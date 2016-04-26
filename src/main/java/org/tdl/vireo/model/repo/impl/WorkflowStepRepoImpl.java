@@ -24,11 +24,25 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
-    public WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization) {
-//        WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
-//        originatingOrganization.addWorkflowStep(workflowStep);
-//        organizationRepo.save(originatingOrganization);
-        return workflowStepRepo.findOne(workflowStep.getId());
+    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {        
+        
+        if(requestingOrganization.getId() == workflowStep.getOriginatingOrganization().getId()) {
+            workflowStep = workflowStepRepo.save(workflowStep);
+        } else if(workflowStep.getOptional()) {
+            
+            requestingOrganization.removeWorkflowStep(workflowStepRepo.findOne(workflowStep.getId()));
+            
+            WorkflowStep newWorflowStep = workflowStepRepo.create(workflowStep.getName(), requestingOrganization);
+            
+            workflowStep.getFieldProfiles().parallelStream().forEach(fieldProfile -> {
+                newWorflowStep.addFieldProfile(fieldProfile);
+            });
+           
+            workflowStep = workflowStepRepo.save(newWorflowStep);
+            
+        }
+         
+        return workflowStep;
     }
     
     @Override
