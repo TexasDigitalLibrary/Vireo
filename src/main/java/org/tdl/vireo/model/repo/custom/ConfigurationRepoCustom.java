@@ -2,6 +2,9 @@ package org.tdl.vireo.model.repo.custom;
 
 import java.util.List;
 
+import javax.servlet.ServletInputStream;
+
+import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.Configuration;
 
 public interface ConfigurationRepoCustom {
@@ -94,4 +97,22 @@ public interface ConfigurationRepoCustom {
      * @return validated {@link Configuration}
      */
     public Configuration validateReset(Configuration configuration);
+    
+    /**
+     * Validates all the business logic for an incoming logo
+     * 
+     * @param unvalidated {@link LookAndFeelControllerModel} for updating
+     * @param inputStream
+     * @return validated {@link LookAndFeelControllerModel}
+     */
+    public LookAndFeelControllerModel validateUploadLogo(LookAndFeelControllerModel lfModel, ServletInputStream inputStream, String path);
+    
+    /**
+     * Validates all the business logic for an incoming reset logo
+     * 
+     * @param unvalidated {@link LookAndFeelControllerModel} for updating
+     * @param inputStream
+     * @return validated {@link LookAndFeelControllerModel} to reset the logo with
+     */
+    public LookAndFeelControllerModel validateResetLogo(LookAndFeelControllerModel lfModel);
 }

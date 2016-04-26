@@ -15,12 +15,10 @@ import javax.servlet.ServletInputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.Application;
 
 @Service
-@DependsOn("systemDataLoader")
 public class FileIOUtility {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 

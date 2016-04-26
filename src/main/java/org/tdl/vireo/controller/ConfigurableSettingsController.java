@@ -85,7 +85,7 @@ public class ConfigurableSettingsController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
                 break;
             default:
-                logger.warn("Couldn't update configuration with name " + configuration.getName() + " and value " + configuration.getValue());
+                logger.warn("Couldn't reset configuration with name " + configuration.getName() + " and value " + configuration.getValue());
                 break;
         }
         

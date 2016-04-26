@@ -1,10 +1,5 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
-
-import java.io.IOException;
-
 import javax.servlet.ServletInputStream;
 
 import org.slf4j.Logger;
@@ -16,7 +11,7 @@ import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -31,53 +26,70 @@ public class LookAndFeelController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    ConfigurationRepo configurationRepo;
-
+    private ConfigurationRepo configurationRepo;
+    
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private ValidationService validationService;
 
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse uploadLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel, @InputStream ServletInputStream inputStream) {
-
-        // TODO: this needs to go in repo.validateCreate() -- VIR-201
-        if (lfModel.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, lfModel.getBindingResult().getAll());
-        }
-
+        
         String logoName = lfModel.getSetting();
         String logoFileName = logoName + "." + lfModel.getFileType();
         String path = "public/" + configurationRepo.getByName(ConfigurationName.THEME_PATH).getValue() + logoFileName;
 
-        try {
-            fileIOUtility.writeImage(inputStream, path);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ApiResponse(VALIDATION_ERROR, "Unable to write image file. [" + e.getMessage() + "]");
+        // will attach any errors to the BindingResult when validating the incoming lfModel
+        lfModel = configurationRepo.validateUploadLogo(lfModel, inputStream, path);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(lfModel);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Changing logo " + logoName);
+                Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
+                response.getPayload().put(newLogoConfig.getClass().getSimpleName(), newLogoConfig);
+                //simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                //simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't update logo " + logoName + " because: " + response.getMeta().getType());
+                break;
         }
 
-        Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
-
-        logger.info("Changing logo " + newLogoConfig.getName());
-
-        return new ApiResponse(SUCCESS, newLogoConfig);
-
+        return response;
     }
 
     @ApiMapping("/logo/reset")
     @Auth(role = "ROLE_MANAGER")
     public ApiResponse resetLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel) {
-
-        // TODO: this needs to go in repo.validateCreate() -- VIR-201
-        if (lfModel.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, lfModel.getBindingResult().getAll());
+        
+        // will attach any errors to the BindingResult when validating the incoming lfModel
+        lfModel = configurationRepo.validateResetLogo(lfModel);
+        
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = validationService.buildResponse(lfModel);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Resetting logo " + lfModel.getSetting());
+                Configuration defaultLogoConfig = configurationRepo.reset(lfModel.getSetting());
+                response.getPayload().put(defaultLogoConfig.getClass().getSimpleName(), defaultLogoConfig);
+                //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            case VALIDATION_WARNING:
+                //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
+                break;
+            default:
+                logger.warn("Couldn't reset logo with name " + lfModel.getSetting());
+                break;
         }
-
-        Configuration defaultLogoConfig = configurationRepo.reset(lfModel.getSetting());
-
-        logger.info("resetting logo " + defaultLogoConfig.getName());
-
-        return new ApiResponse(SUCCESS, defaultLogoConfig);
-
+        
+        return response;
     }
 }

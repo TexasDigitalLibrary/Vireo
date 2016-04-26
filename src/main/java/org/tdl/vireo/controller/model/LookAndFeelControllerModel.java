@@ -7,8 +7,6 @@ import org.tdl.vireo.aspect.AppControllerAspect;
 import org.tdl.vireo.controller.LookAndFeelController;
 import org.tdl.vireo.model.BaseEntity;
 
-import edu.tamu.framework.validation.ModelBindingResult;
-
 /**
  * Model used to validate deserialized {@link LookAndFeelController} objects coming from the front-end
  * 

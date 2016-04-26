@@ -1,14 +1,19 @@
 
 package org.tdl.vireo.model.repo.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletInputStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.ObjectError;
+import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.custom.ConfigurationRepoCustom;
+import org.tdl.vireo.util.FileIOUtility;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -17,9 +22,8 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     @Autowired
     private ConfigurationRepo configurationRepo;
     
-//    private Configuration newConfiguration(String name, String value, String type){
-//        return new Configuration(name, value, type);
-//    }
+    @Autowired
+    private FileIOUtility fileIOUtility;
 
     @Override
     public Configuration create(String name, String value, String type) {
@@ -158,5 +162,33 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         return configuration;
     }
     
+    @Override
+    public LookAndFeelControllerModel validateUploadLogo(LookAndFeelControllerModel lfModel, ServletInputStream inputStream, String path) {
+        Configuration logoToUpdate = configurationRepo.getByName(lfModel.getSetting());
+        // if it doesn't exist
+        if (logoToUpdate == null) {
+            lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", "Cannot upload logo that doesn't exist!"));
+        } else {
+            try {
+                fileIOUtility.writeImage(inputStream, path);
+            } catch (IOException e) {
+                lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", e.getLocalizedMessage()));
+            }
+        }
+        return lfModel;
+    }
     
+    @Override
+    public LookAndFeelControllerModel validateResetLogo(LookAndFeelControllerModel lfModel) {
+        Configuration logoToReset = configurationRepo.getByName(lfModel.getSetting());
+        // if it doesn't exist
+        if (logoToReset == null) {
+            lfModel.getBindingResult().addError(new ObjectError("configuration", "Cannot reset logo that doesn't have a system-required copy in the database!"));
+        }
+        // it exists, but we don't have a custom override for it: nothing to reset!
+        else if (logoToReset.isSystemRequired()) {
+            lfModel.getBindingResult().addWarning(new ObjectError("configuration", "No custom value was set for " + lfModel.getSetting() + ". Nothing to reset!"));
+        }
+        return lfModel;
+    }
 }
