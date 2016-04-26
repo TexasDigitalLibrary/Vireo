@@ -83,7 +83,7 @@ public class ValidationService {
         for (Field field : clazz.getDeclaredFields()) {
             Column col = field.getAnnotation(Column.class);
             if (col != null && col.name() != null && !col.name().isEmpty()) {
-               columnNames.add(col.name());
+                columnNames.add(col.name());
             } else {
                 columnNames.add(field.getName());
             }
