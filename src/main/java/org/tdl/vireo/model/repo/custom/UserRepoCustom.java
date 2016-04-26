@@ -7,4 +7,5 @@ public interface UserRepoCustom {
 
     public User create(String email, String firstName, String lastName, Role role);
 
+    public User validateUpdateRole(User user);
 }

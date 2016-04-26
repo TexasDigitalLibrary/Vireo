@@ -16,10 +16,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
@@ -30,6 +32,9 @@ public class UserControllerTest extends AbstractControllerTest {
 
 	@Mock
     private UserRepo userRepo;
+	
+	@Mock
+	private ValidationService validationService;
 	
 	@InjectMocks
     private UserController userController;
@@ -57,6 +62,19 @@ public class UserControllerTest extends AbstractControllerTest {
             }
         }
         return null;
+    }
+    
+    public User validateUpdateRole(User user) {
+        User possiblyExistingUser = findByEmail(user.getEmail());
+        if (possiblyExistingUser == null) {
+            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
+        } else {
+            possiblyExistingUser.setBindingResult(user.getBindingResult());
+            possiblyExistingUser.setUserRole(user.getUserRole());
+            user = possiblyExistingUser;
+        }
+        
+        return user;
     }
     
     @Before
@@ -87,9 +105,9 @@ public class UserControllerTest extends AbstractControllerTest {
         
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
         
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<User>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
+            public User answer(InvocationOnMock invocation) throws Throwable {
                 return userRepo.save(new User((String) invocation.getArguments()[0], 
                 							  (String) invocation.getArguments()[1], 
                 							  (String) invocation.getArguments()[2], 
@@ -97,18 +115,32 @@ public class UserControllerTest extends AbstractControllerTest {
             }}
         );
                 
-        Mockito.when(userRepo.findByEmail(any(String.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.findByEmail(any(String.class))).then(new Answer<User>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {            	            	
+            public User answer(InvocationOnMock invocation) throws Throwable {            	            	
                 return findByEmail((String) invocation.getArguments()[0]);
             }}
         );
         
-        Mockito.when(userRepo.save(any(User.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.save(any(User.class))).then(new Answer<User>() {
                @Override
-               public Object answer(InvocationOnMock invocation) throws Throwable {
+               public User answer(InvocationOnMock invocation) throws Throwable {
                    return updateUser((User) invocation.getArguments()[0]);
                }}
+        );
+        
+        Mockito.when(userRepo.validateUpdateRole(any(User.class))).then(new Answer<User>() {
+            @Override
+            public User answer(InvocationOnMock invocation) throws Throwable {
+                return validateUpdateRole((User)(invocation.getArguments()[0]));
+            }}
+        );
+        
+        Mockito.when(validationService.buildResponse(any(User.class))).then(new Answer<ApiResponse>() {
+            @Override
+            public ApiResponse answer(InvocationOnMock invocation) throws Throwable {
+                return new ApiResponse(ApiResponseType.SUCCESS);
+            }}
         );
     }
 
