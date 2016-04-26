@@ -145,6 +145,14 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
         assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflowSteps().size());
         
+        //Check that a change to the parent step cascades to the child step.
+        String newName = "A Changed Name";
+        workflowStep.setName(newName);
+        workflowStep = workflowStepRepo.save(workflowStep);
+        
+        assertEquals("The parents organization's workflowStep's name was incorrect", newName, ((WorkflowStep)parentOrganization.getWorkflowSteps().toArray()[0]).getName());
+        assertEquals("The grandChildOrganization workflowStep's name was incorrect", newName, ((WorkflowStep)grandChildOrganization.getWorkflowSteps().toArray()[0]).getName());
+        
     }
 
     @After
