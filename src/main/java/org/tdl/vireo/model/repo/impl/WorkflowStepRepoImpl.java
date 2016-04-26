@@ -24,6 +24,14 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
+    public WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization) {
+//        WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
+//        originatingOrganization.addWorkflowStep(workflowStep);
+//        organizationRepo.save(originatingOrganization);
+        return workflowStepRepo.findOne(workflowStep.getId());
+    }
+    
+    @Override
     public void delete(WorkflowStep workflowStep) {
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
         

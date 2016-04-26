@@ -9,4 +9,6 @@ public interface WorkflowStepRepoCustom {
 
     void delete(WorkflowStep workflowStep);
 
+    WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization);
+
 }
