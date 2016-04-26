@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/custom-action")
@@ -35,11 +36,8 @@ public class CustomActionSettingsController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
-    private Map<String, List<CustomActionDefinition>> getAll() {
-        Map<String, List<CustomActionDefinition>> allRet = new HashMap<String, List<CustomActionDefinition>>();
-        allRet.put("list", customActionDefinitionRepo.findAllByOrderByPositionAsc());
-        return allRet;
-    }
+    @Autowired
+    private ValidationService validationService;
     
     @ApiMapping("/all")
     public ApiResponse getCustomActions() {
@@ -48,104 +46,126 @@ public class CustomActionSettingsController {
     
     @ApiMapping("/create")
     public ApiResponse createCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
-        //TODO: this needs to go in repo.validateCreate() -- VIR-201
-        if(!customActionDefinition.getBindingResult().hasErrors() && customActionDefinitionRepo.findByLabel(customActionDefinition.getLabel()) != null){
-            customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", customActionDefinition.getLabel() + " is already a custom action!"));
+        
+        // will attach any errors to the BindingResult when validating the incoming customActionDefinition
+        customActionDefinition = customActionDefinitionRepo.validateCreate(customActionDefinition);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(customActionDefinition);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
+                customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't create custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
+                break;
         }
-        
-        if(customActionDefinition.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
-        }
-        
-        customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
-        
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
+
+        return response;
     }
     
     @ApiMapping("/update")
     public ApiResponse updateCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
-        //TODO: this needs to go in repo.validateUpdate() -- VIR-201
-        CustomActionDefinition customActionToUpdate = null;
-        if(customActionDefinition.getId() == null) {
-            customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition without an id!"));
-        } else {
-            customActionToUpdate = customActionDefinitionRepo.findOne(customActionDefinition.getId());
-            if(customActionToUpdate == null) {
-                customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition with invalid id!"));
-            }
+        
+        // will attach any errors to the BindingResult when validating the incoming customActionDefinition
+        customActionDefinition = customActionDefinitionRepo.validateUpdate(customActionDefinition);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(customActionDefinition);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
+                customActionDefinitionRepo.save(customActionDefinition);
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't update custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
+                break;
         }
-        
-        if(customActionDefinition.getBindingResult().hasErrors()){
-            return new ApiResponse(VALIDATION_ERROR, customActionDefinition.getBindingResult().getAll());
-        }
-        
-        customActionToUpdate.setLabel(customActionDefinition.getLabel());
-        customActionToUpdate.isStudentVisible(customActionDefinition.isStudentVisible());
-        
-        customActionDefinitionRepo.save(customActionToUpdate);
-        this.simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
-        return new ApiResponse(SUCCESS);
-        
+
+        return response;
     }
     
-    @ApiMapping("/remove/{indexString}")
+    @ApiMapping("/remove/{idString}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse removeCustomAction(@ApiVariable String indexString) {        
-        Long index = -1L;
+    public ApiResponse removeCustomAction(@ApiVariable String idString) {
         
-        try {
-            index = Long.parseLong(indexString);
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "custom_action_definition_id");
+        
+        // will attach any errors to the BindingResult when validating the incoming idString
+        CustomActionDefinition customActionDefinition = customActionDefinitionRepo.validateRemove(idString, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Removing custom action definition with id " + idString);
+                customActionDefinitionRepo.remove(customActionDefinition);
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't remove custom action definition with id " + idString + " because: " + response.getMeta().getType());
+                break;
         }
-        catch(NumberFormatException nfe) {
-            logger.info("\n\nNOT A NUMBER " + indexString + "\n\n");
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid custom action order!");
-        }
         
-        if(index >= 0) {               
-            customActionDefinitionRepo.remove(index);
-        }
-        else {
-            logger.info("\n\nINDEX" + index + "\n\n");
-            return new ApiResponse(VALIDATION_ERROR, "Id is not a valid custom action order!");
-        }
-        
-        logger.info("Custom Action with order " + index);
-        
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
-        
-        return new ApiResponse(SUCCESS);
+        return response;
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse reorderCustomActions(@ApiVariable String src, @ApiVariable String dest) {
-        Long intSrc = Long.parseLong(src);
-        Long intDest = Long.parseLong(dest);
-        customActionDefinitionRepo.reorder(intSrc, intDest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));        
-        return new ApiResponse(SUCCESS);
+        
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(src, "customActionDefinition");
+        
+        // will attach any errors to the BindingResult when validating the incoming src, dest
+        Long longSrc = validationService.validateLong(src, "position", modelBindingResult);
+        Long longDest = validationService.validateLong(dest, "position", modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Reordering custom action definitions");
+                customActionDefinitionRepo.reorder(longSrc, longDest);
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't reorder custom action definitions because: " + response.getMeta().getType());
+                break;
+        }
+        
+        return response;
     }
     
-//    @ApiMapping("/reset")
-//    public ApiResponse resetSetting(@Data String data) {
-//        Map<String,String> map = new HashMap<String,String>();      
-//        try {
-//            map = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        Configuration deletableOverride = customActionDefinitionRepo.findByNameAndType(map.get("setting"),map.get("type"));
-//        if (deletableOverride != null) {
-//            System.out.println(deletableOverride.getName());
-//            customActionDefinitionRepo.delete(deletableOverride);
-//        }
-//        Map<String, Map<String,String>> typeToConfigPair = new HashMap<String, Map<String,String>>();
-//        typeToConfigPair.put(map.get("type"),customActionDefinitionRepo.getAllByType(map.get("type")));
-//        this.simpMessagingTemplate.convertAndSend("/channel/settings", new ApiResponse(SUCCESS, typeToConfigPair));
-//        
-//        return new ApiResponse(SUCCESS);
-//    }
+    private Map<String, List<CustomActionDefinition>> getAll() {
+        Map<String, List<CustomActionDefinition>> allRet = new HashMap<String, List<CustomActionDefinition>>();
+        allRet.put("list", customActionDefinitionRepo.findAllByOrderByPositionAsc());
+        return allRet;
+    }
 }
