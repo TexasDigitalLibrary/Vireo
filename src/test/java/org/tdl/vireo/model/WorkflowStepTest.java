@@ -2,6 +2,9 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +13,9 @@ import org.tdl.vireo.annotations.Order;
 
 public class WorkflowStepTest extends AbstractEntityTest {
 
+    @PersistenceContext
+    EntityManager em;
+    
     @Before
     public void setup() {
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
@@ -109,15 +115,42 @@ public class WorkflowStepTest extends AbstractEntityTest {
     
     @Test
     @Order(value=6)
+    @Transactional
     public void testWorkflowStepChangeAtChild()
     {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
-
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        String updatedName = "Updated Name";
+        
+        //detach this workflowStep as it is now just a means of requesting updates at the organization's level,
+        //and we don't want transactional changes to it persisted
+        em.detach(workflowStep);
+        
+        workflowStep.setName(updatedName);
+        
+        WorkflowStep derivativeWorkflowStep = workflowStepRepo.update(workflowStep, organization);
+        
+        
         //when updating the workflow step at organization, test that
         // a new workflow step is made at the organization
+        assertEquals("The child organization did not recieve a new workflowStep", false, derivativeWorkflowStep.getId().equals(workflowStep.getId()));
+        assertEquals("The updated workflowStep's name did not change.", updatedName, derivativeWorkflowStep.getName());
+        
+        // refreshed (and reattached)
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        
+        assertEquals("The parent workflowStep's name did change.", TEST_WORKFLOW_STEP_NAME, workflowStep.getName());
+        
         // the new workflow step remembers from whence it was derived (the parent's workflow step)
+        assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), derivativeWorkflowStep.getOriginatingWorkflowStep().getId() );
+        
+        
+        
+        
     }
     
     @Test

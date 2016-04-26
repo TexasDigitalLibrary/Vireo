@@ -29,10 +29,17 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
     
+    
+    //TODO: determine necessity of this in light of the originatingWorkflowStep
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
+    
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private WorkflowStep originatingWorkflowStep;
     
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -95,6 +102,14 @@ public class WorkflowStep extends BaseEntity {
         this.originatingOrganization = originatingOrganization;
     }
     
+    public WorkflowStep getOriginatingWorkflowStep() {
+        return originatingWorkflowStep;
+    }
+
+    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        this.originatingWorkflowStep = originatingWorkflowStep;
+    }
+
     /**
      * @return the owningOrganization
      */
