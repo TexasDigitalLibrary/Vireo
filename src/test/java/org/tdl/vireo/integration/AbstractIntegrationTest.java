@@ -109,7 +109,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         clientInboundChannel.send(message);
 
-        Message<?> reply = brokerChannelInterceptor.awaitMessage(5);
+        Message<?> reply = brokerChannelInterceptor.awaitMessage(2);
         
         assertNotNull(reply);
                 
