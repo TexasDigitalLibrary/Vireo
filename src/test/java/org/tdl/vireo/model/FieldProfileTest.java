@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
 
 public class FieldProfileTest extends AbstractEntityTest {
@@ -89,6 +91,39 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
         assertEquals("The field glosses were deleted!", 2, fieldGlossRepo.count());
         assertEquals("The controlled vocabularies were deleted!", 2, controlledVocabularyRepo.count());
+    }
+   
+    @Test
+    @Order(value = 5)
+    @Transactional
+    public void testCascadeThroughWorflowStep() {
+        
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(childOrganization);
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        fieldProfile.setPredicate(fieldPredicate);
+        workflowStep.addFieldProfile(fieldProfile);
+        
+        
+        FieldProfile parentFieldProfile = parentOrganization.getWorkflowSteps().get(0).getFieldProfiles().get(0);
+        FieldProfile childFieldProfile = childOrganization.getWorkflowSteps().get(0).getFieldProfiles().get(0);
+        
+        assertEquals("The parent organization's workflow did not contain the fieldProfile", fieldProfile.getId(), parentFieldProfile.getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile", fieldProfile.getId(), childFieldProfile.getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), parentFieldProfile.getPredicate().getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), childFieldProfile.getPredicate().getId());
+        
+        String updatedFieldPredicateValue = "Updated Value";
+        parentFieldProfile.getPredicate().setValue(updatedFieldPredicateValue);
+        fieldProfileRepo.save(parentFieldProfile);
+        
+        assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getPredicate().getValue());
+
     }
 
     @After

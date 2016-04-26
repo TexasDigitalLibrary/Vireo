@@ -132,15 +132,7 @@ public class Organization extends BaseEntity {
     }
     
     public void addWorkflowStep(WorkflowStep workflowStep) {
-    	if(this.workflowSteps.contains(workflowStep)) {
- //TODO:
-//    	    this.workflowSteps.parallelStream().forEach(wfs -> {
-//    	        if(wfs.getId().equals(workflowStep.id)) {
-//    	            
-//    	        }
-//    	    });
-    	    
-    	} else {
+    	if(!this.workflowSteps.contains(workflowStep)) {
     	    this.workflowSteps.add(workflowStep);
             // add workflowstep id to workflowstep order
             addWorkflowStepOrder(workflowStep.getId());

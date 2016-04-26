@@ -146,10 +146,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The parent workflowStep's name did change.", TEST_WORKFLOW_STEP_NAME, workflowStep.getName());
         
         // the new workflow step remembers from whence it was derived (the parent's workflow step)
-        assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), derivativeWorkflowStep.getOriginatingWorkflowStep().getId() );
-        
-        
-        
+        assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), derivativeWorkflowStep.getOriginatingWorkflowStep().getId() ); 
         
     }
     
