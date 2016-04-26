@@ -109,7 +109,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         clientInboundChannel.send(message);
 
-        Message<?> reply = brokerChannelInterceptor.awaitMessage(2);
+        Message<?> reply = brokerChannelInterceptor.awaitMessage();
         
         assertNotNull(reply);
                 
@@ -119,4 +119,5 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }
+    
 }

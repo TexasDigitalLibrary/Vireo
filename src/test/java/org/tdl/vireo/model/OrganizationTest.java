@@ -120,7 +120,8 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The child organization did not add the workflow step!", true, childOrganization.getWorkflowSteps().contains(severableParentWorkflowStep));
         assertEquals("The child organization did not add the workflow step!", true, childOrganization.getWorkflowSteps().contains(severableChildWorkflowStep));
         assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflowSteps().contains(severableParentWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflowSteps().contains(severableChildWorkflowStep));
+        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflowSteps().contains(severableChildWorkflowStep));        
+        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflowSteps().contains(grandChildWorkflowStep));
         
         // check workflowstep inheritance
         assertEquals("The child organization did not inherit parent workflow step!", true, childOrganization.getWorkflowSteps().contains(parentWorkflowStep));
