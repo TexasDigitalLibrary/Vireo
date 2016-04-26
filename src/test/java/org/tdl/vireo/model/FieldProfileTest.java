@@ -128,9 +128,12 @@ public class FieldProfileTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        fieldProfileRepo.deleteAll();
-        fieldGlossRepo.deleteAll();
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
+        workflowStepRepo.deleteAll();
+        fieldProfileRepo.deleteAll();  
         fieldPredicateRepo.deleteAll();
+        fieldGlossRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();
     }
