@@ -1,9 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
-import org.tdl.vireo.model.repo.OrganizationRepo;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/organization-category")
@@ -34,130 +31,114 @@ public class OrganizationCategoryController {
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
-        
-
-    private Map<String,List<OrganizationCategory>> getAllHelper() {
-        Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();
-        map.put("list", organizationCategoryRepo.findAll());
-        return map;
-    }
+    
+    @Autowired
+    private ValidationService validationService;
 
     @ApiMapping("/all")
     @Auth(role="ROLE_MANAGER")
     @Transactional
-    public ApiResponse getAll() {
-        return new ApiResponse(SUCCESS, getAllHelper());
+    public ApiResponse getOrganizationCategories() {
+        return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse createOrganizationCategory(@Data String data) {
+    public ApiResponse createOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        // will attach any errors to the BindingResult when validating the incoming organizationCategory
+        organizationCategory = organizationCategoryRepo.validateCreate(organizationCategory);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(organizationCategory);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Creating organization category with name " + organizationCategory.getName());
+                organizationCategoryRepo.create(organizationCategory.getName());
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't create organization category with name " + organizationCategory.getName() + " because: " + response.getMeta().getType());
+                break;
         }
-        
-        OrganizationCategory newOrganizationCategory = null;
-                
-        JsonNode name = dataNode.get("name");
-        if(name != null) {
-            newOrganizationCategory = organizationCategoryRepo.create(name.asText());           
-        }
-        else {
-            return new ApiResponse(ERROR, "Name required to create organization category!");
-        }
-        
-        logger.info("Created organization category with name " + newOrganizationCategory.getName());
-        
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()));
-        
-        return new ApiResponse(SUCCESS);
+
+        return response;
     }
     
     @ApiMapping("/update")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
-    public ApiResponse updateOrganizationCategory(@Data String data) {
+    public ApiResponse updateOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         
-        JsonNode dataNode;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse update json ["+e.getMessage()+"]");
+        // will attach any errors to the BindingResult when validating the incoming organizationCategory
+        organizationCategory = organizationCategoryRepo.validateUpdate(organizationCategory);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(organizationCategory);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating organization category with name " + organizationCategory.getName());
+                organizationCategoryRepo.save(organizationCategory);
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't update organization category with name " + organizationCategory.getName() + " because: " + response.getMeta().getType());
+                break;
         }
-        
-        OrganizationCategory organizationCategory = null;
-                
-        JsonNode id = dataNode.get("id");
-        if(id != null) {
-            Long idLong = -1L;
-            try {
-                idLong = id.asLong();
-            }
-            catch(NumberFormatException nfe) {
-                return new ApiResponse(ERROR, "Id required to update organization category!");
-            }
-            organizationCategory = organizationCategoryRepo.findOne(idLong);           
-        }
-        else {
-            return new ApiResponse(ERROR, "Id required to update organization category!");
-        }
-        
-        JsonNode name = dataNode.get("name");
-        if(name != null) {
-            organizationCategory.setName(name.asText());           
-        }
-        else {
-            return new ApiResponse(ERROR, "Name required to create organization category!");
-        }
-        
-        organizationCategory = organizationCategoryRepo.save(organizationCategory);
-        
-        logger.info("Updated organization category with name " + organizationCategory.getName());
-        
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()) );
-        
-        return new ApiResponse(SUCCESS);
+
+        return response;
     }
 
     @ApiMapping("/remove/{idString}")
     @Auth(role = "ROLE_MANAGER")
     @Transactional
     public ApiResponse removeOrganizationCategory(@ApiVariable String idString) {
-        Long id = -1L;
-
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException nfe) {
-            return new ApiResponse(ERROR, "Id is not a valid organization category id!");
+        
+        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
+        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "organization_category_id");
+        
+        // will attach any errors to the BindingResult when validating the incoming idString
+        OrganizationCategory organizationCategory = organizationCategoryRepo.validateRemove(idString, modelBindingResult);
+        
+        // build a response based on the BindingResult state
+        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Removing organization category with id " + idString);
+                organizationCategoryRepo.remove(organizationCategory);
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                break;
+            default:
+                logger.warn("Couldn't remove organization category with id " + idString + " because: " + response.getMeta().getType());
+                break;
         }
-
-        if (id >= 0) {
-            OrganizationCategory toRemove = organizationCategoryRepo.findOne(id);
-            if(toRemove != null) {
-                organizationCategoryRepo.delete(toRemove);
-                logger.info("Deleted organization category with id " + id);
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAllHelper()));
-                return new ApiResponse(SUCCESS);
-            } else {
-                return new ApiResponse(ERROR, "Id for organization category not found!");
-            }
-        } else {
-            return new ApiResponse(ERROR, "Id is not a valid organization category id!");
-        }
+        
+        return response;
+    }
+    
+    private Map<String,List<OrganizationCategory>> getAll() {
+        Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();
+        map.put("list", organizationCategoryRepo.findAll());
+        return map;
     }
 }
