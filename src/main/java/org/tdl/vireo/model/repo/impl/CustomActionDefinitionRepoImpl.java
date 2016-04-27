@@ -53,8 +53,11 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
             customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition without an id!"));
         } else {
             CustomActionDefinition customActionDefinitionToUpdate = customActionDefinitionRepo.findOne(customActionDefinition.getId());
+            CustomActionDefinition customActionDefinitionUnique = customActionDefinitionRepo.findByLabel(customActionDefinition.getLabel());
             if(customActionDefinitionToUpdate == null) {
                 customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition with invalid id!"));
+            } else if(customActionDefinitionUnique != null) {
+                customActionDefinition.getBindingResult().addError(new ObjectError("customActionDefinition", "Cannot update a CustomActionDefinition with label already in use by another!"));
             } else {
                 customActionDefinitionToUpdate.setBindingResult(customActionDefinition.getBindingResult());
                 customActionDefinitionToUpdate.setLabel(customActionDefinition.getLabel());
