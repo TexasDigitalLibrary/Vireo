@@ -292,12 +292,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
                 } else {
                     newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
                     newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
                     newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
                     newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
+                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
                     newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
                     newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
                     newFieldProfile = fieldProfileRepo.save(newFieldProfile);

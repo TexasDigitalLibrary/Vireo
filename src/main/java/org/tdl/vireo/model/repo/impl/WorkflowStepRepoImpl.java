@@ -64,8 +64,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     	
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
         
-        originatingOrganization.removeWorkflowStep(workflowStep);
-        organizationRepo.save(originatingOrganization);
+        if(originatingOrganization != null) {
+            originatingOrganization.removeWorkflowStep(workflowStep);
+            organizationRepo.save(originatingOrganization);
+        }
         
         for(Organization organization : workflowStep.getContainedByOrganizations()) {
             workflowStep.removeContainedByOrganization(organization);

@@ -18,25 +18,26 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     private WorkflowStepRepo workflowStepRepo;
     
     @Override
-    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
-        return create(workflowStep, fieldProfileRepo.save(new FieldProfile(workflowStep, fieldPredicate, inputType, repeatable, enabled, optional)));
+    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        return create(workflowStep, new FieldProfile(workflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional));
     }
 
     @Override
-    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
-        return create(workflowStep, fieldProfileRepo.save(new FieldProfile(workflowStep, fieldPredicate, inputType, usage, repeatable, enabled, optional)));
+    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        return create(workflowStep, new FieldProfile(workflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional));
     }
     
     @Override
-    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
-        return create(workflowStep, fieldProfileRepo.save(new FieldProfile(workflowStep, fieldPredicate, inputType, usage, help, repeatable, enabled, optional)));
+    public FieldProfile create(WorkflowStep workflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        return create(workflowStep, new FieldProfile(workflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional));
     }
 
     private FieldProfile create(WorkflowStep workflowStep, FieldProfile detachedFieldProfile) {
-        workflowStep.addFieldProfile(detachedFieldProfile);
-        workflowStep.addOriginalFieldProfile(detachedFieldProfile);
+        FieldProfile newFieldProfile = fieldProfileRepo.save(detachedFieldProfile);
+        workflowStep.addFieldProfile(newFieldProfile);
+        workflowStep.addOriginalFieldProfile(newFieldProfile);
         workflowStepRepo.save(workflowStep);
-        return fieldProfileRepo.findOne(detachedFieldProfile.getId());
+        return fieldProfileRepo.findOne(newFieldProfile.getId());
     }
     
     @Override

@@ -48,6 +48,9 @@ public class FieldProfile extends BaseEntity {
     @Column(nullable = false)
     private Boolean optional;
     
+    @Column(nullable = false)
+    private Boolean overrideable;    
+    
     @Lob
     @Column(nullable = true, name = "`usage`") // "usage" is a keyword in sql
     private String usage;
@@ -78,12 +81,13 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         this();
         setOriginatingWorkflowStep(originatingWorkflowStep);
         setPredicate(predicate);
         setInputType(inputType);
         setRepeatable(repeatable);
+        setOverrideable(overrideable);
         setEnabled(enabled);
         setOptional(optional);
     }
@@ -97,8 +101,8 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, repeatable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, predicate, inputType, repeatable, overrideable, enabled, optional);
         setUsage(usage);
     }
     
@@ -111,8 +115,8 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, usage, repeatable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, predicate, inputType, usage, repeatable, overrideable, enabled, optional);
         setHelp(help);
     }
 
@@ -173,6 +177,20 @@ public class FieldProfile extends BaseEntity {
      */
     public void setRepeatable(Boolean repeatable) {
         this.repeatable = repeatable;
+    }
+
+    /**
+     * @return the overrideable
+     */
+    public Boolean getOverrideable() {
+        return overrideable;
+    }
+
+    /**
+     * @param overrideable the overrideable to set
+     */
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
     }
 
     public Boolean getEnabled() {
