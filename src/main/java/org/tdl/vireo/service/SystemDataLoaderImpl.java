@@ -273,11 +273,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             if (newWorkflowStep == null) {
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
-
+            
             // temporary list of FieldProfile
             List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
 
-            workflowStep.getFieldProfiles().forEach(fieldProfile -> {
+            for(FieldProfile fieldProfile : workflowStep.getFieldProfiles()) {
 
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
@@ -292,7 +292,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
-                    newFieldProfile = fieldProfileRepo.create(fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
                 } else {
                     newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
                     newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
@@ -361,8 +361,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 fieldProfiles.add(newFieldProfile);
 
-            });
-
+            }
+            
             newWorkflowStep.setFieldProfiles(fieldProfiles);
 
             // temporary list of Note

@@ -107,8 +107,10 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         brokerChannelInterceptor.setIncludedDestinations("/queue/" + root + "/**");
         
-        clientInboundChannel.send(message);
+        boolean sent = clientInboundChannel.send(message);
 
+        assertEquals(true, sent);
+        
         Message<?> reply = brokerChannelInterceptor.awaitMessage();
         
         assertNotNull(reply);
@@ -116,6 +118,8 @@ public abstract class AbstractIntegrationTest extends MockData {
         StompHeaderAccessor replyHeaders = StompHeaderAccessor.wrap(reply);
         
         assertEquals("/queue" + destination + "-user" + sessionId, replyHeaders.getDestination());
+        
+        Thread.sleep(100);
         
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }

@@ -190,7 +190,8 @@ public abstract class AbstractEntityTest {
 
     protected static final String TEST_SEVERABLE_ORGANIZATION_NAME = "Test Severable Organization";
 
-    protected static final String TEST_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
+    protected static final String TEST_WORKFLOW_STEP_NAME = "Test Workflow Step";
+    protected static final String TEST_PARENT_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     protected static final String TEST_SEVERABLE_WORKFLOW_STEP_NAME = "Test Severable Workflow Step";
 
     protected static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";

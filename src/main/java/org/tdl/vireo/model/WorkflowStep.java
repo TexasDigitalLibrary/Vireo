@@ -1,10 +1,10 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -28,8 +29,7 @@ public class WorkflowStep extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-    
-    
+
     //TODO: determine necessity of this in light of the originatingWorkflowStep
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -41,7 +41,7 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> containedByOrganizations;
@@ -52,10 +52,16 @@ public class WorkflowStep extends BaseEntity {
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
     
+    @OneToMany(cascade = ALL, mappedBy = "originatingWorkflowStep", orphanRemoval = true, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<FieldProfile> originalFieldProfiles;
+    
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<Note> notes;
 
     public WorkflowStep() {
+        setOriginalFieldProfiles(new ArrayList<FieldProfile>());
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
         setContainedByOrganizations(new TreeSet<Organization>());
@@ -161,7 +167,7 @@ public class WorkflowStep extends BaseEntity {
      * @param fieldProfile
      */
     public void addFieldProfile(FieldProfile fieldProfile) {
-        getFieldProfiles().add(fieldProfile);
+        this.fieldProfiles.add(fieldProfile);
     }
 
     /**
@@ -169,7 +175,37 @@ public class WorkflowStep extends BaseEntity {
      * @param fieldProfile
      */
     public void removeFieldProfile(FieldProfile fieldProfile) {
-        getFieldProfiles().remove(fieldProfile);
+        this.fieldProfiles.remove(fieldProfile);
+    }
+    
+    /**
+     * @return the originalFieldProfiles
+     */
+    public List<FieldProfile> getOriginalFieldProfiles() {
+        return originalFieldProfiles;
+    }
+
+    /**
+     * @param originalFieldProfiles the originalFieldProfiles to set
+     */
+    public void setOriginalFieldProfiles(List<FieldProfile> originalFieldProfiles) {
+        this.originalFieldProfiles = originalFieldProfiles;
+    }
+    
+    /**
+     * 
+     * @param fieldProfile
+     */
+    public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
+        this.originalFieldProfiles.add(originalFieldProfile);
+    }
+
+    /**
+     * 
+     * @param fieldProfile
+     */
+    public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
+        this.originalFieldProfiles.remove(originalFieldProfile);
     }
 
     /**

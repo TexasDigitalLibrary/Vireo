@@ -27,7 +27,6 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testCreate() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
@@ -64,20 +63,6 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Entity did not delete!", 0, organizationRepo.count());
     }
     
-    @Test
-    @Order(value=5)
-    @Transactional
-    public void testDeleteInterior() {
-        Organization topOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        Organization middleOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, topOrganization, parentCategory);
-        Organization leafOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, middleOrganization, parentCategory);
-        
-        organizationRepo.delete(middleOrganization);
-        assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
-        
-        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization.getId(), ((Organization)leafOrganization.getParentOrganizations().toArray()[0]).getId() );
-    }
-
     @Override
     @Transactional
     public void testCascade() {
@@ -279,11 +264,27 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
 
     }
+    
+    @Test
+    @Order(value = 5)
+    @Transactional
+    public void testDeleteInterior() {
+        Organization topOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization middleOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, topOrganization, parentCategory);
+        Organization leafOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, middleOrganization, parentCategory);
+        
+        organizationRepo.delete(middleOrganization);
+        assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
+        
+        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization.getId(), ((Organization)leafOrganization.getParentOrganizations().toArray()[0]).getId() );
+    }
 
     @After
     public void cleanUp() {
+    	workflowStepRepo.findAll().forEach(workflowStep -> {
+            workflowStepRepo.delete(workflowStep);
+        });
         organizationRepo.deleteAll();
-        workflowStepRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         emailWorkflowRuleRepo.deleteAll();
         submissionStateRepo.deleteAll();
