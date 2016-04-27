@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 public class SubmissionTest extends AbstractEntityTest {
 
@@ -39,10 +40,7 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
 
-        workflow = workflowRepo.create(TEST_WORKFLOW_NAME, TEST_WORKFLOW_INHERITABILITY, organization);
-        assertEquals("The workflow does not exist!", 1, workflowRepo.count());
-        
-        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, workflow);
+        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -94,10 +92,11 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testCascade() {
         Organization severableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, organization.getCategory());
 
-        WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, workflow);
+        WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
 
         FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
@@ -129,7 +128,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.removeSubmissionWorkflowStep(severableWorkflowStep);
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", 1, submission.getSubmissionWorkflowSteps().size());
-        assertEquals("The workflow step was deleted!", 1, workflowStepRepo.count());
+        assertEquals("The workflow step was deleted!", 2, workflowStepRepo.count());
 
         // test remove field value
         submission.removeFieldValue(severableFieldValue);
@@ -150,14 +149,13 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
 
         // the field values are deleted
-        // the workflow steps are deleted
+        // the workflow steps are not deleted
         // the actionlog is deleted
         // the attachment is deleted
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
-        assertEquals("The workflow steps were orphaned!", 0, workflowStepRepo.count());
+        assertEquals("The workflow steps were deleted!", 2, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
         assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
-        assertEquals("The workflow was deleted!", 1, workflowRepo.count());
         assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
         // and, going another level deep on the cascade from field values to
@@ -171,7 +169,6 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();        
         workflowStepRepo.deleteAll();
-        workflowRepo.deleteAll();
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();

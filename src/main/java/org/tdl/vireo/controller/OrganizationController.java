@@ -76,9 +76,7 @@ public class OrganizationController {
         OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("category").get("id").asLong());
         Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
         
-        Organization newOrganization = organizationRepo.create(dataNode.get("name").asText(), newOrganizationCategory);
-        newOrganizationParent.addChildOrganization(newOrganization);
-        organizationRepo.save(newOrganizationParent);
+        organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
         

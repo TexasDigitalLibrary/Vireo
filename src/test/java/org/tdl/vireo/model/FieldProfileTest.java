@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
 
 public class FieldProfileTest extends AbstractEntityTest {
@@ -12,15 +14,18 @@ public class FieldProfileTest extends AbstractEntityTest {
     @Before
     public void setUp() {
         assertEquals("The repository was not empty!", 0, languageRepo.count());
+        assertEquals("The repository was not empty!", 0, fieldProfileRepo.count());
         assertEquals("The repository was not empty!", 0, fieldPredicateRepo.count());
         language = languageRepo.create(TEST_LANGUAGE);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
+        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
+        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
     }
 
     @Override
-    @Order(value = 1)
     public void testCreate() {
-        FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         assertEquals("The repository did not save the entity!", 1, fieldProfileRepo.count());
         assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getPredicate());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_INPUT_TYPE, fieldProfile.getInputType());
@@ -31,29 +36,27 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Override
-    @Order(value = 2)
     public void testDuplication() {
-        fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         try {
-            fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        	fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldProfileRepo.count());
     }
 
     @Override
-    @Order(value = 3)
     public void testDelete() {
-        FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         fieldProfileRepo.delete(fieldProfile);
         assertEquals("Entity did not delete!", 0, fieldProfileRepo.count());
     }
 
     @Override
-    @Order(value = 4)
+    @Transactional
     public void testCascade() {
         // create field profile
-        FieldProfile fieldProfile = fieldProfileRepo.create(fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
 
         // add glosses and controlled vocabularies
         FieldGloss fieldGloss = fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE, language);
@@ -90,12 +93,43 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The field glosses were deleted!", 2, fieldGlossRepo.count());
         assertEquals("The controlled vocabularies were deleted!", 2, controlledVocabularyRepo.count());
     }
+   
+    @Test
+    @Order(value = 5)
+    @Transactional
+    public void testCascadeThroughWorflowStep() {
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(childOrganization);
+        
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        
+        FieldProfile parentFieldProfile = parentOrganization.getWorkflowSteps().get(0).getFieldProfiles().get(0);
+        FieldProfile childFieldProfile = childOrganization.getWorkflowSteps().get(0).getFieldProfiles().get(0);
+        
+        assertEquals("The parent organization's workflow did not contain the fieldProfile", fieldProfile.getId(), parentFieldProfile.getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile", fieldProfile.getId(), childFieldProfile.getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), parentFieldProfile.getPredicate().getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), childFieldProfile.getPredicate().getId());
+        
+        String updatedFieldPredicateValue = "Updated Value";
+        parentFieldProfile.getPredicate().setValue(updatedFieldPredicateValue);
+        fieldProfileRepo.save(parentFieldProfile);
+        
+        assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getPredicate().getValue());
+    }
 
     @After
     public void cleanUp() {
+        workflowStepRepo.findAll().forEach(workflowStep -> {
+            workflowStepRepo.delete(workflowStep);
+        });
+        workflowStepRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         fieldProfileRepo.deleteAll();
-        fieldGlossRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
+        fieldGlossRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();
     }

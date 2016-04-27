@@ -1,5 +1,11 @@
 package org.tdl.vireo.mock.interceptor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -22,13 +28,6 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 /**
  * A ChannelInterceptor that caches messages.
  */
@@ -46,10 +45,10 @@ public class MockChannelInterceptor extends ChannelInterceptorAdapter {
     }
 
     /**
-     * @return the next received message or {@code null} if the specified time elapses
+     * @return the next received message
      */
-    public Message<?> awaitMessage(long timeoutInSeconds) throws InterruptedException {             
-        return this.messages.poll(timeoutInSeconds, TimeUnit.SECONDS);
+    public Message<?> awaitMessage() throws InterruptedException {
+        return this.messages.take();
     }
 
     @Override
