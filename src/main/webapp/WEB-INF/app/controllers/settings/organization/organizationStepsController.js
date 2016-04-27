@@ -40,9 +40,9 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
     containedByOrganizations:[0,1],
     optional:false,
     fieldProfiles:[
-      {name:'fp name foo'},
-      {name:'fp name bar'},
-      {name:'fp name qux'}
+      {name:'fp name pancake'},
+      {name:'fp name waffle'},
+      {name:'fp name French toast'}
     ],
     fieldProfileOrder:[1,0,2],
     notes:[{name:'note name', text: 'note text'}]
@@ -80,11 +80,11 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
   $scope.ready.then(function() {
 
     $scope.reorderUp = function(originIdx) {
-      reorder(originIdx, originIdx-1); //TODO handle originIdx = 0
+      reorder(originIdx, originIdx-1);
     };
 
     $scope.reorderDown = function(originIdx) {
-      reorder(originIdx, originIdx+1); //TODO handle originIdx = array.length-1
+      reorder(originIdx, originIdx+1);
     };
 
     $scope.resetOrganizationSteps = function() {

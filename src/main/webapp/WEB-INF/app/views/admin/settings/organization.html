@@ -173,7 +173,8 @@
 
                 <div class="panel-body">
                   <accordion single-expand="false" >
-		    <pane ng-repeat="step in steps" bar-view="views/directives/workflowStep.html" query="" html="">{{step.name}}</pane>
+		    <pane ng-repeat="step in steps" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+		    <!-- <pane ng-repeat="step in steps; $stepIdx = $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane> -->
 		  </accordion>
                 </div>
 
