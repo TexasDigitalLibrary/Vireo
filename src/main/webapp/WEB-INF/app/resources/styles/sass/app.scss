@@ -1320,3 +1320,9 @@ footer a, footer li, footer p {
 .show-on-hover:hover{
     display:block;
 }
+
+.sticky-note {
+  background: lighten( #F7B624, 30% );
+  border: solid brown 1px;
+  padding: 3px;
+}
