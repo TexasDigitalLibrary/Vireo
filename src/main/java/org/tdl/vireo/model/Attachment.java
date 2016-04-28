@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import edu.tamu.framework.model.BaseEntity;
+
 /**
  * 
  */

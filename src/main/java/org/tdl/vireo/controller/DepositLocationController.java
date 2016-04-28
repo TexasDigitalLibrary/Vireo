@@ -42,13 +42,13 @@ public class DepositLocationController {
     }
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allDepositLocations() {       
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
         
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
@@ -72,7 +72,7 @@ public class DepositLocationController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
         
         //TODO: this needs to go in repo.validateUpdate() -- VIR-201
@@ -111,7 +111,7 @@ public class DepositLocationController {
     }
 
     @ApiMapping("/remove/{indexString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeDepositLocation(@ApiVariable String indexString) {        
         Long index = -1L;
@@ -140,7 +140,7 @@ public class DepositLocationController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderDepositLocations(@ApiVariable String src, @ApiVariable String dest) {
         Long intSrc = Long.parseLong(src);

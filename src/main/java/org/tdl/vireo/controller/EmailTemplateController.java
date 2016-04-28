@@ -42,13 +42,13 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allEmailTemplates() {       
         return new ApiResponse(SUCCESS, getAll());
     }
 
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
         if(!emailTemplate.getBindingResult().hasErrors() && emailTemplateRepo.findByNameAndIsSystemRequired(emailTemplate.getName(), emailTemplate.isSystemRequired()) != null){
@@ -69,7 +69,7 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         // TODO: this needs to go in repo.validateUpdate() -- VIR-201
         EmailTemplate emailTemplateToUpdate = null;
@@ -103,7 +103,7 @@ public class EmailTemplateController {
     }
 
     @ApiMapping("/remove/{indexString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeEmailTemplate(@ApiVariable String indexString) {        
         Long index = -1L;
@@ -138,7 +138,7 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderEmailTemplates(@ApiVariable String src, @ApiVariable String dest) {
         Long intSrc = Long.parseLong(src);

@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import edu.tamu.framework.model.BaseEntity;
+
 /**
  * A named filter search is a set of parameters to search for a set of Vireo
  * submission. The object is used by the SubmissionRepository to filter the set

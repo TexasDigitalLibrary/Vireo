@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import edu.tamu.framework.model.BaseEntity;
+
 /**
  * The value of a custom action associated with a particular submission.
  * 

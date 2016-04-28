@@ -5,9 +5,9 @@ import javax.persistence.Entity;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.aspect.AppControllerAspect;
 import org.tdl.vireo.controller.LookAndFeelController;
-import org.tdl.vireo.model.BaseEntity;
 
-import edu.tamu.framework.validation.ModelBindingResult;
+import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.framework.model.ValidatingBase;
 
 /**
  * Model used to validate deserialized {@link LookAndFeelController} objects coming from the front-end
@@ -17,7 +17,7 @@ import edu.tamu.framework.validation.ModelBindingResult;
  * @author gad
  *
  */
-public class LookAndFeelControllerModel extends BaseEntity {
+public class LookAndFeelControllerModel extends ValidatingBase {
 
     @NotEmpty
     private String setting;
