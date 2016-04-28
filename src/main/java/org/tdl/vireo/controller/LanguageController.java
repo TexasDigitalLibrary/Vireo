@@ -58,7 +58,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getAllLanguages() {
         return new ApiResponse(SUCCESS, getAll());
@@ -70,7 +70,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse createLanguage(@ApiValidatedModel Language language) {
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
@@ -99,7 +99,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateLanguage(@ApiValidatedModel Language language) {
         // TODO: this needs to go in repo.validateUpdate() -- VIR-201
@@ -141,7 +141,7 @@ public class LanguageController {
      * @return ApiResponse indicating success or error
      */
     @ApiMapping("/remove/{indexString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeLanguage(@ApiVariable String indexString) {
         Long index = -1L;
@@ -175,7 +175,7 @@ public class LanguageController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderLanguage(@ApiVariable String src, @ApiVariable String dest) {
         Long intSrc = Long.parseLong(src);
@@ -193,7 +193,7 @@ public class LanguageController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
         languageRepo.sort(column);
@@ -206,7 +206,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/proquest")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse getProquestLanguageCodes() {        
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }

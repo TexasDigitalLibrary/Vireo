@@ -39,4 +39,5 @@ public class UserControllerModel extends ValidatingBase {
     public void setSettingValue(String settingValue) {
         this.settingValue = settingValue;
     }
+    
 }

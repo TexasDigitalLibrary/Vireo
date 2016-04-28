@@ -19,7 +19,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
@@ -88,17 +88,17 @@ public class AuthControllerTest extends AbstractControllerTest {
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
     	TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
-    	TEST_CREDENTIALS.setRole(TEST_USER_ROLE);
+    	TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
         
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
         
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(AppRole.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return userRepo.save(new User((String) invocation.getArguments()[0], 
                 							  (String) invocation.getArguments()[1], 
                 							  (String) invocation.getArguments()[2], 
-                							  (Role) invocation.getArguments()[3]));
+                							  (AppRole) invocation.getArguments()[3]));
             }}
         );
                 

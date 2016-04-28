@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.config.constant.ConfigurationName;
-import org.tdl.vireo.enums.Role;
-import org.tdl.vireo.model.ContactInfo;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -35,16 +34,16 @@ public class AppStompInterceptor extends CoreStompInterceptor {
 
         if (user == null) {
 
-            Role role = Role.STUDENT;
+            AppRole role = AppRole.STUDENT;
 
             if (shib.getRole() == null) {
-                shib.setRole("ROLE_STUDENT");
+                shib.setRole(role.toString());
             }
             String shibEmail = shib.getEmail();
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
-                    shib.setRole("ROLE_ADMIN");
-                    role = Role.ADMINISTRATOR;
+                    role = AppRole.ADMINISTRATOR;
+                    shib.setRole(role.toString());
                 }
             }
 
@@ -67,7 +66,7 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             // this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
             
         } else {
-            shib.setRole(user.getRole());
+            
             if (user.getNetid() != null && !user.getNetid().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID))) {
                 user.setNetid(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID));
             }
@@ -83,7 +82,10 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             if (user.getUin() != null && !user.getUin().equals(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER))) {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER)));
             }            
-            userRepo.save(user);
+            user = userRepo.save(user);
+
+            shib.setRole(user.getRole().toString());
+
         }
         
         return shib;

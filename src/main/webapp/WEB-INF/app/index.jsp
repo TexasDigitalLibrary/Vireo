@@ -239,7 +239,6 @@
 	    <script src="bower_components/core/app/model/userModel.js"></script>
 
 	    <!-- Controllers -->
-	    <script src="bower_components/core/app/controllers/abstractController.js"></script>
 	    <script src="bower_components/core/app/controllers/userController.js"></script>
 	    <script src="bower_components/core/app/controllers/registrationController.js"></script>
 	    <script src="bower_components/core/app/controllers/loginController.js"></script>
@@ -298,6 +297,7 @@
 
 
 	    <!-- Controllers -->
+	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
