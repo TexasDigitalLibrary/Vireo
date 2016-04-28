@@ -17,7 +17,7 @@ import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 
 import edu.tamu.framework.aspect.CoreControllerAspect;
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.framework.model.ValidatingBase;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Component
@@ -73,9 +73,9 @@ public class AppControllerAspect extends CoreControllerAspect {
         else {
             this.validator.validate(object, bindingResult);
         }
-        
-        ((BaseEntity) object).setBindingResult(bindingResult);
-        
+
+        ((ValidatingBase) object).setBindingResult(bindingResult);
+
         return object;
     }
     
