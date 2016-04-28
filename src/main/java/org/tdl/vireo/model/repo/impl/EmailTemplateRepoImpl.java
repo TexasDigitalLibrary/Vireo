@@ -42,7 +42,7 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(EmailTemplate.class, index);
+        orderedEntityService.remove(orderedEntityService, EmailTemplate.class, index);
     }
     
 }

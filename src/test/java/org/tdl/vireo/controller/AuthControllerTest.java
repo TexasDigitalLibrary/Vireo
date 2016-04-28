@@ -82,6 +82,8 @@ public class AuthControllerTest extends AbstractControllerTest {
     	ReflectionTestUtils.setField(jwtUtility, JWT_SECRET_KEY_PROPERTY_NAME, JWT_SECRET_KEY_VALUE);
     	    	
     	ReflectionTestUtils.setField(jwtUtility, JWT_EXPIRATION_PROPERTY_NAME, JWT_EXPIRATION_VALUE);
+    	
+    	ReflectionTestUtils.setField(jwtUtility, SHIB_KEYS_PROPERTY_NAME, SHIB_KEYS);
 
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);

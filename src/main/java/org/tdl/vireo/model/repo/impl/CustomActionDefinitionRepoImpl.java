@@ -28,6 +28,6 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(CustomActionDefinition.class, index);
+        orderedEntityService.remove(customActionDefinitionRepo, CustomActionDefinition.class, index);
     }
 }

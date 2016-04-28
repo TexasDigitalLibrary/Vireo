@@ -171,14 +171,21 @@ public class Embargo extends BaseOrderedEntity {
         Boolean equalsFromBase = super.equals(obj); 
         if (equalsFromBase) {
             Embargo embargo = (Embargo) obj;
-            // if we are valid and we have the same name, description, duration and guarantor
-            if (embargo.getBindingResult() != null && !embargo.getBindingResult().hasErrors() && embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())) {
-                // duration is valid as null
-                Integer tempDuration = embargo.getDuration();
-                if(tempDuration != null) {
-                    return tempDuration.equals(this.getDuration());
-                } else {
-                    return tempDuration == this.getDuration();
+            // if we are valid and we don't have any errors
+            if (embargo.getBindingResult() != null && !embargo.getBindingResult().hasErrors()) {
+                // if we have the same name, description, duration and guarantor
+                if(embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())){
+                    // duration is valid as null
+                    Integer tempDuration = embargo.getDuration();
+                    if(tempDuration != null) {
+                        return tempDuration.equals(this.getDuration());
+                    } else {
+                        return tempDuration == this.getDuration();
+                    }
+                }
+                // we're not equal
+                else {
+                    return false;
                 }
             }
             // if we're here, incoming embargo didn't contain a binding result! We can't tell if we're a valid embargo or not!

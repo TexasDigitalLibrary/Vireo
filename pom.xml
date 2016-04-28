@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>edu.tamu.weaverframework</groupId>
 		<artifactId>weaver-webservice-parent</artifactId>
-		<version>1.1.1-RC1-SNAPSHOT</version>
+		<version>1.1.0-RC1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>edu.tamu.weaverframework</groupId>
 			<artifactId>weaver-webservice-core</artifactId>
-			<version>1.1.1-RC1-SNAPSHOT</version>
+			<version>1.1.0-RC1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
@@ -376,9 +376,15 @@
 
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-			</resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>application.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
 		</resources>
 
 		<!-- <resources> <resource> <directory>src/main/webapp/</directory> <excludes> 

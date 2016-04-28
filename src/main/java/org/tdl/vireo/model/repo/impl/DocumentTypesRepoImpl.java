@@ -27,7 +27,7 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(DocumentType.class, index);
+        orderedEntityService.remove(documentTypesRepo, DocumentType.class, index);
     }
 
     @Override

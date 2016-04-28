@@ -33,7 +33,7 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(GraduationMonth.class, index);
+        orderedEntityService.remove(graduationMonthRepo, GraduationMonth.class, index);
     }
     
 }

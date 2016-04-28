@@ -33,7 +33,7 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
     
     @Override
     public void remove(Long index) {
-        orderedEntityService.remove(Language.class, index);
+        orderedEntityService.remove(languageRepo, Language.class, index);
     }
 
 }

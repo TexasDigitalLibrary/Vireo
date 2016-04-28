@@ -66,7 +66,6 @@ public class Application extends SpringBootServletInitializer {
             File customProps = new File(BASE_PATH + "/conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 logger.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
-
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
         } else {

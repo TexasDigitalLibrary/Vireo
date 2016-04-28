@@ -6,12 +6,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,22 +50,12 @@ public class OrderedEntityService {
     }
 
     @SuppressWarnings("unchecked")
-    private void delete(Class<?> clazz, Long position) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaDelete<Object> delete = (CriteriaDelete<Object>) cb.createCriteriaDelete(clazz);
-        Root<?> e = delete.from((Class<Object>) clazz);
-        delete.where(cb.equal(e.get(POSITION_COLUMN_NAME), position));
-        entityManager.createQuery(delete).executeUpdate();
-    }
-
-    @SuppressWarnings("unchecked")
-    public Object findByOrder(Class<?> clazz, Long position) {
+    public Object findByPosition(Class<?> clazz, Long position) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = cb.createQuery();
         Root<?> e = query.from((Class<Object>) clazz);
-        Path<Long> path = e.get(POSITION_COLUMN_NAME);
-        query.select(path).distinct(true);
-        query.where(cb.equal(path, position));
+        query.select(e).distinct(true);
+        query.where(cb.equal(e.get(POSITION_COLUMN_NAME), position));
         return entityManager.createQuery(query).getSingleResult();
     }
 
@@ -159,8 +150,9 @@ public class OrderedEntityService {
     }
     
     @SuppressWarnings("unchecked")
-    public synchronized void remove(Class<?> clazz, Long position) {
-        delete(clazz, position);
+    public synchronized void remove(Object repo, Class<?> clazz, Long position) {        
+        Long id = ((BaseOrderedEntity) findByPosition(clazz, position)).getId(); 
+        ((JpaRepository<Object, Long>) repo).delete(id);
         {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);
