@@ -15,27 +15,27 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 		}).
 		when('/admin', {
 			redirectTo: '/admin/list',
-			access: ["ROLE_ADMIN"]
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/list', {
 			templateUrl: 'views/admin/list.html',
-			access: ["ROLE_ADMIN"]
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/view', {
 			templateUrl: 'views/admin/view.html',
-			access: ["ROLE_ADMIN"]
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/log', {
 			templateUrl: 'views/admin/log.html',
-			access: ["ROLE_ADMIN"]
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/settings', {
 			redirectTo: '/admin/settings/application',
-			access: ["ROLE_ADMIN"]
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/settings/:tab', {
 			templateUrl: 'views/admin/settings/settings.html',
-			access: ["ROLE_ADMIN"],
+			access: ["ADMINISTRATOR"],
 			controller: 'SettingsController',
 			reloadOnSearch: false
 		}).

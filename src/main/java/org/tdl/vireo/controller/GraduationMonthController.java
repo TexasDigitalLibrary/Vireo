@@ -42,13 +42,13 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allGraduationMonths() {       
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
         if(!graduationMonth.getBindingResult().hasErrors() && graduationMonthRepo.findByMonth(graduationMonth.getMonth()) != null){
@@ -71,7 +71,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
         // TODO: this needs to go in repo.validateUpdate() -- VIR-201
         GraduationMonth graduationMonthToUpdate = null;
@@ -103,7 +103,7 @@ public class GraduationMonthController {
     }
 
     @ApiMapping("/remove/{indexString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeGraduationMonth(@ApiVariable String indexString) {        
         Long index = -1L;
@@ -132,7 +132,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderGraduationMonths(@ApiVariable String src, @ApiVariable String dest) {
         Long intSrc = Long.parseLong(src);
@@ -143,7 +143,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortGraduationMonths(@ApiVariable String column) {
         graduationMonthRepo.sort(column);

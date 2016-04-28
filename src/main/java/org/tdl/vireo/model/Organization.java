@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }) )
 public class Organization extends BaseEntity {

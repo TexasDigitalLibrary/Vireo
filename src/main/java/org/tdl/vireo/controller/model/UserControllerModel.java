@@ -5,7 +5,9 @@ import javax.persistence.Entity;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.aspect.AppControllerAspect;
 import org.tdl.vireo.controller.UserController;
-import org.tdl.vireo.model.BaseEntity;
+
+import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.framework.model.ValidatingBase;
 
 /**
  * Model used to validate deserialized {@link UserController} objects coming from the front-end
@@ -15,7 +17,7 @@ import org.tdl.vireo.model.BaseEntity;
  * @author gad
  *
  */
-public class UserControllerModel extends BaseEntity {
+public class UserControllerModel extends ValidatingBase {
 
     @NotEmpty
     private String settingValue;
@@ -37,4 +39,5 @@ public class UserControllerModel extends BaseEntity {
     public void setSettingValue(String settingValue) {
         this.settingValue = settingValue;
     }
+    
 }
