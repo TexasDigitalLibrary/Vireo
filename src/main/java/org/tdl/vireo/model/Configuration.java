@@ -13,6 +13,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.tamu.framework.model.BaseEntity;
+
 /**
  * Jpa specific implementation of Vireo's Configuration interface
  * 

@@ -98,7 +98,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
@@ -109,7 +109,7 @@
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -185,8 +185,8 @@
 									<include>application.properties</include>
 								</includes>
 								<excludes>
-					                <exclude>**/*.xls</exclude>
-				              	</excludes>
+									<exclude>**/*.xls</exclude>
+								</excludes>
 							</resource>
 						</webResource>
 						<webResource>
@@ -229,8 +229,8 @@
 								<include>application.properties</include>
 							</includes>
 							<excludes>
-				                <exclude>**/*.xls</exclude>
-			              	</excludes>
+								<exclude>**/*.xls</exclude>
+							</excludes>
 						</webResource>
 						<webResource>
 							<filtering>false</filtering>
@@ -287,20 +287,9 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Compass Compile -->
-					<execution>
-						<id>exec-compass-compile</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<executable>compass</executable>
-							<arguments>
-								<argument>compile</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
+					<!-- Compass Compile <execution> <id>exec-compass-compile</id> <phase>generate-sources</phase> 
+						<configuration> <executable>compass</executable> <arguments> <argument>compile</argument> 
+						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
 					<!-- Grunt Deploy <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
 						<configuration> <executable>grunt</executable> <arguments> <argument>deploy</argument> 
 						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
@@ -376,15 +365,15 @@
 
 		<resources>
 			<resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>application.properties</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>application.properties</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
 		</resources>
 
 		<!-- <resources> <resource> <directory>src/main/webapp/</directory> <excludes> 

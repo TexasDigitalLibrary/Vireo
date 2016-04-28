@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @MappedSuperclass
 public abstract class BaseOrderedEntity extends BaseEntity {
 
