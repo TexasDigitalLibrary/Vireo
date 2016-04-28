@@ -40,13 +40,13 @@ public class GraduationMonthController {
     private ValidationService validationService;
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allGraduationMonths() {       
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
         
         // will attach any errors to the BindingResult when validating the incoming graduationMonth
@@ -74,7 +74,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
         
         // will attach any errors to the BindingResult when validating the incoming graduationMonth
@@ -102,7 +102,7 @@ public class GraduationMonthController {
     }
 
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeGraduationMonth(@ApiVariable String idString) {
         
@@ -134,7 +134,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderGraduationMonths(@ApiVariable String src, @ApiVariable String dest) {
         
@@ -167,7 +167,7 @@ public class GraduationMonthController {
     }
     
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortGraduationMonths(@ApiVariable String column) {
         

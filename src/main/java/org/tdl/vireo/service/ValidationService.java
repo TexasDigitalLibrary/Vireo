@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 import org.tdl.vireo.controller.model.ValidationResponse;
-import org.tdl.vireo.model.BaseEntity;
 
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.model.ValidatingBase;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Service
@@ -33,7 +33,7 @@ public class ValidationService {
      * @param baseEntity
      * @return {@link ApiResponse}
      */
-    public ApiResponse buildResponse(BaseEntity baseEntity) {
+    public ApiResponse buildResponse(ValidatingBase baseEntity) {
         return this.buildResponse(baseEntity.getBindingResult());
     }
     

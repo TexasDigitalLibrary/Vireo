@@ -99,7 +99,7 @@ public class CustomActionSettingsController {
     }
     
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeCustomAction(@ApiVariable String idString) {
         
@@ -131,7 +131,7 @@ public class CustomActionSettingsController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderCustomActions(@ApiVariable String src, @ApiVariable String dest) {
         

@@ -54,7 +54,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getAllLanguages() {
         return new ApiResponse(SUCCESS, getAll());
@@ -66,7 +66,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse createLanguage(@ApiValidatedModel Language language) {
         
@@ -100,7 +100,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateLanguage(@ApiValidatedModel Language language) {
         
@@ -136,7 +136,7 @@ public class LanguageController {
      * @return ApiResponse indicating success or error
      */
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional //TODO: this @Transactional throws an exception when we catch DataIntegrityViolation
     public ApiResponse removeLanguage(@ApiVariable String idString) {
         
@@ -183,7 +183,7 @@ public class LanguageController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderLanguage(@ApiVariable String src, @ApiVariable String dest) {
         
@@ -223,7 +223,7 @@ public class LanguageController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortLanguage(@ApiVariable String column) {
         
@@ -259,7 +259,7 @@ public class LanguageController {
      * @return
      */
     @ApiMapping("/proquest")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse getProquestLanguageCodes() {        
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }

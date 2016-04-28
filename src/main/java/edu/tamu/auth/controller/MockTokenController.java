@@ -25,6 +25,8 @@ import edu.tamu.framework.aspect.annotation.SkipAop;
 import edu.tamu.framework.model.jwt.JWT;
 import edu.tamu.framework.util.JwtUtility;
 
+import org.tdl.vireo.config.constant.ConfigurationName;
+
 /** 
  * 
  * 
@@ -125,40 +127,56 @@ public class MockTokenController {
      * 
      */    
     private JWT makeToken(@RequestParam() Map<String,String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {       
+        JWT newToken = null;
+       
+        String token = params.get("token");
 
-    	String token = params.get("token");
-    	if(token != null) {    		
-    		return jwtUtility.makeToken(jwtUtility.validateJWT(token));
+        if(token != null) {
+    		newToken = jwtUtility.makeToken(jwtUtility.validateJWT(token));
+    	} else {
+
+        	newToken = new JWT(secret_key, expiration);
+        	
+        	String mockUser = params.get("mock");
+        	    	
+        	if(mockUser != null) {
+        		if(mockUser.equals("assumed")) {
+    	            for(String k : shibKeys) {
+    	                String p = headers.get(env.getProperty("shib."+k, ""));
+    	                newToken.makeClaim(k, p);
+    	                logger.info("Adding " + k +": " + p + " to JWT.");
+    	            }
+    	        }
+        		else if(mockUser.equals("admin")) {
+                    newToken.makeClaim("netid", "aggieJack");
+                    newToken.makeClaim("uin", "123456789");
+                    newToken.makeClaim("lastName", "Daniels");
+                    newToken.makeClaim("firstName", "Jack");
+                    newToken.makeClaim("email", "aggieJack@tamu.edu");
+    	        }
+    	        else {
+    	        	newToken.makeClaim("netid", "bobBoring");
+    	        	newToken.makeClaim("uin", "987654321");
+    	        	newToken.makeClaim("lastName", "Boring");
+    	        	newToken.makeClaim("firstName", "Bob");
+    	        	newToken.makeClaim("email", "bobBoring@tamu.edu");
+    	        }
+        	}
     	}
-    	
-    	JWT newToken = new JWT(secret_key, expiration);
-    	
-    	String mockUser = params.get("mock");
-    	    	
-    	if(mockUser != null) {
-    		 if(mockUser.equals("assumed")) {
-	            for(String k : shibKeys) {
-	                String p = headers.get(env.getProperty("shib."+k, ""));
-	                newToken.makeClaim(k, p);
-	                logger.info("Adding " + k +": " + p + " to JWT.");
-	            }
-	        }
-	        else if(mockUser.equals("admin")) {        	
-	        	newToken.makeClaim("netid", "aggieJack");
-	        	newToken.makeClaim("uin", "123456789");
-	        	newToken.makeClaim("lastName", "Daniels");
-	        	newToken.makeClaim("firstName", "Jack");
-	        	newToken.makeClaim("email", "aggieJack@tamu.edu");
-	        }
-	        else {
-	        	newToken.makeClaim("netid", "bobBoring");
-	        	newToken.makeClaim("uin", "987654321");
-	        	newToken.makeClaim("lastName", "Boring");
-	        	newToken.makeClaim("firstName", "Bob");
-	        	newToken.makeClaim("email", "bobBoring@tamu.edu");
-	        }
-    	}
-         
+        // For app use
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID,"aggieJack");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER,"987654321");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME,"Daniels");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME,"Jack");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME,"Be");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL,"aggieJack@tamu.edu");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR,"1777");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID,"123ORCID");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER,"123654789");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS,"permanentaggieJack@tamu.edu");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER,"1234567890");
+        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS,"123 The Place 2B");
+
         return newToken;       
     }
 

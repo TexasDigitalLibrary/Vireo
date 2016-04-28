@@ -40,13 +40,13 @@ public class EmailTemplateController {
     private ValidationService validationService;
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allEmailTemplates() {       
         return new ApiResponse(SUCCESS, getAll());
     }
 
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         
         // will attach any errors to the BindingResult when validating the incoming emailTemplate
@@ -74,7 +74,7 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         
         // will attach any errors to the BindingResult when validating the incoming emailTemplate
@@ -102,7 +102,7 @@ public class EmailTemplateController {
     }
 
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeEmailTemplate(@ApiVariable String idString) {
         
@@ -134,7 +134,7 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderEmailTemplates(@ApiVariable String src, @ApiVariable String dest) {
         

@@ -40,13 +40,13 @@ public class DocumentTypesController {
     private ValidationService validationService;
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allDocumentTypes() {
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
         
         // will attach any errors to the BindingResult when validating the incoming documentType
@@ -74,7 +74,7 @@ public class DocumentTypesController {
     }
 
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
         
         // will attach any errors to the BindingResult when validating the incoming documentType
@@ -102,7 +102,7 @@ public class DocumentTypesController {
     }
     
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeDocumentType(@ApiVariable String idString) {
         
@@ -134,7 +134,7 @@ public class DocumentTypesController {
     }
 
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderDocumentTypes(@ApiVariable String src, @ApiVariable String dest) {
         
@@ -167,7 +167,7 @@ public class DocumentTypesController {
     }
     
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         

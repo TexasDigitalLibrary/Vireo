@@ -40,14 +40,14 @@ public class OrganizationCategoryController {
     private ValidationService validationService;
 
     @ApiMapping("/all")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getOrganizationCategories() {
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse createOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         
@@ -76,7 +76,7 @@ public class OrganizationCategoryController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         
@@ -105,7 +105,7 @@ public class OrganizationCategoryController {
     }
 
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeOrganizationCategory(@ApiVariable String idString) {
         

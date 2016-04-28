@@ -65,7 +65,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with all controlled vocabulary
      */
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getAllControlledVocabulary() {
         return new ApiResponse(SUCCESS, getAll());
@@ -79,7 +79,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with requested controlled vocabulary
      */
     @ApiMapping("/{name}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getControlledVocabularyByName(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
@@ -93,7 +93,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with indicating success or error
      */
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         
@@ -131,7 +131,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse indicating success or error
      */
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
@@ -168,7 +168,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse indicating success or error
      */
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeControlledVocabulary(@ApiVariable String idString) {
         
@@ -211,7 +211,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderControlledVocabulary(@ApiVariable String src, @ApiVariable String dest) {
         
@@ -253,7 +253,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse indicating success
      */
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
         
@@ -294,7 +294,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with map containing csv content
      */
     @ApiMapping("/export/{name}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse exportControlledVocabulary(@ApiVariable String name) {
         
@@ -344,7 +344,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with a boolean whether import in progress or not
      */
     @ApiMapping(value = "/status/{name}", method = RequestMethod.POST)
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse importControlledVocabularyStatus(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyCachingService.doesControlledVocabularyExist(name));
     }
@@ -357,7 +357,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse indicating success
      */
     @ApiMapping(value = "/cancel/{name}", method = RequestMethod.POST)
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse cancelImportControlledVocabulary(@ApiVariable String name) {
         
         // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
@@ -398,7 +398,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with map of new words, updating words, and duplicate words
      */
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream Object inputStream) {
         

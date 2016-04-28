@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 public class ContactInfo extends BaseEntity {
 

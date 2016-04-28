@@ -31,44 +31,42 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/user")
 public class UserController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-    
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private UserRepo userRepo;
-        
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
     private ValidationService validationService;
-        
+
     @ApiMapping("/credentials")
-    @Auth
-    public ApiResponse credentials(@Shib Credentials shib) {        
+    @Auth(role = "STUDENT")
+    public ApiResponse credentials(@Shib Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
-        
-        if(user == null) {
+
+        if (user == null) {
             logger.debug("User not registered!");
             return new ApiResponse(VALIDATION_ERROR, "User not registered!");
         }
 
-        shib.setRole(user.getRole());
-        
+        shib.setRole(user.getRole().toString());
+
         return new ApiResponse(SUCCESS, shib);
     }
-    
-    
-    
+
     @ApiMapping("/all")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse allUsers() {            
         return new ApiResponse(SUCCESS, getAll());
     }
-    
+
     @ApiMapping("/update-role")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateRole(@ApiValidatedModel User user) {      
         
@@ -100,9 +98,9 @@ public class UserController {
         
         return response;
     }
-    
+
     @ApiMapping("/settings")
-    @Auth(role="ROLE_USER")
+    @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse getSettings(@Shib Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
@@ -114,26 +112,26 @@ public class UserController {
         
         return new ApiResponse(SUCCESS, user.getSettings());
     }
-    
+
     @ApiMapping("/settings/{key}")
-    @Auth(role="ROLE_USER")
+    @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserControllerModel userSetting) {
-        
+
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {
             userSetting.getBindingResult().addError(new ObjectError("user", "User nto registered!"));
         }
 
-        if(userSetting.getBindingResult().hasErrors()) {
+        if (userSetting.getBindingResult().hasErrors()) {
             return new ApiResponse(VALIDATION_ERROR, userSetting.getBindingResult().getAll());
         }
 
-        user.putSetting(key, userSetting.getSettingValue());        
-        
+        user.putSetting(key, userSetting.getSettingValue());
+
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
     }
-    
+
     private Map<String,List<User>> getAll() {
         Map<String,List<User>> map = new HashMap<String,List<User>>();        
         map.put("list", userRepo.findAll());

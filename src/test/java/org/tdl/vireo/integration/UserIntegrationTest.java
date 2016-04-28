@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -34,9 +34,9 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         
         userRepo.deleteAll();
     			
-    	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ADMINISTRATOR);
-    	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.MANAGER);
-    	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.STUDENT);
+    	userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), AppRole.ADMINISTRATOR);
+    	userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), AppRole.MANAGER);
+    	userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), AppRole.STUDENT);
         
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
                         
@@ -65,7 +65,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         assertEquals("aggieJack", shib.getNetid());
         assertEquals("123456789", shib.getUin());
         assertEquals("aggieJack@tamu.edu", shib.getEmail());
-        assertEquals("ROLE_ADMIN", shib.getRole());
+        assertEquals("ADMINISTRATOR", shib.getRole());
     }
     
     @Test
@@ -81,7 +81,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
            .andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack"))
            .andExpect(jsonPath("$.payload.Credentials.uin").value("123456789"))
            .andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu"))           
-           .andExpect(jsonPath("$.payload.Credentials.role").value("ROLE_ADMIN"))
+           .andExpect(jsonPath("$.payload.Credentials.role").value("ADMINISTRATOR"))
            .andDo(MockMvcResultHandlers.print());
     }
     
@@ -110,17 +110,17 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     			case TEST_USER2_EMAIL: {
     				assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER2.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER2.getRole().toString(), (String) map.get("role"));
     			}; break;
     			case TEST_USER3_EMAIL: {
     				assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));					 
-    				assertEquals(TEST_USER3.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER3.getRole().toString(), (String) map.get("role"));
     			}; break;
     			case TEST_USER4_EMAIL: {
     				assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
     				assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
-    				assertEquals(TEST_USER4.getRole(), (String) map.get("role"));
+    				assertEquals(TEST_USER4.getRole().toString(), (String) map.get("role"));
     			}; break;
     		}
     	}		 
@@ -130,13 +130,14 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	 @Order(value = 4)
 	 public void testUpdateRole() throws Exception {
 		 
-	     User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), Role.STUDENT);
-		 userToUpdate.setUserRole(TEST_USER_ROLE_UPDATE);
+	     User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), AppRole.STUDENT);
+	     
+		 userToUpdate.setRole(TEST_USER_ROLE_UPDATE);
 	    	
 		 String responseJson = StompRequest("/user/update-role", userToUpdate);
 		 
 		 Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
-		 
+
 		 @SuppressWarnings("unchecked")
 		 Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 	        
@@ -147,7 +148,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		 assertEquals(TEST_USER_FIRST_NAME, testUser.getFirstName());
 		 assertEquals(TEST_USER_LAST_NAME, testUser.getLastName());
 		 assertEquals(TEST_USER_EMAIL, testUser.getEmail());
-		 assertEquals(TEST_USER_ROLE_UPDATE, testUser.getUserRole());
+		 assertEquals(TEST_USER_ROLE_UPDATE, testUser.getRole());
 	 }
 	 
 	 @Override
