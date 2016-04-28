@@ -9,6 +9,7 @@ import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -41,6 +42,9 @@ public abstract class AbstractControllerTest extends MockData {
 	protected static final String JWT_EXPIRATION_PROPERTY_NAME = "expiration";
 	protected static final Long JWT_EXPIRATION_VALUE = 120000L;
 	
+	protected static final String SHIB_KEYS_PROPERTY_NAME = "shibKeys";
+    protected static final String[] SHIB_KEYS = new String[] { "netid", "uin", "lastName", "firstName", "email"};
+	
 	protected static final String EMAIL_HOST_PROPERTY_NAME = "host";
 	protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";
 	
@@ -52,6 +56,9 @@ public abstract class AbstractControllerTest extends MockData {
 	
 	@Mock
     private SimpMessagingTemplate simpMessagingTemplate;
+	
+	@Mock
+    private Environment env;
 	
 	@Spy @InjectMocks
 	protected AuthUtility authUtility;

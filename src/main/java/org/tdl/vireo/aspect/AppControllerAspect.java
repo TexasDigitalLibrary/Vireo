@@ -15,9 +15,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
-import org.tdl.vireo.model.BaseEntity;
 
 import edu.tamu.framework.aspect.CoreControllerAspect;
+import edu.tamu.framework.model.BaseEntity;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Component
@@ -55,7 +55,7 @@ public class AppControllerAspect extends CoreControllerAspect {
                 }
                 @Override
                 public void validate(Object target, Errors errors) {
-                    System.out.println("\n\nDOH!!!\n\n");
+                    logger.debug("No validator in context!! This validate call did nothing!");
                 }
             };
         }
@@ -78,4 +78,5 @@ public class AppControllerAspect extends CoreControllerAspect {
         
         return object;
     }
+    
 }

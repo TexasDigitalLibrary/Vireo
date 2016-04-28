@@ -37,7 +37,7 @@ public class LookAndFeelController {
     private FileIOUtility fileIOUtility;
 
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse uploadLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel, @InputStream ServletInputStream inputStream) {
 
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
@@ -65,7 +65,7 @@ public class LookAndFeelController {
     }
 
     @ApiMapping("/logo/reset")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse resetLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel) {
 
         // TODO: this needs to go in repo.validateCreate() -- VIR-201

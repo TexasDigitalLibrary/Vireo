@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 public class FieldValue extends BaseEntity {
 

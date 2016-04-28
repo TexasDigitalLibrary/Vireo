@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 public class SubmissionState extends BaseEntity {
 

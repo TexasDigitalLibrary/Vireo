@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"value" , "language_id"}))
 public class FieldGloss extends BaseEntity {

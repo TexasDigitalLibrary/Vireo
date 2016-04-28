@@ -42,13 +42,13 @@ public class DocumentTypesController {
     }
     
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse allDocumentTypes() {
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
         // TODO: this needs to go in repo.validateCreate() -- VIR-201
         if(!documentType.getBindingResult().hasErrors() && documentTypeRepo.findByName(documentType.getName()) != null){
@@ -69,7 +69,7 @@ public class DocumentTypesController {
     }
 
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
         
         // TODO: this needs to go in repo.validateUpdate() -- VIR-201
@@ -102,7 +102,7 @@ public class DocumentTypesController {
     }
     
     @ApiMapping("/remove/{indexString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeDocumentType(@ApiVariable String indexString) {        
         Long index = -1L;
@@ -131,7 +131,7 @@ public class DocumentTypesController {
     }
 
     @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderDocumentTypes(@ApiVariable String src, @ApiVariable String dest) {
         Long intSrc = Long.parseLong(src);
@@ -142,7 +142,7 @@ public class DocumentTypesController {
     }
     
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         documentTypeRepo.sort(column);
