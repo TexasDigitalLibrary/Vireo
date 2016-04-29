@@ -205,7 +205,7 @@ public class Organization extends BaseEntity {
      * @param parentOrganization
      */
     private void addParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().add(parentOrganization);
+        this.parentOrganizations.add(parentOrganization);
     }
 
     /**
@@ -213,7 +213,7 @@ public class Organization extends BaseEntity {
      * @param parentOrganization
      */
     public void removeParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().remove(parentOrganization);
+        this.parentOrganizations.remove(parentOrganization);
     }
 
     /**
@@ -243,15 +243,15 @@ public class Organization extends BaseEntity {
     public void addChildOrganization(Organization childOrganization) {
         childOrganization.addParentOrganization(this);
         
-        getChildrenOrganizations().add(childOrganization);
+        this.childrenOrganizations.add(childOrganization);
         
-        if(childOrganization.getWorkflowSteps().isEmpty()) {
-            workflowSteps.parallelStream().forEach(workflowStep -> {
-                childOrganization.addWorkflowStep(workflowStep);
-            });
-            workflowStepOrder.forEach(workflowStepId -> {
-                childOrganization.addWorkflowStepOrder(workflowStepId);
-            });
+        List<WorkflowStep> childrenWorkflowSteps = childOrganization.getWorkflowSteps();
+        
+        if(childrenWorkflowSteps.isEmpty()) {
+            for(WorkflowStep workflowStep : workflowSteps) {
+                childrenWorkflowSteps.add(workflowStep);
+            }
+            childOrganization.setWorkflowSteps(childrenWorkflowSteps);
         }
        
     }
@@ -262,7 +262,7 @@ public class Organization extends BaseEntity {
      */
     public void removeChildOrganization(Organization childOrganization) {
         childOrganization.removeParentOrganization(this);
-        getChildrenOrganizations().remove(childOrganization);
+        this.childrenOrganizations.remove(childOrganization);
     }
 
     /**
