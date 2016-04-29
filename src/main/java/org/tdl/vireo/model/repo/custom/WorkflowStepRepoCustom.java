@@ -2,6 +2,7 @@ package org.tdl.vireo.model.repo.custom;
 
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public interface WorkflowStepRepoCustom {
 
@@ -9,6 +10,6 @@ public interface WorkflowStepRepoCustom {
 
     void delete(WorkflowStep workflowStep);
 
-    WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization);
+    WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization) throws WorkflowStepNonOverrideableException;
 
 }

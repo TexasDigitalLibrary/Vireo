@@ -47,7 +47,7 @@ public class WorkflowStep extends BaseEntity {
     private Set<Organization> containedByOrganizations;
     
     @Column(nullable = false)
-    private Boolean optional;
+    private Boolean overrideable;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
@@ -67,15 +67,15 @@ public class WorkflowStep extends BaseEntity {
         setContainedByOrganizations(new TreeSet<Organization>());
     }
     
-    public WorkflowStep(String name, Organization owningOrganization) {
-        this(name, owningOrganization, owningOrganization);
+    public WorkflowStep(String name, Organization originatingOrganization) {
+        this(name, originatingOrganization, originatingOrganization);
     }
     
-    public WorkflowStep(String name, Organization owningOrganization, Organization originatingOrganization) {
+    public WorkflowStep(String name, Organization containingOrganization, Organization originatingOrganization) {
         this();
         setName(name);
-        setOptional(true);
-        addContainedByOrganization(owningOrganization);
+        setOverrideable(true);
+        addContainedByOrganization(containingOrganization);
         setOriginatingOrganization(originatingOrganization);
     }
 
@@ -117,33 +117,33 @@ public class WorkflowStep extends BaseEntity {
     }
 
     /**
-     * @return the owningOrganization
+     * @return the Organizations that use (contain) this workflow step
      */
     public Set<Organization> getContainedByOrganizations() {
         return containedByOrganizations;
     }
 
     /**
-     * @param owningOrganization the owningOrganization to set
+     * @param containingOrganizations the list of Organizations that use (contain) this WorkflowStep to set
      */
-    public void setContainedByOrganizations(Set<Organization> owningOrganizations) {
-        this.containedByOrganizations = owningOrganizations;
+    public void setContainedByOrganizations(Set<Organization> containingOrganizations) {
+        this.containedByOrganizations = containingOrganizations;
     }
     
-    public void addContainedByOrganization(Organization owningOrganization) {
-        this.containedByOrganizations.add(owningOrganization);
+    public void addContainedByOrganization(Organization containingOrganization) {
+        this.containedByOrganizations.add(containingOrganization);
     }
     
-    public void removeContainedByOrganization(Organization owningOrganization) {
-        this.containedByOrganizations.remove(owningOrganization);
+    public void removeContainedByOrganization(Organization containingOrganization) {
+        this.containedByOrganizations.remove(containingOrganization);
     }
 
-    public Boolean getOptional() {
-        return optional;
+    public Boolean getOverrideable() {
+        return overrideable;
     }
 
-    public void setOptional(Boolean optional) {
-        this.optional = optional;
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
     }
 
     /**

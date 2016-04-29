@@ -32,11 +32,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
-    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {
+    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
         
+        //if the Org trying to update is the originating Org of the WorkflowStep, make the update.
         if(requestingOrganization.getId() == workflowStep.getOriginatingOrganization().getId()) {
             workflowStep = workflowStepRepo.save(workflowStep);
-        } else if(workflowStep.getOptional()) {
+        //else, if the child (non-originating) Org trying to update finds that the WorkflowStep is overrideable, make a new WorkflowStep for the update
+        } else if(workflowStep.getOverrideable()) {
             
             requestingOrganization.removeWorkflowStep(workflowStepRepo.findOne(workflowStep.getId()));
             
@@ -54,6 +56,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
            
             workflowStep = workflowStepRepo.save(newWorkflowStep);
             
+        }
+        //else, the requesting Org doesn't originate the step and can't override it, so throw an exception
+        else
+        {
+            throw new WorkflowStepNonOverrideableException();
         }
          
         return workflowStep;
