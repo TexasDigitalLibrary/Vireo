@@ -149,7 +149,7 @@ public class EmailTemplateController {
     }
     
     @ApiMapping("/sort/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortEmailTemplates(@ApiVariable String column) {
         emailTemplateRepo.sort(column);

@@ -13,7 +13,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 			UserRepo.updateRole($scope.user, userToEdit);
 			if($scope.user.email == userToEdit.email) {
 				StorageService.set("role", userToEdit.role);
-				if(userToEdit.role == 'ROLE_STUDENT' || userToEdit.role == 'ROLE_REVIEWER') {
+				if(userToEdit.role == 'STUDENT' || userToEdit.role == 'REVIEWER') {
 					$location.path('/myprofile');
 				}
 				else {
@@ -23,20 +23,20 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 		};
 		
 		$scope.allowableRoles = function(userRole) {
-			if(sessionStorage.role == 'ROLE_ADMIN') {				
-				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT'];
+			if(sessionStorage.role == 'ADMINISTRATOR') {				
+				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT'];
 			}
-			else if(sessionStorage.role == 'ROLE_MANAGER') {
-				if(userRole == 'ROLE_ADMIN') {
-					return ['ROLE_ADMIN'];
+			else if(sessionStorage.role == 'MANAGER') {
+				if(userRole == 'ADMINISTRATOR') {
+					return ['ADMINISTRATOR'];
 				}
-				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT'];
+				return ['MANAGER', 'REVIEWER', 'STUDENT'];
 			}
-			else if(sessionStorage.role == 'ROLE_REVIEWER') {
-				if(userRole == 'ROLE_ADMIN') {
-					return ['ROLE_ADMIN'];
+			else if(sessionStorage.role == 'REVIEWER') {
+				if(userRole == 'ADMINISTRATOR') {
+					return ['ADMINISTRATOR'];
 				}
-				return ['ROLE_REVIEWER', 'ROLE_STUDENT'];
+				return ['REVIEWER', 'STUDENT'];
 			}
 			else {
 				return [userRole];
