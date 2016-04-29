@@ -59,21 +59,19 @@ public class OrganizationController {
             System.out.println("Org name " + org.getName());
             List<WorkflowStep> sortedWorkFlowSteps = new ArrayList<WorkflowStep>(org.getWorkflowSteps().size());
             for (WorkflowStep wStep : org.getWorkflowSteps()) {
-                System.out.println("ws step " + wStep.getName()+" with id " + wStep.getId());
-                System.out.println(org.getWorkflowStepOrder());
-                System.out.println("");
-                System.out.println("inserting at index " + org.getWorkflowStepOrder().indexOf(wStep.getId()));
+//                System.out.println("ws step " + wStep.getName()+" with id " + wStep.getId());
+//                System.out.println(org.getWorkflowStepOrder());
+//                System.out.println("");
+//                System.out.println("inserting at index " + org.getWorkflowStepOrder().indexOf(wStep.getId()));
                 
                 int insertIdx = org.getWorkflowStepOrder().indexOf(wStep.getId());
-                System.out.println("insert idx is " + insertIdx + "steps.size is " + org.getWorkflowSteps().size());
+//                System.out.println("insert idx is " + insertIdx + "steps.size is " + org.getWorkflowSteps().size());
                 if (insertIdx >= sortedWorkFlowSteps.size()) {
                     sortedWorkFlowSteps.add(wStep);
                 }else{
                     sortedWorkFlowSteps.add(insertIdx, wStep);
                 }
                 
-                
-                //sortedWorkFlowSteps.add(org.getWorkflowStepOrder().indexOf(wStep.getId()), wStep);
                 
 //                List<FieldProfile> sortedFieldProfiles = new ArrayList<FieldProfile>();
 //                for (FieldProfile fp : wStep.getFieldProfiles()) {
@@ -89,8 +87,10 @@ public class OrganizationController {
     @Auth(role="ROLE_MANAGER")
     @Transactional
     public ApiResponse allOrganizations() {
+        System.out.println("in update");
         Map<String,List<Organization>> map = new HashMap<String,List<Organization>>();
         map.put("list", orderedOrgs());
+        System.out.println("about to return");
         return new ApiResponse(SUCCESS, getAll());
     }
 

@@ -26,8 +26,6 @@ vireo.directive("pane", function($location, $timeout, $anchorScroll, AccordionSe
 	var count = 0;
 	return {
                 templateUrl:function(element, attr){
-                  console.info('elem, attr VV');
-                  console.info(element);
 			return attr.barView? attr.barView : 'views/directives/accordionPane.html';
                 },
 		restrict: 'E',

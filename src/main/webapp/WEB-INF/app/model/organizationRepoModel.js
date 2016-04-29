@@ -108,7 +108,7 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 					"organization": organization
 				}
 		});
-
+          console.info('ok about to update');
 		return updateOrganizationPromise;
 
 	};
