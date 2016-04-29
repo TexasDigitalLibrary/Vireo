@@ -129,6 +129,10 @@ public class Organization extends BaseEntity {
      */
     public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
         this.workflowSteps = workflowSteps;
+        setWorkflowStepOrder(new ArrayList<Long>());
+        for (WorkflowStep wStep : this.workflowSteps) {
+            this.workflowStepOrder.add(wStep.getId());
+        }
     }
     
     public void addWorkflowStep(WorkflowStep workflowStep) {

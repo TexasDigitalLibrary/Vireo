@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-
 import org.tdl.vireo.controller.interceptor.AppStompInterceptor;
+
 import edu.tamu.framework.config.CoreWebSocketConfig;
 
 @Configuration

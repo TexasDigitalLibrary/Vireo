@@ -1,63 +1,16 @@
-vireo.controller("OrganizationStepsController", function ($controller, $scope, $q) { // TODO inject model
+vireo.controller("OrganizationStepsController", function ($controller, $scope, $q, OrganizationRepo) {
 
   angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-
-
-  //TODO grab the currently selected organization off the parent scope. (from organizationSettingsController);
-  //For now we mock with the following JSON:
-  $scope.stepOrder = [0,2,1];
-  $scope.steps = [{
-    id: 0,
-    name:'step name foo',
-    originatingOrganization:1,
-    containedByOrganizations:[0,1],
-    optional:true,
-    fieldProfiles:[
-      {name:'fp name 1'},
-      {name:'fp name 2'},
-      {name:'fp name 3'}
-    ],
-    fieldProfileOrder:[1,0,2],
-    notes:[{name:'note name', text: 'note text'}]
-  }, {
-    id: 1,
-    name:'step name bar',
-    originatingOrganization:1,
-    containedByOrganizations:[0,1],
-    optional:false,
-    fieldProfiles:[
-      {name:'fp name foo'},
-      {name:'fp name bar'},
-      {name:'fp name qux'}
-    ],
-    fieldProfileOrder:[1,0,2],
-    notes:[{name:'note name', text: 'note text'}]
-  },{
-    id: 2,
-    name:'step name qux',
-    originatingOrganization:1,
-    containedByOrganizations:[0,1],
-    optional:false,
-    fieldProfiles:[
-      {name:'fp name pancake'},
-      {name:'fp name waffle'},
-      {name:'fp name French toast'}
-    ],
-    fieldProfileOrder:[1,0,2],
-    notes:[{name:'note name', text: 'note text'}]
-  }];
-  //End temporary mock JSON
-
-
-
   var reorder = function(originIdx, destinationIdx){
-    if (!(originIdx == 0 && destinationIdx == -1) && !(originIdx == $scope.steps.length-1 && destinationIdx == $scope.steps.length)) {
-      var tmp = $scope.stepOrder[originIdx];
-      $scope.stepOrder[originIdx] = $scope.stepOrder[destinationIdx];
-      $scope.stepOrder[destinationIdx] = tmp;
-      tempRefreshStepOrder();
+    console.info($scope.selectedOrganization.workflowStepOrder);
+    if (!(originIdx == 0 && destinationIdx == -1) && !(originIdx == $scope.selectedOrganization.workflowStepOrder.length-1 && destinationIdx == $scope.selectedOrganization.workflowStepOrder.length)) {
+      var tmp = $scope.selectedOrganization.workflowStepOrder[originIdx];
+      $scope.selectedOrganization.workflowStepOrder[originIdx] = $scope.selectedOrganization.workflowStepOrder[destinationIdx];
+      $scope.selectedOrganization.workflowStepOrder[destinationIdx] = tmp;
     }
+    console.info($scope.selectedOrganization.workflowStepOrder);
+    OrganizationRepo.update($scope.selectedOrganization);
   };
 
   var stepForId = function(id){
@@ -68,16 +21,17 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
     }
   }
 
-  var tempRefreshStepOrder = function(){
-    var tmp = ['a', 'b', 'c'];
-    for(var i=0; i<$scope.steps.length; ++i) {
-      tmp[i] = stepForId($scope.stepOrder[i]);
-    }
-    $scope.steps = tmp;
-    //TODO would save the organization (and thus the ordering) here; refresh from the broadcast.
-  };
+  // var tempRefreshStepOrder = function(){
+  //   var tmp = ['a', 'b', 'c'];
+  //   for(var i=0; i<$scope.steps.length; ++i) {
+  //     tmp[i] = stepForId($scope.stepOrder[i]);
+  //   }
+  //   $scope.steps = tmp;
+  //   //TODO would save the organization (and thus the ordering) here; refresh from the broadcast.
+  // };
 
   $scope.ready.then(function() {
+
 
     $scope.reorderUp = function(originIdx) {
       reorder(originIdx, originIdx-1);
@@ -122,10 +76,9 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
     };
 
     $scope.printState = function() {
-      tempRefreshStepOrder();
+      console.info('parent org VVV');
+      console.info($scope.selectedOrganization);
     };
-    tempRefreshStepOrder();
-    console.info($scope.stepOrder);
 
   });
 });

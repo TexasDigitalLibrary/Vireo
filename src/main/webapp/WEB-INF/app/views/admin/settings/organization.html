@@ -162,7 +162,6 @@
               </div>
             </div>
             <div ng-controller="OrganizationStepsController" class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
-
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <button type="button" class="btn-xs btn-primary pull-right">
@@ -173,7 +172,7 @@
 
                 <div class="panel-body">
                   <accordion single-expand="false" >
-                    <pane ng-repeat="step in steps" ng-init="i = $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                    <pane ng-repeat="step in selectedOrganization.workflowSteps" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
                   </accordion>
                 </div>
 

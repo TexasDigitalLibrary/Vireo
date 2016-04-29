@@ -12,10 +12,9 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.BaseOrderedEntity;
