@@ -218,6 +218,15 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
         
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
+        organization.addChildOrganization(grandChildOrganization);
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
+        grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
+        
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+        grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
+        
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         
         String updatedName = "Updated Name";
@@ -248,8 +257,16 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The parent workflowStep's name did change.", TEST_WORKFLOW_STEP_NAME, workflowStep.getName());
         
         // the new workflow step remembers from whence it was derived (the parent's workflow step)
-        assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), derivativeWorkflowStep.getOriginatingWorkflowStep().getId()); 
+        assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), derivativeWorkflowStep.getOriginatingWorkflowStep().getId());
         
+        //and furthermore, the organization's descendants point to the new WorkflowStep
+        Long grandchildWorkflowStepId = grandChildOrganization.getWorkflowSteps().get(0).getId();
+        assertEquals("The grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", grandchildWorkflowStepId, derivativeWorkflowStep.getId());
+        Long greatGrandChildWorkflowStepId = greatGrandChildOrganization.getWorkflowSteps().get(0).getId();
+        assertEquals("The great grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", greatGrandChildWorkflowStepId, derivativeWorkflowStep.getId());
+        Long anotherGreatGrandChildWorkflowStepId = anotherGreatGrandChildOrganization.getWorkflowSteps().get(0).getId();
+        assertEquals("Another great grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", anotherGreatGrandChildWorkflowStepId, derivativeWorkflowStep.getId());
+
     }
     
     @Test(expected=WorkflowStepNonOverrideableException.class)
