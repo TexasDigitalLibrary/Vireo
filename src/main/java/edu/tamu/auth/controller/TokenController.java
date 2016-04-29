@@ -160,7 +160,7 @@ public class TokenController {
         token.makeClaim("email", "aggieJack@tamu.edu");
         token.makeClaim("uin", "123456789");
         token.makeClaim("netid", "aggieJack");
-        token.makeClaim("role", "ROLE_ADMIN");
+        token.makeClaim("role", "ADMINISTRATOR");
         token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L)));
         return token.getTokenAsString();
     }

@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in userRepo.list | filter:{role: '!ROLE_STUDENT'}" ng-init="selectedRole = user.role">
+        <tr ng-repeat="user in userRepo.list | filter:{role: '!STUDENT'}" ng-init="selectedRole = user.role">
           <td>{{user.firstName}} {{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>

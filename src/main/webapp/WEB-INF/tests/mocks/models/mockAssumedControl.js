@@ -3,7 +3,7 @@ var mockAssumedControl1 = {
 		"uin": "123456789",
 	    "lastName": "Daniels",
 	    "firstName": "Jack",
-	    "role": "ROLE_ADMIN"
+	    "role": "ADMINISTRATOR"
 	},
 	'netid': '',
 	'button': 'Unassume',
@@ -15,7 +15,7 @@ var mockAssumedControl2 = {
 		"uin": "987654321",
 		"lastName": "Daniels",
 	    "firstName": "Jill",
-	    "role": "ROLE_USER"
+	    "role": "USER"
 	},
 	'netid': '',
 	'button': 'Unassume',

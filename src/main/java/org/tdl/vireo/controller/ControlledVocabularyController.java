@@ -442,7 +442,7 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @ApiMapping(value = "/import/{name}", method = RequestMethod.POST)
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse importControlledVocabulary(@ApiVariable String name) {
         
