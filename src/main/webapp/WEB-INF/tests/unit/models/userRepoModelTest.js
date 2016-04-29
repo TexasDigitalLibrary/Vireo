@@ -42,8 +42,8 @@ describe('model: UserRepo', function() {
 		it('the user was updated in the UserRepo', function() {
 			var userRepo = UserRepo.get();	
 			$scope.$apply();		
-			UserRepo.updateRole("192837465","ROLE_MANAGER");			
-			userRepo.content['HashMap'][2].role = "ROLE_MANAGER";			
+			UserRepo.updateRole("192837465","MANAGER");			
+			userRepo.content['HashMap'][2].role = "MANAGER";			
 			expect(userRepo.content).toEqual(mockUserRepo1);
 		});
 	});

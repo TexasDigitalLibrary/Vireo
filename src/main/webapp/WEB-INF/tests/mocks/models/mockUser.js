@@ -4,7 +4,7 @@ var mockUser1 = {
     "uin": "123456789",
     "exp": "1425393875282",
     "email": "aggieJack@library.tamu.edu",
-    "role": "ROLE_ADMIN",
+    "role": "ADMINISTRATOR",
     "netId": "aggieJack"
 };
 
@@ -14,7 +14,7 @@ var mockUser2 = {
     "uin": "987654321",
     "exp": "1425393875282",
     "email": "aggieJill@library.tamu.edu",
-    "role": "ROLE_USER",
+    "role": "USER",
     "netId": "aggieJill"
 };
 
@@ -24,7 +24,7 @@ var mockUser3 = {
     "uin": "192837465",
     "exp": "1425393875282",
     "email": "jsmith@library.tamu.edu",
-    "role": "ROLE_USER",
+    "role": "USER",
     "netId": "jsmith"
 };
 

@@ -320,7 +320,6 @@ public class ControlledVocabularyController {
     @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream Object inputStream) {
-
         String[] rows;
         try {
             rows = inputStreamToRows(inputStream);
