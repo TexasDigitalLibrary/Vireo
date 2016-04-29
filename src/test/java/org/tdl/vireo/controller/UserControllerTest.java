@@ -17,7 +17,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.enums.Role;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -83,17 +83,17 @@ public class UserControllerTest extends AbstractControllerTest {
     	TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
     	TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
     	TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
-    	TEST_CREDENTIALS.setRole(TEST_USER_ROLE);
+    	TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
         
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
         
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(AppRole.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return userRepo.save(new User((String) invocation.getArguments()[0], 
                 							  (String) invocation.getArguments()[1], 
                 							  (String) invocation.getArguments()[2], 
-                							  (Role) invocation.getArguments()[3]));
+                							  (AppRole) invocation.getArguments()[3]));
             }}
         );
                 
@@ -123,7 +123,7 @@ public class UserControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_LAST_NAME, credentials.getLastName());
         assertEquals(TEST_USER_FIRST_NAME, credentials.getFirstName());
         assertEquals(TEST_USER_EMAIL, credentials.getEmail());
-        assertEquals(TEST_USER_ROLE, credentials.getRole());
+        assertEquals(TEST_USER_ROLE, AppRole.valueOf(credentials.getRole()));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     @Order(value = 3)
     public void testUpdateRole() throws Exception {
-        TEST_USER.setUserRole(TEST_USER_ROLE_UPDATE);
+        TEST_USER.setRole(TEST_USER_ROLE_UPDATE);
     	
     	ApiResponse response = userController.updateRole(TEST_USER);
     	
@@ -179,7 +179,7 @@ public class UserControllerTest extends AbstractControllerTest {
     	assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
     	assertEquals(TEST_USER_LAST_NAME, user.getLastName());
     	assertEquals(TEST_USER_EMAIL, user.getEmail());
-    	assertEquals(TEST_USER_ROLE_UPDATE, user.getUserRole());
+    	assertEquals(TEST_USER_ROLE_UPDATE, user.getRole());
     }
 	 	 
 }

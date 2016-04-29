@@ -84,7 +84,7 @@ public class OrganizationController {
     }
     
     @ApiMapping("/all")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role="MANAGER")
     @Transactional
     public ApiResponse allOrganizations() {
         System.out.println("in update");
@@ -96,7 +96,7 @@ public class OrganizationController {
 
     //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
     @ApiMapping("/create")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role="MANAGER")
     @Transactional
     public ApiResponse createOrganization(@Data String data) {
         
@@ -119,7 +119,7 @@ public class OrganizationController {
     }
     
     @ApiMapping("/update")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role="MANAGER")
     @Transactional
     public ApiResponse updateOrganization(@Data String data) {
         

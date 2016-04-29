@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "predicate_id" }) )
 public class FieldProfile extends BaseEntity {

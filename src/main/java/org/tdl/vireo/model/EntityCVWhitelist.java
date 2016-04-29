@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class EntityCVWhitelist  extends BaseEntity {

@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }) )
 public class VocabularyWord extends BaseEntity {

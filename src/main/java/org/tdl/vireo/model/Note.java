@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 public class Note extends BaseEntity {
 

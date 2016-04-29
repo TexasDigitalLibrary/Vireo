@@ -74,13 +74,13 @@ public class EmbargoController {
     }
 
     @ApiMapping("/all")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse getEmbargoes() {
         return new ApiResponse(SUCCESS, getAll());
     }
 
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
@@ -90,7 +90,7 @@ public class EmbargoController {
     }
 
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     public ApiResponse updateEmbargo(@ApiValidatedModel Embargo embargo) {
 
         // will attach any errors to the BindingResult when validating the incoming embargo
@@ -100,7 +100,7 @@ public class EmbargoController {
     }
 
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeEmbargo(@ApiVariable String idString) {
         Long id = -1L;
@@ -130,7 +130,7 @@ public class EmbargoController {
     }
 
     @ApiMapping("/reorder/{guarantorString}/{src}/{dest}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse reorderEmbargoes(@ApiVariable String guarantorString, @ApiVariable String src, @ApiVariable String dest) {
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
@@ -145,7 +145,7 @@ public class EmbargoController {
     }
 
     @ApiMapping("/sort/{guarantorString}/{column}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse sortEmbargoes(@ApiVariable String guarantorString, @ApiVariable String column) {
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);

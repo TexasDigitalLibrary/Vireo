@@ -53,14 +53,14 @@ public class OrganizationCategoryController {
     }
 
     @ApiMapping("/all")
-    @Auth(role="ROLE_MANAGER")
+    @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, getAllHelper());
     }
     
     @ApiMapping("/create")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse createOrganizationCategory(@Data String data) {
         
@@ -89,7 +89,7 @@ public class OrganizationCategoryController {
     }
     
     @ApiMapping("/update")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse updateOrganizationCategory(@Data String data) {
         
@@ -135,7 +135,7 @@ public class OrganizationCategoryController {
     }
 
     @ApiMapping("/remove/{idString}")
-    @Auth(role = "ROLE_MANAGER")
+    @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse removeOrganizationCategory(@ApiVariable String idString) {
         Long id = -1L;

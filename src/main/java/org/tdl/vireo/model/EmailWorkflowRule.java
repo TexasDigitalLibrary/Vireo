@@ -15,6 +15,8 @@ import org.tdl.vireo.enums.RecipientType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 public class EmailWorkflowRule extends BaseEntity {
 

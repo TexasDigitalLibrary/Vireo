@@ -22,6 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import edu.tamu.framework.model.BaseEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }))
 public class Submission extends BaseEntity {
