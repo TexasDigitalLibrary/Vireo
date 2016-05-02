@@ -3,6 +3,9 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
@@ -14,6 +17,9 @@ import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
+    @PersistenceContext
+    private EntityManager em;
+    
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
     
@@ -43,6 +49,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
         //if the Org trying to update is the originating Org of the WorkflowStep, make the update.
         if(workflowStep.getOriginatingOrganization() != null && requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
+            //em.merge(workflowStep);
             workflowStep = workflowStepRepo.findOne(workflowStep.getId());
             workflowStep = workflowStepRepo.save(workflowStep);
         //else, if the child (non-originating) Org trying to update finds that the WorkflowStep is overrideable, make a new WorkflowStep for the update
@@ -60,7 +67,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             
             
             //make the new workflow step remember from whence it was derived
-            newWorkflowStep.setOriginatingWorkflowStep(workflowStep);
+            newWorkflowStep.setOriginatingWorkflowStep(workflowStep.getOriginatingWorkflowStep());
 
             //make the new workflow step note that it both originates in and is contained by the requesting organization
             newWorkflowStep.addContainedByOrganization(requestingOrganization);
@@ -177,5 +184,20 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         organization.getChildrenOrganizations().parallelStream().forEach(child -> {
             recursivelyRemoveFieldProfile(child, targetFieldProfile);
         });
+    }
+    
+    private void recursivelyRemoveDescendantSteps(Organization organization, WorkflowStep originalStep)
+    {
+        //TODO:
+        //find the workflow step, if any, that descends from the original
+        
+        //have the organization point at the originating step
+        
+        //delete the descendant
+        
+        for(Organization org : organization.getChildrenOrganizations())
+        {
+            recursivelyRemoveDescendantSteps(org, originalStep);
+        }
     }
 }
