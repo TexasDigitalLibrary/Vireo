@@ -132,31 +132,32 @@ public class Organization extends BaseEntity {
     }
     
     public void addWorkflowStep(WorkflowStep workflowStep) {
-    	if(!this.workflowSteps.contains(workflowStep)) {
-	        this.workflowSteps.add(workflowStep);
-	        // add workflowstep id to workflowstep order
-	        addWorkflowStepOrder(workflowStep.getId());
-	        Set<Organization> children = getChildrenOrganizations();
-	        if(!children.isEmpty()) {
-	            children.parallelStream().forEach(child -> {
-	                child.addWorkflowStep(workflowStep);
-	            });
-	        }
-    	}
+        	if(!this.workflowSteps.contains(workflowStep)) {
+    	        this.workflowSteps.add(workflowStep);
+    	        workflowStep.addContainedByOrganization(this);
+    	        // add workflowstep id to workflowstep order
+    	        addWorkflowStepOrder(workflowStep.getId());
+    	        Set<Organization> children = getChildrenOrganizations();
+    	        if(!children.isEmpty()) {
+    	            children.parallelStream().forEach(child -> {
+    	                child.addWorkflowStep(workflowStep);
+    	            });
+    	        }
+        	}
     }
 
     public void removeWorkflowStep(WorkflowStep workflowStep) {
-    	if(this.workflowSteps.contains(workflowStep)) {
-	        this.workflowSteps.remove(workflowStep);
-	        // remove workflowstep id to workflowstep order
-	        removeWorkflowStepOrder(workflowStep.getId());
-	        Set<Organization> children = getChildrenOrganizations();
-	        if(!children.isEmpty()) {
-	            children.parallelStream().forEach(child -> {
-	                child.removeWorkflowStep(workflowStep);
-	            });
-	        }
-    	}
+        	if(this.workflowSteps.contains(workflowStep)) {
+    	        this.workflowSteps.remove(workflowStep);
+    	        // remove workflowstep id to workflowstep order
+    	        removeWorkflowStepOrder(workflowStep.getId());
+    	        Set<Organization> children = getChildrenOrganizations();
+    	        if(!children.isEmpty()) {
+    	            children.parallelStream().forEach(child -> {
+    	                child.removeWorkflowStep(workflowStep);
+    	            });
+    	        }
+        	}
     }
     
     /**
@@ -239,15 +240,15 @@ public class Organization extends BaseEntity {
     public void addChildOrganization(Organization childOrganization) {
         childOrganization.addParentOrganization(this);
         
-        getChildrenOrganizations().add(childOrganization);
+        this.childrenOrganizations.add(childOrganization);
         
-        if(childOrganization.getWorkflowSteps().isEmpty()) {
-            workflowSteps.parallelStream().forEach(workflowStep -> {
-                childOrganization.addWorkflowStep(workflowStep);
-            });
-            workflowStepOrder.forEach(workflowStepId -> {
-                childOrganization.addWorkflowStepOrder(workflowStepId);
-            });
+        List<WorkflowStep> childrenWorkflowSteps = childOrganization.getWorkflowSteps();
+        
+        if(childrenWorkflowSteps.isEmpty()) {
+            for(WorkflowStep workflowStep : workflowSteps) {
+                childrenWorkflowSteps.add(workflowStep);
+            }
+            childOrganization.setWorkflowSteps(childrenWorkflowSteps);
         }
        
     }

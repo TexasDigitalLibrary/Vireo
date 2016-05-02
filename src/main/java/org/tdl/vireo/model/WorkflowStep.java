@@ -30,28 +30,36 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    //TODO: determine necessity of this in light of the originatingWorkflowStep
+    //the organization for which this workflow step was created
+    //need to know if a given organization is the owner
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
     
+    //the workflow step from which this one is derived
+    //need to know so we can tell if things are overrideable by this workflow step
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
+    //the organizations that use this workflow step
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> containedByOrganizations;
     
+
     @Column(nullable = false)
     private Boolean overrideable;
 
+    //the field profiles used in this workflow step
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     private List<FieldProfile> fieldProfiles;
     
+    //the field profiles that originated in this workflow step
+    //need to know so that when a field profile is overridden we know if it is derivative
     @OneToMany(cascade = ALL, mappedBy = "originatingWorkflowStep", orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)

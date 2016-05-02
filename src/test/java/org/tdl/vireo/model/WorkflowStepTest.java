@@ -1,7 +1,9 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,6 +43,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Transactional
     public void testDelete() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         workflowStepRepo.delete(workflowStep);
@@ -65,14 +68,13 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         FieldProfile severableFieldProfile = fieldProfileRepo.create(workflowStep, severableFieldPredicate, TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, TEST_SEVERABLE_FIELD_PROFILE_USAGE, TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_SEVERABLE_FIELD_PROFILE_ENABLED, TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL);
-        
-        
-        // detach workflow step entity when updating to simulate behavior of endpoint
-        em.detach(workflowStep);
-        
         workflowStep.addNote(note);
         workflowStep.addNote(severableNote);
         
+        
+        
+        //WorkflowStep detachedWorkflowStepForUpdate = clone(workflowStep);
+        //detachedWorkflowStepForUpdate.setOriginatingOrganization(organization);
         
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
@@ -81,6 +83,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
             e.printStackTrace();
         }
 
+        
         // check number of field profiles
         assertEquals("Saved entity did not contain the correct number of field profiles!", 2, workflowStep.getFieldProfiles().size());
         assertEquals("WorkflowStep repo does not have the correct number of field profiles", 2, fieldProfileRepo.count());
@@ -107,8 +110,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the field profile field predicate value!", severableFieldPredicate, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getPredicate());
 
         
-        // detach workflow step entity when updating to simulate behavior of endpoint
-        em.detach(workflowStep);
+       // detachedWorkflowStepForUpdate = clone(workflowStep);
         
         
         // test remove severable field profile
@@ -125,11 +127,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The field profile was deleted!", 2, fieldProfileRepo.count());
         
         
-        // detach workflow step entity when updating to simulate behavior of endpoint
-        em.detach(workflowStep);
+        //detachedWorkflowStepForUpdate = clone(workflowStep);
         
         
         // test remove severable note
+        //detachedWorkflowStepForUpdate.removeNote(severableNote);
         workflowStep.removeNote(severableNote);
         
         try {
@@ -228,27 +230,32 @@ public class WorkflowStepTest extends AbstractEntityTest {
         grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
         
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        
+        System.out.println("workflowStep has originator: " + workflowStep.getOriginatingOrganization().getName());
         String updatedName = "Updated Name";
         
-        //detach this workflowStep as it is now just a means of requesting updates at the organization's level,
-        //and we don't want transactional changes to it persisted
-        em.detach(workflowStep);
+        WorkflowStep detachedWorkflowStepForUpdate = clone(workflowStep);
         
-        workflowStep.setName(updatedName);
-        
+        detachedWorkflowStepForUpdate.setName(updatedName);
+        detachedWorkflowStepForUpdate.setOriginatingOrganization(parentOrganization);
+        System.out.println("detachedWorkflowStepForUpdate has name and originator: " + detachedWorkflowStepForUpdate.getName() + ", " + detachedWorkflowStepForUpdate.getOriginatingOrganization().getName());
+
+        //update the workflow step at the child - should result in a new one being created
         WorkflowStep derivativeWorkflowStep = null;
         try {
-            derivativeWorkflowStep = workflowStepRepo.update(workflowStep, organization);
+            derivativeWorkflowStep = workflowStepRepo.update(detachedWorkflowStepForUpdate, organization);
         } catch (WorkflowStepNonOverrideableException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         
+        System.out.println("derivativeWorkflowStep has originator: " + derivativeWorkflowStep.getOriginatingOrganization().getName());
+        
+        
+        
         
         //when updating the workflow step at organization, test that
         // a new workflow step is made at the organization
-        assertEquals("The child organization did not recieve a new workflowStep", false, derivativeWorkflowStep.getId().equals(workflowStep.getId()));
+        assertFalse("The child organization did not recieve a new workflowStep; steps had same IDs of " + workflowStep.getId(), derivativeWorkflowStep.getId().equals(workflowStep.getId()));
         assertEquals("The updated workflowStep's name did not change.", updatedName, derivativeWorkflowStep.getName());
         
         // refreshed (and reattached)
@@ -307,22 +314,102 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @Test
     @Order(value=9)
     @Transactional
-    public void testMakeWorkflwoStepWithDescendantsNonOverrideable()
+    public void testMakeWorkflwoStepWithDescendantsNonOverrideable() throws WorkflowStepNonOverrideableException
     {
+        System.out.println("starting here");
         //Step S1 has derivative step S2 which has derivative step S3
-        //Test that making S1 non-overrieable will blow away S2 and S3 and replace pointer to them with pointers to S1
+        //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
+        organization.addChildOrganization(grandChildOrganization);
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
+        grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
+        
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+        grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
+        
+        WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        Long step1Id = s1.getId();
+        
+        String updatedName = "Updated Name";
+        
+        WorkflowStep detachedStepForUpdates = clone(s1);
+        detachedStepForUpdates.setName(updatedName);
+        
+        WorkflowStep s2 = workflowStepRepo.update(detachedStepForUpdates, organization);
+        Long step2Id = s2.getId();
+        
+        String anotherUpdatedName ="Yet another updated name";
+        detachedStepForUpdates = clone(s2);
+        detachedStepForUpdates.setName(anotherUpdatedName);
+        
+        WorkflowStep s3 = workflowStepRepo.update(detachedStepForUpdates, grandChildOrganization);
+        Long step3Id = s3.getId();
+        
+        System.out.println("\n\n*** I, s2, of ID " + s2.getId() + " am named: "+ s2.getName() + " and am contained by " + s2.getContainedByOrganizations().size() + " orgs but my originating org is " + s2.getOriginatingOrganization().getName() + "\n\n***");
+        
+        assertEquals("s1 had the wrong name!", TEST_WORKFLOW_STEP_NAME, s1.getName());
+        assertEquals("s2 had the wrong name!", updatedName, s2.getName());
+        assertEquals("s2 had the wrong originating Organization!", organization.getId(), s2.getOriginatingOrganization().getId());
+        assertEquals("s2 was contained in the wrong Organization!", organization.getId(), ((Organization) s2.getContainedByOrganizations().toArray()[0]).getId());
+        assertEquals("s3 had the wrong name!", anotherUpdatedName, s3.getName());
+        System.out.println("s3 has " + s3.getContainedByOrganizations().size() );
+        
+        for(Organization o : s3.getContainedByOrganizations())
+        {
+            System.out.println("s3 " + s3.getName() + " contained by " + o.getName() );
+        }
+        
+        assertTrue("s3 wasn't on a great grandchild organization who should have inherited it!", s3.getContainedByOrganizations().contains(anotherGreatGrandChildOrganization));
+                
+        
+        
     }
 
     @After
     public void cleanUp() {
+        //TODO:  need to be able to delete all the workflow steps
+        //before deleting all the field profiles
+        fieldProfileRepo.findAll().forEach(fieldProfile -> {
+            fieldProfileRepo.delete(fieldProfile);
+        });
+        
         workflowStepRepo.findAll().forEach(workflowStep -> {
             workflowStepRepo.delete(workflowStep);
         });
-        organizationRepo.deleteAll();
+        
+//        for(Organization org : organizationRepo.findAll())
+//        {
+//            organizationRepo.delete(org);
+//        }
+
+        
+        //organizationRepo.flush();
+        //organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         noteRepo.deleteAll();
-        fieldProfileRepo.deleteAll();
+        //fieldProfileRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
+    }
+    
+    private WorkflowStep clone(WorkflowStep ws)
+    {
+        WorkflowStep myDetachedWorkflowStep = new WorkflowStep(ws.getName(), ws.getOriginatingOrganization());
+        myDetachedWorkflowStep.setId(ws.getId());
+        myDetachedWorkflowStep.setOriginatingOrganization(null);
+        myDetachedWorkflowStep.setContainedByOrganizations(ws.getContainedByOrganizations());
+        myDetachedWorkflowStep.setOverrideable(ws.getOverrideable());
+        myDetachedWorkflowStep.setContainedByOrganizations(ws.getContainedByOrganizations());
+        myDetachedWorkflowStep.setFieldProfiles(ws.getFieldProfiles());
+        myDetachedWorkflowStep.setNotes(ws.getNotes());
+        myDetachedWorkflowStep.setOriginalFieldProfiles(ws.getOriginalFieldProfiles());
+        myDetachedWorkflowStep.setOriginatingWorkflowStep(ws.getOriginatingWorkflowStep());
+        return myDetachedWorkflowStep;
     }
 
 }
