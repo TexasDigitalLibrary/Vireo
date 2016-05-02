@@ -68,7 +68,7 @@ vireo.service("UserRepo", function($route, WsApi, AbstractModel, StorageService)
 			updateUserRolePromise.then(function(data) {				
 				if(user.email == userToEdit.email) {
 					StorageService.set("role", userToEdit.role);
-					if(userToEdit.role == 'ROLE_STUDENT' || userToEdit.role == 'ROLE_REVIEWER') {
+					if(userToEdit.role == 'STUDENT' || userToEdit.role == 'REVIEWER') {
 						$location.path('/myprofile');
 					}
 					else {

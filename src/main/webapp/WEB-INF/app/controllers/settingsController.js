@@ -33,7 +33,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
     	temp.innerHTML = html;
 		return temp.textContent || temp.innerText || "";
   	};
-
+  	
 	ConfigurableSettings.ready().then(function() {
 
 		//TODO:  check these update config settings methods for redundancy and clean up.
@@ -52,24 +52,22 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.updateConfigurableSettingsPlainText = function(type,name) {
 			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name])).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+				console.log(validationResponse);
 			});
 		};
 
 		$scope.updateConfigurableSettings = function(type,setting) {
-			if (typeof $scope.settings.configurable[type] !== undefined && $scope.settings.configurable[type][setting]) {
-				ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]).then(function(data) {
-					var errors = angular.fromJson(data.body).payload;
-					console.log(errors);
-				});
-			}
+			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]).then(function(data) { 
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+				console.log(validationResponse);
+			});
 		};
 
 		$scope.resetConfigurableSettings = function(type,name) {
 			ConfigurableSettings.reset(type,name,$scope.settings.configurable[type][name]).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+				console.log(validationResponse);
 			});
 		};
 

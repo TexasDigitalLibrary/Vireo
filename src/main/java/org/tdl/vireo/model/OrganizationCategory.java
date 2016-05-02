@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +25,7 @@ import edu.tamu.framework.model.BaseEntity;
 public class OrganizationCategory extends BaseEntity {
 
     @Column(nullable = false)
+    @NotEmpty
     private String name;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "category")

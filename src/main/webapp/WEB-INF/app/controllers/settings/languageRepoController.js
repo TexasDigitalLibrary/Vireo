@@ -40,8 +40,8 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		
 		$scope.createLanguage = function() {
 			LanguageRepo.add($scope.modalData).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetLanguages();
 			});
 		};
@@ -57,16 +57,16 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		
 		$scope.updateLanguage = function() {
 			LanguageRepo.update($scope.modalData).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetLanguages();
 			});
 		};
 
 		$scope.reorderLanguages = function(src, dest) {
 	    	LanguageRepo.reorder(src, dest).then(function(data) {
-	    		var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 	    		$scope.resetLanguages();
 	    	});
 		};
@@ -78,8 +78,8 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 			}
 			else if($scope.sortAction == 'sort') {
 				LanguageRepo.sort(column).then(function(data) {
-					var errors = angular.fromJson(data.body).payload;
-					console.log(errors);
+					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+	                console.log(validationResponse);
 					$scope.resetLanguages();
 					$scope.sortAction = 'confirm';
 				});
@@ -88,8 +88,8 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 
 		$scope.removeLanguage = function(index) {
 	    	LanguageRepo.remove(index).then(function(data) {
-	    		var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 	    		$scope.resetLanguages();
 	    	});
 		};

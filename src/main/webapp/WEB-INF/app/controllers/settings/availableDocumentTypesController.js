@@ -27,8 +27,8 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
         $scope.createNewDocumentType = function(documentType) {
             AvailableDocumentTypesRepo.add(documentType).then(function(data) {
-            	var errors = angular.fromJson(data.body).payload;
-                console.log(errors);
+            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
                 $scope.resetDocumentTypes();
             });
 	    };	
@@ -40,24 +40,24 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
         $scope.updateDocumentType = function(){
             AvailableDocumentTypesRepo.update($scope.modalData).then(function(data) {
-            	var errors = angular.fromJson(data.body).payload;
-                console.log(errors);
+            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
                 $scope.resetDocumentTypes();
             });
         }
 
         $scope.removeDocumentType = function(index){
             AvailableDocumentTypesRepo.remove(index).then(function(data) {
-            	var errors = angular.fromJson(data.body).payload;
-                console.log(errors);
+            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
                 $scope.resetDocumentTypes();
             });
         }
 
         $scope.reorderDocumentTypes = function(src, dest) {
             AvailableDocumentTypesRepo.reorder(src, dest).then(function(data) {
-            	var errors = angular.fromJson(data.body).payload;
-                console.log(errors);
+            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
                 $scope.resetDocumentTypes();
             });
         };
@@ -72,8 +72,8 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             }
             else if($scope.sortAction == 'sort') {
                 AvailableDocumentTypesRepo.sort(column).then(function(data) {
-                	var errors = angular.fromJson(data.body).payload;
-	                console.log(errors);
+                	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                    console.log(validationResponse);
                     $scope.resetDocumentTypes();
                 });
                 $scope.sortAction = 'confirm';

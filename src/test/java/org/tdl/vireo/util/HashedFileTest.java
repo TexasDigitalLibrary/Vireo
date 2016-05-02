@@ -45,7 +45,7 @@ public class HashedFileTest {
     @Before
     public void setUp() {
         // set attachments.path
-        configurationRepo.createOrUpdate(TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY, TEST_VIREO_ATTACHMENTS_PATH,"application");
+        configurationRepo.create(TEST_VIREO_CONFIG_ATTACHMENTS_PATH_KEY, TEST_VIREO_ATTACHMENTS_PATH,"application");
         Application.init(true);
         TEST_ATTACHMENT_STORE_PATH = new File(Application.BASE_PATH + TEST_VIREO_ATTACHMENTS_PATH);
     }

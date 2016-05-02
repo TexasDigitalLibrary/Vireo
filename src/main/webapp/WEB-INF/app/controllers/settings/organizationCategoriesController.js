@@ -25,13 +25,18 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     };
 
     $scope.createOrganizationCategory = function() {
-      OrganizationCategoryRepo.add($scope.modalData).then(function(){
+      OrganizationCategoryRepo.add($scope.modalData).then(function(data){
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
       });
         $scope.resetOrganizationCategories();
     };
 
     $scope.updateOrganizationCategory = function() {
-        OrganizationCategoryRepo.update($scope.modalData);
+        OrganizationCategoryRepo.update($scope.modalData).then(function(data){
+        	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+            console.log(validationResponse);
+        });
         $scope.resetOrganizationCategories();
     };
 
@@ -41,9 +46,11 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     };
 
     $scope.removeOrganizationCategory = function(index) {
-      OrganizationCategoryRepo.remove($scope.modalData).then(function(){
-        $scope.resetOrganizationCategories();
-        console.info($scope.organizationCategories);
+      OrganizationCategoryRepo.remove($scope.modalData).then(function(data){
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
+          $scope.resetOrganizationCategories();
+          console.info($scope.organizationCategories);
       });
     };
 

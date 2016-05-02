@@ -28,8 +28,8 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 			    $scope.resetEmbargo();
 			});
 		};
@@ -45,28 +45,32 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.updateEmbargo = function() {
 			EmbargoRepo.update($scope.modalData).then(function(data){
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetEmbargo();
 			});
 		};
 		
 		$scope.removeEmbargo = function(id) {
             EmbargoRepo.remove(id).then(function(data){
-            	var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
                 $scope.resetEmbargo();
             });
         };
 		
 		$scope.reorderEmbargoDefault = function(src, dest) {
-			EmbargoRepo.reorder("DEFAULT", src, dest).then(function(){
+			EmbargoRepo.reorder("DEFAULT", src, dest).then(function(data){
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetEmbargo();
 			});
 		};
 		
 		$scope.reorderEmbargoProquest = function(src, dest) {
-			EmbargoRepo.reorder("PROQUEST", src, dest).then(function(){
+			EmbargoRepo.reorder("PROQUEST", src, dest).then(function(data){
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetEmbargo();
 			});
 		};
@@ -75,7 +79,9 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			if($scope.sortAction != $scope.sortDefault && $scope.sortAction != $scope.sortProquest) {
 				$scope.sortAction = $scope.sortDefault;
 			} else if($scope.sortAction == $scope.sortDefault || $scope.sortAction == $scope.sortProquest) {
-				EmbargoRepo.sort("DEFAULT", column).then(function(){
+				EmbargoRepo.sort("DEFAULT", column).then(function(data){
+					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+	                console.log(validationResponse);
 					$scope.resetEmbargo();
 					$scope.sortAction = 'confirm';
 				});
@@ -86,7 +92,9 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			if($scope.sortAction != $scope.sortDefault && $scope.sortAction != $scope.sortProquest) {
 				$scope.sortAction = $scope.sortProquest;
 			} else if($scope.sortAction == $scope.sortDefault || $scope.sortAction == $scope.sortProquest) {
-				EmbargoRepo.sort("PROQUEST", column).then(function(){
+				EmbargoRepo.sort("PROQUEST", column).then(function(data){
+					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+	                console.log(validationResponse);
 					$scope.resetEmbargo();
 					$scope.sortAction = 'confirm';
 				});

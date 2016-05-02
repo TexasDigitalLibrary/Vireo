@@ -107,15 +107,19 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         brokerChannelInterceptor.setIncludedDestinations("/queue/" + root + "/**");
         
-        clientInboundChannel.send(message);
+        boolean sent = clientInboundChannel.send(message);
+        
+        assertEquals(true, sent);
 
-        Message<?> reply = brokerChannelInterceptor.awaitMessage(5);
+        Message<?> reply = brokerChannelInterceptor.awaitMessage();
         
         assertNotNull(reply);
                 
         StompHeaderAccessor replyHeaders = StompHeaderAccessor.wrap(reply);
         
         assertEquals("/queue" + destination + "-user" + sessionId, replyHeaders.getDestination());
+        
+        Thread.sleep(100); // H2 needs time to commit/persist any sent messages
         
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }

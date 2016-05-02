@@ -39,9 +39,13 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 		uploadPromise.then(
 			function(data) {
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				updateLogos(data);
 			}, 
 			function(data) {
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				console.log("Error");
 			}
 		);
@@ -67,9 +71,13 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 		resetPromise.then(
 			function(data) {
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				updateLogos(data);
 			}, 
 			function(data) {
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				console.log("error");
 			}
 		);
