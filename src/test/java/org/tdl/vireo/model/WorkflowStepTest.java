@@ -230,15 +230,14 @@ public class WorkflowStepTest extends AbstractEntityTest {
         grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
         
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        System.out.println("workflowStep has originator: " + workflowStep.getOriginatingOrganization().getName());
         String updatedName = "Updated Name";
         
         WorkflowStep detachedWorkflowStepForUpdate = clone(workflowStep);
         
         detachedWorkflowStepForUpdate.setName(updatedName);
         detachedWorkflowStepForUpdate.setOriginatingOrganization(parentOrganization);
-        System.out.println("detachedWorkflowStepForUpdate has name and originator: " + detachedWorkflowStepForUpdate.getName() + ", " + detachedWorkflowStepForUpdate.getOriginatingOrganization().getName());
-
+        detachedWorkflowStepForUpdate.setOriginatingWorkflowStep(workflowStep);
+       
         //update the workflow step at the child - should result in a new one being created
         WorkflowStep derivativeWorkflowStep = null;
         try {
@@ -248,19 +247,10 @@ public class WorkflowStepTest extends AbstractEntityTest {
             e.printStackTrace();
         }
         
-        System.out.println("derivativeWorkflowStep has originator: " + derivativeWorkflowStep.getOriginatingOrganization().getName());
-        
-        
-        
-        
         //when updating the workflow step at organization, test that
         // a new workflow step is made at the organization
         assertFalse("The child organization did not recieve a new workflowStep; steps had same IDs of " + workflowStep.getId(), derivativeWorkflowStep.getId().equals(workflowStep.getId()));
         assertEquals("The updated workflowStep's name did not change.", updatedName, derivativeWorkflowStep.getName());
-        
-        // refreshed (and reattached)
-        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
-        
         assertEquals("The parent workflowStep's name did change.", TEST_WORKFLOW_STEP_NAME, workflowStep.getName());
         
         // the new workflow step remembers from whence it was derived (the parent's workflow step)
@@ -316,7 +306,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @Transactional
     public void testMakeWorkflwoStepWithDescendantsNonOverrideable() throws WorkflowStepNonOverrideableException
     {
-        System.out.println("starting here");
         //Step S1 has derivative step S2 which has derivative step S3
         //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
         
@@ -339,6 +328,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         String updatedName = "Updated Name";
         
         WorkflowStep detachedStepForUpdates = clone(s1);
+        detachedStepForUpdates.setOriginatingWorkflowStep(s1);
         detachedStepForUpdates.setName(updatedName);
         
         WorkflowStep s2 = workflowStepRepo.update(detachedStepForUpdates, organization);
@@ -346,6 +336,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         String anotherUpdatedName ="Yet another updated name";
         detachedStepForUpdates = clone(s2);
+        detachedStepForUpdates.setOriginatingWorkflowStep(s2);
         detachedStepForUpdates.setName(anotherUpdatedName);
         
         WorkflowStep s3 = workflowStepRepo.update(detachedStepForUpdates, grandChildOrganization);
@@ -358,16 +349,21 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("s2 had the wrong originating Organization!", organization.getId(), s2.getOriginatingOrganization().getId());
         assertEquals("s2 was contained in the wrong Organization!", organization.getId(), ((Organization) s2.getContainedByOrganizations().toArray()[0]).getId());
         assertEquals("s3 had the wrong name!", anotherUpdatedName, s3.getName());
-        System.out.println("s3 has " + s3.getContainedByOrganizations().size() );
-        
-        for(Organization o : s3.getContainedByOrganizations())
-        {
-            System.out.println("s3 " + s3.getName() + " contained by " + o.getName() );
-        }
-        
         assertTrue("s3 wasn't on a great grandchild organization who should have inherited it!", s3.getContainedByOrganizations().contains(anotherGreatGrandChildOrganization));
-                
         
+        //now we are ready to make step 1 non-overrideable and ensure that step 2 and 3 go away
+//        detachedStepForUpdates = clone(s1);
+//        detachedStepForUpdates.setOverrideable(false);
+//        
+        s1.setOverrideable(false);
+        s1 = workflowStepRepo.update(s1, parentOrganization);
+        
+//        assertEquals("Workflow Step Repo didn't get the illegal (no longer overrideable) steps deleted!", 1, workflowStepRepo.count());
+//        
+//        assertEquals("Child org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), organization.getWorkflowSteps().get(0).getId());
+//        assertEquals("Grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), grandChildOrganization.getWorkflowSteps().get(0).getId());
+//        assertEquals("Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), greatGrandChildOrganization.getWorkflowSteps().get(0).getId());
+//        assertEquals("Another Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), anotherGreatGrandChildOrganization.getWorkflowSteps().get(0).getId());
         
     }
 
@@ -401,7 +397,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     {
         WorkflowStep myDetachedWorkflowStep = new WorkflowStep(ws.getName(), ws.getOriginatingOrganization());
         myDetachedWorkflowStep.setId(ws.getId());
-        myDetachedWorkflowStep.setOriginatingOrganization(null);
+        myDetachedWorkflowStep.setOriginatingOrganization(ws.getOriginatingOrganization());
         myDetachedWorkflowStep.setContainedByOrganizations(ws.getContainedByOrganizations());
         myDetachedWorkflowStep.setOverrideable(ws.getOverrideable());
         myDetachedWorkflowStep.setContainedByOrganizations(ws.getContainedByOrganizations());
