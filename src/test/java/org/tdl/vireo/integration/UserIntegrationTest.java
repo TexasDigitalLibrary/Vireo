@@ -137,11 +137,11 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 		 String responseJson = StompRequest("/user/update-role", userToUpdate);
 		 
 		 Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
-         
-         @SuppressWarnings("unchecked")
-         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
-            
-         assertEquals("SUCCESS", meta.get("type"));
+
+		 @SuppressWarnings("unchecked")
+		 Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+	        
+		 assertEquals("SUCCESS", meta.get("type"));
 		 		 
 		 User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
 		 

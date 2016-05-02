@@ -148,8 +148,12 @@ public class OrderedEntityService {
         }
     }
     
+    public synchronized void remove(Object repo, Class<?> clazz, Long position) {
+        this.remove(repo, clazz, position, null, null);
+    }
+    
     @SuppressWarnings("unchecked")
-    public synchronized void remove(Object repo, Class<?> clazz, Long position) {        
+    public synchronized void remove(Object repo, Class<?> clazz, Long position, String whereProp, Object whereVal) {
         Long id = ((BaseOrderedEntity) findByPosition(clazz, position)).getId(); 
         ((JpaRepository<Object, Long>) repo).delete(id);
         {
@@ -158,9 +162,13 @@ public class OrderedEntityService {
             Root<?> e = update.from((Class<Object>) clazz);
             Path<Long> path = e.get(POSITION_COLUMN_NAME);
             update.set(path, cb.sum(path, -one));
-            update.where(cb.greaterThan(path, position));
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            predicates.add(cb.greaterThan(path, position));
+            if (whereProp != null && whereVal != null) {
+                predicates.add(cb.equal(e.get(whereProp), whereVal));
+            }
+            update.where(predicates.toArray(new Predicate[] {}));
             entityManager.createQuery(update).executeUpdate();
         }
     }
-
 }

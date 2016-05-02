@@ -1,6 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 
 import java.util.HashMap;
@@ -17,13 +18,13 @@ import org.springframework.validation.ObjectError;
 import org.tdl.vireo.controller.model.UserControllerModel;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Shib;
-import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
@@ -38,6 +39,9 @@ public class UserController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Autowired
+    private ValidationService validationService;
 
     @ApiMapping("/credentials")
     @Auth(role = "STUDENT")
@@ -54,45 +58,45 @@ public class UserController {
         return new ApiResponse(SUCCESS, shib);
     }
 
-    private Map<String, List<User>> allUsersHelper() {
-        Map<String, List<User>> map = new HashMap<String, List<User>>();
-        map.put("list", userRepo.findAll());
-        return map;
-    }
-
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse allUsers() {
-        return new ApiResponse(SUCCESS, allUsersHelper());
+    public ApiResponse allUsers() {            
+        return new ApiResponse(SUCCESS, getAll());
     }
 
     @ApiMapping("/update-role")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse updateRole(@ApiValidatedModel User user) {
-
-        // TODO this check should be moved to repo.validateCreate() for VIR-201
-        User possiblyExistingUser = userRepo.findByEmail(user.getEmail());
-        if (possiblyExistingUser == null) {
-            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
-        }
-
-        if (user.getBindingResult().hasErrors()) {
-            return new ApiResponse(ApiResponseType.VALIDATION_ERROR, user.getBindingResult().getAll());
-        }
-
-        possiblyExistingUser.setRole(user.getRole());
-
-        userRepo.save(possiblyExistingUser);
-
+    public ApiResponse updateRole(@ApiValidatedModel User user) {      
+        
+        // will attach any errors to the BindingResult when validating the incoming user
+        user = userRepo.validateUpdateRole(user);
+        
+        // build a response based on the BindingResult state in the configuration
+        ApiResponse response = validationService.buildResponse(user);
+        
         Map<String, Object> retMap = new HashMap<String, Object>();
         retMap.put("list", userRepo.findAll());
-        retMap.put("changedUserEmail", possiblyExistingUser.getEmail());
-
-        this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
-
-        return new ApiResponse(SUCCESS, user);
+        
+        switch(response.getMeta().getType()){
+            case SUCCESS:
+            case VALIDATION_INFO:
+                logger.info("Updating role for " + user.getEmail());
+                userRepo.save(user);
+                retMap.put("changedUserEmail", user.getEmail());
+                response.getPayload().put(user.getClass().getSimpleName(), user);
+                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
+                break;
+            case VALIDATION_WARNING:
+                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(VALIDATION_WARNING, retMap));
+                break;
+            default:
+                logger.warn("Couldn't update role for " + user.getEmail());
+                break;
+        }
+        
+        return response;
     }
 
     @ApiMapping("/settings")
@@ -100,6 +104,12 @@ public class UserController {
     @Transactional
     public ApiResponse getSettings(@Shib Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
+        
+        if(user == null) {
+            logger.debug("User not registered!");
+            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
+        }
+        
         return new ApiResponse(SUCCESS, user.getSettings());
     }
 
@@ -110,7 +120,7 @@ public class UserController {
 
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {
-            userSetting.getBindingResult().addError(new ObjectError("user", "can change settings on a nonexistant user!"));
+            userSetting.getBindingResult().addError(new ObjectError("user", "User not registered!"));
         }
 
         if (userSetting.getBindingResult().hasErrors()) {
@@ -120,5 +130,11 @@ public class UserController {
         user.putSetting(key, userSetting.getSettingValue());
 
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
+    }
+
+    private Map<String,List<User>> getAll() {
+        Map<String,List<User>> map = new HashMap<String,List<User>>();        
+        map.put("list", userRepo.findAll());
+        return map;
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EntityCVWhitelist;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -232,7 +233,9 @@ public class EntityControlledVocabularyService {
      * @return List<Object>
      *          return generic list of objects that is castable to the properties datatype
      */
-    public List<Object> getControlledVocabulary(Class<?> entity, String property) {
+    public List<VocabularyWord> getControlledVocabulary(Class<?> entity, String property) {
+        
+        ArrayList<VocabularyWord> ret = new ArrayList<VocabularyWord>();
         
         Metamodel meta = entityManager.getMetamodel();
         EntityType<?> entityType = meta.entity(entity);
@@ -257,15 +260,18 @@ public class EntityControlledVocabularyService {
                     CriteriaQuery<Object> query = builder.createQuery();
                     Root<?> root = query.from(entity);
                     query.multiselect(root.get(property)).distinct(true);
-                    return entityManager.createQuery(query).getResultList();
+                    List<Object> results = entityManager.createQuery(query).getResultList();
+                    for (Object row : results) {
+                      ret.add(new VocabularyWord(row.toString()));  
+                    }
                 }
             }
         }
         
-        System.out.println("\nEntity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
+        //System.out.println("\nEntity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
 
         // return empty array list
-        return new ArrayList<Object>();
+        return ret;
     }
     
     /**
@@ -281,7 +287,7 @@ public class EntityControlledVocabularyService {
      * @throws ClassNotFoundException
      *          thrown when an entityType does not match a class
      */
-    public List<?> getControlledVocabulary(String entityName, String property) throws ClassNotFoundException {
+    public List<VocabularyWord> getControlledVocabulary(String entityName, String property) throws ClassNotFoundException {
         return getControlledVocabulary(Class.forName("org.tdl.vireo.model." + entityName), property);
     }
 

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -118,18 +117,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String TEST_LANGUAGE_NAME4 = "German";
         
         Language language = languageRepo.create(TEST_LANGUAGE_NAME4);
+        ControlledVocabulary testCV4 = new ControlledVocabulary(TEST_CONTROLLED_VOCABULARY_NAME4, language);
         
-        Map<String, Object> dataMap = new HashMap<String, Object>();
-        
-        dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
-        
-        Map<String, Object> langaugeMap = new HashMap<String, Object>();
-        
-        langaugeMap.put("id", language.getId());
-        
-        dataMap.put("language", langaugeMap);
-        
-        String responseJson = StompRequest("/settings/controlled-vocabulary/create", dataMap);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/create", testCV4);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -151,16 +141,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String TEST_CONTROLLED_VOCABULARY_NAME4 = "TestCV4";
 
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
-        
-        Map<String, Object> dataMap = new HashMap<String, Object>();
-        
-        dataMap.put("id", controlledVocabulary.getId());
-        
-        dataMap.put("name", TEST_CONTROLLED_VOCABULARY_NAME4);
-        
-        dataMap.put("language", controlledVocabulary.getLanguage());
+        controlledVocabulary.setName(TEST_CONTROLLED_VOCABULARY_NAME4);
                         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/update", dataMap);
+        String responseJson = StompRequest("/settings/controlled-vocabulary/update", controlledVocabulary);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -181,7 +164,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getPosition(), "");
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getId(), "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -235,6 +218,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @Test
     @Order(value = 8)
+    @SuppressWarnings("unchecked")
     public void testExportControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         
         addVocabularyWords();
@@ -242,29 +226,36 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
-
-        @SuppressWarnings("unchecked")
+        
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
         
         assertEquals("SUCCESS", meta.get("type"));        
         
-        @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
         
-        @SuppressWarnings("unchecked")
+        System.out.println(payload);
+        
         List<List<String>> rows = (List<List<String>>) ((Map<String, Object>) payload.get("HashMap")).get("rows");
-
-        assertEquals(rows.get(0).get(0), TEST_VOCABULARY_WORD_NAME1);
-        assertEquals(rows.get(0).get(1), TEST_VOCABULARY_WORD_DEFINITION1);
-        assertEquals(rows.get(0).get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);
         
-        assertEquals(rows.get(1).get(0), TEST_VOCABULARY_WORD_NAME2);
-        assertEquals(rows.get(1).get(1), TEST_VOCABULARY_WORD_DEFINITION2);
-        assertEquals(rows.get(1).get(2), TEST_VOCABULARY_WORD_IDENTIFIER2);
+        List<String> row = rows.get(0);
         
-        assertEquals(rows.get(2).get(0), TEST_VOCABULARY_WORD_NAME3);
-        assertEquals(rows.get(2).get(1), TEST_VOCABULARY_WORD_DEFINITION3);
-        assertEquals(rows.get(2).get(2), TEST_VOCABULARY_WORD_IDENTIFIER3);
+        System.out.println(row.get(0));
+        
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME1);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION1);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER1);
+        
+        row = rows.get(1);
+        
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME2);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION2);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER2);
+        
+        row = rows.get(2);
+        
+        assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME3);
+        assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION3);
+        assertEquals(row.get(2), TEST_VOCABULARY_WORD_IDENTIFIER3);
     }
 
     @Test

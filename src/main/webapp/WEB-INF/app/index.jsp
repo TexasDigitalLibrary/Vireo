@@ -12,7 +12,7 @@
 	
 	<base href="${base}/">
 	
-	<title>Vireo :: Texas Digital Libraries</title>
+	<title>Vireo :: Texas Digital Library</title>
 	
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">

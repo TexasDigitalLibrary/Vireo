@@ -119,7 +119,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         
         assertEquals("/queue" + destination + "-user" + sessionId, replyHeaders.getDestination());
         
-        Thread.sleep(100);
+        Thread.sleep(100); // H2 needs time to commit/persist any sent messages
         
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }

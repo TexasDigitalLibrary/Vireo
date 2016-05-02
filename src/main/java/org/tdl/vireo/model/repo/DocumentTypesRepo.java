@@ -12,12 +12,15 @@ package org.tdl.vireo.model.repo;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.repo.custom.DocumentTypesRepoCustom;
 
 public interface DocumentTypesRepo extends JpaRepository<DocumentType, Long>, DocumentTypesRepoCustom {
     
     public DocumentType findByName(String name);
+    
+    public DocumentType findByNameAndDegreeLevel(String name, DegreeLevel degreeLevel);
     
     public List<DocumentType> findAllByOrderByPositionAsc();
         

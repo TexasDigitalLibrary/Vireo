@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CustomActionDefinition extends BaseOrderedEntity {
 	
 	@Column(nullable = false, unique = true, length = 255)
-	@Size(min=1, max=255)
+	@NotEmpty
+	@Size(max=255)
 	private String label;
 	
 	@Column(nullable = false)

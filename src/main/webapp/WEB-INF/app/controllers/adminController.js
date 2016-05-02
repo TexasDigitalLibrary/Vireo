@@ -12,7 +12,7 @@ vireo.controller('AdminController', function ($controller, $scope, $window, $rou
 	$scope.$watch('user.role', function() {
 		if($scope.user.role) {
 			StorageService.set('role', $scope.user.role);
-			if ($scope.user.role == 'ROLE_ADMIN') {
+			if ($scope.user.role == 'ADMINISTRATOR') {
 				$scope.admin = true;
 			}
 			else {

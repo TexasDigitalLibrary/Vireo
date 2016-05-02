@@ -9,10 +9,10 @@ vireo.controller("WhoHasAccessController", function ($controller, $q, $scope, Us
     
     $scope.ready = $q.all([User.ready(), UserRepo.ready()]);
 
-    $scope.roles = {'ROLE_ADMIN'   : 'Admin'   ,
-                    'ROLE_MANAGER' : 'Manager' ,
-                    'ROLE_REVIEWER': 'Reviewer',
-                    'ROLE_STUDENT' : 'Student'};
+    $scope.roles = {'ADMINISTRATOR'   : 'Administrator'   ,
+                    'MANAGER' : 'Manager' ,
+                    'REVIEWER': 'Reviewer',
+                    'STUDENT' : 'Student'};
 
     $scope.ready.then(function() {
 

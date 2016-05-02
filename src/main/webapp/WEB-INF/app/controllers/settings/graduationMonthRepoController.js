@@ -42,8 +42,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 		$scope.createGraduationMonth = function() {
 			GraduationMonthRepo.add($scope.modalData).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetGraduationMonth();
 			});
 		};
@@ -61,16 +61,16 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		
 		$scope.updateGraduationMonth = function() {
 			GraduationMonthRepo.update($scope.modalData).then(function(data) {
-				var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetGraduationMonth();
 			});
 		};
 
 		$scope.reorderGraduationMonth = function(src, dest) {
 	    	GraduationMonthRepo.reorder(src, dest).then(function(data) {
-	    		var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 				$scope.resetGraduationMonth();
 			});
 		};
@@ -81,8 +81,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			}
 			else if($scope.sortAction == 'sort') {
 				GraduationMonthRepo.sort(column).then(function(data) {
-					var errors = angular.fromJson(data.body).payload;
-					console.log(errors);
+					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+	                console.log(validationResponse);
 					$scope.resetGraduationMonth();
 				});
 				$scope.sortAction = 'confirm';
@@ -92,8 +92,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 		$scope.removeGraduationMonth = function(index) {
 	    	GraduationMonthRepo.remove(index).then(function(data) {
-	    		var errors = angular.fromJson(data.body).payload;
-				console.log(errors);
+	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+                console.log(validationResponse);
 	    		$scope.resetGraduationMonth();
 	    	});
 		};

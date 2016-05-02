@@ -7,6 +7,7 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
+import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -17,6 +18,9 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
 
     @Autowired
     private EmbargoRepo embargoRepo;
+    
+    @Autowired
+    private ValidationService validationService;
 
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
@@ -36,21 +40,22 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
 
     @Override
-    public void remove(Long index) {
-        orderedEntityService.remove(embargoRepo, Embargo.class, index);
+    public void remove(Embargo embargo) {
+        orderedEntityService.remove(embargoRepo, Embargo.class, embargo.getPosition(), "guarantor", embargo.getGuarantor());
     }
 
     @Override
-    public void validateCreate(Embargo embargo) {
+    public Embargo validateCreate(Embargo embargo) {
         // make sure we won't get a unique constraint violation from the DB
         Embargo existing = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargo.getName(), embargo.getGuarantor(), false);
         if (existing != null) {
             embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot create embargo that already exists!"));
         }
+        return embargo;
     }
 
     @Override
-    public void validateUpdate(Embargo embargo) {
+    public Embargo validateUpdate(Embargo embargo) {
         if (embargo.getId() != null) {
             Embargo embargoToUpdate = embargoRepo.findOne(embargo.getId());
             if (embargoToUpdate != null) {
@@ -102,5 +107,34 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
         } else {
             embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot edit Embargo, no id was passed in!"));
         }
+        return embargo;
+    }
+    
+    @Override
+    public Embargo validateRemove(String idString, ModelBindingResult modelBindingResult) {
+        Embargo toRemove = null;
+        Long id = validationService.validateLong(idString, "embargo", modelBindingResult);
+        
+        if(!modelBindingResult.hasErrors()){
+            toRemove = embargoRepo.findOne(id);
+            if (toRemove != null) {
+                if (toRemove.isSystemRequired()) {
+                    modelBindingResult.addError(new ObjectError("embargo", "Cannot remove a System Embargo!"));
+                }
+            } else {
+                modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
+            }
+        }
+        
+        return toRemove;
+    }
+    
+    @Override
+    public EmbargoGuarantor validateGuarantor(String guarantorString, ModelBindingResult modelBindingResult) {
+        EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
+        if (guarantor == null) {
+            modelBindingResult.addError(new ObjectError("guarantor", "Guarantor doesn't exist!"));
+        }
+        return guarantor;
     }
 }

@@ -119,18 +119,15 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * 
      * @return the values
      */
-    public List<Object> getDictionary() {
-        List<Object> values = new ArrayList<Object>();
+    public List<VocabularyWord> getDictionary() {
+        List<VocabularyWord> values = new ArrayList<VocabularyWord>();
         if(!isEntityProperty()) {
             values.addAll(dictionary);
         }
         else {
             try {                
                 EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
-                
-                entityControlledVocabularyService.getControlledVocabulary(entityName, name).parallelStream().forEach(property -> {
-                    values.add(property);
-                });                
+                values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, name));
             }
             catch(ClassNotFoundException e) {
                 System.out.println("Entity " + entityName + " not found!\n");

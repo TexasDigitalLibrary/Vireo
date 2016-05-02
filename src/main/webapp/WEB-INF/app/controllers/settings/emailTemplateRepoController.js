@@ -29,8 +29,8 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     $scope.createEmailTemplate = function() {
       EmailTemplateRepo.add($scope.modalData).then(function(data) {
-    	  var errors = angular.fromJson(data.body).payload;
-    	  console.log(errors);
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     };
@@ -42,24 +42,24 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     $scope.updateEmailTemplate = function() {
       EmailTemplateRepo.update($scope.modalData).then(function(data) {
-    	  var errors = angular.fromJson(data.body).payload;
-    	  console.log(errors);
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     };
 
     $scope.removeEmailTemplate = function(index) {
       EmailTemplateRepo.remove(index).then(function(data) {
-    	  var errors = angular.fromJson(data.body).payload;
-    	  console.log(errors);
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     };
 
     $scope.reorderEmailTemplates = function(src, dest){
       EmailTemplateRepo.reorder(src, dest).then(function(data) {
-    	  var errors = angular.fromJson(data.body).payload;
-    	  console.log(errors);
+    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+          console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     }
@@ -70,8 +70,8 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       }
       else if($scope.sortAction == 'sort') {
         EmailTemplateRepo.sort(column).then(function(data) {
-        	var errors = angular.fromJson(data.body).payload;
-			console.log(errors);
+        	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+            console.log(validationResponse);
 			$scope.resetEmailTemplates();
         });
         $scope.sortAction = 'confirm';
