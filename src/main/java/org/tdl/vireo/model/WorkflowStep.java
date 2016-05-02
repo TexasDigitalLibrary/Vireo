@@ -39,6 +39,7 @@ public class WorkflowStep extends BaseEntity {
     
     //the workflow step from which this one is derived
     //need to know so we can tell if things are overrideable by this workflow step
+    //use null if this workflow step is original
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -247,6 +248,22 @@ public class WorkflowStep extends BaseEntity {
     
     public void clearAllNotes() {
         notes.clear();
+    }
+    
+    public boolean descendsFrom(WorkflowStep putativeAncestor)
+    {
+        if(originatingWorkflowStep.equals(null))
+        {
+            return false;
+        }
+        else if(originatingWorkflowStep.equals(putativeAncestor))
+        {
+            return true;
+        }
+        else
+        {
+            return this.getOriginatingWorkflowStep().descendsFrom(putativeAncestor);
+        }
     }
     
 }
