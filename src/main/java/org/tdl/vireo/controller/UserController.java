@@ -120,7 +120,7 @@ public class UserController {
 
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {
-            userSetting.getBindingResult().addError(new ObjectError("user", "User nto registered!"));
+            userSetting.getBindingResult().addError(new ObjectError("user", "User not registered!"));
         }
 
         if (userSetting.getBindingResult().hasErrors()) {
