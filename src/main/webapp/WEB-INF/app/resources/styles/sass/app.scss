@@ -1294,3 +1294,35 @@ footer a, footer li, footer p {
 #email-template-modal-instructions-list{
   cursor:help;
 }
+
+.orderable-panel-bar {
+    @extend .panel-heading;
+    display:inline-block;
+    padding:10px 15px;
+    width:100%;
+    margin-right: -26px;
+}
+
+.accordion-order-box {
+    display:inline-block;
+    float:right;
+    margin-right:12px;
+    margin-top:1px;
+    &>a{
+        display:block;
+    }
+}
+
+.workflow-step-edit-button{
+    display:none;
+}
+
+.show-on-hover:hover{
+    display:block;
+}
+
+.sticky-note {
+  background: lighten( #F7B624, 30% );
+  border: solid brown 1px;
+  padding: 3px;
+}

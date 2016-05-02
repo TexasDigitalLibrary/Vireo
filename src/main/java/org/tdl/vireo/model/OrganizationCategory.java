@@ -1,6 +1,9 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.LAZY;
 
 import java.util.Set;
@@ -28,7 +31,7 @@ public class OrganizationCategory extends BaseEntity {
     @NotEmpty
     private String name;
 
-    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "category")
+    @OneToMany(cascade = { DETACH, REFRESH, MERGE, REMOVE }, fetch = LAZY, mappedBy = "category")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> organizations;

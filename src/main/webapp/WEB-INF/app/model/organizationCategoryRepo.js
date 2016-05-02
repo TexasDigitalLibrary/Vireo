@@ -54,17 +54,6 @@ vireo.service("OrganizationCategoryRepoModel", function($route, WsApi, AbstractM
 		return OrganizationCategoryRepo.data;
 	
 	};
-
-	OrganizationCategoryRepo.findById = function(id) {
-
-		var catagory = null;		
-		for(var i in OrganizationCategoryRepo.data.list) {
-			if(OrganizationCategoryRepo.data.list[i].id == id) {
-				catagory = OrganizationCategoryRepo.data.list[i];
-			}
-		}
-		return catagory;
-	}
 	
 	OrganizationCategoryRepo.ready = function() {
 		return OrganizationCategoryRepo.promise;

@@ -19,11 +19,20 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "predicate_id" }) )
 public class FieldProfile extends BaseEntity {
+    
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private WorkflowStep originatingWorkflowStep;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private FieldPredicate predicate;
@@ -71,8 +80,9 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean enabled, Boolean optional) {
         this();
+        setOriginatingWorkflowStep(originatingWorkflowStep);
         setPredicate(predicate);
         setInputType(inputType);
         setRepeatable(repeatable);
@@ -89,8 +99,8 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
-        this(predicate, inputType, repeatable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, predicate, inputType, repeatable, enabled, optional);
         setUsage(usage);
     }
     
@@ -103,9 +113,23 @@ public class FieldProfile extends BaseEntity {
      * @param enabled
      * @param optional
      */
-    public FieldProfile(FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
-        this(predicate, inputType, usage, repeatable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, predicate, inputType, usage, repeatable, enabled, optional);
         setHelp(help);
+    }
+
+    /**
+     * @return the originatingWorkflowStep
+     */
+    public WorkflowStep getOriginatingWorkflowStep() {
+        return originatingWorkflowStep;
+    }
+
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
+    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        this.originatingWorkflowStep = originatingWorkflowStep;
     }
 
     /**

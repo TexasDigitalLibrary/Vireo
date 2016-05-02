@@ -18,9 +18,9 @@ import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.tamu.framework.util.AuthUtility;
-
 import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.util.AuthUtility;
 
 public class AuthIntegrationTest extends AbstractIntegrationTest {
 

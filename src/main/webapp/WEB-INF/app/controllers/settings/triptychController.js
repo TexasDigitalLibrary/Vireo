@@ -55,16 +55,12 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var panelParentOrganization = panel.parentOrganization
 
             if(organization.parentOrganizations.indexOf(panelParentOrganization.id) != -1) {
-            	panel.organizationCategories[organization.id] = $scope.getCategoryById(organization.category);
+            	panel.organizationCategories[organization.id] = organization.category;
             	return true;
             } 
             
             return false;
             
-        }
-
-        $scope.getCategoryById = function(id) {
-        	return OrganizationCategoryRepo.findById(id);
         }
 
         $scope.resetPanels = function() {

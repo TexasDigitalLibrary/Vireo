@@ -44,7 +44,7 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, orphanRemoval = false)
     private Set<WorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)

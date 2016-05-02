@@ -5,8 +5,8 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,41 +31,50 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }) )
 public class Organization extends BaseEntity {
-
+    
     @Column(nullable = false)
     private String name;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     private OrganizationCategory category;
 
-    @OneToOne(cascade = ALL, orphanRemoval = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = OrganizationCategory.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Workflow workflow;
+    @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
+    private List<WorkflowStep> workflowSteps;
+    
+    @ElementCollection(fetch = EAGER)
+    private List<Long> workflowStepOrder;
 
-    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, PERSIST }, fetch = LAZY)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE, PERSIST }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
 
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     private Set<String> emails;
     
-    @OneToMany(cascade = ALL, fetch=EAGER, orphanRemoval=true)
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
+        setWorkflowSteps(new ArrayList<WorkflowStep>());
+        setWorkflowStepOrder(new ArrayList<Long>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
+    }
+    
+    /**
+     * 
+     * @param name
+     */
+    public Organization(String name) {
+        this();
+        setName(name);
+        setCategory(category);
     }
 
     /**
@@ -110,22 +118,75 @@ public class Organization extends BaseEntity {
     public void setCategory(OrganizationCategory category) {
         this.category = category;
     }
-
+    
     /**
-     * @return the workflow
+     * @return the workflowSteps
      */
-    public Workflow getWorkflow() {
-        return workflow;
+    public List<WorkflowStep> getWorkflowSteps() {
+        return workflowSteps;
     }
 
     /**
-     * @param workflow
-     *            the workflow to set
+     * @param workflowSteps the workflowSteps to set
      */
-    public void setWorkflow(Workflow workflow) {
-        this.workflow = workflow;
+    public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
+        this.workflowSteps = workflowSteps;
+        setWorkflowStepOrder(new ArrayList<Long>());
+        for (WorkflowStep wStep : this.workflowSteps) {
+            this.workflowStepOrder.add(wStep.getId());
+        }
+    }
+    
+    public void addWorkflowStep(WorkflowStep workflowStep) {
+    	if(!this.workflowSteps.contains(workflowStep)) {
+	        this.workflowSteps.add(workflowStep);
+	        // add workflowstep id to workflowstep order
+	        addWorkflowStepOrder(workflowStep.getId());
+	        Set<Organization> children = getChildrenOrganizations();
+	        if(!children.isEmpty()) {
+	            children.parallelStream().forEach(child -> {
+	                child.addWorkflowStep(workflowStep);
+	            });
+	        }
+    	}
     }
 
+    public void removeWorkflowStep(WorkflowStep workflowStep) {
+    	if(this.workflowSteps.contains(workflowStep)) {
+	        this.workflowSteps.remove(workflowStep);
+	        // remove workflowstep id to workflowstep order
+	        removeWorkflowStepOrder(workflowStep.getId());
+	        Set<Organization> children = getChildrenOrganizations();
+	        if(!children.isEmpty()) {
+	            children.parallelStream().forEach(child -> {
+	                child.removeWorkflowStep(workflowStep);
+	            });
+	        }
+    	}
+    }
+    
+    /**
+     * @return the workflowStepOrder
+     */
+    public List<Long> getWorkflowStepOrder() {
+        return workflowStepOrder;
+    }
+
+    /**
+     * @param workflowStepOrder the workflowStepOrder to set
+     */
+    public void setWorkflowStepOrder(List<Long> workflowStepOrder) {
+        this.workflowStepOrder = workflowStepOrder;
+    }
+
+    public void addWorkflowStepOrder(Long workflowStepId) {
+        this.workflowStepOrder.add(workflowStepId);
+    }
+    
+    public void removeWorkflowStepOrder(Long workflowStepId) {
+        this.workflowStepOrder.remove(workflowStepId);
+    }
+    
     /**
      * @return the parentOrganizations
      */
@@ -146,7 +207,7 @@ public class Organization extends BaseEntity {
      * @param parentOrganization
      */
     private void addParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().add(parentOrganization);
+        this.parentOrganizations.add(parentOrganization);
     }
 
     /**
@@ -154,7 +215,7 @@ public class Organization extends BaseEntity {
      * @param parentOrganization
      */
     public void removeParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().remove(parentOrganization);
+        this.parentOrganizations.remove(parentOrganization);
     }
 
     /**
@@ -183,7 +244,18 @@ public class Organization extends BaseEntity {
      */
     public void addChildOrganization(Organization childOrganization) {
         childOrganization.addParentOrganization(this);
-        getChildrenOrganizations().add(childOrganization);
+        
+        this.childrenOrganizations.add(childOrganization);
+        
+        List<WorkflowStep> childrenWorkflowSteps = childOrganization.getWorkflowSteps();
+        
+        if(childrenWorkflowSteps.isEmpty()) {
+            for(WorkflowStep workflowStep : workflowSteps) {
+                childrenWorkflowSteps.add(workflowStep);
+            }
+            childOrganization.setWorkflowSteps(childrenWorkflowSteps);
+        }
+       
     }
 
     /**
@@ -192,7 +264,7 @@ public class Organization extends BaseEntity {
      */
     public void removeChildOrganization(Organization childOrganization) {
         childOrganization.removeParentOrganization(this);
-        getChildrenOrganizations().remove(childOrganization);
+        this.childrenOrganizations.remove(childOrganization);
     }
 
     /**
@@ -215,7 +287,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void addEmail(String email) {
-        getEmails().add(email);
+    	this.emails.add(email);
     }
 
     /**
@@ -223,7 +295,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void removeEmail(String email) {
-        getEmails().remove(email);
+    	this.emails.remove(email);
     }
 
 	/**
@@ -245,7 +317,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRule
      */
     public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-        getEmailWorkflowRules().add(emailWorkflowRule);
+    	this.emailWorkflowRules.add(emailWorkflowRule);
     }
 
     /**
@@ -253,7 +325,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRules
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-    	getEmailWorkflowRules().remove(emailWorkflowRule);
+    	this.emailWorkflowRules.remove(emailWorkflowRule);
     }
 
 }

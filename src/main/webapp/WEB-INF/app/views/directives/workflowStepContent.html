@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-6">
+    <div ng-repeat="fp in steps[$parent.$index].fieldProfiles">
+      <div>{{fp.name}}</div>
+      <input class="workflow-step-edit-button btn btn-primary" value="Edit"></input>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div ng-repeat="note in steps[$parent.$index].notes" class="sticky-note">{{note.name}}</div>
+  </div>
+</div>

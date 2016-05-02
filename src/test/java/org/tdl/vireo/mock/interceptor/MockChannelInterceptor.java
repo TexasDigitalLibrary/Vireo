@@ -45,9 +45,9 @@ public class MockChannelInterceptor extends ChannelInterceptorAdapter {
     }
 
     /**
-     * @return the next received message or {@code null} if the specified time elapses
+     * @return the next received message
      */
-    public Message<?> awaitMessage() throws InterruptedException {             
+    public Message<?> awaitMessage() throws InterruptedException {
         return this.messages.take();
     }
 
