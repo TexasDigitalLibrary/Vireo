@@ -26,6 +26,7 @@ import edu.tamu.framework.model.jwt.JWT;
 import edu.tamu.framework.util.JwtUtility;
 
 import org.tdl.vireo.config.constant.ConfigurationName;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 /** 
  * 
@@ -42,6 +43,9 @@ public class MockTokenController {
     
     @Autowired
     private JwtUtility jwtUtility;
+    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
         
     @Value("${auth.security.jwt.secret-key}")
     private String secret_key;
@@ -130,6 +134,19 @@ public class MockTokenController {
         JWT newToken = null;
        
         String token = params.get("token");
+        
+        // get shib headers out of DB
+        String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
+        String birthYearHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
+        String middleNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
+        String firstNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME, "firstName");
+        String lastNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME, "lastName");
+        String emailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL, "email");
+        String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
+        String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
+        String permEmailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS, "permanentEmailAddress");
+        String permPhoneHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER, "permanentPhoneNumber");
+        String permAddressHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS, "permanentPostalAddress");
 
         if(token != null) {
     		newToken = jwtUtility.makeToken(jwtUtility.validateJWT(token));
@@ -148,34 +165,34 @@ public class MockTokenController {
     	            }
     	        }
         		else if(mockUser.equals("admin")) {
-                    newToken.makeClaim("netid", "aggieJack");
-                    newToken.makeClaim("uin", "123456789");
-                    newToken.makeClaim("lastName", "Daniels");
-                    newToken.makeClaim("firstName", "Jack");
-                    newToken.makeClaim("email", "aggieJack@tamu.edu");
+                    newToken.makeClaim(netIdHeader, "aggieJack");
+                    newToken.makeClaim(institutionalIdentifierHeader, "123456789");
+                    newToken.makeClaim(lastNameHeader, "Daniels");
+                    newToken.makeClaim(firstNameHeader, "Jack");
+                    newToken.makeClaim(emailHeader, "aggieJack@tamu.edu");
     	        }
     	        else {
-    	        	newToken.makeClaim("netid", "bobBoring");
-    	        	newToken.makeClaim("uin", "987654321");
-    	        	newToken.makeClaim("lastName", "Boring");
-    	        	newToken.makeClaim("firstName", "Bob");
-    	        	newToken.makeClaim("email", "bobBoring@tamu.edu");
+    	        	newToken.makeClaim(netIdHeader, "bobBoring");
+    	        	newToken.makeClaim(institutionalIdentifierHeader, "987654321");
+    	        	newToken.makeClaim(lastNameHeader, "Boring");
+    	        	newToken.makeClaim(firstNameHeader, "Bob");
+    	        	newToken.makeClaim(emailHeader, "bobBoring@tamu.edu");
     	        }
         	}
     	}
+        
         // For app use
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID,"aggieJack");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER,"987654321");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME,"Daniels");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME,"Jack");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME,"Be");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL,"aggieJack@tamu.edu");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR,"1777");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID,"123ORCID");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER,"123654789");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS,"permanentaggieJack@tamu.edu");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER,"1234567890");
-        newToken.makeClaim(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS,"123 The Place 2B");
+        newToken.makeClaim(netIdHeader,"aggieJack");
+        newToken.makeClaim(institutionalIdentifierHeader,"987654321");
+        newToken.makeClaim(lastNameHeader,"Daniels");
+        newToken.makeClaim(firstNameHeader,"Jack");
+        newToken.makeClaim(middleNameHeader,"Be");
+        newToken.makeClaim(emailHeader,"aggieJack@tamu.edu");
+        newToken.makeClaim(birthYearHeader,"1777");
+        newToken.makeClaim(orcidHeader,"123ORCID");
+        newToken.makeClaim(permEmailHeader,"permanentaggieJack@tamu.edu");
+        newToken.makeClaim(permPhoneHeader,"1234567890");
+        newToken.makeClaim(permAddressHeader,"123 The Place 2B");
 
         return newToken;       
     }

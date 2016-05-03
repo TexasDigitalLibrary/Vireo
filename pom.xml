@@ -287,9 +287,20 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Compass Compile <execution> <id>exec-compass-compile</id> <phase>generate-sources</phase> 
-						<configuration> <executable>compass</executable> <arguments> <argument>compile</argument> 
-						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
+					<!-- Compass Compile -->
+					<execution>
+						<id>exec-compass-compile</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<executable>compass</executable>
+							<arguments>
+								<argument>compile</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
 					<!-- Grunt Deploy <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
 						<configuration> <executable>grunt</executable> <arguments> <argument>deploy</argument> 
 						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
