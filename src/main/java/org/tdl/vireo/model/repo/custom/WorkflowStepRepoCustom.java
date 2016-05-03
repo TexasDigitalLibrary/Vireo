@@ -12,4 +12,8 @@ public interface WorkflowStepRepoCustom {
 
     WorkflowStep update(WorkflowStep workflowStep, Organization originatingOrganization) throws WorkflowStepNonOverrideableException;
 
+    WorkflowStep create(String name, Organization originatingOrganization, Integer orderIndex);
+
+    WorkflowStep create(String name, Organization originatingOrganization, Integer orderIndex, WorkflowStep originatingWorkflowStep);
+
 }

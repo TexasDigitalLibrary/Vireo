@@ -61,15 +61,15 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         
         Note note = noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);
-        Note severableNote = noteRepo.create(TEST_SEVERABLE_NOTE_NAME, TEST_SEVERABLE_NOTE_TEXT);
+        Note noteToDisassociate = noteRepo.create(TEST_SEVERABLE_NOTE_NAME, TEST_SEVERABLE_NOTE_TEXT);
         
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
-        FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
+        FieldPredicate fieldPredicateToDisassociate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
         
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-        FieldProfile severableFieldProfile = fieldProfileRepo.create(workflowStep, severableFieldPredicate, TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, TEST_SEVERABLE_FIELD_PROFILE_USAGE, TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_SEVERABLE_FIELD_PROFILE_ENABLED, TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfileToDisassociate = fieldProfileRepo.create(workflowStep, fieldPredicateToDisassociate, TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, TEST_SEVERABLE_FIELD_PROFILE_USAGE, TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_SEVERABLE_FIELD_PROFILE_ENABLED, TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL);
         workflowStep.addNote(note);
-        workflowStep.addNote(severableNote);
+        workflowStep.addNote(noteToDisassociate);
         
         
         
@@ -99,22 +99,22 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the field profile enabled value!", TEST_FIELD_PROFILE_ENABLED, fieldProfile.getEnabled());
         assertEquals("Saved entity did not contain the field profile optional value!", TEST_FIELD_PROFILE_OPTIONAL, fieldProfile.getOptional());
         assertEquals("Saved entity did not contain the field profile input type!", TEST_FIELD_PROFILE_INPUT_TYPE, workflowStep.getFieldProfileByPredicate(fieldPredicate).getInputType());
-        assertEquals("Saved entity did not contain the field profile repeatable value!", TEST_SEVERABLE_FIELD_PROFILE_USAGE, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getUsage());
-        assertEquals("Saved entity did not contain the field profile repeatable value!", TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getRepeatable());
-        assertEquals("Saved entity did not contain the field profile required value!", TEST_SEVERABLE_FIELD_PROFILE_ENABLED, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getEnabled());
-        assertEquals("Saved entity did not contain the field profile required value!", TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getOptional());
-        assertEquals("Saved entity did not contain the field profile input type!", TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getInputType());
+        assertEquals("Saved entity did not contain the field profile repeatable value!", TEST_SEVERABLE_FIELD_PROFILE_USAGE, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getUsage());
+        assertEquals("Saved entity did not contain the field profile repeatable value!", TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getRepeatable());
+        assertEquals("Saved entity did not contain the field profile required value!", TEST_SEVERABLE_FIELD_PROFILE_ENABLED, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getEnabled());
+        assertEquals("Saved entity did not contain the field profile required value!", TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getOptional());
+        assertEquals("Saved entity did not contain the field profile input type!", TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getInputType());
 
         // verify field predicates
         assertEquals("Saved entity did not contain the field profile field predicate value!", fieldPredicate, workflowStep.getFieldProfileByPredicate(fieldPredicate).getPredicate());
-        assertEquals("Saved entity did not contain the field profile field predicate value!", severableFieldPredicate, workflowStep.getFieldProfileByPredicate(severableFieldPredicate).getPredicate());
+        assertEquals("Saved entity did not contain the field profile field predicate value!", fieldPredicateToDisassociate, workflowStep.getFieldProfileByPredicate(fieldPredicateToDisassociate).getPredicate());
 
         
        // detachedWorkflowStepForUpdate = clone(workflowStep);
         
         
-        // test remove severable field profile
-        workflowStep.removeFieldProfile(severableFieldProfile);
+        // test remove field profile from workflowStep
+        workflowStep.removeFieldProfile(fieldProfileToDisassociate);
          
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
@@ -123,16 +123,15 @@ public class WorkflowStepTest extends AbstractEntityTest {
             e.printStackTrace();
         }
         
+        //the field profile should no longer be on the workflow step, and it should be deleted since it was orphaned
         assertEquals("The field profile was not removed!", 1, workflowStep.getFieldProfiles().size());
         assertEquals("The field profile was deleted!", 2, fieldProfileRepo.count());
         
         
-        //detachedWorkflowStepForUpdate = clone(workflowStep);
+        // test remove note from workflow step
+        workflowStep.removeNote(noteToDisassociate);
         
-        
-        // test remove severable note
-        //detachedWorkflowStepForUpdate.removeNote(severableNote);
-        workflowStep.removeNote(severableNote);
+        long noteCount = noteRepo.count();
         
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
@@ -141,8 +140,9 @@ public class WorkflowStepTest extends AbstractEntityTest {
             e.printStackTrace();
         }
         
+        //the note should no longer be on the workflow step, but it should not be deleted
         assertEquals("The note was not removed!", 1, workflowStep.getNotes().size());
-        assertEquals("The note was deleted!", 2, noteRepo.count());
+        assertEquals("The note was deleted!", noteCount, noteRepo.count());
         
         // test delete workflow step
         workflowStepRepo.delete(workflowStep);
@@ -150,9 +150,10 @@ public class WorkflowStepTest extends AbstractEntityTest {
         // assert workflow step was deleted
         assertEquals("The workflow step was not deleted!", 0, workflowStepRepo.count());
         
-        // assert all properties of originating workflow step are deleted
-        assertEquals("The field profiles were orphaned!", 0, fieldProfileRepo.count());
-        assertEquals("The notes were deleted!", 2, noteRepo.count());
+        // assert all field profiles originating in the workflow step are deleted,
+        // but the many-to-many associated properties are not
+        assertEquals("The field profiles originating in this workflow step were orphaned!", 0, fieldProfileRepo.count());
+        assertEquals("The notes were deleted!", noteCount, noteRepo.count());
         assertEquals("The field predicates were deleted!", 2, fieldPredicateRepo.count());
     }
     
@@ -291,14 +292,19 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
         
-        //test that we can't override a non-overrideable workflow step at the child of its originating organization
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        assertEquals("the workflow step didn't start out overrideable as expected!", true, workflowStep.getOverrideable());
         workflowStep.setOverrideable(false);
         
         //test that we can override a non-overrideable workflow step (which will remain the same database row) if we're the originating organization
         Long originalWorkflowStepId = workflowStep.getId();
         WorkflowStep updatedWorkflowStep = workflowStepRepo.update(workflowStep, parentOrganization);
-        assertEquals("The originating Organization of the WorkflowStep couldn't properly update it!", updatedWorkflowStep.getId(), originalWorkflowStepId);
+        assertEquals("The originating Organization of the WorkflowStep couldn't update it!", updatedWorkflowStep.getId(), originalWorkflowStepId);
+        assertEquals("The originating Organization of the WorkflowStep couldn't make it non-overrideable!", false, updatedWorkflowStep.getOverrideable());
+        assertEquals("The originating Organization of the WorkflowStep couldn't make it non-overrideable!", false, workflowStep.getOverrideable());
+    
+        
+    
     }
     
     @Test
@@ -325,6 +331,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         Long step1Id = s1.getId();
         
+        // add a couple of additional steps to test ordering
+        WorkflowStep t1 = workflowStepRepo.create("Step T", parentOrganization);
+
+        WorkflowStep u1 = workflowStepRepo.create("Step U", parentOrganization);
+
         String updatedName = "Updated Name";
         
         WorkflowStep detachedStepForUpdates = clone(s1);
@@ -338,32 +349,36 @@ public class WorkflowStepTest extends AbstractEntityTest {
         detachedStepForUpdates = clone(s2);
         detachedStepForUpdates.setOriginatingWorkflowStep(s2);
         detachedStepForUpdates.setName(anotherUpdatedName);
-        
+         
         WorkflowStep s3 = workflowStepRepo.update(detachedStepForUpdates, grandChildOrganization);
         Long step3Id = s3.getId();
-        
-        System.out.println("\n\n*** I, s2, of ID " + s2.getId() + " am named: "+ s2.getName() + " and am contained by " + s2.getContainedByOrganizations().size() + " orgs but my originating org is " + s2.getOriginatingOrganization().getName() + "\n\n***");
         
         assertEquals("s1 had the wrong name!", TEST_WORKFLOW_STEP_NAME, s1.getName());
         assertEquals("s2 had the wrong name!", updatedName, s2.getName());
         assertEquals("s2 had the wrong originating Organization!", organization.getId(), s2.getOriginatingOrganization().getId());
-        assertEquals("s2 was contained in the wrong Organization!", organization.getId(), ((Organization) s2.getContainedByOrganizations().toArray()[0]).getId());
+        assertTrue("s2 was not contained in the right Organization!", s2.getContainedByOrganizations().contains(organization));
         assertEquals("s3 had the wrong name!", anotherUpdatedName, s3.getName());
+        assertEquals("s3 had the wrong originating Organization!", grandChildOrganization.getId(), s3.getOriginatingOrganization().getId());
         assertTrue("s3 wasn't on a great grandchild organization who should have inherited it!", s3.getContainedByOrganizations().contains(anotherGreatGrandChildOrganization));
         
         //now we are ready to make step 1 non-overrideable and ensure that step 2 and 3 go away
-//        detachedStepForUpdates = clone(s1);
-//        detachedStepForUpdates.setOverrideable(false);
-//        
+        detachedStepForUpdates = clone(s1);
+        detachedStepForUpdates.setOverrideable(false);
+        
         s1.setOverrideable(false);
         s1 = workflowStepRepo.update(s1, parentOrganization);
         
-//        assertEquals("Workflow Step Repo didn't get the illegal (no longer overrideable) steps deleted!", 1, workflowStepRepo.count());
-//        
-//        assertEquals("Child org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), organization.getWorkflowSteps().get(0).getId());
-//        assertEquals("Grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), grandChildOrganization.getWorkflowSteps().get(0).getId());
-//        assertEquals("Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), greatGrandChildOrganization.getWorkflowSteps().get(0).getId());
-//        assertEquals("Another Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", s1.getId(), anotherGreatGrandChildOrganization.getWorkflowSteps().get(0).getId());
+        assertEquals("Workflow Step Repo didn't get the disallowed (no longer overrideable) steps deleted!", 3, workflowStepRepo.count());
+        
+        assertTrue("Child org didn't get its workflow step replaced by the non-overrideable s1!", organization.getWorkflowSteps().contains(s1));
+        assertTrue("Grandchild org didn't get its workflow step replaced by the non-overrideable s1!", grandChildOrganization.getWorkflowSteps().contains(s1));
+        assertTrue("Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", greatGrandChildOrganization.getWorkflowSteps().contains(s1));
+        assertTrue("Another Great grandchild org didn't get its workflow step replaced by the non-overrideable s1!", anotherGreatGrandChildOrganization.getWorkflowSteps().contains(s1));
+        
+        assertEquals("Great grandchild org didn't have s1 as the first step", s1.getId(), greatGrandChildOrganization.getWorkflowStepOrder().get(0));
+        assertEquals("Great grandchild org didn't have t1 as the first step", t1.getId(), greatGrandChildOrganization.getWorkflowStepOrder().get(1));
+        assertEquals("Great grandchild org didn't have u1 as the first step", u1.getId(), greatGrandChildOrganization.getWorkflowStepOrder().get(2));
+
         
     }
 

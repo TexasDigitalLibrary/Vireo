@@ -61,6 +61,7 @@ public class WorkflowStep extends BaseEntity {
     
     //the field profiles that originated in this workflow step
     //need to know so that when a field profile is overridden we know if it is derivative
+    //need to know so that when the workflow step is deleted, the field profiles originating in it are deleted, not orphaned
     @OneToMany(cascade = ALL, mappedBy = "originatingWorkflowStep", orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -252,7 +253,7 @@ public class WorkflowStep extends BaseEntity {
     
     public boolean descendsFrom(WorkflowStep putativeAncestor)
     {
-        if(originatingWorkflowStep.equals(null))
+        if(originatingWorkflowStep == null)
         {
             return false;
         }

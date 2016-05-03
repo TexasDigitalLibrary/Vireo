@@ -131,26 +131,55 @@ public class Organization extends BaseEntity {
         this.workflowSteps = workflowSteps;
     }
     
-    public void addWorkflowStep(WorkflowStep workflowStep) {
+    public void addWorkflowStep(WorkflowStep workflowStep)
+    {
+        addWorkflowStep(workflowStep, null);
+    }
+    
+    
+    //TODO:  handle the ordering elsewhere, i.e. workflow step repo
+    public void addWorkflowStep(WorkflowStep workflowStep, Integer orderIndex) {
+        //if(orderIndex < 0) orderIndex = 0;
+         
+        WorkflowStep ancestorStepMarkedForRemoval = null;
+        
         	if(!this.workflowSteps.contains(workflowStep)) {
     	        this.workflowSteps.add(workflowStep);
+    	        
+    	        //if the Organization has a step that this new one descends from, get rid of that one
+    	        for(WorkflowStep ws : workflowSteps)
+    	        {
+    	            if(workflowStep.descendsFrom(ws))
+    	            {
+    	                ancestorStepMarkedForRemoval = ws;
+    	                break;
+    	            }
+    	        }
+    	        
     	        workflowStep.addContainedByOrganization(this);
-    	        // add workflowstep id to workflowstep order
-    	        addWorkflowStepOrder(workflowStep.getId());
+    	        if(orderIndex != null)
+    	            workflowStepOrder.add(orderIndex, workflowStep.getId());
     	        Set<Organization> children = getChildrenOrganizations();
     	        if(!children.isEmpty()) {
     	            children.parallelStream().forEach(child -> {
-    	                child.addWorkflowStep(workflowStep);
+    	                //TODO:  do we want to more carefully consider the index where the step gets added to children?  If they have more or fewer steps, it could be inappropriate to put it at the index that works for the parent.
+    	                child.addWorkflowStep(workflowStep, orderIndex);
     	            });
     	        }
+        	}
+        	
+        	if(ancestorStepMarkedForRemoval != null)
+        	{
+            	removeWorkflowStep(ancestorStepMarkedForRemoval);
+            removeWorkflowStepOrder(ancestorStepMarkedForRemoval.getId());
         	}
     }
 
     public void removeWorkflowStep(WorkflowStep workflowStep) {
         	if(this.workflowSteps.contains(workflowStep)) {
     	        this.workflowSteps.remove(workflowStep);
-    	        // remove workflowstep id to workflowstep order
-    	        removeWorkflowStepOrder(workflowStep.getId());
+    	        //remove workflowstep id to workflowstep order
+    	        //removeWorkflowStepOrder(workflowStep.getId());
     	        Set<Organization> children = getChildrenOrganizations();
     	        if(!children.isEmpty()) {
     	            children.parallelStream().forEach(child -> {
@@ -321,6 +350,18 @@ public class Organization extends BaseEntity {
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
     	this.emailWorkflowRules.remove(emailWorkflowRule);
+    }
+
+    public void replaceWorkflowStep(WorkflowStep previous, WorkflowStep replacement) 
+    {
+        Integer pos = getPositionOfWorkflowStep(previous);
+        removeWorkflowStep(previous);
+        addWorkflowStep(replacement, pos);
+    }
+    
+    public Integer getPositionOfWorkflowStep(WorkflowStep ws)
+    {
+        return workflowStepOrder.indexOf(ws.getId());
     }
 
 }
