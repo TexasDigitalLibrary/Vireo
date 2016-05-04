@@ -270,7 +270,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @Test(expected=WorkflowStepNonOverrideableException.class)
     @Order(value = 7)
     @Transactional
-    public void testPermissionWorkflowStepChangeAtChildOrg() throws WorkflowStepNonOverrideableException
+    public void testCantOverrideNonOverrideable() throws WorkflowStepNonOverrideableException
     {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentOrganization.addChildOrganization(organization);
@@ -386,6 +386,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     public void cleanUp() {
         //TODO:  need to be able to delete all the workflow steps
         //before deleting all the field profiles
+        //have to delete the fieldProfiles first to avoid an org.hibernate.AssertionFailure after the testInheritWorkflowStepViaPointer test
         fieldProfileRepo.findAll().forEach(fieldProfile -> {
             fieldProfileRepo.delete(fieldProfile);
         });
@@ -394,17 +395,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
             workflowStepRepo.delete(workflowStep);
         });
         
-//        for(Organization org : organizationRepo.findAll())
-//        {
-//            organizationRepo.delete(org);
-//        }
-
-        
-        //organizationRepo.flush();
-        //organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         noteRepo.deleteAll();
-        //fieldProfileRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
     }
     
