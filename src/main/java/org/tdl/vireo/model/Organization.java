@@ -255,11 +255,21 @@ public class Organization extends BaseEntity {
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
         if(childrenOrganizations != null) {
-            childrenOrganizations.stream().forEach(childOrganization -> {
-                childOrganization.addParentOrganization(this);
-            });
-            this.childrenOrganizations = childrenOrganizations;
+            if(childrenOrganizations.size() == 0)
+            {
+                this.childrenOrganizations = childrenOrganizations;
+                return;
+            }
+            else
+            {
+                childrenOrganizations.stream().forEach(childOrganization -> {
+                    //childOrganization.addParentOrganization(this);
+                    addChildOrganization(childOrganization);
+                });
+            }
+            
         }
+        
     }
 
     /**
