@@ -19,8 +19,10 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
       }
     }
   }
+  $scope.foo = [{name:'myname'}];
 
   $scope.ready.then(function() {
+    console.info($scope.selectedOrganization);
 
 
     $scope.reorderUp = function(originIdx) {
@@ -66,9 +68,9 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
     };
 
     $scope.printState = function() {
-      // console.info($scope.selectedOrganization);
-      console.info($scope.selectedOrganization.workflowSteps);
-      console.info($scope.selectedOrganization.workflowStepOrder);
+      console.info($scope.selectedOrganization);
+      // console.info($scope.selectedOrganization.workflowSteps);
+      // console.info($scope.selectedOrganization.workflowStepOrder);
     };
 
   });
