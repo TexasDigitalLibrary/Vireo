@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.repo.impl;
+package org.tdl.vireo.model.repo.impl.exception;
 
 public class WorkflowStepNonOverrideableException extends Exception {
 

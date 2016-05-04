@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.annotations.Order;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.exception.WorkflowStepNonOverrideableException;
 
 public class WorkflowStepTest extends AbstractEntityTest {
 

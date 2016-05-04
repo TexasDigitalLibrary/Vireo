@@ -16,6 +16,7 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
+import org.tdl.vireo.model.repo.impl.exception.WorkflowStepNonOverrideableException;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
