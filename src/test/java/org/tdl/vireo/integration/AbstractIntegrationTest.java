@@ -108,6 +108,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         brokerChannelInterceptor.setIncludedDestinations("/queue/" + root + "/**");
         
         boolean sent = clientInboundChannel.send(message);
+
         assertEquals(true, sent);
 
         Message<?> reply = brokerChannelInterceptor.awaitMessage();

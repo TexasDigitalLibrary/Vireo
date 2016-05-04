@@ -38,7 +38,7 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
-    
+
     //the workflow step from which this one is derived
     //need to know so we can tell if things are overrideable by this workflow step
     //use null if this workflow step is original

@@ -2,7 +2,7 @@ package org.tdl.vireo.model.repo.custom;
 
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.exception.WorkflowStepNonOverrideableException;
 
 public interface WorkflowStepRepoCustom {
 
