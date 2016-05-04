@@ -136,7 +136,22 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
         FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        fieldProfile.setOverrideable(false);
+        fieldProfileRepo.save(fieldProfile);
         
+        FieldProfile copyForUpdate = clone(fieldProfile);
+        copyForUpdate.setOverrideable(false);
+        
+        //expect to throw exception as this field profile does not originate in a workflow step originating in the child organization
+        fieldProfileRepo.update(copyForUpdate, childOrganization);
+    }
+    
+    @Test
+    @Order(value = 7)
+    @Transactional
+    public void testFieldProfileChangeAtChildOrg()
+    {
+    
     }
 
     @After
@@ -151,5 +166,23 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldGlossRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
         languageRepo.deleteAll();
+    }
+    
+    private FieldProfile clone (FieldProfile fp)
+    {
+        FieldProfile myDetachedFieldProfile = new FieldProfile();
+        myDetachedFieldProfile.setControlledVocabularies(fp.getControlledVocabularies());
+        myDetachedFieldProfile.setEnabled(fp.getEnabled());
+        myDetachedFieldProfile.setFieldGlosses(fp.getFieldGlosses());
+        myDetachedFieldProfile.setHelp(fp.getHelp());
+        myDetachedFieldProfile.setId(fp.getId());
+        myDetachedFieldProfile.setInputType(fp.getInputType());
+        myDetachedFieldProfile.setOptional(fp.getOptional());
+        myDetachedFieldProfile.setOriginatingWorkflowStep(fp.getOriginatingWorkflowStep());
+        myDetachedFieldProfile.setOverrideable(fp.getOverrideable());
+        myDetachedFieldProfile.setPredicate(fp.getPredicate());
+        myDetachedFieldProfile.setRepeatable(fp.getRepeatable());
+        myDetachedFieldProfile.setUsage(fp.getUsage());
+        return myDetachedFieldProfile;
     }
 }
