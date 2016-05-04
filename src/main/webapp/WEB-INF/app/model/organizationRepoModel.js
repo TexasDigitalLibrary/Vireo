@@ -87,7 +87,7 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 				'method': 'create',
 				'data': {
 					"name": OrganizationRepo.newOrganization.name, 
-					"categoryId": OrganizationRepo.newOrganization.categoryId,
+					"category": OrganizationRepo.newOrganization.category,
 					"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
 				}
 		});

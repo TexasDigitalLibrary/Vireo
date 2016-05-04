@@ -17,10 +17,6 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 			OrganizationRepo.add();
 		}
 
-		$scope.findOrganizationCategoryById = function(id) {
-			return OrganizationCategoryRepo.findById(id);
-		}
-
 	});
 
 

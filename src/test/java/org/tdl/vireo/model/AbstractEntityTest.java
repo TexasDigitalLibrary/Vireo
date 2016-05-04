@@ -42,7 +42,6 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
-import org.tdl.vireo.model.repo.WorkflowRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
@@ -67,6 +66,8 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_FIELD_PROFILE_REPEATABLE = true;
     protected static final boolean TEST_FIELD_PROFILE_ENABLED = true;
     protected static final boolean TEST_FIELD_PROFILE_OPTIONAL = false;
+    protected static final boolean TEST_FIELD_PROFILE_OVERRIDEABLE = true;
+    protected static final boolean TEST_FIELD_PROFILE_NONOVERRIDEABLE = true;
     protected static final String  TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
     
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
@@ -191,7 +192,8 @@ public abstract class AbstractEntityTest {
 
     protected static final String TEST_SEVERABLE_ORGANIZATION_NAME = "Test Severable Organization";
 
-    protected static final String TEST_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
+    protected static final String TEST_WORKFLOW_STEP_NAME = "Test Workflow Step";
+    protected static final String TEST_PARENT_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     protected static final String TEST_SEVERABLE_WORKFLOW_STEP_NAME = "Test Severable Workflow Step";
 
     protected static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
@@ -380,9 +382,6 @@ public abstract class AbstractEntityTest {
     protected OrganizationRepo organizationRepo;
 
     @Autowired
-    protected WorkflowRepo workflowRepo;
-
-    @Autowired
     protected NamedSearchFilterRepo namedSearchFilterRepo;
     
     @Autowired
@@ -409,6 +408,7 @@ public abstract class AbstractEntityTest {
     protected Organization organization;
     protected Language language;
     protected OrganizationCategory parentCategory;
+    protected OrganizationCategory childCategory;
     protected OrganizationCategory organizationCategory;
 
     protected SubmissionState submissionState;
@@ -428,8 +428,6 @@ public abstract class AbstractEntityTest {
     protected User includedSubmitter;
     protected User excludedSubmitter;
 
-    protected Workflow workflow;
-    
     protected WorkflowStep workflowStep;
     
     protected VocabularyWord vocabularyWord;
