@@ -303,6 +303,7 @@
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
+        <script src="controllers/settings/organizationStepsController.js"></script>
         <script src="controllers/settings/triptychController.js"></script>
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
