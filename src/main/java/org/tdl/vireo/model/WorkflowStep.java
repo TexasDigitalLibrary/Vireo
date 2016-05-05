@@ -59,6 +59,8 @@ public class WorkflowStep extends BaseEntity {
 
     //the field profiles used in this workflow step
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<FieldProfile> fieldProfiles;
     
     //the field profiles that originated in this workflow step
