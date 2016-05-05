@@ -39,6 +39,8 @@ public class Organization extends BaseEntity {
     private OrganizationCategory category;
 
     @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<WorkflowStep> workflowSteps;
     
     @ElementCollection(fetch = EAGER)
