@@ -67,7 +67,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public User validateUpdateRole(User user) {
         User possiblyExistingUser = findByEmail(user.getEmail());
         if (possiblyExistingUser == null) {
-            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistant user!"));
+            user.getBindingResult().addError(new ObjectError("user", "cannot update a role on a nonexistent user!"));
         } else {
             possiblyExistingUser.setBindingResult(user.getBindingResult());
             possiblyExistingUser.setRole(user.getRole());
