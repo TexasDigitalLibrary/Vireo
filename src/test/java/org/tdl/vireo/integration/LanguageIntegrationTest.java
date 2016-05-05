@@ -13,6 +13,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
+import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,6 +23,10 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private LanguageRepo languageRepo;
+    
+    //need this to clear the user created by the StopConnect() call in setup
+    @Autowired
+    private UserRepo userRepo;
         
     @Override
     public void setup() {
@@ -63,6 +68,7 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Override
     public void cleanup() {
         languageRepo.deleteAll();
+        userRepo.deleteAll();
     }
 
 }
