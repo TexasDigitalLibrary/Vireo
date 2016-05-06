@@ -19,18 +19,16 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
       }
     }
   }
-  $scope.foo = [{name:'myname'}];
 
   $scope.ready.then(function() {
-    console.info($scope.selectedOrganization);
 
+    $scope.selectedOrganizationSteps = [];
 
     $scope.reorderUp = function(originIdx) {
       reorder(originIdx, originIdx-1);
     };
 
     $scope.reorderDown = function(originIdx) {
-      console.info('downclick');
       reorder(originIdx, originIdx+1);
     };
 
@@ -40,17 +38,16 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
 
     $scope.resetOrganizationSteps();
     
-    $scope.selectedOrganizationSteps = function() {
-      var steps = [];
-      $scope.resetOrganizationSteps();
+    $scope.cacheSelectedOrganizationSteps = function() {
+      if ($scope.selectedOrganization == null) return null;
       $scope.selectedOrganization.workflowSteps.forEach(function(element, idx, array){
+        console.info('this is an id: '+element);
         OrganizationRepo.getStepForId(element).then(function(workflowStep){
-          console.info(workflowStep);
+          // console.info(workflowStep);
+          //todo order the steps visually
+          $scope.selectedOrganizationSteps.push(workflowStep);
         });
       });
-      
-      console.info(steps);
-      // $scope.modalData = $scope.organizationSteps.list[index];
     };
 
     $scope.createOrganizationSteps = function() {
@@ -76,8 +73,7 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
     };
 
     $scope.printState = function() {
-      console.info($scope.selectedOrganization);
-      $scope.selectedOrganizationSteps();
+      $scope.cacheSelectedOrganizationSteps();
     };
 
   });

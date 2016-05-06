@@ -131,8 +131,7 @@ public class OrganizationController {
         WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(wStepID);
         if (potentiallyExistingStep != null) {
             System.out.println("going to return step: " + potentiallyExistingStep.getName());
-            simpMessagingTemplate.convertAndSend("/channel/organization/workflow-step", new ApiResponse(SUCCESS, potentiallyExistingStep));
-            return new ApiResponse(SUCCESS);
+            return new ApiResponse(SUCCESS, potentiallyExistingStep);
         }
         return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
     }

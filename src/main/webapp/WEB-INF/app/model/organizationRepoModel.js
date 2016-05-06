@@ -18,7 +18,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	OrganizationRepo.listener = null;
 
-	OrganizationRepo.promise = null;
+        OrganizationRepo.promise = null;
 
 	OrganizationRepo.newOrganization = {};
 
@@ -62,15 +62,6 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 			controller: 'organization', 
 			method: '',
 		});
-
-		 WsApi.listen({
-			endpoint: '/channel', 
-			controller: 'organization', 
-			method: 'workflow-step',
-		}).then(null, null, function(res){
-                  // console.info(res);
-                  
-                });
 
 		OrganizationRepo.set(OrganizationRepo.listener);
 
@@ -125,10 +116,10 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	};
 
 	OrganizationRepo.getStepForId = function(wsID) {
-
 		var defer = $q.defer();
 
 		if (workflowStepsCache[wsID]) {
+                  console.info('actually returning wsV');
 			defer.resolve(workflowStepsCache[wsID]);
 		}else{
 			var stepPromise = WsApi.fetch({
@@ -137,14 +128,15 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 				method: 'workflow-step/' + wsID,
 			});
 
-			stepPromise.then(function(result){
-				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
-				workflowStepsCache[wsID] = workflowStep;
-				defer.resolve(workflowStep);
-			});
+                  stepPromise.then(function(result){
+                    var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
+                    console.info(workflowStep);
+                    workflowStepsCache[wsID] = workflowStep;
+                    defer.resolve(workflowStep);
+                  });
 
-		}
-		return defer.promise;
+                }
+                return defer.promise;
 	}
         
         OrganizationRepo.ready = function() {
