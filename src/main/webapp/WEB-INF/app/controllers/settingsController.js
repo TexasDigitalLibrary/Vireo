@@ -46,7 +46,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 			$scope.pendingUpdate = true;
 
 			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfigurableSettings(type,name,$scope.settings.configurable[type][name]);
+				$scope.updateConfigurableSettings(type,name);
 				$scope.pendingUpdate = false;
 			}, 500);
 

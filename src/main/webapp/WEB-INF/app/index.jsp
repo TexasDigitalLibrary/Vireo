@@ -273,6 +273,7 @@
 	    <script src="directives/trashCanDirective.js"></script>
 	    <script src="directives/selectedDirective.js"></script>
 	    <script src="directives/dropZoneDirective.js"></script>
+	    <script src="directives/validationResponseDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>

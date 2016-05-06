@@ -126,8 +126,14 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     public Configuration validateUpdate(Configuration configuration) {
         if(!configuration.getBindingResult().hasErrors()) {
             Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
+            // special case for #RGB values for CSS colors
+            if(configuration.getType().equals("lookAndFeel") && configuration.getName().contains("_color")){
+                if(!configuration.getValue().matches("(^#[0-9A-Fa-f]{6}$)|(^#[0-9A-Fa-f]{3}$)")) {
+                    configuration.getBindingResult().addError(new ObjectError("configuration", "Invalid Hex color value!"));
+                }
+            }
             // if we only found the system required one, create a custom non-system
-            if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
+            else if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
                 // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
                 ModelBindingResult bindingResult = configuration.getBindingResult();
                 // we copy values over to new instance of Configuration in case the incoming configuration had isSystemRequired() set to true

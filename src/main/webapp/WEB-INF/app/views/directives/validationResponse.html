@@ -1,0 +1,11 @@
+<div ng-messages="validationResponse">
+    <span class="alert alert-danger glyphicon glyphicon-info-sign" ng-message="errors">
+   		<span ng-repeat="error in validationResponse.errors">{{error.field}} {{error.defaultMessage}}</span>
+   	</span>
+   	<span class="alert alert-warning glyphicon glyphicon-info-sign" ng-message="warnings">
+   		<span ng-repeat="warning in validationResponse.warnings">{{warning.field}} {{warning.defaultMessage}}</span>
+  		</span>
+    <span class="alert alert-info glyphicon glyphicon-info-sign" ng-message="infos">
+    	<span ng-repeat="info in validationResponse.infos">{{info.field}} {{info.defaultMessage}}</span>
+    </span>
+</div>
