@@ -60,6 +60,12 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             workflowStepRepo.delete(workflowStep);
         }
         
+        // remove org from list of containing orgs for all the workflow steps on it
+        for(WorkflowStep workflowStep : organization.getWorkflowSteps())
+        {
+            workflowStep.removeContainedByOrganization(organization);
+        }
+        
         Set<Organization> parentOrganizations = organization.getParentOrganizations();
         
         // reconstructing tree when intermediate organization removed

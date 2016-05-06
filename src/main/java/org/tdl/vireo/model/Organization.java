@@ -141,7 +141,6 @@ public class Organization extends BaseEntity {
     }
     
     
-    //TODO:  handle the ordering elsewhere, i.e. workflow step repo
     public void addWorkflowStep(WorkflowStep workflowStep, Integer orderIndex) {
         //if(orderIndex < 0) orderIndex = 0;
          
@@ -175,7 +174,7 @@ public class Organization extends BaseEntity {
         	if(ancestorStepMarkedForRemoval != null)
         	{
             	removeWorkflowStep(ancestorStepMarkedForRemoval);
-            removeWorkflowStepOrder(ancestorStepMarkedForRemoval.getId());
+            	removeWorkflowStepOrder(ancestorStepMarkedForRemoval.getId());
         	}
     }
 
@@ -270,10 +269,8 @@ public class Organization extends BaseEntity {
                     //childOrganization.addParentOrganization(this);
                     addChildOrganization(childOrganization);
                 });
-            }
-            
-        }
-        
+            }            
+        }        
     }
 
     /**
@@ -292,8 +289,7 @@ public class Organization extends BaseEntity {
                 childrenWorkflowSteps.add(workflowStep);
             }
             childOrganization.setWorkflowSteps(childrenWorkflowSteps);
-        }
-       
+        }       
     }
 
     /**
