@@ -40,9 +40,17 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
 
     $scope.resetOrganizationSteps();
     
-    $scope.selectOrganizationSteps = function(index) {
+    $scope.selectedOrganizationSteps = function() {
+      var steps = [];
       $scope.resetOrganizationSteps();
-      $scope.modalData = $scope.organizationSteps.list[index];
+      $scope.selectedOrganization.workflowSteps.forEach(function(element, idx, array){
+        OrganizationRepo.getStepForId(element).then(function(workflowStep){
+          console.info(workflowStep);
+        });
+      });
+      
+      console.info(steps);
+      // $scope.modalData = $scope.organizationSteps.list[index];
     };
 
     $scope.createOrganizationSteps = function() {
@@ -69,8 +77,7 @@ vireo.controller("OrganizationStepsController", function ($controller, $scope, $
 
     $scope.printState = function() {
       console.info($scope.selectedOrganization);
-      // console.info($scope.selectedOrganization.workflowSteps);
-      // console.info($scope.selectedOrganization.workflowStepOrder);
+      $scope.selectedOrganizationSteps();
     };
 
   });

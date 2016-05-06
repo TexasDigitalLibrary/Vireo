@@ -1,4 +1,4 @@
-vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
+vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	var self;
 	
@@ -11,6 +11,8 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 		self.unwrap(self, futureData);
 		
 	};
+
+	var workflowStepsCache = [];
 	
 	OrganizationRepo.data = null;
 	
@@ -60,7 +62,16 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 			controller: 'organization', 
 			method: '',
 		});
-				
+
+		 WsApi.listen({
+			endpoint: '/channel', 
+			controller: 'organization', 
+			method: 'workflow-step',
+		}).then(null, null, function(res){
+                  // console.info(res);
+                  
+                });
+
 		OrganizationRepo.set(OrganizationRepo.listener);
 
 		return OrganizationRepo.data;
@@ -112,9 +123,32 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 		return updateOrganizationPromise;
 
 	};
-	
-	OrganizationRepo.ready = function() {
-		return OrganizationRepo.promise;
+
+	OrganizationRepo.getStepForId = function(wsID) {
+
+		var defer = $q.defer();
+
+		if (workflowStepsCache[wsID]) {
+			defer.resolve(workflowStepsCache[wsID]);
+		}else{
+			var stepPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'organization', 
+				method: 'workflow-step/' + wsID,
+			});
+
+			stepPromise.then(function(result){
+				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
+				workflowStepsCache[wsID] = workflowStep;
+				defer.resolve(workflowStep);
+			});
+
+		}
+		return defer.promise;
+	}
+        
+        OrganizationRepo.ready = function() {
+                return OrganizationRepo.promise;
 	};
 
 	OrganizationRepo.listen = function() {
