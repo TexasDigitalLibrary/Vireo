@@ -7,7 +7,8 @@
           scope-value="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'proquest_institution_code')"
           key-down="confirmEdit(event, prop)"
-          tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+          tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue."
+          validation-response="serverErrors['proquest_umi_degree_code']['proquest_institution_code']">
       </textField>
 
       <togglebutton
@@ -44,70 +45,80 @@
           label="Doctor of Philosophy:" 
           scope-value="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'doctor_of_philosophy')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['doctor_of_philosophy']">
       </textField>
 
       <textField 
           label="Doctor of Education:" 
           scope-value="settings.configurable.proquest_umi_degree_code.doctor_of_education"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'doctor_of_education')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['doctor_of_education']">
       </textField>
 
       <textField 
           label="Doctor of Engineering:" 
           scope-value="settings.configurable.proquest_umi_degree_code.doctor_of_engineering"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'doctor_of_engineering')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['doctor_of_engineering']">
       </textField>
 
       <textField 
           label="Doctor of Public Health:" 
           scope-value="settings.configurable.proquest_umi_degree_code.doctor_of_public_health"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'doctor_of_public_health')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['doctor_of_public_health']">
       </textField>
 
       <textField 
           label="Doctor of Musical Arts:" 
           scope-value="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'doctor_of_musical_arts')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['doctor_of_musical_arts']">
       </textField>
 
       <textField 
           label="Master of Science:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_science"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_science')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_science']">
       </textField>
 
       <textField 
           label="Master of Arts:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_arts"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_arts')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_arts']">
       </textField>
 
       <textField 
           label="Master of Landscape Architecture:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_landscape_architecture')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_landscape_architecture']">
       </textField>
 
       <textField 
           label="Master of Marine Resources Management:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_marine_resources_management')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_marine_resources_management']">
       </textField>
 
       <textField 
           label="Master of Maritime Administration and Logistics:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_maritime_administration_and_logistics')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_maritime_administration_and_logistics']">
       </textField>
 
     </div>
@@ -118,63 +129,72 @@
           label="Master of Public Affairs:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_public_affairs"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_public_affairs')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_public_affairs']">
       </textField>
 
       <textField 
           label="Master of Science Public Health:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_science_public_health"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_science_public_health')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_science_public_health']">
       </textField>
 
       <textField 
           label="Master of Urban Planning:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_urban_planning"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_urban_planning')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_urban_planning']">
       </textField>
 
       <textField 
           label="Biology:" 
           scope-value="settings.configurable.proquest_umi_degree_code.biology"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'biology')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['biology']">
       </textField>
 
       <textField 
           label="Biomedical Engineering:" 
           scope-value="settings.configurable.proquest_umi_degree_code.biomedical_engineering"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'biomedical_engineering')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['biomedical_engineering']">
       </textField>
 
       <textField 
           label="Computer Science:" 
           scope-value="settings.configurable.proquest_umi_degree_code.computer_science"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'computer_science')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['computer_science']">
       </textField>
 
       <textField 
           label="Master of Public Health:" 
           scope-value="settings.configurable.proquest_umi_degree_code.master_of_public_health"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'master_of_public_health')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['master_of_public_health']">
       </textField>
 
       <textField 
           label="Psychology:" 
           scope-value="settings.configurable.proquest_umi_degree_code.psychology"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'psychology')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['psychology']">
       </textField>
 
       <textField 
           label="Transportation:" 
           scope-value="settings.configurable.proquest_umi_degree_code.transportation"
           on-blur="updateConfigurableSettings('proquest_umi_degree_code', 'transportation')"
-          key-down="confirmEdit(event, prop)">
+          key-down="confirmEdit(event, prop)"
+          validation-response="serverErrors['proquest_umi_degree_code']['transportation']">
       </textField>
 
     </div>

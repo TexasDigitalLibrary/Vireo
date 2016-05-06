@@ -4,6 +4,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
+	
+	$scope.serverErrors = [];
 		
 	$scope.settings.configurable = ConfigurableSettings.get();
 
@@ -52,22 +54,31 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.updateConfigurableSettingsPlainText = function(type,name) {
 			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name])).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+				if($scope.serverErrors[type] === undefined) {
+					$scope.serverErrors[type] = [];
+				}
+				$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
+				//console.log($scope.serverErrors[type][name]);
 			});
 		};
 
-		$scope.updateConfigurableSettings = function(type,setting) {
-			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]).then(function(data) { 
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+		$scope.updateConfigurableSettings = function(type,name) {
+			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+				if($scope.serverErrors[type] === undefined) {
+					$scope.serverErrors[type] = [];
+				}
+				$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
+				//console.log($scope.serverErrors[type][name]);
 			});
 		};
 
 		$scope.resetConfigurableSettings = function(type,name) {
 			ConfigurableSettings.reset(type,name,$scope.settings.configurable[type][name]).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+				if($scope.serverErrors[type] === undefined) {
+					$scope.serverErrors[type] = [];
+				}
+				$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
+				//console.log($scope.serverErrors[type][name]);
 			});
 		};
 
