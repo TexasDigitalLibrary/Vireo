@@ -1,6 +1,8 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -126,7 +128,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, grandchildFieldProfile.getPredicate().getValue());
     }
     
-    @Test
+    @Test(expected=FieldProfileNonOverrideableException.class)
     @Order(value = 6)
     @Transactional
     public void testCantOverrideNonOverrideable() throws FieldProfileNonOverrideableException
@@ -142,7 +144,12 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldProfileRepo.save(fieldProfile);
         
         FieldProfile copyForUpdate = clone(fieldProfile);
-        copyForUpdate.setOverrideable(false);
+        
+        assertEquals("The workflow step didn't originate in the right org!", parentOrganization, parentWorkflowStep.getOriginatingOrganization());
+        
+        assertEquals("The copy of the field profile didn't originate in the right workflow step!", parentWorkflowStep, copyForUpdate.getOriginatingWorkflowStep());
+        
+        assertFalse("The copy of the field profile didn't record that it was made non-overrideable!", copyForUpdate.getOverrideable());
         
         //expect to throw exception as this field profile does not originate in a workflow step originating in the child organization
         fieldProfileRepo.update(copyForUpdate, childOrganization);
@@ -150,6 +157,34 @@ public class FieldProfileTest extends AbstractEntityTest {
     
     @Test
     @Order(value = 7)
+    @Transactional
+    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws FieldProfileNonOverrideableException
+    {
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addChildOrganization(childOrganization);
+        
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+
+        fieldProfile.setOverrideable(false);
+        fieldProfileRepo.save(fieldProfile);
+        
+        FieldProfile copyForUpdate = clone(fieldProfile);
+        copyForUpdate.setHelp("Help!");
+        
+        assertTrue("The setter didn't work for help string on the FieldProfile!", copyForUpdate.getHelp().equals("Help!"));
+        
+        assertFalse("The field profile didn't record that it was made non-overrideable!", fieldProfile.getOverrideable());
+        
+        //expect not to throw exception as this field profile originates in a workflow step originating in the parentOrganization
+        fieldProfile = fieldProfileRepo.update(copyForUpdate, parentOrganization);
+        assertTrue("The field profile wasn't updated to include the changed help!", fieldProfile.getHelp().equals("Help!"));
+        
+    }
+    
+    @Test
+    @Order(value = 8)
     @Transactional
     public void testFieldProfileChangeAtChildOrg()
     {

@@ -46,18 +46,35 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException {
         //if the requesting organization does not originate the step that originates the fieldProfile, and it is non-overrideable, then throw an exception.
         boolean requestorOriginatesProfile = false;
-        for(WorkflowStep prospectiveOriginatorOfFieldProfile : requestingOrganization.getWorkflowSteps())
+        for(WorkflowStep prospectiveOriginatingStepOfFieldProfile : requestingOrganization.getWorkflowSteps())
         {
-            if(fieldProfile.getOriginatingWorkflowStep().equals(prospectiveOriginatorOfFieldProfile))
+            //if this step of the requesting organization happens to be the originator of the field profile, and the step also originates in the requesting organization, then this organization truly originates the field profile.
+            if(fieldProfile.getOriginatingWorkflowStep().equals(prospectiveOriginatingStepOfFieldProfile) && 
+               requestingOrganization.equals(prospectiveOriginatingStepOfFieldProfile.getOriginatingOrganization()))
             {
                 requestorOriginatesProfile=true;
             }
         }
+        
+        //if the requestor is not the originator and it is not overrideable, we can't make the update
         if(requestorOriginatesProfile == false && fieldProfile.getOverrideable() == false)
         {
             throw new FieldProfileNonOverrideableException();
         }
-        return null;
+        //if the requestor originates, make the update at the requestor
+        else if(requestorOriginatesProfile == true)
+        {
+            fieldProfile = fieldProfileRepo.save(fieldProfile);
+            return fieldProfile;
+        }
+        //else, it's overrideable and we didn't oringinate it so we need to make a new one that overrides.
+        else
+        {
+            //TODO:
+            return null;
+        }
+        
+        
     }
     
     @Override
