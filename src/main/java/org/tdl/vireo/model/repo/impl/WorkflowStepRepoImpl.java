@@ -61,8 +61,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
         //if the Org trying to update is the originating Org of the WorkflowStep, make the update.
         if(workflowStep.getOriginatingOrganization() != null && requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
-            workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+            
             Organization originatingOrg = workflowStep.getOriginatingOrganization();
+            
             //If the workflowStep is now non-overrideable, blow away descendants and change pointer to them to point to the non-overrideable
             if(workflowStep.getOverrideable() == false)
             {
@@ -75,6 +76,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
             
             workflowStep = workflowStepRepo.save(workflowStep);
+            
         }
         //else, if the child (non-originating) Org trying to update finds that the WorkflowStep is overrideable, make a new WorkflowStep for the update
         else if(workflowStep.getOverrideable()) {
@@ -146,15 +148,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
         if(originatingOrganization != null) {
             originatingOrganization.removeWorkflowStep(workflowStep);
-            //TODO: why not?
-            //organizationRepo.save(originatingOrganization);
+            organizationRepo.save(originatingOrganization);
         }
         
         for(Organization organization : workflowStep.getContainedByOrganizations()) {
             organization.removeWorkflowStepOrder(workflowStep.getId());
             organization.removeWorkflowStep(workflowStep);
-            //TODO: why not?
-            //organizationRepo.save(organization);
+            organizationRepo.save(organization);
         }
         
         workflowStep.setContainedByOrganizations(null);
@@ -183,8 +183,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	recursivelyRemoveFieldProfile(originatingOrganization, fieldProfile);
             fieldProfileRepo.delete(fieldProfile);            
         }
-        
+    
         workflowStepRepo.delete(workflowStep.getId());
+     
     }
 
     private void recursivelyRemoveFieldProfile(Organization organization, FieldProfile targetFieldProfile) {
