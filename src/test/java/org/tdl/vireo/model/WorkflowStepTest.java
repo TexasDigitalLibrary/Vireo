@@ -2,8 +2,8 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,6 +43,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
+    @Transactional
     public void testWorkFlowStepDefaultEmptyInit() {
         Organization org = organizationRepo.create("testOrg", parentCategory);
         assertEquals("A newly created organization should have no workflow steps", 0, org.getWorkflowSteps().size());
@@ -50,6 +51,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
+    @Transactional
     public void testWorkFlowStepAppend() {
         Organization org = organizationRepo.create("testOrg", parentCategory);
         org.addWorkflowStep(workflowStepRepo.create("first step", org));
@@ -58,6 +60,19 @@ public class WorkflowStepTest extends AbstractEntityTest {
         org.addWorkflowStep(workflowStepRepo.create("second step", org));
         assertEquals("The organization should have one step", 2, org.getWorkflowSteps().size());
         assertEquals("The organization should have one step", 2, org.getWorkflowStepOrder().size());
+    }
+
+    @Test
+    @Transactional
+    public void testWorkFlowStepAppendAtIndexThrowsForOutOfBounds() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        try {
+            System.out.println("about to try....");
+            org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
+            fail("Inserting a workflow step out of bounds should throw an IndexOutOfBoundException");
+        } catch (Exception e) {
+            
+        } 
     }
 
     @Override
@@ -424,12 +439,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        //TODO:  need to be able to delete all the workflow steps
-        //before deleting all the field profiles
-        //have to delete the fieldProfiles first to avoid an org.hibernate.AssertionFailure after the testInheritWorkflowStepViaPointer test
-
-        
-        
         organizationCategoryRepo.deleteAll();
         assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
         
