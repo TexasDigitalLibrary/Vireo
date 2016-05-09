@@ -133,7 +133,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
                 }
             }
             // if we only found the system required one, create a custom non-system
-            else if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
+            if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
                 // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
                 ModelBindingResult bindingResult = configuration.getBindingResult();
                 // we copy values over to new instance of Configuration in case the incoming configuration had isSystemRequired() set to true
