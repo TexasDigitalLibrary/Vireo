@@ -160,8 +160,11 @@ public class Organization extends BaseEntity {
     	        }
     	        
     	        workflowStep.addContainedByOrganization(this);
-    	        if(orderIndex != null)
+    	        if(orderIndex != null){
     	            workflowStepOrder.add(orderIndex, workflowStep.getId());
+    	        }else{
+    	            workflowStepOrder.add(workflowStep.getId());
+    	        }
     	        Set<Organization> children = getChildrenOrganizations();
     	        if(!children.isEmpty()) {
     	            children.parallelStream().forEach(child -> {
