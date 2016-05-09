@@ -173,12 +173,12 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         Configuration logoToUpdate = configurationRepo.getByName(lfModel.getSetting());
         // if it doesn't exist
         if (logoToUpdate == null) {
-            lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", "Cannot upload logo that doesn't exist!"));
+            lfModel.getBindingResult().addError(new ObjectError(lfModel.getSetting(), "Cannot upload logo that doesn't exist!"));
         } else {
             try {
                 fileIOUtility.writeImage(inputStream, path);
             } catch (IOException e) {
-                lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", e.getLocalizedMessage()));
+                lfModel.getBindingResult().addError(new ObjectError(lfModel.getSetting(), e.toString()));
             }
         }
         return lfModel;
