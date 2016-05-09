@@ -75,6 +75,21 @@ public class WorkflowStepTest extends AbstractEntityTest {
         } 
     }
 
+    @Transactional
+    public void testWorkFlowStepAppendAtIndexSuccess() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 0));
+        assertEquals("The org should have 1 workflow steps.", 1, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 1));
+        assertEquals("The org should have 2 workflow steps.", 2, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 2));
+        assertEquals("The org should have 3 workflow steps.", 3, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
+        assertEquals("The org should have 4 workflow steps.", 4, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 4));
+        assertEquals("The org should have 5 workflow steps.", 5, org.getWorkflowSteps().size());
+    }
+
     @Override
     @Transactional
     public void testDelete() {
