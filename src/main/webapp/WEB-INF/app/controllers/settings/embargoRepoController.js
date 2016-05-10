@@ -45,7 +45,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log(validationResponse);
                 if($scope.serverErrors[$scope.modalData.guarantor] === undefined || $scope.serverErrors[$scope.modalData.guarantor].errors.length == 0) {
                 	$scope.resetEmbargo();
 					$scope.closeModal("embargoNewModal");
@@ -69,7 +68,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log(validationResponse);
                 if($scope.serverErrors[$scope.modalData.guarantor] === undefined || $scope.serverErrors[$scope.modalData.guarantor].errors.length == 0) {
                 	$scope.resetEmbargo();
 					$scope.closeModal("embargoEditModal");
@@ -83,7 +81,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log(validationResponse);
 				if($scope.serverErrors[$scope.modalData.guarantor] === undefined || $scope.serverErrors[$scope.modalData.guarantor].errors.length == 0) {
                 	$scope.resetEmbargo();
 					$scope.closeModal("embargoEditModal");
@@ -94,7 +91,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.reorderEmbargoDefault = function(src, dest) {
 			EmbargoRepo.reorder("DEFAULT", src, dest).then(function(data){
 				$scope.serverErrors['DEFAULT'] = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log(validationResponse);
                 if($scope.serverErrors['DEFAULT'] === undefined || $scope.serverErrors['DEFAULT'].errors.length == 0) {
                 	$scope.resetEmbargo();
                 }
@@ -104,7 +100,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		$scope.reorderEmbargoProquest = function(src, dest) {
 			EmbargoRepo.reorder("PROQUEST", src, dest).then(function(data){
 				$scope.serverErrors['PROQUEST'] = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log(validationResponse);
                 if($scope.serverErrors['PROQUEST'] === undefined || $scope.serverErrors['PROQUEST'].errors.length == 0) {
                 	$scope.resetEmbargo();
                 }
@@ -117,7 +112,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			} else if($scope.sortAction == $scope.sortDefault || $scope.sortAction == $scope.sortProquest) {
 				EmbargoRepo.sort("DEFAULT", column).then(function(data){
 					$scope.serverErrors['DEFAULT'] = angular.fromJson(data.body).payload.ValidationResponse;
-	                //console.log(validationResponse);
 	                if($scope.serverErrors['DEFAULT'] === undefined || $scope.serverErrors['DEFAULT'].errors.length == 0) {
 	                	$scope.resetEmbargo();
 	                	$scope.sortAction = 'confirm';
@@ -132,7 +126,6 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			} else if($scope.sortAction == $scope.sortDefault || $scope.sortAction == $scope.sortProquest) {
 				EmbargoRepo.sort("PROQUEST", column).then(function(data){
 					$scope.serverErrors['PROQUEST'] = angular.fromJson(data.body).payload.ValidationResponse;
-	                //console.log(validationResponse);
 	                if($scope.serverErrors['PROQUEST'] === undefined || $scope.serverErrors['PROQUEST'].errors.length == 0) {
 	                	$scope.resetEmbargo();
 						$scope.sortAction = 'confirm';

@@ -32,7 +32,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.createCustomAction = function() {
 			CustomActionSettings.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log($scope.serverErrors);
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
 					$scope.closeModal("customActionNewModal");
@@ -52,7 +51,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.updateCustomAction = function() {
 			CustomActionSettings.update($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log($scope.serverErrors);
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
 					$scope.closeModal("customActionEditModal");
@@ -63,7 +61,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.reorderCustomAction = function(src, dest) {
 			CustomActionSettings.reorder(src, dest).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log($scope.serverErrors);
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
 				}
@@ -73,7 +70,6 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.removeCustomAction = function(index) {
 			CustomActionSettings.remove(index).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-                //console.log($scope.serverErrors);
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
 					$scope.closeModal("customActionConfirmRemoveModal");
