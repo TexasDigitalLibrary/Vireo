@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" data-dismiss="modal" ng-click="resetDepositLocation()" aria-label="Close">
+	<button type="button" class="close" ng-click="resetDepositLocation(); closeModal(attr.modalId)" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
@@ -9,9 +9,12 @@
 	<h4><b>Click confirm to remove the Deposit Location:</b></h4>
 	<h4>Name: {{modalData.name}}</h4>
 	<h4>Repository: {{modalData.repository}}</h4>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetDepositLocation()" data-dismiss="modal">Cancel</button>
-	<button id="depositLocation-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeDepositLocation(modalData.id)">Confirm</button>
+	<button type="button" class="btn btn-warning" ng-click="resetDepositLocation(); closeModal(attr.modalId)">Cancel</button>
+	<button id="depositLocation-confirm" type="button" class="btn btn-primary" ng-click="removeDepositLocation(modalData.id)">Confirm</button>
 </div>
