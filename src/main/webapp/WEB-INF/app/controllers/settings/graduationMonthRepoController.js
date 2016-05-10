@@ -6,6 +6,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
 	$scope.dragging = false;
+	
+	$scope.serverErrors = [];
 
 	$scope.trashCanId = 'graduation-month-trash';
 	
@@ -38,13 +40,23 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			$scope.resetMonthOptions();
 		};
 		
+		$scope.closeModal = function(modalId) {
+    		angular.element('#' + modalId).modal('hide');
+    		// clear all errors, but not infos or warnings
+    		if($scope.serverErrors !== undefined) {
+    			$scope.serverErrors.errors = undefined;
+    		}
+    	}
+		
 		$scope.resetGraduationMonth();
 
 		$scope.createGraduationMonth = function() {
 			GraduationMonthRepo.add($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetGraduationMonth();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetGraduationMonth();
+            		$scope.closeModal("graduationMonthNewModal");
+            	}
 			});
 		};
 		
@@ -55,23 +67,27 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 		
 		$scope.editGraduationMonth = function(index) {
+			$scope.serverErrors = [];
 			$scope.selectGraduationMonth(index - 1);
 			angular.element('#graduationMonthEditModal').modal('show');
 		};
 		
 		$scope.updateGraduationMonth = function() {
 			GraduationMonthRepo.update($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetGraduationMonth();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetGraduationMonth();
+            		$scope.closeModal("graduationMonthEditModal");
+            	}
 			});
 		};
 
 		$scope.reorderGraduationMonth = function(src, dest) {
 	    	GraduationMonthRepo.reorder(src, dest).then(function(data) {
-	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetGraduationMonth();
+	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetGraduationMonth();
+            	}
 			});
 		};
 
@@ -81,9 +97,10 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			}
 			else if($scope.sortAction == 'sort') {
 				GraduationMonthRepo.sort(column).then(function(data) {
-					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-	                console.log(validationResponse);
-					$scope.resetGraduationMonth();
+					$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+	            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+	            		$scope.resetGraduationMonth();
+	            	}
 				});
 				$scope.sortAction = 'confirm';
 			}
@@ -92,9 +109,11 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 		$scope.removeGraduationMonth = function(index) {
 	    	GraduationMonthRepo.remove(index).then(function(data) {
-	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-	    		$scope.resetGraduationMonth();
+	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetGraduationMonth();
+            		$scope.closeModal("graduationMonthConfirmRemoveModal");
+            	}
 	    	});
 		};
 
