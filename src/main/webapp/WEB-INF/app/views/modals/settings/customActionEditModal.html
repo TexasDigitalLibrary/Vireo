@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="resetCustomAction(); closeModal(attr.modalId)" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Custom Action Checklist</h3>
@@ -28,9 +28,12 @@
 			</div>
 		</form>
 	</div>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 </div>
 
 <div class="modal-footer">	
-	<button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="resetCustomAction()">Cancel</button>
-	<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="updateCustomAction()">Save Custom Action</button>
+	<button type="button" class="btn btn-warning" ng-click="resetCustomAction(); closeModal(attr.modalId)">Cancel</button>
+	<button type="button" class="btn btn-primary" ng-click="updateCustomAction()">Save Custom Action</button>
 </div>

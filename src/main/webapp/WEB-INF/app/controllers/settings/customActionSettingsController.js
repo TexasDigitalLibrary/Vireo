@@ -6,6 +6,8 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.ready = $q.all([CustomActionSettings.ready()]);
 	
 	$scope.dragging = false;
+	
+	$scope.serverErrors = [];
 
 	$scope.trashCanId = 'custom-action-trash';
 	
@@ -16,14 +18,25 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 				isStudentVisible: false 
 			};
 		}
+		
+		$scope.closeModal = function(modalId) {
+			angular.element('#' + modalId).modal('hide');
+			// clear all errors, but not infos or warnings
+			if($scope.serverErrors !== undefined) {
+				$scope.serverErrors.errors = undefined;
+			}
+		}
 
 		$scope.resetCustomAction();
 
 		$scope.createCustomAction = function() {
 			CustomActionSettings.create($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetCustomAction();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+                //console.log($scope.serverErrors);
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetCustomAction();
+					$scope.closeModal("customActionNewModal");
+				}
 			});
 		};
 		
@@ -38,25 +51,33 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		
 		$scope.updateCustomAction = function() {
 			CustomActionSettings.update($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetCustomAction();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+                //console.log($scope.serverErrors);
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetCustomAction();
+					$scope.closeModal("customActionEditModal");
+				}
 			});
 		};
 		
 		$scope.reorderCustomAction = function(src, dest) {
 			CustomActionSettings.reorder(src, dest).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetCustomAction();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+                //console.log($scope.serverErrors);
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetCustomAction();
+				}
 			});
 		};
 		
 		$scope.removeCustomAction = function(index) {
 			CustomActionSettings.remove(index).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetCustomAction();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+                //console.log($scope.serverErrors);
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetCustomAction();
+					$scope.closeModal("customActionConfirmRemoveModal");
+				}
 			});
 		};
 

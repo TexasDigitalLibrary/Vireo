@@ -1,6 +1,8 @@
 <div id="custom-action" class="row" ng-controller="CustomActionSettingsController">
 	
-	<alerts channels="/settings/custom-action" types="ERROR, WARNING" exclusive></alerts>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 	
 	<div class="col-sm-6">
 
