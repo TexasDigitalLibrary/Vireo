@@ -2,8 +2,8 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,6 +40,54 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The field profile did not contain the correct value!", TEST_FIELD_PROFILE_ENABLED, fieldProfile.getEnabled());
         assertEquals("The field profile did not contain the correct value!", TEST_FIELD_PROFILE_OPTIONAL, fieldProfile.getOptional());
         assertEquals("Saved entity did not contain the field profile field predicate value!", fieldPredicate, workflowStep.getFieldProfileByPredicate(fieldPredicate).getPredicate());
+    }
+    
+    @Test
+    @Transactional
+    public void testWorkFlowStepDefaultEmptyInit() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        assertEquals("A newly created organization should have no workflow steps", 0, org.getWorkflowSteps().size());
+        assertEquals("A newly created organization should have empty workflow step order", 0, org.getWorkflowStepOrder().size());
+    }
+    
+    @Test
+    @Transactional
+    public void testWorkFlowStepAppend() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        org.addWorkflowStep(workflowStepRepo.create("first step", org));
+        assertEquals("The organization should have one step", 1, org.getWorkflowSteps().size());
+        assertEquals("The organization should have one step", 1, org.getWorkflowStepOrder().size());
+        org.addWorkflowStep(workflowStepRepo.create("second step", org));
+        assertEquals("The organization should have one step", 2, org.getWorkflowSteps().size());
+        assertEquals("The organization should have one step", 2, org.getWorkflowStepOrder().size());
+    }
+
+    @Test
+    @Transactional
+    public void testWorkFlowStepAppendAtIndexThrowsForOutOfBounds() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        try {
+            System.out.println("about to try....");
+            org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
+            fail("Inserting a workflow step out of bounds should throw an IndexOutOfBoundException");
+        } catch (Exception e) {
+            
+        } 
+    }
+
+    @Transactional
+    public void testWorkFlowStepAppendAtIndexSuccess() {
+        Organization org = organizationRepo.create("testOrg", parentCategory);
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 0));
+        assertEquals("The org should have 1 workflow steps.", 1, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 1));
+        assertEquals("The org should have 2 workflow steps.", 2, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 2));
+        assertEquals("The org should have 3 workflow steps.", 3, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
+        assertEquals("The org should have 4 workflow steps.", 4, org.getWorkflowSteps().size());
+        org.addWorkflowStep(workflowStepRepo.create("first step", org, 4));
+        assertEquals("The org should have 5 workflow steps.", 5, org.getWorkflowSteps().size());
     }
 
     @Override
@@ -406,19 +454,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        //TODO:  need to be able to delete all the workflow steps
-        //before deleting all the field profiles
-        //have to delete the fieldProfiles first to avoid an org.hibernate.AssertionFailure after the testInheritWorkflowStepViaPointer test
-        fieldProfileRepo.findAll().forEach(fieldProfile -> {
-            fieldProfileRepo.delete(fieldProfile);
-        });
-        assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
-        
-        workflowStepRepo.findAll().forEach(workflowStep -> {
-            workflowStepRepo.delete(workflowStep);
-        });
-        assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
-        
         organizationCategoryRepo.deleteAll();
         assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
         
@@ -427,6 +462,24 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         fieldPredicateRepo.deleteAll();
         assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
+        
+        organizationRepo.deleteAll();
+        assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
+        
+//        workflowStepRepo.findAll().forEach(workflowStep -> {
+//            workflowStepRepo.delete(workflowStep);
+//        });
+        
+        //We must call this after deleting all the organizations, categories, etc. so as to be able to call the default (non-custom)
+        //deleteAll() method. WorkflowStepRepo's delete() is a custom override, and trying to call it on each item in findAll using a
+        //foreach loop will cause an exception (we'd be modifying an array while we iterate over it). This is commented out immediately above.
+        workflowStepRepo.deleteAll();
+        assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
+        
+        fieldProfileRepo.findAll().forEach(fieldProfile -> {
+            fieldProfileRepo.delete(fieldProfile);
+        });
+        assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
         
     }
     

@@ -16,13 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -38,6 +41,9 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
+    
+    @Autowired
+    private WorkflowStepRepo workflowStepRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -109,5 +115,24 @@ public class OrganizationController {
         
         return new ApiResponse(SUCCESS);
         
+    }
+    
+    @ApiMapping("/workflow-step/{id}")
+    @Auth(role="MANAGER")
+    @Transactional
+    public ApiResponse stepForID(@ApiVariable String id){
+        Long wStepID = null;
+        try {
+            wStepID = Long.valueOf(id);
+        } catch (NumberFormatException e) {
+            return new ApiResponse(ERROR, "Enable to parse long from string: [" + id + "]");
+        }
+        
+        WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(wStepID);
+        if (potentiallyExistingStep != null) {
+            System.out.println("going to return step: " + potentiallyExistingStep.getName());
+            return new ApiResponse(SUCCESS, potentiallyExistingStep);
+        }
+        return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
     }
 }

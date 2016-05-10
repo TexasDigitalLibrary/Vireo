@@ -143,7 +143,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     @Override
     public void delete(WorkflowStep workflowStep) {
     	    
-        if(workflowStep == null) return;
+        if(workflowStep == null || workflowStepRepo.findOne(workflowStep.getId()) == null) return;
     	    
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
         if(originatingOrganization != null) {

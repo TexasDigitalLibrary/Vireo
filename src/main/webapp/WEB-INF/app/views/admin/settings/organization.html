@@ -176,7 +176,7 @@
                                                                   <h3>before accordion</h3>
                                                                   <accordion single-expand="false" >
                                                                     <!-- <pane ng-repeat="step in foo" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane> -->
-                                                                    <pane ng-repeat="step in selectedOrganization.workflowSteps" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                                                                    <pane ng-repeat="step in selectedOrganizationSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
                                                                   </accordion>
 
 								</div>
