@@ -6,7 +6,8 @@
 			hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
 			scope-value="settings.configurable.submission.submit_license"
 			on-blur="updateConfigurableSettings('submission', 'submit_license')"
-          	timer="5">
+          	timer="5"
+          	validation-response="serverErrors['submission']['submit_license']">
 		</lockingtextarea>
 		
 	</div>
