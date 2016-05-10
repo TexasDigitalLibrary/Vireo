@@ -164,24 +164,24 @@
 								</form>
 							</div>
 						</div>
-						<div ng-controller="OrganizationStepsController" class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
+						
+						<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<button type="button" class="btn-xs btn-primary pull-right">
 										<span class="glyphicon glyphicon-plus pull-right"></span>
 									</button>
-									<h3 ng-click="printState()" class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
+									<h3 class="panel-title">
+									Manage {{getManagedOrganization().name}} Workflow</h3>
 								</div>
 								<div class="panel-body">
-                                                                  <h3>before accordion</h3>
-                                                                  <accordion single-expand="false" >
-                                                                    <!-- <pane ng-repeat="step in foo" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane> -->
-                                                                    <pane ng-repeat="step in selectedOrganizationSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
-                                                                  </accordion>
-
+                                    <accordion single-expand="false" >
+                                    	<pane ng-repeat="step in currentWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                                    </accordion>
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>

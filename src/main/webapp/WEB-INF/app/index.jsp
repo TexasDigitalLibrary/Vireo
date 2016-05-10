@@ -294,6 +294,7 @@
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
 	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
+	    <script src="model/workflowStepRepo.js"></script>
 
 
 	    <!-- Controllers -->
@@ -303,7 +304,7 @@
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
-        <script src="controllers/settings/organizationStepsController.js"></script>
+        <script src="controllers/settings/workflowStepsController.js"></script>
         <script src="controllers/settings/triptychController.js"></script>
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
