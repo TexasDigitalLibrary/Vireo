@@ -30,14 +30,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 					clearCurrentWorkflowSteps();
 					angular.forEach($scope.managedOrganization.workflowSteps, function(stepId) {
-
-						console.log(WorkflowStepRepo.getStepById(stepId));
-
 						WorkflowStepRepo.getStepById(stepId).then(function(step) {
 							$scope.currentWorkflowSteps.push(step);
 						}); 
 					});					
-
 				}
 			}
 			return $scope.managedOrganization;
@@ -47,16 +43,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
 		};
 
-		//WorkflowSteps
-		$scope.getWorkflowStepsByIds = function(stepIds) {
-			var workflowSteps = [];
-
-			WorkflowStepRepo.getStepsByIds(stepIds).then(function() {
-
-			});
-
-			return workflowSteps;
-		};
 
 	});
 });

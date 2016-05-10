@@ -64,21 +64,21 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 			defer.resolve(WorkflowStepRepo.currentWorkflowSteps[wsID]);
 		} else {
 
-		var stepPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'workflow-step', 
-			method: "get/"+wsID,
-		});
+			var stepPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: "get/"+wsID,
+			});
 
-	        stepPromise.then(function(result){
-	          var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
-	          WorkflowStepRepo.currentWorkflowSteps[wsID] = workflowStep;
-	          defer.resolve(workflowStep);
-	        });
+			stepPromise.then(function(result){
+				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
+				WorkflowStepRepo.currentWorkflowSteps[wsID] = workflowStep;
+				defer.resolve(workflowStep);
+			});
 
-	      }
+      	}
 
-	      return defer.promise;	
+      return defer.promise;	
 
 	};
 
