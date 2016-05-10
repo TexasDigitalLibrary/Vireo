@@ -77,10 +77,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 		$scope.uploadStatus = function() {
 			if($scope.uploadModalData.cv != undefined) {
-				ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function(response) {
+				ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function(data) {
 					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
 	                console.log(validationResponse);
-					$scope.uploadModalData.cv.inProgress = angular.fromJson(response.body).payload.Boolean;
+					$scope.uploadModalData.cv.inProgress = angular.fromJson(data.body).payload.Boolean;
 				});
 			}
 		}
@@ -136,10 +136,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			if($scope.uploadAction == 'confirm') {
 				var reader = new FileReader();
 		        reader.onload = function() {
-		            ControlledVocabularyRepo.confirmCSV(reader.result, $scope.uploadModalData.cv.name).then(function(response) {
-		            	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+		            ControlledVocabularyRepo.confirmCSV(reader.result, $scope.uploadModalData.cv.name).then(function(data) {
+		            	var validationResponse = data.payload.ValidationResponse;
 		                console.log(validationResponse);
-		            	$scope.uploadWordMap = response.payload.HashMap;		            	
+		            	$scope.uploadWordMap = data.payload.HashMap;		            	
 		            });
 		        };
 		        reader.readAsDataURL($scope.uploadModalData.file);    	
@@ -160,10 +160,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 		$scope.exportControlledVocabulary = function() {
 			$scope.headers = [];
-			return ControlledVocabularyRepo.downloadCSV($scope.uploadModalData.cv.name).then(function(response) {
+			return ControlledVocabularyRepo.downloadCSV($scope.uploadModalData.cv.name).then(function(data) {
 				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
                 console.log(validationResponse);
-				var csvMap = angular.fromJson(response.body).payload.HashMap;
+				var csvMap = angular.fromJson(data.body).payload.HashMap;
 				for(var key in csvMap.headers) {
 					$scope.headers.push(csvMap.headers[key]);
 				}
