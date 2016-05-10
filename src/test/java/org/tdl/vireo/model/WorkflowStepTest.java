@@ -62,32 +62,25 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The organization should have one step", 2, org.getWorkflowStepOrder().size());
     }
 
-    @Test
+    @Test(expected=IndexOutOfBoundsException.class)
     @Transactional
     public void testWorkFlowStepAppendAtIndexThrowsForOutOfBounds() {
-        Organization org = organizationRepo.create("testOrg", parentCategory);
-        try {
-            System.out.println("about to try....");
-            org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
-            fail("Inserting a workflow step out of bounds should throw an IndexOutOfBoundException");
-        } catch (Exception e) {
-            
-        } 
+        organization.addWorkflowStep(workflowStepRepo.create("first step", organization, 3));
     }
 
+    @Test
     @Transactional
     public void testWorkFlowStepAppendAtIndexSuccess() {
-        Organization org = organizationRepo.create("testOrg", parentCategory);
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 0));
-        assertEquals("The org should have 1 workflow steps.", 1, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 1));
-        assertEquals("The org should have 2 workflow steps.", 2, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 2));
-        assertEquals("The org should have 3 workflow steps.", 3, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
-        assertEquals("The org should have 4 workflow steps.", 4, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 4));
-        assertEquals("The org should have 5 workflow steps.", 5, org.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("first step", organization, 0));
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("second step", organization, 1));
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("third step", organization, 2));
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("fourth step", organization, 3));
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("fifth step", organization, 4));
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
     }
 
     @Override
