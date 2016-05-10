@@ -44,6 +44,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.editCustomAction = function(index) {
+			$scope.serverErrors = [];
 			$scope.selectCustomAction(index - 1);
 			angular.element('#customActionEditModal').modal('show');
 		};
