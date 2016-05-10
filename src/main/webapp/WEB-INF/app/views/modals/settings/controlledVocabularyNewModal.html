@@ -16,9 +16,12 @@
         	<select ng-model="modalData.language" class="form-control" id="controlledVocabulary-language" name="controlledVocabulary-language" ng-options="language.name for language in languages.list"></select>
     	</div>
 	</form>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 </div>
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()" data-dismiss="modal">Cancel</button>
-	<button id="controlledVocabulary-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.name" ng-click="createControlledVocabulary()">Create</button>
+	<button id="controlledVocabulary-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createControlledVocabulary()">Create</button>
 </div>

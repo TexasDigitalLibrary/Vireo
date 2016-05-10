@@ -12,9 +12,12 @@
         	<input ng-model="modalData.name" type="text" class="form-control" placeholder="Name of controlled vocabulary"/>
     	</div>
 	</form>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 </div>
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="resetControlledVocabulary()">Cancel</button>
-	<button id="controlledVocabulary-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.name" ng-click="updateControlledVocabulary()">Update</button>
+	<button id="controlledVocabulary-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="updateControlledVocabulary()">Update</button>
 </div>
