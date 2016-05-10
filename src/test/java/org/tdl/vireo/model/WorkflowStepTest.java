@@ -127,6 +127,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep ws5 = workflowStepRepo.create("fifth step", organization, 4);
         assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
         
+        assertEquals("Workflow step order was the wrong length!", 5, organization.getWorkflowStepOrder().size());
         assertEquals("Step 1 did not appear in position 1!", ws1.getId(), organization.getWorkflowStepOrder().get(0));
         assertEquals("Step 2 did not appear in position 2!", ws2.getId(), organization.getWorkflowStepOrder().get(1));
         assertEquals("Step 3 did not appear in position 3!", ws3.getId(), organization.getWorkflowStepOrder().get(2));
@@ -134,6 +135,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("Step 5 did not appear in position 5!", ws5.getId(), organization.getWorkflowStepOrder().get(4));
         
         Organization childOrg = organizationRepo.create("Child Organization", organization, parentCategory);
+        assertEquals("Workflow step order was the wrong length!", 5, childOrg.getWorkflowStepOrder().size());
         assertEquals("Step 1 did not appear in position 1!", ws1.getId(), childOrg.getWorkflowStepOrder().get(0));
         assertEquals("Step 2 did not appear in position 2!", ws2.getId(), childOrg.getWorkflowStepOrder().get(1));
         assertEquals("Step 3 did not appear in position 3!", ws3.getId(), childOrg.getWorkflowStepOrder().get(2));
