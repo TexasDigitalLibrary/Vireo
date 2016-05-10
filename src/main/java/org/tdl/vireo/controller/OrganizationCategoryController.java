@@ -10,9 +10,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.service.ValidationService;
@@ -122,8 +124,14 @@ public class OrganizationCategoryController {
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Removing organization category with id " + idString);
-                organizationCategoryRepo.remove(organizationCategory);
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                try {
+                    organizationCategoryRepo.remove(organizationCategory);
+                    simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                } catch(DataIntegrityViolationException e) {
+                    modelBindingResult.addError(new ObjectError("organizationCategory", "Could not remove organization category " + organizationCategory.getName() + ", it's being used!"));
+                    response = validationService.buildResponse(modelBindingResult);
+                    logger.error("Couldn't remove organization category " + organizationCategory.getName() + " because: " + e.getLocalizedMessage());
+                }
                 break;
             case VALIDATION_WARNING:
                 simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
