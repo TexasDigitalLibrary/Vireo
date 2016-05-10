@@ -117,22 +117,4 @@ public class OrganizationController {
         
     }
     
-    @ApiMapping("/workflow-step/{id}")
-    @Auth(role="MANAGER")
-    @Transactional
-    public ApiResponse stepForID(@ApiVariable String id){
-        Long wStepID = null;
-        try {
-            wStepID = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ApiResponse(ERROR, "Enable to parse long from string: [" + id + "]");
-        }
-        
-        WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(wStepID);
-        if (potentiallyExistingStep != null) {
-            System.out.println("going to return step: " + potentiallyExistingStep.getName());
-            return new ApiResponse(SUCCESS, potentiallyExistingStep);
-        }
-        return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
-    }
 }

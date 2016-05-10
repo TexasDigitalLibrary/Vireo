@@ -292,7 +292,17 @@ public class Organization extends BaseEntity {
                 childrenWorkflowSteps.add(workflowStep);
             }
             childOrganization.setWorkflowSteps(childrenWorkflowSteps);
-        }       
+        }
+        
+        List<Long> duplicateOrderList = new ArrayList<Long>();
+        for( Long id : this.getWorkflowStepOrder())
+        {
+            Long dupId = new Long(id);
+            duplicateOrderList.add(dupId);
+        }
+        childOrganization.setWorkflowStepOrder(duplicateOrderList);
+        
+        
     }
 
     /**

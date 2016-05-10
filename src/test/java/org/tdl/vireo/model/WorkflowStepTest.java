@@ -62,33 +62,88 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The organization should have one step", 2, org.getWorkflowStepOrder().size());
     }
 
-    @Test
+    @Test(expected=IndexOutOfBoundsException.class)
     @Transactional
     public void testWorkFlowStepAppendAtIndexThrowsForOutOfBounds() {
-        Organization org = organizationRepo.create("testOrg", parentCategory);
-        try {
-            System.out.println("about to try....");
-            org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
-            fail("Inserting a workflow step out of bounds should throw an IndexOutOfBoundException");
-        } catch (Exception e) {
-            
-        } 
+        organization.addWorkflowStep(workflowStepRepo.create("first step", organization, 3));
     }
 
+    @Test
     @Transactional
     public void testWorkFlowStepAppendAtIndexSuccess() {
-        Organization org = organizationRepo.create("testOrg", parentCategory);
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 0));
-        assertEquals("The org should have 1 workflow steps.", 1, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 1));
-        assertEquals("The org should have 2 workflow steps.", 2, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 2));
-        assertEquals("The org should have 3 workflow steps.", 3, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 3));
-        assertEquals("The org should have 4 workflow steps.", 4, org.getWorkflowSteps().size());
-        org.addWorkflowStep(workflowStepRepo.create("first step", org, 4));
-        assertEquals("The org should have 5 workflow steps.", 5, org.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("first step", organization, 0));
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("second step", organization, 1));
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("third step", organization, 2));
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("fourth step", organization, 3));
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        organization.addWorkflowStep(workflowStepRepo.create("fifth step", organization, 4));
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
     }
+    
+    @Test
+    @Transactional
+    public void testWorkFlowStepOrderRecordsCorrectly() {
+        WorkflowStep ws1 = workflowStepRepo.create("first step", organization, 0);
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws2 = workflowStepRepo.create("second step", organization, 1);
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws3 = workflowStepRepo.create("third step", organization, 2);
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws4 = workflowStepRepo.create("fourth step", organization, 3);
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws5 = workflowStepRepo.create("fifth step", organization, 4);
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
+        
+        assertEquals("Step 1 did not appear in position 1!", ws1.getId(), organization.getWorkflowStepOrder().get(0));
+        assertEquals("Step 2 did not appear in position 2!", ws2.getId(), organization.getWorkflowStepOrder().get(1));
+        assertEquals("Step 3 did not appear in position 3!", ws3.getId(), organization.getWorkflowStepOrder().get(2));
+        assertEquals("Step 4 did not appear in position 4!", ws4.getId(), organization.getWorkflowStepOrder().get(3));
+        assertEquals("Step 5 did not appear in position 5!", ws5.getId(), organization.getWorkflowStepOrder().get(4));
+    }
+    
+    @Test
+    @Transactional
+    public void testInheritWorkflowStepOrder()
+    {
+        WorkflowStep ws1 = workflowStepRepo.create("first step", organization, 0);
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws2 = workflowStepRepo.create("second step", organization, 1);
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws3 = workflowStepRepo.create("third step", organization, 2);
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws4 = workflowStepRepo.create("fourth step", organization, 3);
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        
+        WorkflowStep ws5 = workflowStepRepo.create("fifth step", organization, 4);
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
+        
+        assertEquals("Workflow step order was the wrong length!", 5, organization.getWorkflowStepOrder().size());
+        assertEquals("Step 1 did not appear in position 1!", ws1.getId(), organization.getWorkflowStepOrder().get(0));
+        assertEquals("Step 2 did not appear in position 2!", ws2.getId(), organization.getWorkflowStepOrder().get(1));
+        assertEquals("Step 3 did not appear in position 3!", ws3.getId(), organization.getWorkflowStepOrder().get(2));
+        assertEquals("Step 4 did not appear in position 4!", ws4.getId(), organization.getWorkflowStepOrder().get(3));
+        assertEquals("Step 5 did not appear in position 5!", ws5.getId(), organization.getWorkflowStepOrder().get(4));
+        
+        Organization childOrg = organizationRepo.create("Child Organization", organization, parentCategory);
+        assertEquals("Workflow step order was the wrong length!", 5, childOrg.getWorkflowStepOrder().size());
+        assertEquals("Step 1 did not appear in position 1!", ws1.getId(), childOrg.getWorkflowStepOrder().get(0));
+        assertEquals("Step 2 did not appear in position 2!", ws2.getId(), childOrg.getWorkflowStepOrder().get(1));
+        assertEquals("Step 3 did not appear in position 3!", ws3.getId(), childOrg.getWorkflowStepOrder().get(2));
+        assertEquals("Step 4 did not appear in position 4!", ws4.getId(), childOrg.getWorkflowStepOrder().get(3));
+        assertEquals("Step 5 did not appear in position 5!", ws5.getId(), childOrg.getWorkflowStepOrder().get(4));
+        
+    }
+    
 
     @Override
     @Transactional
