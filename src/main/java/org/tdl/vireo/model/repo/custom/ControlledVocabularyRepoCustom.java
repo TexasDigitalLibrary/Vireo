@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
+import javax.servlet.ServletInputStream;
+
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
 
@@ -27,7 +29,7 @@ public interface ControlledVocabularyRepoCustom {
     
     public ControlledVocabulary validateCompareCV(String name, ModelBindingResult modelBindingResult);
     
-    public String[] validateCompareRows(Object inputStream, ModelBindingResult modelBindingResult);
+    public String[] validateCompareRows(ServletInputStream inputStream, ModelBindingResult modelBindingResult);
     
     public ControlledVocabulary validateImport(String name, ModelBindingResult modelBindingResult);
 }

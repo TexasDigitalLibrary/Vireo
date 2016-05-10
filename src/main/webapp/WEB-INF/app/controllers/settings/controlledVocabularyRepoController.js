@@ -54,6 +54,14 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 				language: $scope.languages.list[0] 
 			};
 		};
+		
+		$scope.closeModal = function(modalId) {
+    		angular.element('#' + modalId).modal('hide');
+    		// clear all errors, but not infos or warnings
+    		if($scope.serverErrors !== undefined) {
+    			$scope.serverErrors.errors = undefined;
+    		}
+    	}
 
 		$scope.resetControlledVocabulary();
 
@@ -70,7 +78,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.createControlledVocabulary = function() {
 			ControlledVocabularyRepo.add($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				$scope.resetControlledVocabulary();
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetControlledVocabulary();
+            		$scope.closeModal("controlledVocabularyNewModal");
+            	}
 			});
 		};
 
@@ -96,7 +107,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.updateControlledVocabulary = function() {
 			ControlledVocabularyRepo.update($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				$scope.resetControlledVocabulary();
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetControlledVocabulary();
+            		$scope.closeModal("controlledVocabularyEditModal");
+            	}
 			});
 		};
 
@@ -123,7 +137,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.removeControlledVocabulary = function(index) {
 	    	ControlledVocabularyRepo.remove(index).then(function(data) {
 	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				$scope.resetControlledVocabulary();
+	    		if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					$scope.resetControlledVocabulary();
+            		$scope.closeModal("controlledVocabularyConfirmRemoveModal");
+            	}
 			});
 		};
 

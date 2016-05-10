@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletInputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -364,7 +366,7 @@ public class ControlledVocabularyController {
         ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
         
         if(!controlledVocabularyCachingService.doesControlledVocabularyExist(name)){
-            modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot cancel import for cached Controlled Vocabulary, name did not exist!"));
+            modelBindingResult.addWarning(new ObjectError("controlledVocabulary", "Cannot cancel import for cached Controlled Vocabulary, name did not exist!"));
         }
         
         // build a response based on the BindingResult state
@@ -400,7 +402,7 @@ public class ControlledVocabularyController {
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream Object inputStream) {
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream ServletInputStream inputStream) {
         
         // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
         ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
