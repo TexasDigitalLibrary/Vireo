@@ -11,6 +11,8 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 	$scope.ready = $q.all([LanguageRepo.ready(), LanguageRepo.getProquestLanguageCodes()]);
 
 	$scope.dragging = false;
+	
+	$scope.serverErrors = [];
 
 	$scope.trashCanId = 'language-trash';
 	
@@ -35,14 +37,24 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 				languages: $scope.languages.list[0] 
 			};
 		};
+		
+		$scope.closeModal = function(modalId) {
+    		angular.element('#' + modalId).modal('hide');
+    		// clear all errors, but not infos or warnings
+    		if($scope.serverErrors !== undefined) {
+    			$scope.serverErrors.errors = undefined;
+    		}
+    	}
 
 		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
 			LanguageRepo.add($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetLanguages();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetLanguages();
+            		$scope.closeModal("languagesNewModal");
+            	}
 			});
 		};
 		
@@ -51,23 +63,27 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 		};
 		
 		$scope.editLanguage = function(index) {
+			$scope.serverErrors = [];
 			$scope.selectLanguage(index - 1);
 			angular.element('#languagesEditModal').modal('show');
 		};
 		
 		$scope.updateLanguage = function() {
 			LanguageRepo.update($scope.modalData).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				$scope.resetLanguages();
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetLanguages();
+            		$scope.closeModal("languagesEditModal");
+            	}
 			});
 		};
 
 		$scope.reorderLanguages = function(src, dest) {
 	    	LanguageRepo.reorder(src, dest).then(function(data) {
-	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-	    		$scope.resetLanguages();
+	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetLanguages();
+            	}
 	    	});
 		};
 
@@ -78,9 +94,10 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 			}
 			else if($scope.sortAction == 'sort') {
 				LanguageRepo.sort(column).then(function(data) {
-					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-	                console.log(validationResponse);
-					$scope.resetLanguages();
+					$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+	            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+	            		$scope.resetLanguages();
+	            	}
 					$scope.sortAction = 'confirm';
 				});
 			}
@@ -88,9 +105,11 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 
 		$scope.removeLanguage = function(index) {
 	    	LanguageRepo.remove(index).then(function(data) {
-	    		var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-	    		$scope.resetLanguages();
+	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+            		$scope.resetLanguages();
+            		$scope.closeModal("languagesConfirmRemoveModal");
+            	}
 	    	});
 		};
 
