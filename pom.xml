@@ -126,7 +126,6 @@
 		</dependency>
 	</dependencies>
 
-
 	<build>
 
 		<plugins>
@@ -286,17 +285,17 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Compass Compile --> 
-					<execution> 
+					<!-- Compass Compile -->
+					<execution>
 						<id>exec-compass-compile</id>
-						<phase>generate-sources</phase> 
-						<configuration> 
+						<phase>generate-sources</phase>
+						<configuration>
 							<executable>compass</executable>
 							<arguments>
-								<argument>compile</argument> 
+								<argument>compile</argument>
 							</arguments>
 						</configuration>
-						<goals> 
+						<goals>
 							<goal>exec</goal>
 						</goals>
 					</execution>
