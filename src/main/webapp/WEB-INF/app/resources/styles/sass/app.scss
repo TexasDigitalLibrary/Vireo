@@ -1310,5 +1310,11 @@ footer a, footer li, footer p {
     margin-top:1px;
     &>a{
         display:block;
+        color: #FFFFFF;
+    }
+    &:hover{
+        &>a{
+            color: #70706F;
+        }
     }
 }
