@@ -41,7 +41,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.createEmbargo = function() {
 			EmbargoRepo.create($scope.modalData).then(function(data) {
-				if($scope.serverErrors[$scope.modalData.guarantor] == undefined) {
+				if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
@@ -64,7 +64,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.updateEmbargo = function() {
 			EmbargoRepo.update($scope.modalData).then(function(data){
-				if($scope.serverErrors[$scope.modalData.guarantor] == undefined) {
+				if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
@@ -77,7 +77,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		
 		$scope.removeEmbargo = function(id) {
             EmbargoRepo.remove(id).then(function(data){
-            	if($scope.serverErrors[$scope.modalData.guarantor] == undefined) {
+            	if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
 				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
