@@ -14,11 +14,11 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	WorkflowStepRepo.currentWorkflowSteps = [];
 	
-	WorkflowStepRepo.data = null;
+	WorkflowStepRepo.data = [];
 	
-	WorkflowStepRepo.listener = null;
+	WorkflowStepRepo.listener = [];
 
-	WorkflowStepRepo.promise = null;
+	WorkflowStepRepo.promise = [];
 	
 	WorkflowStepRepo.set = function(data) {
 		self.unwrap(self, data);

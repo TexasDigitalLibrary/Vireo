@@ -24,7 +24,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.getManagedOrganization = function() {
 			var currentOrganization = $scope.getSelectedOrganization();
-			if (typeof currentOrganization !== 'undefined' && currentOrganization) {
+			if (currentOrganization !== undefined && currentOrganization) {
 				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
 					$scope.managedOrganization = angular.copy(currentOrganization);
 
