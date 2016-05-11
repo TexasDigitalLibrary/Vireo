@@ -1,4 +1,4 @@
-vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
+vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	var self;
 	
@@ -11,12 +11,12 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 		self.unwrap(self, futureData);
 		
 	};
+		
+	OrganizationRepo.data = [];
 	
-	OrganizationRepo.data = null;
-	
-	OrganizationRepo.listener = null;
+	OrganizationRepo.listener = [];
 
-	OrganizationRepo.promise = null;
+        OrganizationRepo.promise = [];
 
 	OrganizationRepo.newOrganization = {};
 
@@ -60,7 +60,7 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 			controller: 'organization', 
 			method: '',
 		});
-				
+
 		OrganizationRepo.set(OrganizationRepo.listener);
 
 		return OrganizationRepo.data;
@@ -87,7 +87,7 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 				'method': 'create',
 				'data': {
 					"name": OrganizationRepo.newOrganization.name, 
-					"categoryId": OrganizationRepo.newOrganization.categoryId,
+					"category": OrganizationRepo.newOrganization.category,
 					"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
 				}
 		});
@@ -112,9 +112,9 @@ vireo.service("OrganizationRepo", function($route, WsApi, AbstractModel) {
 		return updateOrganizationPromise;
 
 	};
-	
-	OrganizationRepo.ready = function() {
-		return OrganizationRepo.promise;
+        
+    OrganizationRepo.ready = function() {
+                return OrganizationRepo.promise;
 	};
 
 	OrganizationRepo.listen = function() {

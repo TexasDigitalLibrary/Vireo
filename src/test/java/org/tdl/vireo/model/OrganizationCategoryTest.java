@@ -41,6 +41,7 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
 
         assertEquals("The organization category repository is empty!", 1, organizationCategoryRepo.count());
+        
         assertEquals("The organization repository is empty!", 1, organizationRepo.count());
 
         assertEquals("Saved entity did not contain the correct Name!", TEST_ORGANIZATION_NAME, organization.getName());

@@ -16,13 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -38,6 +41,9 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
+    
+    @Autowired
+    private WorkflowStepRepo workflowStepRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -73,12 +79,10 @@ public class OrganizationController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
-        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("categoryId").asLong());
+        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("category").get("id").asLong());
         Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
         
-        Organization newOrganization = organizationRepo.create(dataNode.get("name").asText(), newOrganizationCategory);
-        newOrganizationParent.addChildOrganization(newOrganization);
-        organizationRepo.save(newOrganizationParent);
+        organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
         
@@ -112,4 +116,5 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
         
     }
+    
 }

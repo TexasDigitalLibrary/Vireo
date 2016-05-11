@@ -164,50 +164,24 @@
 								</form>
 							</div>
 						</div>
+						
 						<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<button type="button" class="btn-xs btn-primary pull-right">
 										<span class="glyphicon glyphicon-plus pull-right"></span>
 									</button>
-									<h3 class="panel-title">Manage {{getManagedOrganization().name}} Workflow</h3>
+									<h3 class="panel-title">
+									Manage {{getManagedOrganization().name}} Workflow</h3>
 								</div>
 								<div class="panel-body">
-									<ul class="list-group">
-										<li class="list-group-item">Step 1
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 2
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 3
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 4
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-										<li class="list-group-item">Step 5
-											<ul class="inline-list pull-right">
-												<li><span class="glyphicon glyphicon-pencil pull-right"></span></li>
-												<li><span class="glyphicon glyphicon-trash pull-right"></span></li>
-											</ul>
-										</li>
-									</ul>
+                                    <accordion single-expand="false" >
+                                    	<pane ng-repeat="step in currentWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                                    </accordion>
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
