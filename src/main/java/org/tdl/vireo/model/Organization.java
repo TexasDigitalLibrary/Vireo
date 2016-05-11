@@ -334,7 +334,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void addEmail(String email) {
-    	this.emails.add(email);
+    	getEmails().add(email);
     }
 
     /**
@@ -342,7 +342,7 @@ public class Organization extends BaseEntity {
      * @param email
      */
     public void removeEmail(String email) {
-    	this.emails.remove(email);
+    	getEmails().remove(email);
     }
 
 	/**
@@ -364,7 +364,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRule
      */
     public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-    	this.emailWorkflowRules.add(emailWorkflowRule);
+    	getEmailWorkflowRules().add(emailWorkflowRule);
     }
 
     /**
@@ -372,7 +372,7 @@ public class Organization extends BaseEntity {
      * @param emailWorkflowRules
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
-    	this.emailWorkflowRules.remove(emailWorkflowRule);
+    	getEmailWorkflowRules().remove(emailWorkflowRule);
     }
 
     public void replaceWorkflowStep(WorkflowStep previous, WorkflowStep replacement) 
