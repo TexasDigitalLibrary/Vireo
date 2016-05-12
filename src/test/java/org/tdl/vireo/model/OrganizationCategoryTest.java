@@ -42,7 +42,7 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional(rollbackFor={DataIntegrityViolationException.class})
+    @Transactional
     public void testCascade() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
