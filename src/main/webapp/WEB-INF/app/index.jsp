@@ -175,6 +175,7 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
+	<script src="bower_components/angular-messages/angular-messages.js"></script>
 
 	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
@@ -262,7 +263,6 @@
         <script src="directives/textFieldDirective.js"></script>
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
-	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/checkBoxDirective.js"></script>
 	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
@@ -272,6 +272,7 @@
 	    <script src="directives/trashCanDirective.js"></script>
 	    <script src="directives/selectedDirective.js"></script>
 	    <script src="directives/dropZoneDirective.js"></script>
+	    <script src="directives/validationResponseDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>

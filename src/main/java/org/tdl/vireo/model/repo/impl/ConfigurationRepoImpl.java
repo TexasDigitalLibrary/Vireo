@@ -126,6 +126,12 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     public Configuration validateUpdate(Configuration configuration) {
         if(!configuration.getBindingResult().hasErrors()) {
             Configuration configurationToUpdate = configurationRepo.getByName(configuration.getName());
+            // special case for #RGB values for CSS colors
+            if(configuration.getType().equals("lookAndFeel") && configuration.getName().contains("_color")){
+                if(!configuration.getValue().matches("(^#[0-9A-Fa-f]{6}$)|(^#[0-9A-Fa-f]{3}$)")) {
+                    configuration.getBindingResult().addError(new ObjectError("configuration", "Invalid Hex color value!"));
+                }
+            }
             // if we only found the system required one, create a custom non-system
             if (configurationToUpdate != null && configurationToUpdate.isSystemRequired()) {
                 // make sure we copy the binding result to the new configuration... for the controller to use if it needs it
@@ -167,12 +173,12 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         Configuration logoToUpdate = configurationRepo.getByName(lfModel.getSetting());
         // if it doesn't exist
         if (logoToUpdate == null) {
-            lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", "Cannot upload logo that doesn't exist!"));
+            lfModel.getBindingResult().addError(new ObjectError(lfModel.getSetting(), "Cannot upload logo that doesn't exist!"));
         } else {
             try {
                 fileIOUtility.writeImage(inputStream, path);
             } catch (IOException e) {
-                lfModel.getBindingResult().addError(new ObjectError("lookAndFeelControllerModel", e.getLocalizedMessage()));
+                lfModel.getBindingResult().addError(new ObjectError(lfModel.getSetting(), e.toString()));
             }
         }
         return lfModel;

@@ -527,9 +527,12 @@ a[title]:hover:after {
   position: absolute;
 }
 
-.glyphicon-info-sign{
+.glyphicon-info-sign {
   line-height: 2;
   margin-left: 10px;
+}
+
+.glyphicon-info-sign.opaque {
   opacity: .5;
 }
 

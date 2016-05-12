@@ -1,8 +1,9 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
-
-	<alerts channels="/settings/embargo" types="ERROR, WARNING" exclusive></alerts>
 	
 	<div class="row">
+		<validationresponse
+			validation-response="serverErrors['DEFAULT']">
+		</validationresponse>
 		<div class="col-sm-12">
 			<h3>Default Embargoes</h3>
 	        <draganddroplist
@@ -21,7 +22,7 @@
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
 				data-toggle="modal"
-				ng-click="modalData.guarantor='DEFAULT'"
+				ng-click="modalData.guarantor='DEFAULT'; serverErrors['DEFAULT'] = undefined;"
 				data-target="#embargoNewModal">
 				Add New
 			</button>
@@ -29,6 +30,9 @@
 	</div>
 	
 	<div class="row">
+		<validationresponse
+			validation-response="serverErrors['PROQUEST']">
+		</validationresponse>
 		<div class="col-sm-12">
 			<h3>ProQuest Embargoes</h3>
 	        <draganddroplist
@@ -46,7 +50,8 @@
 				sort-method='sortEmbargoesProquest(column)'>
 			</draganddroplist>
 			<button class="btn btn-default modal-add-btn"
-				data-toggle="modal" 
+				data-toggle="modal"
+				ng-click="modalData.guarantor='PROQUEST'; serverErrors['PROQUEST'] = undefined;"
 				data-target="#embargoNewModal">
 				Add New
 			</button>

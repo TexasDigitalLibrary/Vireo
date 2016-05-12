@@ -1,6 +1,8 @@
 <div id="languages" class="container-fluid" ng-controller="LanguageRepoController">
 	
-	<alerts channels="/settings/languages" types="ERROR, WARNING" exclusive></alerts>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 
 	<div class="col-sm-6">		
 		
@@ -10,7 +12,7 @@
 			Add Language
 		</button>
 		
-		<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which allows to create new language."></div>
+		<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which allows to create new language."></div>
 
 		<p ng-if="languages.list.length == 0">Add New Language</p>
 		

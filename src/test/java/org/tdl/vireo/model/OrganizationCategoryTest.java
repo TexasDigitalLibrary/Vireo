@@ -4,11 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+
 import org.junit.After;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class OrganizationCategoryTest extends AbstractEntityTest {
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void testCreate() {
@@ -35,7 +42,7 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor={DataIntegrityViolationException.class})
     public void testCascade() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
@@ -50,13 +57,21 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
         category = organizationCategoryRepo.findByName(TEST_CATEGORY_NAME);
 
         Set<Organization> organizations = category.getOrganizations();
+        entityManager.flush();
         assertEquals("Category does not have the organization!", true, organizations.contains(organization));
-
-        organizationCategoryRepo.delete(category);
-
-        assertEquals("Entity did not delete!", 0, organizationCategoryRepo.count());
-
-        assertEquals("Child entity did not delete by cascade!", 0, organizationRepo.count());
+        
+        try {
+            organizationCategoryRepo.delete(category);
+            // make sure that @Transaction runs the delete operation
+            entityManager.flush();
+        } catch (PersistenceException e){ 
+            // make sure we clear the previous delete operation, we expect it to fail!
+            entityManager.clear();
+        }
+        
+        assertEquals("Entity deleted!", 1, organizationCategoryRepo.count());
+        
+        assertEquals("Child entity deleted by cascade!", 1, organizationRepo.count());
     }
 
     @After

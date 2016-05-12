@@ -4,6 +4,11 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 	$scope.modalData = {
 		newLogo: {}
 	};
+	
+	var setServerErrors = function(name, validationResponse){
+  		// either put a ValidationResponse object into the array, or clear it since it'll be "undefined"
+		$scope.serverErrors[name] = validationResponse;
+  	};
 
 	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo; 
 	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo;
@@ -12,7 +17,6 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		previewLogo(file).then(function(result) {
 			
 			var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
-			console.log(fileType);
 			
 			$scope.modalData.newLogo.fileType = fileType;
 			$scope.modalData.newLogo.file = result;
@@ -24,28 +28,33 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 	$scope.modalData.confirmLogoUpload = function() {
 
-		var uplaodLogo = {};
-		angular.copy($scope.modalData.newLogo, uplaodLogo);
-		delete uplaodLogo.file;
+		$scope.uplaodLogo = {};
+		angular.copy($scope.modalData.newLogo, $scope.uplaodLogo);
+		delete $scope.uplaodLogo.file;
 
 		//TODO: This may be better if removed to a service
 		var uploadPromise = RestApi.post({
 			'endpoint': '', 
 			'controller': 'settings/look-and-feel',  
 			'method': 'logo/upload',
-			'data': uplaodLogo,
+			'data': $scope.uplaodLogo,
 			'file': $scope.modalData.newLogo.file
 		});
 
 		uploadPromise.then(
 			function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				updateLogos(data);
+				if(data.payload !== undefined) {
+					setServerErrors($scope.uplaodLogo.setting, data.payload.ValidationResponse);
+				
+	                if(data.payload.Configuration !== undefined) {
+	                	updateLogos(data);
+	                }
+				}
 			}, 
 			function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
+				if(data.payload !== undefined) {
+					setServerErrors($scope.uplaodLogo.setting, data.payload.ValidationResponse);
+				}
 				console.log("Error");
 			}
 		);
@@ -71,13 +80,20 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 		resetPromise.then(
 			function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
-				updateLogos(data);
+				data = angular.fromJson(data.body);
+				if(data.payload !== undefined) {
+					setServerErrors(setting, data.payload.ValidationResponse);
+				
+	                if(data.payload.Configuration !== undefined) {
+	                	updateLogos(data);
+					}
+				}
 			}, 
 			function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-                console.log(validationResponse);
+				data = angular.fromJson(data.body);
+				if(data.payload !== undefined) {
+					setServerErrors(setting, data.payload.ValidationResponse);
+				}
 				console.log("error");
 			}
 		);

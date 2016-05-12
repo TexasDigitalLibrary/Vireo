@@ -1,0 +1,17 @@
+<div ng-messages="validationResponse" multiple>
+    <div ng-message="errors" ng-if="validationResponse.errors.length > 0" class="alert alert-danger glyphicon glyphicon-info-sign">
+    	<ul>
+    		<li ng-repeat="error in validationResponse.errors">{{error.field}} {{error.defaultMessage}}</li>
+    	</ul>
+   	</div>
+   	<div ng-message="warnings" ng-if="validationResponse.warnings.length > 0" class="alert alert-warning glyphicon glyphicon-info-sign">
+   		<ul>
+    		<li ng-repeat="warning in validationResponse.warnings">{{warning.field}} {{warning.defaultMessage}}</li>
+    	</ul>
+	</div>
+    <div ng-message="infos" ng-if="validationResponse.infos.length > 0" class="alert alert-info glyphicon glyphicon-info-sign">
+    	<ul>
+    		<li ng-repeat="info in validationResponse.infos">{{info.field}} {{info.defaultMessage}}</li>
+    	</ul>
+    </div>
+</div>

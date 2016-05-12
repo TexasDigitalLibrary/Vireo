@@ -83,6 +83,8 @@ public class LookAndFeelController {
                 //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
                 break;
             case VALIDATION_WARNING:
+                Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting());
+                response.getPayload().put(systemLogo.getClass().getSimpleName(), systemLogo);
                 //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
                 break;
             default:

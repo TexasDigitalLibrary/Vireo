@@ -6,7 +6,7 @@
 				<div class="row">
 					<h4>Background
 					   <div tooltip="Use hex color values to change the background on the student side. The main color (default #1B333F) fades into the highlight color (default #43606E).">
-					   	<span class="glyphicon glyphicon-info-sign color-reset"></span>
+					   	<span class="glyphicon glyphicon-info-sign opaque color-reset"></span>
 					   </div>
 					</h4> 
 				</div>
@@ -35,7 +35,9 @@
 							</span>
 
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['background_main_color']">
+						</validationresponse>
 					</div>
 
 
@@ -63,7 +65,9 @@
 							</span>
 
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['background_highlight_color']">
+						</validationresponse>
 					</div>
 					<div class="col-md-1 col-lg-5"></div>
 
@@ -74,7 +78,7 @@
 				<div class="row">
 					<h4>Submission Step Button (On)
 					   <div tooltip="Use hex color values to change the look of the submission step buttons when on the current step or on hover. The main color (default #1B333F) fades into the highlight color (default #43606E) and then back to the main color.">
-					   		<span class="glyphicon glyphicon-info-sign color-reset"></span>
+					   		<span class="glyphicon glyphicon-info-sign opaque color-reset"></span>
 					   </div>
 					</h4>
 				</div>
@@ -104,7 +108,9 @@
 							</span>
 
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['button_main_color_on']">
+						</validationresponse>
 					</div>
 
 
@@ -132,7 +138,9 @@
 							</span>
 
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['button_highlight_color_on']">
+						</validationresponse>
 					</div>
 
 					<div class="col-md-1 col-lg-5"></div>
@@ -144,7 +152,7 @@
 					<h4>Submission Step Button (Off)
 			   			<div 
 			   				tooltip="Use hex color values to change the look of the submission step buttons when in a default state. The main color (default #A6A18C) fades into the highlight color (default #C7C2A9) and then back to the main color.">
-			   				<span class="glyphicon glyphicon-info-sign color-reset"></span>
+			   				<span class="glyphicon glyphicon-info-sign opaque color-reset"></span>
 			   			</div>
 					</h4>
 				</div>
@@ -173,7 +181,9 @@
 							</span>
 
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['button_main_color_off']">
+						</validationresponse>
 					</div>
 
 
@@ -197,11 +207,14 @@
 										name="button_highlight_color_off" 
 										ng-model="settings.configurable.lookAndFeel.button_highlight_color_off"
 										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" />
+										
 								</label>
 							</span>
-
+							
 						</div>
-
+						<validationresponse
+							validation-response="serverErrors['lookAndFeel']['button_highlight_color_off']">
+						</validationresponse>
 					</div>
 
 					<div class="col-md-1 col-lg-5"></div>
@@ -220,7 +233,7 @@
 				
 			<h4>Logos
 				<div tooltip="Change the logos located on the student side in the top left and top right corners. The recommended size is 50 x 150 pixels.">
-		   			<span class="glyphicon glyphicon-info-sign color-reset"></span>
+		   			<span class="glyphicon glyphicon-info-sign opaque color-reset"></span>
 		   		</div>	
 			</h4>
 
@@ -237,6 +250,9 @@
 
 						<img ng-src="{{modalData.logoLeft}}" class="logo-preview">
 					</div>
+					<validationresponse
+						validation-response="serverErrors['left_logo']">
+					</validationresponse>
 				</div>
 				
 				<div class="col-sm-4">
@@ -249,6 +265,9 @@
 						</p>
 						<img ng-src="{{modalData.logoRight}}" class="logo-preview">
 					</div>
+					<validationresponse
+						validation-response="serverErrors['right_logo']">
+					</validationresponse>
 				</div>
 
 
@@ -277,7 +296,8 @@
     			scope-value="settings.configurable.lookAndFeel.custom_css"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'custom_css')"
               	key-down="confirmEdit(event, prop)"
-              	wysiwyg="false">
+              	wysiwyg="false"
+              	validation-response="serverErrors['lookAndFeel']['custom_css']">
    		</lockingtextarea>
 		
 		<!-- FRONT PAGE INSTRUCTIONS BEFORE BUTTON -->
@@ -286,7 +306,8 @@
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.front_page_instructions_before"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_before')"
-              	key-down="confirmEdit(event, prop)">
+              	key-down="confirmEdit(event, prop)"
+              	validation-response="serverErrors['lookAndFeel']['front_page_instructions_before']">
    		</lockingtextarea>
    		
    		<!-- FRONT PAGE INSTRUCTIONS AFTER BUTTON -->
@@ -295,7 +316,8 @@
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.front_page_instructions_after"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_after')"
-              	key-down="confirmEdit(event, prop)">
+              	key-down="confirmEdit(event, prop)"
+              	validation-response="serverErrors['lookAndFeel']['front_page_instructions_after']">
    		</lockingtextarea>
    		
    		<!-- POST SUBMISSION INSTRUCTIONS -->
@@ -304,7 +326,8 @@
     			hint="These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.post_submission_instructions"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'post_submission_instructions')"
-              	key-down="confirmEdit(event, prop)">
+              	key-down="confirmEdit(event, prop)"
+              	validation-response="serverErrors['lookAndFeel']['post_submission_instructions']">
    		</lockingtextarea>
 
 		<!-- POST CORRECTION INSTRUCTIONS-->
@@ -313,7 +336,8 @@
     			hint="These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
     			scope-value="settings.configurable.lookAndFeel.post_correction_instructions"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'post_correction_instructions')"
-              	key-down="confirmEdit(event, prop)">
+              	key-down="confirmEdit(event, prop)"
+              	validation-response="serverErrors['lookAndFeel']['post_correction_instructions']">
    		</lockingtextarea>
 	</form>
 
