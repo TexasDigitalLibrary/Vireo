@@ -12,13 +12,13 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 		
 	};
 	
-	WorkflowStepRepo.currentWorkflowSteps = [];
+	WorkflowStepRepo.currentWorkflowSteps = {};
 	
-	WorkflowStepRepo.data = [];
+	WorkflowStepRepo.data = null;
 	
-	WorkflowStepRepo.listener = [];
+	WorkflowStepRepo.listener = null;
 
-	WorkflowStepRepo.promise = [];
+	WorkflowStepRepo.promise = null;
 	
 	WorkflowStepRepo.set = function(data) {
 		self.unwrap(self, data);
@@ -58,11 +58,16 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	};
 
 	WorkflowStepRepo.getStepById = function(wsID) {
+
+		console.log(wsID);
+
 		var defer = $q.defer();
 
 		if (WorkflowStepRepo.currentWorkflowSteps[wsID]) {
 			defer.resolve(WorkflowStepRepo.currentWorkflowSteps[wsID]);
 		} else {
+
+			WorkflowStepRepo.currentWorkflowSteps[wsID] = "pending";
 
 			var stepPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
@@ -73,6 +78,7 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 			stepPromise.then(function(result){
 				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
 				WorkflowStepRepo.currentWorkflowSteps[wsID] = workflowStep;
+				console.log(WorkflowStepRepo.currentWorkflowSteps);
 				defer.resolve(workflowStep);
 			});
 

@@ -41,9 +41,6 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
-    
-    @Autowired
-    private WorkflowStepRepo workflowStepRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -60,9 +57,11 @@ public class OrganizationController {
     @ApiMapping("/all")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse allOrganizations() {
-        Map<String,List<Organization>> map = new HashMap<String,List<Organization>>();        
-        map.put("list", organizationRepo.findAll());
+    public ApiResponse allOrganizations() {        
+        getAll().get("list").forEach(org -> {
+            System.out.println(org.getName());
+            System.out.println(org.getWorkflowSteps().size());
+        });
         return new ApiResponse(SUCCESS, getAll());
     }
 

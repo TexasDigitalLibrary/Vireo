@@ -26,14 +26,18 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			var currentOrganization = $scope.getSelectedOrganization();
 			if (currentOrganization !== undefined && currentOrganization) {
 				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
+
+					console.log(currentOrganization);
+
 					$scope.managedOrganization = angular.copy(currentOrganization);
 
 					clearCurrentWorkflowSteps();
-					angular.forEach($scope.managedOrganization.workflowSteps, function(stepId) {
-						WorkflowStepRepo.getStepById(stepId).then(function(step) {
-							$scope.currentWorkflowSteps.push(step);
-						}); 
-					});					
+					//console.log($scope.managedOrganization.workflowSteps);
+					// angular.forEach($scope.managedOrganization.workflowSteps, function(stepId) {
+					// 	WorkflowStepRepo.getStepById(stepId).then(function(step) {
+					// 		$scope.currentWorkflowSteps.push(step);
+					// 	}); 
+					// });					
 				}
 			}
 			return $scope.managedOrganization;

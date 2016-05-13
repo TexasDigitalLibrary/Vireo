@@ -11,12 +11,10 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		self.unwrap(self, futureData);
 		
 	};
-		
-	OrganizationRepo.data = [];
-	
-	OrganizationRepo.listener = [];
 
-        OrganizationRepo.promise = [];
+	OrganizationRepo.data = null;
+	OrganizationRepo.listener = null;
+	OrganizationRepo.promise = null;
 
 	OrganizationRepo.newOrganization = {};
 

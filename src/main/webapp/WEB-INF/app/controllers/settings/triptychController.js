@@ -17,7 +17,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var nextPanelIndex = panelIndex + 1;
             var hasHistory = $scope.triptych.panelHistory.length > 0;
             var orgHasChildren = organization.childrenOrganizations.length > 0;
-            var isFirstPanel = panelIndex == 0;
+            var isFirstPanel = panelIndex === 0;
             var isLastPanel = panelIndex == 2;
 
             $scope.setSelectedOrganization(organization);
@@ -46,13 +46,13 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             	}
             }
 
-        } 
+        }; 
 
         $scope.filterPanelByParent = function(panel, organization) {
 
             if(!panel) return false;
 
-            var panelParentOrganization = panel.parentOrganization
+            var panelParentOrganization = panel.parentOrganization;
 
             if(organization.parentOrganizations.indexOf(panelParentOrganization.id) != -1) {
             	panel.organizationCategories[organization.id] = organization.category;
@@ -61,12 +61,12 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             
             return false;
             
-        }
+        };
 
         $scope.resetPanels = function() {
             $scope.triptych.resetPanels();
             $scope.newOrganization.parent = $scope.organizations.list[0];
-        }
+        };
 
     });
 
@@ -160,7 +160,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             panel.previouslyActive = false;
             panel.active = true;
         }
-    }
+    };
 
     var Panel = function(parentOrganization) {
         var Panel = this;
@@ -175,7 +175,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         Panel.opening = false;
         Panel.visible = false;
         return this;
-    }
+    };
 
     Panel.prototype = {
         open: function() {
@@ -239,6 +239,6 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
 
             return uniqueCategories;
         }
-    }
+    };
 
 });

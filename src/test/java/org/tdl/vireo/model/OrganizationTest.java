@@ -278,6 +278,24 @@ public class OrganizationTest extends AbstractEntityTest {
         
         assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization.getId(), ((Organization)leafOrganization.getParentOrganizations().toArray()[0]).getId() );
     }
+    
+    @Test
+    @Order(value = 6)
+    @Transactional
+    public void testInsanity() {
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        WorkflowStep parentWorkflowStep2 = workflowStepRepo.create("Step 2", parentOrganization);
+        WorkflowStep parentWorkflowStep3 = workflowStepRepo.create("Step 3", parentOrganization);
+        WorkflowStep parentWorkflowStep4 = workflowStepRepo.create("Step 4", parentOrganization);
+        
+        int numberOfParentWorkflowSteps = parentOrganization.getWorkflowSteps().size();
+        
+        assertEquals("The number of workflowsteps was off!", 4, numberOfParentWorkflowSteps);
+        
+        
+    }
 
     @After
     public void cleanUp() {
