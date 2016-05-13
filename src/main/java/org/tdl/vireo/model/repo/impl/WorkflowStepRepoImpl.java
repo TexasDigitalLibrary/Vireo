@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
@@ -45,6 +46,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
+    @Transactional
     public WorkflowStep create(String name, Organization originatingOrganization, Integer orderIndex, WorkflowStep originatingWorkflowStep) {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
         workflowStep.setOriginatingWorkflowStep(originatingWorkflowStep);
