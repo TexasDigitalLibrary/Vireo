@@ -16,16 +16,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
-import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -65,10 +62,8 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, getAll());
     }
 
-    //TODO: Resolve model issues: lazy initialization error when trying to get an Org Cat from the repo
     @ApiMapping("/create")
     @Auth(role="MANAGER")
-    @Transactional
     public ApiResponse createOrganization(@Data String data) {
         
         JsonNode dataNode = null;

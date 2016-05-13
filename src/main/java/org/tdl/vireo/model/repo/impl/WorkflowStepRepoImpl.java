@@ -49,6 +49,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
         workflowStep.setOriginatingWorkflowStep(originatingWorkflowStep);
     
+        // this might be needed, but breaks tests
+        //workflowStep = workflowStepRepo.save(workflowStep);
+        
         //recursive call
         originatingOrganization.addWorkflowStep(workflowStep, orderIndex);
         
