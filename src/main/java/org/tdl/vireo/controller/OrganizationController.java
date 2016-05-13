@@ -64,6 +64,7 @@ public class OrganizationController {
 
     @ApiMapping("/create")
     @Auth(role="MANAGER")
+    @Transactional
     public ApiResponse createOrganization(@Data String data) {
         
         JsonNode dataNode = null;
