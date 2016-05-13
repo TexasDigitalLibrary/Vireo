@@ -20,7 +20,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var isFirstPanel = panelIndex === 0;
             var isLastPanel = panelIndex == 2;
 
-            $scope.setSelectedOrganization(organization);
+            if(organization.id !== 1) $scope.setSelectedOrganization(organization);
 
             panel.selectedOrganization = organization;
 
@@ -68,7 +68,25 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             $scope.newOrganization.parent = $scope.organizations.list[0];
         };
 
+        if($scope.organizations.list.length==1) $scope.add = true;
+
+        $scope.hasOrganization = function() {
+            
+            var hasOrgs = $scope.organizations.list.length < 2;
+
+            if($scope.organizations.list.length == 2 && $scope.add) {
+                $scope.add = false;
+                $timeout(function() {
+                    $scope.shiftPanels($scope.triptych.rootPanel, $scope.organizations.list[0]);
+                });
+            }
+
+            return hasOrgs;
+        }; 
+
     });
+
+    
 
     var Triptych = function(organization) {
 
