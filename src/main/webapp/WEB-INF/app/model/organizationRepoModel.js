@@ -36,8 +36,6 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 		if(OrganizationRepo.promise) return OrganizationRepo.data;
 
-		var orgPromise = $q.defer();
-
 		var newAllOrganizationsPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'organization', 
