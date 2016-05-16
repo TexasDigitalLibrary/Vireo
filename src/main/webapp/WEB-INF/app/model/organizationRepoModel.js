@@ -26,7 +26,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	OrganizationRepo.getNewOrganization = function() {
 		return OrganizationRepo.newOrganization;
-	}
+	};
 
 	OrganizationRepo.set = function(data) {
 		self.unwrap(self, data);
@@ -51,13 +51,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		}
 		else {
 			OrganizationRepo.data = new OrganizationRepo(newAllOrganizationsPromise);	
-		}
-
-		// OrganizationRepo.promise.then(function() {
-		// 	angular.forEach(OrganizationRepo.data.list, function(org){
-		// 		OrganizationRepo.getOrganizationsWorkflowStep(org);
-		// 	});
-		// });		
+		}	
 		
 		OrganizationRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
@@ -67,35 +61,27 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 		OrganizationRepo.set(OrganizationRepo.listener);
 
-		// OrganizationRepo.listener.then(null,null,function() {
-		// 	var newOrg = OrganizationRepo.data.list[OrganizationRepo.data.list.length-1];
-		// 	OrganizationRepo.getOrganizationsWorkflowStep(newOrg);
-		// });
-
 		return OrganizationRepo.data;
 	
 	};
 
 	OrganizationRepo.getOrganizationsWorkflowStep = function(org) {
+
 		var workflowStepsPromise = WsApi.fetch({
-						endpoint: '/private/queue', 
-						controller: 'organization', 
-						method: 'get/worflow-steps',
-						data: org
-		})
+			endpoint: '/private/queue', 
+			controller: 'organization', 
+			method: org.id+'/worflow-steps'
+		});
 
 		workflowStepsPromise.then(function(data) {
-			
-			org.workflowSteps.length = 0;
-
-			angular.forEach(JSON.parse(data.body).payload.PersistentBag, function(workflowStep) {
-				org.workflowSteps.push(workflowStep);
-			});
-		
+			var workflowSteps = JSON.parse(data.body).payload.PersistentBag;
+			if(workflowSteps !== undefined && workflowSteps.length == org.workflowSteps.length) {
+				org.workflowSteps = JSON.parse(data.body).payload.PersistentBag;	
+			}
 		});
 
 		return workflowStepsPromise;
-	}
+	};
 
 	OrganizationRepo.getChildren = function(id) {
 

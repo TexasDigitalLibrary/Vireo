@@ -116,9 +116,9 @@ public class OrganizationController {
     
     @ApiMapping("/{id}/worflow-steps")
     @Auth(role="MANAGER")
-    public ApiResponse getWorkflowStepsForOrganization(@ApiModel Organization org) {
-        
-        org = organizationRepo.findOne(org.getId());     
+    public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
+                
+        Organization org = organizationRepo.findOne(Long.parseLong(id));     
         
         return new ApiResponse(SUCCESS, org.getWorkflowSteps());
         
