@@ -53,11 +53,11 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 			OrganizationRepo.data = new OrganizationRepo(newAllOrganizationsPromise);	
 		}
 
-		OrganizationRepo.promise.then(function() {
-			angular.forEach(OrganizationRepo.data.list, function(org){
-				OrganizationRepo.getOrganizationsWorkflowStep(org);
-			});
-		});		
+		// OrganizationRepo.promise.then(function() {
+		// 	angular.forEach(OrganizationRepo.data.list, function(org){
+		// 		OrganizationRepo.getOrganizationsWorkflowStep(org);
+		// 	});
+		// });		
 		
 		OrganizationRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
@@ -67,10 +67,10 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 		OrganizationRepo.set(OrganizationRepo.listener);
 
-		OrganizationRepo.listener.then(null,null,function() {
-			var newOrg = OrganizationRepo.data.list[OrganizationRepo.data.list.length-1];
-			OrganizationRepo.getOrganizationsWorkflowStep(newOrg);
-		});
+		// OrganizationRepo.listener.then(null,null,function() {
+		// 	var newOrg = OrganizationRepo.data.list[OrganizationRepo.data.list.length-1];
+		// 	OrganizationRepo.getOrganizationsWorkflowStep(newOrg);
+		// });
 
 		return OrganizationRepo.data;
 	
