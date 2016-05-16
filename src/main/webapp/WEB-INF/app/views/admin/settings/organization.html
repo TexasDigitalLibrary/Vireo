@@ -167,9 +167,15 @@
 				<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<button type="button" class="btn-xs btn-primary pull-right">
+							<div class="add-workflow-step" data-toggle="modal" data-target="#addWorkflowStepModal">
 								<span class="glyphicon glyphicon-plus pull-right"></span>
-							</button>
+							</div>
+							<modal  modal-id="addWorkflowStepModal"
+									modal-view="views/modals/settings/addWorkflowStep.html"
+									modal-header-class="modal-header-primary"
+									modal-backdrop="static"
+									modal-fullscreen="true">
+						  </modal>
 							<h3 class="panel-title">
 							Manage {{getManagedOrganization().name}} Workflow</h3>
 						</div>

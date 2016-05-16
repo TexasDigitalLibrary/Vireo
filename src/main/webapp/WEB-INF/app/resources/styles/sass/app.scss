@@ -1139,6 +1139,13 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
+#organizationManagement .add-workflow-step:hover {
+  cursor: pointer;
+  color:  #337ab7;
+}
+
+
+
 
 /*************
 * DIRECTIVES *
@@ -1318,3 +1325,5 @@ footer a, footer li, footer p {
         }
     }
 }
+
+
