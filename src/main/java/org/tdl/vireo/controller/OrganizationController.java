@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
@@ -109,6 +111,16 @@ public class OrganizationController {
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
+        
+    }
+    
+    @ApiMapping("/{id}/worflow-steps")
+    @Auth(role="MANAGER")
+    public ApiResponse getWorkflowStepsForOrganization(@ApiModel Organization org) {
+        
+        org = organizationRepo.findOne(org.getId());     
+        
+        return new ApiResponse(SUCCESS, org.getWorkflowSteps());
         
     }
     

@@ -176,7 +176,7 @@
 								</div>
 								<div class="panel-body">
                                     <accordion single-expand="false" >
-                                    	<pane ng-repeat="step in currentWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                                    	<pane ng-repeat="step in getManagedOrganization().workflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
                                     </accordion>
 								</div>
 							</div>
