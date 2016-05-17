@@ -119,7 +119,7 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
                 
-        Organization org = organizationRepo.findOne(Long.parseLong(id));     
+        Organization org = organizationRepo.findOne(Long.parseLong(id));
         
         return new ApiResponse(SUCCESS, org.getWorkflowSteps());
         

@@ -65,7 +65,22 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	};
 
+	OrganizationRepo.findOrganizationById = function(id) {
+
+		var matchedOrganization = null;
+
+		angular.forEach(OrganizationRepo.data.list, function(orgToCompare) {
+			if(orgToCompare.id === id) {
+				matchedOrganization = orgToCompare;
+			}
+		});
+
+		return matchedOrganization;
+	};
+
 	OrganizationRepo.getOrganizationsWorkflowStep = function(org) {
+
+		var workflowStepsDefer = new $q.defer();
 
 		var workflowStepsPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
@@ -75,12 +90,15 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 		workflowStepsPromise.then(function(data) {
 			var workflowSteps = JSON.parse(data.body).payload.PersistentBag;
-			if(workflowSteps !== undefined && workflowSteps.length == org.workflowSteps.length) {
-				org.workflowSteps = JSON.parse(data.body).payload.PersistentBag;	
+			if(workflowSteps !== undefined) {
+				org.workflowSteps = workflowSteps;	
 			}
+
+			workflowStepsDefer.resolve(org);
+
 		});
 
-		return workflowStepsPromise;
+		return workflowStepsDefer.promise;
 	};
 
 	OrganizationRepo.getChildren = function(id) {
@@ -130,7 +148,10 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 		addWorkflowStepPromise.then(function(rawRes) {
 			var newWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
-			addWorkflowStepDefer.resolve(newWorkflowStep);			
+			addWorkflowStepDefer.resolve(newWorkflowStep);
+			angular.forEach(OrganizationRepo.data.list, function(org) {
+				OrganizationRepo.getOrganizationsWorkflowStep(org);
+			});			
 		});
 
 		return addWorkflowStepDefer.promise;
