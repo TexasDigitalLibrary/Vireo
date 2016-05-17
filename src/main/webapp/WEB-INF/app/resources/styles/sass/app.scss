@@ -1302,28 +1302,22 @@ footer a, footer li, footer p {
   cursor:help;
 }
 
-.orderable-panel-bar {
-    @extend .panel-heading;
-    display:inline-block;
-    padding:10px 15px;
-    width:100%;
-    margin-right: -26px;
+.accordion-order-box {
+  color: #afafaf;
+  margin-top: -9px;
+  margin-right: -10px;
+  text-align: center;
+  width: 25px;
 }
 
-.accordion-order-box {
-    display:inline-block;
-    float:right;
-    margin-right:12px;
-    margin-top:1px;
-    &>a{
-        display:block;
-        color: #FFFFFF;
-    }
-    &:hover{
-        &>a{
-            color: #70706F;
-        }
-    }
+.panel-heading:hover .accordion-order-box {
+  color: #333;
 }
+
+.accordion-order-box>div:active, {
+  color: #337ab7;
+}
+
+
 
 

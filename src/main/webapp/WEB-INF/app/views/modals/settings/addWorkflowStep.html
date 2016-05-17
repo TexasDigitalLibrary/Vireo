@@ -7,11 +7,11 @@
 
 <div class="modal-body">
 	<form name="addWorkflowStep">
-    	
+    	<input class="form-control" placeholder="Name of Workflow Step" type="text" name="name" ng-model="newWorkflowStepName" />
 	</form>
 </div>
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
-	<button id="languages-save" type="button" class="btn btn-primary">Add</button>
+	<button id="languages-save" type="button" class="btn btn-primary" ng-click="$parent.addWorkflowStep(newWorkflowStepName)">Add</button>
 </div>

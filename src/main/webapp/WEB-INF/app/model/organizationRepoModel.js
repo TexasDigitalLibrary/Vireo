@@ -114,6 +114,29 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	};
 
+	OrganizationRepo.addWorkflowStep = function(org, workflowStepName) {
+
+		var addWorkflowStepDefer = $q.defer();
+		var addWorkflowStepPromise = WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': org.id+'/create-workflow-step',
+			'data': {
+				'name': workflowStepName,
+				'originating_organization_id': org.id,
+				'overrideable': true
+			}
+		});
+
+		addWorkflowStepPromise.then(function(rawRes) {
+			var newWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
+			addWorkflowStepDefer.resolve(newWorkflowStep);			
+		});
+
+		return addWorkflowStepDefer.promise;
+
+	};
+
 	OrganizationRepo.update = function(organization) {
 
 		var updateOrganizationPromise = WsApi.fetch({
