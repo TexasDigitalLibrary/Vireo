@@ -16,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,9 +39,12 @@ public class OrganizationController {
     
     @Autowired
     private OrganizationRepo organizationRepo;
-
+    
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
+    
+    @Autowired
+    private WorkflowStepRepo workflowStepRepo;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,10 +62,6 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse allOrganizations() {        
-        getAll().get("list").forEach(org -> {
-            System.out.println(org.getName());
-            System.out.println(org.getWorkflowSteps().size());
-        });
         return new ApiResponse(SUCCESS, getAll());
     }
 
@@ -118,9 +119,28 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
                 
-        Organization org = organizationRepo.findOne(Long.parseLong(id));     
+        Organization org = organizationRepo.findOne(Long.parseLong(id));
         
         return new ApiResponse(SUCCESS, org.getWorkflowSteps());
+        
+    }
+    
+    @ApiMapping("/{id}/create-workflow-step")
+    @Auth(role="MANAGER")
+    @Transactional
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {
+                
+        Organization org = organizationRepo.findOne(Long.parseLong(id));
+        
+        // We are using the repo create method to take advantage of 
+        // the mutations it performs on the new WorkflowStep. Without this the newWorkflowStep cannot be saved
+        newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
+        
+        org.addWorkflowStep(newWorkflowStep);
+        
+        organizationRepo.save(org);
+        
+        return new ApiResponse(SUCCESS, newWorkflowStep);
         
     }
     

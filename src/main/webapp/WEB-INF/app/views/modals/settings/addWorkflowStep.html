@@ -1,0 +1,17 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetLanguages()" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Workflow Step</h3>
+</div>
+
+<div class="modal-body">
+	<form name="addWorkflowStep">
+    	<input class="form-control" placeholder="Name of Workflow Step" type="text" name="name" ng-model="newWorkflowStepName" />
+	</form>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+	<button id="languages-save" type="button" class="btn btn-primary" ng-click="$parent.addWorkflowStep(newWorkflowStepName)">Add</button>
+</div>

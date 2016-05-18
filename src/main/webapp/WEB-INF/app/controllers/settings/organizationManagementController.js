@@ -30,6 +30,12 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
 		};
 
+		$scope.addWorkflowStep = function(newWorkflowStepName) {
+			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function(newWorkflowStep) {
+				$scope.managedOrganization.workflowSteps.push(newWorkflowStep);
+				angular.element("#addWorkflowStepModal").modal("hide");		
+			}); 
+		};
 
 	});
 });
