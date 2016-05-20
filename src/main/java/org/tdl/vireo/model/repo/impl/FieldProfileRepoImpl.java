@@ -1,5 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.FieldPredicate;
@@ -46,14 +50,18 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 
     @Override
     public void delete(FieldProfile fieldProfile) {
+        if(fieldProfileRepo.findOne(fieldProfile.getId()) == null)
+            return;
         
     	WorkflowStep originatingWorkflowStep = fieldProfile.getOriginatingWorkflowStep();
     	
-    	originatingWorkflowStep.removeFieldProfile(fieldProfile);
-    	
-    	workflowStepRepo.save(originatingWorkflowStep);
+    	if(originatingWorkflowStep != null) {
+    	    originatingWorkflowStep.removeFieldProfile(fieldProfile);
+    	    workflowStepRepo.save(originatingWorkflowStep);
+    	}
     	
     	fieldProfileRepo.delete(fieldProfile.getId());
+    	
     }
     
 }

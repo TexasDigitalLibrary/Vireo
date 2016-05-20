@@ -172,6 +172,26 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return updateOrganizationPromise;
 
 	};
+
+	OrganizationRepo.updateWorkflowStep = function(requestingOrganization, workflowStepToUpdate) {
+		var updateWorkflowStepDefer = $q.defer();
+		var updateWorkflowStepPromise = WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': requestingOrganization.id+'/update-workflow-step',
+			'data': workflowStepToUpdate
+		});
+
+		updateWorkflowStepPromise.then(function(rawRes) {
+			var updatedWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
+			updateWorkflowStepDefer.resolve(updatedWorkflowStep);
+			angular.forEach(OrganizationRepo.data.list, function(org) {
+				OrganizationRepo.getOrganizationsWorkflowStep(org);
+			});			
+		});
+
+		return updateWorkflowStepDefer.promise;
+	}
         
     OrganizationRepo.ready = function() {
                 return OrganizationRepo.promise;

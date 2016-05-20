@@ -249,8 +249,18 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var uniqueCategories = [];
 
             for(var key in Panel.organizationCategories) {
+                
                 var category = Panel.organizationCategories[key];
-                if(uniqueCategories.indexOf(category) === -1) {
+                var unique = true;
+
+                for(var i in uniqueCategories) {
+                    if(uniqueCategories[i].id === category.id) {
+                        unique = false;
+                        break; 
+                    }
+                }
+
+                if(unique) {
                     uniqueCategories.push(category);
                 }
             }

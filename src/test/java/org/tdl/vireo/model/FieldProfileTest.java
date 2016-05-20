@@ -91,7 +91,6 @@ public class FieldProfileTest extends AbstractEntityTest {
 
     }
     
-    
 //    @Test
 //    @Transactional
 //    public void testInheritFieldProfileViaPointer() {

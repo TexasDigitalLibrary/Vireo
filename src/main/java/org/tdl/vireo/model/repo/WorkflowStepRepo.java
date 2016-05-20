@@ -11,9 +11,11 @@ public interface WorkflowStepRepo extends JpaRepository<WorkflowStep, Long>, Wor
 
     public List<WorkflowStep> findByName(String name);
     
-    public WorkflowStep findByNameAndOriginatingOrganization(String name, Organization originatingOrganization);
+    public WorkflowStep findByNameAndOriginatingOrganizationId(String name, Long originatingOrganizationId);
     
     public List<WorkflowStep> findByOriginatingOrganization(Organization originatingOrganization);
+    
+    public List<WorkflowStep> findByOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep);
     
     public void delete(WorkflowStep workflowStep);
     

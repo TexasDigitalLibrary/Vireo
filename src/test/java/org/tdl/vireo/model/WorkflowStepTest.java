@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class WorkflowStepTest extends AbstractEntityTest {
 
@@ -45,7 +46,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public void testCascade() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         
@@ -104,6 +105,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         //the field profile should no longer be on the workflow step, and it should be deleted since it was orphaned
         assertEquals("The field profile was not removed!", false, workflowStep.getFieldProfiles().contains(fieldProfileToDisassociate));
+
         assertEquals("The field profile was deleted!", 2, fieldProfileRepo.count());
         
         
@@ -123,7 +125,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         workflowStepRepo.delete(workflowStep);
         
         // assert workflow step was deleted
-        assertEquals("The workflow step was not deleted!", 0, workflowStepRepo.count());
+        assertEquals("The workflow step was not deleted!", null, workflowStepRepo.findOne(workflowStep.getId()));
         
         // assert all field profiles originating in the workflow step are deleted,
         // but the many-to-many associated properties are not
@@ -136,7 +138,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @Test
     public void testWorkFlowStepDefaultEmptyInit() {
         Organization org = organizationRepo.create("testOrg", parentCategory);
-        assertEquals("A newly created organization should have no workflow steps", 0, org.getWorkflowSteps().size());
+        assertEquals("A newly created organization should have no workflow steps", 0, org.getOriginalWorkflowSteps().size());
         assertEquals("A newly created organization should have empty workflow", 0, org.getWorkflow().size());
     }
     
@@ -144,44 +146,44 @@ public class WorkflowStepTest extends AbstractEntityTest {
     public void testWorkFlowStepAppend() {
         Organization org = organizationRepo.create("testOrg", parentCategory);
         workflowStepRepo.create("first step", org);
-        assertEquals("The organization should have one step", 1, org.getWorkflowSteps().size());
+        assertEquals("The organization should have one step", 1, org.getOriginalWorkflowSteps().size());
         assertEquals("The organization should have one step in workflow", 1, org.getWorkflow().size());
         workflowStepRepo.create("second step", org);
-        assertEquals("The organization should have one step", 2, org.getWorkflowSteps().size());
+        assertEquals("The organization should have one step", 2, org.getOriginalWorkflowSteps().size());
         assertEquals("The organization should have one step in workflow", 2, org.getWorkflow().size());
     }
     
     @Test
     public void testWorkFlowStepAppendAtIndexSuccess() {
         workflowStepRepo.create("first step", organization);
-        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getOriginalWorkflowSteps().size());
         workflowStepRepo.create("second step", organization);
-        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getOriginalWorkflowSteps().size());
         workflowStepRepo.create("third step", organization);
-        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getOriginalWorkflowSteps().size());
         workflowStepRepo.create("fourth step", organization);
-        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getOriginalWorkflowSteps().size());
         workflowStepRepo.create("fifth step", organization);
-        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getOriginalWorkflowSteps().size());
     }
     
     @Test
     @Transactional
     public void testWorkFlowOrderRecordsCorrectly() {
         WorkflowStep ws1 = workflowStepRepo.create("first step", organization);
-        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws2 = workflowStepRepo.create("second step", organization);
-        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws3 = workflowStepRepo.create("third step", organization);
-        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws4 = workflowStepRepo.create("fourth step", organization);
-        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws5 = workflowStepRepo.create("fifth step", organization);
-        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getOriginalWorkflowSteps().size());
         
         assertEquals("Step 1 did not appear in position 1!", ws1.getId(), organization.getWorkflow().get(0).getId());
         assertEquals("Step 2 did not appear in position 2!", ws2.getId(), organization.getWorkflow().get(1).getId());
@@ -195,19 +197,19 @@ public class WorkflowStepTest extends AbstractEntityTest {
     public void testInheritWorkflowInCorrectOrder() {
         
         WorkflowStep ws1 = workflowStepRepo.create("first step", organization);
-        assertEquals("The org should have 1 workflow steps.", 1, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 1 workflow steps.", 1, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws2 = workflowStepRepo.create("second step", organization);
-        assertEquals("The org should have 2 workflow steps.", 2, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 2 workflow steps.", 2, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws3 = workflowStepRepo.create("third step", organization);
-        assertEquals("The org should have 3 workflow steps.", 3, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 3 workflow steps.", 3, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws4 = workflowStepRepo.create("fourth step", organization);
-        assertEquals("The org should have 4 workflow steps.", 4, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 4 workflow steps.", 4, organization.getOriginalWorkflowSteps().size());
         
         WorkflowStep ws5 = workflowStepRepo.create("fifth step", organization);
-        assertEquals("The org should have 5 workflow steps.", 5, organization.getWorkflowSteps().size());
+        assertEquals("The org should have 5 workflow steps.", 5, organization.getOriginalWorkflowSteps().size());
         
         assertEquals("Workflow step order was the wrong length!", 5, organization.getWorkflow().size());
         assertEquals("Step 1 did not appear in position 1!", ws1.getId(), organization.getWorkflow().get(0).getId());
@@ -227,7 +229,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    @Transactional
+    //@Transactional
     public void testInheritWorkflowStepViaPointer() {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
@@ -235,10 +237,10 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.save(parentOrganization);
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
        
-        assertEquals("The Parent Organization had workflow steps", 0, parentOrganization.getWorkflowSteps().size());
-        assertEquals("The Organization had workflow steps", 0, organization.getWorkflowSteps().size());
-        assertEquals("The Grand Child Organization had workflow steps", 0, grandChildOrganization.getWorkflowSteps().size());
-        
+        assertEquals("The Parent Organization had workflow steps", 0, parentOrganization.getOriginalWorkflowSteps().size());
+        assertEquals("The Organization had workflow steps", 0, organization.getOriginalWorkflowSteps().size());
+        assertEquals("The Grand Child Organization had workflow steps", 0, grandChildOrganization.getOriginalWorkflowSteps().size());
+
         assertEquals("The Parent Organization had workflow steps", 0, parentOrganization.getWorkflow().size());
         assertEquals("The Organization had workflow steps", 0, organization.getWorkflow().size());
         assertEquals("The Grand Child Organization had workflow steps", 0, grandChildOrganization.getWorkflow().size());
@@ -249,26 +251,30 @@ public class WorkflowStepTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
        
-        assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflowSteps().size());
-        assertEquals("The Organization acquired workflow steps", 0, organization.getWorkflowSteps().size());
-        assertEquals("The Grand Child Organization acquired workflow steps", 0, grandChildOrganization.getWorkflowSteps().size());
+        assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getOriginalWorkflowSteps().size());
+        assertEquals("The Organization acquired workflow steps", 0, organization.getOriginalWorkflowSteps().size());
+        assertEquals("The Grand Child Organization acquired workflow steps", 0, grandChildOrganization.getOriginalWorkflowSteps().size());
         
         assertEquals("The Parent Organization did not add workflow steps", 1, parentOrganization.getWorkflow().size());
         assertEquals("The Organization did not inherit workflow steps", 1, organization.getWorkflow().size());
         assertEquals("The Grand Child Organization did not inherit workflow steps", 1, grandChildOrganization.getWorkflow().size());
         
-        
-        Long workflowStepId = workflowStep.getId();
-        
-        
         String newName = "A Changed Name";
         workflowStep.setName(newName);
-        
-        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, workflowStep.getOriginatingOrganization());
+    
+        //workflowStep is owned (originates in) the parent organization.  A change 
+        //requested by the child should result in a new one.
+        WorkflowStep newWorkflowStep = null;
+        try {
+            newWorkflowStep = workflowStepRepo.update(workflowStep, organization);
+        } catch (WorkflowStepNonOverrideableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
         
         // get old workflow step back. pointer changed!
-        workflowStep = workflowStepRepo.findOne(workflowStepId);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         
         // is indeed a new row!
         assertNotEquals("The workflow step didn't get a new id! Needs a new row in the table!", workflowStep.getId(), newWorkflowStep.getId());
@@ -305,19 +311,22 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The Parent Organization didn't have the right workflowStep", workflowStep, parentOrganization.getWorkflow().get(0));
         assertEquals("The Grand Child Organization didn't have the right workflowStep", workflowStep, grandChildOrganization.getWorkflow().get(0));
         
-        
         Long workflowStepId = workflowStep.getId();
-        
         
         //Check that inheritance still works
         String newName = "A Changed Name";
         workflowStep.setName(newName);
         
-        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, workflowStep.getOriginatingOrganization());
+        WorkflowStep newWorkflowStep = null;
+        try {
+            newWorkflowStep = workflowStepRepo.update(workflowStep, workflowStep.getOriginatingOrganization());
+        } catch (WorkflowStepNonOverrideableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
        
         // get old workflow step back. pointer changed!
         workflowStep = workflowStepRepo.findOne(workflowStepId);
-        
         
         // is indeed a new row!
         assertNotEquals("The workflow step didn't get a new id! Needs a new row in the table!", workflowStep.getId(), newWorkflowStep.getId());
@@ -464,19 +473,20 @@ public class WorkflowStepTest extends AbstractEntityTest {
         });
         assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
         
-        organizationCategoryRepo.deleteAll();
-        assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
-        
+        //TODO:  should be able to delete org categories before the orgs...
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
         assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
         
+        organizationCategoryRepo.deleteAll();
+        assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
+                
     	fieldPredicateRepo.deleteAll();
         assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
         
         noteRepo.deleteAll();
         assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
     }
-   
+
 }

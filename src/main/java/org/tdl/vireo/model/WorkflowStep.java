@@ -53,8 +53,8 @@ public class WorkflowStep extends BaseEntity {
     @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JoinColumn(name="originating_organization_id")
-    private List<FieldProfile> fieldProfiles;
+    @JoinColumn(name="originating_workflow_step_id")
+    private List<FieldProfile> originalFieldProfiles;
     
     @OneToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
@@ -153,7 +153,7 @@ public class WorkflowStep extends BaseEntity {
      * @return
      */
     public List<FieldProfile> getFieldProfiles() {
-        return fieldProfiles;
+        return originalFieldProfiles;
     }
 
     /**
@@ -161,7 +161,7 @@ public class WorkflowStep extends BaseEntity {
      * @param param
      */
     public void setFieldProfiles(List<FieldProfile> fieldProfiles) {
-        this.fieldProfiles = fieldProfiles;
+        this.originalFieldProfiles = fieldProfiles;
     }
 
     /**
@@ -254,5 +254,5 @@ public class WorkflowStep extends BaseEntity {
     public void clearAllNotes() {
         notes.clear();
     }
-
+    
 }

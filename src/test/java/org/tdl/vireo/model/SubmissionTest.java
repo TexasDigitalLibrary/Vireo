@@ -171,6 +171,7 @@ public class SubmissionTest extends AbstractEntityTest {
         workflowStepRepo.findAll().forEach(workflowStep -> {
         	workflowStepRepo.delete(workflowStep);
         });
+
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();

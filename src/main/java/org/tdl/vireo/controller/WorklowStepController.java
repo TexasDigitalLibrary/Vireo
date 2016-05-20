@@ -39,9 +39,6 @@ public class WorklowStepController {
     @Transactional
     public ApiResponse getStepById(@ApiVariable String id){
         
-        System.out.println("Got here");
-        System.out.println("\n\n\n\n"+id+"\n\n\n\n");
-        
         Long wStepID = null;
         try {
             wStepID = Long.valueOf(id);

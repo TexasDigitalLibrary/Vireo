@@ -18,6 +18,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.exception.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -118,7 +119,7 @@ public class OrganizationController {
                 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
         
-        return new ApiResponse(SUCCESS, org.getWorkflowSteps());
+        return new ApiResponse(SUCCESS, org.getWorkflow());
         
     }
     
@@ -132,6 +133,24 @@ public class OrganizationController {
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
         
         return new ApiResponse(SUCCESS, newWorkflowStep);
+        
+    }
+    
+    @ApiMapping("/{id}/update-workflow-step")
+    @Auth(role="MANAGER")
+    @Transactional  
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
+                
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
+     
+        try {
+            workflowStepToUpdate = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+        } catch (org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return new ApiResponse(SUCCESS, workflowStepToUpdate);
         
     }
     

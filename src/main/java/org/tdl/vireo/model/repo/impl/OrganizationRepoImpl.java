@@ -47,7 +47,9 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     public void delete(Organization organization) {
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
-        organizationCategoryRepo.save(category);
+        
+        //TODO:  needed?
+        //organizationCategoryRepo.save(category);
         
         Set<Organization> parentOrganizations = organization.getParentOrganizations();
         

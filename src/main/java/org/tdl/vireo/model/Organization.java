@@ -36,10 +36,10 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, mappedBy="originatingOrganization")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private List<WorkflowStep> workflowSteps;
+    private List<WorkflowStep> originalWorkflowSteps;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
@@ -61,7 +61,7 @@ public class Organization extends BaseEntity {
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
-        setWorkflowSteps(new ArrayList<WorkflowStep>());
+        setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setWorkflow(new ArrayList<WorkflowStep>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
@@ -124,26 +124,26 @@ public class Organization extends BaseEntity {
     /**
      * @return the workflowSteps
      */
-    public List<WorkflowStep> getWorkflowSteps() {
-        return workflowSteps;
+    public List<WorkflowStep> getOriginalWorkflowSteps() {
+        return originalWorkflowSteps;
     }
 
     /**
      * @param workflowSteps the workflowSteps to set
      */
-    public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
-        this.workflowSteps = workflowSteps;
+    public void setOriginalWorkflowSteps(List<WorkflowStep> workflowSteps) {
+        this.originalWorkflowSteps = workflowSteps;
     }
     
-    public void addWorkflowStep(WorkflowStep workflowStep) {
-        if(!getWorkflowSteps().contains(workflowStep)) {
-            getWorkflowSteps().add(workflowStep);
+    public void addOriginalWorkflowStep(WorkflowStep workflowStep) {
+        if(!getOriginalWorkflowSteps().contains(workflowStep)) {
+            getOriginalWorkflowSteps().add(workflowStep);
         }
         addStepToWorkflow(workflowStep);
     }
     
-    public void removeWorkflowStep(WorkflowStep workflowStep) {
-        getWorkflowSteps().remove(workflowStep);
+    public void removeOriginalWorkflowStep(WorkflowStep workflowStep) {
+        getOriginalWorkflowSteps().remove(workflowStep);
         removeStepFromWorkflow(workflowStep);
     }
     
@@ -155,7 +155,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * @param workflowSteps the workflowSteps to set
+     * @param originalWorkflowSteps the workflowSteps to set
      */
     public void setWorkflow(List<WorkflowStep> workflow) {
         this.workflow = workflow;

@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.config.SpringContext;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EmailTemplate;
@@ -191,9 +192,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 systemOrganization = organization;
             }
 
-
-            organization.setWorkflow(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
-            
+            organization.setWorkflow(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
 
             // temporary set of EmailWorkflowRule
             List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
@@ -262,9 +261,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     	List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
     	
     	for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
+    	    
+    	    
+    	    System.out.println("After processing workflow steps, loop brings us to this one on sys org: " + workflowStep.getName());
+    	    System.out.println("Number of field profiles on workflow step: " + workflowStep.getFieldProfiles().size());
             
             // check to see if the WorkflowStep exists
-            WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
+            WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganizationId(workflowStep.getName(), organization.getId());
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
@@ -289,7 +292,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
+                    
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                
+                    System.out.println("New field profile is null, so add to new wfstep " + newWorkflowStep.getName());
+                    System.out.println("New field profile got new id of " + newFieldProfile.getId());
+                
                 } else {
                     newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
                     newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());

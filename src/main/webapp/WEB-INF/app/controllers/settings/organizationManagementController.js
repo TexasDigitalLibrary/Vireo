@@ -37,5 +37,13 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			}); 
 		};
 
+		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
+			OrganizationRepo.updateWorkflowStep($scope.selectedOrganization, workflowStepToUpdate).then(function(updatedWorkflowStep) {
+				console.log(updatedWorkflowStep);
+				var oldWorkflowStepIndex = $scope.managedOrganization.workflowSteps.indexOf(updatedWorkflowStep);
+				$scope.managedOrganization.workflowSteps[oldWorkflowStepIndex] = updatedWorkflowStep;
+			}); 
+		};
+
 	});
 });
