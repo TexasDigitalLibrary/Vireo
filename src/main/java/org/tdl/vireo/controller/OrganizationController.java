@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -34,8 +32,6 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/organization")
 public class OrganizationController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -117,6 +113,7 @@ public class OrganizationController {
     
     @ApiMapping("/{id}/worflow-steps")
     @Auth(role="MANAGER")
+    @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
                 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
@@ -132,13 +129,7 @@ public class OrganizationController {
                 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
         
-        // We are using the repo create method to take advantage of 
-        // the mutations it performs on the new WorkflowStep. Without this the newWorkflowStep cannot be saved
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
-        
-        org.addWorkflowStep(newWorkflowStep);
-        
-        organizationRepo.save(org);
         
         return new ApiResponse(SUCCESS, newWorkflowStep);
         

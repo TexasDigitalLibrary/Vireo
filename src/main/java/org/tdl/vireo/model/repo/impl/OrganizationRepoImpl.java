@@ -1,16 +1,12 @@
 package org.tdl.vireo.model.repo.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
-import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
@@ -21,15 +17,15 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
     
-    @Autowired
-    private WorkflowStepRepo workflowStepRepo;
-    
+    //@Autowired
+    //private WorkflowStepRepo workflowStepRepo;
+     
     @Override
     public Organization create(String name, OrganizationCategory category) {
         Organization organization = organizationRepo.save(new Organization(name, category));
         category.addOrganization(organization);
         organizationCategoryRepo.save(category);
-        return organizationRepo.findOne(organization.getId());
+        return organization;
     }
     
     @Override
@@ -37,7 +33,14 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization organization = create(name, category);
         parent.addChildOrganization(organization);
         organizationRepo.save(parent);
-        return organizationRepo.findOne(organization.getId());
+        parent.getWorkflow().forEach(ws -> {
+            organization.addStepToWorkflow(ws);
+            
+            //ws.addContainingOrganization(organization);
+        	//ws = workflowStepRepo.save(ws);
+        
+        });
+        return  organization;
     }
 
     @Override
@@ -45,26 +48,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
-
-        // need to recursively delete workflow step originating from organization being deleted
-        List<WorkflowStep> workFlowStepsToRemove = new ArrayList<WorkflowStep>();
-
-        organization.getWorkflowSteps().parallelStream().forEach(workflowStep -> {
-            if(workflowStep.getOriginatingOrganization().getId().equals(organization.getId())) {
-                workFlowStepsToRemove.add(workflowStep);
-            }
-        });
-        
-        for(WorkflowStep workflowStep : workFlowStepsToRemove) {
-        	organization.removeWorkflowStep(workflowStep);
-            workflowStepRepo.delete(workflowStep);
-        }
-        
-        // remove org from list of containing orgs for all the workflow steps on it
-        for(WorkflowStep workflowStep : organization.getWorkflowSteps())
-        {
-            workflowStep.removeContainedByOrganization(organization);
-        }
         
         Set<Organization> parentOrganizations = organization.getParentOrganizations();
         
@@ -72,13 +55,13 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         // i.e. grandparent becomes new parent of children
         organization.getChildrenOrganizations().parallelStream().forEach(childOrganization -> {
             childOrganization.removeParentOrganization(organization);
+            organizationRepo.save(childOrganization);
             
             parentOrganizations.parallelStream().forEach(parentOrganization -> {
                 parentOrganization.addChildOrganization(childOrganization);
                 organizationRepo.save(parentOrganization);
             });
             
-            organizationRepo.save(childOrganization);
         });
 
         organization.getParentOrganizations().parallelStream().forEach(parentOrganization -> {

@@ -182,7 +182,7 @@
 									modal-backdrop="static">
 						  	</modal>
                             <accordion single-expand="false" >
-                            	<pane ng-repeat="step in getManagedOrganization().workflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
+                            	<pane ng-repeat="step in getManagedOrganization().workflow track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{step.name}}</pane>
                             </accordion>
 						</div>
 					</div>

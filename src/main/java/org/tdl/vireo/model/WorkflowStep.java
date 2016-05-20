@@ -1,21 +1,19 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,64 +30,54 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    //the organization for which this workflow step was created
-    //need to know if a given organization is the owner
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Organization originatingOrganization;
-
-    //the workflow step from which this one is derived
-    //need to know so we can tell if things are overrideable by this workflow step
-    //use null if this workflow step is original
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @Column(nullable = false)
+    private Boolean overrideable;
+    
+    // used when a workflow step is updated and needs a new workflow step
+    @ManyToOne(cascade = { REFRESH }, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    //the organizations that use this workflow step
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, mappedBy = "workflowSteps", fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<Organization> containedByOrganizations;
-    
+    private Organization originatingOrganization;
 
-    @Column(nullable = false)
-    private Boolean overrideable;
+    // maybe needed to recursively add and remove aggregate workflow steps
+//    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+//    @JsonIdentityReference(alwaysAsId = true)
+//    private List<Organization> containingOrganizations;
 
-    //the field profiles used in this workflow step
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name="originating_organization_id")
     private List<FieldProfile> fieldProfiles;
     
-    //the field profiles that originated in this workflow step
-    //need to know so that when a field profile is overridden we know if it is derivative
-    //need to know so that when the workflow step is deleted, the field profiles originating in it are deleted, not orphaned
-    @OneToMany(cascade = ALL, mappedBy = "originatingWorkflowStep", orphanRemoval = true, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<FieldProfile> originalFieldProfiles;
-    
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER)
+    @OrderColumn
+    private List<FieldProfile> aggregateFieldProfiles;
+
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<Note> notes;
 
     public WorkflowStep() {
-        setOriginalFieldProfiles(new ArrayList<FieldProfile>());
+//    	setContainingOrganizations(new ArrayList<Organization>());
+    	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
-        setContainedByOrganizations(new TreeSet<Organization>());
     }
-    
-    public WorkflowStep(String name, Organization originatingOrganization) {
-        this(name, originatingOrganization, originatingOrganization);
-    }
-    
-    public WorkflowStep(String name, Organization containingOrganization, Organization originatingOrganization) {
+
+    public WorkflowStep(String name) {
         this();
         setName(name);
         setOverrideable(true);
-        addContainedByOrganization(containingOrganization);
+    }
+    
+    public WorkflowStep(String name, Organization originatingOrganization) {
+        this(name);
         setOriginatingOrganization(originatingOrganization);
     }
 
@@ -107,7 +95,7 @@ public class WorkflowStep extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
+    
     /**
      * @return the originatingOrganization
      */
@@ -122,34 +110,18 @@ public class WorkflowStep extends BaseEntity {
         this.originatingOrganization = originatingOrganization;
     }
     
+    /**
+     * @return the originatingWorkflowStep
+     */
     public WorkflowStep getOriginatingWorkflowStep() {
         return originatingWorkflowStep;
     }
 
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
-    }
-
-    /**
-     * @return the Organizations that use (contain) this workflow step
-     */
-    public Set<Organization> getContainedByOrganizations() {
-        return containedByOrganizations;
-    }
-
-    /**
-     * @param containingOrganizations the list of Organizations that use (contain) this WorkflowStep to set
-     */
-    public void setContainedByOrganizations(Set<Organization> containingOrganizations) {
-        this.containedByOrganizations = containingOrganizations;
-    }
-    
-    public void addContainedByOrganization(Organization containingOrganization) {
-        this.containedByOrganizations.add(containingOrganization);
-    }
-    
-    public void removeContainedByOrganization(Organization containingOrganization) {
-        this.containedByOrganizations.remove(containingOrganization);
     }
 
     public Boolean getOverrideable() {
@@ -159,6 +131,22 @@ public class WorkflowStep extends BaseEntity {
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
+    
+//    public List<Organization> getContainingOrganizations() {
+//        return containingOrganizations;
+//    }
+//
+//    public void setContainingOrganizations(List<Organization> containingOrganizations) {
+//        this.containingOrganizations = containingOrganizations;
+//    }
+//
+//    public void addContainingOrganization(Organization containingOrganization) {
+//    	getContainingOrganizations().add(containingOrganization);
+//    }
+//
+//    public void removeContainingOrganization(Organization containingOrganization) {
+//    	getContainingOrganizations().remove(containingOrganization);
+//    }
 
     /**
      * 
@@ -181,7 +169,10 @@ public class WorkflowStep extends BaseEntity {
      * @param fieldProfile
      */
     public void addFieldProfile(FieldProfile fieldProfile) {
-        this.fieldProfiles.add(fieldProfile);
+        if(!getFieldProfiles().contains(fieldProfile)) {
+            getFieldProfiles().add(fieldProfile);
+        }
+    	addFieldProfileToAggregate(fieldProfile);
     }
 
     /**
@@ -189,37 +180,46 @@ public class WorkflowStep extends BaseEntity {
      * @param fieldProfile
      */
     public void removeFieldProfile(FieldProfile fieldProfile) {
-        this.fieldProfiles.remove(fieldProfile);
-    }
-    
-    /**
-     * @return the originalFieldProfiles
-     */
-    public List<FieldProfile> getOriginalFieldProfiles() {
-        return originalFieldProfiles;
-    }
-
-    /**
-     * @param originalFieldProfiles the originalFieldProfiles to set
-     */
-    public void setOriginalFieldProfiles(List<FieldProfile> originalFieldProfiles) {
-        this.originalFieldProfiles = originalFieldProfiles;
+    	getFieldProfiles().remove(fieldProfile);
+    	removeFieldProfileFromAggregate(fieldProfile);
     }
     
     /**
      * 
-     * @param fieldProfile
+     * @return
      */
-    public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
-        this.originalFieldProfiles.add(originalFieldProfile);
+    public List<FieldProfile> getAggregateFieldProfiles() {
+        return aggregateFieldProfiles;
+    }
+
+    /**
+     * 
+     * @param param
+     */
+    public void setAggregateFieldProfiles(List<FieldProfile> aggregateFieldProfiles) {
+        this.aggregateFieldProfiles = aggregateFieldProfiles;
     }
 
     /**
      * 
      * @param fieldProfile
      */
-    public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
-        this.originalFieldProfiles.remove(originalFieldProfile);
+    public void addFieldProfileToAggregate(FieldProfile aggregateFieldProfile) {
+        if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
+            getAggregateFieldProfiles().add(aggregateFieldProfile);
+        }
+    	
+		// TODO: recurively add to aggregateFieldProfiles
+    }
+
+    /**
+     * 
+     * @param fieldProfile
+     */
+    public void removeFieldProfileFromAggregate(FieldProfile aggregateFieldProfile) {
+    	getAggregateFieldProfiles().remove(aggregateFieldProfile);
+    	
+    	// TODO: recurively remove from aggregateFieldProfiles
     }
 
     /**
@@ -242,33 +242,17 @@ public class WorkflowStep extends BaseEntity {
     public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
-    
+
     public void addNote(Note note) {
         notes.add(note);
     }
-    
+
     public void removeNote(Note note) {
         notes.remove(note);
     }
-    
+
     public void clearAllNotes() {
         notes.clear();
     }
-    
-    public boolean descendsFrom(WorkflowStep putativeAncestor)
-    {
-        if(originatingWorkflowStep == null)
-        {
-            return false;
-        }
-        else if(originatingWorkflowStep.equals(putativeAncestor))
-        {
-            return true;
-        }
-        else
-        {
-            return this.getOriginatingWorkflowStep().descendsFrom(putativeAncestor);
-        }
-    }
-    
+
 }

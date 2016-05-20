@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,8 +17,6 @@ import org.tdl.vireo.model.ControlledVocabularyCache;
  */
 @Service
 public class ControlledVocabularyCachingService {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Value("${app.cvcache.duration}")
     private Long duration;

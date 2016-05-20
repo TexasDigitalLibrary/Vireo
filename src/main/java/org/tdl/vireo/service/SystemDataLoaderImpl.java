@@ -192,10 +192,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
 
-            organization.setWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
-            
-            
-            organization = organizationRepo.save(organization);
+            organization.setWorkflow(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
             
 
             // temporary set of EmailWorkflowRule
@@ -288,7 +285,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
 
                 // check to see if the FieldProfile exists
-                FieldProfile newFieldProfile = fieldProfileRepo.findByPredicate(fieldPredicate);
+                FieldProfile newFieldProfile = fieldProfileRepo.findByPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {

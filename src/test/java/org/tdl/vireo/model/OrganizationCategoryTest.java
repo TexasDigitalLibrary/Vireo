@@ -62,7 +62,9 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
+        organizationRepo.findAll().forEach(organization -> {
+            organizationRepo.delete(organization);
+        });
     }
 }

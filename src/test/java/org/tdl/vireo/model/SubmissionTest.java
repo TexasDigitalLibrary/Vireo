@@ -168,12 +168,16 @@ public class SubmissionTest extends AbstractEntityTest {
     public void cleanUp() {        
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();        
-        workflowStepRepo.deleteAll();
+        workflowStepRepo.findAll().forEach(workflowStep -> {
+        	workflowStepRepo.delete(workflowStep);
+        });
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
-        organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
+        organizationRepo.findAll().forEach(organization -> {
+            organizationRepo.delete(organization);
+        });        
         embargoRepo.deleteAll();
         userRepo.deleteAll();        
         attachmentRepo.deleteAll();

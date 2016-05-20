@@ -17,7 +17,6 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void testCreate() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
         assertEquals("The repository did not save the entity!", 1, controlledVocabularyRepo.count());

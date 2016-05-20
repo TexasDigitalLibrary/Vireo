@@ -11,20 +11,18 @@ import java.util.List;
 
 import javax.persistence.Column;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 import org.tdl.vireo.controller.model.ValidationResponse;
 
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.model.BaseEntity;
 import edu.tamu.framework.model.ValidatingBase;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Service
 public class ValidationService {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+   
     /**
      * build an {@link ApiResponse} from a {@link BaseEntity}.
      * 

@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -13,17 +9,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -38,35 +33,36 @@ public class Organization extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, REMOVE, PERSIST }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> workflowSteps;
     
-    @ElementCollection(fetch = EAGER)
-    private List<Long> workflowStepOrder;
-
-    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @OrderColumn
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "workflow_order", "workflow_id" }))
+    private List<WorkflowStep> workflow;
+    
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE, PERSIST }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
     private Set<String> emails;
     
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
         setWorkflowSteps(new ArrayList<WorkflowStep>());
-        setWorkflowStepOrder(new ArrayList<Long>());
+        setWorkflow(new ArrayList<WorkflowStep>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
@@ -139,86 +135,46 @@ public class Organization extends BaseEntity {
         this.workflowSteps = workflowSteps;
     }
     
-    public void addWorkflowStep(WorkflowStep workflowStep)
-    {
-        addWorkflowStep(workflowStep, null);
+    public void addWorkflowStep(WorkflowStep workflowStep) {
+        if(!getWorkflowSteps().contains(workflowStep)) {
+            getWorkflowSteps().add(workflowStep);
+        }
+        addStepToWorkflow(workflowStep);
     }
     
-    
-    public void addWorkflowStep(WorkflowStep workflowStep, Integer orderIndex) {
-        //if(orderIndex < 0) orderIndex = 0;
-         
-        WorkflowStep ancestorStepMarkedForRemoval = null;
-        
-        	if(!this.workflowSteps.contains(workflowStep)) {
-    	        this.workflowSteps.add(workflowStep);
-    	        
-    	        //if the Organization has a step that this new one descends from, get rid of that one
-    	        for(WorkflowStep ws : workflowSteps)
-    	        {
-    	            if(workflowStep.descendsFrom(ws))
-    	            {
-    	                ancestorStepMarkedForRemoval = ws;
-    	                break;
-    	            }
-    	        }
-    	        
-    	        workflowStep.addContainedByOrganization(this);
-    	        if(orderIndex != null){
-    	            workflowStepOrder.add(orderIndex, workflowStep.getId());
-    	        }else{
-    	            workflowStepOrder.add(workflowStep.getId());
-    	        }
-    	        Set<Organization> children = getChildrenOrganizations();
-    	        if(!children.isEmpty()) {
-    	            children.parallelStream().forEach(child -> {
-    	                //TODO:  do we want to more carefully consider the index where the step gets added to children?  If they have more or fewer steps, it could be inappropriate to put it at the index that works for the parent.
-    	                child.addWorkflowStep(workflowStep, orderIndex);
-    	            });
-    	        }
-        	}
-        	
-        	if(ancestorStepMarkedForRemoval != null)
-        	{
-            	removeWorkflowStep(ancestorStepMarkedForRemoval);
-            	removeWorkflowStepOrder(ancestorStepMarkedForRemoval.getId());
-        	}
-    }
-
     public void removeWorkflowStep(WorkflowStep workflowStep) {
-        	if(this.workflowSteps.contains(workflowStep)) {
-    	        this.workflowSteps.remove(workflowStep);
-    	        //remove workflowstep id to workflowstep order
-    	        //removeWorkflowStepOrder(workflowStep.getId());
-    	        Set<Organization> children = getChildrenOrganizations();
-    	        if(!children.isEmpty()) {
-    	            children.parallelStream().forEach(child -> {
-    	                child.removeWorkflowStep(workflowStep);
-    	            });
-    	        }
-        	}
+        getWorkflowSteps().remove(workflowStep);
+        removeStepFromWorkflow(workflowStep);
     }
     
     /**
-     * @return the workflowStepOrder
+     * @return the workflowSteps
      */
-    public List<Long> getWorkflowStepOrder() {
-        return workflowStepOrder;
+    public List<WorkflowStep> getWorkflow() {
+        return workflow;
     }
 
     /**
-     * @param workflowStepOrder the workflowStepOrder to set
+     * @param workflowSteps the workflowSteps to set
      */
-    public void setWorkflowStepOrder(List<Long> workflowStepOrder) {
-        this.workflowStepOrder = workflowStepOrder;
-    }
-
-    public void addWorkflowStepOrder(Long workflowStepId) {
-        this.workflowStepOrder.add(workflowStepId);
+    public void setWorkflow(List<WorkflowStep> workflow) {
+        this.workflow = workflow;
     }
     
-    public void removeWorkflowStepOrder(Long workflowStepId) {
-        this.workflowStepOrder.remove(workflowStepId);
+    public void addStepToWorkflow(WorkflowStep workflowStep) {
+        if(!getWorkflow().contains(workflowStep)) {
+            getWorkflow().add(workflowStep);
+        }
+        getChildrenOrganizations().forEach(childOrganization -> {
+            childOrganization.addStepToWorkflow(workflowStep);
+        });
+    }
+    
+    public void removeStepFromWorkflow(WorkflowStep workflowStep) {
+        getWorkflow().remove(workflowStep);
+        getChildrenOrganizations().forEach(childOrganization -> {
+            childOrganization.removeStepFromWorkflow(workflowStep);
+        });
     }
     
     /**
@@ -264,20 +220,7 @@ public class Organization extends BaseEntity {
      *            the childrenOrganizations to set
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
-        if(childrenOrganizations != null) {
-            if(childrenOrganizations.size() == 0)
-            {
-                this.childrenOrganizations = childrenOrganizations;
-                return;
-            }
-            else
-            {
-                childrenOrganizations.stream().forEach(childOrganization -> {
-                    //childOrganization.addParentOrganization(this);
-                    addChildOrganization(childOrganization);
-                });
-            }            
-        }        
+        this.childrenOrganizations = childrenOrganizations;
     }
 
     /**
@@ -286,27 +229,7 @@ public class Organization extends BaseEntity {
      */
     public void addChildOrganization(Organization childOrganization) {
         childOrganization.addParentOrganization(this);
-        
-        this.childrenOrganizations.add(childOrganization);
-        
-        List<WorkflowStep> childrenWorkflowSteps = childOrganization.getWorkflowSteps();
-        
-        if(childrenWorkflowSteps.isEmpty()) {
-            for(WorkflowStep workflowStep : workflowSteps) {
-                childrenWorkflowSteps.add(workflowStep);
-            }
-            childOrganization.setWorkflowSteps(childrenWorkflowSteps);
-        }
-        
-        List<Long> duplicateOrderList = new ArrayList<Long>();
-        for( Long id : this.getWorkflowStepOrder())
-        {
-            Long dupId = new Long(id);
-            duplicateOrderList.add(dupId);
-        }
-        childOrganization.setWorkflowStepOrder(duplicateOrderList);
-        
-        
+        getChildrenOrganizations().add(childOrganization); 
     }
 
     /**
@@ -377,18 +300,6 @@ public class Organization extends BaseEntity {
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
     	getEmailWorkflowRules().remove(emailWorkflowRule);
-    }
-
-    public void replaceWorkflowStep(WorkflowStep previous, WorkflowStep replacement) 
-    {
-        Integer pos = getPositionOfWorkflowStep(previous);
-        removeWorkflowStep(previous);
-        addWorkflowStep(replacement, pos);
-    }
-    
-    public Integer getPositionOfWorkflowStep(WorkflowStep ws)
-    {
-        return workflowStepOrder.indexOf(ws.getId());
     }
 
 }
