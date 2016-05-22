@@ -38,13 +38,72 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     // TODO: this method needs to handle all inheretence and aggregation duties
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {
         
-        WorkflowStep originatingWorkflowStep = workflowStep.getOriginatingWorkflowStep();
+        Long originalWorkflowStepId = workflowStep.getId();
         
         em.detach(workflowStep);
         
         workflowStep.setId(null);
         
-        workflowStep.setOriginatingWorkflowStep(originatingWorkflowStep);
+        workflowStep = workflowStepRepo.save(workflowStep);
+        
+        
+        WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
+        
+        
+        WorkflowStep originatingWorkflowStep = originalWorkflowStep.getOriginatingWorkflowStep();
+        Organization originatingOrganization = originalWorkflowStep.getOriginatingOrganization();
+        
+        
+        workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
+                
+        
+        
+        
+        
+        
+        if(requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
+            
+            if(!workflowStep.getOverrideable() && originalWorkflowStep.getOverrideable()) {
+                
+                
+                
+            }
+            
+            
+        }
+        else {
+            workflowStep.setOriginatingOrganization(requestingOrganization);
+            
+            
+            
+            if(workflowStep.getOverrideable()) {
+                
+                
+                
+            }
+            
+        }
+        
+        
+        
+        
+        
+//        System.out.println("\n" + organizationRepo.findByWorkflowId(workflowStep.getId()).size() + "\n");
+//        
+//        
+//        
+//        organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(containingOrganization -> {
+//            System.out.println("\n" + containingOrganization + "\n");
+//        });
+       
+        
+       
+        
+        
+        
+        
+        
+        
         
         return workflowStepRepo.save(workflowStep);
     }
@@ -57,6 +116,30 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
         organizationRepo.save(originatingOrganization);
         
+        workflowStep.setOriginatingWorkflowStep(null);
+        
+        organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(containingOrganization -> {
+            containingOrganization.removeWorkflowStep(workflowStep);
+            containingOrganization.removeStepFromWorkflow(workflowStep);
+        });
+        
+//        workflowStepRepo.findByOriginatingWorkflowStep(workflowStep).forEach(migratingWorkflowStep -> {
+//            
+//            if(migratingWorkflowStep.getId().equals(workflowStep.getId())) {
+//                System.out.println("\nHOWD THIS HAPPEN\n");
+//            }
+//            else {
+//                if(migratingWorkflowStep.getOriginatingWorkflowStep() == null) {
+//                    
+//                }
+//                else {
+//                    
+//                }
+//            }
+//            
+//            
+//        });
+
         fieldProfileRepo.findByOriginatingWorkflowStep(workflowStep).forEach(fieldProfile -> {
         	fieldProfileRepo.delete(fieldProfile);
         });
