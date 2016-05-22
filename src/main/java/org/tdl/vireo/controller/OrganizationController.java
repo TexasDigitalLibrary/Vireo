@@ -3,6 +3,9 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +21,6 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
@@ -111,14 +111,15 @@ public class OrganizationController {
         
     }
     
-    @ApiMapping("/{id}/worflow-steps")
+    // TODO: refactor client side request with path "/{id}/workflow"
+    @ApiMapping("/{id}/worflow")
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
                 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
         
-        return new ApiResponse(SUCCESS, org.getWorkflowSteps());
+        return new ApiResponse(SUCCESS, org.getWorkflow());
         
     }
     
@@ -132,6 +133,17 @@ public class OrganizationController {
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
         
         return new ApiResponse(SUCCESS, newWorkflowStep);
+        
+    }
+    
+    @ApiMapping("/{id}/update-workflow-step")
+    @Auth(role="MANAGER")
+    @Transactional  
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
+                
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
+     
+        return new ApiResponse(SUCCESS, workflowStepRepo.update(workflowStepToUpdate, requestingOrg));
         
     }
     

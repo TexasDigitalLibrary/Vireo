@@ -11,9 +11,9 @@ public interface OrganizationRepo extends JpaRepository<Organization, Long>, Org
 
     public List<Organization> findByWorkflowId(Long workflowId);
     
-    public Organization findByNameAndCategory(String name, OrganizationCategory category);
-    
     public List<Organization> findByCategory(String name, OrganizationCategory category);
+    
+    public Organization findByNameAndCategory(String name, OrganizationCategory category);
 
     public void delete(Organization organization);
 

@@ -260,7 +260,6 @@ public class FieldProfile extends BaseEntity {
     }
     
     // TODO : Restrict multiple field gloss with the same language
-    // Could a field gloss with different values and the same language be added to this set?
 
     /**
      * 
@@ -319,8 +318,7 @@ public class FieldProfile extends BaseEntity {
         this.controlledVocabularies = controlledVocabularies;
     }
 
-    // TODO : Restrict multiple controlled vocabulary with the same language
-    // Could a controlled vocabulary with different names and the same language be added to this set?
+    // TODO : Restrict multiple controlled vocabulary with the same language 
     
     /**
      * 

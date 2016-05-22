@@ -16,9 +16,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
-    
-    //@Autowired
-    //private WorkflowStepRepo workflowStepRepo;
      
     @Override
     public Organization create(String name, OrganizationCategory category) {
@@ -35,10 +32,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         organizationRepo.save(parent);
         parent.getWorkflow().forEach(ws -> {
             organization.addStepToWorkflow(ws);
-            
-            //ws.addContainingOrganization(organization);
-        	//ws = workflowStepRepo.save(ws);
-        
         });
         return  organization;
     }

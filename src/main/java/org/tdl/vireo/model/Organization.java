@@ -24,6 +24,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -39,6 +42,7 @@ public class Organization extends BaseEntity {
     @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+    @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> workflowSteps;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)

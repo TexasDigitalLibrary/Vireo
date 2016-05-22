@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -29,16 +31,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     public WorkflowStep create(String name, Organization originatingOrganization) {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
         originatingOrganization.addWorkflowStep(workflowStep);
-        
-        //workflowStep.addContainingOrganization(originatingOrganization);
-        
         return workflowStep;
     }
     
     // TODO: this method needs to handle all inheretence and aggregation duties
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {
         
-        Long originalWorkflowStepId = workflowStep.getId();
+        Long originalWorkflowStepId = workflowStep.getId();        
         
         em.detach(workflowStep);
         
@@ -61,16 +60,32 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
         
         
-        if(requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
+        // If the requestingOrganization originates the workflowStep, make the change directly
+        if(originatingOrganization != null && requestingOrganization.getId().equals(originatingOrganization.getId())) {
             
             if(!workflowStep.getOverrideable() && originalWorkflowStep.getOverrideable()) {
                 
+            	List<WorkflowStep> derivativeWorkflowStepsToDelete = getDescendantsOfStep(workflowStep);
                 
+                for(WorkflowStep ws : derivativeWorkflowStepsToDelete){
+                    
+                    organizationRepo.findByWorkflowId(ws.getId()).forEach(organization -> {
+                        //TODO:  this puts it at the end; we should make sure it gets into the right spot
+                        organization.addStepToWorkflow(originatingWorkflowStep);
+                        organizationRepo.save(organization);
+                    });
+                    
+                    workflowStepRepo.delete(ws);
+                    
+                } 
+
                 
             }
             
             
         }
+        // If the requestingOrganization is not originator of workflowStep,
+
         else {
             workflowStep.setOriginatingOrganization(requestingOrganization);
             
@@ -78,30 +93,14 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             
             if(workflowStep.getOverrideable()) {
                 
+                // provide feedback of attempt to override non overrideable
+            	// exceptions may be of better use for unavoidable error handling
                 
-                
+            	workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
+                workflowStep.setOriginatingOrganization(requestingOrganization);
             }
             
         }
-        
-        
-        
-        
-        
-//        System.out.println("\n" + organizationRepo.findByWorkflowId(workflowStep.getId()).size() + "\n");
-//        
-//        
-//        
-//        organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(containingOrganization -> {
-//            System.out.println("\n" + containingOrganization + "\n");
-//        });
-       
-        
-       
-        
-        
-        
-        
         
         
         
@@ -146,5 +145,17 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
         workflowStepRepo.delete(workflowStep.getId());
     }
+    
+    private List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
+
+        List<WorkflowStep> descendantWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
+
+        descendantWorkflowSteps.forEach(desendantWorflowStep -> {
+            descendantWorkflowSteps.addAll(getDescendantsOfStep(desendantWorflowStep));
+        });
+        
+        return descendantWorkflowSteps;
+    }
+
     
 }

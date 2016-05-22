@@ -7,6 +7,7 @@ import static javax.persistence.FetchType.EAGER;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -21,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -33,7 +37,6 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private Boolean overrideable;
     
-    // used when a workflow step is updated and needs a new workflow step
     @ManyToOne(cascade = { REFRESH }, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -44,28 +47,23 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
 
-    // maybe needed to recursively add and remove aggregate workflow steps
-//    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-//    @JsonIdentityReference(alwaysAsId = true)
-//    private List<Organization> containingOrganizations;
-
     @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name="originating_organization_id")
+    @Fetch(FetchMode.SELECT)
     private List<FieldProfile> fieldProfiles;
     
     @OneToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
-    private List<FieldProfile> aggregateFieldProfiles;
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "fields_order", "fields_id" }))
+    private List<FieldProfile> fields;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<Note> notes;
 
     public WorkflowStep() {
-//    	setContainingOrganizations(new ArrayList<Organization>());
-    	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
+    	setFields(new ArrayList<FieldProfile>());
         setFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
     }
@@ -131,22 +129,6 @@ public class WorkflowStep extends BaseEntity {
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
-//    public List<Organization> getContainingOrganizations() {
-//        return containingOrganizations;
-//    }
-//
-//    public void setContainingOrganizations(List<Organization> containingOrganizations) {
-//        this.containingOrganizations = containingOrganizations;
-//    }
-//
-//    public void addContainingOrganization(Organization containingOrganization) {
-//    	getContainingOrganizations().add(containingOrganization);
-//    }
-//
-//    public void removeContainingOrganization(Organization containingOrganization) {
-//    	getContainingOrganizations().remove(containingOrganization);
-//    }
 
     /**
      * 
@@ -172,7 +154,7 @@ public class WorkflowStep extends BaseEntity {
         if(!getFieldProfiles().contains(fieldProfile)) {
             getFieldProfiles().add(fieldProfile);
         }
-    	addFieldProfileToAggregate(fieldProfile);
+    	addProfileToFields(fieldProfile);
     }
 
     /**
@@ -181,45 +163,45 @@ public class WorkflowStep extends BaseEntity {
      */
     public void removeFieldProfile(FieldProfile fieldProfile) {
     	getFieldProfiles().remove(fieldProfile);
-    	removeFieldProfileFromAggregate(fieldProfile);
+    	removeProfileFromFields(fieldProfile);
     }
     
     /**
      * 
      * @return
      */
-    public List<FieldProfile> getAggregateFieldProfiles() {
-        return aggregateFieldProfiles;
+    public List<FieldProfile> getFields() {
+        return fields;
     }
 
     /**
      * 
      * @param param
      */
-    public void setAggregateFieldProfiles(List<FieldProfile> aggregateFieldProfiles) {
-        this.aggregateFieldProfiles = aggregateFieldProfiles;
+    public void setFields(List<FieldProfile> fields) {
+        this.fields = fields;
     }
 
     /**
      * 
-     * @param fieldProfile
+     * @param aggregateFieldProfile
      */
-    public void addFieldProfileToAggregate(FieldProfile aggregateFieldProfile) {
-        if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
-            getAggregateFieldProfiles().add(aggregateFieldProfile);
+    public void addProfileToFields(FieldProfile aggregateFieldProfile) {
+        if(!getFields().contains(aggregateFieldProfile)) {
+        	getFields().add(aggregateFieldProfile);
         }
     	
-		// TODO: recurively add to aggregateFieldProfiles
+		// TODO: recurively add to aggregateFieldProfiles?
     }
 
     /**
      * 
-     * @param fieldProfile
+     * @param aggregateFieldProfile
      */
-    public void removeFieldProfileFromAggregate(FieldProfile aggregateFieldProfile) {
-    	getAggregateFieldProfiles().remove(aggregateFieldProfile);
+    public void removeProfileFromFields(FieldProfile aggregateFieldProfile) {
+    	getFields().remove(aggregateFieldProfile);
     	
-    	// TODO: recurively remove from aggregateFieldProfiles
+    	// TODO: recurively remove from aggregateFieldProfiles?
     }
 
     /**
