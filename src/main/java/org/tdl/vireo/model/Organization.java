@@ -46,8 +46,10 @@ public class Organization extends BaseEntity {
     private List<WorkflowStep> workflowSteps;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @OrderColumn
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "workflow_order", "workflow_id" }))
+    @OrderColumn
     private List<WorkflowStep> workflow;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)

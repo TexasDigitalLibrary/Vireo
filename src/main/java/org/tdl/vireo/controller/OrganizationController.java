@@ -111,40 +111,34 @@ public class OrganizationController {
         
     }
     
-    // TODO: refactor client side request with path "/{id}/workflow"
     @ApiMapping("/{id}/worflow")
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
-                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        
         return new ApiResponse(SUCCESS, org.getWorkflow());
-        
     }
     
     @ApiMapping("/{id}/create-workflow-step")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {
-                
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
-        
+        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
+        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, org.getWorkflow()));
         return new ApiResponse(SUCCESS, newWorkflowStep);
-        
     }
     
     @ApiMapping("/{id}/update-workflow-step")
     @Auth(role="MANAGER")
-    @Transactional  
+    @Transactional
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
-                
         Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
-     
-        return new ApiResponse(SUCCESS, workflowStepRepo.update(workflowStepToUpdate, requestingOrg));
-        
+        WorkflowStep updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
+        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, requestingOrg.getWorkflow()));
+        return new ApiResponse(SUCCESS, updatedWorkflowStep);
     }
     
 }

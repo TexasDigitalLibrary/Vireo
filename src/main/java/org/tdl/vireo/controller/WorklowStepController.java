@@ -31,32 +31,26 @@ public class WorklowStepController {
     public ApiResponse getAll() {
         Map<String,List<WorkflowStep>> map = new HashMap<String,List<WorkflowStep>>();        
         map.put("list", workflowStepRepo.findAll());
-        
         return new ApiResponse(SUCCESS, map);
     }
     
     @ApiMapping("/get/{id}")
     @Transactional
     public ApiResponse getStepById(@ApiVariable String id){
-        
-        System.out.println("Got here");
-        System.out.println("\n\n\n\n"+id+"\n\n\n\n");
-        
+
         Long wStepID = null;
         try {
             wStepID = Long.valueOf(id);
         } catch (NumberFormatException e) {
             return new ApiResponse(ERROR, "Enable to parse long from string: [" + id + "]");
         }
-        
+
         WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(wStepID);
         if (potentiallyExistingStep != null) {
             return new ApiResponse(SUCCESS, potentiallyExistingStep);
         }
-        
-        return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
-        
-    }
 
+        return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
+    }
 
 }
