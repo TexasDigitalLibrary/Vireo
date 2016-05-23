@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Isolation;
+
 
 public class WorkflowStepTest extends AbstractEntityTest {
 
@@ -385,7 +387,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    @Transactional
+    @Transactional//(isolation = Isolation.READ_COMMITTED)
     public void testMakeWorkflwoStepWithDescendantsNonOverrideable() {
         //Step S1 has derivative step S2 which has derivative step S3
         //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1

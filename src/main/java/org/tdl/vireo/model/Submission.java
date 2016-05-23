@@ -38,13 +38,13 @@ public class Submission extends BaseEntity {
     private SubmissionState state;
 
     //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<Organization> organizations;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, orphanRemoval = false)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
     private Set<WorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)

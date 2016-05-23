@@ -39,7 +39,7 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)

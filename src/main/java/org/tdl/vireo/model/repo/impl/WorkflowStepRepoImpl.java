@@ -82,12 +82,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
             	workflowStep.setOriginatingOrganization(requestingOrganization);                
                 
-            	
-            	// this is important!
-            	// This causes problems for some reason
-            	
-//            	requestingOrganization.addWorkflowStep(workflowStep);
-//              organizationRepo.save(requestingOrganization);
+            	requestingOrganization.addWorkflowStep(workflowStep);
+            	organizationRepo.save(requestingOrganization);
             }
             else {
             	
@@ -114,43 +110,35 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
         organizationRepo.save(originatingOrganization);
         
-        
         if(workflowStep.getOriginatingWorkflowStep() != null) {
         	workflowStep.setOriginatingWorkflowStep(null);
         }
-        
-                
-        organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(containingOrganization -> {
-        	containingOrganization.removeStepFromWorkflow(workflowStep);
-            organizationRepo.save(containingOrganization);
-        });
-        
-        
-//        workflowStepRepo.findByOriginatingWorkflowStep(workflowStep).forEach(migratingWorkflowStep -> {
-//            
-//            if(migratingWorkflowStep.getId().equals(workflowStep.getId())) {
-//                
-//            }
-//            else {
-//                if(migratingWorkflowStep.getOriginatingWorkflowStep() == null) {
-//                    
-//                }
-//                else {
-//                    
-//                }
-//            }
-//            
-//        });
-
         
         fieldProfileRepo.findByOriginatingWorkflowStep(workflowStep).forEach(fieldProfile -> {
         	workflowStep.removeFieldProfile(fieldProfile);
         	workflowStepRepo.save(workflowStep);
         	fieldProfileRepo.delete(fieldProfile);
         });
+         
+        organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(organization -> {
+        	organization.removeWorkflowStep(workflowStep);
+            organizationRepo.save(organization);
+        });
         
+        workflowStepRepo.findByOriginatingWorkflowStep(workflowStep).forEach(ws -> {
+        	ws.setOriginatingWorkflowStep(null);
+        });
+        
+        deleteDescendantsOfStep(workflowStep);
         
         workflowStepRepo.delete(workflowStep.getId());
+    }
+    
+    private void deleteDescendantsOfStep(WorkflowStep workflowStep) {
+        workflowStepRepo.findByOriginatingWorkflowStep(workflowStep).forEach(desendantWorflowStep -> {
+        	deleteDescendantsOfStep(desendantWorflowStep);
+        	delete(desendantWorflowStep);
+        });
     }
     
     private List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
