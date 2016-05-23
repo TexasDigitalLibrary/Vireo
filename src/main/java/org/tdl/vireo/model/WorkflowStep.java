@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -47,16 +48,15 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
 
-    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JoinColumn(name="originating_organization_id")
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> fieldProfiles;
     
-    @OneToMany(cascade = { REFRESH }, fetch = EAGER)
-    @OrderColumn
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "fields_order", "fields_id" }))
+    @OrderColumn
     private List<FieldProfile> fields;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)

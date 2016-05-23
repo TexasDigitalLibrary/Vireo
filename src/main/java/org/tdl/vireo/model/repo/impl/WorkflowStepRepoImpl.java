@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -37,34 +38,14 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     // TODO: this method needs to handle all inheretence and aggregation duties
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {
         
-        Long originalWorkflowStepId = workflowStep.getId();        
-        
-        em.detach(workflowStep);
-        
-        workflowStep.setId(null);
-        
-        workflowStep = workflowStepRepo.save(workflowStep);
-        
-        
-        WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
-        
-        
-        WorkflowStep originatingWorkflowStep = originalWorkflowStep.getOriginatingWorkflowStep();
-        Organization originatingOrganization = originalWorkflowStep.getOriginatingOrganization();
-        
-        
-        workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
-                
-        
-        
-        
-        
+        Organization originatingOrganization = workflowStep.getOriginatingOrganization();
+        WorkflowStep originatingWorkflowStep = workflowStep.getOriginatingWorkflowStep();
         
         // If the requestingOrganization originates the workflowStep, make the change directly
         if(originatingOrganization != null && requestingOrganization.getId().equals(originatingOrganization.getId())) {
             
-            if(!workflowStep.getOverrideable() && originalWorkflowStep.getOverrideable()) {
-                
+            if(!workflowStep.getOverrideable()) {
+                            	
             	List<WorkflowStep> derivativeWorkflowStepsToDelete = getDescendantsOfStep(workflowStep);
                 
                 for(WorkflowStep ws : derivativeWorkflowStepsToDelete){
@@ -78,29 +59,46 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                     workflowStepRepo.delete(ws);
                     
                 } 
-
                 
             }
-            
             
         }
         // If the requestingOrganization is not originator of workflowStep,
-
         else {
-            workflowStep.setOriginatingOrganization(requestingOrganization);
-            
-            
-            
+        	
             if(workflowStep.getOverrideable()) {
+            	
+            	Long originalWorkflowStepId = workflowStep.getId();        
                 
-                // provide feedback of attempt to override non overrideable
-            	// exceptions may be of better use for unavoidable error handling
+                em.detach(workflowStep);
+                
+                workflowStep.setId(null);
+                
+                workflowStep = workflowStepRepo.save(workflowStep);
+                
+                
+                WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
                 
             	workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
-                workflowStep.setOriginatingOrganization(requestingOrganization);
+            	workflowStep.setOriginatingOrganization(requestingOrganization);                
+                
+            	
+            	// this is important!
+            	// This causes problems for some reason
+            	
+//            	requestingOrganization.addWorkflowStep(workflowStep);
+//              organizationRepo.save(requestingOrganization);
+            }
+            else {
+            	
+            	// provide feedback of attempt to override non overrideable
+            	// exceptions may be of better use for unavoidable error handling
+            	
+            	//TODO: add non overridable exception and throw it here
             }
             
         }
+        
         
         
         
@@ -109,23 +107,29 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     @Override
     public void delete(WorkflowStep workflowStep) {
+    	
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
         
         originatingOrganization.removeWorkflowStep(workflowStep);
         
         organizationRepo.save(originatingOrganization);
         
-        workflowStep.setOriginatingWorkflowStep(null);
         
+        if(workflowStep.getOriginatingWorkflowStep() != null) {
+        	workflowStep.setOriginatingWorkflowStep(null);
+        }
+        
+                
         organizationRepo.findByWorkflowId(workflowStep.getId()).forEach(containingOrganization -> {
-            containingOrganization.removeWorkflowStep(workflowStep);
-            containingOrganization.removeStepFromWorkflow(workflowStep);
+        	containingOrganization.removeStepFromWorkflow(workflowStep);
+            organizationRepo.save(containingOrganization);
         });
+        
         
 //        workflowStepRepo.findByOriginatingWorkflowStep(workflowStep).forEach(migratingWorkflowStep -> {
 //            
 //            if(migratingWorkflowStep.getId().equals(workflowStep.getId())) {
-//                System.out.println("\nHOWD THIS HAPPEN\n");
+//                
 //            }
 //            else {
 //                if(migratingWorkflowStep.getOriginatingWorkflowStep() == null) {
@@ -136,24 +140,26 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 //                }
 //            }
 //            
-//            
 //        });
 
+        
         fieldProfileRepo.findByOriginatingWorkflowStep(workflowStep).forEach(fieldProfile -> {
+        	workflowStep.removeFieldProfile(fieldProfile);
+        	workflowStepRepo.save(workflowStep);
         	fieldProfileRepo.delete(fieldProfile);
         });
+        
         
         workflowStepRepo.delete(workflowStep.getId());
     }
     
     private List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
-
-        List<WorkflowStep> descendantWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
-
-        descendantWorkflowSteps.forEach(desendantWorflowStep -> {
+        List<WorkflowStep> descendantWorkflowSteps = new ArrayList<WorkflowStep>();
+        List<WorkflowStep> currentWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
+        descendantWorkflowSteps.addAll(currentWorkflowSteps);
+        currentWorkflowSteps.forEach(desendantWorflowStep -> {
             descendantWorkflowSteps.addAll(getDescendantsOfStep(desendantWorflowStep));
         });
-        
         return descendantWorkflowSteps;
     }
 

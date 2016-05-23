@@ -50,6 +50,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     	WorkflowStep originatingWorkflowStep = fieldProfile.getOriginatingWorkflowStep();
     	
     	originatingWorkflowStep.removeFieldProfile(fieldProfile);
+    	originatingWorkflowStep.removeProfileFromFields(fieldProfile);
     	
     	workflowStepRepo.save(originatingWorkflowStep);
     	

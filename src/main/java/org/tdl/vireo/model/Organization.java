@@ -39,7 +39,7 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
@@ -63,7 +63,7 @@ public class Organization extends BaseEntity {
     @ElementCollection(fetch = EAGER)
     private Set<String> emails;
     
-    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
