@@ -20,12 +20,12 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -39,7 +39,7 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
@@ -153,6 +153,37 @@ public class Organization extends BaseEntity {
         removeStepFromWorkflow(workflowStep);
     }
     
+    public boolean replaceStepInWorkflow(WorkflowStep ws1, WorkflowStep ws2) {    	
+    	boolean res = false;
+    	int pos = 0;
+    	for(WorkflowStep ws : getWorkflow()) {
+    		if(ws.getId().equals(ws1.getId())) {
+    			getWorkflow().remove(ws1);
+    			getWorkflow().add(pos, ws2);
+    			res = true;
+    			break;
+    		}
+    		pos++;
+    	}
+    	return res;
+    }
+    
+    public boolean replaceWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
+    	boolean res = false;
+    	int pos = 0;
+    	for(WorkflowStep ws : getWorkflowSteps()) {    		
+    		if(ws.getId().equals(ws1.getId())) {
+    			getWorkflowSteps().remove(ws1);
+    			getWorkflowSteps().add(pos, ws2);
+    			res = true;
+    			break;
+    		}
+    		pos++;
+    	}
+    	replaceStepInWorkflow(ws1, ws2);
+    	return res;
+    }
+
     /**
      * @return the workflowSteps
      */

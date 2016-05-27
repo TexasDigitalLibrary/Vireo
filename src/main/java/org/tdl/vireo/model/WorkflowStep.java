@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -11,7 +10,6 @@ import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -19,12 +17,12 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -48,7 +46,7 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
 
-    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
@@ -236,5 +234,18 @@ public class WorkflowStep extends BaseEntity {
     public void clearAllNotes() {
         notes.clear();
     }
+    
+    public boolean descendsFrom(WorkflowStep workflowStep) {
+        if(getOriginatingWorkflowStep() == null) {
+            return false;
+        }
+        else if(getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            return true;
+        }
+        else { 
+            return getOriginatingWorkflowStep().descendsFrom(workflowStep);
+        }
+    }    
+
 
 }

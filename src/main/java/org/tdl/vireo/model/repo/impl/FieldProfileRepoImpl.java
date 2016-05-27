@@ -22,6 +22,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
+        workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfile;
     }
 
@@ -29,6 +30,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
+        workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfile;
     }
     
@@ -36,6 +38,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
+        workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfile;
     }
     
