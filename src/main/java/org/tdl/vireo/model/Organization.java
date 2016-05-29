@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -57,7 +59,7 @@ public class Organization extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)

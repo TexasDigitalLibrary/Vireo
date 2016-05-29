@@ -10,6 +10,8 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
+import org.springframework.transaction.annotation.Transactional;
+
 public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 
     @Autowired
@@ -19,30 +21,32 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     private WorkflowStepRepo workflowStepRepo;
     
     @Override
+    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfile;
+        return fieldProfileRepo.findOne(fieldProfile.getId());
     }
 
     @Override
+    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfile;
+        return fieldProfileRepo.findOne(fieldProfile.getId());
     }
     
     @Override
+    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional));
         originatingWorkflowStep.addFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfile;
+        return fieldProfileRepo.findOne(fieldProfile.getId());
     }
     
-    // TODO: this method needs to handle all inheretence and aggregation duties
     public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) {
         return null;
     }
@@ -53,9 +57,10 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     	WorkflowStep originatingWorkflowStep = fieldProfile.getOriginatingWorkflowStep();
     	
     	originatingWorkflowStep.removeFieldProfile(fieldProfile);
-    	originatingWorkflowStep.removeProfileFromFields(fieldProfile);
     	
     	workflowStepRepo.save(originatingWorkflowStep);
+    	
+    	fieldProfile.setOriginatingWorkflowStep(null);
     	
     	fieldProfileRepo.delete(fieldProfile.getId());
     }
