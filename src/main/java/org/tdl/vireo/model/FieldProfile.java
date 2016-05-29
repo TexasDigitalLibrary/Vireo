@@ -33,7 +33,7 @@ public class FieldProfile extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private FieldPredicate predicate;
     
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;

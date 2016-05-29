@@ -38,23 +38,23 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private Boolean overrideable;
     
-    @ManyToOne(cascade = { REFRESH }, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    @ManyToOne(cascade = { REFRESH }, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
 
-    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER, mappedBy = "originatingWorkflowStep")
+    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> fieldProfiles;
     
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "fields_order", "fields_id" }))
     @OrderColumn
     private List<FieldProfile> fields;
