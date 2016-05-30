@@ -203,6 +203,39 @@ public class WorkflowStep extends BaseEntity {
     	
     	// TODO: recurively remove from aggregateFieldProfiles?
     }
+    
+    
+    public boolean replaceProfileInFields(FieldProfile fp1, FieldProfile fp2) {    	
+    	boolean res = false;
+    	int pos = 0;
+    	for(FieldProfile fp : getFields()) {
+    		if(fp.getId().equals(fp1.getId())) {
+    			getFields().remove(fp1);
+    			getFields().add(pos, fp2);
+    			res = true;
+    			break;
+    		}
+    		pos++;
+    	}
+    	return res;
+    }
+    
+    public boolean replaceFieldProfile(FieldProfile fp1, FieldProfile fp2) {
+    	boolean res = false;
+    	int pos = 0;
+    	for(FieldProfile fp : getFieldProfiles()) {    		
+    		if(fp.getId().equals(fp1.getId())) {
+    			getFieldProfiles().remove(fp1);
+    			getFieldProfiles().add(pos, fp2);
+    			res = true;
+    			break;
+    		}
+    		pos++;
+    	}
+    	replaceProfileInFields(fp1, fp2);
+    	return res;
+    }
+    
 
     /**
      * 

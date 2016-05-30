@@ -14,6 +14,8 @@ public interface FieldProfileRepo extends JpaRepository<FieldProfile, Long>, Fie
     
     public List<FieldProfile> findByOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep);
     
+    public List<FieldProfile> findByOriginatingFieldProfile(FieldProfile originatingFieldProfile);
+    
     public void delete(FieldProfile fieldProfile);
 
 }

@@ -30,14 +30,19 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id" }) )
 public class FieldProfile extends BaseEntity {
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate predicate;
+    
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private FieldProfile originatingFieldProfile;
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-
+    
     @Enumerated
     @Column(nullable = false)
     private InputType inputType;
@@ -140,6 +145,20 @@ public class FieldProfile extends BaseEntity {
      */
     public void setPredicate(FieldPredicate predicate) {
         this.predicate = predicate;
+    }
+    
+    /**
+     * @return the originatingFieldProfile
+     */
+    public FieldProfile getOriginatingFieldProfile() {
+        return originatingFieldProfile;
+    }
+
+    /**
+     * @param originatingFieldProfile the originatingFieldProfile to set
+     */
+    public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
+        this.originatingFieldProfile = originatingFieldProfile;
     }
     
     /**

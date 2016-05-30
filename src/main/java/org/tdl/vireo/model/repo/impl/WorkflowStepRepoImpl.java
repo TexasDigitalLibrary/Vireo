@@ -75,7 +75,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	
             if(workflowStep.getOverrideable()) {
             	
-                
             	Long originalWorkflowStepId = workflowStep.getId();
             	
             	
@@ -96,20 +95,20 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	em.detach(workflowStep);
                 workflowStep.setId(null);
                 
-                workflowStep = workflowStepRepo.save(workflowStep);
-                
                 
                 WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
-                
 
                 workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
                 workflowStep.setOriginatingOrganization(requestingOrganization);
+                
                 
                 workflowStep.setFieldProfiles(fieldProfiles);
                 workflowStep.setFields(fields);
                 
                 
-                // maybe we could do this through cascade merge, but lets do it here for now
+                workflowStep = workflowStepRepo.save(workflowStep);
+                
+                
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, originalWorkflowStep)) {
             		organization.replaceStepInWorkflow(originalWorkflowStep, workflowStep);
             		organizationRepo.save(organization);
