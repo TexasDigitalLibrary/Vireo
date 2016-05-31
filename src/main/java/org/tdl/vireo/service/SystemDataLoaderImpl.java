@@ -192,7 +192,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
 
-            organization.setWorkflow(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
+            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
             
 
             // temporary set of EmailWorkflowRule
@@ -275,7 +275,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
             
             
-            for(FieldProfile fieldProfile : workflowStep.getFieldProfiles()) {
+            for(FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
 
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
@@ -361,7 +361,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 newFieldProfile = fieldProfileRepo.save(newFieldProfile);
                 
-                newWorkflowStep.addFieldProfile(newFieldProfile);
+                newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
                 
                 newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 

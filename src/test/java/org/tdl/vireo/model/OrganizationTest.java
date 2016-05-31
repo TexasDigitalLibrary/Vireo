@@ -149,20 +149,20 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The organization had incorrect number of parents!", 1, childOrganization.getParentOrganizations().size());
         
         // check workflow step
-        assertEquals("The parent organization did not add the workflow step!", true, parentOrganization.getWorkflowSteps().contains(severableParentWorkflowStep));
-        assertEquals("The parent organization did not add the workflow step!", true, childOrganization.getWorkflowSteps().contains(severableChildWorkflowStep));
+        assertEquals("The parent organization did not add the workflow step!", true, parentOrganization.getOriginalWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The parent organization did not add the workflow step!", true, childOrganization.getOriginalWorkflowSteps().contains(severableChildWorkflowStep));
         
         // check workflow
-        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getWorkflow().contains(severableParentWorkflowStep));
-        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getWorkflow().contains(severableChildWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflow().contains(severableParentWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflow().contains(severableChildWorkflowStep));        
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getWorkflow().contains(grandChildWorkflowStep));
+        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
+        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));        
+        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildWorkflowStep));
         
         // check workflow inheritance
-        assertEquals("The child organization did not inherit parent workflow step!", true, childOrganization.getWorkflow().contains(parentWorkflowStep));
-        assertEquals("The grand child organization did not inherit parent workflow step!", true, grandChildOrganization.getWorkflow().contains(parentWorkflowStep));
-        assertEquals("The grand child organization did not inherit child workflow step!", true, grandChildOrganization.getWorkflow().contains(childWorkflowStep));
+        assertEquals("The child organization did not inherit parent workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("The grand child organization did not inherit parent workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("The grand child organization did not inherit child workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
         
         // verify parent organization
         parentOrganization = (Organization) childOrganization.getParentOrganizations().toArray()[0]; 
@@ -195,47 +195,47 @@ public class OrganizationTest extends AbstractEntityTest {
 
         
         // test remove severable workflow steps
-        parentOrganization.removeWorkflowStep(severableParentWorkflowStep);
+        parentOrganization.removeOriginalWorkflowStep(severableParentWorkflowStep);
         parentOrganization = organizationRepo.save(parentOrganization);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         
-        assertEquals("The severable workflow step was not removed!", 1, parentOrganization.getWorkflowSteps().size());
+        assertEquals("The severable workflow step was not removed!", 1, parentOrganization.getOriginalWorkflowSteps().size());
         assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableParentWorkflowStep.getName()));
         
-        childOrganization.removeWorkflowStep(severableChildWorkflowStep);
+        childOrganization.removeOriginalWorkflowStep(severableChildWorkflowStep);
         childOrganization = organizationRepo.save(childOrganization);
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
-        assertEquals("The severable workflow step was not removed!", false, childOrganization.getWorkflow().contains(severableChildWorkflowStep));
+        assertEquals("The severable workflow step was not removed!", false, childOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
         assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableChildWorkflowStep.getName()));
         
         
         // check workflowstep removal inheritance
-        assertEquals("The parent organization did not remove the workflow step!", false, parentOrganization.getWorkflow().contains(severableParentWorkflowStep));
-        assertEquals("The child organization did not remove the workflow step!", false, childOrganization.getWorkflow().contains(severableParentWorkflowStep));
-        assertEquals("The child organization did not remove the workflow step!", false, childOrganization.getWorkflow().contains(severableChildWorkflowStep));
-        assertEquals("The grand child organization did not remove the workflow step!", false, grandChildOrganization.getWorkflow().contains(severableParentWorkflowStep));
-        assertEquals("The grand child organization did not remove the workflow step!", false, grandChildOrganization.getWorkflow().contains(severableChildWorkflowStep));
+        assertEquals("The parent organization did not remove the workflow step!", false, parentOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The child organization did not remove the workflow step!", false, childOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The child organization did not remove the workflow step!", false, childOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
+        assertEquals("The grand child organization did not remove the workflow step!", false, grandChildOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        assertEquals("The grand child organization did not remove the workflow step!", false, grandChildOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
         
         severableParentWorkflowStep = workflowStepRepo.findOne(severableParentWorkflowStep.getId());
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
         // reattach severable workflow steps
-        parentOrganization.addWorkflowStep(severableParentWorkflowStep);        
+        parentOrganization.addOriginalWorkflowStep(severableParentWorkflowStep);        
         parentOrganization = organizationRepo.save(parentOrganization);
         
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         
-        assertEquals("The parent organization had incorrect number of workflow steps!", 2, parentOrganization.getWorkflow().size());
+        assertEquals("The parent organization had incorrect number of workflow steps!", 2, parentOrganization.getAggregateWorkflowSteps().size());
         
-        childOrganization.addWorkflowStep(severableChildWorkflowStep);
+        childOrganization.addOriginalWorkflowStep(severableChildWorkflowStep);
         childOrganization = organizationRepo.save(childOrganization);
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
-        assertEquals("The child organization had incorrect number of workflow steps!", 4, childOrganization.getWorkflow().size());
+        assertEquals("The child organization had incorrect number of workflow steps!", 4, childOrganization.getAggregateWorkflowSteps().size());
         
         
         // test remove severable child organization
@@ -333,7 +333,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The child organization had incorrect number of parents!", 0, childOrganization.getParentOrganizations().size());
         
         assertEquals("The parent workflowstep was not deleted!", null, workflowStepRepo.findOne(parentWorkflowStep.getId()));
-        assertEquals("The child contained workflowsteps with a detached originatingOrganization!", false, childOrganization.getWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("The child contained workflowsteps with a detached originatingOrganization!", false, childOrganization.getOriginalWorkflowSteps().contains(parentWorkflowStep));
         
         
         // test delete child organization
@@ -347,7 +347,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("The grand child organization had incorrect number of parents!", 0, grandChildOrganization.getParentOrganizations().size());
 
-        assertEquals("The grand child contained workflowsteps with a detached originatingOrganization!", false, grandChildOrganization.getWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("The grand child contained workflowsteps with a detached originatingOrganization!", false, grandChildOrganization.getOriginalWorkflowSteps().contains(parentWorkflowStep));
         
         
         

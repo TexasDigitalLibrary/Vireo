@@ -35,7 +35,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
+        originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
@@ -44,7 +44,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
+        originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
@@ -53,7 +53,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
+        originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
@@ -63,7 +63,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     	//if the requesting organization does not originate the step that originates the fieldProfile, and it is non-overrideable, then throw an exception.
         boolean requestorOriginatesProfile = false;
         
-        for(WorkflowStep workflowStep : requestingOrganization.getWorkflow()) {        	
+        for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {        	
             //if this step of the requesting organization happens to be the originator of the field profile, and the step also originates in the requesting organization, then this organization truly originates the field profile.
             if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
                 requestorOriginatesProfile = true;
@@ -134,14 +134,14 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         	
         	
         	for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, originalFieldProfile)) {
-        		workflowStep.replaceProfileInFields(originalFieldProfile, fieldProfile);
+        		workflowStep.replaceAggregateFieldProfile(originalFieldProfile, fieldProfile);
         		workflowStepRepo.save(workflowStep);
         	}
         	
         	
-        	for(WorkflowStep workflowStep : requestingOrganization.getWorkflow()) {
-				if(workflowStep.getFields().contains(originalFieldProfile)) {
-					workflowStep.replaceProfileInFields(originalFieldProfile, fieldProfile);
+        	for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
+				if(workflowStep.getAggregateFieldProfiles().contains(originalFieldProfile)) {
+					workflowStep.replaceAggregateFieldProfile(originalFieldProfile, fieldProfile);
 					workflowStepRepo.save(workflowStep);
 				}
     		}
@@ -162,7 +162,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         
 	    	WorkflowStep originatingWorkflowStep = fieldProfile.getOriginatingWorkflowStep();
 	    	
-	    	originatingWorkflowStep.removeFieldProfile(fieldProfile);
+	    	originatingWorkflowStep.removeOriginalFieldProfile(fieldProfile);
 	    	
 	    	if(fieldProfile.getOriginatingFieldProfile() != null) {
 	    		fieldProfile.setOriginatingFieldProfile(null);
@@ -170,8 +170,8 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 	    		    	
 	    	fieldProfile.setOriginatingWorkflowStep(null);
 	    	
-	    	workflowStepRepo.findByFieldsId(fieldProfile.getId()).forEach(workflowStep -> {
-	    		workflowStep.removeProfileFromFields(fieldProfile);
+	    	workflowStepRepo.findByAggregateFieldProfilesId(fieldProfile.getId()).forEach(workflowStep -> {
+	    		workflowStep.removeAggregateFieldProfile(fieldProfile);
 	    		workflowStepRepo.save(workflowStep);
 	        });
 	    	
@@ -194,8 +194,8 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     
     private List<WorkflowStep> getContainingDescendantWorkflowStep(Organization organization, FieldProfile fieldProfile) {
         List<WorkflowStep> descendantWorkflowStepsContainingFieldProfile = new ArrayList<WorkflowStep>();
-        organization.getWorkflow().forEach(ws -> {
-        	if(ws.getFields().contains(fieldProfile)) {
+        organization.getAggregateWorkflowSteps().forEach(ws -> {
+        	if(ws.getAggregateFieldProfiles().contains(fieldProfile)) {
             	descendantWorkflowStepsContainingFieldProfile.add(ws);
             }
         });

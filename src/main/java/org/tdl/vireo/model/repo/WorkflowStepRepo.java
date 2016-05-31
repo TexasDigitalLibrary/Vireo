@@ -15,7 +15,7 @@ public interface WorkflowStepRepo extends JpaRepository<WorkflowStep, Long>, Wor
     
     public List<WorkflowStep> findByOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep);
     
-    public List<WorkflowStep> findByFieldsId(Long fieldId);
+    public List<WorkflowStep> findByAggregateFieldProfilesId(Long fieldProfileId);
     
     public WorkflowStep findByNameAndOriginatingOrganization(String name, Organization originatingOrganization);
     

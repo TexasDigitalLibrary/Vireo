@@ -41,8 +41,8 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization organization = create(name, category);
         parent.addChildOrganization(organization);
         parent = organizationRepo.save(parent);
-        parent.getWorkflow().forEach(ws -> {
-            organization.addStepToWorkflow(ws);
+        parent.getAggregateWorkflowSteps().forEach(ws -> {
+            organization.addAggregateWorkflowStep(ws);
         });
         return organizationRepo.save(organization);
     }
@@ -84,24 +84,24 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         List<WorkflowStep> workflowStepsToDelete = new ArrayList<WorkflowStep>();
         List<WorkflowStep> workflowStepsToRemove = new ArrayList<WorkflowStep>();
         
-        for(WorkflowStep ws : organization.getWorkflowSteps()) {
+        for(WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
         	workflowStepsToDelete.add(ws);
         	workflowStepsToRemove.add(ws);
         }
         
         for(WorkflowStep ws : workflowStepsToRemove) {
-        	organization.removeWorkflowStep(ws);
+        	organization.removeOriginalWorkflowStep(ws);
         }
         
         
         List<WorkflowStep> workflow = new ArrayList<WorkflowStep>();
         
-        for(WorkflowStep ws : organization.getWorkflow()) {
+        for(WorkflowStep ws : organization.getAggregateWorkflowSteps()) {
         	workflow.add(ws);
         }
         
         for(WorkflowStep ws : workflow) {
-        	organization.removeStepFromWorkflow(ws);
+        	organization.removeAggregateWorkflowStep(ws);
         }
    	
     	

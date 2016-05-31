@@ -51,19 +51,19 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
-    private List<FieldProfile> fieldProfiles;
+    private List<FieldProfile> originalFieldProfiles;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "fields_order", "fields_id" }))
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
     @OrderColumn
-    private List<FieldProfile> fields;
+    private List<FieldProfile> aggregateFieldProfiles;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<Note> notes;
 
     public WorkflowStep() {
-    	setFields(new ArrayList<FieldProfile>());
-        setFieldProfiles(new ArrayList<FieldProfile>());
+    	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
+        setOriginalFieldProfiles(new ArrayList<FieldProfile>());
         setNotes(new ArrayList<Note>());
     }
 
@@ -121,10 +121,18 @@ public class WorkflowStep extends BaseEntity {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getOverrideable() {
         return overrideable;
     }
 
+    /**
+     * 
+     * @param overrideable
+     */
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
@@ -133,61 +141,83 @@ public class WorkflowStep extends BaseEntity {
      * 
      * @return
      */
-    public List<FieldProfile> getFieldProfiles() {
-        return fieldProfiles;
+    public List<FieldProfile> getOriginalFieldProfiles() {
+        return originalFieldProfiles;
     }
 
     /**
      * 
      * @param param
      */
-    public void setFieldProfiles(List<FieldProfile> fieldProfiles) {
-        this.fieldProfiles = fieldProfiles;
+    public void setOriginalFieldProfiles(List<FieldProfile> originalFieldProfiles) {
+        this.originalFieldProfiles = originalFieldProfiles;
     }
 
     /**
      * 
      * @param fieldProfile
      */
-    public void addFieldProfile(FieldProfile fieldProfile) {
-        if(!getFieldProfiles().contains(fieldProfile)) {
-            getFieldProfiles().add(fieldProfile);
+    public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
+        if(!getOriginalFieldProfiles().contains(originalFieldProfile)) {
+            getOriginalFieldProfiles().add(originalFieldProfile);
         }
-    	addProfileToFields(fieldProfile);
+    	addAggregateFieldProfile(originalFieldProfile);
     }
 
     /**
      * 
      * @param fieldProfile
      */
-    public void removeFieldProfile(FieldProfile fieldProfile) {
-    	getFieldProfiles().remove(fieldProfile);
-    	removeProfileFromFields(fieldProfile);
+    public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
+    	getOriginalFieldProfiles().remove(originalFieldProfile);
+    	removeAggregateFieldProfile(originalFieldProfile);
+    }
+    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
+    public boolean replaceOriginalFieldProfile(FieldProfile fp1, FieldProfile fp2) {
+        boolean res = false;
+        int pos = 0;
+        for(FieldProfile fp : getOriginalFieldProfiles()) {         
+            if(fp.getId().equals(fp1.getId())) {
+                getOriginalFieldProfiles().remove(fp1);
+                getOriginalFieldProfiles().add(pos, fp2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        replaceAggregateFieldProfile(fp1, fp2);
+        return res;
     }
     
     /**
      * 
      * @return
      */
-    public List<FieldProfile> getFields() {
-        return fields;
+    public List<FieldProfile> getAggregateFieldProfiles() {
+        return aggregateFieldProfiles;
     }
 
     /**
      * 
      * @param param
      */
-    public void setFields(List<FieldProfile> fields) {
-        this.fields = fields;
+    public void setAggregateFieldProfiles(List<FieldProfile> aggregateFieldProfiles) {
+        this.aggregateFieldProfiles = aggregateFieldProfiles;
     }
 
     /**
      * 
      * @param aggregateFieldProfile
      */
-    public void addProfileToFields(FieldProfile aggregateFieldProfile) {
-        if(!getFields().contains(aggregateFieldProfile)) {
-        	getFields().add(aggregateFieldProfile);
+    public void addAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
+        if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
+        	getAggregateFieldProfiles().add(aggregateFieldProfile);
         }
     	
 		// TODO: recurively add to aggregateFieldProfiles?
@@ -197,20 +227,20 @@ public class WorkflowStep extends BaseEntity {
      * 
      * @param aggregateFieldProfile
      */
-    public void removeProfileFromFields(FieldProfile aggregateFieldProfile) {
-    	getFields().remove(aggregateFieldProfile);
+    public void removeAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
+    	getAggregateFieldProfiles().remove(aggregateFieldProfile);
     	
     	// TODO: recurively remove from aggregateFieldProfiles?
     }
     
     
-    public boolean replaceProfileInFields(FieldProfile fp1, FieldProfile fp2) {    	
+    public boolean replaceAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {    	
     	boolean res = false;
     	int pos = 0;
-    	for(FieldProfile fp : getFields()) {
+    	for(FieldProfile fp : getAggregateFieldProfiles()) {
     		if(fp.getId().equals(fp1.getId())) {
-    			getFields().remove(fp1);
-    			getFields().add(pos, fp2);
+    			getAggregateFieldProfiles().remove(fp1);
+    			getAggregateFieldProfiles().add(pos, fp2);
     			res = true;
     			break;
     		}
@@ -219,30 +249,13 @@ public class WorkflowStep extends BaseEntity {
     	return res;
     }
     
-    public boolean replaceFieldProfile(FieldProfile fp1, FieldProfile fp2) {
-    	boolean res = false;
-    	int pos = 0;
-    	for(FieldProfile fp : getFieldProfiles()) {    		
-    		if(fp.getId().equals(fp1.getId())) {
-    			getFieldProfiles().remove(fp1);
-    			getFieldProfiles().add(pos, fp2);
-    			res = true;
-    			break;
-    		}
-    		pos++;
-    	}
-    	replaceProfileInFields(fp1, fp2);
-    	return res;
-    }
-    
-
     /**
      * 
      * @param fieldPredicate
      * @return
      */
     public FieldProfile getFieldProfileByPredicate(FieldPredicate fieldPredicate) {
-        for (FieldProfile fieldProfile : getFieldProfiles()) {
+        for (FieldProfile fieldProfile : getOriginalFieldProfiles()) {
             if (fieldProfile.getPredicate().equals(fieldPredicate))
                 return fieldProfile;
         }

@@ -116,7 +116,7 @@ public class OrganizationController {
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        return new ApiResponse(SUCCESS, org.getWorkflow());
+        return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
     @ApiMapping("/{id}/create-workflow-step")

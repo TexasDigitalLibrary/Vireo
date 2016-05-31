@@ -218,34 +218,66 @@ public class FieldProfile extends BaseEntity {
         this.overrideable = overrideable;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getEnabled() {
         return enabled;
     }
 
+    /**
+     * 
+     * @param enabled
+     */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getOptional() {
         return optional;
     }
 
+    /**
+     * 
+     * @param optional
+     */
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getUsage() {
         return usage;
     }
 
+    /**
+     * 
+     * @param usage
+     */
     public void setUsage(String usage) {
         this.usage = usage;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getHelp() {
         return help;
     }
 
+    /**
+     * 
+     * @param help
+     */
     public void setHelp(String help) {
         this.help = help;
     }
