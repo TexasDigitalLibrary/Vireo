@@ -164,8 +164,8 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test(expected=FieldProfileNonOverrideableException.class)
-    public void testCantOverrideNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException
-    {
+    public void testCantOverrideNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
+        
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         

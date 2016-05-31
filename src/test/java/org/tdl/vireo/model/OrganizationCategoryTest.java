@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.After;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 public class OrganizationCategoryTest extends AbstractEntityTest {
 
@@ -35,9 +34,9 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testCascade() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
+        
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
 
         assertEquals("The organization category repository is empty!", 1, organizationCategoryRepo.count());
