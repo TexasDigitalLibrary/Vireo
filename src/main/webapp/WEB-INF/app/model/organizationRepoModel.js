@@ -100,9 +100,9 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		});
 
 		workflowStepsPromise.then(function(data) {
-			var workflow = JSON.parse(data.body).payload.PersistentList;
-			if(workflow !== undefined) {
-				org.workflow = workflow;
+			var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+			if(aggregateWorkflowSteps !== undefined) {
+				org.aggregateWorkflowSteps = aggregateWorkflowSteps;
 			}
 			workflowStepsDefer.resolve(org);
 		});
