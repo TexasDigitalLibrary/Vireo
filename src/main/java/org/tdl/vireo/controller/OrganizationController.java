@@ -3,6 +3,9 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +21,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
@@ -111,27 +112,43 @@ public class OrganizationController {
         
     }
     
-    @ApiMapping("/{id}/worflow-steps")
+    @ApiMapping("/{id}/worflow")
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
-                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        
-        return new ApiResponse(SUCCESS, org.getWorkflowSteps());
-        
+        return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
     @ApiMapping("/{id}/create-workflow-step")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {
-                
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
-        
+        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
+        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, org.getWorkflow()));
         return new ApiResponse(SUCCESS, newWorkflowStep);
+    }
+    
+    @ApiMapping("/{id}/update-workflow-step")
+    @Auth(role="MANAGER")
+    @Transactional
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
+        
+        WorkflowStep updatedWorkflowStep;
+        try {
+            updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+            return new ApiResponse(SUCCESS, updatedWorkflowStep);
+        } catch (WorkflowStepNonOverrideableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return new ApiResponse(ERROR, "Unable to update workflow step!");
+        }
+        
+        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
+        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, requestingOrg.getWorkflow()));
         
     }
     

@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -28,14 +29,19 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id" }) )
 public class FieldProfile extends BaseEntity {
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate predicate;
     
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private FieldProfile originatingFieldProfile;
+    
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-
+    
     @Enumerated
     @Column(nullable = false)
     private InputType inputType;
@@ -141,6 +147,20 @@ public class FieldProfile extends BaseEntity {
     }
     
     /**
+     * @return the originatingFieldProfile
+     */
+    public FieldProfile getOriginatingFieldProfile() {
+        return originatingFieldProfile;
+    }
+
+    /**
+     * @param originatingFieldProfile the originatingFieldProfile to set
+     */
+    public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
+        this.originatingFieldProfile = originatingFieldProfile;
+    }
+    
+    /**
      * @return the originatingWorkflowStep
      */
     public WorkflowStep getOriginatingWorkflowStep() {
@@ -198,34 +218,66 @@ public class FieldProfile extends BaseEntity {
         this.overrideable = overrideable;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getEnabled() {
         return enabled;
     }
 
+    /**
+     * 
+     * @param enabled
+     */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getOptional() {
         return optional;
     }
 
+    /**
+     * 
+     * @param optional
+     */
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getUsage() {
         return usage;
     }
 
+    /**
+     * 
+     * @param usage
+     */
     public void setUsage(String usage) {
         this.usage = usage;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getHelp() {
         return help;
     }
 
+    /**
+     * 
+     * @param help
+     */
     public void setHelp(String help) {
         this.help = help;
     }
@@ -260,7 +312,6 @@ public class FieldProfile extends BaseEntity {
     }
     
     // TODO : Restrict multiple field gloss with the same language
-    // Could a field gloss with different values and the same language be added to this set?
 
     /**
      * 
@@ -319,8 +370,7 @@ public class FieldProfile extends BaseEntity {
         this.controlledVocabularies = controlledVocabularies;
     }
 
-    // TODO : Restrict multiple controlled vocabulary with the same language
-    // Could a controlled vocabulary with different names and the same language be added to this set?
+    // TODO : Restrict multiple controlled vocabulary with the same language 
     
     /**
      * 

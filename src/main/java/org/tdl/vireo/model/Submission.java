@@ -1,8 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -31,20 +29,20 @@ public class Submission extends BaseEntity {
     @OneToOne(optional = false)
     private User submitter;
     
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<User> assignees;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(cascade = { REFRESH }, optional = false)
     private SubmissionState state;
 
     //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<Organization> organizations;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @OneToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, orphanRemoval = false)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
     private Set<WorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)
@@ -54,7 +52,7 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private Set<Embargo> embargoTypes;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)

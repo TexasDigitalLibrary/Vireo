@@ -5,6 +5,8 @@ import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.exception.FieldProfileNonOverrideableException;
 
 
 public interface FieldProfileRepoCustom {
@@ -15,7 +17,7 @@ public interface FieldProfileRepoCustom {
     
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional);
 
-    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization);
+    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException;
     
     public void delete(FieldProfile fieldProfile);
     

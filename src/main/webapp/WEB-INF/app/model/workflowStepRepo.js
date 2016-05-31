@@ -4,12 +4,9 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	var WorkflowStepRepo = function(futureData) {
 		self = this;
-
 		//This causes our model to extend AbstractModel
-		angular.extend(self, AbstractModel);
-		
-		self.unwrap(self, futureData);
-		
+		angular.extend(self, AbstractModel);		
+		self.unwrap(self, futureData);		
 	};
 	
 	WorkflowStepRepo.currentWorkflowSteps = {};

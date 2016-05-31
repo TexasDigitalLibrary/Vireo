@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -20,6 +21,9 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -36,33 +40,36 @@ public class Organization extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @ManyToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private List<WorkflowStep> workflowSteps;
+    @Fetch(FetchMode.SELECT)
+    private List<WorkflowStep> originalWorkflowSteps;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregateWorkflowSteps_order", "aggregate_workflow_steps_id" }))
     @OrderColumn
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "workflow_order", "workflow_id" }))
-    private List<WorkflowStep> workflow;
+    private List<WorkflowStep> aggregateWorkflowSteps;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> parentOrganizations;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
     private Set<String> emails;
     
-    @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = { REFRESH, REMOVE }, orphanRemoval = true, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
-        setWorkflowSteps(new ArrayList<WorkflowStep>());
-        setWorkflow(new ArrayList<WorkflowStep>());
+        setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
+        setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new TreeSet<String>());
@@ -122,59 +129,118 @@ public class Organization extends BaseEntity {
     }
     
     /**
-     * @return the workflowSteps
+     * @return the originalWorkflowSteps
      */
-    public List<WorkflowStep> getWorkflowSteps() {
-        return workflowSteps;
+    public List<WorkflowStep> getOriginalWorkflowSteps() {
+        return originalWorkflowSteps;
     }
 
     /**
-     * @param workflowSteps the workflowSteps to set
+     * @param originalWorkflowSteps the originalWorkflowSteps to set
      */
-    public void setWorkflowSteps(List<WorkflowStep> workflowSteps) {
-        this.workflowSteps = workflowSteps;
-    }
-    
-    public void addWorkflowStep(WorkflowStep workflowStep) {
-        if(!getWorkflowSteps().contains(workflowStep)) {
-            getWorkflowSteps().add(workflowStep);
-        }
-        addStepToWorkflow(workflowStep);
-    }
-    
-    public void removeWorkflowStep(WorkflowStep workflowStep) {
-        getWorkflowSteps().remove(workflowStep);
-        removeStepFromWorkflow(workflowStep);
+    public void setOriginalWorkflowSteps(List<WorkflowStep> originalWorkflowSteps) {
+        this.originalWorkflowSteps = originalWorkflowSteps;
     }
     
     /**
-     * @return the workflowSteps
+     * 
+     * @param originalWorkflowStep
      */
-    public List<WorkflowStep> getWorkflow() {
-        return workflow;
+    public void addOriginalWorkflowStep(WorkflowStep originalWorkflowStep) {
+        if(!getOriginalWorkflowSteps().contains(originalWorkflowStep)) {
+            getOriginalWorkflowSteps().add(originalWorkflowStep);
+        }
+        addAggregateWorkflowStep(originalWorkflowStep);
+    }
+    
+    /**
+     * 
+     * @param originalWorkflowStep
+     */
+    public void removeOriginalWorkflowStep(WorkflowStep originalWorkflowStep) {
+        getOriginalWorkflowSteps().remove(originalWorkflowStep);
+        removeAggregateWorkflowStep(originalWorkflowStep);
+    }
+    
+    /**
+     * 
+     * @param ws1
+     * @param ws2
+     * @return
+     */
+    public boolean replaceOriginalWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
+    	boolean res = false;
+    	int pos = 0;
+    	for(WorkflowStep ws : getOriginalWorkflowSteps()) {    		
+    		if(ws.getId().equals(ws1.getId())) {
+    			getOriginalWorkflowSteps().remove(ws1);
+    			getOriginalWorkflowSteps().add(pos, ws2);
+    			res = true;
+    			break;
+    		}
+    		pos++;
+    	}
+    	replaceAggregateWorkflowStep(ws1, ws2);
+    	return res;
     }
 
     /**
-     * @param workflowSteps the workflowSteps to set
+     * @return the aggregateWorkflowSteps
      */
-    public void setWorkflow(List<WorkflowStep> workflow) {
-        this.workflow = workflow;
+    public List<WorkflowStep> getAggregateWorkflowSteps() {
+        return aggregateWorkflowSteps;
+    }
+
+    /**
+     * @param aggregateWorkflowSteps the aggregateWorkflowSteps to set
+     */
+    public void setAggregateWorkflowSteps(List<WorkflowStep> aggregateWorkflowSteps) {
+        this.aggregateWorkflowSteps = aggregateWorkflowSteps;
     }
     
-    public void addStepToWorkflow(WorkflowStep workflowStep) {
-        if(!getWorkflow().contains(workflowStep)) {
-            getWorkflow().add(workflowStep);
+    /**
+     * 
+     * @param aggregateWorkflowStep
+     */
+    public void addAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep) {
+        if(!getAggregateWorkflowSteps().contains(aggregateWorkflowStep)) {
+            getAggregateWorkflowSteps().add(aggregateWorkflowStep);
         }
         getChildrenOrganizations().forEach(childOrganization -> {
-            childOrganization.addStepToWorkflow(workflowStep);
+            childOrganization.addAggregateWorkflowStep(aggregateWorkflowStep);
         });
     }
     
-    public void removeStepFromWorkflow(WorkflowStep workflowStep) {
-        getWorkflow().remove(workflowStep);
+    /**
+     * 
+     * @param aggregateWorkflowStep
+     */
+    public void removeAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep) {
+        getAggregateWorkflowSteps().remove(aggregateWorkflowStep);
         getChildrenOrganizations().forEach(childOrganization -> {
-            childOrganization.removeStepFromWorkflow(workflowStep);
+            childOrganization.removeAggregateWorkflowStep(aggregateWorkflowStep);
         });
+    }
+    
+    /**
+     * 
+     * @param ws1
+     * @param ws2
+     * @return
+     */
+    public boolean replaceAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {      
+        boolean res = false;
+        int pos = 0;
+        for(WorkflowStep ws : getAggregateWorkflowSteps()) {
+            if(ws.getId().equals(ws1.getId())) {
+                getAggregateWorkflowSteps().remove(ws1);
+                getAggregateWorkflowSteps().add(pos, ws2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        return res;
     }
     
     /**

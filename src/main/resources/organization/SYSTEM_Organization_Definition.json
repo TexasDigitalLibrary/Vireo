@@ -3,7 +3,7 @@
     "category": {
         "name": "System"
     },
-    "workflowSteps": [
+    "originalWorkflowSteps": [
         {
             "name": "Verify Personal Information",
             "overrideable": true,
@@ -27,7 +27,7 @@
                     "text": "You must enter a permanent, long-term address. If your present address is different, use the Current Address field."
                 }
             ],
-            "fieldProfiles": [
+            "originalFieldProfiles": [
                 {
                     "predicate": {
                         "value": "firstName"
@@ -448,7 +448,7 @@
                 }
             },
             "notes": [],
-            "fieldProfiles": [
+            "originalFieldProfiles": [
                 {
                     "predicate": {
                         "value": "licenseAgreement"
@@ -526,7 +526,7 @@
                     "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication."
                 }
             ],
-            "fieldProfiles": [
+            "originalFieldProfiles": [
                 {
                     "predicate": {
                         "value": "title"
@@ -864,7 +864,7 @@
                     "text": "SIZE QUOTA: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB."
                 }
             ],
-            "fieldProfiles": [
+            "originalFieldProfiles": [
                 {
                     "predicate": {
                         "value": "manuscriptInPdf"

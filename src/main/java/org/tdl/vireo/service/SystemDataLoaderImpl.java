@@ -192,7 +192,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
 
-            organization.setWorkflow(processWorkflowSteps(organization, systemOrganization.getWorkflowSteps()));
+            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
             
 
             // temporary set of EmailWorkflowRule
@@ -268,13 +268,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
+            	
+            	organization = organizationRepo.findOne(organization.getId());
+            	
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
             
-            // temporary list of FieldProfile
-            List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
-
-            for(FieldProfile fieldProfile : workflowStep.getFieldProfiles()) {
+            
+            for(FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
 
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
@@ -289,6 +290,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
+                	
+                	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                	
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
                 } else {
                     newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
@@ -355,13 +359,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 newFieldProfile.setControlledVocabularies(controlledVocabularies);
 
-                fieldProfileRepo.save(newFieldProfile);
-
-                fieldProfiles.add(newFieldProfile);
+                newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+                
+                newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
+                
+                newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 
             }
-            
-            newWorkflowStep.setFieldProfiles(fieldProfiles);
 
             // temporary list of Note
             List<Note> notes = new ArrayList<Note>();
