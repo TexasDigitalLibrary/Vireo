@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 public class WorkflowStepTest extends AbstractEntityTest {
 
@@ -780,14 +779,12 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         
         
-        Long s2Id = s2.getId();
-        
         String anotherUpdatedName = "Yet another updated name";
         
         s2.setName(anotherUpdatedName);
 
         // should change originating organization
-        WorkflowStep s3 = workflowStepRepo.update(s2, grandChildOrganization);
+        workflowStepRepo.update(s2, grandChildOrganization);
         
         
         

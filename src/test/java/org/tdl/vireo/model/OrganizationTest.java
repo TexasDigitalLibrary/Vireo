@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.enums.RecipientType;
 
 public class OrganizationTest extends AbstractEntityTest {

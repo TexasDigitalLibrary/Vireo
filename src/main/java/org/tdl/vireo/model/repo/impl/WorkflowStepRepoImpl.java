@@ -10,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
-
-import org.springframework.transaction.annotation.Transactional;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
@@ -24,9 +21,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
-    
-    @Autowired
-    private FieldProfileRepo fieldProfileRepo;
     
     @Autowired
     private OrganizationRepo organizationRepo;
