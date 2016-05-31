@@ -33,7 +33,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return workflowStepRepo.findOne(workflowStep.getId());
     }
 
-    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) {
+    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
                 
@@ -120,8 +120,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	
             	// provide feedback of attempt to override non overrideable
             	// exceptions may be of better use for unavoidable error handling
-            	
-            	//TODO: add non overridable exception and throw it here
+            	                
+                throw new WorkflowStepNonOverrideableException();
             }
             
         }

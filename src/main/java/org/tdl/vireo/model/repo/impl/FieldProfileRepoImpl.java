@@ -17,7 +17,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
-
+import org.tdl.vireo.model.repo.impl.exception.FieldProfileNonOverrideableException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
@@ -58,7 +58,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
     
-    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) {
+    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
     	
     	//if the requesting organization does not originate the step that originates the fieldProfile, and it is non-overrideable, then throw an exception.
         boolean requestorOriginatesProfile = false;
@@ -76,10 +76,7 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         	// provide feedback of attempt to override non overrideable
         	// exceptions may be of better use for unavoidable error handling
         	
-        	//TODO: add non overridable exception and throw it here
-        	//throw new FieldProfileNonOverrideableException();
-        	
-        	return null;
+            throw new FieldProfileNonOverrideableException();
         }
         //if the requestor originates, make the update at the requestor
         else if(requestorOriginatesProfile) {

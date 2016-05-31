@@ -21,6 +21,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
@@ -135,10 +136,20 @@ public class OrganizationController {
     @Transactional
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
         Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
-        WorkflowStep updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+        
+        WorkflowStep updatedWorkflowStep;
+        try {
+            updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+            return new ApiResponse(SUCCESS, updatedWorkflowStep);
+        } catch (WorkflowStepNonOverrideableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return new ApiResponse(ERROR, "Unable to update workflow step!");
+        }
+        
         // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
         //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, requestingOrg.getWorkflow()));
-        return new ApiResponse(SUCCESS, updatedWorkflowStep);
+        
     }
     
 }

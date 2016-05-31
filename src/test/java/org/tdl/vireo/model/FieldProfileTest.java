@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.exception.FieldProfileNonOverrideableException;
 
 public class FieldProfileTest extends AbstractEntityTest {
 
@@ -160,9 +162,42 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getPredicate().getValue());
         assertEquals("The grand child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, grandchildFieldProfile.getPredicate().getValue());
     }
+    
+    @Test(expected=FieldProfileNonOverrideableException.class)
+    public void testCantOverrideNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException
+    {
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(childOrganization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+
+        fieldProfile.setOverrideable(false);
+        
+        
+        assertEquals("The workflow step didn't originate in the right org!", parentOrganization.getId(), parentWorkflowStep.getOriginatingOrganization().getId());
+        
+        assertEquals("The copy of the field profile didn't originate in the right workflow step!", parentWorkflowStep.getId(), fieldProfile.getOriginatingWorkflowStep().getId());
+        
+        assertFalse("The copy of the field profile didn't record that it was made non-overrideable!", fieldProfile.getOverrideable());
+        
+        //expect to throw exception as this field profile does not originate in a workflow step originating in the child organization
+        fieldProfileRepo.update(fieldProfile, childOrganization);
+        
+    }
         
     @Test
-    public void testCanOverrideNonOverrideableAtOriginatingOrg() {
+    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
     	
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -205,7 +240,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testFieldProfileChangeAtChildOrg() {
+    public void testFieldProfileChangeAtChildOrg() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
     	
     	// this test calls for adding a single workflowstep to the parent organization
     	workflowStepRepo.delete(workflowStep);
@@ -396,6 +431,9 @@ public class FieldProfileTest extends AbstractEntityTest {
 //    	FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
 //    	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 //    	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+    	
+    	
+    	
     }
     
     @Test

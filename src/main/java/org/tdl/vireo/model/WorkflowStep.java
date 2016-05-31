@@ -182,7 +182,7 @@ public class WorkflowStep extends BaseEntity {
     public boolean replaceOriginalFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
         int pos = 0;
-        for(FieldProfile fp : getOriginalFieldProfiles()) {         
+        for(FieldProfile fp : getOriginalFieldProfiles()) {
             if(fp.getId().equals(fp1.getId())) {
                 getOriginalFieldProfiles().remove(fp1);
                 getOriginalFieldProfiles().add(pos, fp2);

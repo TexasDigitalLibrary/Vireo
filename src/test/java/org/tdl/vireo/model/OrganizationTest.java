@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.enums.RecipientType;
 
@@ -366,6 +367,54 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
 
     }
+    
+    @Test
+    public void testDeleteInterior() {
+        
+        Organization topOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        Organization middleOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, topOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        Organization leafOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, middleOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        topOrganization = organizationRepo.findOne(topOrganization.getId());
+        middleOrganization = organizationRepo.findOne(middleOrganization.getId());
+        
+        organizationRepo.delete(middleOrganization);
+        
+        topOrganization = organizationRepo.findOne(topOrganization.getId());
+        leafOrganization = organizationRepo.findOne(leafOrganization.getId());
+        
+        assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
+        
+        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization.getId(), ((Organization)leafOrganization.getParentOrganizations().toArray()[0]).getId() );
+    }
+    
+    
+    @Test
+    public void testSanity() {
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        
+        workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        workflowStepRepo.create("Step 2", parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        workflowStepRepo.create("Step 3", parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        workflowStepRepo.create("Step 4", parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        assertEquals("The number of original workflowsteps was off!", 4, parentOrganization.getOriginalWorkflowSteps().size());
+        assertEquals("The number of aggregate workflowsteps was off!", 4, parentOrganization.getAggregateWorkflowSteps().size());
+    }
+    
  
     @After
     public void cleanUp() {
