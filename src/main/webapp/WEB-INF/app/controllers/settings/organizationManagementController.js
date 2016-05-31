@@ -3,12 +3,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.organizationCategories = OrganizationCategoryRepo.get();
 
-	$scope.currentWorkflowSteps = [];
-
-	var clearCurrentWorkflowSteps = function() {
-		$scope.currentWorkflowSteps.length = 0;
-	};
-
 	$scope.ready = $q.all([OrganizationRepo.ready(),OrganizationCategoryRepo.ready()]);
 
 	$scope.managedOrganization = null;
@@ -24,16 +18,9 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.getManagedOrganization = function() {
 			var currentOrganization = $scope.getSelectedOrganization();
-			if (typeof currentOrganization !== 'undefined' && currentOrganization) {
+			if (currentOrganization !== undefined && currentOrganization) {
 				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
 					$scope.managedOrganization = angular.copy(currentOrganization);
-
-					clearCurrentWorkflowSteps();
-					angular.forEach($scope.managedOrganization.workflowSteps, function(stepId) {
-						WorkflowStepRepo.getStepById(stepId).then(function(step) {
-							$scope.currentWorkflowSteps.push(step);
-						}); 
-					});					
 				}
 			}
 			return $scope.managedOrganization;
@@ -43,6 +30,20 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
 		};
 
+		$scope.addWorkflowStep = function(newWorkflowStepName) {
+			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function(newWorkflowStep) {
+				$scope.managedOrganization.aggregateWorkflowSteps.push(newWorkflowStep);
+				angular.element("#addWorkflowStepModal").modal("hide");		
+			}); 
+		};
+		
+		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
+			OrganizationRepo.updateWorkflowStep($scope.selectedOrganization, workflowStepToUpdate).then(function(updatedWorkflowStep) {
+				console.log(updatedWorkflowStep);
+				var oldWorkflowStepIndex = $scope.managedOrganization.aggregateWorkflowSteps.indexOf(updatedWorkflowStep);
+				$scope.managedOrganization.aggregateWorkflowSteps[oldWorkflowStepIndex] = updatedWorkflowStep;
+			}); 
+		};
 
 	});
 });

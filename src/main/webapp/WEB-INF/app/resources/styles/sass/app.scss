@@ -1139,6 +1139,13 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
+#organizationManagement .add-workflow-step:hover {
+  cursor: pointer;
+  color:  #337ab7;
+}
+
+
+
 
 /*************
 * DIRECTIVES *
@@ -1295,20 +1302,39 @@ footer a, footer li, footer p {
   cursor:help;
 }
 
-.orderable-panel-bar {
-    @extend .panel-heading;
-    display:inline-block;
-    padding:10px 15px;
-    width:100%;
-    margin-right: -26px;
+.accordion-order-box {
+  color: #afafaf;
+  margin-top: -9px;
+  margin-right: -10px;
+  text-align: center;
+  width: 25px;
 }
 
-.accordion-order-box {
-    display:inline-block;
-    float:right;
-    margin-right:12px;
-    margin-top:1px;
-    &>a{
-        display:block;
-    }
+.accordion-order-box .glyphicon-chevron-down,
+.accordion-order-box .glyphicon-chevron-up  {
+  background-color: #afafaf;
+  color: transparent;
+  text-shadow: 0px 2px 3px rgba(255,255,255,0.75);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
 }
+
+.panel-heading:hover .accordion-order-box .glyphicon-chevron-down,
+.panel-heading:hover .accordion-order-box .glyphicon-chevron-up  {
+  background-color: transparent;
+  color: #afafaf;
+  text-shadow: 0px 2px 3px transparent;
+  -webkit-background-clip: initial;
+  -moz-background-clip: initial;
+  background-clip: initial;
+}
+
+.panel-heading:hover .accordion-order-box .glyphicon-chevron-down:active,
+.panel-heading:hover .accordion-order-box .glyphicon-chevron-up:active, {
+  color: #337ab7;
+}
+
+
+
+

@@ -17,10 +17,10 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var nextPanelIndex = panelIndex + 1;
             var hasHistory = $scope.triptych.panelHistory.length > 0;
             var orgHasChildren = organization.childrenOrganizations.length > 0;
-            var isFirstPanel = panelIndex == 0;
+            var isFirstPanel = panelIndex === 0;
             var isLastPanel = panelIndex == 2;
 
-            $scope.setSelectedOrganization(organization);
+            if(organization.id !== 1) $scope.setSelectedOrganization(organization);
 
             panel.selectedOrganization = organization;
 
@@ -46,13 +46,13 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             	}
             }
 
-        } 
+        }; 
 
         $scope.filterPanelByParent = function(panel, organization) {
 
             if(!panel) return false;
 
-            var panelParentOrganization = panel.parentOrganization
+            var panelParentOrganization = panel.parentOrganization;
 
             if(organization.parentOrganizations.indexOf(panelParentOrganization.id) != -1) {
             	panel.organizationCategories[organization.id] = organization.category;
@@ -61,14 +61,32 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             
             return false;
             
-        }
+        };
 
         $scope.resetPanels = function() {
             $scope.triptych.resetPanels();
             $scope.newOrganization.parent = $scope.organizations.list[0];
-        }
+        };
+
+        if($scope.organizations.list.length==1) $scope.add = true;
+
+        $scope.hasOrganization = function() {
+            
+            var hasOrgs = $scope.organizations.list.length < 2;
+
+            if($scope.organizations.list.length == 2 && $scope.add) {
+                $scope.add = false;
+                $timeout(function() {
+                    $scope.shiftPanels($scope.triptych.rootPanel, $scope.organizations.list[0]);
+                });
+            }
+
+            return hasOrgs;
+        }; 
 
     });
+
+    
 
     var Triptych = function(organization) {
 
@@ -160,7 +178,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             panel.previouslyActive = false;
             panel.active = true;
         }
-    }
+    };
 
     var Panel = function(parentOrganization) {
         var Panel = this;
@@ -175,7 +193,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         Panel.opening = false;
         Panel.visible = false;
         return this;
-    }
+    };
 
     Panel.prototype = {
         open: function() {
@@ -232,13 +250,20 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
 
             for(var key in Panel.organizationCategories) {
                 var category = Panel.organizationCategories[key];
-                if(uniqueCategories.indexOf(category) === -1) {
-                    uniqueCategories.push(category);
+                var unique = true; 
+                for(var i in uniqueCategories) {
+                	 if(uniqueCategories[i].id === category.id) { 
+                		 unique = false;
+                		 break;
+                	}
+                }
+                if(unique) { 
+                	uniqueCategories.push(category); 
                 }
             }
 
             return uniqueCategories;
         }
-    }
+    };
 
 });

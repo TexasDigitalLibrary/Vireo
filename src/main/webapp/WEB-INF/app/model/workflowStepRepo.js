@@ -4,15 +4,12 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	var WorkflowStepRepo = function(futureData) {
 		self = this;
-
 		//This causes our model to extend AbstractModel
-		angular.extend(self, AbstractModel);
-		
-		self.unwrap(self, futureData);
-		
+		angular.extend(self, AbstractModel);		
+		self.unwrap(self, futureData);		
 	};
 	
-	WorkflowStepRepo.currentWorkflowSteps = [];
+	WorkflowStepRepo.currentWorkflowSteps = {};
 	
 	WorkflowStepRepo.data = null;
 	
@@ -58,11 +55,16 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	};
 
 	WorkflowStepRepo.getStepById = function(wsID) {
+
+		console.log(wsID);
+
 		var defer = $q.defer();
 
 		if (WorkflowStepRepo.currentWorkflowSteps[wsID]) {
 			defer.resolve(WorkflowStepRepo.currentWorkflowSteps[wsID]);
 		} else {
+
+			WorkflowStepRepo.currentWorkflowSteps[wsID] = "pending";
 
 			var stepPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
@@ -73,6 +75,7 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 			stepPromise.then(function(result){
 				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
 				WorkflowStepRepo.currentWorkflowSteps[wsID] = workflowStep;
+				console.log(WorkflowStepRepo.currentWorkflowSteps);
 				defer.resolve(workflowStep);
 			});
 

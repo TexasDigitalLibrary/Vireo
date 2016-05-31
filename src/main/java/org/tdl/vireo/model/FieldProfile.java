@@ -1,8 +1,8 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
@@ -23,22 +23,25 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-
 import edu.tamu.framework.model.BaseEntity;
 
-
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "predicate_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id" }) )
 public class FieldProfile extends BaseEntity {
+
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    private FieldPredicate predicate;
     
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private FieldProfile originatingFieldProfile;
+    
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    private FieldPredicate predicate;
-
+    
     @Enumerated
     @Column(nullable = false)
     private InputType inputType;
@@ -63,10 +66,10 @@ public class FieldProfile extends BaseEntity {
     @Column(nullable = true)
     private String help;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private List<FieldGloss> fieldGlosses;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private List<ControlledVocabulary> controlledVocabularies;
     
     public FieldProfile() {
@@ -75,6 +78,11 @@ public class FieldProfile extends BaseEntity {
         setOptional(true);
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
+    }
+    
+    public FieldProfile(WorkflowStep originatingWorkflowStep) {
+        this();
+        setOriginatingWorkflowStep(originatingWorkflowStep);
     }
 
     /**
@@ -86,8 +94,7 @@ public class FieldProfile extends BaseEntity {
      * @param optional
      */
     public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this();
-        setOriginatingWorkflowStep(originatingWorkflowStep);
+        this(originatingWorkflowStep);
         setPredicate(predicate);
         setInputType(inputType);
         setRepeatable(repeatable);
@@ -125,20 +132,6 @@ public class FieldProfile extends BaseEntity {
     }
 
     /**
-     * @return the originatingWorkflowStep
-     */
-    public WorkflowStep getOriginatingWorkflowStep() {
-        return originatingWorkflowStep;
-    }
-
-    /**
-     * @param originatingWorkflowStep the originatingWorkflowStep to set
-     */
-    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
-        this.originatingWorkflowStep = originatingWorkflowStep;
-    }
-
-    /**
      * @return the predicate
      */
     public FieldPredicate getPredicate() {
@@ -151,6 +144,34 @@ public class FieldProfile extends BaseEntity {
      */
     public void setPredicate(FieldPredicate predicate) {
         this.predicate = predicate;
+    }
+    
+    /**
+     * @return the originatingFieldProfile
+     */
+    public FieldProfile getOriginatingFieldProfile() {
+        return originatingFieldProfile;
+    }
+
+    /**
+     * @param originatingFieldProfile the originatingFieldProfile to set
+     */
+    public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
+        this.originatingFieldProfile = originatingFieldProfile;
+    }
+    
+    /**
+     * @return the originatingWorkflowStep
+     */
+    public WorkflowStep getOriginatingWorkflowStep() {
+        return originatingWorkflowStep;
+    }
+
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
+    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        this.originatingWorkflowStep = originatingWorkflowStep;
     }
 
     /**
@@ -197,34 +218,66 @@ public class FieldProfile extends BaseEntity {
         this.overrideable = overrideable;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getEnabled() {
         return enabled;
     }
 
+    /**
+     * 
+     * @param enabled
+     */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getOptional() {
         return optional;
     }
 
+    /**
+     * 
+     * @param optional
+     */
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getUsage() {
         return usage;
     }
 
+    /**
+     * 
+     * @param usage
+     */
     public void setUsage(String usage) {
         this.usage = usage;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getHelp() {
         return help;
     }
 
+    /**
+     * 
+     * @param help
+     */
     public void setHelp(String help) {
         this.help = help;
     }
@@ -259,7 +312,6 @@ public class FieldProfile extends BaseEntity {
     }
     
     // TODO : Restrict multiple field gloss with the same language
-    // Could a field gloss with different values and the same language be added to this set?
 
     /**
      * 
@@ -318,8 +370,7 @@ public class FieldProfile extends BaseEntity {
         this.controlledVocabularies = controlledVocabularies;
     }
 
-    // TODO : Restrict multiple controlled vocabulary with the same language
-    // Could a controlled vocabulary with different names and the same language be added to this set?
+    // TODO : Restrict multiple controlled vocabulary with the same language 
     
     /**
      * 

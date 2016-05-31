@@ -38,9 +38,11 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
 
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
+        organization = organizationRepo.findOne(organization.getId());
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -94,9 +96,14 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     @Transactional
     public void testCascade() {
-        Organization severableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, organization.getCategory());
+        parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
+        
+        Organization severableOrganization = organizationRepo.create(TEST_SEVERABLE_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
+        organization = organizationRepo.findOne(organization.getId());
+        
 
         FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
@@ -104,7 +111,9 @@ public class SubmissionTest extends AbstractEntityTest {
         Submission submission = submissionRepo.create(submitter, submissionState);
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
-
+        submission = submissionRepo.findOne(submission.getId());
+        
+        
         submission.addOrganization(organization);
         submission.addSubmissionWorkflowStep(workflowStep);
         submission.addFieldValue(fieldValue);
@@ -122,6 +131,9 @@ public class SubmissionTest extends AbstractEntityTest {
         submission = submissionRepo.save(submission);
         assertEquals("The organization was not removed!", 1, submission.getOrganizations().size());
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
+        
+        
+        severableWorkflowStep = workflowStepRepo.findOne(severableWorkflowStep.getId());
 
         // test remove pointer workflow step and make sure the workflow step is
         // no longer associated but still exists
@@ -129,7 +141,8 @@ public class SubmissionTest extends AbstractEntityTest {
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", 1, submission.getSubmissionWorkflowSteps().size());
         assertEquals("The workflow step was deleted!", 2, workflowStepRepo.count());
-
+        
+        
         // test remove field value
         submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.save(submission);
@@ -168,12 +181,16 @@ public class SubmissionTest extends AbstractEntityTest {
     public void cleanUp() {        
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();        
-        workflowStepRepo.deleteAll();
+        workflowStepRepo.findAll().forEach(workflowStep -> {
+        	workflowStepRepo.delete(workflowStep);
+        });
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
-        organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
+        organizationRepo.findAll().forEach(organization -> {
+            organizationRepo.delete(organization);
+        });        
         embargoRepo.deleteAll();
         userRepo.deleteAll();        
         attachmentRepo.deleteAll();

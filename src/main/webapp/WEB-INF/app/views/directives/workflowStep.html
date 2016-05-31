@@ -1,17 +1,17 @@
 <div id="{{::query}}" class="panel panel-default">
-  <div>
-    <div ng-click="toggleExpanded()" class="orderable-panel-bar" ng-class="{'expanded': expanded}">
-      <div class="panel-selection"><img ng-if="loading" class="loader" src="resources/images/ajax-loader.gif" /></div>
-      <span ng-transclude></span>
-    </div>
-    <div class="accordion-order-box">
-      <a ng-click="reorderUp($index)" href="#"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></a>
-      <a ng-click="reorderDown($index)" href="#"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></a>
-    </div>
-  </div>
-
-  <div class="panel-body" ng-class="{'expanded': expanded}">
-    <div ng-include="html" class="panel-content-wrapper" onload="loaded()"></div>
-  </div>
-
+	<div ng-click="toggleExpanded()" class="panel-heading orderable-panel-bar" ng-class="{'expanded': expanded}">
+		<div class="accordion-order-box pull-right" ng-click="$event.stopPropagation()">
+			<div ng-click="reorderUp($index)">
+				<span  class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+			</div>
+			<div ng-click="reorderDown($index)">
+				<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="panel-selection"><img ng-if="loading" class="loader" src="resources/images/ajax-loader.gif" /></div>
+		<span ng-transclude></span>
+	</div>
+	<div class="panel-body" ng-class="{'expanded': expanded}">
+		<div ng-include="html" class="panel-content-wrapper" onload="loaded()"></div>
+	</div>
 </div>

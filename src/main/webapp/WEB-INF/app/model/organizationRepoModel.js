@@ -4,19 +4,14 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	var OrganizationRepo = function(futureData) {
 		self = this;
-
 		//This causes our model to extend AbstractModel
 		angular.extend(self, AbstractModel);
-		
 		self.unwrap(self, futureData);
-		
 	};
-		
-	OrganizationRepo.data = null;
-	
-	OrganizationRepo.listener = null;
 
-        OrganizationRepo.promise = null;
+	OrganizationRepo.data = null;
+	OrganizationRepo.listener = null;
+	OrganizationRepo.promise = null;
 
 	OrganizationRepo.newOrganization = {};
 
@@ -28,7 +23,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	OrganizationRepo.getNewOrganization = function() {
 		return OrganizationRepo.newOrganization;
-	}
+	};
 
 	OrganizationRepo.set = function(data) {
 		self.unwrap(self, data);
@@ -53,18 +48,66 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		}
 		else {
 			OrganizationRepo.data = new OrganizationRepo(newAllOrganizationsPromise);	
-		}
+		}	
 		
 		OrganizationRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
 			controller: 'organization', 
 			method: '',
 		});
-
+		
 		OrganizationRepo.set(OrganizationRepo.listener);
-
+		
+		// TODO: use this if wanting to eager load workflow and receive updates,
+		// else delete
+		// probably should just continue to lazy load workflow		
+//		WsApi.listen({
+//			endpoint: '/channel', 
+//			controller: 'organization/workflow', 
+//			method: '',
+//		}).then(null, null, function(data) {
+//		
+//			console.log(data);
+//			console.log(angular.element(data.body));
+//			
+//		});
+		
 		return OrganizationRepo.data;
 	
+	};
+
+	OrganizationRepo.findOrganizationById = function(id) {
+
+		var matchedOrganization = null;
+
+		angular.forEach(OrganizationRepo.data.list, function(orgToCompare) {
+			if(orgToCompare.id === id) {
+				matchedOrganization = orgToCompare;
+			}
+		});
+
+		return matchedOrganization;
+	};
+
+	OrganizationRepo.getOrganizationsWorkflow = function(org) {
+
+		var workflowStepsDefer = new $q.defer();
+
+		var workflowStepsPromise = WsApi.fetch({
+			endpoint: '/private/queue', 
+			controller: 'organization', 
+			method: org.id + '/worflow'
+		});
+
+		workflowStepsPromise.then(function(data) {
+			var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+			if(aggregateWorkflowSteps !== undefined) {
+				org.aggregateWorkflowSteps = aggregateWorkflowSteps;
+			}
+			workflowStepsDefer.resolve(org);
+		});
+
+		return workflowStepsDefer.promise;
 	};
 
 	OrganizationRepo.getChildren = function(id) {
@@ -95,6 +138,31 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		OrganizationRepo.resetNewOrganization();
 
 		return addOrganizationPromise;
+	};
+
+	OrganizationRepo.addWorkflowStep = function(org, workflowStepName) {
+
+		var addWorkflowStepDefer = $q.defer();
+		var addWorkflowStepPromise = WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': org.id+'/create-workflow-step',
+			'data': {
+				'name': workflowStepName,
+				'originating_organization_id': org.id,
+				'overrideable': true
+			}
+		});
+
+		addWorkflowStepPromise.then(function(rawRes) {
+			var newWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
+			addWorkflowStepDefer.resolve(newWorkflowStep);
+			angular.forEach(OrganizationRepo.data.list, function(org) {
+				OrganizationRepo.getOrganizationsWorkflow(org);
+			});			
+		});
+
+		return addWorkflowStepDefer.promise;
 
 	};
 
@@ -112,9 +180,29 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return updateOrganizationPromise;
 
 	};
-        
-    OrganizationRepo.ready = function() {
-                return OrganizationRepo.promise;
+	
+	OrganizationRepo.updateWorkflowStep = function(requestingOrganization, workflowStepToUpdate) {
+		var updateWorkflowStepDefer = $q.defer();
+		var updateWorkflowStepPromise = WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': requestingOrganization.id+'/update-workflow-step',
+			'data': workflowStepToUpdate
+		});
+
+		updateWorkflowStepPromise.then(function(rawRes) {
+			var updatedWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
+			updateWorkflowStepDefer.resolve(updatedWorkflowStep);
+			angular.forEach(OrganizationRepo.data.list, function(org) {
+				OrganizationRepo.getOrganizationsWorkflow(org);
+			});			
+		});
+
+		return updateWorkflowStepDefer.promise;
+	}
+
+	OrganizationRepo.ready = function() {
+        return OrganizationRepo.promise;
 	};
 
 	OrganizationRepo.listen = function() {
