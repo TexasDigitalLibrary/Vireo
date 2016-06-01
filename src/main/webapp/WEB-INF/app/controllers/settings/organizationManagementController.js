@@ -36,6 +36,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};
+
+                $scope.deleteWorkflowStep = function(requestingOrganization, workflowStepId) {
+                    console.info('should delete!!');
+		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
 			OrganizationRepo.updateWorkflowStep($scope.selectedOrganization, workflowStepToUpdate).then(function(updatedWorkflowStep) {
