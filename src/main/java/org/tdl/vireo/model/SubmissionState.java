@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -45,8 +49,9 @@ public class SubmissionState extends BaseEntity {
     @JsonProperty("isActive")
     private Boolean isActive;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE })
-    @JsonProperty("transitionSubmissionStates")
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionState.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private List<SubmissionState> transitionSubmissionStates;
 
     public SubmissionState() {

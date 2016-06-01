@@ -61,6 +61,14 @@ public class OrganizationController {
     public ApiResponse allOrganizations() {        
         return new ApiResponse(SUCCESS, getAll());
     }
+    
+    @ApiMapping("/get/{id}")
+    @Auth(role="MANAGER")
+    @Transactional
+    public ApiResponse getOrganization(@ApiVariable String id) {        
+        Organization org = organizationRepo.findOne(Long.parseLong(id));
+        return new ApiResponse(SUCCESS, org);
+    }
 
     @ApiMapping("/create")
     @Auth(role="MANAGER")

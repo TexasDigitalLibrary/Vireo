@@ -89,25 +89,37 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return matchedOrganization;
 	};
 
-	OrganizationRepo.getOrganizationsWorkflow = function(org) {
+	OrganizationRepo.lazyFetch = function(orgId) {
 
-		var workflowStepsDefer = new $q.defer();
+		var fetchedOrgDefer = new $q.defer();
 
-		var workflowStepsPromise = WsApi.fetch({
+		var getOrgPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
 			controller: 'organization', 
-			method: org.id + '/worflow'
+			method: 'get/' + orgId
 		});
 
-		workflowStepsPromise.then(function(data) {
-			var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
-			if(aggregateWorkflowSteps !== undefined) {
-				org.aggregateWorkflowSteps = aggregateWorkflowSteps;
-			}
-			workflowStepsDefer.resolve(org);
+		getOrgPromise.then(function(rawApiResponse) {
+			
+			var fetchedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
+
+			var workflowStepsPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'organization', 
+				method: fetchedOrg.id + '/worflow'
+			});
+
+			workflowStepsPromise.then(function(data) {
+				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+				if(aggregateWorkflowSteps !== undefined) {
+					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
+				}
+				fetchedOrgDefer.resolve(fetchedOrg);
+			});
+
 		});
 
-		return workflowStepsDefer.promise;
+		return fetchedOrgDefer.promise;
 	};
 
 	OrganizationRepo.getChildren = function(id) {

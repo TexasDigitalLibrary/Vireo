@@ -11,9 +11,9 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
     $scope.newOrganization = OrganizationRepo.getNewOrganization();
 
     $scope.setSelectedOrganization = function(organization) {
-        OrganizationRepo.getOrganizationsWorkflow(organization).then(function(orgWithSteps) {
-            $scope.selectedOrganization = orgWithSteps;
-            $scope.newOrganization.parent = organization;    
+        OrganizationRepo.lazyFetch(organization.id).then(function(fetchedOrg) {
+            $scope.selectedOrganization = fetchedOrg;
+            $scope.newOrganization.parent = fetchedOrg;    
         });
     };
 
