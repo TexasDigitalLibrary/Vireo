@@ -363,76 +363,111 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
  
     @Test
-    public void testMaintainFieldOrderWhenOverriding() {
+    public void testMaintainFieldOrderWhenOverriding() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
+        
+        // this test calls for adding a single workflowstep to the parent organization
+        workflowStepRepo.delete(workflowStep);
       
     	Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
     	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
     	
-    	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-    	
     	parentOrganization.addChildOrganization(organization);
     	parentOrganization = organizationRepo.save(parentOrganization);
     	
-    	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
     	organization = organizationRepo.findOne(organization.getId());
       
     	
-    	Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
+    	Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
     	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
     	
     	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+    	organization = organizationRepo.findOne(organization.getId());
+      
     	
-    	organization.addChildOrganization(grandChildOrganization);
-    	organization = organizationRepo.save(organization);
+    	Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+    	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
     	
+    	greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
     	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
     	
       
-    	
-    	Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
-    	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-    	
-    	greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
-    	
-    	grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
-    	grandChildOrganization = organizationRepo.save(grandChildOrganization);
-    	
-    	greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
-    	
-      
-    	Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+    	Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
     	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
     	
     	anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
-    	
-    	grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
-    	grandChildOrganization = organizationRepo.save(grandChildOrganization);;
-    	
-    	anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+    	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
     	
     	
     	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
     	
-    	
     	WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
     	
-//    	FieldProfile fp1 = 
     	
-    	fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
+    	FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+    	
+    	FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
     	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
-    	// violates unique constraints, needs either different workflowStep or fieldPredicate
-//    	FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-//    	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
-//    	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+    	FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+    	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
-    	// violates unique constraints, needs either different workflowStep or fieldPredicate
-//    	FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-//    	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
-//    	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+    	FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+    	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
     	
+    	
+    	
+    	
+    	//now, override the second step at the grandchild and ensure that the new step is the second step at the grandchild and at the great grandchildren
+    	fp2.setHelp("help!");
+    	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+    	FieldProfile fp2Updated = fieldProfileRepo.update(fp2, grandChildOrganization);
+    	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+    	
+    	
+    	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+    	organization = organizationRepo.findOne(organization.getId());
+    	
+    	for(WorkflowStep wor : parentOrganization.getAggregateWorkflowSteps())
+    	{
+    	    System.out.println("Parent's Step " + wor.getId());
+    	    for(FieldProfile pro : wor.getAggregateFieldProfiles())
+            {
+                System.out.println("\t\tParent Step's field " + pro.getId());
+            }
+    	}
+    	
+    	//just made field profiles on the workflow step, are they on the organization?
+    	for(WorkflowStep wor : organization.getAggregateWorkflowSteps())
+    	{
+            System.out.println("Org's Step " + wor.getId());
+
+            for(FieldProfile pro : wor.getAggregateFieldProfiles())
+            {
+                System.out.println("\t\tOrg Step's field" + pro.getId());
+            }
+    	}
+        
+    	for(WorkflowStep wor : grandChildOrganization.getAggregateWorkflowSteps())
+        {
+            System.out.println("Grandchild's Step " + wor.getId());
+
+        	for(FieldProfile pro : wor.getAggregateFieldProfiles())
+        	{
+        	    System.out.println("\t\tGrandchild Step's field" + pro.getId());
+        	}
+        }
+    	
+    	WorkflowStep newWSWithNewFPViaAggregation = grandChildOrganization.getAggregateWorkflowSteps().get(0);
+        WorkflowStep newWSWithNewFPViaOriginals = grandChildOrganization.getOriginalWorkflowSteps().get(0);
+        assertEquals("The new aggregated workflow step on the grandchild org was not the one the grandchild org just originated!", newWSWithNewFPViaOriginals, newWSWithNewFPViaAggregation);
+        
+    	
+    	assertEquals("Updated field profile was in the wrong order!", fp2Updated.getId(), grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1).getId());
     	
     }
     
