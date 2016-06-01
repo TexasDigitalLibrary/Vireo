@@ -742,7 +742,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testReorderWithInheritance() {
+    public void testReorderAggregateWorkflowStepsWithInheritance() {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
