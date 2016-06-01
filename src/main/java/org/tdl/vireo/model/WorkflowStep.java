@@ -6,6 +6,7 @@ import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -219,8 +220,6 @@ public class WorkflowStep extends BaseEntity {
         if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
         	getAggregateFieldProfiles().add(aggregateFieldProfile);
         }
-    	
-		// TODO: recurively add to aggregateFieldProfiles?
     }
 
     /**
@@ -229,11 +228,14 @@ public class WorkflowStep extends BaseEntity {
      */
     public void removeAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
     	getAggregateFieldProfiles().remove(aggregateFieldProfile);
-    	
-    	// TODO: recurively remove from aggregateFieldProfiles?
     }
     
-    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
     public boolean replaceAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {    	
     	boolean res = false;
     	int pos = 0;
@@ -247,6 +249,31 @@ public class WorkflowStep extends BaseEntity {
     		pos++;
     	}
     	return res;
+    }
+    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
+    public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
+        boolean res = false;
+        int i = 0, pos1 = 0, pos2 = 0;
+        for(FieldProfile fp : getAggregateFieldProfiles()) { 
+            if(fp.getId().equals(fp1.getId())) {
+                pos1 = i;
+            }
+            if(fp.getId().equals(fp2.getId())) {
+                pos2 = i;
+            }
+            i++;
+        }
+        if(pos1 >= 0 && pos2 >= 0) {
+            Collections.swap(getAggregateFieldProfiles(), pos1, pos2);
+            res = true;
+        }
+        return res;
     }
     
     /**
@@ -282,16 +309,4 @@ public class WorkflowStep extends BaseEntity {
         notes.clear();
     }
     
-    public boolean descendsFrom(WorkflowStep workflowStep) {
-        if(getOriginatingWorkflowStep() == null) {
-            return false;
-        }
-        else if(getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
-            return true;
-        }
-        else { 
-            return getOriginatingWorkflowStep().descendsFrom(workflowStep);
-        }
-    }
-
 }
