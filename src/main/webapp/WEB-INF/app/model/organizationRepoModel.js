@@ -9,6 +9,8 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		self.unwrap(self, futureData);
 	};
 
+	var selectedOrganization = {};
+
 	OrganizationRepo.data = null;
 	OrganizationRepo.listener = null;
 	OrganizationRepo.promise = null;
@@ -34,9 +36,9 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		if(OrganizationRepo.promise) return OrganizationRepo.data;
 
 		var newAllOrganizationsPromise = WsApi.fetch({
-				endpoint: '/private/queue', 
-				controller: 'organization', 
-				method: 'all',
+			endpoint: '/private/queue', 
+			controller: 'organization', 
+			method: 'all',
 		});
 
 		OrganizationRepo.promise = newAllOrganizationsPromise;
@@ -61,20 +63,34 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		// TODO: use this if wanting to eager load workflow and receive updates,
 		// else delete
 		// probably should just continue to lazy load workflow		
-//		WsApi.listen({
-//			endpoint: '/channel', 
-//			controller: 'organization/workflow', 
-//			method: '',
-//		}).then(null, null, function(data) {
-//		
-//			console.log(data);
-//			console.log(angular.element(data.body));
-//			
-//		});
+		//		WsApi.listen({
+		//			endpoint: '/channel', 
+		//			controller: 'organization/workflow', 
+		//			method: '',
+		//		}).then(null, null, function(data) {
+		//		
+		//			console.log(data);
+		//			console.log(angular.element(data.body));
+		//			
+		//		});
 		
 		return OrganizationRepo.data;
-	
+		
 	};
+
+	OrganizationRepo.getSelectedOrganization = function() {
+		return selectedOrganization;
+	}
+
+	OrganizationRepo.setSelectedOrganization = function(organization){
+		OrganizationRepo.lazyFetch(organization.id).then(function(fetchedOrg) {
+			var keys = Object.keys(fetchedOrg);
+			angular.forEach(keys, function(key){
+				selectedOrganization[key] = fetchedOrg[key];
+			});
+		});
+		return selectedOrganization;
+	}
 
 	OrganizationRepo.findOrganizationById = function(id) {
 
@@ -125,26 +141,26 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	OrganizationRepo.getChildren = function(id) {
 
 		var childOrganizationsPromise = WsApi.fetch({
-				endpoint: '/private/queue', 
-				controller: 'organization', 
-				method: 'get-children/' + id,
+			endpoint: '/private/queue', 
+			controller: 'organization', 
+			method: 'get-children/' + id,
 		});
 
 		return childOrganizationsPromise;
-	
+		
 	};
 
 	OrganizationRepo.add = function() {
 
 		var addOrganizationPromise = WsApi.fetch({
-				'endpoint': '/private/queue', 
-				'controller': 'organization', 
-				'method': 'create',
-				'data': {
-					"name": OrganizationRepo.newOrganization.name, 
-					"category": OrganizationRepo.newOrganization.category,
-					"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
-				}
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': 'create',
+			'data': {
+				"name": OrganizationRepo.newOrganization.name, 
+				"category": OrganizationRepo.newOrganization.category,
+				"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
+			}
 		});
 
 		OrganizationRepo.resetNewOrganization();
@@ -181,12 +197,12 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	OrganizationRepo.update = function(organization) {
 
 		var updateOrganizationPromise = WsApi.fetch({
-				'endpoint': '/private/queue', 
-				'controller': 'organization', 
-				'method': 'update',
-				'data': {
-					"organization": organization
-				}
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': 'update',
+			'data': {
+				"organization": organization
+			}
 		});
 
 		return updateOrganizationPromise;
@@ -214,7 +230,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	}
 
 	OrganizationRepo.ready = function() {
-        return OrganizationRepo.promise;
+		return OrganizationRepo.promise;
 	};
 
 	OrganizationRepo.listen = function() {
