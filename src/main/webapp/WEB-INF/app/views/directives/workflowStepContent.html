@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
   		<!--ng-click="updateConfigurableSettings('application', 'submissions_open')"-->
   		<toggleButton 
 			label="Workflow Step is Overridable:"
@@ -8,7 +8,7 @@
 			ng-click="updateWorkflowStep(step)">
 		</toggleButton>
 	</div>
-  	<div class="col-md-6">
+  	<div class="col-md-4">
   		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
 				key-down="confirmEdit(event, prop)"-->
   		<textField 
@@ -17,12 +17,14 @@
 			hint="'My Workflow Step's name'">
 		</textField>
   	</div>
+  	<div class="col-md-4">
+  		<button class="btn btn-default ng-click="deleteWorkflowStep('a','b')">Delete Field Profile</button>
+  	</div>
 </div>
 <hr>
 <div class="row">
   	<div class="col-md-6">
   		<button class="btn btn-default">Add Field Profile</button>
-  		<button class="btn btn-default ng-click="deleteWorkflowStep('a','b')">Delete Field Profile</button>
 
   		<br><br><br>
 
