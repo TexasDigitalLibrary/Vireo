@@ -87,7 +87,7 @@ public class OrganizationController {
         
         organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
         
@@ -134,8 +134,7 @@ public class OrganizationController {
     public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
-        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
-        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, org.getWorkflow()));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, org));
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
     

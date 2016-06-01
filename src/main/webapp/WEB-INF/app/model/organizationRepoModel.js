@@ -31,6 +31,17 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		self.unwrap(self, data);
 	};
 
+	OrganizationRepo.updateListener = WsApi.listen({
+		endpoint: '/channel', 
+		controller: 'organization', 
+		method: '',
+	}).then(null,null,function(rawApiResponse){
+		var broadcastedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
+		if (broadcastedOrg.id == selectedOrganization.id) {
+			OrganizationRepo.setSelectedOrganization(broadcastedOrg);
+		}
+	});
+
 	OrganizationRepo.get = function() {
 
 		if(OrganizationRepo.promise) return OrganizationRepo.data;
@@ -54,25 +65,11 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		
 		OrganizationRepo.listener = WsApi.listen({
 			endpoint: '/channel', 
-			controller: 'organization', 
+			controller: 'organizations', 
 			method: '',
 		});
 		
 		OrganizationRepo.set(OrganizationRepo.listener);
-		
-		// TODO: use this if wanting to eager load workflow and receive updates,
-		// else delete
-		// probably should just continue to lazy load workflow		
-		//		WsApi.listen({
-		//			endpoint: '/channel', 
-		//			controller: 'organization/workflow', 
-		//			method: '',
-		//		}).then(null, null, function(data) {
-		//		
-		//			console.log(data);
-		//			console.log(angular.element(data.body));
-		//			
-		//		});
 		
 		return OrganizationRepo.data;
 		
@@ -84,10 +81,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	OrganizationRepo.setSelectedOrganization = function(organization){
 		OrganizationRepo.lazyFetch(organization.id).then(function(fetchedOrg) {
-			var keys = Object.keys(fetchedOrg);
-			angular.forEach(keys, function(key){
-				selectedOrganization[key] = fetchedOrg[key];
-			});
+			extendWithOverwrite(selectedOrganization, fetchedOrg);
 		});
 		return selectedOrganization;
 	}
@@ -183,11 +177,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		});
 
 		addWorkflowStepPromise.then(function(rawRes) {
-			var newWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
-			addWorkflowStepDefer.resolve(newWorkflowStep);
-			angular.forEach(OrganizationRepo.data.list, function(org) {
-				OrganizationRepo.getOrganizationsWorkflow(org);
-			});			
+			addWorkflowStepDefer.resolve();
 		});
 
 		return addWorkflowStepDefer.promise;
@@ -236,6 +226,13 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	OrganizationRepo.listen = function() {
 		return OrganizationRepo.listener;
 	};
+
+	var extendWithOverwrite = function(targetObj, srcObj) {
+		var keys = Object.keys(srcObj);
+		angular.forEach(keys, function(key){
+			targetObj[key] = srcObj[key];
+		});
+	}
 	
 	return OrganizationRepo;
 	

@@ -12,7 +12,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
 				//update the parent scoped selected organization
-				$scope.setSelectedOrganization(organization);
+				$scope.eetSelectedOrganization(organization);
 			});
         };
 
@@ -31,8 +31,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 
 		$scope.addWorkflowStep = function(newWorkflowStepName) {
-			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function(newWorkflowStep) {
-				$scope.managedOrganization.aggregateWorkflowSteps.push(newWorkflowStep);
+			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function() {
+				// $scope.managedOrganization.aggregateWorkflowSteps.push(newWorkflowStep);
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};
