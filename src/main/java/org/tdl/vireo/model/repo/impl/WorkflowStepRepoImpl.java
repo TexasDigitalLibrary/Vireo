@@ -32,7 +32,42 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         organizationRepo.save(originatingOrganization);
         return workflowStepRepo.findOne(workflowStep.getId());
     }
-
+    
+    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
+       
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+            
+            for(WorkflowStep ws : requestingOrganization.getAggregateWorkflowSteps()) {
+                if(ws.getId().equals(workflowStep.getId())) {
+                    ws.swapAggregateFieldProfile(fp1, fp2);
+                    workflowStep = ws;
+                    break;
+                }
+            }
+            
+            
+        }
+        else {
+            
+            workflowStep = update(workflowStep, requestingOrganization);
+            
+            requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+            
+            for(WorkflowStep ws : requestingOrganization.getAggregateWorkflowSteps()) {
+                if(ws.getId().equals(workflowStep.getId())) {
+                    ws.swapAggregateFieldProfile(fp1, fp2);
+                    workflowStep = ws;
+                    break;
+                }
+            }
+            
+        }
+        
+        requestingOrganization = organizationRepo.save(requestingOrganization);
+        
+        return workflowStep;
+    }
+    
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
         Organization originatingOrganization = workflowStep.getOriginatingOrganization();
@@ -72,35 +107,35 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	Long originalWorkflowStepId = workflowStep.getId();
             	
             	
-            	List<FieldProfile> fieldProfiles = new ArrayList<FieldProfile>();
-            	List<FieldProfile> fields = new ArrayList<FieldProfile>();
+            	List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
+            	List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
             	
             	for(FieldProfile fp : workflowStep.getOriginalFieldProfiles()) {
-            		fieldProfiles.add(fp);            		
+            		originalFieldProfiles.add(fp);            		
             	}
             	
 				for(FieldProfile fp : workflowStep.getAggregateFieldProfiles()) {
-					fields.add(fp);
+					aggregateFieldProfiles.add(fp);
             	}
             	
-				workflowStep.setOriginalFieldProfiles(new ArrayList<FieldProfile>());
-				workflowStep.setAggregateFieldProfiles(new ArrayList<FieldProfile>());
-            	
+				
             	em.detach(workflowStep);
                 workflowStep.setId(null);
                 
                 
                 WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
-
+                
                 workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
                 workflowStep.setOriginatingOrganization(requestingOrganization);
                 
                 
-                workflowStep.setOriginalFieldProfiles(fieldProfiles);
-                workflowStep.setAggregateFieldProfiles(fields);
+                workflowStep.setOriginalFieldProfiles(originalFieldProfiles);
+                workflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
+                
                 
                 
                 workflowStep = workflowStepRepo.save(workflowStep);
+                
                 
                 
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, originalWorkflowStep)) {
