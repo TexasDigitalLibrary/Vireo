@@ -813,8 +813,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
         
         
-        parentOrganization.swapAggregateWorkflowStep(s1, s2);
-        parentOrganization = organizationRepo.save(parentOrganization);
+        parentOrganization = organizationRepo.reorderWorkflowSteps(parentOrganization, s1, s2);
         
         
         organization = organizationRepo.findOne(organization.getId());
@@ -848,8 +847,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
         
         
-        parentOrganization.swapAggregateWorkflowStep(s2, s3);
-        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        parentOrganization = organizationRepo.reorderWorkflowSteps(parentOrganization, s2, s3);
         
         
         organization = organizationRepo.findOne(organization.getId());
@@ -883,9 +882,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
         
         
-        organization.swapAggregateWorkflowStep(s1, s3);
-        organization = organizationRepo.save(organization);
-        
+        organization = organizationRepo.reorderWorkflowSteps(organization, s1, s3);
+
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());

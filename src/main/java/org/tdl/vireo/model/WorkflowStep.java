@@ -6,6 +6,7 @@ import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
@@ -259,7 +260,7 @@ public class WorkflowStep extends BaseEntity {
     public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
         int i = 0, pos1 = 0, pos2 = 0;
-        for(FieldProfile fp : getAggregateFieldProfiles()) {         
+        for(FieldProfile fp : getAggregateFieldProfiles()) { 
             if(fp.getId().equals(fp1.getId())) {
                 pos1 = i;
             }
@@ -269,10 +270,7 @@ public class WorkflowStep extends BaseEntity {
             i++;
         }
         if(pos1 >= 0 && pos2 >= 0) {
-            getAggregateFieldProfiles().remove(fp1);
-            getAggregateFieldProfiles().remove(fp2);
-            getAggregateFieldProfiles().add(pos1, fp2);
-            getAggregateFieldProfiles().add(pos2, fp1);
+            Collections.swap(getAggregateFieldProfiles(), pos1, pos2);
             res = true;
         }
         return res;
@@ -311,16 +309,4 @@ public class WorkflowStep extends BaseEntity {
         notes.clear();
     }
     
-    public boolean descendsFrom(WorkflowStep workflowStep) {
-        if(getOriginatingWorkflowStep() == null) {
-            return false;
-        }
-        else if(getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
-            return true;
-        }
-        else { 
-            return getOriginatingWorkflowStep().descendsFrom(workflowStep);
-        }
-    }
-
 }

@@ -244,6 +244,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
+        
+        organization = organizationRepo.findOne(organization.getId());
               
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -414,11 +416,13 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testReorderAggregateFieldProfiles() {
+    public void testReorderAggregateFieldProfiles() throws WorkflowStepNonOverrideableException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
-              
+        
+        organization = organizationRepo.findOne(organization.getId());
+         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         
@@ -447,8 +451,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        
-                
+             
         
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
@@ -465,6 +468,10 @@ public class FieldProfileTest extends AbstractEntityTest {
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
+        
+        Long fp1Id = fp1.getId();
+        Long fp2Id = fp2.getId();
+        Long fp3Id = fp3.getId();
         
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -500,9 +507,14 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
         
         
-        parentOrganization.getAggregateWorkflowSteps().get(0).swapAggregateFieldProfile(fp1, fp2);
-        parentOrganization = organizationRepo.save(parentOrganization);
         
+        fp1 = fieldProfileRepo.findOne(fp1Id);
+        fp2 = fieldProfileRepo.findOne(fp2Id);
+        
+        workflowStep = workflowStepRepo.reorderFieldProfiles(parentOrganization, workflowStep, fp1, fp2);
+        
+
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
@@ -534,9 +546,13 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
         
         
-        parentOrganization.getAggregateWorkflowSteps().get(0).swapAggregateFieldProfile(fp2, fp3);
-        parentOrganization = organizationRepo.save(parentOrganization);
+        fp2 = fieldProfileRepo.findOne(fp2Id);
+        fp3 = fieldProfileRepo.findOne(fp3Id);
         
+        workflowStep = workflowStepRepo.reorderFieldProfiles(parentOrganization, workflowStep, fp2, fp3);
+        
+
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
@@ -567,6 +583,67 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
         assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
         
+        
+        fp1 = fieldProfileRepo.findOne(fp1Id);
+        fp3 = fieldProfileRepo.findOne(fp3Id);
+        
+        // creates a new workflow step
+        workflowStepRepo.reorderFieldProfiles(organization, workflowStep, fp1, fp3);
+        
+
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        
+        WorkflowStep newWorkflowStep = organization.getOriginalWorkflowSteps().get(0);
+         
+        
+        
+        assertEquals("The parentOrganization's original workflow step's first original field profile was not as expected!", fp1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(0));
+        assertEquals("The parentOrganization's original workflow step's second original field profile was not as expected!", fp2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(1));
+        assertEquals("The parentOrganization's original workflow step's third original field profile was not as expected!", fp3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(2));
+       
+        assertEquals("The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
+        assertEquals("The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
+        assertEquals("The parentOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
+        
+        // make sure new workflow step contains all field profiles
+        assertTrue("The organization's original workflow step's contains first field profile!", organization.getOriginalWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp1));
+        assertTrue("The organization's original workflow step's contains second field profile!!", organization.getOriginalWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("The organization's original workflow step's contains third field profile!!", organization.getOriginalWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        
+        assertEquals("The organization aggregate workflow steps does not have new workflow step from reorder on non originating organization!", newWorkflowStep, organization.getAggregateWorkflowSteps().get(0));
+        
+        assertEquals("The organization's aggregate workflow step's first aggregate field profile was not as expected!", fp1, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
+        assertEquals("The organization's aggregate workflow step's second aggregate field profile was not as expected!", fp3, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
+        assertEquals("The organization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
+        
+        
+        assertEquals("The grandChildOrganization did not inherit new workflow step from reorder on non originating organization!", newWorkflowStep, grandChildOrganization.getAggregateWorkflowSteps().get(0));
+        
+        assertEquals("The grandChildOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
+        assertEquals("The grandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp3, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
+        assertEquals("The grandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
+        
+        
+        assertEquals("The greatGrandChildOrganization did not inherit new workflow step from reorder on non originating organization!", newWorkflowStep, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0));
+        
+        assertEquals("The greatGrandChildOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp1, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
+        assertEquals("The greatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp3, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
+        assertEquals("The greatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
+        
+        
+        assertEquals("The anotherGreatGrandChildOrganization did not inherit new workflow step from reorder on non originating organization!", newWorkflowStep, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0));
+        
+        assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
+        assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
+        assertEquals("The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
+        
     }
     
     @Test
@@ -575,14 +652,11 @@ public class FieldProfileTest extends AbstractEntityTest {
     	// this test calls for adding a single workflowstep to the parent organization
     	workflowStepRepo.delete(workflowStep);
     	
+    	organization = organizationRepo.findOne(organization.getId());
     	
     	Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
     	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-    	
-    	
-    	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-    	organization = organizationRepo.findOne(organization.getId());
-    	
+    	    	
     	parentOrganization.addChildOrganization(organization);
     	parentOrganization = organizationRepo.save(parentOrganization);
     	

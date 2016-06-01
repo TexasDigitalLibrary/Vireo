@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
 	
@@ -44,6 +43,11 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         parent.getAggregateWorkflowSteps().forEach(ws -> {
             organization.addAggregateWorkflowStep(ws);
         });
+        return organizationRepo.save(organization);
+    }
+    
+    public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
+        organization.swapAggregateWorkflowStep(ws1, ws2);
         return organizationRepo.save(organization);
     }
 
