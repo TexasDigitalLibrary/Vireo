@@ -6,6 +6,7 @@ import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -49,7 +50,7 @@ public class Organization extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregateWorkflowSteps_order", "aggregate_workflow_steps_id" }))
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
     
@@ -183,7 +184,7 @@ public class Organization extends BaseEntity {
     	replaceAggregateWorkflowStep(ws1, ws2);
     	return res;
     }
-
+    
     /**
      * @return the aggregateWorkflowSteps
      */
@@ -236,9 +237,42 @@ public class Organization extends BaseEntity {
                 getAggregateWorkflowSteps().remove(ws1);
                 getAggregateWorkflowSteps().add(pos, ws2);
                 res = true;
+                
+                getChildrenOrganizations().forEach(childOrganization -> {
+                    childOrganization.replaceAggregateWorkflowStep(ws1, ws2);
+                });
                 break;
             }
             pos++;
+        }
+        return res;
+    }
+    
+    /**
+     * 
+     * @param ws1
+     * @param ws2
+     * @return
+     */
+    public boolean swapAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
+        boolean res = false;
+        int i = 0, pos1 = -1, pos2 = -1;
+        for(WorkflowStep ws : getAggregateWorkflowSteps()) {         
+            if(ws.getId().equals(ws1.getId())) {
+                pos1 = i;
+            }
+            if(ws.getId().equals(ws2.getId())) {
+                pos2 = i;
+            }
+            i++;
+        }
+        if(pos1 >= 0 && pos2 >= 0) {
+            Collections.swap(getAggregateWorkflowSteps(), pos1, pos2);
+            res = true;
+            
+            getChildrenOrganizations().forEach(childOrganization -> {
+                childOrganization.swapAggregateWorkflowStep(ws1, ws2);
+            });
         }
         return res;
     }

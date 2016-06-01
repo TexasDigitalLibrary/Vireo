@@ -419,9 +419,6 @@ public class FieldProfileTest extends AbstractEntityTest {
     	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
     	
-    	
-    	
-    	
     	//now, override the second step at the grandchild and ensure that the new step is the second step at the grandchild and at the great grandchildren
     	fp2.setHelp("help!");
     	grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
@@ -432,35 +429,6 @@ public class FieldProfileTest extends AbstractEntityTest {
     	parentOrganization = organizationRepo.findOne(parentOrganization.getId());
     	organization = organizationRepo.findOne(organization.getId());
     	
-    	for(WorkflowStep wor : parentOrganization.getAggregateWorkflowSteps())
-    	{
-    	    System.out.println("Parent's Step " + wor.getId());
-    	    for(FieldProfile pro : wor.getAggregateFieldProfiles())
-            {
-                System.out.println("\t\tParent Step's field " + pro.getId());
-            }
-    	}
-    	
-    	//just made field profiles on the workflow step, are they on the organization?
-    	for(WorkflowStep wor : organization.getAggregateWorkflowSteps())
-    	{
-            System.out.println("Org's Step " + wor.getId());
-
-            for(FieldProfile pro : wor.getAggregateFieldProfiles())
-            {
-                System.out.println("\t\tOrg Step's field" + pro.getId());
-            }
-    	}
-        
-    	for(WorkflowStep wor : grandChildOrganization.getAggregateWorkflowSteps())
-        {
-            System.out.println("Grandchild's Step " + wor.getId());
-
-        	for(FieldProfile pro : wor.getAggregateFieldProfiles())
-        	{
-        	    System.out.println("\t\tGrandchild Step's field" + pro.getId());
-        	}
-        }
     	
     	WorkflowStep newWSWithNewFPViaAggregation = grandChildOrganization.getAggregateWorkflowSteps().get(0);
         WorkflowStep newWSWithNewFPViaOriginals = grandChildOrganization.getOriginalWorkflowSteps().get(0);

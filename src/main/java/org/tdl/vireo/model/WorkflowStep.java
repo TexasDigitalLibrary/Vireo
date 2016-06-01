@@ -233,7 +233,12 @@ public class WorkflowStep extends BaseEntity {
     	// TODO: recurively remove from aggregateFieldProfiles?
     }
     
-    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
     public boolean replaceAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {    	
     	boolean res = false;
     	int pos = 0;
@@ -242,11 +247,45 @@ public class WorkflowStep extends BaseEntity {
     			getAggregateFieldProfiles().remove(fp1);
     			getAggregateFieldProfiles().add(pos, fp2);
     			res = true;
+    			
+    			 // apply inheritance
+    			
     			break;
     		}
     		pos++;
     	}
     	return res;
+    }
+    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
+    public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
+        boolean res = false;
+        int i = 0, pos1 = 0, pos2 = 0;
+        for(FieldProfile fp : getAggregateFieldProfiles()) {         
+            if(fp.getId().equals(fp1.getId())) {
+                pos1 = i;
+            }
+            if(fp.getId().equals(fp2.getId())) {
+                pos2 = i;
+            }
+            i++;
+        }
+        if(pos1 >= 0 && pos2 >= 0) {
+            getAggregateFieldProfiles().remove(fp1);
+            getAggregateFieldProfiles().remove(fp2);
+            getAggregateFieldProfiles().add(pos1, fp2);
+            getAggregateFieldProfiles().add(pos2, fp1);
+            res = true;
+            
+            // apply inheritance
+            
+        }
+        return res;
     }
     
     /**

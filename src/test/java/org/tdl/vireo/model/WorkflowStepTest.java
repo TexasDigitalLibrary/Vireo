@@ -741,6 +741,151 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("Great grandchild org didn't have u1 as the third step", u1.getId(), greatGrandChildOrganization.getAggregateWorkflowSteps().get(2).getId());
     }
     
+    @Test
+    public void testReorderWithInheritance() {
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+                
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+          
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        
+        WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep s2 = workflowStepRepo.create("Step 2", parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep s3 = workflowStepRepo.create("Step 3", parentOrganization);
+                
+        
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+    
+        
+        assertEquals("The parentOrganization's first original workflow step was not as expected!", s1, parentOrganization.getOriginalWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second original workflow step was not as expected!", s2, parentOrganization.getOriginalWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third original workflow step was not as expected!", s3, parentOrganization.getOriginalWorkflowSteps().get(2));
+        
+        assertEquals("The parentOrganization's first aggregate workflow step was not as expected!", s1, parentOrganization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second aggregate workflow step was not as expected!", s2, parentOrganization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third aggregate workflow step was not as expected!", s3, parentOrganization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The organization's first aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The organization's second aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The organization's third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The grandChildOrganization first aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The grandChildOrganization second aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The grandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The greatGrandChildOrganization first aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The greatGrandChildOrganization second aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The greatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The anotherGreatGrandChildOrganization first aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The anotherGreatGrandChildOrganization second aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        
+        parentOrganization.swapAggregateWorkflowStep(s1, s2);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        assertEquals("The parentOrganization's first original workflow step was not as expected!", s1, parentOrganization.getOriginalWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second original workflow step was not as expected!", s2, parentOrganization.getOriginalWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third original workflow step was not as expected!", s3, parentOrganization.getOriginalWorkflowSteps().get(2));
+        
+        assertEquals("The parentOrganization's first aggregate workflow step was not as expected!", s2, parentOrganization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second aggregate workflow step was not as expected!", s1, parentOrganization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third aggregate workflow step was not as expected!", s3, parentOrganization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The organization's first aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The organization's second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The organization's third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The grandChildOrganization first aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The grandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The grandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The greatGrandChildOrganization first aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The greatGrandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The greatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The anotherGreatGrandChildOrganization first aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The anotherGreatGrandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(2));
+        
+        
+        parentOrganization.swapAggregateWorkflowStep(s2, s3);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        assertEquals("The parentOrganization's first original workflow step was not as expected!", s1, parentOrganization.getOriginalWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second original workflow step was not as expected!", s2, parentOrganization.getOriginalWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third original workflow step was not as expected!", s3, parentOrganization.getOriginalWorkflowSteps().get(2));
+        
+        assertEquals("The parentOrganization's first aggregate workflow step was not as expected!", s3, parentOrganization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The parentOrganization's second aggregate workflow step was not as expected!", s1, parentOrganization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The parentOrganization's third aggregate workflow step was not as expected!", s2, parentOrganization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The organization's first aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The organization's second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The organization's third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The grandChildOrganization first aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The grandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The grandChildOrganization third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The greatGrandChildOrganization first aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The greatGrandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The greatGrandChildOrganization third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
+        
+        assertEquals("The anotherGreatGrandChildOrganization first aggregate workflow step was not as expected!", s3, organization.getAggregateWorkflowSteps().get(0));
+        assertEquals("The anotherGreatGrandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
+        assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
+        
+        
+    
+    }
+    
     
     @Test
     public void testDeleteParentWorkflow() throws WorkflowStepNonOverrideableException {
