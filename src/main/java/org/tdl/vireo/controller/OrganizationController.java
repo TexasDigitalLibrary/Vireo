@@ -144,18 +144,15 @@ public class OrganizationController {
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
         Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
         
-        WorkflowStep updatedWorkflowStep;
         try {
-            updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
-            return new ApiResponse(SUCCESS, updatedWorkflowStep);
+            workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(id))));
+            return new ApiResponse(SUCCESS);
         } catch (WorkflowStepNonOverrideableException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return new ApiResponse(ERROR, "Unable to update workflow step!");
         }
-        
-        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
-        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, requestingOrg.getWorkflow()));
         
     }
     

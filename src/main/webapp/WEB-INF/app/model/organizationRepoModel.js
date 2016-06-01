@@ -201,23 +201,21 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	OrganizationRepo.updateWorkflowStep = function(requestingOrganization, workflowStepToUpdate) {
 		var updateWorkflowStepDefer = $q.defer();
+		
 		var updateWorkflowStepPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
 			'method': requestingOrganization.id+'/update-workflow-step',
 			'data': workflowStepToUpdate
 		});
-
-		updateWorkflowStepPromise.then(function(rawRes) {
-			var updatedWorkflowStep = JSON.parse(rawRes.body).payload.WorkflowStep;
-			updateWorkflowStepDefer.resolve(updatedWorkflowStep);
-			angular.forEach(OrganizationRepo.data.list, function(org) {
-				OrganizationRepo.getOrganizationsWorkflow(org);
-			});			
+			console.log("FOO");
+		updateWorkflowStepPromise.then(function() {
+			updateWorkflowStepDefer.resolve();
+			console.log("BAR");
 		});
 
 		return updateWorkflowStepDefer.promise;
-	}
+	};
 
 	OrganizationRepo.ready = function() {
 		return OrganizationRepo.promise;
@@ -228,11 +226,18 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	};
 
 	var extendWithOverwrite = function(targetObj, srcObj) {
-		var keys = Object.keys(srcObj);
-		angular.forEach(keys, function(key){
+		var srcKeys = Object.keys(srcObj);
+		angular.forEach(srcKeys, function(key){
 			targetObj[key] = srcObj[key];
 		});
-	}
+		
+		var targetKeys = Object.keys(targetObj);
+		angular.forEach(targetKeys, function(key){
+			if(typeof srcObj[key] === undefined) {
+				delete targetObj[key];
+			}
+		});
+	};
 	
 	return OrganizationRepo;
 	
