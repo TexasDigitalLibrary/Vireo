@@ -882,10 +882,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("The anotherGreatGrandChildOrganization second aggregate workflow step was not as expected!", s1, organization.getAggregateWorkflowSteps().get(1));
         assertEquals("The anotherGreatGrandChildOrganization third aggregate workflow step was not as expected!", s2, organization.getAggregateWorkflowSteps().get(2));
         
-        
-    
     }
-    
     
     @Test
     public void testDeleteParentWorkflow() throws WorkflowStepNonOverrideableException {

@@ -240,6 +240,180 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
+    public void testInheritAndRemoveFieldProfiles() {
+        
+        // this test calls for adding a single workflowstep to the parent organization
+        workflowStepRepo.delete(workflowStep);
+              
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+        assertEquals("parentOrganization's workflow step has the incorrect number of field profiles!", 0, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().size());
+        assertEquals("parentOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 0, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        
+        assertEquals("organization's aggregate workflow step has the incorrect number of aggregate field profiles!", 0, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        
+        assertEquals("grandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 0, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        
+        
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        
+        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+        assertEquals("parentOrganization's workflow step has the incorrect number of field profiles!", 3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().size());
+        assertTrue("parentOrganization's workflow step's did not contain field profile 1!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp));
+        assertTrue("parentOrganization's workflow step's did not contain field profile 2!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2));
+        assertTrue("parentOrganization's workflow step's did not contain field profile 3!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp3));
+        
+        assertEquals("parentOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertTrue("parentOrganization's aggregate workflow step's did not contain field profile 1!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("parentOrganization's aggregate workflow step's did not contain field profile 2!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("parentOrganization's aggregate workflow step's did not contain field profile 3!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("organization's aggregate workflow step has the incorrect number of aggregate field profiles!", 3, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertTrue("organization's aggregate workflow step's did not contain field profile 1!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("organization's aggregate workflow step's did not contain field profile 2!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("organization's aggregate workflow step's did not contain field profile 3!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("grandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 3, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertTrue("grandChildOrganization's aggregate workflow step's did not contain field profile 1!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("grandChildOrganization's aggregate workflow step's did not contain field profile 2!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("grandChildOrganization's aggregate workflow step's did not contain field profile 3!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        
+        
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+        assertEquals("greatGrandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 3, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertTrue("greatGrandChildOrganization's aggregate workflow step's did not contain field profile 1!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("greatGrandChildOrganization's aggregate workflow step's did not contain field profile 2!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("greatGrandChildOrganization's aggregate workflow step's did not contain field profile 3!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("anotherGreatGrandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertTrue("anotherGreatGrandChildOrganization's aggregate workflow step's did not contain field profile 1!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("anotherGreatGrandChildOrganization's aggregate workflow step's did not contain field profile 2!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("anotherGreatGrandChildOrganization's aggregate workflow step's did not contain field profile 3!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        
+        
+        parentOrganization.getOriginalWorkflowSteps().get(0).removeOriginalFieldProfile(fp);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        fieldProfileRepo.delete(fp);
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+        assertEquals("parentOrganization's workflow step has the incorrect number of field profiles!", 2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().size());
+        assertFalse("parentOrganization's workflow step's still contains field profile 1!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp));
+        assertTrue("parentOrganization's workflow step's did not contain field profile 2!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2));
+        assertTrue("parentOrganization's workflow step's did not contain field profile 3!", parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp3));
+        
+        assertEquals("parentOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertFalse("parentOrganization's aggregate workflow step's still contains field profile 1!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("parentOrganization's aggregate workflow step's did not contain field profile 2!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("parentOrganization's aggregate workflow step's did not contain field profile 3!", parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("organization's aggregate workflow step has the incorrect number of aggregate field profiles!", 2, organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertFalse("organization's aggregate workflow step's still contains field profile 1!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("organization's aggregate workflow step's did not contain field profile 2!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("organization's aggregate workflow step's did not contain field profile 3!", organization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("grandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 2, grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertFalse("grandChildOrganization's aggregate workflow step's still contains field profile 1!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("grandChildOrganization's aggregate workflow step's did not contain field profile 2!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("grandChildOrganization's aggregate workflow step's did not contain field profile 3!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("greatGrandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 2, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertFalse("greatGrandChildOrganization's aggregate workflow step's still contains field profile 1!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("greatGrandChildOrganization's aggregate workflow step's did not contain field profile 2!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("greatGrandChildOrganization's aggregate workflow step's did not contain field profile 3!", greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        assertEquals("anotherGreatGrandChildOrganization's aggregate workflow step has the incorrect number of aggregate field profiles!", 2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().size());
+        assertFalse("anotherGreatGrandChildOrganization's aggregate workflow step's still contains field profile 1!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp));
+        assertTrue("anotherGreatGrandChildOrganization's aggregate workflow step's did not contain field profile 2!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2));
+        assertTrue("anotherGreatGrandChildOrganization's aggregate workflow step's did not contain field profile 3!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp3));
+        
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+    }
+    
+    @Test
     public void testFieldProfileChangeAtChildOrg() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
     	
     	// this test calls for adding a single workflowstep to the parent organization

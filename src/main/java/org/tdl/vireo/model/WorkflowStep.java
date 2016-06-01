@@ -219,8 +219,6 @@ public class WorkflowStep extends BaseEntity {
         if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
         	getAggregateFieldProfiles().add(aggregateFieldProfile);
         }
-    	
-		// TODO: recurively add to aggregateFieldProfiles?
     }
 
     /**
@@ -229,8 +227,6 @@ public class WorkflowStep extends BaseEntity {
      */
     public void removeAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
     	getAggregateFieldProfiles().remove(aggregateFieldProfile);
-    	
-    	// TODO: recurively remove from aggregateFieldProfiles?
     }
     
     /**
@@ -247,9 +243,6 @@ public class WorkflowStep extends BaseEntity {
     			getAggregateFieldProfiles().remove(fp1);
     			getAggregateFieldProfiles().add(pos, fp2);
     			res = true;
-    			
-    			 // apply inheritance
-    			
     			break;
     		}
     		pos++;
@@ -281,9 +274,6 @@ public class WorkflowStep extends BaseEntity {
             getAggregateFieldProfiles().add(pos1, fp2);
             getAggregateFieldProfiles().add(pos2, fp1);
             res = true;
-            
-            // apply inheritance
-            
         }
         return res;
     }
