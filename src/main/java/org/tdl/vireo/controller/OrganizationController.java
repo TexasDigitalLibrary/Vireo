@@ -160,11 +160,13 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     public ApiResponse deleteWorkflowStep(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
         Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
         
-        System.out.println(requestingOrgID);
-        System.out.println(workflowStepID);
+        workflowStepRepo.disinheritFromOrganization(requestingOrg, workflowStepToDelete);
         
-        return null;
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        
+        return new ApiResponse(SUCCESS);
     }
     
 }
