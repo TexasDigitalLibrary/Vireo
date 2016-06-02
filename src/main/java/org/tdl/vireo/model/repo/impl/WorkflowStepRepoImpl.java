@@ -75,8 +75,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         // If the requestingOrganization originates the workflowStep, make the change directly
         if(originatingOrganization != null && requestingOrganization.getId().equals(originatingOrganization.getId())) {
 
+            System.out.println("Own ws, so update directly");
         	if(!workflowStep.getOverrideable()) {
-        		                
+        	    
+        	    System.out.println("Own ws, not overrideable, so ");
             	Long originalWorkflowStepId = workflowStep.getId();
             	
             	WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
@@ -102,10 +104,23 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
         // If the requestingOrganization is not originator of workflowStep,
         else {
+            
+            System.out.println("Not owner of ws, so see if we can override");
+            boolean wasOverrideableUntilNow = workflowStepRepo.findOne(workflowStep.getId()).getOverrideable();
+            
+            System.out.println("Was it overrideable until now? " + wasOverrideableUntilNow);
         	
-            if(workflowStep.getOverrideable()) {
+            if(workflowStep.getOverrideable() || wasOverrideableUntilNow) {
+                
+                System.out.println("Overrideable now or until now, so making update");
             	
             	Long originalWorkflowStepId = workflowStep.getId();
+            	//WorkflowStep originalWorkflowStep
+            	
+            	//WorkflowStep newOverridingWorkflowStep = workflowStepRepo.create(workflowStep.getName(), requestingOrganization);
+            	//workflowStep = workflowStepRepo.create(workflowStep.getName(), requestingOrganization);
+            	
+            	System.out.println("Created new overriding workflow step in requesting Organization " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")");
             	
             	
             	List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
@@ -126,15 +141,15 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
                 WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
                 
+                //TODO:  should be originating workflow step, not null?
                 workflowStep.setOriginatingWorkflowStep(null);
                 
                 workflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                
                 workflowStep.setOriginalFieldProfiles(originalFieldProfiles);
                 workflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
                 
-                
+                System.out.println("Originating ws had originator " + workflowStepRepo.findOne(originalWorkflowStepId).getOriginatingOrganization().getId() + " whereas our new one here originates in requesting org "+ requestingOrganization.getId());
                 workflowStep = workflowStepRepo.save(workflowStep);
                 
                 
