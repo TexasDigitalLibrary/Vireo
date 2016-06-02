@@ -14,7 +14,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 				//update the parent scoped selected organization
 				$scope.eetSelectedOrganization(organization);
 			});
-        };
+		};
 
 		$scope.getManagedOrganization = function() {
 			var currentOrganization = $scope.getSelectedOrganization();
@@ -37,8 +37,11 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			}); 
 		};
 
-        $scope.deleteWorkflowStep = function(requestingOrganization, workflowStepId) {
-            console.info('should delete!!');
+		$scope.deleteWorkflowStep = function(selectedOrganization, workflowStepID) {
+
+			OrganizationRepo.deleteWorkflowStep(selectedOrganization, workflowStepID);
+			console.info('should delete!!');
+
 		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {

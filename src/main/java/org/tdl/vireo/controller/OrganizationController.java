@@ -156,4 +156,15 @@ public class OrganizationController {
         
     }
     
+    @ApiMapping("/{requestingOrgID}/delete-workflow-step/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse deleteWorkflowStep(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        
+        System.out.println(requestingOrgID);
+        System.out.println(workflowStepID);
+        
+        return null;
+    }
+    
 }

@@ -217,6 +217,14 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return updateWorkflowStepDefer.promise;
 	};
 
+	OrganizationRepo.deleteWorkflowStep = function(organization, workflowStepID) {
+		WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': organization.id + '/' + 'delete-workflow-step/' + workflowStepID,
+		});
+	}
+
 	OrganizationRepo.ready = function() {
 		return OrganizationRepo.promise;
 	};
