@@ -70,24 +70,32 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
-        Organization originatingOrganization = workflowStepRepo.findOne(workflowStep.getId()).getOriginatingOrganization();
+        
+        WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        
+        Organization originatingOrganization = originalWorkflowStep.getOriginatingOrganization();
         
         System.out.println(workflowStep.getOriginatingOrganization());
         System.out.println(requestingOrganization.getId());
         System.out.println(originatingOrganization.getId());
         System.out.println(requestingOrganization.getId().equals(originatingOrganization.getId()));
         
+        
+        System.out.println("Not owner of ws, so see if we can override");
+        boolean overrideableUntilNow = originalWorkflowStep.getOverrideable();
+        
+        System.out.println("Was it overrideable until now? " + overrideableUntilNow);
                 
         // If the requestingOrganization originates the workflowStep, make the change directly
         if(requestingOrganization.getId().equals(originatingOrganization.getId())) {
 
             System.out.println("Own ws, so update directly");
-        	if(!workflowStep.getOverrideable()) {
+        	if(!workflowStep.getOverrideable() && overrideableUntilNow) {
         	    
-        	    System.out.println("Own ws, not overrideable, so ");
-            	Long originalWorkflowStepId = workflowStep.getId();
-            	
-            	WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
+//        	    System.out.println("Own ws, not overrideable, so ");
+//            	Long originalWorkflowStepId = workflowStep.getId();
+//            	
+//            	WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
             	originalWorkflowStep.setOverrideable(false);
             	workflowStepRepo.save(originalWorkflowStep);
             	            	
@@ -106,9 +114,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
             }
         	else {
-        	    WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(workflowStep.getId());
-                originalWorkflowStep.setOverrideable(workflowStep.getOverrideable());
-                originalWorkflowStep.setName(workflowStep.getName());
+        	    Boolean overridable = workflowStep.getOverrideable();
+        	    String name = workflowStep.getName();
+        	    
+                originalWorkflowStep.setOverrideable(overridable);
+                originalWorkflowStep.setName(name);
                 workflowStep = workflowStepRepo.save(originalWorkflowStep);
         	}
             
@@ -116,12 +126,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         // If the requestingOrganization is not originator of workflowStep,
         else {
             
-            System.out.println("Not owner of ws, so see if we can override");
-            boolean wasOverrideableUntilNow = workflowStepRepo.findOne(workflowStep.getId()).getOverrideable();
             
-            System.out.println("Was it overrideable until now? " + wasOverrideableUntilNow);
         	
-            if(workflowStep.getOverrideable() || wasOverrideableUntilNow) {
+            if(workflowStep.getOverrideable() || overrideableUntilNow) {
                 
                 System.out.println("Overrideable now or until now, so making update");
             	
@@ -150,7 +157,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 workflowStep.setId(null);
                 
                 
-                WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
+//                WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
                 
                 //TODO:  should be originating workflow step, not null?
                 workflowStep.setOriginatingWorkflowStep(null);
