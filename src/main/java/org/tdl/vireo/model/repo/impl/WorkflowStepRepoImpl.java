@@ -70,10 +70,16 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
-        Organization originatingOrganization = workflowStep.getOriginatingOrganization();
+        Organization originatingOrganization = workflowStepRepo.findOne(workflowStep.getId()).getOriginatingOrganization();
+        
+        System.out.println(workflowStep.getOriginatingOrganization());
+        System.out.println(requestingOrganization.getId());
+        System.out.println(originatingOrganization.getId());
+        System.out.println(requestingOrganization.getId().equals(originatingOrganization.getId()));
+        
                 
         // If the requestingOrganization originates the workflowStep, make the change directly
-        if(originatingOrganization != null && requestingOrganization.getId().equals(originatingOrganization.getId())) {
+        if(requestingOrganization.getId().equals(originatingOrganization.getId())) {
 
             System.out.println("Own ws, so update directly");
         	if(!workflowStep.getOverrideable()) {
@@ -82,6 +88,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	Long originalWorkflowStepId = workflowStep.getId();
             	
             	WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
+            	originalWorkflowStep.setOverrideable(false);
+            	workflowStepRepo.save(originalWorkflowStep);
             	            	
             	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(workflowStep);
             	
@@ -98,7 +106,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
             }
         	else {
-        	    workflowStep = workflowStepRepo.save(workflowStep);
+        	    WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(workflowStep.getId());
+                originalWorkflowStep.setOverrideable(workflowStep.getOverrideable());
+                originalWorkflowStep.setName(workflowStep.getName());
+                workflowStep = workflowStepRepo.save(originalWorkflowStep);
         	}
             
         }
