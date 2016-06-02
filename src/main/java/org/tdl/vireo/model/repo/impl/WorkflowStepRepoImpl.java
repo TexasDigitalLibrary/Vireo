@@ -93,10 +93,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	descendentWorkflowSteps.forEach(descendentWorkflowStep -> {
             		delete(descendentWorkflowStep);
             	});
-            	
-            	return workflowStep;
                 
             }
+        	else {
+        	    workflowStep = workflowStepRepo.save(workflowStep);
+        	}
             
         }
         // If the requestingOrganization is not originator of workflowStep,
@@ -125,7 +126,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
                 WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
                 
-                workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
+                workflowStep.setOriginatingWorkflowStep(null);
+                
                 workflowStep.setOriginatingOrganization(requestingOrganization);
                 
                 
@@ -133,9 +135,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 workflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
                 
                 
-                
                 workflowStep = workflowStepRepo.save(workflowStep);
-                
                 
                 
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, originalWorkflowStep)) {
@@ -143,13 +143,20 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             		organizationRepo.save(organization);
             	}
                 
-                
                 requestingOrganization.replaceAggregateWorkflowStep(originalWorkflowStep, workflowStep);
                 
                 
             	organizationRepo.save(requestingOrganization);
             	
-            	            	
+            	// if parent organization updates a workflow step originating form a descendent, the original workflow steps need to be deleted
+                if(organizationRepo.findByAggregateWorkflowStepsId(originalWorkflowStep.getId()).size() == 0) {
+                    workflowStepRepo.delete(originalWorkflowStep);
+                }
+                else {
+                    workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
+                    workflowStep = workflowStepRepo.save(workflowStep);
+                }
+            	
             }
             else {
             	
@@ -161,7 +168,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             
         }
         
-        return workflowStepRepo.save(workflowStep);
+        return workflowStep;
     }
     
     @Override
@@ -169,7 +176,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     	
     	// allows for delete by iterating through findAll, while still deleting descendents
     	if(workflowStepRepo.findOne(workflowStep.getId()) != null) {
-        
+    	    
 	        Organization originatingOrganization = workflowStep.getOriginatingOrganization();
 	        
 	        originatingOrganization.removeOriginalWorkflowStep(workflowStep);
