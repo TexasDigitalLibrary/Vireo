@@ -24,7 +24,10 @@
 
   	<div class="col-md-3">
   		<div class="form-group">
-  			<button class="btn btn-danger" ng-click="deleteWorkflowStep('a','b')">Delete Field Profile</button>
+  			<button class="btn btn-danger" data-toggle="modal" data-target="#workflow-step-delete-confirm">Delete Workflow Step</button>
+
+                        <modal modal-id="workflow-step-delete-confirm" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
+
   		</div>
   	</div>
 
