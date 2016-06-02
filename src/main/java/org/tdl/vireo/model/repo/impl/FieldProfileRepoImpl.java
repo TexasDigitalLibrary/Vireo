@@ -80,9 +80,8 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         }
         //if the requestor originates, make the update at the requestor
         else if(requestorOriginatesProfile) {
-            // do nothing, just save changes 
-        	
-        	fieldProfile = fieldProfileRepo.save(fieldProfile);
+            // do nothing, just save changes
+            fieldProfile = fieldProfileRepo.save(fieldProfile);
         }
         //else, it's overrideable and we didn't oringinate it so we need to make a new one that overrides.
         else {
@@ -121,7 +120,9 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         		fieldProfile.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
         	}
         	
-        	fieldProfile.setOriginatingFieldProfile(originalFieldProfile);
+        	
+        	fieldProfile.setOriginatingFieldProfile(null);
+        	
              
         	fieldProfile.setFieldGlosses(fieldGlosses);
         	fieldProfile.setControlledVocabularies(controlledVocabularies);
@@ -143,7 +144,15 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 				}
     		}
 			
-			//organizationRepo.save(requestingOrganization);
+        	
+        	// if parent organization's workflow step updates a field profile originating form a descendent, the original field profile need to be deleted
+            if(workflowStepRepo.findByAggregateFieldProfilesId(originalFieldProfile.getId()).size() == 0) {
+                fieldProfileRepo.delete(originalFieldProfile);
+            }
+            else {
+                fieldProfile.setOriginatingFieldProfile(originalFieldProfile);
+                fieldProfile = fieldProfileRepo.save(fieldProfile);
+            }
         	
         }
         

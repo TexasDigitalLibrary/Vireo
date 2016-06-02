@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -289,7 +290,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         String newName = "A Changed Name";
         workflowStep.setName(newName);
         
-        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, workflowStep.getOriginatingOrganization());
+        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, parentOrganization);
         
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -1055,7 +1056,90 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
+    }
+    
+    @Test
+    public void testParentUpdatesWorkflowStepOriginatingAtDescendent() throws WorkflowStepNonOverrideableException {
         
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);        
+        parentOrganization = organizationRepo.save(parentOrganization);
+                
+        organization = organizationRepo.findOne(organization.getId());
+        
+        WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
+        
+        assertEquals("Incorrect number of workflow steps!", 1, workflowStepRepo.count());
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        
+        
+        Long s1Id = s1.getId();
+        
+        String updatedName = "Updated Name";
+        
+        s1.setName(updatedName);
+        
+        // should change originating organization
+        WorkflowStep s2 = workflowStepRepo.update(s1, parentOrganization);
+        
+        assertEquals("Incorrect number of workflow steps!", 1, workflowStepRepo.count());
+        
+        assertNotEquals("Updated descendent workflow step on parent organization did not create new row!", s1Id, s2.getId());
+        
+        assertEquals("Original workflow step of descendent was not removed!", null, workflowStepRepo.findOne(s1Id));
+        
+    }
+
+    
+    @Test
+    public void testUpdateWorkflowStepAndRevertUpdate() throws WorkflowStepNonOverrideableException {
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);        
+        parentOrganization = organizationRepo.save(parentOrganization);
+                
+        organization = organizationRepo.findOne(organization.getId());
+        
+        WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        assertEquals("Incorrect number of workflow steps!", 1, workflowStepRepo.count());
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        
+        
+        String updatedName = "Updated Name";
+        
+        s1.setName(updatedName);
+        
+        // should change originating organization
+        WorkflowStep s2 = workflowStepRepo.update(s1, organization);
+        
+        assertEquals("Incorrect number of workflow steps!", 2, workflowStepRepo.count());
+        
+        
+        String anotherUpdatedName = "Yet another updated name";
+        
+        s2.setName(anotherUpdatedName);
+
+        // should change originating organization
+        WorkflowStep s3 = workflowStepRepo.update(s2, organization);
+        
+        
+        assertEquals("Incorrect number of workflow steps!", 2, workflowStepRepo.count());
+        
+        s3.setName(updatedName);
+        
+        // should change originating organization
+        workflowStepRepo.update(s3, organization);
+        
+        assertEquals("Incorrect number of workflow steps!", 2, workflowStepRepo.count());
     }
 
 
