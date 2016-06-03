@@ -1143,11 +1143,113 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         assertEquals("Incorrect number of workflow steps!", 2, workflowStepRepo.count());
     }
+    
+    @Test
+    public void testMakeWSNonOverrideableAndAddBackToOrgsThatDeletedItFromAggregate() throws WorkflowStepNonOverrideableException
+    {
+
+        //Step S1 will be inherited by the (child) organization, the grandchildren, and the great grandchildren.
+        //Test that after deleting S1 from some of these's aggregate steps, it gets added back when made non-overrideable. 
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
+        organization.addChildOrganization(grandChildOrganization);
+        organization = organizationRepo.save(organization);
+        
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+                
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
+        grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
+        
+        grandChildOrganization = organizationRepo.save(grandChildOrganization);
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep t1 = workflowStepRepo.create("Step T", parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep u1 = workflowStepRepo.create("Step U", parentOrganization);
+                
+        
+        
+        
+        
+        //organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        //now let's delete S1 off the grandchild
+        workflowStepRepo.disinheritFromOrganization(grandChildOrganization, s1);
+        
+        //but let's also override S1 at the (child) org so that it is a new one derived from S1
+        Long s1Id = s1.getId();
+        s1 = workflowStepRepo.findOne(s1Id);
+        s1.setName("Overridden S1 at the child org");
+        organization = organizationRepo.findOne(organization.getId());
+        WorkflowStep s1override = workflowStepRepo.update(s1, organization);
+        s1 = workflowStepRepo.findOne(s1Id);
+        organization = organizationRepo.findOne(organization.getId());
+        assertTrue("The child org didn't contained the overriding workflow step it originated!", organization.getAggregateWorkflowSteps().contains(s1override));
+        assertFalse("The child org contained a workflow step it was supposed to have overridden!", organization.getAggregateWorkflowSteps().contains(s1));
+        
+               
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        //should be on the aggregate of parent, but nobody else
+        assertEquals("Parent lost it's original workflow step from its aggregates when a child removed it from its aggregates!", 3, parentOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("A great grandchild org kept an aggregate workflow step that an ancestor removed!", 2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        
+        //TODO: make s1 non overrideable and see that's its added back down below where it was removed
+        s1 = workflowStepRepo.findOne(s1.getId());
+        s1.setOverrideable(false);
+        s1 = workflowStepRepo.update(s1, parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        assertEquals("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", 3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        assertTrue("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(s1));
+    }
 
 
     @After
     public void cleanUp() {
-    	
+        
 		fieldProfileRepo.findAll().forEach(fieldProfile -> {
 			fieldProfileRepo.delete(fieldProfile);
 		});
