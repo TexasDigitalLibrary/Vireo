@@ -81,31 +81,37 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         
     }
     
-    public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep update(WorkflowStep workflowStepRequestedChanges, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
         
-        WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        WorkflowStep workflowStepBeingUpdated = workflowStepRepo.findOne(workflowStepRequestedChanges.getId());
         
-        Organization originatingOrganization = originalWorkflowStep.getOriginatingOrganization();
-
-        boolean overrideableUntilNow = originalWorkflowStep.getOverrideable();
+        boolean overrideableUntilNow = workflowStepBeingUpdated.getOverrideable();
         
         // If the requestingOrganization originates the workflowStep, make the change directly
-        if(requestingOrganization.getId().equals(originatingOrganization.getId())) {
+        if(requestingOrganization.getId().equals(workflowStepBeingUpdated.getOriginatingOrganization().getId())) {
 
-        	if(!workflowStep.getOverrideable() && overrideableUntilNow) {
-
-            	originalWorkflowStep.setOverrideable(false);
-            	workflowStepRepo.save(originalWorkflowStep);
-            	            	
-            	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(workflowStep);
+            //change is from overrideable to non-overrideable
+        	if(!workflowStepRequestedChanges.getOverrideable() && overrideableUntilNow) {
+        	    
+            	workflowStepBeingUpdated.setOverrideable(false);
             	
+            	//TODO: need to handle other changes to the workflow step in addition to setting overrideable to false?
+            	
+            	workflowStepRepo.save(workflowStepBeingUpdated);
+            	            	
+            	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(workflowStepRequestedChanges);
+            	
+            	//if you find the descendant of the workflow step on the child org, replace it
             	for(WorkflowStep descendentWorkflowStep : descendentWorkflowSteps) {
 	            	for(Organization organization : organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())) {
-	            		organization.replaceAggregateWorkflowStep(descendentWorkflowStep, originalWorkflowStep);
+	            	    organization.replaceAggregateWorkflowStep(descendentWorkflowStep, workflowStepBeingUpdated);
 	            		organizationRepo.save(organization);
 	            	}
             	}
+        		
+            	requestingOrganization.addAggregateWorkflowStep(workflowStepBeingUpdated, requestingOrganization.getAggregateWorkflowSteps().indexOf(workflowStepBeingUpdated));
+        	    organizationRepo.save(requestingOrganization);
             	
             	descendentWorkflowSteps.forEach(descendentWorkflowStep -> {
             		delete(descendentWorkflowStep);
@@ -113,68 +119,68 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
             }
         	else {
-        	    Boolean overridable = workflowStep.getOverrideable();
-        	    String name = workflowStep.getName();
+        	    Boolean overridable = workflowStepRequestedChanges.getOverrideable();
+        	    String name = workflowStepRequestedChanges.getName();
         	    
-                originalWorkflowStep.setOverrideable(overridable);
-                originalWorkflowStep.setName(name);
-                workflowStep = workflowStepRepo.save(originalWorkflowStep);
+                workflowStepBeingUpdated.setOverrideable(overridable);
+                workflowStepBeingUpdated.setName(name);
+                
+                //TODO: need to handle other changes to the workflow step in addition to setting overrideable and name to what was passed?
+                
+                workflowStepRequestedChanges = workflowStepRepo.save(workflowStepBeingUpdated);
         	}
             
         }
-        // If the requestingOrganization is not originator of workflowStep,
+        // If the requestingOrganization is not originator of workflowStep, make a new workflow step to override the original
         else {
-            
-            
         	
-            if(workflowStep.getOverrideable() || overrideableUntilNow) {
+            //if the workflowstep is (or was...) overrideable, then the requestor can make the change
+            if(overrideableUntilNow) {
                 
-                Long originalWorkflowStepId = workflowStep.getId();
-            	
-            	List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
+                List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
             	List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
             	
-            	for(FieldProfile fp : workflowStep.getOriginalFieldProfiles()) {
+            	for(FieldProfile fp : workflowStepRequestedChanges.getOriginalFieldProfiles()) {
             		originalFieldProfiles.add(fp);            		
             	}
             	
-				for(FieldProfile fp : workflowStep.getAggregateFieldProfiles()) {
+				for(FieldProfile fp : workflowStepRequestedChanges.getAggregateFieldProfiles()) {
 					aggregateFieldProfiles.add(fp);
             	}
             	
-				
-            	em.detach(workflowStep);
-                workflowStep.setId(null);
+            	em.detach(workflowStepRequestedChanges);
+                workflowStepRequestedChanges.setId(null);
                                 
-                workflowStep.setOriginatingWorkflowStep(null);
+                workflowStepRequestedChanges.setOriginatingWorkflowStep(null);
                 
-                workflowStep.setOriginatingOrganization(requestingOrganization);
+                workflowStepRequestedChanges.setOriginatingOrganization(requestingOrganization);
                 
-                workflowStep.setOriginalFieldProfiles(originalFieldProfiles);
-                workflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
+                workflowStepRequestedChanges.setOriginalFieldProfiles(originalFieldProfiles);
+                workflowStepRequestedChanges.setAggregateFieldProfiles(aggregateFieldProfiles);
                 
-                workflowStep = workflowStepRepo.save(workflowStep);
+                workflowStepRequestedChanges = workflowStepRepo.save(workflowStepRequestedChanges);
                
-                for(Organization organization : getContainingDescendantOrganization(requestingOrganization, originalWorkflowStep)) {
-            		organization.replaceAggregateWorkflowStep(originalWorkflowStep, workflowStep);
+                for(Organization organization : getContainingDescendantOrganization(requestingOrganization, workflowStepBeingUpdated)) {
+            		organization.replaceAggregateWorkflowStep(workflowStepBeingUpdated, workflowStepRequestedChanges);
             		organizationRepo.save(organization);
             	}
                 
-                requestingOrganization.replaceAggregateWorkflowStep(originalWorkflowStep, workflowStep);
+                requestingOrganization.replaceAggregateWorkflowStep(workflowStepBeingUpdated, workflowStepRequestedChanges);
                 
                 
             	organizationRepo.save(requestingOrganization);
             	
             	// if parent organization updates a workflow step originating form a descendent, the original workflow steps need to be deleted
-                if(organizationRepo.findByAggregateWorkflowStepsId(originalWorkflowStep.getId()).size() == 0) {
-                    workflowStepRepo.delete(originalWorkflowStep);
+                if(organizationRepo.findByAggregateWorkflowStepsId(workflowStepBeingUpdated.getId()).size() == 0) {
+                    workflowStepRepo.delete(workflowStepBeingUpdated);
                 }
                 else {
-                    workflowStep.setOriginatingWorkflowStep(originalWorkflowStep);
-                    workflowStep = workflowStepRepo.save(workflowStep);
+                    workflowStepRequestedChanges.setOriginatingWorkflowStep(workflowStepBeingUpdated);
+                    workflowStepRequestedChanges = workflowStepRepo.save(workflowStepRequestedChanges);
                 }
             	
             }
+            //if the workflow step to be updated was not overrideable, then this non-originating organization can't make the change
             else {
             	
             	// provide feedback of attempt to override non overrideable
@@ -185,7 +191,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             
         }
         
-        return workflowStep;
+        return workflowStepRequestedChanges;
     }
     
     @Override
