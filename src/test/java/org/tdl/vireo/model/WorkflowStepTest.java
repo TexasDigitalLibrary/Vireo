@@ -1230,8 +1230,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("Parent lost it's original workflow step from its aggregates when a child removed it from its aggregates!", 3, parentOrganization.getAggregateWorkflowSteps().size());
         assertEquals("A great grandchild org kept an aggregate workflow step that an ancestor removed!", 2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
         
-        //TODO: make s1 non overrideable and see that's its added back down below where it was removed
-        s1 = workflowStepRepo.findOne(s1.getId());
+        //make s1 non overrideable and see that's its added back down below where it was removed or overridden, and is unaffected where it originates
+        s1 = workflowStepRepo.findOne(s1Id);
         s1.setOverrideable(false);
         s1 = workflowStepRepo.update(s1, parentOrganization);
         
@@ -1241,10 +1241,26 @@ public class WorkflowStepTest extends AbstractEntityTest {
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
         
+        assertEquals("The parent org somehow lost it's originating step!", 3, parentOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("The parent org somehow lost it's originating step!", 3, parentOrganization.getOriginalWorkflowSteps().size());
+        assertTrue("The parent org somehow lost it's originating step!", parentOrganization.getOriginalWorkflowSteps().contains(s1));
+        assertTrue("The parent org somehow lost it's originating step!", parentOrganization.getAggregateWorkflowSteps().contains(s1));
         
-        assertEquals("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", 3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
-        assertTrue("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(s1));
+        assertFalse("The org with the overriding step didn't get the override removed when it was made non-overrideable!", organization.getAggregateWorkflowSteps().contains(s1override));
+        assertFalse("The org with the overriding step didn't get the override removed when it was made non-overrideable!", organization.getOriginalWorkflowSteps().contains(s1override));
+        assertEquals("The org with the overriding step didn't get the override removed when it was made non-overrideable!", 0, organization.getOriginalWorkflowSteps().size());
+        assertTrue("The org with the overriding step didn't get it replaced when it was made non-overrideable!", organization.getAggregateWorkflowSteps().contains(s1));
+        
+        assertEquals("The grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", 3, greatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        assertTrue("The grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(s1));
+    
+        assertEquals("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", 3, grandChildOrganization.getAggregateWorkflowSteps().size());
+        assertTrue("A great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", grandChildOrganization.getAggregateWorkflowSteps().contains(s1));
+        
+        assertEquals("Another great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", 3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        assertTrue("Another great grandchild org didn't get back an aggregate workflow step that an ancestor made non-overrideable!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(s1));
     }
+    
 
 
     @After
