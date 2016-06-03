@@ -1144,9 +1144,6 @@ footer a, footer li, footer p {
   color:  #337ab7;
 }
 
-
-
-
 /*************
 * DIRECTIVES *
 **************/
@@ -1312,18 +1309,31 @@ footer a, footer li, footer p {
 
 .accordion-order-box .glyphicon-chevron-down,
 .accordion-order-box .glyphicon-chevron-up  {
-  background-color: #afafaf;
-  color: transparent;
+
+
+  color: inherit;
+  -webkit-text-fill-color: transparent;
+  background: -webkit-linear-gradient(#afafaf, #afafaf);
+  background: -o-linear-gradient(#afafaf, #afafaf);
   text-shadow: 0px 2px 3px rgba(255,255,255,0.75);
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
+
+  // background-color: #afafaf;
+  // color: transparent;
+  // text-shadow: 0px 2px 3px rgba(255,255,255,0.75);
+  // -webkit-background-clip: text;
+  // -moz-background-clip: text;
+  // background-clip: text;
 }
 
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-down,
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-up  {
-  background-color: transparent;
   color: #afafaf;
+  -webkit-text-fill-color: #afafaf;
+  background: -webkit-linear-gradient(transparent, transparent);
+  background: -o-linear-gradient(transparent, transparent);
   text-shadow: 0px 2px 3px transparent;
   -webkit-background-clip: initial;
   -moz-background-clip: initial;
@@ -1333,6 +1343,7 @@ footer a, footer li, footer p {
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-down:active,
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-up:active, {
   color: #337ab7;
+  -webkit-text-fill-color: #337ab7;
 }
 
 

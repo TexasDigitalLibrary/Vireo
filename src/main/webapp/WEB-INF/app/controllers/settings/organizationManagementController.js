@@ -12,9 +12,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
 				//update the parent scoped selected organization
+				// TODO: confirm this is necessary 
 				$scope.setSelectedOrganization(organization);
 			});
-        };
+		};
 
 		$scope.getManagedOrganization = function() {
 			var currentOrganization = $scope.getSelectedOrganization();
@@ -31,18 +32,28 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 
 		$scope.addWorkflowStep = function(newWorkflowStepName) {
-			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function(newWorkflowStep) {
-				$scope.managedOrganization.aggregateWorkflowSteps.push(newWorkflowStep);
+			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function() {
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};
+
+		$scope.deleteWorkflowStep = function(workflowStepID) {
+
+			OrganizationRepo.deleteWorkflowStep(workflowStepID);
+			console.info('should delete!!');
+
+		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
-			OrganizationRepo.updateWorkflowStep($scope.selectedOrganization, workflowStepToUpdate).then(function(updatedWorkflowStep) {
-				console.log(updatedWorkflowStep);
-				var oldWorkflowStepIndex = $scope.managedOrganization.aggregateWorkflowSteps.indexOf(updatedWorkflowStep);
-				$scope.managedOrganization.aggregateWorkflowSteps[oldWorkflowStepIndex] = updatedWorkflowStep;
-			}); 
+			OrganizationRepo.updateWorkflowStep(workflowStepToUpdate);
+		};
+
+		$scope.reorderWorkflowStepUp = function(workflowStepID) {
+			OrganizationRepo.reorderWorkflowStep("up", workflowStepID);
+		};
+
+		$scope.reorderWorkflowStepDown = function(workflowStepID) {
+			OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
 		};
 
 	});

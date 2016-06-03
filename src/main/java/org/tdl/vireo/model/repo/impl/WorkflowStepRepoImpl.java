@@ -68,18 +68,35 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return workflowStep;
     }
     
+    public void disinheritFromOrganization(Organization requestingOrg, WorkflowStep workflowStepToDisinherit) {
+        
+        if(requestingOrg.getId().equals(workflowStepToDisinherit.getOriginatingOrganization().getId())) {
+            //the requesting organization is the owning organization so just delete
+            workflowStepRepo.delete(workflowStepToDisinherit);
+        } else {
+          //the requesting organization is not the owning organization so only remove from aggregate workflowsteps
+          requestingOrg.removeAggregateWorkflowStep(workflowStepToDisinherit);
+          organizationRepo.save(requestingOrg);
+        }
+        
+    }
+    
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
     	
-        Organization originatingOrganization = workflowStep.getOriginatingOrganization();
-                
-        // If the requestingOrganization originates the workflowStep, make the change directly
-        if(originatingOrganization != null && requestingOrganization.getId().equals(originatingOrganization.getId())) {
+        
+        WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        
+        Organization originatingOrganization = originalWorkflowStep.getOriginatingOrganization();
 
-        	if(!workflowStep.getOverrideable()) {
-        		                
-            	Long originalWorkflowStepId = workflowStep.getId();
-            	
-            	WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
+        boolean overrideableUntilNow = originalWorkflowStep.getOverrideable();
+        
+        // If the requestingOrganization originates the workflowStep, make the change directly
+        if(requestingOrganization.getId().equals(originatingOrganization.getId())) {
+
+        	if(!workflowStep.getOverrideable() && overrideableUntilNow) {
+
+            	originalWorkflowStep.setOverrideable(false);
+            	workflowStepRepo.save(originalWorkflowStep);
             	            	
             	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(workflowStep);
             	
@@ -96,17 +113,23 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
             }
         	else {
-        	    workflowStep = workflowStepRepo.save(workflowStep);
+        	    Boolean overridable = workflowStep.getOverrideable();
+        	    String name = workflowStep.getName();
+        	    
+                originalWorkflowStep.setOverrideable(overridable);
+                originalWorkflowStep.setName(name);
+                workflowStep = workflowStepRepo.save(originalWorkflowStep);
         	}
             
         }
         // If the requestingOrganization is not originator of workflowStep,
         else {
+            
+            
         	
-            if(workflowStep.getOverrideable()) {
-            	
-            	Long originalWorkflowStepId = workflowStep.getId();
-            	
+            if(workflowStep.getOverrideable() || overrideableUntilNow) {
+                
+                Long originalWorkflowStepId = workflowStep.getId();
             	
             	List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
             	List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
@@ -122,22 +145,16 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 				
             	em.detach(workflowStep);
                 workflowStep.setId(null);
-                
-                
-                WorkflowStep originalWorkflowStep = workflowStepRepo.findOne(originalWorkflowStepId);
-                
+                                
                 workflowStep.setOriginatingWorkflowStep(null);
                 
                 workflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                
                 workflowStep.setOriginalFieldProfiles(originalFieldProfiles);
                 workflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
                 
-                
                 workflowStep = workflowStepRepo.save(workflowStep);
-                
-                
+               
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, originalWorkflowStep)) {
             		organization.replaceAggregateWorkflowStep(originalWorkflowStep, workflowStep);
             		organizationRepo.save(organization);

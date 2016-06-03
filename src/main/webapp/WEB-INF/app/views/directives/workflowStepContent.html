@@ -1,5 +1,18 @@
 <div class="row">
+	
 	<div class="col-md-6">
+  		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
+				key-down="confirmEdit(event, prop)"-->
+  		<textField
+  			class="workflowstep-edit-name" 
+			label="Workflow Step Name:" 
+			scope-value="step.name"
+			hint="'My Workflow Step's name'"
+			on-blur="updateWorkflowStep(step)">
+		</textField>
+  	</div>
+
+	<div class="col-md-3">
   		<!--ng-click="updateConfigurableSettings('application', 'submissions_open')"-->
   		<toggleButton 
 			label="Workflow Step is Overridable:"
@@ -8,24 +21,22 @@
 			ng-click="updateWorkflowStep(step)">
 		</toggleButton>
 	</div>
-  	<div class="col-md-6">
-  		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
-				key-down="confirmEdit(event, prop)"-->
-  		<textField 
-			label="Workflow Step Name:" 
-			scope-value="step.name"
-			hint="'My Workflow Step's name'">
-		</textField>
+
+  	<div class="col-md-3">
+  		<div class="form-group">
+  			<button class="btn btn-danger" data-toggle="modal" data-target="#workflow-step-delete-confirm-{{step.id}}">Delete Workflow Step</button>
+			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
+  		</div>
   	</div>
+
+
+
 </div>
 <hr>
 <div class="row">
   	<div class="col-md-6">
   		<button class="btn btn-default">Add Field Profile</button>
-
-  		<br><br><br>
-
-		<ol>
+  		<ol>
 			<li  ng-repeat="fp in step.aggregateFieldProfiles track by $index"> 
 				 {{fp.predicate.value}}
 			</li>

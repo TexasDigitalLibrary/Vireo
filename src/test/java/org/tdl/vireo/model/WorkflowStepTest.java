@@ -489,9 +489,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
         //test that we can't override a non-overrideable workflow step at the child of its originating organization
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         workflowStep.setOverrideable(false);
+        workflowStep = workflowStepRepo.save(workflowStep);
         
         organization = organizationRepo.findOne(organization.getId());
         
+        //make the update at the non-originating organization.  We'll find it's non-overrideable, so throw and exception.
         workflowStepRepo.update(workflowStep, organization);
     }
     

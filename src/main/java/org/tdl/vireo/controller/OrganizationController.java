@@ -61,6 +61,14 @@ public class OrganizationController {
     public ApiResponse allOrganizations() {        
         return new ApiResponse(SUCCESS, getAll());
     }
+    
+    @ApiMapping("/get/{id}")
+    @Auth(role="MANAGER")
+    @Transactional
+    public ApiResponse getOrganization(@ApiVariable String id) {        
+        Organization org = organizationRepo.findOne(Long.parseLong(id));
+        return new ApiResponse(SUCCESS, org);
+    }
 
     @ApiMapping("/create")
     @Auth(role="MANAGER")
@@ -79,7 +87,7 @@ public class OrganizationController {
         
         organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, getAll()));
         
         return new ApiResponse(SUCCESS);
         
@@ -126,8 +134,7 @@ public class OrganizationController {
     public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
         Organization org = organizationRepo.findOne(Long.parseLong(id));
         newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
-        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
-        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, org.getWorkflow()));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, org));
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
     
@@ -136,20 +143,68 @@ public class OrganizationController {
     @Transactional
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
         Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
-        
-        WorkflowStep updatedWorkflowStep;
+                
         try {
-            updatedWorkflowStep = workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
-            return new ApiResponse(SUCCESS, updatedWorkflowStep);
+            workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(id))));
+            return new ApiResponse(SUCCESS);
         } catch (WorkflowStepNonOverrideableException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return new ApiResponse(ERROR, "Unable to update workflow step!");
         }
         
-        // TODO: if ok with lazy loading workflow, delete this, else eager load workflow
-        //simpMessagingTemplate.convertAndSend("/channel/organization/workflow", new ApiResponse(SUCCESS, requestingOrg.getWorkflow()));
+    }
+    
+    @ApiMapping("/{requestingOrgID}/delete-workflow-step/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse deleteWorkflowStep(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
         
+        workflowStepRepo.disinheritFromOrganization(requestingOrg, workflowStepToDelete);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{requestingOrgID}/shift-workflow-step-up/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse shiftWorkflowStepUp(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+        
+        int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
+        
+        if(workflowStepToShiftIndex-1 > -1) {
+            WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex-1);
+            
+            organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
+            
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        }
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{requestingOrgID}/shift-workflow-step-down/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse shiftWorkflowStepDown(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+        
+        int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
+        
+        if(workflowStepToShiftIndex+1 < requestingOrg.getAggregateWorkflowSteps().size()) {
+            WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex+1);
+            
+            organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
+            
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        }
+        
+        return new ApiResponse(SUCCESS);
     }
     
 }

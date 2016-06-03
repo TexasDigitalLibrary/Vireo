@@ -53,4 +53,9 @@ public class WorklowStepController {
         return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
     }
 
+    @ApiMapping("/delete/{organizationID}/{workflowStepID}")
+    public ApiResponse deleteStepById(String organizationID, String workflowStepID) {
+        System.out.println("got orgID " + " and wsID: " + workflowStepID);
+        return null;
+    }
 }
