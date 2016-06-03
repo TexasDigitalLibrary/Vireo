@@ -1,0 +1,21 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Delete Workflow Step</h3>
+</div>
+
+<div class="modal-body">
+  <div>
+    <form>
+
+      <h4>Really delete workflow step "{{step.name}}"? This action cannot be undone.</h4>
+
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-danger" type="submit" data-dismiss="modal" ng-click="deleteWorkflowStep(selectedOrganization, step.id)">Delete</button>
+  <button class="btn btn-default" type="submit" data-dismiss="modal">Cancel</button>
+</div>
