@@ -1,10 +1,10 @@
 <div id="{{::query}}" class="panel panel-default">
 	<div ng-click="toggleExpanded()" class="panel-heading orderable-panel-bar" ng-class="{'expanded': expanded}">
 		<div class="accordion-order-box pull-right" ng-click="$event.stopPropagation()">
-			<div ng-click="reorderUp($index)">
+			<div ng-click="reorderWorkflowStepUp(step.id)">
 				<span  class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
 			</div>
-			<div ng-click="reorderDown($index)">
+			<div ng-click="reorderWorkflowStepDown(step.id)">
 				<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
 			</div>
 		</div>
