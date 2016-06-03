@@ -204,12 +204,22 @@ public class Organization extends BaseEntity {
      * @param aggregateWorkflowStep
      */
     public void addAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep) {
+        addAggregateWorkflowStep(aggregateWorkflowStep, getAggregateWorkflowSteps().size());
+    }
+
+    /**
+     * 
+     * @param aggregateWorkflowStep
+     * @param indexOf
+     */
+    public void addAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep, int indexOf) {
         if(!getAggregateWorkflowSteps().contains(aggregateWorkflowStep)) {
-            getAggregateWorkflowSteps().add(aggregateWorkflowStep);
+            getAggregateWorkflowSteps().add(indexOf, aggregateWorkflowStep);
         }
         getChildrenOrganizations().forEach(childOrganization -> {
             childOrganization.addAggregateWorkflowStep(aggregateWorkflowStep);
         });
+        
     }
     
     /**
@@ -401,5 +411,7 @@ public class Organization extends BaseEntity {
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
     	getEmailWorkflowRules().remove(emailWorkflowRule);
     }
+
+   
 
 }
