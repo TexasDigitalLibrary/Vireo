@@ -208,10 +208,9 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 			'method': OrganizationRepo.getSelectedOrganization().id+'/update-workflow-step',
 			'data': workflowStepToUpdate
 		});
-			console.log("FOO");
+		
 		updateWorkflowStepPromise.then(function() {
 			updateWorkflowStepDefer.resolve();
-			console.log("BAR");
 		});
 
 		return updateWorkflowStepDefer.promise;
