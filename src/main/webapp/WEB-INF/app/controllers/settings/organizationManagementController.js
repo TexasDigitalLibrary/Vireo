@@ -32,20 +32,27 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.addWorkflowStep = function(newWorkflowStepName) {
 			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function() {
-				// $scope.managedOrganization.aggregateWorkflowSteps.push(newWorkflowStep);
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};
 
-		$scope.deleteWorkflowStep = function(selectedOrganization, workflowStepID) {
+		$scope.deleteWorkflowStep = function(workflowStepID) {
 
-			OrganizationRepo.deleteWorkflowStep(selectedOrganization, workflowStepID);
+			OrganizationRepo.deleteWorkflowStep(workflowStepID);
 			console.info('should delete!!');
 
 		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
-			OrganizationRepo.updateWorkflowStep($scope.selectedOrganization, workflowStepToUpdate);
+			OrganizationRepo.updateWorkflowStep(workflowStepToUpdate);
+		};
+
+		$scope.reorderWorkflowStepUp = function(workflowStepID) {
+			OrganizationRepo.reorderWorkflowStep("up", workflowStepID);
+		};
+
+		$scope.reorderWorkflowStepDown = function(workflowStepID) {
+			OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
 		};
 
 	});

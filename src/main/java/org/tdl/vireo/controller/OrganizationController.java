@@ -169,4 +169,42 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
     }
     
+    @ApiMapping("/{requestingOrgID}/shift-workflow-step-up/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse shiftWorkflowStepUp(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+        
+        int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
+        
+        if(workflowStepToShiftIndex-1 > -1) {
+            WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex-1);
+            
+            organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
+            
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        }
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{requestingOrgID}/shift-workflow-step-down/{workflowStepID}")
+    @Auth(role="MANAGER")
+    public ApiResponse shiftWorkflowStepDown(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+        
+        int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
+        
+        if(workflowStepToShiftIndex+1 < requestingOrg.getAggregateWorkflowSteps().size()) {
+            WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex+1);
+            
+            organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
+            
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        }
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
 }

@@ -162,21 +162,21 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return addOrganizationPromise;
 	};
 
-	OrganizationRepo.addWorkflowStep = function(org, workflowStepName) {
+	OrganizationRepo.addWorkflowStep = function(workflowStepName) {
 
 		var addWorkflowStepDefer = $q.defer();
 		var addWorkflowStepPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
-			'method': org.id+'/create-workflow-step',
+			'method': OrganizationRepo.getSelectedOrganization().id+'/create-workflow-step',
 			'data': {
 				'name': workflowStepName,
-				'originating_organization_id': org.id,
+				'originating_organization_id': OrganizationRepo.getSelectedOrganization().id,
 				'overrideable': true
 			}
 		});
 
-		addWorkflowStepPromise.then(function(rawRes) {
+		addWorkflowStepPromise.then(function() {
 			addWorkflowStepDefer.resolve();
 		});
 
@@ -199,13 +199,13 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	};
 	
-	OrganizationRepo.updateWorkflowStep = function(requestingOrganization, workflowStepToUpdate) {
+	OrganizationRepo.updateWorkflowStep = function(workflowStepToUpdate) {
 		var updateWorkflowStepDefer = $q.defer();
 		
 		var updateWorkflowStepPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
-			'method': requestingOrganization.id+'/update-workflow-step',
+			'method': OrganizationRepo.getSelectedOrganization().id+'/update-workflow-step',
 			'data': workflowStepToUpdate
 		});
 			console.log("FOO");
@@ -217,13 +217,21 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return updateWorkflowStepDefer.promise;
 	};
 
-	OrganizationRepo.deleteWorkflowStep = function(organization, workflowStepID) {
+	OrganizationRepo.reorderWorkflowStep = function(upOrDown, workflowStepID) {
 		WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
-			'method': organization.id + '/' + 'delete-workflow-step/' + workflowStepID,
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + 'shift-workflow-step-'+upOrDown+'/' + workflowStepID,
 		});
-	}
+	};
+
+	OrganizationRepo.deleteWorkflowStep = function(workflowStepID) {
+		WsApi.fetch({
+			'endpoint': '/private/queue', 
+			'controller': 'organization', 
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + 'delete-workflow-step/' + workflowStepID,
+		});
+	};
 
 	OrganizationRepo.ready = function() {
 		return OrganizationRepo.promise;
