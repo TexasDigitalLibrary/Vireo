@@ -180,7 +180,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
         
-        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
 
         fieldProfile.setOverrideable(false);
         
@@ -216,7 +216,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
         
-        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         
         
         
@@ -288,15 +288,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
         
-        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
-        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
@@ -456,15 +456,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
         
-        FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
-        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
@@ -699,7 +699,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     	
     	WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
     	
-    	FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	
     	Long originalFieldProfileId = fieldProfile.getId();
     	
@@ -810,15 +810,15 @@ public class FieldProfileTest extends AbstractEntityTest {
     	FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
     	FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
     	
-    	fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
     	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
-    	FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
     	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
-    	fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_NONOVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+    	fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
     	fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
     	
@@ -843,9 +843,142 @@ public class FieldProfileTest extends AbstractEntityTest {
     	
     }
     
+    //TODO:  this test is not done, development of the full feature deferred for now
     @Test
     public void testMakeFieldNonOverrideable() {
+        // this test calls for adding a single workflowstep to the parent organization
+        workflowStepRepo.delete(workflowStep);
       
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+      
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        //put a field profile on the parent org's workflow step
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        
+        fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        
+        //workflow step with field profiles should be on the parent, child, grandchild, and great grandchildren
+        
+        //make a change to the field profile at the child org
+        
+        //change to field profile recorded on new workflow step at child org, inherited by all descendant orgs
+        
+        //make field profile non-overrideable at parent
+        
+        //should delete new field profile at child org, delete workflow step which is now functionally identical to original workflow step, and have everybody point back at the original.
+        
+        //TODO:  do we really need the overrideable boolean on field profiles?
+      
+    }
+    
+    //TODO:  this test is not done, development of the full feature deferred for now
+    @Test
+    public void testDeleteFPAtDescendantOrgAndDuplicateWSIsDeletedToo() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException
+    {
+        // this test calls for adding a single workflowstep to the parent organization
+        workflowStepRepo.delete(workflowStep);
+        organization = organizationRepo.findOne(organization.getId());
+        
+      
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+      
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        //put a field profile on the parent org's workflow step
+        //and go ahead and put on a couple more field profiles for good measure
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        //override the field profile at the child
+        fieldProfile.setHelp("help!");
+        FieldProfile fpPrime = fieldProfileRepo.update(fieldProfile, organization);
+        
+        //TODO:  make fieldProfile non-overrideable, check that fpPrime goes away and the new derivative step goes away
+        
+        
     }
     
     @After
