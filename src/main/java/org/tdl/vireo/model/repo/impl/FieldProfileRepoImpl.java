@@ -78,6 +78,11 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         	
             throw new FieldProfileNonOverrideableException();
         }
+        //if the requestor is not originator, and the step the profile's on is not overrideable, we can't make the update
+        else if(!requestorOriginatesProfile && !fieldProfile.getOriginatingWorkflowStep().getOverrideable())
+        {
+            throw new WorkflowStepNonOverrideableException();
+        }
         //if the requestor originates, make the update at the requestor
         else if(requestorOriginatesProfile) {
             // do nothing, just save changes
