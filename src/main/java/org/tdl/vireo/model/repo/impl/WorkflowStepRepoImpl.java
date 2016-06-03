@@ -146,7 +146,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	em.detach(workflowStep);
                 workflowStep.setId(null);
                                 
-                //TODO:  should be originating workflow step, not null?
                 workflowStep.setOriginatingWorkflowStep(null);
                 
                 workflowStep.setOriginatingOrganization(requestingOrganization);
