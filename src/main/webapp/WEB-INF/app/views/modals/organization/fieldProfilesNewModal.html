@@ -1,0 +1,20 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetFieldProfiles()" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Field Profile</h3>
+</div>
+
+<div class="modal-body">
+	<form>
+    	<div class="form-group">
+       	 	<label for="field-profiles-predicate">Predicate</label>
+        	<input ng-model="modalData.predicate" type="text" class="form-control" placeholder="Predicate of the new field profile"/>
+    	</div>
+	</form>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
+	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.name" ng-click="createFieldProfile()">Create</button>
+</div>

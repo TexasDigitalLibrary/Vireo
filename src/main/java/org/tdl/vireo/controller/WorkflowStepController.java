@@ -20,7 +20,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 @Controller
 @ApiMapping("/workflow-step")
-public class WorklowStepController {
+public class WorkflowStepController {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;

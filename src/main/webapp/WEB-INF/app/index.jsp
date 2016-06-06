@@ -316,10 +316,11 @@
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
-	    <script src="controllers/settings/languageRepoController.js"></script> 
+	    <script src="controllers/settings/languageRepoController.js"></script>
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
+	    <script src="controllers/settings/fieldProfileManagementController.js"></script>
 	    
 	<!-- endbuild -->
 

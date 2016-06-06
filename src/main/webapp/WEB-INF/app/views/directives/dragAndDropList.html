@@ -1,16 +1,18 @@
 
-<div ng-if="sortColumn && scopeValue.list.length > 0" class="sort-div">
-	<a href="" ng-click="sortMethod({column:sortColumn})">
-		<span class="glyphicon glyphicon-refresh"></span>
-		<span ng-if="sortAction=='confirm'"> Sort {{sortLabel}} by {{sortColumn}}</span>
-		<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{sortLabel}} by {{sortColumn}}?</span>
-	</a>
+<div *ngIf="scopeValue.list">
+	<div ng-if="sortColumn && scopeValue.list.length > 0" class="sort-div">
+		<a href="" ng-click="sortMethod({column:sortColumn})">
+			<span class="glyphicon glyphicon-refresh"></span>
+			<span ng-if="sortAction=='confirm'"> Sort {{sortLabel}} by {{sortColumn}}</span>
+			<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{sortLabel}} by {{sortColumn}}?</span>
+		</a>
+	</div>
+	
+	<ol data-as-sortable="listeners" data-ng-model="scopeValue.list">
+	   <li data-ng-repeat="item in scopeValue.list" data-as-sortable-item>
+	      	<div data-as-sortable-item-handle>
+	      		<span ng-include src="itemView" draggable="true"></span>
+	      	</div>
+	   </li>
+	</ol>
 </div>
-
-<ol data-as-sortable="listeners" data-ng-model="scopeValue.list">
-   <li data-ng-repeat="item in scopeValue.list" data-as-sortable-item>
-      	<div data-as-sortable-item-handle>
-      		<span ng-include src="itemView" draggable="true"></span>
-      	</div>
-   </li>
-</ol>

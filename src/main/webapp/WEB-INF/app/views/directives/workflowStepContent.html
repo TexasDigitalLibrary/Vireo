@@ -33,7 +33,10 @@
 
 </div>
 <hr>
-<div class="row">
+<div id="fieldProfiles" class="row" ng-controller="FieldProfileManagementController">
+	
+	<!-- 
+	
   	<div class="col-md-6">
   		<button class="btn btn-default">Add Field Profile</button>
   		<ol>
@@ -42,6 +45,69 @@
 			</li>
 		</ol>
 	</div>
+	
+	-->
+	
+	<alerts channels="/organization/workflowStep/fieldProfiles" types="ERROR, WARNING" exclusive></alerts>
+
+	<div class="col-sm-6">		
+		
+		<button class="btn btn-default modal-add-btn" 
+				data-toggle="modal" 
+				data-target="#fieldProfilesNewModal">
+			Add Field Profile
+		</button>
+		
+		<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which allows to create new field profile."></div>
+
+		<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field Profile</p>
+		 
+		<draganddroplist dragging="dragging"
+						 scope-value="fieldProfiles"
+						 properties='["fieldGlosses"]'
+						 item-view='views/directives/dragAndDropFieldProfile.html'
+						 listeners='dragControlListeners'
+						 edit='editFieldProfile(index)'
+						 sort-label='FieldProfiles'
+						 sort-column='predicate',
+						 sort-action='sortAction'
+						 sort-method='sortFieldProfiles(column)'>
+		</draganddroplist>
+ 		
+	</div>
+
+
+	
+	<div class="col-sm-6">
+		<trashcan id="{{trashCanId}}"
+				  dragging="dragging"
+				  listeners='dragControlListeners'>
+		</trashcan>
+	</div>
+
+	<modal modal-id="fieldProfilesNewModal" 
+		   modal-view="views/modals/organization/fieldProfilesNewModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="fieldProfilesEditModal" 
+		   modal-view="views/modals/organization/fieldProfilesEditModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="fieldProfilesConfirmRemoveModal" 
+		   modal-view="views/modals/organization/fieldProfilesConfirmRemoveModal.html" 
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   modal-backdrop="static">
+	</modal>
+
+	<hr/>
+	
   	<div class="col-md-6">
     	<div ng-repeat="note in steps[$parent.$index].notes" class="sticky-note">{{note.name}}</div>
   	</div>
