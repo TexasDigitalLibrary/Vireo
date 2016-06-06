@@ -73,9 +73,12 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 			}
 		};
 
-		$scope.removeFieldProfile = function(index) {
-	    	// TODO
-			console.log('remove field profile');
+		$scope.removeFieldProfile = function(fieldProfileId) {
+
+			console.log(fieldProfileId);
+	  //   	WorkflowStepRepo.remove($scope.step.id, fieldProfileId).then(function() {
+			// 	$scope.resetFieldProfiles();
+			// });
 		};
 
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({

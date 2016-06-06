@@ -54,7 +54,7 @@
 		
 		<button class="btn btn-default modal-add-btn" 
 				data-toggle="modal" 
-				data-target="#fieldProfilesNewModal">
+				data-target="#fieldProfilesNewModal-{{step-id}}">
 			Add Field Profile
 		</button>
 		
@@ -85,23 +85,23 @@
 		</trashcan>
 	</div>
 
-	<modal modal-id="fieldProfilesNewModal" 
+	<modal modal-id="fieldProfilesNewModal-{{step-id}}" 
 		   modal-view="views/modals/organization/fieldProfilesNewModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="fieldProfilesEditModal" 
+	<modal modal-id="fieldProfilesEditModal-{{step-id}}" 
 		   modal-view="views/modals/organization/fieldProfilesEditModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="fieldProfilesConfirmRemoveModal" 
+	<modal modal-id="fieldProfilesConfirmRemoveModal-{{step-id}}" 
 		   modal-view="views/modals/organization/fieldProfilesConfirmRemoveModal.html" 
-		   modal-header-class="modal-header-primary"
+		   modal-header-class="modal-header-danger"
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
