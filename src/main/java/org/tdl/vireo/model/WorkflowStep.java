@@ -259,21 +259,35 @@ public class WorkflowStep extends BaseEntity {
      */
     public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
-        int i = 0, pos1 = 0, pos2 = 0;
-        for(FieldProfile fp : getAggregateFieldProfiles()) { 
-            if(fp.getId().equals(fp1.getId())) {
-                pos1 = i;
-            }
-            if(fp.getId().equals(fp2.getId())) {
-                pos2 = i;
-            }
-            i++;
-        }
+        
+        int pos1 = getAggregateFieldProfiles().indexOf(fp1), 
+            pos2 = getAggregateFieldProfiles().indexOf(fp2);
+       
         if(pos1 >= 0 && pos2 >= 0) {
             Collections.swap(getAggregateFieldProfiles(), pos1, pos2);
             res = true;
         }
+        
         return res;
+    }
+    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
+    public void reorderAggregateFieldProfile(int src, int dest) {
+        
+        //adjust for index + 1
+        src -= 1;
+        dest -= 1;
+        
+        FieldProfile fieldProfile = getAggregateFieldProfiles().get(src);
+                
+        getAggregateFieldProfiles().remove(src);
+                
+        getAggregateFieldProfiles().add(dest, fieldProfile);
     }
     
     /**

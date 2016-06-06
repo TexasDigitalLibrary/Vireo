@@ -3,19 +3,29 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
+import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -23,8 +33,16 @@ import edu.tamu.framework.model.ApiResponse;
 public class WorkflowStepController {
     
     @Autowired
+    private OrganizationRepo organizationRepo;
+    
+    @Autowired
     private WorkflowStepRepo workflowStepRepo;
     
+    @Autowired
+    private ObjectMapper objectMapper;
+    
+    @Autowired 
+    private SimpMessagingTemplate simpMessagingTemplate;
     
     @ApiMapping("/all")
     @Auth(role="MANAGER")
@@ -52,10 +70,29 @@ public class WorkflowStepController {
 
         return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
     }
-
-    @ApiMapping("/delete/{organizationID}/{workflowStepID}")
-    public ApiResponse deleteStepById(String organizationID, String workflowStepID) {
-        System.out.println("got orgID " + " and wsID: " + workflowStepID);
-        return null;
+    
+    @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
+    @Auth(role="MANAGER")
+    public ApiResponse reorderFieldProfiles(@ApiVariable String workflowStepId, @ApiVariable String src, @ApiVariable String dest, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        Organization requestingOrganization = organizationRepo.findOne(Long.parseLong(dataNode.get("requestingOrgId").toString()));
+        
+        workflowStep = workflowStepRepo.reorderFieldProfiles(requestingOrganization, workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
+        
+        requestingOrganization = organizationRepo.findOne(Long.parseLong(dataNode.get("requestingOrgId").toString()));
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, requestingOrganization));
+        
+        return new ApiResponse(SUCCESS);
     }
+    
+
 }

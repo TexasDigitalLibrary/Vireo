@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($controller, $q, $scope, OrganizationRepo, DragAndDropListenerFactory) {
+vireo.controller("FieldProfileManagementController", function ($controller, $q, $scope, OrganizationRepo, DragAndDropListenerFactory, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 	
@@ -10,15 +10,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 	$scope.fieldProfiles = {
 		list: $scope.step.aggregateFieldProfiles
 	};
-	
-	
-	var position = 1;	
-	angular.forEach($scope.fieldProfiles.list, function(fieldProfile, key) {
-		fieldProfile.position = position;
-		position++;
-	});
-	
-	
+
 	//$scope.ready = $q.all([OrganizationRepo.ready()]);
 
 	$scope.dragging = false;
@@ -34,8 +26,12 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 	//$scope.ready.then(function() {
 
 		$scope.resetFieldProfiles = function() {
-			// TODO
-			console.log('reset field profiles')
+
+			var position = 1;	
+			angular.forEach($scope.fieldProfiles.list, function(fieldProfile) {
+				fieldProfile.position = position;
+				position++;
+			});
 			
 		};
 
@@ -43,7 +39,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 		
 		$scope.createFieldProfile = function() {
 			// TODO
-			console.log('create field profile')
+			console.log('create field profile');
 		};
 		
 		$scope.selectFieldProfile = function(index) {
@@ -57,11 +53,13 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 		
 		$scope.updateFieldProfile = function() {
 			// TODO
-			console.log('update field profile')
+			console.log('update field profile');
 		};
 
 		$scope.reorderFieldProfiles = function(src, dest) {
-			console.log('reorder field profile')
+			WorkflowStepRepo.reorder($scope.step.id, src, dest).then(function() {
+				$scope.resetFieldProfiles();
+			});
 		};
 
 		$scope.sortFieldProfiles = function(column) {
@@ -71,13 +69,13 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 			}
 			else if($scope.sortAction == 'sort') {
 				// TODO
-				console.log('sort field profile')
+				console.log('sort field profile');
 			}
 		};
 
 		$scope.removeFieldProfile = function(index) {
 	    	// TODO
-			console.log('remove field profile')
+			console.log('remove field profile');
 		};
 
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
@@ -89,6 +87,8 @@ vireo.controller("FieldProfileManagementController", function ($controller, $q, 
 			reorder: $scope.reorderFieldProfiles,
 			container: '#fieldProfiles'
 		});
+
+		$scope.resetFieldProfiles();
 
 	//});	
 

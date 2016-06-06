@@ -266,16 +266,8 @@ public class Organization extends BaseEntity {
      */
     public boolean swapAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
-        int i = 0, pos1 = -1, pos2 = -1;
-        for(WorkflowStep ws : getAggregateWorkflowSteps()) {         
-            if(ws.getId().equals(ws1.getId())) {
-                pos1 = i;
-            }
-            if(ws.getId().equals(ws2.getId())) {
-                pos2 = i;
-            }
-            i++;
-        }
+        int pos1 = getAggregateWorkflowSteps().indexOf(ws1), 
+            pos2 = getAggregateWorkflowSteps().indexOf(ws2);
         if(pos1 >= 0 && pos2 >= 0) {
             Collections.swap(getAggregateWorkflowSteps(), pos1, pos2);
             res = true;

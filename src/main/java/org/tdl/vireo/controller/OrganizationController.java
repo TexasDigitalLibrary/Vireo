@@ -120,7 +120,7 @@ public class OrganizationController {
         
     }
     
-    @ApiMapping("/{id}/worflow")
+    @ApiMapping("/{id}/workflow")
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {

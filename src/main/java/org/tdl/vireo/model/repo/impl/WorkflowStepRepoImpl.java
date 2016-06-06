@@ -33,7 +33,31 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return workflowStepRepo.findOne(workflowStep.getId());
     }
     
-    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
+    
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+                        
+            int indexOfWS = requestingOrganization.getAggregateWorkflowSteps().indexOf(workflowStep);
+            requestingOrganization.getAggregateWorkflowSteps().get(indexOfWS).reorderAggregateFieldProfile(src, dest);
+            
+        }
+        else {
+                        
+            workflowStep = update(workflowStep, requestingOrganization);
+            
+            requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+            
+            int indexOfWS = requestingOrganization.getAggregateWorkflowSteps().indexOf(workflowStep);
+            requestingOrganization.getAggregateWorkflowSteps().get(indexOfWS).reorderAggregateFieldProfile(src, dest);
+            
+        }
+        
+        requestingOrganization = organizationRepo.save(requestingOrganization);
+        
+        return workflowStep;
+    }
+    
+    public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
        
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
             

@@ -116,7 +116,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 			var workflowStepsPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'organization', 
-				method: fetchedOrg.id + '/worflow'
+				method: fetchedOrg.id + '/workflow'
 			});
 
 			workflowStepsPromise.then(function(data) {

@@ -511,7 +511,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         fp1 = fieldProfileRepo.findOne(fp1Id);
         fp2 = fieldProfileRepo.findOne(fp2Id);
         
-        workflowStep = workflowStepRepo.reorderFieldProfiles(parentOrganization, workflowStep, fp1, fp2);
+        workflowStep = workflowStepRepo.swapFieldProfiles(parentOrganization, workflowStep, fp1, fp2);
         
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -549,7 +549,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         fp2 = fieldProfileRepo.findOne(fp2Id);
         fp3 = fieldProfileRepo.findOne(fp3Id);
         
-        workflowStep = workflowStepRepo.reorderFieldProfiles(parentOrganization, workflowStep, fp2, fp3);
+        workflowStep = workflowStepRepo.swapFieldProfiles(parentOrganization, workflowStep, fp2, fp3);
         
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -588,7 +588,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         fp3 = fieldProfileRepo.findOne(fp3Id);
         
         // creates a new workflow step
-        workflowStepRepo.reorderFieldProfiles(organization, workflowStep, fp1, fp3);
+        workflowStepRepo.swapFieldProfiles(organization, workflowStep, fp1, fp3);
         
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
