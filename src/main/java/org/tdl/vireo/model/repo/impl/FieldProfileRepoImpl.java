@@ -73,11 +73,11 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
             List<WorkflowStep> workflowStepsContainingFieldProfile = getContainingDescendantWorkflowStep(requestingOrganization, fieldProfileToDisinherit);
             
             if(workflowStepsContainingFieldProfile.size() > 0) {
-                System.out.println("Descendents contain the field profile!");
                 
                 boolean foundNewOriginalOwner = false;
                 
                 for(WorkflowStep workflowStepContainingFieldProfile : workflowStepsContainingFieldProfile) {
+                    // add field profile as original to first workflow step
                     if(!foundNewOriginalOwner) {
                         workflowStepContainingFieldProfile.addOriginalFieldProfile(fieldProfileToDisinherit);
                         foundNewOriginalOwner = true;

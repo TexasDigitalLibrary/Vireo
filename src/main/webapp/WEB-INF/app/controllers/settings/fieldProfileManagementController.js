@@ -2,8 +2,6 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 	
-	console.log($scope.step)
-
 	$scope.fieldProfiles = {
 		list: $scope.step.aggregateFieldProfiles
 	};

@@ -87,13 +87,6 @@ public class WorkflowStepController {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
-        System.out.println("\nReorder field profile");
-        System.out.println("workflow step id: " + workflowStepId);
-        System.out.println("src: " + src);
-        System.out.println("dest: " + dest);
-        System.out.println("req org id: " + reqOrgId + "\n");
-        
-        
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         
         workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
@@ -115,11 +108,6 @@ public class WorkflowStepController {
         }
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        
-        System.out.println("\nRemove field profile");
-        System.out.println("workflow step id: " + workflowStepId);
-        System.out.println("field profile id: " + fieldProfileId);
-        System.out.println("req org id: " + reqOrgId + "\n");
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
