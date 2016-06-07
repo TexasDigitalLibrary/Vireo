@@ -11,8 +11,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
-				//update the parent scoped selected organization
-				// TODO: confirm this is necessary 
+				// update the parent scoped selected organization 
 				$scope.setSelectedOrganization(organization);
 			});
 		};
