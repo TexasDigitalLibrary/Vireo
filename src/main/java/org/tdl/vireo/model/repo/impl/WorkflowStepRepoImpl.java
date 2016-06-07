@@ -35,32 +35,42 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
     	
-    	// if requesting organization is not the workflow step's orignating organization    	    	    	
-        if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
-        	// create a new workflow step
-            workflowStep = update(workflowStep, requestingOrganization);
+        if(workflowStep.getOverrideable()) {
+        	// if requesting organization is not the workflow step's orignating organization    	    	    	
+            if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+            	// create a new workflow step
+                workflowStep = update(workflowStep, requestingOrganization);
+            }
+    
+    		// reorder aggregate field profiles
+            workflowStep.reorderAggregateFieldProfile(src, dest);
+            
+            // save workflow step
+            return workflowStepRepo.save(workflowStep);
         }
-
-		// reorder aggregate field profiles
-        workflowStep.reorderAggregateFieldProfile(src, dest);
-        
-        // save workflow step
-        return workflowStepRepo.save(workflowStep);
+        else {
+            throw new WorkflowStepNonOverrideableException();
+        }
     }
     
     public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
     	
-    	// if requesting organization is not the workflow step's orignating organization
-        if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
-        	// create a new workflow step
-            workflowStep = update(workflowStep, requestingOrganization);
+        if(workflowStep.getOverrideable()) {
+        	// if requesting organization is not the workflow step's orignating organization
+            if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+            	// create a new workflow step
+                workflowStep = update(workflowStep, requestingOrganization);
+            }
+            
+            // swap aggregate field profiles
+            workflowStep.swapAggregateFieldProfile(fp1, fp2);
+            
+            // save workflow step
+            return workflowStepRepo.save(workflowStep);
         }
-        
-        // swap aggregate field profiles
-        workflowStep.swapAggregateFieldProfile(fp1, fp2);
-        
-        // save workflow step
-        return workflowStepRepo.save(workflowStep);
+        else {
+            throw new WorkflowStepNonOverrideableException();
+        }
     }
     
     public void disinheritFromOrganization(Organization requestingOrg, WorkflowStep workflowStepToDisinherit) {

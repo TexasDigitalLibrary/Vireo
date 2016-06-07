@@ -57,45 +57,57 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
     
-    public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException {
+    public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
-    	// if requesting organization is not the workflow step's orignating organization    	    	    	
-        if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
-        	// create a new workflow step
-            workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+        if(workflowStep.getOverrideable()) {
             
-            workflowStep.removeAggregateFieldProfile(fieldProfileToDisinherit);
-        	
-            workflowStepRepo.save(workflowStep);
+            if(fieldProfileToDisinherit.getOverrideable()) {
+            
+            	// if requesting organization is not the workflow step's orignating organization    	    	    	
+                if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+                	// create a new workflow step
+                    workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+                    
+                    workflowStep.removeAggregateFieldProfile(fieldProfileToDisinherit);
+                	
+                    workflowStepRepo.save(workflowStep);
+                }
+                else {
+                    
+                    List<WorkflowStep> workflowStepsContainingFieldProfile = getContainingDescendantWorkflowStep(requestingOrganization, fieldProfileToDisinherit);
+                    
+                    if(workflowStepsContainingFieldProfile.size() > 0) {
+                        
+                        boolean foundNewOriginalOwner = false;
+                        
+                        for(WorkflowStep workflowStepContainingFieldProfile : workflowStepsContainingFieldProfile) {
+                            // add field profile as original to first workflow step
+                            if(!foundNewOriginalOwner) {
+                                workflowStepContainingFieldProfile.addOriginalFieldProfile(fieldProfileToDisinherit);
+                                foundNewOriginalOwner = true;
+                            }
+                            else {
+                                workflowStepContainingFieldProfile.addAggregateFieldProfile(fieldProfileToDisinherit);
+                            }
+                            workflowStepRepo.save(workflowStepContainingFieldProfile);
+                        }
+                        
+                        workflowStep.removeOriginalFieldProfile(fieldProfileToDisinherit);
+                        
+                        workflowStepRepo.save(workflowStep);
+                        
+                    }
+                    else {            
+                        fieldProfileRepo.delete(fieldProfileToDisinherit);
+                    }
+                }
+            }
+            else {
+                throw new FieldProfileNonOverrideableException();
+            }
         }
         else {
-            
-            List<WorkflowStep> workflowStepsContainingFieldProfile = getContainingDescendantWorkflowStep(requestingOrganization, fieldProfileToDisinherit);
-            
-            if(workflowStepsContainingFieldProfile.size() > 0) {
-                
-                boolean foundNewOriginalOwner = false;
-                
-                for(WorkflowStep workflowStepContainingFieldProfile : workflowStepsContainingFieldProfile) {
-                    // add field profile as original to first workflow step
-                    if(!foundNewOriginalOwner) {
-                        workflowStepContainingFieldProfile.addOriginalFieldProfile(fieldProfileToDisinherit);
-                        foundNewOriginalOwner = true;
-                    }
-                    else {
-                        workflowStepContainingFieldProfile.addAggregateFieldProfile(fieldProfileToDisinherit);
-                    }
-                    workflowStepRepo.save(workflowStepContainingFieldProfile);
-                }
-                
-                workflowStep.removeOriginalFieldProfile(fieldProfileToDisinherit);
-                
-                workflowStepRepo.save(workflowStep);
-                
-            }
-            else {            
-                fieldProfileRepo.delete(fieldProfileToDisinherit);
-            }
+            throw new WorkflowStepNonOverrideableException();
         }
         
     }

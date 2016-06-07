@@ -17,6 +17,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -98,7 +99,7 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/remove-field-profile/{fieldProfileId}")
     @Auth(role="MANAGER")
-    public ApiResponse removeFieldProfile(@ApiVariable String workflowStepId, @ApiVariable String fieldProfileId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
+    public ApiResponse removeFieldProfile(@ApiVariable String workflowStepId, @ApiVariable String fieldProfileId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
     	JsonNode dataNode = null;
         try {

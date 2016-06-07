@@ -1,12 +1,14 @@
-vireo.controller("FieldProfileManagementController", function ($controller, $scope, DragAndDropListenerFactory, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($controller, $scope, OrganizationRepo, DragAndDropListenerFactory, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+
+	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 	
 	$scope.fieldProfiles = {
 		list: $scope.step.aggregateFieldProfiles
 	};
 
-
+	// TODO: remove after refactoring out arrays put onto map with list as key
 	$scope.$watch(
         "step.aggregateFieldProfiles",
         function handleStepChanged(newStepFieldProfiles, oldStepFieldProfiles) {
@@ -14,6 +16,9 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
             $scope.resetFieldProfiles();
         }
     );
+
+    console.log($scope.step)
+    console.log($scope.selectedOrganization)
 
 	
 	$scope.dragging = false;
