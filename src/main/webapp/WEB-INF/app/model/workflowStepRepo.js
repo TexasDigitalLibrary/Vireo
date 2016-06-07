@@ -54,6 +54,13 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 
 	WorkflowStepRepo.remove = function(workflowStepId, fieldProfileId) {
 
+		console.log('********************************')
+		console.log('remove field profile')
+		console.log('workflow step id: ' + workflowStepId)
+		console.log('field profile id: ' + fieldProfileId)
+		console.log('req org id: ' + OrganizationRepo.getSelectedOrganization().id)
+		console.log('********************************')
+
 		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
@@ -68,6 +75,14 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 	};
 
 	WorkflowStepRepo.reorder = function(workflowStepId, src, dest) {
+
+		console.log('********************************')
+		console.log('reorder field profile')
+		console.log('workflow step id: ' + workflowStepId)
+		console.log('src: ' + src)
+		console.log('dest: ' + dest)
+		console.log('req org id: ' + OrganizationRepo.getSelectedOrganization().id)
+		console.log('********************************')
 
 		var reorderPromise = WsApi.fetch({
 				endpoint: '/private/queue', 

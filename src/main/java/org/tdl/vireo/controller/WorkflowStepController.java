@@ -13,7 +13,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -88,6 +87,13 @@ public class WorkflowStepController {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
+        System.out.println("\nReorder field profile");
+        System.out.println("workflow step id: " + workflowStepId);
+        System.out.println("src: " + src);
+        System.out.println("dest: " + dest);
+        System.out.println("req org id: " + reqOrgId + "\n");
+        
+        
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         
         workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
@@ -109,6 +115,11 @@ public class WorkflowStepController {
         }
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
+        System.out.println("\nRemove field profile");
+        System.out.println("workflow step id: " + workflowStepId);
+        System.out.println("field profile id: " + fieldProfileId);
+        System.out.println("req org id: " + reqOrgId + "\n");
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));

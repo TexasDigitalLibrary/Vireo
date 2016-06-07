@@ -2,9 +2,24 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 	
+	console.log($scope.step)
+
 	$scope.fieldProfiles = {
 		list: $scope.step.aggregateFieldProfiles
 	};
+
+
+	$scope.$watch(
+        "step.aggregateFieldProfiles",
+        function handleStepChanged(newStepFieldProfiles, oldStepFieldProfiles) {
+            console.log("new step field profiles:", newStepFieldProfiles);
+            console.log("old step field profiles:", oldStepFieldProfiles);
+
+            $scope.fieldProfiles.list = newStepFieldProfiles;
+            $scope.resetFieldProfiles();
+        }
+    );
+
 	
 	$scope.dragging = false;
 

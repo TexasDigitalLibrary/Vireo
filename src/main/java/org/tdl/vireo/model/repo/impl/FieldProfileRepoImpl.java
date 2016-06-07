@@ -8,20 +8,16 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.FieldGloss;
-import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
-import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
-import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 	
@@ -33,9 +29,6 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
-    
-    @Autowired
-    private OrganizationRepo organizationRepo;
     
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
