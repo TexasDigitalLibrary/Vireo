@@ -35,8 +35,8 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 
 	$scope.resetFieldProfiles();
 	
-	$scope.createFieldProfile = function() {
-		// TODO
+	$scope.createFieldProfile = function(newFieldProfile) {
+		console.log(newFieldProfile);
 		console.log('create field profile');
 	};
 	
