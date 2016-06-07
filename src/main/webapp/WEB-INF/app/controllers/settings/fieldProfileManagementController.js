@@ -16,10 +16,6 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
             $scope.resetFieldProfiles();
         }
     );
-
-    console.log($scope.step)
-    console.log($scope.selectedOrganization)
-
 	
 	$scope.dragging = false;
 
