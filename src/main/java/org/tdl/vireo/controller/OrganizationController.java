@@ -127,12 +127,12 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
-    @ApiMapping("/{id}/create-workflow-step")
+    @ApiMapping("/{id}/create-workflow-step/{name}")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiVariable String name) { 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
+        WorkflowStep newWorkflowStep = workflowStepRepo.create(name, org);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, org));
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
