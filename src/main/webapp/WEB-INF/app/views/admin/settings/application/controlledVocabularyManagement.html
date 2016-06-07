@@ -17,7 +17,7 @@
 			<p ng-if="controlledVocabulary.list.length == 0">Add new Controlled Vocabulary</p>
 			
 			<draganddroplist dragging="dragging"
-							 scope-value="controlledVocabulary"
+							 scope-value="controlledVocabulary.list"
 							 properties='["name"]'
 							 item-view='views/directives/dragAndDropControlledVocabulary.html'
 							 listeners='dragControlListeners'

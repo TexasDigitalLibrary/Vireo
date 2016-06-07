@@ -4,16 +4,15 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 	
-	$scope.fieldProfiles = {
-		list: $scope.step.aggregateFieldProfiles
-	};
-
-	// TODO: remove after refactoring out arrays put onto map with list as key
 	$scope.$watch(
-        "step.aggregateFieldProfiles",
-        function handleStepChanged(newStepFieldProfiles, oldStepFieldProfiles) {
-            $scope.fieldProfiles.list = newStepFieldProfiles;
-            $scope.resetFieldProfiles();
+		"step",
+		function handleStepChanged(newStep, oldStep) {
+			// console.log(newStep)
+			// console.log(oldStep)
+			$scope.resetFieldProfiles();
+
+			$scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
+			$scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
         }
     );
 
@@ -21,8 +20,6 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	console.info($scope.controlledVocabularies);
 	
 	$scope.dragging = false;
-
-	$scope.trashCanId = 'field-profile-trash-' + $scope.step.id;
 	
 	$scope.sortAction = "confirm";
 
@@ -30,7 +27,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	
 	$scope.resetFieldProfiles = function() {
 		var position = 1;	
-		angular.forEach($scope.fieldProfiles.list, function(fieldProfile) {
+		angular.forEach($scope.step.aggregateFieldProfiles, function(fieldProfile) {
 			fieldProfile.position = position;
 			position++;
 		});
@@ -81,10 +78,10 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	};
 
 	$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
-		trashId: $scope.trashCanId,
+		trashId: 'field-profile-trash-' + $scope.step.id,
 		dragging: $scope.dragging,
 		select: $scope.selectFieldProfile,
-		model: $scope.fieldProfiles,
+		model: $scope.step.aggregateFieldProfiles,
 		confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id, 
 		reorder: $scope.reorderFieldProfiles,
 		container: '#fieldProfiles'

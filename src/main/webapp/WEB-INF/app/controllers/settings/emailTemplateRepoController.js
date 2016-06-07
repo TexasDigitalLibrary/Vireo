@@ -43,7 +43,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     $scope.updateEmailTemplate = function() {
       EmailTemplateRepo.update($scope.modalData).then(function(data) {
     	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-          console.log(validationResponse);
+        console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     };
@@ -51,7 +51,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     $scope.removeEmailTemplate = function(index) {
       EmailTemplateRepo.remove(index).then(function(data) {
     	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-          console.log(validationResponse);
+        console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     };
@@ -59,7 +59,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     $scope.reorderEmailTemplates = function(src, dest){
       EmailTemplateRepo.reorder(src, dest).then(function(data) {
     	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-          console.log(validationResponse);
+        console.log(validationResponse);
     	  $scope.resetEmailTemplates();
       });
     }
@@ -82,7 +82,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       trashId: $scope.trashCanId,
       dragging: $scope.dragging,
       select: $scope.selectEmailTemplate,     
-      model: $scope.emailTemplates,
+      model: $scope.emailTemplates.list,
       confirm: '#emailTemplatesConfirmRemoveModal',
       reorder: $scope.reorderEmailTemplates,
       container: '#email-templates'

@@ -31,7 +31,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 
 		$scope.addWorkflowStep = function(newWorkflowStepName) {
-			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function() {
+			OrganizationRepo.addWorkflowStep(newWorkflowStepName).then(function() {
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};

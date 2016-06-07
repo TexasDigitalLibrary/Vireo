@@ -58,7 +58,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
       trashId: $scope.trashCanId,
       dragging: $scope.dragging,
       select: $scope.selectOrganizationCategory,     
-      model: $scope.organizationCategories,
+      model: $scope.organizationCategories.list,
       confirm: '#organizationCategoryConfirmRemoveModal',
       reorder: null,
       container: '#organization-categories'
