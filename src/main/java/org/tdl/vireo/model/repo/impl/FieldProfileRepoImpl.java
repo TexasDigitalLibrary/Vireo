@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
@@ -15,10 +17,11 @@ import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
-import org.tdl.vireo.model.repo.impl.exception.FieldProfileNonOverrideableException;
-import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 	
@@ -30,6 +33,9 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
+    
+    @Autowired
+    private OrganizationRepo organizationRepo;
     
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
@@ -56,6 +62,23 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
         return fieldProfileRepo.findOne(fieldProfile.getId());
+    }
+    
+    public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException {
+        
+    	// if requesting organization is not the workflow step's orignating organization    	    	    	
+        if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+        	// create a new workflow step
+            workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+            
+            workflowStep.removeAggregateFieldProfile(fieldProfileToDisinherit);
+        	
+            workflowStepRepo.save(workflowStep);
+        }
+        else {
+        	fieldProfileRepo.delete(fieldProfileToDisinherit);
+        }
+        
     }
     
     public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {

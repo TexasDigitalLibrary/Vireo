@@ -54,16 +54,16 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 
 	WorkflowStepRepo.remove = function(workflowStepId, fieldProfileId) {
 
-		var reorderPromise = WsApi.fetch({
+		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
-				method: workflowStepId+'/remove-field-profile/'+src+'/'+dest,
+				method: workflowStepId+'/remove-field-profile/' + fieldProfileId,
 				data: {
 					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
 				}
 		});
 
-		return reorderPromise;
+		return removePromise;
 
 	};
 

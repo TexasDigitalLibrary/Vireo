@@ -38,10 +38,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 
 		$scope.deleteWorkflowStep = function(workflowStepID) {
-
 			OrganizationRepo.deleteWorkflowStep(workflowStepID);
-			console.info('should delete!!');
-
 		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {

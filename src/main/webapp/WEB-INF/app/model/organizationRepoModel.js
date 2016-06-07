@@ -121,6 +121,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 			workflowStepsPromise.then(function(data) {
 				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+				
 				if(aggregateWorkflowSteps !== undefined) {
 					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
 				}
