@@ -12,9 +12,6 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	$scope.$watch(
         "step.aggregateFieldProfiles",
         function handleStepChanged(newStepFieldProfiles, oldStepFieldProfiles) {
-            console.log("new step field profiles:", newStepFieldProfiles);
-            console.log("old step field profiles:", oldStepFieldProfiles);
-
             $scope.fieldProfiles.list = newStepFieldProfiles;
             $scope.resetFieldProfiles();
         }
