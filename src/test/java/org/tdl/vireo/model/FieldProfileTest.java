@@ -8,8 +8,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
-import org.tdl.vireo.model.repo.impl.exception.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
 
 public class FieldProfileTest extends AbstractEntityTest {
 

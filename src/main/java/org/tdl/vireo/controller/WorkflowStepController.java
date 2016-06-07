@@ -13,8 +13,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
@@ -37,6 +37,9 @@ public class WorkflowStepController {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
+
+    @Autowired
+    private FieldProfileRepo fieldProfileRepo;
     
     @Autowired
     private ObjectMapper objectMapper;
@@ -82,14 +85,36 @@ public class WorkflowStepController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
-        Organization requestingOrganization = organizationRepo.findOne(Long.parseLong(dataNode.get("requestingOrgId").toString()));
         
-        workflowStep = workflowStepRepo.reorderFieldProfiles(requestingOrganization, workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
+        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
         
-        requestingOrganization = organizationRepo.findOne(Long.parseLong(dataNode.get("requestingOrgId").toString()));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, requestingOrganization));
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{workflowStepId}/remove-field-profile/{fieldProfileId}")
+    @Auth(role="MANAGER")
+    public ApiResponse removeFieldProfile(@ApiVariable String workflowStepId, @ApiVariable String fieldProfileId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
+        
+    	JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
+        
+        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);     
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
         return new ApiResponse(SUCCESS);
     }

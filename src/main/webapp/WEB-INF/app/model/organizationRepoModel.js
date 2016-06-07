@@ -121,6 +121,7 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 			workflowStepsPromise.then(function(data) {
 				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+				
 				if(aggregateWorkflowSteps !== undefined) {
 					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
 				}
@@ -185,13 +186,15 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 	};
 
 	OrganizationRepo.update = function(organization) {
-
+		
 		var updateOrganizationPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
 			'method': 'update',
 			'data': {
-				"organization": organization
+				"organizationId": organization.id,
+				"organizationName": organization.name,
+				"organizationCategoryId": organization.category.id
 			}
 		});
 

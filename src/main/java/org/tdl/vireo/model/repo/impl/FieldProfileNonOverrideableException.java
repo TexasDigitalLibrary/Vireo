@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.repo.impl.exception;
+package org.tdl.vireo.model.repo.impl;
 
 public class FieldProfileNonOverrideableException extends Exception {
 
