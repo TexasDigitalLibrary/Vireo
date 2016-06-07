@@ -13,7 +13,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		UserSettings.ready().then(function() {
 			$scope.updateUserSetting = function(name, timer) {
-				if(Object.keys($scope.userSettingsForm.$error).length) return;
+				if($scope.userSettingsForm && Object.keys($scope.userSettingsForm.$error).length) return;
 
 				timer = typeof timer == "undefined" ? 0 : timer;
 
