@@ -17,13 +17,13 @@
     	</div>
     	<div class="form-group">
        	 	<label for="field-profiles-predicate">Input Type</label>
-        	<select ng-model="modalData.inputType" type="text" class="form-control" required >
-        	</select>
+        	<select ng-model="modalData.inputType" type="text" class="form-control" required ></select>
     	</div>
     	<div class="form-group">
        	 	<label for="field-profiles-predicate">Controlled Vocabulary</label>
-        	<select ng-model="modalData.controlledVocabulary" type="text" class="form-control">        		
-        	</select>
+        	<select ng-model="modalData.controlledVocabulary" ng-options="cvname as cv.name for cv in controlledVocabularies.list" type="text" class="form-control">
+			  <option value="">(None)</option>
+			</select>
     	</div>
 	</form>
 </div>

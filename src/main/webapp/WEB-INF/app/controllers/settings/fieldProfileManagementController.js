@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($controller, $scope, OrganizationRepo, DragAndDropListenerFactory, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -16,6 +16,9 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
             $scope.resetFieldProfiles();
         }
     );
+
+	$scope.controlledVocabularies = ControlledVocabularyRepo.get();
+	console.info($scope.controlledVocabularies);
 	
 	$scope.dragging = false;
 
