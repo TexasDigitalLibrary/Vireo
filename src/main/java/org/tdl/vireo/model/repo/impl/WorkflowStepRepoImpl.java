@@ -35,7 +35,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
     	
-        if(workflowStep.getOverrideable()) {
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
         	// if requesting organization is not the workflow step's orignating organization    	    	    	
             if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
             	// create a new workflow step
@@ -55,7 +55,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     
     public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
     	
-        if(workflowStep.getOverrideable()) {
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
         	// if requesting organization is not the workflow step's orignating organization
             if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
             	// create a new workflow step

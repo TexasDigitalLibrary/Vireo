@@ -59,9 +59,9 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
     
     public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
-        if(workflowStep.getOverrideable()) {
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             
-            if(fieldProfileToDisinherit.getOverrideable()) {
+            if(fieldProfileToDisinherit.getOriginatingWorkflowStep().getId().equals(fieldProfileToDisinherit.getId()) || fieldProfileToDisinherit.getOverrideable()) {
             
             	// if requesting organization is not the workflow step's orignating organization    	    	    	
                 if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
