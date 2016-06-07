@@ -78,7 +78,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		$scope.uploadStatus = function() {
 			if($scope.uploadModalData.cv != undefined) {
 				ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function(response) {
-					var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
+					var validationResponse = angular.fromJson(response.body).payload.ValidationResponse;
 	                console.log(validationResponse);
 					$scope.uploadModalData.cv.inProgress = angular.fromJson(response.body).payload.Boolean;
 				});
@@ -220,7 +220,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectControlledVocabulary,			
-			model: $scope.controlledVocabulary,
+			model: $scope.controlledVocabulary.list,
 			confirm: '#controlledVocabularyConfirmRemoveModal',
 			reorder: $scope.reorderControlledVocabulary,
 			container: '#controlled-vocabulary'

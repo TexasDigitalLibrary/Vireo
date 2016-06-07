@@ -10,7 +10,7 @@
 		</button>
 		<p ng-if="graduationMonths.list.length == 0">Add new Graduation Month</p>
 		<draganddroplist dragging="dragging"
-						 scope-value="graduationMonths"
+						 scope-value="graduationMonths.list"
 						 properties='["month"]'
 						 item-view='views/directives/dragAndDropGraduationMonth.html'
 						 listeners='dragControlListeners'

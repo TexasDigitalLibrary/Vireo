@@ -65,7 +65,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectDepositLocation,			
-			model: $scope.depositLocations,
+			model: $scope.depositLocations.list,
 			confirm: '#depositLocationConfirmRemoveModal',
 			reorder: $scope.reorderDepositLocation,
 			container: '#deposit-location'

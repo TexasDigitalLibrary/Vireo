@@ -55,7 +55,7 @@
 				<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field Profile</p>
 				 
 				<draganddroplist dragging="dragging"
-								 scope-value="fieldProfiles"
+								 scope-value="step.aggregateFieldProfiles"
 								 properties='["fieldGlosses"]'
 								 item-view='views/directives/dragAndDropFieldProfile.html'
 								 listeners='dragControlListeners'
@@ -71,7 +71,7 @@
 
 			
 			<div class="col-sm-6">
-				<trashcan id="{{trashCanId}}"
+				<trashcan id="field-profile-trash-{{step.id}}"
 						  dragging="dragging"
 						  listeners='dragControlListeners'>
 				</trashcan>
@@ -109,7 +109,7 @@
 	<div ng-if="!step.overrideable && step.originatingOrganization != selectedOrganization.id">
 		<h3>Read only. Workflow step is non overrideable.</h3>
 		<ul class="list-unstyled">
-		   <li ng-repeat="fieldProfile in fieldProfiles.list">
+		   <li ng-repeat="fieldProfile in step.aggregateFieldProfiles">
 		      	{{fieldProfile.position}}. {{fieldProfile.fieldGlosses[0].value}}
 		   </li>
 		</ul>

@@ -64,7 +64,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectCustomAction,			
-			model: $scope.customActions,
+			model: $scope.customActions.list,
 			confirm: '#customActionConfirmRemoveModal',
 			reorder: $scope.reorderCustomAction,
 			container: '#custom-action'

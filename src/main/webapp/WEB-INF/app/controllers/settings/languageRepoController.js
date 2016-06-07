@@ -98,7 +98,7 @@ vireo.controller("LanguageRepoController", function ($controller, $q, $scope, La
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectLanguage,
-			model: $scope.languages,
+			model: $scope.languages.list,
 			confirm: '#languagesConfirmRemoveModal',
 			reorder: $scope.reorderLanguages,
 			container: '#languages'
