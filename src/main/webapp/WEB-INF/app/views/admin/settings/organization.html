@@ -139,7 +139,7 @@
 								<div class="col-sm-4 expanded">
 									<div class="with-tool-tip">
 										<div class="with-hint">
-											<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
+											<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category.id" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
 											</select>
 										</div>
 									</div>
