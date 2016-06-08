@@ -1262,11 +1262,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
 
-    //@Test
+    @Test
     public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverridable() throws WorkflowStepNonOverrideableException {
-        
-        //Step S1 has derivative step S2 which has derivative step S3
-        //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -1274,38 +1271,28 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
         
-        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
         
         organization = organizationRepo.findOne(organization.getId());
         
-        organization.addChildOrganization(grandChildOrganization);
-        organization = organizationRepo.save(organization);
-        
-        
-        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         
-                
-        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
-        
-        
-        grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
-        grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
-        
-        grandChildOrganization = organizationRepo.save(grandChildOrganization);
-        
+                
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+                
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
+        
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        Long pwsId = parentWorkflowStep.getId();
         
         assertEquals("Wrong number of workflow steps!", 1, workflowStepRepo.count());
         
@@ -1328,15 +1315,18 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        
-        WorkflowStep grandChildNonOverridableWorkflowStep = grandChildOrganization.getAggregateWorkflowSteps().get(0);
                 
-        grandChildNonOverridableWorkflowStep.setOverrideable(false);
+        parentWorkflowStep.setOverrideable(false);
         
-        grandChildNonOverridableWorkflowStep = workflowStepRepo.update(grandChildNonOverridableWorkflowStep, grandChildOrganization);
+        WorkflowStep grandChildNonOverridableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, grandChildOrganization);
+        
+        Long gcwsId = grandChildNonOverridableWorkflowStep.getId();
         
         
         assertEquals("Wrong number of workflow steps!", 2, workflowStepRepo.count());
+        
+        
+        parentWorkflowStep = workflowStepRepo.findOne(pwsId);
         
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -1362,11 +1352,12 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         
         
-        WorkflowStep childNonOverridableWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
+        grandChildNonOverridableWorkflowStep.setOverrideable(false);
         
-        childNonOverridableWorkflowStep.setOverrideable(false);
+        WorkflowStep childNonOverridableWorkflowStep = workflowStepRepo.update(grandChildNonOverridableWorkflowStep, organization);
         
-        childNonOverridableWorkflowStep = workflowStepRepo.update(childNonOverridableWorkflowStep, organization);
+        
+        grandChildNonOverridableWorkflowStep = workflowStepRepo.findOne(gcwsId);
         
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
