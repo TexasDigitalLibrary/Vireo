@@ -35,6 +35,7 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    // TODO: refactor with correct spelling, remember the getter and setters as well
     @Column(nullable = false)
     private Boolean overrideable;
     

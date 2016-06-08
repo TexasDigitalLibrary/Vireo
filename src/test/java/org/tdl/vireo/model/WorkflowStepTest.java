@@ -1352,12 +1352,15 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         
         
-        grandChildNonOverridableWorkflowStep.setOverrideable(false);
+        parentWorkflowStep.setOverrideable(false);
         
-        WorkflowStep childNonOverridableWorkflowStep = workflowStepRepo.update(grandChildNonOverridableWorkflowStep, organization);
+        WorkflowStep childNonOverridableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, organization);
         
         
         grandChildNonOverridableWorkflowStep = workflowStepRepo.findOne(gcwsId);
+        
+        
+        parentWorkflowStep = workflowStepRepo.findOne(pwsId);
         
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
