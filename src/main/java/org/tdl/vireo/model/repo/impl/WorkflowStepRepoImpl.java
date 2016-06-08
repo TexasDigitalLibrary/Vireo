@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
@@ -18,6 +19,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
 	@PersistenceContext
     private EntityManager em;
+	
+	@Autowired
+    private FieldProfileRepo fieldProfileRepo;
 	
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -164,11 +168,12 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
                 WorkflowStep newWorkflowStep = workflowStepRepo.save(pendingWorkflowStep);
                 
-               
+                
+                
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
-            		organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
-            		organizationRepo.save(organization);
-            	}
+                    organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
+                    organizationRepo.save(organization);
+                }
                 
                 
                 if(organizationRepo.findByAggregateWorkflowStepsId(persistedWorkflowStep.getId()).size() == 0) {
@@ -180,7 +185,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 }
                 
                 
-                
+               
                 if(!pendingWorkflowStep.getOverrideable()) {
                     
                     List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);
@@ -190,12 +195,15 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                             organization.replaceAggregateWorkflowStep(descendentWorkflowStep, newWorkflowStep);
                             organizationRepo.save(organization);
                         }
-                        if(!descendentWorkflowStep.getId().equals(newWorkflowStep.getId())) {
+                        
+                        if(!descendentWorkflowStep.getId().equals(newWorkflowStep.getId()) && descendentWorkflowStep.getOriginalFieldProfiles().size() == 0) {
                             workflowStepRepo.delete(descendentWorkflowStep);
                         }
                     }
                     
                 }
+                
+                
                 
                 resultingWorkflowStep = newWorkflowStep;
             }
