@@ -1,8 +1,8 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -523,7 +523,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     
     @Test
     public void testMakeWorkflwoStepWithDescendantsNonOverrideable() throws WorkflowStepNonOverrideableException {
-    	
+        
         //Step S1 has derivative step S2 which has derivative step S3
         //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
         
@@ -1192,11 +1192,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
-        WorkflowStep t1 = workflowStepRepo.create("Step T", parentOrganization);
+        /*WorkflowStep t1 =*/ workflowStepRepo.create("Step T", parentOrganization);
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
-        WorkflowStep u1 = workflowStepRepo.create("Step U", parentOrganization);
+        /*WorkflowStep u1 =*/ workflowStepRepo.create("Step U", parentOrganization);
                 
         
         
@@ -1262,33 +1262,146 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
 
+    //@Test
+    public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverridable() throws WorkflowStepNonOverrideableException {
+        
+        //Step S1 has derivative step S2 which has derivative step S3
+        //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
+        organization.addChildOrganization(grandChildOrganization);
+        organization = organizationRepo.save(organization);
+        
+        
+        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+                
+        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
+        grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
+        
+        grandChildOrganization = organizationRepo.save(grandChildOrganization);
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        assertEquals("Wrong number of workflow steps!", 1, workflowStepRepo.count());
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        
+        WorkflowStep grandChildNonOverridableWorkflowStep = grandChildOrganization.getAggregateWorkflowSteps().get(0);
+                
+        grandChildNonOverridableWorkflowStep.setOverrideable(false);
+        
+        grandChildNonOverridableWorkflowStep = workflowStepRepo.update(grandChildNonOverridableWorkflowStep, grandChildOrganization);
+        
+        
+        assertEquals("Wrong number of workflow steps!", 2, workflowStepRepo.count());
+        
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+        
+        
+        WorkflowStep childNonOverridableWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
+        
+        childNonOverridableWorkflowStep.setOverrideable(false);
+        
+        childNonOverridableWorkflowStep = workflowStepRepo.update(childNonOverridableWorkflowStep, organization);
+        
+        
+        // should of deleted the workflow step the grandchild created when making it non overridable
+        assertEquals("Wrong number of workflow steps!", 2, workflowStepRepo.count());
+        
+        
+        // parent would be the institution
+        assertTrue("Parent does not have workflow step!", parentOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("Parent has more than one workflow step!", 1, parentOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("Parent workflow step is overridable!", true, parentOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        
+        // child is the first organization created. set workflow step to non overridable after the granchild did
+        assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertEquals("Child has more than one workflow step!", 1, organization.getAggregateWorkflowSteps().size());
+        assertEquals("Child workflow step is overridable!", false, organization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        
+        // grandchild is the organization to first set workflow step to non overridable
+        assertTrue("Grandchild does not have parent workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertFalse("Grandchild still has child workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertEquals("Grandchild has more than one workflow step!", 1, grandChildOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("Grandchild workflow step is overridable!", false, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        
+        // some additional children to check
+        assertTrue("Great grandchild does not have parent workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertFalse("Great grandchild still has child workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertEquals("Great grandchild has more than oneworkflow step!", 1, greatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("Great grandchild workflow step is overridable!", false, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        
+        // some additional children to check
+        assertTrue("Another great grandchild does not have parent workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertFalse("Another great grandchild still has child workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertEquals("Another great grandchild has more than one workflow step!", 1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
+        assertEquals("Another great grandchild workflow step is overridable!", false, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        
+    }
+    
 
     @After
     public void cleanUp() {
         
-		fieldProfileRepo.findAll().forEach(fieldProfile -> {
-			fieldProfileRepo.delete(fieldProfile);
-		});
-		assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
+        fieldProfileRepo.findAll().forEach(fieldProfile -> {
+            fieldProfileRepo.delete(fieldProfile);
+        });
+        assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
 
-		workflowStepRepo.findAll().forEach(workflowStep -> {
-			workflowStepRepo.delete(workflowStep);
-		});
-		assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
+        workflowStepRepo.findAll().forEach(workflowStep -> {
+            workflowStepRepo.delete(workflowStep);
+        });
+        assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
 
-		organizationCategoryRepo.deleteAll();
-		assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
+        organizationCategoryRepo.deleteAll();
+        assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
 
-		organizationRepo.findAll().forEach(organization -> {
-			organizationRepo.delete(organization);
-		});
-		assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
+        organizationRepo.findAll().forEach(organization -> {
+            organizationRepo.delete(organization);
+        });
+        assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
 
-		fieldPredicateRepo.deleteAll();
-		assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
+        fieldPredicateRepo.deleteAll();
+        assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
 
-		noteRepo.deleteAll();
-		assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
+        noteRepo.deleteAll();
+        assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
     }
    
 }
