@@ -183,7 +183,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
                 pendingWorkflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                // this is important, original field profiles will be related to this new workflow step as the originator 
+                // this is important, elsewise original field profiles will be related to this new workflow step as the originator 
                 pendingWorkflowStep.setOriginalFieldProfiles(new ArrayList<FieldProfile>());
                 
                 pendingWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
@@ -221,13 +221,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                         }
                         
                         // delete if not belonging to any aggregate
-                        if(organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId()).size() == 0) {
-                        	
-                        	descendentWorkflowStep.getOriginalFieldProfiles().forEach(fp -> {
-                        		System.out.println("deleting field profile id: " + fp.getId());
-                        		System.out.println("deleting field profile: " + fp.getPredicate().getValue());
-                        	});
-                        	
+                        if(organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId()).size() == 0) {                        	
                             workflowStepRepo.delete(descendentWorkflowStep);
                         }
                     }
