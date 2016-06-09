@@ -26,7 +26,8 @@
 				scope-value="settings.configurable.application.current_semester"
 				hint="'Month Year' (i.e. May 2015)"
 				on-blur="updateConfigurableSettings('application', 'current_semester')"
-				key-down="confirmEdit(event, prop)">
+				key-down="confirmEdit(event, prop)"
+				validation-response="serverErrors['application']['current_semester']">
 			</textField>
 
 			<textField 
@@ -34,7 +35,8 @@
 				scope-value="settings.configurable.application.grantor"
 				hint="The full name of the institution awarding degrees."
 				on-blur="updateConfigurableSettings('application', 'grantor')"
-				key-down="confirmEdit(event, prop)">
+				key-down="confirmEdit(event, prop)"
+				validation-response="serverErrors['application']['grantor']">
 			</textField>
 
 		</div>

@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetGraduationMonth()" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="resetGraduationMonth(); closeModal(attr.modalId)" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
@@ -8,9 +8,12 @@
 <div class="modal-body">
 	<h4><b>Click confirm to remove the Graduation Month:</b></h4>
 	<h4>{{toMonthString(modalData.month)}}</h4>
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()" data-dismiss="modal">Cancel</button>
-	<button id="graduationMonth-confirm" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="removeGraduationMonth(modalData.id)">Confirm</button>
+	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth(); closeModal(attr.modalId)">Cancel</button>
+	<button id="graduationMonth-confirm" type="button" class="btn btn-primary" ng-click="removeGraduationMonth(modalData.id)">Confirm</button>
 </div>

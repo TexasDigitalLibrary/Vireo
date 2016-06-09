@@ -187,10 +187,10 @@ public class SubmissionTest extends AbstractEntityTest {
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
-        organizationCategoryRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
-        });        
+        });
+        organizationCategoryRepo.deleteAll();
         embargoRepo.deleteAll();
         userRepo.deleteAll();        
         attachmentRepo.deleteAll();

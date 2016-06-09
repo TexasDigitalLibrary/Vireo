@@ -8,7 +8,7 @@ import org.junit.After;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class OrganizationCategoryTest extends AbstractEntityTest {
-
+    
     @Override
     public void testCreate() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
@@ -50,20 +50,26 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
         category = organizationCategoryRepo.findByName(TEST_CATEGORY_NAME);
 
         Set<Organization> organizations = category.getOrganizations();
+        
         assertEquals("Category does not have the organization!", true, organizations.contains(organization));
-
+        
         organizationCategoryRepo.delete(category);
-
-        assertEquals("Entity did not delete!", 0, organizationCategoryRepo.count());
-
+        
+        
+        assertEquals("Entity did not deleted!", 0, organizationCategoryRepo.count());
+        
         assertEquals("Child entity did not delete by cascade!", 0, organizationRepo.count());
+        
     }
 
     @After
     public void cleanUp() {
+        
         organizationCategoryRepo.deleteAll();
+        
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
+        
     }
 }

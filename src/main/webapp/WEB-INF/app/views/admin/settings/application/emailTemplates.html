@@ -1,6 +1,8 @@
 <div id="email-templates" class="row" ng-controller="EmailTemplateRepoController">
 
-  <alerts channels="/settings/email-templates" types="ERROR, WARNING" exclusive></alerts>
+  	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
 
   <div class="col-sm-6">
     <button class="btn btn-default modal-add-btn"

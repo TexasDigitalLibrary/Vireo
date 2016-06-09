@@ -1020,8 +1020,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         	workflowStepRepo.delete(workflowStep);
         });
     	
-        organizationCategoryRepo.deleteAll();
-        
+    	organizationCategoryRepo.deleteAll();
+    	
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });

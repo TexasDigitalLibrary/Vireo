@@ -79,9 +79,9 @@ public class UserTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         userRepo.deleteAll();
-        organizationCategoryRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
+        organizationCategoryRepo.deleteAll();
     }
 }

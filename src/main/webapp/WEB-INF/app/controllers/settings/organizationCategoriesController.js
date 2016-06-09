@@ -8,6 +8,8 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
   $scope.ready = $q.all([OrganizationCategoryRepo.ready()]);
 
   $scope.dragging = false;
+  
+  $scope.serverErrors = [];
 
   $scope.trashCanId = 'organization-category-trash';
 
@@ -16,6 +18,14 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     $scope.resetOrganizationCategories = function() {
       $scope.modalData = {'name':''};
     }
+    
+    $scope.closeModal = function(modalId) {
+		angular.element('#' + modalId).modal('hide');
+		// clear all errors, but not infos or warnings
+		if($scope.serverErrors !== undefined) {
+			$scope.serverErrors.errors = undefined;
+		}
+	}
 
     $scope.resetOrganizationCategories();
     
@@ -26,31 +36,37 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     $scope.createOrganizationCategory = function() {
       OrganizationCategoryRepo.add($scope.modalData).then(function(data){
-    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-          console.log(validationResponse);
+    	  $scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+    	  if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+    		  $scope.resetOrganizationCategories();
+    		  $scope.closeModal("organizationCategoryNewModal");
+    	  }
       });
-        $scope.resetOrganizationCategories();
     };
 
     $scope.updateOrganizationCategory = function() {
         OrganizationCategoryRepo.update($scope.modalData).then(function(data){
-        	var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-            console.log(validationResponse);
+        	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+        	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+      		  $scope.resetOrganizationCategories();
+      		  $scope.closeModal("organizationCategoryEditModal");
+      	  }
         });
-        $scope.resetOrganizationCategories();
     };
 
     $scope.launchEditModal = function(organizationCategory) {
+    	$scope.serverErrors = [];
         $scope.modalData = organizationCategory;
         angular.element('#organizationCategoryEditModal').modal('show');
     };
 
     $scope.removeOrganizationCategory = function(index) {
       OrganizationCategoryRepo.remove($scope.modalData).then(function(data){
-    	  var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-          console.log(validationResponse);
-          $scope.resetOrganizationCategories();
-          console.info($scope.organizationCategories);
+    	  $scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+    	  if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+    		  $scope.resetOrganizationCategories();
+    		  $scope.closeModal("organizationCategoryConfirmRemoveModal");
+    	  }
       });
     };
 

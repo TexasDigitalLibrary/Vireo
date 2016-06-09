@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -107,6 +108,8 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
             toRemove = controlledVocabularyRepo.findOne(id);
             if (toRemove == null) {
                 modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, id did not exist!"));
+            } else if (toRemove.isEnum() || toRemove.isEntityProperty()) {
+                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, it's an internal system one!"));
             }
         }
         return toRemove;
@@ -139,13 +142,13 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     }
     
     @Override
-    public String[] validateCompareRows(Object inputStream, ModelBindingResult modelBindingResult) {
-        String[] rows = null;
+    public String[] validateCompareRows(ServletInputStream inputStream, ModelBindingResult modelBindingResult) {
+        String[] rows = new String[0];
         
         try {
             rows = inputStreamToRows(inputStream);
-        } catch (IOException e) {
-            modelBindingResult.addError(new ObjectError("controlledVocabulary", "Invalid input!"));
+        } catch (IOException e1) {
+            modelBindingResult.addError(new ObjectError("controlledVocabulary", "Invalid file uploaded!"));
         }
         
         return rows;
@@ -167,14 +170,14 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     /**
      * Converts input stream to array of strings which represent the rows
      * 
-     * @param inputStream
+     * @param ServletInputStream
      *            csv bitstream
      * @return string array of the csv rows
      * @throws IOException
      */
-    private String[] inputStreamToRows(Object inputStream) throws IOException {
+    private String[] inputStreamToRows(InputStream bufferedIn) throws IOException {
         String csvString = null;
-        String[] imageData = IOUtils.toString((ServletInputStream) inputStream, "UTF-8").split(";");
+        String[] imageData = IOUtils.toString(bufferedIn, "UTF-8").split(";");
         String[] encodedData = imageData[1].split(",");
         csvString = new String(Base64.getDecoder().decode(encodedData[1]));
         String[] rows = csvString.split("\\R");

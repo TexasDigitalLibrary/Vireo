@@ -4,6 +4,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
+	
+	$scope.serverErrors = [];
 		
 	$scope.settings.configurable = ConfigurableSettings.get();
 
@@ -34,6 +36,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		return temp.textContent || temp.innerText || "";
   	};
   	
+  	var setServerErrors = function(type, name, data){
+  		// since we're a 2d array, make sure our 1d exists first
+  		if($scope.serverErrors[type] === undefined) {
+			$scope.serverErrors[type] = [];
+		}
+  		// either put a ValidationResponse object into the 2d array, or clear it since it'll be "undefined"
+		$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
+  	};
+  	
 	ConfigurableSettings.ready().then(function() {
 
 		//TODO:  check these update config settings methods for redundancy and clean up.
@@ -44,7 +55,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 			$scope.pendingUpdate = true;
 
 			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfigurableSettings(type,name,$scope.settings.configurable[type][name]);
+				$scope.updateConfigurableSettings(type,name);
 				$scope.pendingUpdate = false;
 			}, 500);
 
@@ -52,22 +63,19 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.updateConfigurableSettingsPlainText = function(type,name) {
 			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name])).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+				setServerErrors(type, name, data);
 			});
 		};
 
-		$scope.updateConfigurableSettings = function(type,setting) {
-			ConfigurableSettings.update(type,setting,$scope.settings.configurable[type][setting]).then(function(data) { 
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+		$scope.updateConfigurableSettings = function(type,name) {
+			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+				setServerErrors(type, name, data);
 			});
 		};
 
 		$scope.resetConfigurableSettings = function(type,name) {
 			ConfigurableSettings.reset(type,name,$scope.settings.configurable[type][name]).then(function(data) {
-				var validationResponse = angular.fromJson(data.body).payload.ValidationResponse;
-				console.log(validationResponse);
+				setServerErrors(type, name, data);
 			});
 		};
 

@@ -8,7 +8,10 @@
 				<input class="form-control" type="text" ng-model="scopeValue" ng-keydown="keyDown({event: $event, prop: prop})" ng-blur="onBlur()"></input>
 				<span ng-if="hint" class="hint">{{ hint }}</span>
 			</div>
-			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign tooltip-span" tooltip="{{ toolTip }}"></span>
+			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque tooltip-span" tooltip="{{ toolTip }}"></span>
+			<validationresponse
+				validation-response="validationResponse">
+			</validationresponse>
 		</div>
 	</div>
 </div>

@@ -1,6 +1,10 @@
 <div ng-controller="WhoHasAccessController">
 <div class="row">
 
+	<validationresponse
+		validation-response="serverErrors">
+	</validationresponse>
+
     <button class="btn btn-default modal-add-btn" 
             data-toggle="modal" 
             data-target="#addMemberModal">

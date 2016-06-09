@@ -130,10 +130,10 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     public void cleanUp() {
         namedSearchFilterRepo.deleteAll();
         embargoRepo.deleteAll();
-        organizationCategoryRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
+        organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
         attachmentRepo.deleteAll();
         attachmentTypeRepo.deleteAll();

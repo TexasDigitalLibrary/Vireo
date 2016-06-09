@@ -7,7 +7,7 @@
 			<div class="btn-group">
 	      		<button ng-repeat="option in options track by $index" class="btn btn-sm btn-default" ng-click="setActive(option.evaluation)" ng-class="{'active': scopeValue.toString() == option.evaluation}">{{ option.gloss }}</button>	
 	    	</div>
-	    	<span ng-if="toolTip" class="glyphicon glyphicon-info-sign" tooltip="{{ toolTip }}"></span>
+	    	<span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ toolTip }}"></span>
     	</div>
 	</div>
 </div>
