@@ -34,7 +34,6 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    // TODO: refactor with correct spelling, remember the getter and setters as well
     @Column(nullable = false)
     private Boolean overrideable;
     
@@ -58,14 +57,23 @@ public class WorkflowStep extends BaseEntity {
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
     @OrderColumn
     private List<FieldProfile> aggregateFieldProfiles;
+    
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @Fetch(FetchMode.SELECT)
+    private List<Note> originalNotes;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private List<Note> notes;
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateNotes_order", "aggregate_notes_id" }))
+    @OrderColumn
+    private List<Note> aggregateNotes;
 
     public WorkflowStep() {
     	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setOriginalFieldProfiles(new ArrayList<FieldProfile>());
-        setNotes(new ArrayList<Note>());
+        setAggregateNotes(new ArrayList<Note>());
+        setOriginalNotes(new ArrayList<Note>());
     }
 
     public WorkflowStep(String name) {
@@ -95,17 +103,19 @@ public class WorkflowStep extends BaseEntity {
     }
     
     /**
-     * @return the originatingOrganization
+     * 
+     * @return
      */
-    public Organization getOriginatingOrganization() {
-        return originatingOrganization;
+    public Boolean getOverrideable() {
+        return overrideable;
     }
 
     /**
-     * @param originatingOrganization the originatingOrganization to set
+     * 
+     * @param overrideable
      */
-    public void setOriginatingOrganization(Organization originatingOrganization) {
-        this.originatingOrganization = originatingOrganization;
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
     }
     
     /**
@@ -121,23 +131,21 @@ public class WorkflowStep extends BaseEntity {
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
-
+    
     /**
-     * 
-     * @return
+     * @return the originatingOrganization
      */
-    public Boolean getOverrideable() {
-        return overrideable;
+    public Organization getOriginatingOrganization() {
+        return originatingOrganization;
     }
 
     /**
-     * 
-     * @param overrideable
+     * @param originatingOrganization the originatingOrganization to set
      */
-    public void setOverrideable(Boolean overrideable) {
-        this.overrideable = overrideable;
+    public void setOriginatingOrganization(Organization originatingOrganization) {
+        this.originatingOrganization = originatingOrganization;
     }
-
+    
     /**
      * 
      * @return
@@ -303,24 +311,101 @@ public class WorkflowStep extends BaseEntity {
         return null;
     }
 
-    public List<Note> getNotes() {
-        return notes;
+    
+    public List<Note> getOriginalNotes() {
+        return originalNotes;
     }
 
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
+    public void setOriginalNotes(List<Note> originalNotes) {
+        this.originalNotes = originalNotes;
     }
 
-    public void addNote(Note note) {
-        notes.add(note);
+    public void addOriginalNote(Note originalNote) {
+        if(!getOriginalNotes().contains(originalNote)) {
+            getOriginalNotes().add(originalNote);
+        }
+        addAggregateNote(originalNote);
     }
 
-    public void removeNote(Note note) {
-        notes.remove(note);
+    public void removeOriginalNote(Note originalNote) {
+        getOriginalNotes().remove(originalNote);
+        removeAggregateNote(originalNote);
+    }
+   
+    public boolean replaceOriginalNote(Note n1, Note n2) {
+        boolean res = false;
+        int pos = 0;
+        for(Note n : getOriginalNotes()) {
+            if(n.getId().equals(n1.getId())) {
+                getOriginalNotes().remove(n1);
+                getOriginalNotes().add(pos, n2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        replaceAggregateNote(n1, n2);
+        return res;
+    }
+    
+    public List<Note> getAggregateNotes() {
+        return aggregateNotes;
     }
 
-    public void clearAllNotes() {
-        notes.clear();
+    public void setAggregateNotes(List<Note> aggregateNotes) {
+        this.aggregateNotes = aggregateNotes;
+    }
+
+    public void addAggregateNote(Note aggregateNote) {
+        if(!getAggregateNotes().contains(aggregateNote)) {
+            getAggregateNotes().add(aggregateNote);
+        }
+    }
+
+    public void removeAggregateNote(Note aggregateNote) {
+        getAggregateNotes().remove(aggregateNote);
+    }
+    
+    public boolean replaceAggregateNote(Note n1, Note n2) {       
+        boolean res = false;
+        int pos = 0;
+        for(Note n : getAggregateNotes()) {
+            if(n.getId().equals(n1.getId())) {
+                getAggregateNotes().remove(n1);
+                getAggregateNotes().add(pos, n2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        return res;
+    }
+    
+    public boolean swapAggregateNote(Note n1, Note n2) {
+        boolean res = false;
+        
+        int pos1 = getAggregateNotes().indexOf(n1), 
+            pos2 = getAggregateNotes().indexOf(n2);
+       
+        if(pos1 >= 0 && pos2 >= 0) {
+            Collections.swap(getAggregateNotes(), pos1, pos2);
+            res = true;
+        }
+        
+        return res;
+    }
+    
+    public void reorderAggregateNote(int src, int dest) {
+        
+        //adjust for index + 1
+        src -= 1;
+        dest -= 1;
+        
+        Note note = getAggregateNotes().get(src);
+                
+        getAggregateNotes().remove(src);
+                
+        getAggregateNotes().add(dest, note);
     }
     
 }

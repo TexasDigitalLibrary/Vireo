@@ -50,8 +50,10 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         organization = organizationRepo.findOne(organization.getId());
         
-        Note note = noteRepo.create(TEST_NOTE_NAME, TEST_NOTE_TEXT);
-        Note noteToDisassociate = noteRepo.create(TEST_SEVERABLE_NOTE_NAME, TEST_SEVERABLE_NOTE_TEXT);
+        Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+        Note noteToDisassociate = noteRepo.create(workflowStep, TEST_SEVERABLE_NOTE_NAME, TEST_SEVERABLE_NOTE_TEXT);
+        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
         FieldPredicate fieldPredicateToDisassociate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
@@ -62,8 +64,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         FieldProfile fieldProfileToDisassociate = fieldProfileRepo.create(workflowStep, fieldPredicateToDisassociate, TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE, TEST_SEVERABLE_FIELD_PROFILE_USAGE, TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE,  TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_SEVERABLE_FIELD_PROFILE_ENABLED, TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         
-        workflowStep.addNote(note);
-        workflowStep.addNote(noteToDisassociate);
+        workflowStep.addOriginalNote(note);
+        workflowStep.addOriginalNote(noteToDisassociate);
         
         
         try {
@@ -82,7 +84,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertEquals("WorkflowStep repo does not have the correct number of field profiles", 2, fieldProfileRepo.count());
         
         // check number of notes
-        assertEquals("WorkflowStep repo does not have the correct number of notes", 2, workflowStep.getNotes().size());
+        assertEquals("WorkflowStep repo does not have the correct number of notes", 2, workflowStep.getOriginalNotes().size());
 
         // check number of field predicates
         assertEquals("WorkflowStep repo does not have the correct number of field profiles", 2, workflowStep.getOriginalFieldProfiles().size());
@@ -127,7 +129,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         
         // test remove note from workflow step
-        workflowStep.removeNote(noteToDisassociate);
+        workflowStep.removeOriginalNote(noteToDisassociate);
         
         long noteCount = noteRepo.count();
         
@@ -140,7 +142,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         }
         
         //the note should no longer be on the workflow step, but it should not be deleted
-        assertEquals("The note was not removed!", 1, workflowStep.getNotes().size());
+        assertEquals("The note was not removed!", 1, workflowStep.getOriginalNotes().size());
+        
         assertEquals("The note was deleted!", noteCount, noteRepo.count());
         
         // test delete workflow step
@@ -149,10 +152,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
         // assert workflow step was deleted
         assertEquals("The workflow step was not deleted!", 0, workflowStepRepo.count());
         
-        // assert all field profiles originating in the workflow step are deleted,
-        // but the many-to-many associated properties are not
+
         assertEquals("The field profiles originating in this workflow step were orphaned!", 0, fieldProfileRepo.count());
-        assertEquals("The notes were deleted!", noteCount, noteRepo.count());
+        
+        assertEquals("The notes originating in this workflow step were orphaned!", 0, noteRepo.count());
+        
         assertEquals("The field predicates were deleted!", 2, fieldPredicateRepo.count());
     }
     
@@ -1449,6 +1453,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         
+        noteRepo.findAll().forEach(note -> {
+            noteRepo.delete(note);
+        });
+        assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
+        
         fieldProfileRepo.findAll().forEach(fieldProfile -> {
             fieldProfileRepo.delete(fieldProfile);
         });
@@ -1469,9 +1478,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         fieldPredicateRepo.deleteAll();
         assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
-
-        noteRepo.deleteAll();
-        assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
+        
     }
    
 }

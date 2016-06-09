@@ -13,18 +13,27 @@
                     "name": "System"
                 }
             },
-            "notes": [
+            "originalNotes": [
                 {
                     "name": "name",
-                    "text": "Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them"
+                    "text": "Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "degreeAndMajor",
-                    "text": "Select the degree and major that are listed on your title page."
+                    "text": "Select the degree and major that are listed on your title page.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "permanentAddress",
-                    "text": "You must enter a permanent, long-term address. If your present address is different, use the Current Address field."
+                    "text": "You must enter a permanent, long-term address. If your present address is different, use the Current Address field.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 }
             ],
             "originalFieldProfiles": [
@@ -447,7 +456,7 @@
                     "name": "System"
                 }
             },
-            "notes": [],
+            "originalNotes": [],
             "originalFieldProfiles": [
                 {
                     "predicate": {
@@ -508,22 +517,34 @@
                     "name": "System"
                 }
             },
-            "notes": [
+            "originalNotes": [
                 {
                     "name": "degreeDate",
-                    "text": "For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester)."
+                    "text": "For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "multipleKeywords",
-                    "text": "You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries."
+                    "text": "You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "committeeMembers",
-                    "text": "Please supply the names of your committee members, and a single email address to reach the chair or either co-chair."
+                    "text": "Please supply the names of your committee members, and a single email address to reach the chair or either co-chair.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "embargoCheckAdvisor",
-                    "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication."
+                    "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 }
             ],
             "originalFieldProfiles": [
@@ -850,18 +871,27 @@
                     "name": "System"
                 }
             },
-            "notes": [
+            "originalNotes": [
                 {
                     "name": "onePdfFile",
-                    "text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file."
+                    "text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "noLimit",
-                    "text": "There is no limit on the number or formats of supplementary files you may upload."
+                    "text": "There is no limit on the number or formats of supplementary files you may upload.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 },
                 {
                     "name": "sizeQuota",
-                    "text": "SIZE QUOTA: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB."
+                    "text": "SIZE QUOTA: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB.",
+                    "originatingWorkflowStep": {
+                        "name": "Verify Personal Information"
+                    }
                 }
             ],
             "originalFieldProfiles": [

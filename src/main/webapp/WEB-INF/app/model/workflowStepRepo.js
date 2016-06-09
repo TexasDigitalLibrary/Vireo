@@ -52,7 +52,7 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 	
 	};
 
-	WorkflowStepRepo.remove = function(workflowStepId, fieldProfileId) {
+	WorkflowStepRepo.removeFieldProfile = function(workflowStepId, fieldProfileId) {
 
 		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
@@ -67,12 +67,78 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 
 	};
 
-	WorkflowStepRepo.reorder = function(workflowStepId, src, dest) {
+	WorkflowStepRepo.reorderFieldProfile = function(workflowStepId, src, dest) {
 
 		var reorderPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
 				method: workflowStepId+'/reorder-field-profiles/'+src+'/'+dest,
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+				}
+		});
+
+		return reorderPromise;
+
+	};
+
+
+	WorkflowStepRepo.addNote = function(workflowStepId, note) {
+
+		var removePromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: workflowStepId+'/add-note',
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id,
+					noteName: note.name,
+					noteText: note.text
+				}
+		});
+
+		return removePromise;
+
+	};
+
+	WorkflowStepRepo.updateNote = function(workflowStepId, note) {
+
+		var removePromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: workflowStepId+'/update-note',
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id,
+					noteId: note.id,
+					noteName: note.name,
+					noteText: note.text
+				}
+		});
+
+		return removePromise;
+
+	};
+
+	WorkflowStepRepo.removeNote = function(workflowStepId, noteId) {
+
+		var removePromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: workflowStepId+'/remove-note/' + noteId,
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+				}
+		});
+
+		return removePromise;
+
+	};
+
+	WorkflowStepRepo.reorderNote = function(workflowStepId, src, dest) {
+
+		var reorderPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: workflowStepId+'/reorder-notes/'+src+'/'+dest,
 				data: {
 					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
 				}

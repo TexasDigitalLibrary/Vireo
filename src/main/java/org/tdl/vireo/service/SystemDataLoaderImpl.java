@@ -370,14 +370,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             // temporary list of Note
             List<Note> notes = new ArrayList<Note>();
 
-            workflowStep.getNotes().forEach(note -> {
+            for(Note note : workflowStep.getOriginalNotes()) {
 
                 // check to see if the Note exists
-                Note newNote = noteRepo.findByName(note.getName());
+                Note newNote = noteRepo.findByNameAndOriginatingWorkflowStep(note.getName(), newWorkflowStep);
 
                 // create new Note if not already exists
                 if (newNote == null) {
-                    newNote = noteRepo.create(note.getName(), note.getText());
+                    newNote = noteRepo.create(newWorkflowStep, note.getName(), note.getText());
+                    newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
                 } else {
                     newNote.setText(note.getText());
                     newNote = noteRepo.save(newNote);
@@ -385,9 +386,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 notes.add(newNote);
 
-            });
+            }
 
-            newWorkflowStep.setNotes(notes);
+            newWorkflowStep.setOriginalNotes(notes);
 
             newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 

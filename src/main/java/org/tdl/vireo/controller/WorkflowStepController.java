@@ -13,11 +13,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.Note;
+import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,6 +45,9 @@ public class WorkflowStepController {
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
+    
+    @Autowired
+    private NoteRepo noteRepo;
     
     @Autowired
     private ObjectMapper objectMapper;
@@ -114,6 +121,113 @@ public class WorkflowStepController {
         FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
         
         fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);     
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    
+    
+    @ApiMapping("/{workflowStepId}/add-note")
+    @Auth(role="MANAGER")
+    public ApiResponse addNote(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        String name = dataNode.get("noteName").textValue();
+        String text = dataNode.get("noteText").textValue();
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
+        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        
+        if(!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
+            workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+        }
+        
+        noteRepo.create(workflowStep, name, text);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{workflowStepId}/update-note")
+    @Auth(role="MANAGER")
+    public ApiResponse updateNote(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        Long id = Long.parseLong(dataNode.get("noteId").toString());
+        String name = dataNode.get("noteName").textValue();
+        String text = dataNode.get("noteText").textValue();
+                
+        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        
+        Note note = noteRepo.findOne(id);
+        
+        note.setName(name);
+        note.setText(text);
+        
+        noteRepo.update(note, requestingOrganization);
+                
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{workflowStepId}/remove-note/{noteId}")
+    @Auth(role="MANAGER")
+    public ApiResponse removeNote(@ApiVariable String workflowStepId, @ApiVariable String noteId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        Note note = noteRepo.findOne(Long.parseLong(noteId));
+        
+        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);     
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{workflowStepId}/reorder-notes/{src}/{dest}")
+    @Auth(role="MANAGER")
+    public ApiResponse reorderNotes(@ApiVariable String workflowStepId, @ApiVariable String src, @ApiVariable String dest, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
+        workflowStepRepo.reorderNotes(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         

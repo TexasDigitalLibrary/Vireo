@@ -7,8 +7,6 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	$scope.$watch(
 		"step",
 		function handleStepChanged(newStep, oldStep) {
-			// console.log(newStep)
-			// console.log(oldStep)
 			$scope.resetFieldProfiles();
 
 			$scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
@@ -52,7 +50,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	};
 
 	$scope.reorderFieldProfiles = function(src, dest) {
-		WorkflowStepRepo.reorder($scope.step.id, src, dest).then(function() {
+		WorkflowStepRepo.reorderFieldProfile($scope.step.id, src, dest).then(function() {
 			$scope.resetFieldProfiles();
 		});
 	};
@@ -69,7 +67,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	};
 
 	$scope.removeFieldProfile = function(fieldProfileId) {
-		WorkflowStepRepo.remove($scope.step.id, fieldProfileId).then(function() {
+		WorkflowStepRepo.removeFieldProfile($scope.step.id, fieldProfileId).then(function() {
      		$scope.resetFieldProfiles();
      	});
 	};
@@ -83,7 +81,5 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 		reorder: $scope.reorderFieldProfiles,
 		container: '#fieldProfiles'
 	});
-
-	$scope.resetFieldProfiles();
 
 });

@@ -55,9 +55,8 @@ public class FieldProfile extends BaseEntity {
     @Column(nullable = false)
     private Boolean optional;
     
-    // TODO: refactor with correct spelling, remember the getter and setters as well
     @Column(nullable = false)
-    private Boolean overrideable;    
+    private Boolean overrideable;
     
     @Lob
     @Column(nullable = true, name = "`usage`") // "usage" is a keyword in sql
