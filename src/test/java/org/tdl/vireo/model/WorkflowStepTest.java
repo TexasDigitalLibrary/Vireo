@@ -66,8 +66,15 @@ public class WorkflowStepTest extends AbstractEntityTest {
         workflowStep.addNote(noteToDisassociate);
         
         
-        // TODO replace with update
-        workflowStep = workflowStepRepo.save(workflowStep);
+        try {
+            workflowStep = workflowStepRepo.update(workflowStep, organization);
+        } catch (WorkflowStepNonOverrideableException e) {
+            e.printStackTrace();
+            
+            assertTrue("Could not update workflow step", false);
+        }
+        
+        organization = organizationRepo.findOne(organization.getId());
         
         
         // check number of field profiles
@@ -100,8 +107,18 @@ public class WorkflowStepTest extends AbstractEntityTest {
         // test remove field profile from workflowStep
         workflowStep.removeOriginalFieldProfile(fieldProfileToDisassociate);
                  
-        // TODO: replace with update
-        workflowStep = workflowStepRepo.save(workflowStep);
+        
+
+        try {
+            workflowStep = workflowStepRepo.update(workflowStep, organization);
+        } catch (WorkflowStepNonOverrideableException e) {
+            e.printStackTrace();
+            
+            assertTrue("Could not update workflow step", false);
+        }
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
         
         
         //the field profile should no longer be on the workflow step, and it should be deleted since it was orphaned
@@ -114,8 +131,13 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         long noteCount = noteRepo.count();
         
-        // TODO: replace with update
-        workflowStep = workflowStepRepo.save(workflowStep);
+        try {
+            workflowStep = workflowStepRepo.update(workflowStep, organization);
+        } catch (WorkflowStepNonOverrideableException e) {
+            e.printStackTrace();
+            
+            assertTrue("Could not update workflow step", false);
+        }
         
         //the note should no longer be on the workflow step, but it should not be deleted
         assertEquals("The note was not removed!", 1, workflowStep.getNotes().size());

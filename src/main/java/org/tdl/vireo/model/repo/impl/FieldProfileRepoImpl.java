@@ -232,8 +232,6 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
 	    	if(fieldProfile.getOriginatingFieldProfile() != null) {
 	    		fieldProfile.setOriginatingFieldProfile(null);
 	        }
-	    		    	
-	    	fieldProfile.setOriginatingWorkflowStep(null);
 	    	
 	    	workflowStepRepo.findByAggregateFieldProfilesId(fieldProfile.getId()).forEach(workflowStep -> {
 	    		workflowStep.removeAggregateFieldProfile(fieldProfile);
