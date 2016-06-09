@@ -1,13 +1,17 @@
 <div class="col-lg-8 col-lg-offset-2" ng-controller="UserController">
-	<div id="body">
+	<div id="body" ng-controller="SettingsController">
 		<div class="row">
-			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
 		</div>
 		<div class="form-actions row center" style="text-align: center;">
-			<a href="/submit" class="btn btn-primary">Manage/View your submission(s)</a>
+			<p ng-if="!stringToBoolean(settings.configurable.application.submissions_open)" class="alert alert-danger">The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please click on <a href="/submit">Submission History</a>.</p>
+			<a ng-if="(stringToBoolean(settings.configurable.application.submissions_open) && isAnonymous())" href="" data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login</a>
+			<a ng-if="(stringToBoolean(settings.configurable.application.submissions_open) && !isAnonymous()) && (stringToBoolean(settings.configurable.application.allow_multiple_submissions) && (true || true))" href="/submit" class="btn btn-primary">Manage/View your submission(s)</a>
+			<a ng-if="(stringToBoolean(settings.configurable.application.submissions_open) && !isAnonymous()) && (stringToBoolean(settings.configurable.application.allow_multiple_submissions) && (false || true))" href="/submit" class="btn btn-primary">Correct your submission</a>
+			<a ng-if="(stringToBoolean(settings.configurable.application.submissions_open) && !isAnonymous()) && (stringToBoolean(settings.configurable.application.allow_multiple_submissions) && (true || false))" href="/submit" class="btn btn-primary">Continue your submission</a>
 		</div>
 		<div class="row">
-			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
 		</div>
 	</div>
 </div>

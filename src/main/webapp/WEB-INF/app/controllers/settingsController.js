@@ -36,6 +36,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		return temp.textContent || temp.innerText || "";
   	};
   	
+  	$scope.stringToBoolean = function(string) {
+  		switch(string.toLowerCase().trim()) {
+  			case "false": case "no": case "0": case "": return false;
+  			default: return true;
+  		}
+  	};
+  	
   	var setServerErrors = function(type, name, data){
   		// since we're a 2d array, make sure our 1d exists first
   		if($scope.serverErrors[type] === undefined) {
