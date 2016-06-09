@@ -92,10 +92,9 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
         
     }
-    
+     
     @ApiMapping("/update")
     @Auth(role="MANAGER")
-    @Transactional
     public ApiResponse updateOrganization(@Data String data) {
         
         JsonNode dataNode = null;
@@ -105,22 +104,22 @@ public class OrganizationController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
-        JsonNode organizationNode = dataNode.get("organization");
-        Organization organization = organizationRepo.findOne(organizationNode.get("id").asLong());
+        Organization organization = organizationRepo.findOne(Long.parseLong(dataNode.get("organizationId").toString()));
 
-        organization.setName(dataNode.get("organization").get("name").asText());
-        OrganizationCategory organizationCategory = organizationCategoryRepo.findOne(organizationNode.get("category").asLong());
+        organization.setName(dataNode.get("organizationName").asText());
+        
+        OrganizationCategory organizationCategory = organizationCategoryRepo.findOne(Long.parseLong(dataNode.get("organizationCategoryId").toString()));
         
         organization.setCategory(organizationCategory);
-        organizationRepo.save(organization);
+        organization = organizationRepo.save(organization);
 
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS,  getAll()));
         
         return new ApiResponse(SUCCESS);
         
     }
     
-    @ApiMapping("/{id}/worflow")
+    @ApiMapping("/{id}/workflow")
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
@@ -128,12 +127,12 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
-    @ApiMapping("/{id}/create-workflow-step")
+    @ApiMapping("/{id}/create-workflow-step/{name}")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep newWorkflowStep) {                
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiVariable String name) { 
         Organization org = organizationRepo.findOne(Long.parseLong(id));
-        newWorkflowStep = workflowStepRepo.create(newWorkflowStep.getName(), org);
+        WorkflowStep newWorkflowStep = workflowStepRepo.create(name, org);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, org));
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }

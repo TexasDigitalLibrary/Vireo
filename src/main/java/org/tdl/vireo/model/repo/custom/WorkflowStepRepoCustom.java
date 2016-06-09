@@ -9,7 +9,9 @@ public interface WorkflowStepRepoCustom {
         
     public WorkflowStep create(String name, Organization originatingOrganization);
     
-    public WorkflowStep reorderFieldProfiles(Organization requestOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException;
+    public WorkflowStep swapFieldProfiles(Organization requestOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException;
+    
+    public WorkflowStep reorderFieldProfiles(Organization requestOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException;
     
     public void disinheritFromOrganization(Organization requestingOrganization, WorkflowStep workflowStepToDisinherit);
 

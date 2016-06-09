@@ -1,4 +1,4 @@
-vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
+vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, AbstractModel) {
 
 	var self;
 	
@@ -8,9 +8,7 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 		angular.extend(self, AbstractModel);		
 		self.unwrap(self, futureData);		
 	};
-	
-	WorkflowStepRepo.currentWorkflowSteps = {};
-	
+		
 	WorkflowStepRepo.data = null;
 	
 	WorkflowStepRepo.listener = null;
@@ -54,39 +52,34 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, AbstractModel) {
 	
 	};
 
-	WorkflowStepRepo.getStepById = function(wsID) {
+	WorkflowStepRepo.remove = function(workflowStepId, fieldProfileId) {
 
-		console.log(wsID);
-
-		var defer = $q.defer();
-
-		if (WorkflowStepRepo.currentWorkflowSteps[wsID]) {
-			defer.resolve(WorkflowStepRepo.currentWorkflowSteps[wsID]);
-		} else {
-
-			WorkflowStepRepo.currentWorkflowSteps[wsID] = "pending";
-
-			var stepPromise = WsApi.fetch({
+		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
-				method: "get/"+wsID,
-			});
+				method: workflowStepId+'/remove-field-profile/' + fieldProfileId,
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+				}
+		});
 
-			stepPromise.then(function(result){
-				var workflowStep = JSON.parse(result.body).payload.WorkflowStep;
-				WorkflowStepRepo.currentWorkflowSteps[wsID] = workflowStep;
-				console.log(WorkflowStepRepo.currentWorkflowSteps);
-				defer.resolve(workflowStep);
-			});
-
-      	}
-
-      return defer.promise;	
+		return removePromise;
 
 	};
 
-	WorkflowStepRepo.getCurrentWorkflowSteps = function() {
-		return WorkflowStepRepo.currentWorkflowSteps;
+	WorkflowStepRepo.reorder = function(workflowStepId, src, dest) {
+
+		var reorderPromise = WsApi.fetch({
+				endpoint: '/private/queue', 
+				controller: 'workflow-step', 
+				method: workflowStepId+'/reorder-field-profiles/'+src+'/'+dest,
+				data: {
+					requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+				}
+		});
+
+		return reorderPromise;
+
 	};
 	
 	WorkflowStepRepo.ready = function() {

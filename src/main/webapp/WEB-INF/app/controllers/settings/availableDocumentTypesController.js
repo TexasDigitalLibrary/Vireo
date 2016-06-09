@@ -84,7 +84,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             trashId: $scope.trashCanId,
             dragging: $scope.dragging,
             select: $scope.selectDocumentType,
-            model: $scope.documentTypes,
+            model: $scope.documentTypes.list,
             confirm: '#availableDocumentTypesConfirmRemoveModal',
             reorder: $scope.reorderDocumentTypes,
             container: '#available-document-types'

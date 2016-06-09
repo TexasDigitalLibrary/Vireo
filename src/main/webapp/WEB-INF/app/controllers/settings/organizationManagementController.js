@@ -11,8 +11,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
-				//update the parent scoped selected organization
-				// TODO: confirm this is necessary 
+				// update the parent scoped selected organization 
 				$scope.setSelectedOrganization(organization);
 			});
 		};
@@ -32,16 +31,13 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 
 		$scope.addWorkflowStep = function(newWorkflowStepName) {
-			OrganizationRepo.addWorkflowStep($scope.selectedOrganization, newWorkflowStepName).then(function() {
+			OrganizationRepo.addWorkflowStep(newWorkflowStepName).then(function() {
 				angular.element("#addWorkflowStepModal").modal("hide");		
 			}); 
 		};
 
 		$scope.deleteWorkflowStep = function(workflowStepID) {
-
 			OrganizationRepo.deleteWorkflowStep(workflowStepID);
-			console.info('should delete!!');
-
 		};
 		
 		$scope.updateWorkflowStep = function(workflowStepToUpdate) {

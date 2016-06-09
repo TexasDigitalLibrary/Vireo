@@ -13,9 +13,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			'select': null,
 			
 			'dragging': null,
-					
-			'list': [],
-			
+						
 			'confirm': {
 				'remove': {
 					'modal': ''
@@ -84,19 +82,19 @@ vireo.factory('DragAndDropListenerFactory', function() {
 		    },
 		    orderChanged: function(event) {
 		    	if(!listener.trash.hover) {
-		    		var isSingleSorted = (listener.model.list.length == event.source.sortableScope.modelValue.length);
+		    		var isSingleSorted = (listener.model.length == event.source.sortableScope.modelValue.length);
 		    		var src = event.source.index + 1;
 		    		var dest = event.dest.index + 1;
 		    		if(!isSingleSorted) {		    		
 		    			var offset = 0;
-			    		for(var i in listener.model.list) {
-			    			if(listener.model.list[i].id == startingObj.id) {
+			    		for(var i in listener.model) {
+			    			if(listener.model[i].id == startingObj.id) {
 			    				offset = i;
 			    				break;
 			    			}
 			    		}
-			    		src = listener.model.list[parseInt(event.source.index) + parseInt(offset)].position;
-			    		dest = listener.model.list[parseInt(event.dest.index) + parseInt(offset)].position;
+			    		src = listener.model[parseInt(event.source.index) + parseInt(offset)].position;
+			    		dest = listener.model[parseInt(event.dest.index) + parseInt(offset)].position;
 		    		}
 		    		listener.reorder(src, dest);
 		    	}

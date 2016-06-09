@@ -2,7 +2,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.graduationMonths = GraduationMonthRepo.get();
-	
+
 	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
 	$scope.dragging = false;
@@ -102,7 +102,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectGraduationMonth,			
-			model: $scope.graduationMonths,
+			model: $scope.graduationMonths.list,
 			confirm: '#graduationMonthConfirmRemoveModal',
 			reorder: $scope.reorderGraduationMonth,
 			container: '#graduation-month'

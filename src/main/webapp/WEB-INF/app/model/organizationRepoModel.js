@@ -116,11 +116,12 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 			var workflowStepsPromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'organization', 
-				method: fetchedOrg.id + '/worflow'
+				method: fetchedOrg.id + '/workflow'
 			});
 
 			workflowStepsPromise.then(function(data) {
 				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
+				
 				if(aggregateWorkflowSteps !== undefined) {
 					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
 				}
@@ -162,18 +163,13 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 		return addOrganizationPromise;
 	};
 
-	OrganizationRepo.addWorkflowStep = function(workflowStepName) {
-
+	OrganizationRepo.addWorkflowStep = function(newWorkflowStepName) {
 		var addWorkflowStepDefer = $q.defer();
+
 		var addWorkflowStepPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
-			'method': OrganizationRepo.getSelectedOrganization().id+'/create-workflow-step',
-			'data': {
-				'name': workflowStepName,
-				'originating_organization_id': OrganizationRepo.getSelectedOrganization().id,
-				'overrideable': true
-			}
+			'method': OrganizationRepo.getSelectedOrganization().id + '/create-workflow-step/' + newWorkflowStepName
 		});
 
 		addWorkflowStepPromise.then(function() {
@@ -186,12 +182,16 @@ vireo.service("OrganizationRepo", function($route, $q, WsApi, AbstractModel) {
 
 	OrganizationRepo.update = function(organization) {
 
+		console.log(organization.category)
+		
 		var updateOrganizationPromise = WsApi.fetch({
 			'endpoint': '/private/queue', 
 			'controller': 'organization', 
 			'method': 'update',
 			'data': {
-				"organization": organization
+				"organizationId": organization.id,
+				"organizationName": organization.name,
+				"organizationCategoryId": organization.category.id ? organization.category.id : organization.category
 			}
 		});
 

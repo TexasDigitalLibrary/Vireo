@@ -15,7 +15,7 @@
 		<p ng-if="languages.list.length == 0">Add New Language</p>
 		
 		<draganddroplist dragging="dragging"
-						 scope-value="languages"
+						 scope-value="languages.list"
 						 properties='["name", "proquestCode"]'
 						 item-view='views/directives/dragAndDropLanguage.html'
 						 listeners='dragControlListeners'

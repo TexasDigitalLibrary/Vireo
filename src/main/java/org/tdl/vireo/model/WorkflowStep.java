@@ -2,7 +2,6 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ public class WorkflowStep extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    // TODO: refactor with correct spelling, remember the getter and setters as well
     @Column(nullable = false)
     private Boolean overrideable;
     
@@ -48,7 +48,7 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization originatingOrganization;
 
-    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER, mappedBy = "originatingWorkflowStep")
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
@@ -259,21 +259,35 @@ public class WorkflowStep extends BaseEntity {
      */
     public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
-        int i = 0, pos1 = 0, pos2 = 0;
-        for(FieldProfile fp : getAggregateFieldProfiles()) { 
-            if(fp.getId().equals(fp1.getId())) {
-                pos1 = i;
-            }
-            if(fp.getId().equals(fp2.getId())) {
-                pos2 = i;
-            }
-            i++;
-        }
+        
+        int pos1 = getAggregateFieldProfiles().indexOf(fp1), 
+            pos2 = getAggregateFieldProfiles().indexOf(fp2);
+       
         if(pos1 >= 0 && pos2 >= 0) {
             Collections.swap(getAggregateFieldProfiles(), pos1, pos2);
             res = true;
         }
+        
         return res;
+    }
+    
+    /**
+     * 
+     * @param fp1
+     * @param fp2
+     * @return
+     */
+    public void reorderAggregateFieldProfile(int src, int dest) {
+        
+        //adjust for index + 1
+        src -= 1;
+        dest -= 1;
+        
+        FieldProfile fieldProfile = getAggregateFieldProfiles().get(src);
+                
+        getAggregateFieldProfiles().remove(src);
+                
+        getAggregateFieldProfiles().add(dest, fieldProfile);
     }
     
     /**
