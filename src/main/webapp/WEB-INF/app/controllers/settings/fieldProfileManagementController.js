@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, InputTypeService) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, InputTypeService, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -32,6 +32,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			fieldProfile.position = position;
 			position++;
 		});
+		$scope.modalData = {inputType: 'INPUT_TEXT'};
 	};
 
 	$scope.resetFieldProfiles();
@@ -56,7 +57,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	};
 
 	$scope.reorderFieldProfiles = function(src, dest) {
-		WorkflowStepRepo.reorder($scope.step.id, src, dest).then(function() {
+		WorkflowStepRepo.reorderFieldProfile($scope.step.id, src, dest).then(function() {
 			$scope.resetFieldProfiles();
 		});
 	};
@@ -73,7 +74,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	};
 
 	$scope.removeFieldProfile = function(fieldProfileId) {
-		WorkflowStepRepo.remove($scope.step.id, fieldProfileId).then(function() {
+		WorkflowStepRepo.removeFieldProfile($scope.step.id, fieldProfileId).then(function() {
      		$scope.resetFieldProfiles();
      	});
 	};
