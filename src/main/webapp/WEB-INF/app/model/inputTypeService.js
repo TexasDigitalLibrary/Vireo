@@ -1,13 +1,13 @@
-vireo.service("InputTypeService", function($q, WsApi) {
+vireo.service("InputTypeService", function($q, $timeout, WsApi) {
 
-	var inputTypes = {}; //May be either {}, a promise, or a real payload object at any time.
+	var cache = {inputTypesCache:[], cached: false}; //May be either {}, a promise, or a real payload object at any time.
 
 	//Return a promise of real data, and caches the real data upon fulfillment.
 	this.getAll = function() {
-		if(angular.isDefined(this.inputTypes.inputTypesCache)){
-			return $q.resolve(this.inputTypes.inputTypesCache).then(function(data){
+		if(cache.cached){
+			return $q.resolve(cache.inputTypesCache).then(function(data){
 				console.info('callback cache fired; mapping data', data);
-				inputTypes.body = data.body;
+				cache.inputTypesCache = data;
 			});
 		}
 
@@ -17,13 +17,15 @@ vireo.service("InputTypeService", function($q, WsApi) {
 			'method'    : 'all'
 		}).then(function(data){
 			console.info('ws callback fired; mapping data', data);
-			inputTypes.body = data.body;
+			cache.inputTypesCache.length = 0;
+			cache.inputTypesCache.push(data);
+			cache.cached = true;
 		});
 	}
 
 	this.inputTypes = function(){
 		this.getAll();
-		return inputTypes;
+		return cache.inputTypesCache;
 	}
 
 });
