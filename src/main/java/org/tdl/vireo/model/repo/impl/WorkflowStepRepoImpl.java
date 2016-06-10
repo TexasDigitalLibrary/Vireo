@@ -152,7 +152,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	persistedWorkflowStep.setOverrideable(false);
             	
             	WorkflowStep savedWorkflowStep = workflowStepRepo.save(persistedWorkflowStep);
-            	            	
+            	  	
             	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);
             	
             	for(WorkflowStep descendentWorkflowStep : descendentWorkflowSteps) {
@@ -162,6 +162,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	            	}
             	}
         		
+            	requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+            	
             	requestingOrganization.addAggregateWorkflowStep(savedWorkflowStep, requestingOrganization.getAggregateWorkflowSteps().indexOf(savedWorkflowStep));
         	    organizationRepo.save(requestingOrganization);
             	
@@ -278,7 +280,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                             workflowStepRepo.delete(descendentWorkflowStep);
                         }
                     }
-                    
+
                 }
 
 

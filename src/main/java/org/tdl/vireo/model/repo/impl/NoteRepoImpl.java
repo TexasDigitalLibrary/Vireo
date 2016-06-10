@@ -24,7 +24,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
-
+    
     @Override
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text) {
         Note note = noteRepo.save(new Note(originatingWorkflowStep, name, text));
@@ -88,92 +88,111 @@ public class NoteRepoImpl implements NoteRepoCustom {
         
     }
     
-    public Note update(Note note, Organization requestingOrganization) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public Note update(Note pendingNote, Organization requestingOrganization) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
         
-        //if the requesting organization does not originate the step that originates the note, and it is non-overrideable, then throw an exception.
-        boolean requestorOriginatesNote = false;
+        Note resultingNote = null;
         
-        for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {           
-            //if this step of the requesting organization happens to be the originator of the field profile, and the step also originates in the requesting organization, then this organization truly originates the field profile.
-            if(note.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
-                requestorOriginatesNote = true;
+        Note persistedNote = noteRepo.findOne(pendingNote.getId());
+        
+        boolean overridabilityOfPersistedNote = persistedNote.getOverrideable();
+        
+        boolean overridabilityOfOriginatingWorkflowStep = persistedNote.getOriginatingWorkflowStep().getOverrideable();
+        
+        
+        WorkflowStep workflowStepWithNoteOnRequestingOrganization = null;
+        
+        boolean requestingOrganizationOriginatedWorkflowStep = false;
+        
+        boolean workflowStepWithNoteOnRequestingOrganizationOriginatedNote = false;
+        
+        for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
+            if(workflowStep.getAggregateNotes().contains(persistedNote)) {
+                workflowStepWithNoteOnRequestingOrganization = workflowStep;
+                requestingOrganizationOriginatedWorkflowStep = workflowStepWithNoteOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
             }
         }
         
-        //if the requestor is not the originator and it is not overrideable, we can't make the update
-        if(!requestorOriginatesNote && !note.getOverrideable()) {
-            
-            // provide feedback of attempt to override non overrideable
-            // exceptions may be of better use for unavoidable error handling
-            
-            throw new NoteNonOverrideableException();
+        if(workflowStepWithNoteOnRequestingOrganization != null) {
+            workflowStepWithNoteOnRequestingOrganizationOriginatedNote = persistedNote.getOriginatingWorkflowStep().getId().equals(workflowStepWithNoteOnRequestingOrganization.getId());
         }
-        //if the requestor is not originator, and the step the profile's on is not overrideable, we can't make the update
-        else if(!requestorOriginatesNote && !note.getOriginatingWorkflowStep().getOverrideable())
-        {
+        
+        if(!overridabilityOfOriginatingWorkflowStep && !requestingOrganizationOriginatedWorkflowStep) {
             throw new WorkflowStepNonOverrideableException();
         }
-        //if the requestor originates, make the update at the requestor
-        else if(requestorOriginatesNote) {
-            // do nothing, just save changes
-            note = noteRepo.save(note);
+        
+        if(!overridabilityOfPersistedNote && !(workflowStepWithNoteOnRequestingOrganizationOriginatedNote && requestingOrganizationOriginatedWorkflowStep)) {
+            throw new NoteNonOverrideableException();
         }
-        //else, it's overrideable and we didn't oringinate it so we need to make a new one that overrides.
+        
+        if(workflowStepWithNoteOnRequestingOrganizationOriginatedNote && requestingOrganizationOriginatedWorkflowStep) {
+            resultingNote = noteRepo.save(pendingNote);
+        }
         else {
             
-            Long originalNoteId = note.getId();
+            em.detach(pendingNote);
+            pendingNote.setId(null);
+
+            WorkflowStep persistedOriginatingWorkflowStep = persistedNote.getOriginatingWorkflowStep();
             
-            em.detach(note);
-            note.setId(null);
-            
-            
-            Note originalNote = noteRepo.findOne(originalNoteId);
-             
-            
-            WorkflowStep originalOriginatingWorkflowStep = originalNote.getOriginatingWorkflowStep();
-            
-            // when a organization that did not originate the workflow step needs to update the field profile with the step,
-            // a new workflow step must be created with the requesting organization as the originator           
-            if(!originalOriginatingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+            if(!requestingOrganizationOriginatedWorkflowStep) {
                 
-                WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(originalOriginatingWorkflowStep, requestingOrganization);
+                WorkflowStep existingOriginatingWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(persistedOriginatingWorkflowStep.getName(), requestingOrganization);
                 
-                note.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
+                if(existingOriginatingWorkflowStep == null) {
+                    WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(persistedOriginatingWorkflowStep, requestingOrganization);
+                  
+                    pendingNote.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
+                }
+                else {
+                    pendingNote.setOriginatingWorkflowStep(existingOriginatingWorkflowStep);
+                }
+                
             }
-            
-            
-            note.setOriginatingNote(null);
-                        
-            note = noteRepo.save(note);
-            
-            
-            for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, originalNote)) {
-                workflowStep.replaceAggregateNote(originalNote, note);
+          
+          
+            pendingNote.setOriginatingNote(null);
+                      
+            Note newNote = noteRepo.save(pendingNote);
+          
+          
+            for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedNote)) {
+                workflowStep.replaceAggregateNote(persistedNote, newNote);
                 workflowStepRepo.save(workflowStep);
             }
-            
-            
+          
+          
             for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
-                if(workflowStep.getAggregateNotes().contains(originalNote)) {
-                    workflowStep.replaceAggregateNote(originalNote, note);
+                if(workflowStep.getAggregateNotes().contains(persistedNote)) {
+                    workflowStep.replaceAggregateNote(persistedNote, newNote);
                     workflowStepRepo.save(workflowStep);
                 }
             }
-            
-            
+          
+          
             // if parent organization's workflow step updates a field profile originating form a descendent, the original field profile need to be deleted
-            if(workflowStepRepo.findByAggregateNotesId(originalNote.getId()).size() == 0) {
-                noteRepo.delete(originalNote);
+            if(workflowStepRepo.findByAggregateNotesId(persistedNote.getId()).size() == 0) {
+                noteRepo.delete(persistedNote);
             }
             else {
-                note.setOriginatingNote(originalNote);
-                note = noteRepo.save(note);
+                newNote.setOriginatingNote(persistedNote);
+                newNote = noteRepo.save(newNote);
             }
             
+            
+            
+            // TODO: if changed from overrideable to non overrideable, re-inherit
+            
+            
+            
+            
+            
+            
+            
+            resultingNote = newNote;
+            
         }
-        
-        return note;
-
+ 
+        return resultingNote;
     }
 
     @Override

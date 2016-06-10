@@ -1171,8 +1171,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testMakeWSNonOverrideableAndAddBackToOrgsThatDeletedItFromAggregate() throws WorkflowStepNonOverrideableException
-    {
+    public void testMakeWSNonOverrideableAndAddBackToOrgsThatDeletedItFromAggregate() throws WorkflowStepNonOverrideableException {
 
         //Step S1 will be inherited by the (child) organization, the grandchildren, and the great grandchildren.
         //Test that after deleting S1 from some of these's aggregate steps, it gets added back when made non-overrideable. 
@@ -1218,11 +1217,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
-        /*WorkflowStep t1 =*/ workflowStepRepo.create("Step T", parentOrganization);
+        WorkflowStep t1 = workflowStepRepo.create("Step T", parentOrganization);
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
-        /*WorkflowStep u1 =*/ workflowStepRepo.create("Step U", parentOrganization);
+        WorkflowStep u1 = workflowStepRepo.create("Step U", parentOrganization);
                 
         
         

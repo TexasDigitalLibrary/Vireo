@@ -112,111 +112,130 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         
     }
     
-    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
+    public FieldProfile update(FieldProfile pendingFieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException {
     	
-    	//if the requesting organization does not originate the step that originates the fieldProfile, and it is non-overrideable, then throw an exception.
-        boolean requestorOriginatesProfile = false;
+        FieldProfile resultingFieldProfile = null;
         
-        for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {        	
-            //if this step of the requesting organization happens to be the originator of the field profile, and the step also originates in the requesting organization, then this organization truly originates the field profile.
-            if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
-                requestorOriginatesProfile = true;
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(pendingFieldProfile.getId());
+        
+        boolean overridabilityOfPersistedFieldProfile = persistedFieldProfile.getOverrideable();
+        
+        boolean overridabilityOfOriginatingWorkflowStep = persistedFieldProfile.getOriginatingWorkflowStep().getOverrideable();
+        
+        
+        WorkflowStep workflowStepWithFieldProfileOnRequestingOrganization = null;
+        
+        boolean requestingOrganizationOriginatedWorkflowStep = false;
+        
+        boolean workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile = false;
+        
+        for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
+            if(workflowStep.getAggregateFieldProfiles().contains(persistedFieldProfile)) {
+                workflowStepWithFieldProfileOnRequestingOrganization = workflowStep;
+                requestingOrganizationOriginatedWorkflowStep = workflowStepWithFieldProfileOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
             }
         }
         
-        //if the requestor is not the originator and it is not overrideable, we can't make the update
-        if(!requestorOriginatesProfile && !fieldProfile.getOverrideable()) {
-            
-        	// provide feedback of attempt to override non overrideable
-        	// exceptions may be of better use for unavoidable error handling
-        	
-            throw new FieldProfileNonOverrideableException();
+        if(workflowStepWithFieldProfileOnRequestingOrganization != null) {
+            workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile = persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStepWithFieldProfileOnRequestingOrganization.getId());
         }
-        //if the requestor is not originator, and the step the profile's on is not overrideable, we can't make the update
-        else if(!requestorOriginatesProfile && !fieldProfile.getOriginatingWorkflowStep().getOverrideable())
-        {
+        
+        if(!overridabilityOfOriginatingWorkflowStep && !requestingOrganizationOriginatedWorkflowStep) {
             throw new WorkflowStepNonOverrideableException();
         }
-        //if the requestor originates, make the update at the requestor
-        else if(requestorOriginatesProfile) {
-            // do nothing, just save changes
-            fieldProfile = fieldProfileRepo.save(fieldProfile);
-        }
-        //else, it's overrideable and we didn't oringinate it so we need to make a new one that overrides.
-        else {
-            
-        	Long originalFieldProfileId = fieldProfile.getId();
-        	
-        	List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
-        	List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
-        	
-        	for(FieldGloss fg : fieldProfile.getFieldGlosses()) {
-        		fieldGlosses.add(fg);            		
-        	}
-        	
-			for(ControlledVocabulary cv : fieldProfile.getControlledVocabularies()) {
-				controlledVocabularies.add(cv);
-        	}
-        	
-			fieldProfile.setFieldGlosses(new ArrayList<FieldGloss>());
-			fieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>());
-        	
-        	em.detach(fieldProfile);
-        	fieldProfile.setId(null);
-            
-        	
-        	FieldProfile originalFieldProfile = fieldProfileRepo.findOne(originalFieldProfileId);
-             
-        	
-        	WorkflowStep originalOriginatingWorkflowStep = originalFieldProfile.getOriginatingWorkflowStep();
-        	
-        	// when a organization that did not originate the workflow step needs to update the field profile with the step,
-        	// a new workflow step must be created with the requesting organization as the originator        	
-        	if(!originalOriginatingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
-        		
-        		WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(originalOriginatingWorkflowStep, requestingOrganization);
-        		
-        		fieldProfile.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
-        	}
-        	
-        	
-        	fieldProfile.setOriginatingFieldProfile(null);
-        	
-             
-        	fieldProfile.setFieldGlosses(fieldGlosses);
-        	fieldProfile.setControlledVocabularies(controlledVocabularies);
-        	
-        	
-        	fieldProfile = fieldProfileRepo.save(fieldProfile);
-        	
-        	
-        	for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, originalFieldProfile)) {
-        		workflowStep.replaceAggregateFieldProfile(originalFieldProfile, fieldProfile);
-        		workflowStepRepo.save(workflowStep);
-        	}
-        	
-        	
-        	for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
-				if(workflowStep.getAggregateFieldProfiles().contains(originalFieldProfile)) {
-					workflowStep.replaceAggregateFieldProfile(originalFieldProfile, fieldProfile);
-					workflowStepRepo.save(workflowStep);
-				}
-    		}
-			
-        	
-        	// if parent organization's workflow step updates a field profile originating form a descendent, the original field profile need to be deleted
-            if(workflowStepRepo.findByAggregateFieldProfilesId(originalFieldProfile.getId()).size() == 0) {
-                fieldProfileRepo.delete(originalFieldProfile);
-            }
-            else {
-                fieldProfile.setOriginatingFieldProfile(originalFieldProfile);
-                fieldProfile = fieldProfileRepo.save(fieldProfile);
-            }
-        	
+        
+        if(!overridabilityOfPersistedFieldProfile && !(workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile && requestingOrganizationOriginatedWorkflowStep)) {
+            throw new FieldProfileNonOverrideableException();
         }
         
-        return fieldProfile;
+        if(workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile && requestingOrganizationOriginatedWorkflowStep) {
+            resultingFieldProfile = fieldProfileRepo.save(pendingFieldProfile);
+        }
+        else {
+            
+            List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
+            List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
+              
+            for(FieldGloss fg : pendingFieldProfile.getFieldGlosses()) {
+                fieldGlosses.add(fg);                   
+            }
+              
+            for(ControlledVocabulary cv : pendingFieldProfile.getControlledVocabularies()) {
+                controlledVocabularies.add(cv);
+            }
+              
+            pendingFieldProfile.setFieldGlosses(new ArrayList<FieldGloss>());
+            pendingFieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>());
+            
+            
+            em.detach(pendingFieldProfile);
+            
+            pendingFieldProfile.setId(null);
 
+            WorkflowStep persistedOriginatingWorkflowStep = persistedFieldProfile.getOriginatingWorkflowStep();
+            
+            if(!requestingOrganizationOriginatedWorkflowStep) {
+                
+                WorkflowStep existingOriginatingWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(persistedOriginatingWorkflowStep.getName(), requestingOrganization);
+                
+                if(existingOriginatingWorkflowStep == null) {
+                    WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(persistedOriginatingWorkflowStep, requestingOrganization);
+                  
+                    pendingFieldProfile.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
+                }
+                else {
+                    pendingFieldProfile.setOriginatingWorkflowStep(existingOriginatingWorkflowStep);
+                }
+            }
+          
+          
+            pendingFieldProfile.setOriginatingFieldProfile(null);
+            
+            pendingFieldProfile.setFieldGlosses(fieldGlosses);
+            pendingFieldProfile.setControlledVocabularies(controlledVocabularies);
+          
+
+            FieldProfile newFieldProfile = fieldProfileRepo.save(pendingFieldProfile);
+          
+          
+            for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedFieldProfile)) {
+                workflowStep.replaceAggregateFieldProfile(persistedFieldProfile, newFieldProfile);
+                workflowStepRepo.save(workflowStep);
+            }
+          
+          
+            for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
+                if(workflowStep.getAggregateFieldProfiles().contains(persistedFieldProfile)) {
+                    workflowStep.replaceAggregateFieldProfile(persistedFieldProfile, newFieldProfile);
+                    workflowStepRepo.save(workflowStep);
+                }
+            }
+            
+          
+            // if parent organization's workflow step updates a field profile originating form a descendent, the original field profile need to be deleted
+            if(workflowStepRepo.findByAggregateFieldProfilesId(persistedFieldProfile.getId()).size() == 0) {
+                fieldProfileRepo.delete(persistedFieldProfile);
+            }
+            else {
+                newFieldProfile.setOriginatingFieldProfile(persistedFieldProfile);
+                newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+            }
+            
+            
+            
+            // TODO: if changed from overrideable to non overrideable, re-inherit
+            
+            
+            
+            
+            
+            
+            
+            resultingFieldProfile = newFieldProfile;
+            
+        }
+        
+        return resultingFieldProfile;
     }
 
     @Override
