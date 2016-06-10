@@ -18,11 +18,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.controlledVocabularies = ControlledVocabularyRepo.get();
 
-	//Working!!!!
 	$scope.inputTypes = InputTypeService.getAll();
-	
-	console.info('value: VVVV');
-	console.info($scope.inputTypes);
 	
 	$scope.dragging = false;
 	

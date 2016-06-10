@@ -2,8 +2,9 @@ vireo.service("InputTypeService", function($q, WsApi) {
 
 	var cache = {
 		list  : [],
-		cached: false
+		ready: false
 	};
+
 	var api = {
 		request: {
 			endpoint  : '/private/queue',
@@ -11,26 +12,25 @@ vireo.service("InputTypeService", function($q, WsApi) {
 			method    : 'all'
 		},
 		type: 'ArrayList<InputType>'
-	}
+	};
 
 	//Return a promise of real data, and caches the real data upon fulfillment.
 	this.getAllPromise = function() {
-		if(cache.cached){
-			return $q.resolve(cache.list).then(function(data){
-				cache.list = data;
-			});
+		if(cache.ready){
+			return $q.resolve(cache.list);
 		}
-
-		return wsResult = WsApi.fetch(api.request).then(function(response){
+		return WsApi.fetch(api.request).then(function(response){
 			cache.list.length = 0;
 			angular.extend(cache.list, angular.fromJson(response.body).payload[api.type]);
-			cache.cached = true;
+			cache.ready = true;
 		});
 	}
 
-	this.getAll = function(){
+	this.getAll = function(sync){
+		cache.ready = sync ? !sync : cache.ready;
 		this.getAllPromise();
 		return cache.list;
 	}
 
 });
+
