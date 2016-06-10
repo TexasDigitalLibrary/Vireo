@@ -68,11 +68,12 @@ public class InputTypeController {
     public ApiResponse getAllInputTypes() {
         System.out.println("\n\n\nthe enum.values is VV");
         System.out.println(InputType.values());
-        for (InputType type : InputType.values()) {
+        List<InputType> inputTypes = new ArrayList<InputType>(Arrays.asList(InputType.values()));
+        for (InputType type : inputTypes) {
             System.out.println(type.toString());
         }
         System.out.println("\n\n");
-        return new ApiResponse(SUCCESS, InputType.values());
+        return new ApiResponse(SUCCESS, inputTypes);
     }
 
 }
