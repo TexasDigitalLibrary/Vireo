@@ -4,11 +4,14 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 	
+	// if we do not want to use a watch, 
+	// the OrganizationRepo can notify a promise that is subscribed here
 	$scope.$watch(
 		"step",
 		function handleStepChanged(newStep, oldStep) {
 			$scope.resetNotes();
 
+			$scope.dragControlListeners.getListener().model = $scope.step.aggregateNotes;
 			$scope.dragControlListeners.getListener().trash.id = 'note-trash-' + $scope.step.id;
 			$scope.dragControlListeners.getListener().confirm.remove.modal = '#notesConfirmRemoveModal-' + $scope.step.id;
         }
@@ -28,6 +31,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 			position++;
 		});
 
+		console.log($scope.step)
+
 		$scope.modalData = {
 	    	name: '',
 	    	text: ''
@@ -37,8 +42,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	$scope.resetNotes();
 	
 	$scope.createNote = function() {
-		WorkflowStepRepo.addNote($scope.step.id, $scope.modalData).then(function() {
-			$scope.resetNotes();
+		WorkflowStepRepo.addNote($scope.step.id, $scope.modalData).then(function(response) {
+			
 		});
 	};
 	
@@ -52,14 +57,14 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	};
 	
 	$scope.updateNote = function() {
-		WorkflowStepRepo.updateNote($scope.step.id, $scope.modalData).then(function() {
-			$scope.resetNotes();
+		WorkflowStepRepo.updateNote($scope.step.id, $scope.modalData).then(function(response) {
+			
 		});
 	};
 
 	$scope.reorderNotes = function(src, dest) {
-		WorkflowStepRepo.reorderNote($scope.step.id, src, dest).then(function() {
-			$scope.resetNotes();
+		WorkflowStepRepo.reorderNote($scope.step.id, src, dest).then(function(response) {
+			
 		});
 	};
 
@@ -75,8 +80,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	};
 
 	$scope.removeNote = function(noteId) {
-		WorkflowStepRepo.removeNote($scope.step.id, noteId).then(function() {
-     		$scope.resetNotes();
+		WorkflowStepRepo.removeNote($scope.step.id, noteId).then(function(response) {
+     		
      	});
 	};
 
