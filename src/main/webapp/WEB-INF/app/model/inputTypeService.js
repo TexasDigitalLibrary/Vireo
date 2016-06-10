@@ -10,8 +10,7 @@ vireo.service("InputTypeService", function($q, WsApi) {
 			endpoint  : '/private/queue',
 			controller: 'settings/input-types',
 			method    : 'all'
-		},
-		type: 'ArrayList<InputType>'
+		}
 	};
 
 	//Return a promise of real data, and caches the real data upon fulfillment.
@@ -20,8 +19,15 @@ vireo.service("InputTypeService", function($q, WsApi) {
 			return $q.resolve(cache.list);
 		}
 		return WsApi.fetch(api.request).then(function(response){
+			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
-			angular.extend(cache.list, angular.fromJson(response.body).payload[api.type]);
+			angular.forEach(Object.keys(payload), function(key){
+				if (key.indexOf('ArrayList') > -1) {
+					angular.extend(cache.list, payload[key]);
+				} else {
+					cache[key] = payload[key];
+				}
+			});
 			cache.ready = true;
 		});
 	}

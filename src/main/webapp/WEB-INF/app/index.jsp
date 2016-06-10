@@ -297,6 +297,7 @@
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/workflowStepRepo.js"></script>
 	    <script src="model/inputTypeService.js"></script>
+	    <script src="model/fieldPredicateModel.js"></script>
 
 
 	    <!-- Controllers -->

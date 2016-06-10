@@ -10,8 +10,7 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 			endpoint  : '/private/queue',
 			controller: 'settings/field-predicates',
 			method    : 'all'
-		},
-		type: 'ArrayList<FieldPredicate>'
+		}
 	};
 
 	//Return a promise of real data, and caches the real data upon fulfillment.
@@ -20,9 +19,15 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 			return $q.resolve(cache.list);
 		}
 		return WsApi.fetch(api.request).then(function(response){
-			console.info('raw response: ', response);
+			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
-			angular.extend(cache.list, angular.fromJson(response.body).payload[api.type]);
+			angular.forEach(Object.keys(payload), function(key){
+				if (key.indexOf('ArrayList') > -1) {
+					angular.extend(cache.list, payload[key]);
+				} else {
+					cache[key] = payload[key];
+				}
+			});
 			cache.ready = true;
 		});
 	}
