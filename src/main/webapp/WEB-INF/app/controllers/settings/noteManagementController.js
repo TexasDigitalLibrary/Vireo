@@ -31,8 +31,6 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 			position++;
 		});
 
-		console.log($scope.step)
-
 		$scope.modalData = {
 	    	name: '',
 	    	text: ''
