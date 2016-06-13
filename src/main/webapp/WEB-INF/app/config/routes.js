@@ -7,6 +7,10 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			templateUrl: 'views/myprofile.html',
 			controller: 'SettingsController'
 		}).
+		when('/submission/new', {
+			templateUrl: 'views/submission/newSubmission.html',
+			controller: 'NewSubmissionController'
+		}).
 		when('/users', {
 			templateUrl: 'views/users.html'
 		}).

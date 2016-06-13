@@ -1,0 +1,78 @@
+
+<div class="row">
+		<div class="col-xs-12 triptych" ng-controller="TriptychController">
+		<h1>Choose your Organization</h1>
+			<div class="triptych-wrapper" ng-class="{'collapse': !triptych.expanded}">
+				<div class="row triptych-navigation">
+					<div class="row">
+						<div class="col-xs-12">
+							<ul class="breadcrumb">
+								<li ng-click="resetPanels()">
+									<a href="#">Vireo Institution</a>
+									<span ng-if="triptych.panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span>
+								</li>
+								<li ng-repeat="panel in triptych.panelHistory" ng-click="triptych.rewindPanels(panel)">
+									<a href="#">{{panel.selectedOrganization.name}} ({{panel.selectedOrganization.category.name}})</a>
+									<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-if="hasOrganization()">
+					<div class="col-xs-12"> 
+						<p>Your Institution has no child organizations. Use the 'Create Organization' side module to create your first organization.</p>
+					</div>
+				</div>
+				<div class="row triptych-panels">
+					<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper"
+						 ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}" 
+						 ng-repeat="panel in triptych.openPanels" 
+						 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
+
+						<div class="panel panel-default triptych-panel"
+							 ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">
+
+							<div class="panel-heading" 
+								 ng-click="triptych.expanded = true"> 
+								<span 	ng-repeat="(orgId, category) in panel.getUniqueCategories()" 
+										ng-click="panel.toggleFilter(category)">
+									<span 	class="category-heading" 
+											ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span> 
+									<span ng-if="!$last"> / </span> 
+								</span>
+								<span 	class="glyphicon glyphicon-arrow-right pull-right"
+										ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
+								</span> 
+							</div>
+							<div class="panel-body">
+								<ul class="list-group">
+									<li class="list-group-item"
+										ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
+										ng-if="filterPanelByParent(panel, organization)" 
+										ng-click="shiftPanels(panel, organization);"
+										ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
+										class="triptych-panel-entry">
+										<span>
+											{{organization.name}}
+											<span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
+										</span>
+										<span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{organization.category.name}}</span>
+									</li>
+								</ul>
+							</div>
+
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-4 col-md-offset-4">
+					<form name="newSubmission" ng-if="selectedOrganization.id">
+						<button class="btn btn-primary form-control">Start {{selectedOrganization.name}} Submission</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
