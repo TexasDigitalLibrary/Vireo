@@ -5,12 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Auth;
+import edu.tamu.framework.aspect.annotation.Data;
+import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.model.Credentials;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +30,11 @@ public class SubmissionController {
     @Autowired
     private SubmissionRepo submissionRepo;
     
+    @Autowired
+    private ObjectMapper objectMapper;
+    
     @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @Auth(role = "STUDENT")
     public ApiResponse getAll() {
         
         Map<String, List<Submission>> allSubmissions = new HashMap<String, List<Submission>>();
@@ -32,6 +43,22 @@ public class SubmissionController {
         
         return new ApiResponse(SUCCESS, allSubmissions);
         
+    }
+    
+    @ApiMapping("/create")
+    @Auth(role = "STUDENT")
+    public ApiResponse createSubmission(@Shib Credentials credentials, @Data String data) {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            new ApiResponse(ERROR, "could not parse data string ["+e.getMessage()+"]");
+        }
+        
+        submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
+        
+        return new ApiResponse(SUCCESS);
     }
     
 }

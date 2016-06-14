@@ -55,7 +55,16 @@ vireo.service("SubmissionRepo", function(AbstractModel, WsApi) {
 	};
 
 	SubmissionRepo.create = function(organizationId) {
-		console.log(organizationId);
+		
+		var createSubmissionPromise = WsApi.fetch({
+			endpoint: '/private/queue', 
+			controller: 'submission', 
+			method: 'create',
+			data: {organizationId: organizationId}
+		});
+
+		return createSubmissionPromise;
+
 	}
 
 	return SubmissionRepo;
