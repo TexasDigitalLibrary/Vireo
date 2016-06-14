@@ -48,7 +48,7 @@ public class FieldPredicateController {
      */
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse getFieldPredicateByValue() {
+    public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
     }
 
