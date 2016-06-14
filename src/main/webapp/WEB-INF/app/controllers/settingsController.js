@@ -36,7 +36,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		return temp.textContent || temp.innerText || "";
   	};
   	
-  	$scope.stringToBoolean = function(string) {
+  	stringToBoolean = function(string) {
   		switch(string.toLowerCase().trim()) {
   			case "false": case "no": case "0": case "": return false;
   			default: return true;
@@ -54,6 +54,26 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   	
 	ConfigurableSettings.ready().then(function() {
 
+		$scope.submissionsOpen = function(){
+	  		return stringToBoolean($scope.settings.configurable.application.submissions_open);
+	  	};
+	  	
+	  	$scope.multipleSubmissions = function(){
+	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions);
+	  	};
+	  	
+	  	$scope.hasSubmissions = function() {
+	  		return false;
+	  	};
+	  	
+	  	$scope.submissionInProgress = function() {
+	  		return false;
+	  	};
+	  	
+	  	$scope.submissionNeedsCorrections = function() {
+	  		return false;
+	  	};
+		
 		//TODO:  check these update config settings methods for redundancy and clean up.
 		$scope.delayedUpdateConfigurableSettings = function(type,name) {
 

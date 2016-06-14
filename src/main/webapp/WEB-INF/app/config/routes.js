@@ -17,6 +17,10 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			redirectTo: '/admin/list',
 			access: ["ADMINISTRATOR"]
 		}).
+		when('/submit', {
+			templateUrl: 'views/student/submit.html',
+			access: ["STUDENT"]
+		}).
 		when('/admin/list', {
 			templateUrl: 'views/admin/list.html',
 			access: ["ADMINISTRATOR"]
