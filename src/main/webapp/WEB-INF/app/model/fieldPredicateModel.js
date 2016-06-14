@@ -30,13 +30,37 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 			});
 			cache.ready = true;
 		});
-	}
+	};
 
 	this.getAll = function(sync){
 		cache.ready = sync ? !sync : cache.ready;
 		this.getAllPromise();
 		return cache.list;
-	}
+	};
 
+	this.predicateWithValueExists = function(value) {
+		var retVal = false;
+		if (!cache.ready) {
+			this.getAllPromise().then(function(){ //If for this is called before InputTypeService.getAll(), our cache would be empty.
+				//Now we can be sure the cache is full. Proceed with evaluation.
+				angular.forEach(cache.list, function(predicateInCache){
+					if (value == predicateInCache.value) {
+						console.info('cache not ready match for', value);
+						return true;
+					}
+				});
+				return false;
+			});
+		}else{
+			angular.forEach(cache.list, function(predicateInCache){
+				if (value == predicateInCache.value) {
+					console.info('cache READY match for', value);
+					retVal = true;
+				}
+			});
+			
+		}
+		return retVal;
+	};
 });
 

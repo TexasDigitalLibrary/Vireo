@@ -95,4 +95,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		container: '#fieldProfiles'
 	});
 
+	$scope.predicateWithValueExists = function(fpValue){
+		console.info('ce got passed ', fpValue);
+		console.info(fpValue);
+		console.info(FieldPredicateModel.predicateWithValueExists(fpValue));
+		return FieldPredicateModel.predicateWithValueExists(fpValue);
+	};
+
 });
