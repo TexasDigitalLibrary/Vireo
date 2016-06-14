@@ -24,11 +24,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     private UserRepo userRepo;
 
     @Override
-    public Submission create(User submitter, SubmissionState state) {
-        return submissionRepo.save(new Submission(submitter, state));
-    }
-
-    @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
         
         User submitter = userRepo.findByEmail(submitterCredentials.getEmail());

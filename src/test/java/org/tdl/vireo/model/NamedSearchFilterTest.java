@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import edu.tamu.framework.model.Credentials;
+
 public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @Before
@@ -16,11 +18,19 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         includedSubmitter = userRepo.create(TEST_INCLUDED_SUBMITTER_EMAIL, TEST_INCLUDED_SUBMITTER_FIRSTNAME, TEST_INCLUDED_SUBMITTER_LASTNAME, TEST_SUBMITTER_ROLE);
         includedSubmissionState = submissionStateRepo.create(TEST_INCLUDED_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-        includedSubmission = submissionRepo.create(includedSubmitter, includedSubmissionState);
+        //includedSubmission = submissionRepo.create(includedSubmitter, includedSubmissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(includedSubmitter.getEmail());
+        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
+        includedSubmission = submissionRepo.create(credentials, organization.getId());
+        includedSubmission.setState(includedSubmissionState);
 
         excludedSubmitter = userRepo.create(TEST_EXCLUDED_SUBMITTER_EMAIL, TEST_EXCLUDED_SUBMITTER_FIRSTNAME, TEST_EXCLUDED_SUBMITTER_LASTNAME, TEST_SUBMITTER_ROLE);
         excludedSubmissionState = submissionStateRepo.create(TEST_EXCLUDED_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-        excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
+        //excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
+        Credentials credentials2 = new Credentials();
+        credentials.setEmail(excludedSubmitter.getEmail());
+        includedSubmission = submissionRepo.create(credentials2, organization.getId());
         assertEquals("The submission does not exist!", 2, submissionRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);

@@ -5,10 +5,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 
+import edu.tamu.framework.model.Credentials;
+
 public class ActionLogTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
+        
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
@@ -18,7 +21,11 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The attachmentType repository is not empty!", 1, attachmentTypeRepo.count());
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
-        testSubmission = submissionRepo.create(testUser, submissionState);
+        
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
+        testSubmission = submissionRepo.create(credentials, organization.getId());
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
 

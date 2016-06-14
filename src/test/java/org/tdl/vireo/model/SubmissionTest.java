@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.tamu.framework.model.Credentials;
+
 public class SubmissionTest extends AbstractEntityTest {
 
     @Before
@@ -57,7 +59,11 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        Submission submission = submissionRepo.create(submitter, submissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        Submission submission = submissionRepo.create(credentials, organization.getId());
+        submission.setState(submissionState);
+        
         submission.addOrganization(organization);
         submission.addSubmissionWorkflowStep(workflowStep);
         submission.addFieldValue(fieldValue);
@@ -77,10 +83,12 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        submissionRepo.create(submitter, submissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        submissionRepo.create(credentials, organization.getId());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(submitter, submissionState);
+            submissionRepo.create(credentials,  organization.getId());
         } 
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
@@ -88,7 +96,9 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        Submission submission = submissionRepo.create(submitter, submissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        Submission submission = submissionRepo.create(credentials, organization.getId());
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
     }
@@ -108,8 +118,10 @@ public class SubmissionTest extends AbstractEntityTest {
         FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
 
-        Submission submission = submissionRepo.create(submitter, submissionState);
-
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        Submission submission = submissionRepo.create(credentials, organization.getId());
+        
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
         
