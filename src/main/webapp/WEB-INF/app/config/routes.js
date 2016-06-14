@@ -19,7 +19,11 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 		}).
 		when('/submit', {
 			templateUrl: 'views/student/submit.html',
-			access: ["STUDENT"]
+			access: ["STUDENT", "ADMINISTRATOR"]
+		}).
+		when('/submit/personalInfo', {
+			templateUrl: 'views/student/submit.html',
+			access: ["STUDENT", "ADMINISTRATOR"]
 		}).
 		when('/admin/list', {
 			templateUrl: 'views/admin/list.html',

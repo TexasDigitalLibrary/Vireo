@@ -17,6 +17,35 @@ main footer {
   margin-bottom: 65px;
 }
 
+.breadcrumb .divider {
+    padding: 0 5px;
+    color: #333333;
+}
+
+.pageHead {
+    margin: 0;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #cccccc;
+}
+
+.pageHead h3 {
+    font-size: 2.2em;
+    font-weight: normal;
+    margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.form-actions {
+    padding: 17px 20px 18px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e5e5e5;
+}
+
 .form-group {  
   margin: 18px 0 18px 0;
   font-size: 13px;

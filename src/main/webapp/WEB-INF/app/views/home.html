@@ -9,7 +9,7 @@
 			<a href="/submit" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && multipleSubmissions() && (hasSubmissions() || submissionInProgress || submissionNeedsCorrections())">Manage/View your submission(s)</a>
 			<a href="/submit/1/personalInfo" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && submissionInProgress()">Continue your submission</a>
 			<a href="/submit/1/view" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
-			<p class="alert alert-error" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && !submissionNeedsCorrections() && hasSubmissions()">You've already submitted an ETD <a href="/submit" class="btn btn-primary">Submission History</a></p>
+			<p class="alert alert-danger" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && !submissionNeedsCorrections() && hasSubmissions()">You've already submitted an ETD <a href="/submit" class="btn btn-primary">Submission History</a></p>
 			<a href="/submit/personalInfo" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && (!submissionInProgress() || !submissionNeedsCorrections() || !hasSubmissions())">Start your submission</a>
 		</div>
 		<div class="row">
