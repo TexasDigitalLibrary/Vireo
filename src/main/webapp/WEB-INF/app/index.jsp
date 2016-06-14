@@ -298,6 +298,7 @@
 	    <script src="model/workflowStepRepo.js"></script>
 	    <script src="model/inputTypeService.js"></script>
 	    <script src="model/fieldPredicateModel.js"></script>
+	    <script src="model/fieldGlossRepoModel.js"></script>
 
 
 	    <!-- Controllers -->

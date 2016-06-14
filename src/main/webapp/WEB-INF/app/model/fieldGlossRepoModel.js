@@ -1,4 +1,4 @@
-vireo.service("FieldPredicateModel", function($q, WsApi) {
+vireo.service("FieldGlossModel", function($q, WsApi) {
 
 	var cache = {
 		list  : [],
@@ -8,7 +8,7 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 	var api = {
 		request: {
 			endpoint  : '/private/queue',
-			controller: 'settings/field-predicates',
+			controller: 'settings/field-gloss',
 			method    : 'all'
 		}
 	};
@@ -38,19 +38,19 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 		return cache.list;
 	};
 
-	this.predicateWithValueExists = function(value) {
+	this.glossWithValueExists = function(value) {
 		var retVal = false;
 		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.
 			this.getAllPromise().then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
-				angular.forEach(cache.list, function(predicateInCache){
-					if (value == predicateInCache.value) {
+				angular.forEach(cache.list, function(glossInCache){
+					if (value == glossInCache.value) {
 						retVal = true;
 					}
 				});
 			});
 		}else{ //Cache is available. Evaluate right away.
-			angular.forEach(cache.list, function(predicateInCache){
-				if (value == predicateInCache.value) {
+			angular.forEach(cache.list, function(glossInCache){
+				if (value == glossInCache.value) {
 					retVal = true;
 				}
 			});
@@ -59,4 +59,3 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 	};
 
 });
-

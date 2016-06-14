@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossModel, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -20,7 +20,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.controlledVocabularies = ControlledVocabularyRepo.get();
 
 	$scope.fieldPredicates = FieldPredicateModel.getAll();
-	console.info('predicates are: ', $scope.fieldPredicates);
+	$scope.fieldGlosses = FieldGlossModel.getAll();
 
 	$scope.inputTypes = InputTypeService.getAll();
 	
@@ -96,10 +96,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	});
 
 	$scope.predicateWithValueExists = function(fpValue){
-		console.info('ce got passed ', fpValue);
-		console.info(fpValue);
-		console.info(FieldPredicateModel.predicateWithValueExists(fpValue));
 		return FieldPredicateModel.predicateWithValueExists(fpValue);
+	};
+
+	$scope.glossWithValueExists = function(glossValue){
+		return FieldGlossModel.glossWithValueExists(glossValue);
 	};
 
 });
