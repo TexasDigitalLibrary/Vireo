@@ -14,7 +14,8 @@
 			class="table table-striped table-bordered table-condensed">
 			<caption>
 				<h4>
-					<p class="center red">Currently accepting submissions for the {{settings.configurable.application.current_semester}} semester.</p>
+					<p class="center red" ng-if="submissionsOpen()">Currently accepting submissions for the {{settings.configurable.application.current_semester}} semester.</p>
+					<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.</p>
 				</h4>
 			</caption>
 			<thead>
@@ -76,8 +77,8 @@
 			</tbody>
 		</table>
 		<div class="form-actions row center">
-			<a href="javascript:void(0)" onclick="checkBeforeNewSub()"
-				class="btn btn-primary">Start a new submission</a>
+			<a href="javascript:void(0)" onclick="checkBeforeNewSub()" class="btn btn-primary" ng-if="submissionsOpen() && (multipleSubmissions() || !hasSubmissions())">Start a new submission</a>
+			<p class="alert alert-danger" ng-if="!(multipleSubmissions() || !hasSubmissions())">You've already submitted an ETD or have one in progress!</p>
 		</div>
 	</div>
 
