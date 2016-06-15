@@ -13,6 +13,21 @@ vireo.service("FieldGlossModel", function($q, WsApi) {
 		}
 	};
 
+	// Helper method to create our WSAPI call using the method as a parameter.
+	// Allows us to define the endpoint and controller in one place.
+	// The data parameter is optional.
+	var buildRequest = function(method, data) {
+		var builtRequest = angular.copy(api.request);
+		builtRequest.method = method;
+
+		if (angular.isDefined(data)){
+			builtRequest.data = data;
+		}
+		
+		console.info('debug copiedAPI', builtRequest);
+		return builtRequest;
+	};
+
 	//Return a promise of real data, and caches the real data upon fulfillment.
 	this.getAllPromise = function() {
 		if(cache.ready){
@@ -36,6 +51,10 @@ vireo.service("FieldGlossModel", function($q, WsApi) {
 		cache.ready = sync ? !sync : cache.ready;
 		this.getAllPromise();
 		return cache.list;
+	};
+
+	this.addGloss = function(gloss){
+		return WsApi.fetch(buildRequest('create', gloss));
 	};
 
 	this.glossWithValueExists = function(value) {

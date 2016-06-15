@@ -10,7 +10,7 @@
 		<div class="form-group">
        	 	<label for="field-profiles-gloss">Gloss</label>
         	<input id="field-profiles-gloss" ng-model="modalData.gloss" uib-typeahead="gloss.value for gloss in fieldGlosses | filter:$viewValue" type="text" class="form-control" placeholder="Display gloss for the new field profile" required/>
-			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-if="!glossWithValueExists(modalData.gloss)">Create New Gloss</button>
+			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-click="createGloss(modalData.gloss)" ng-if="!glossWithValueExists(modalData.gloss)">Create New Gloss</button>
     	</div>
     	<div class="form-group field-profile-modal-group">
        	 	<label for="field-profiles-predicate">Predicate</label>

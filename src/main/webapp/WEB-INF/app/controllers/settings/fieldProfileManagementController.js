@@ -44,9 +44,14 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	};
 
 	$scope.resetFieldProfiles();
+
+	$scope.createGloss = function(value) {
+		//TODO actually set the language.
+		FieldGlossModel.addGloss({'Value': value, 'Language': 'EnglishHardCode'});
+	};
 	
 	$scope.createFieldProfile = function(newFieldProfile) {
-
+		
 	};
 	
 	$scope.selectFieldProfile = function(index) {

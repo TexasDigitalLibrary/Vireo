@@ -2,15 +2,19 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.awt.FileDialog;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
@@ -40,8 +44,21 @@ public class FieldGlossController {
      */
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse getFieldGlossByValue() {
+    public ApiResponse getAllFieldGlosses() {
         return new ApiResponse(SUCCESS, fieldGlossRepo.findAll());
+    }
+    
+    /**
+     * Endpoint to create a field gloss
+     * 
+     * @return ApiResponse with all input types.
+     */
+    @ApiMapping("/create")
+    @Auth(role = "MANAGER")
+    public ApiResponse createFieldGloss(@ApiModel FieldGloss fieldGloss) {
+        System.out.println("CREATE FIELD GLOSS");
+        System.out.println(fieldGloss.toString());
+        return null;
     }
 
 }
