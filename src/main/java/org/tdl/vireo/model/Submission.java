@@ -24,6 +24,8 @@ import javax.persistence.UniqueConstraint;
 
 import edu.tamu.framework.model.BaseEntity;
 
+import org.tdl.vireo.model.SubmissionWorkflowStep;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id" }))
 public class Submission extends BaseEntity {
@@ -44,8 +46,11 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
+//    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
+//    private List<SubmissionWorkflowStep> submissionWorkflowSteps;
+    
     @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
-    private List<WorkflowStep> submissionWorkflowSteps;
+    private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
@@ -63,7 +68,7 @@ public class Submission extends BaseEntity {
     public Submission() {
         setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
-        setSubmissionWorkflowSteps(new ArrayList<WorkflowStep>());
+        setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
         setEmbargoTypes(new TreeSet<Embargo>());
         setAttachments(new TreeSet<Attachment>());
@@ -175,7 +180,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the submissionWorkflowSteps
      */
-    public List<WorkflowStep> getSubmissionWorkflowSteps() {
+    public List<SubmissionWorkflowStep> getSubmissionWorkflowSteps() {
         return submissionWorkflowSteps;
     }
 
@@ -183,7 +188,7 @@ public class Submission extends BaseEntity {
      * @param list
      *            the submissionWorkflowSteps to set
      */
-    public void setSubmissionWorkflowSteps(List<WorkflowStep> list) {
+    public void setSubmissionWorkflowSteps(List<SubmissionWorkflowStep> list) {
         this.submissionWorkflowSteps = list;
     }
 
@@ -191,7 +196,7 @@ public class Submission extends BaseEntity {
      * 
      * @param submissionWorkflowStep
      */
-    public void addSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+    public void addSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().add(submissionWorkflowStep);
     }
 

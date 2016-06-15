@@ -12,6 +12,7 @@ import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
@@ -25,35 +26,36 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
     private EntityManager em;
 
     @Autowired
-    private SubmissionFieldProfileRepo fieldProfileRepo;
-    
-    @Autowired
-    private SubmissionWorkflowStepRepo workflowStepRepo;
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
     
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
-    public SubmissionFieldProfile create(SubmissionWorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean optional) {
-        SubmissionFieldProfile fieldProfile = fieldProfileRepo.save(new SubmissionFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, repeatable, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
-        workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfileRepo.findOne(fieldProfile.getId());
-    }
-
-    @Override
-    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
-    public SubmissionFieldProfile create(SubmissionWorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean optional) {
-        SubmissionFieldProfile fieldProfile = fieldProfileRepo.save(new SubmissionFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
-        workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfileRepo.findOne(fieldProfile.getId());
-    }
-    
-    @Override
-    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
-    public SubmissionFieldProfile create(SubmissionWorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean optional) {
-        SubmissionFieldProfile fieldProfile = fieldProfileRepo.save(new SubmissionFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, optional));
-        originatingWorkflowStep.addFieldProfile(fieldProfile);
-        workflowStepRepo.save(originatingWorkflowStep);
-        return fieldProfileRepo.findOne(fieldProfile.getId());
+    public SubmissionFieldProfile create(FieldProfile fieldProfile) {
+        
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelp(
+                    fieldProfile.getPredicate(), 
+                    fieldProfile.getInputType(),
+                    fieldProfile.getRepeatable(),
+                    fieldProfile.getOptional(),
+                    fieldProfile.getUsage(),
+                    fieldProfile.getHelp()
+                );
+                        
+        if(submissionfieldProfile == null) {
+            submissionfieldProfile = new SubmissionFieldProfile();
+            
+            submissionfieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
+            submissionfieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
+            submissionfieldProfile.setHelp(fieldProfile.getHelp());
+            submissionfieldProfile.setInputType(fieldProfile.getInputType());
+            submissionfieldProfile.setOptional(fieldProfile.getOptional());
+            submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
+            submissionfieldProfile.setUsage(submissionfieldProfile.getUsage());
+            
+            submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
+            
+        }
+        
+        return submissionfieldProfile;
     }
 }

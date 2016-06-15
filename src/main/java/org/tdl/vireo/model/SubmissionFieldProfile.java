@@ -9,15 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
 
 import edu.tamu.framework.model.BaseEntity;
 
+@Entity
 public class SubmissionFieldProfile extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
@@ -27,6 +31,9 @@ public class SubmissionFieldProfile extends BaseEntity {
     @Column(nullable = false)
     private InputType inputType;
     
+    @Column(nullable = false)
+    private Boolean repeatable;
+     
     @Column(nullable = false)
     private Boolean optional;
     
@@ -63,6 +70,14 @@ public class SubmissionFieldProfile extends BaseEntity {
      */
     public void setInputType(InputType inputType) {
         this.inputType = inputType;
+    }
+    
+    public Boolean getRepeatable() {
+        return this.repeatable;
+    }
+    
+    public void setRepeatable(Boolean repeatable) {
+        this.repeatable = repeatable;
     }
 
     

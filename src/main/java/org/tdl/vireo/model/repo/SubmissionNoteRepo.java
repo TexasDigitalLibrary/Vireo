@@ -6,6 +6,6 @@ import org.tdl.vireo.model.repo.custom.SubmissionNoteRepoCustom;
 
 public interface SubmissionNoteRepo extends JpaRepository<SubmissionNote, Long>, SubmissionNoteRepoCustom {
 
-    public SubmissionNote findByName(String name);
+    public SubmissionNote findByNameAndText(String name, String text);
 
 }
