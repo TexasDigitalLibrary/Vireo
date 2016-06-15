@@ -60,7 +60,8 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         Credentials credentials = new Credentials();
-        credentials.setEmail(testUser.getEmail());
+                
+        credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
         submission.setState(submissionState);
         
@@ -84,7 +85,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testDuplication() {
         Credentials credentials = new Credentials();
-        credentials.setEmail(testUser.getEmail());
+        credentials.setEmail(submitter.getEmail());
         submissionRepo.create(credentials, organization.getId());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
@@ -97,7 +98,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testDelete() {
         Credentials credentials = new Credentials();
-        credentials.setEmail(testUser.getEmail());
+        credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
@@ -119,7 +120,8 @@ public class SubmissionTest extends AbstractEntityTest {
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
 
         Credentials credentials = new Credentials();
-        credentials.setEmail(testUser.getEmail());
+                
+        credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
         
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
@@ -199,9 +201,7 @@ public class SubmissionTest extends AbstractEntityTest {
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
+        organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         embargoRepo.deleteAll();
         userRepo.deleteAll();        

@@ -5,7 +5,9 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id" }))
 public class Submission extends BaseEntity {
 
     @OneToOne(optional = false)
@@ -32,7 +34,7 @@ public class Submission extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<User> assignees;
 
-    @ManyToOne(cascade = { REFRESH }, optional = false)
+    @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
 
     //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
@@ -43,7 +45,7 @@ public class Submission extends BaseEntity {
     private Set<FieldValue> fieldValues;
 
     @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
-    private Set<WorkflowStep> submissionWorkflowSteps;
+    private List<WorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
@@ -61,7 +63,7 @@ public class Submission extends BaseEntity {
     public Submission() {
         setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
-        setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
+        setSubmissionWorkflowSteps(new ArrayList<WorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
         setEmbargoTypes(new TreeSet<Embargo>());
         setAttachments(new TreeSet<Attachment>());
@@ -173,16 +175,16 @@ public class Submission extends BaseEntity {
     /**
      * @return the submissionWorkflowSteps
      */
-    public Set<WorkflowStep> getSubmissionWorkflowSteps() {
+    public List<WorkflowStep> getSubmissionWorkflowSteps() {
         return submissionWorkflowSteps;
     }
 
     /**
-     * @param submissionWorkflowSteps
+     * @param list
      *            the submissionWorkflowSteps to set
      */
-    public void setSubmissionWorkflowSteps(Set<WorkflowStep> submissionWorkflowSteps) {
-        this.submissionWorkflowSteps = submissionWorkflowSteps;
+    public void setSubmissionWorkflowSteps(List<WorkflowStep> list) {
+        this.submissionWorkflowSteps = list;
     }
 
     /**

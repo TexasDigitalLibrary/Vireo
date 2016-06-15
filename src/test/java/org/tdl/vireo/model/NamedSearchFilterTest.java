@@ -21,16 +21,18 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         //includedSubmission = submissionRepo.create(includedSubmitter, includedSubmissionState);
         Credentials credentials = new Credentials();
         credentials.setEmail(includedSubmitter.getEmail());
-        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
+        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
         includedSubmission = submissionRepo.create(credentials, organization.getId());
         includedSubmission.setState(includedSubmissionState);
 
         excludedSubmitter = userRepo.create(TEST_EXCLUDED_SUBMITTER_EMAIL, TEST_EXCLUDED_SUBMITTER_FIRSTNAME, TEST_EXCLUDED_SUBMITTER_LASTNAME, TEST_SUBMITTER_ROLE);
+               
         excludedSubmissionState = submissionStateRepo.create(TEST_EXCLUDED_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         //excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
         Credentials credentials2 = new Credentials();
-        credentials.setEmail(excludedSubmitter.getEmail());
-        includedSubmission = submissionRepo.create(credentials2, organization.getId());
+        credentials2.setEmail(excludedSubmitter.getEmail());
+        excludedSubmission = submissionRepo.create(credentials2, organization.getId());
         assertEquals("The submission does not exist!", 2, submissionRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -53,11 +55,9 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         customActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         customActionValue = customActionValueRepo.create(includedSubmission, customActionDefinition, TEST_CUSTOM_ACTION_VALUE);
-        assertEquals("The customActionValue Repo is empty", 1, customActionValueRepo.count());
-        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        assertEquals("The customActionValue Repo is empty", 1, customActionValueRepo.count());        
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
-        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
-        assertEquals("The organization Repo is empty", 1, organizationRepo.count());
+       
     }
 
     @Override
@@ -120,6 +120,9 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         namedSearchFilter.addEmbargoType(embargoType);
         namedSearchFilter.addAssignee(assignee);
         namedSearchFilter.addCustomActionValue(customActionValue);
+        
+        System.out.println(organization);
+        
         namedSearchFilter.addOrganization(organization);
 
         namedSearchFilter = namedSearchFilterRepo.save(namedSearchFilter);
@@ -138,11 +141,10 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
+        
         namedSearchFilterRepo.deleteAll();
         embargoRepo.deleteAll();
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
+        organizationRepo.deleteAll(); 
         organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
         attachmentRepo.deleteAll();

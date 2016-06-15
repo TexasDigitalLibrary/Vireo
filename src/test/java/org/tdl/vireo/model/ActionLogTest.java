@@ -24,7 +24,8 @@ public class ActionLogTest extends AbstractEntityTest {
         
         Credentials credentials = new Credentials();
         credentials.setEmail(testUser.getEmail());
-        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
+        OrganizationCategory category = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
         testSubmission = submissionRepo.create(credentials, organization.getId());
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
@@ -77,6 +78,8 @@ public class ActionLogTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();

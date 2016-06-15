@@ -62,6 +62,8 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         customActionValueRepo.deleteAll();
         submissionRepo.deleteAll();
         userRepo.deleteAll();
