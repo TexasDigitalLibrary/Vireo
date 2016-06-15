@@ -2,15 +2,15 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.awt.FileDialog;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.FieldGloss;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
+import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -37,6 +37,9 @@ public class FieldGlossController {
     @Autowired
     private FieldGlossRepo fieldGlossRepo;
     
+    @Autowired
+    private LanguageRepo languageRepo;
+    
     /**
      * Endpoint to request all field glosses.
      * 
@@ -56,8 +59,9 @@ public class FieldGlossController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     public ApiResponse createFieldGloss(@ApiModel FieldGloss fieldGloss) {
-        System.out.println("CREATE FIELD GLOSS");
-        System.out.println(fieldGloss.toString());
+        Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
+        fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage);
+        
         return null;
     }
 
