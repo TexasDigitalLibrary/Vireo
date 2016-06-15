@@ -9,8 +9,19 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 		request: {
 			endpoint  : '/private/queue',
 			controller: 'settings/field-predicates',
-			method    : 'all'
+			method    : ''
 		}
+	};
+
+	var buildRequest = function(method, data) {
+		var builtRequest = angular.copy(api.request);
+		builtRequest.method = method;
+
+		if (angular.isDefined(data)){
+			builtRequest.data = data;
+		}
+		
+		return builtRequest;
 	};
 
 	//Return a promise of real data, and caches the real data upon fulfillment.
@@ -18,7 +29,7 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 		if(cache.ready){
 			return $q.resolve(cache.list);
 		}
-		return WsApi.fetch(api.request).then(function(response){
+		return WsApi.fetch(buildRequest('all')).then(function(response){
 			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
 			angular.forEach(Object.keys(payload), function(key){
@@ -31,6 +42,12 @@ vireo.service("FieldPredicateModel", function($q, WsApi) {
 			cache.ready = true;
 		});
 	};
+
+
+	// -----------------------------------------------------------------------
+	// Begin model specific code ---------------------------------------------
+	// -----------------------------------------------------------------------
+
 
 	this.getAll = function(sync){
 		cache.ready = sync ? !sync : cache.ready;
