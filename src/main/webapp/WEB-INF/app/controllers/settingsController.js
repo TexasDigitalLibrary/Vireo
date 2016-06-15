@@ -62,14 +62,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions);
 	  	};
 	  	
+	  	// TODO: logic
 	  	$scope.hasSubmissions = function() {
 	  		return false;
 	  	};
 	  	
+	  	// TODO: logic
 	  	$scope.submissionInProgress = function() {
 	  		return false;
 	  	};
 	  	
+	  	// TODO: logic
 	  	$scope.submissionNeedsCorrections = function() {
 	  		return false;
 	  	};
