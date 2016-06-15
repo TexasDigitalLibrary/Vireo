@@ -9,54 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.InputType;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import edu.tamu.framework.model.BaseEntity;
 
-@Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id" }) )
-public class FieldProfile extends BaseEntity {
+public class SubmissionFieldProfile extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate predicate;
     
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private FieldProfile originatingFieldProfile;
-    
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private WorkflowStep originatingWorkflowStep;
-    
     @Enumerated
     @Column(nullable = false)
     private InputType inputType;
-
-    @Column(nullable = false)
-    private Boolean repeatable;
-
-    @Column(nullable = false)
-    private Boolean enabled;
     
     @Column(nullable = false)
     private Boolean optional;
-    
-    @Column(nullable = false)
-    private Boolean overrideable;    
     
     @Lob
     @Column(nullable = true, name = "`usage`") // "usage" is a keyword in sql
@@ -72,108 +44,12 @@ public class FieldProfile extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private List<ControlledVocabulary> controlledVocabularies;
     
-    public FieldProfile() {
-        setRepeatable(false);
-        setEnabled(false);
+    public SubmissionFieldProfile() {
         setOptional(true);
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
     
-    public FieldProfile(WorkflowStep originatingWorkflowStep) {
-        this();
-        setOriginatingWorkflowStep(originatingWorkflowStep);
-    }
-
-    /**
-     * 
-     * @param predicate
-     * @param inputType
-     * @param repeatable
-     * @param enabled
-     * @param optional
-     */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep);
-        setPredicate(predicate);
-        setInputType(inputType);
-        setRepeatable(repeatable);
-        setOverrideable(overrideable);
-        setEnabled(enabled);
-        setOptional(optional);
-    }
-    
-    /**
-     * 
-     * @param predicate
-     * @param inputType
-     * @param usage
-     * @param repeatable
-     * @param enabled
-     * @param optional
-     */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, repeatable, overrideable, enabled, optional);
-        setUsage(usage);
-    }
-    
-    /**
-     * 
-     * @param predicate
-     * @param inputType
-     * @param usage
-     * @param repeatable
-     * @param enabled
-     * @param optional
-     */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, usage, repeatable, overrideable, enabled, optional);
-        setHelp(help);
-    }
-
-    /**
-     * @return the predicate
-     */
-    public FieldPredicate getPredicate() {
-        return predicate;
-    }
-
-    /**
-     * @param predicate
-     *            the predicate to set
-     */
-    public void setPredicate(FieldPredicate predicate) {
-        this.predicate = predicate;
-    }
-    
-    /**
-     * @return the originatingFieldProfile
-     */
-    public FieldProfile getOriginatingFieldProfile() {
-        return originatingFieldProfile;
-    }
-
-    /**
-     * @param originatingFieldProfile the originatingFieldProfile to set
-     */
-    public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
-        this.originatingFieldProfile = originatingFieldProfile;
-    }
-    
-    /**
-     * @return the originatingWorkflowStep
-     */
-    public WorkflowStep getOriginatingWorkflowStep() {
-        return originatingWorkflowStep;
-    }
-
-    /**
-     * @param originatingWorkflowStep the originatingWorkflowStep to set
-     */
-    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
-        this.originatingWorkflowStep = originatingWorkflowStep;
-    }
-
     /**
      * @return the inputType
      */
@@ -189,51 +65,7 @@ public class FieldProfile extends BaseEntity {
         this.inputType = inputType;
     }
 
-    /**
-     * @return the repeatable
-     */
-    public Boolean getRepeatable() {
-        return repeatable;
-    }
-
-    /**
-     * @param repeatable
-     *            the repeatable to set
-     */
-    public void setRepeatable(Boolean repeatable) {
-        this.repeatable = repeatable;
-    }
-
-    /**
-     * @return the overrideable
-     */
-    public Boolean getOverrideable() {
-        return overrideable;
-    }
-
-    /**
-     * @param overrideable the overrideable to set
-     */
-    public void setOverrideable(Boolean overrideable) {
-        this.overrideable = overrideable;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    /**
-     * 
-     * @param enabled
-     */
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
+    
     /**
      * 
      * @return
@@ -387,5 +219,4 @@ public class FieldProfile extends BaseEntity {
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().remove(controlledVocabulary);
     }
-    
 }

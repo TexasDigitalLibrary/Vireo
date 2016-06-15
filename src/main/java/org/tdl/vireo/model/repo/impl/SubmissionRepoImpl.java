@@ -15,6 +15,7 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
 import edu.tamu.framework.model.Credentials;
@@ -32,6 +33,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Autowired
     private UserRepo userRepo;
+    
+    @Autowired
+    private WorkflowStepRepo workflowStepRepo;
 
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
@@ -47,9 +51,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         List<WorkflowStep> submissionWorkflowSteps = new ArrayList<WorkflowStep>();
         for(WorkflowStep step : organization.getAggregateWorkflowSteps()) {
             //for every field profile and note on the the step, put a clone of it on the submission's step
+            //WorkflowStep stepClone = workflowStepRepo.findByNameAndOriginatingOrganization(name, originatingOrganization)
+            
             List<Note> notes = new ArrayList<Note>();
             List<FieldProfile> fps = new ArrayList<FieldProfile>();
             for(Note note : step.getNotes()) {
+                //Note noteClone 
+            }
+            for(FieldProfile fp : step.getAggregateFieldProfiles())
+            {
                 
             }
         }
