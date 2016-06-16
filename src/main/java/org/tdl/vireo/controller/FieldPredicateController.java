@@ -14,13 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
+import scala.annotation.meta.field;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -50,6 +54,18 @@ public class FieldPredicateController {
     @Auth(role = "MANAGER")
     public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
+    }
+    
+    /**
+     * Endpoint to create a field predicate
+     * 
+     * @return ApiResponse with all input types.
+     */
+    @ApiMapping("/create")
+    @Auth(role = "MANAGER")
+    public ApiResponse createFieldPredicate(@ApiModel FieldPredicate fieldPredicate) {
+        fieldPredicateRepo.create(fieldPredicate.getValue());
+        return null;
     }
 
 }
