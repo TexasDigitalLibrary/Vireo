@@ -11,20 +11,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+
 import edu.tamu.framework.model.BaseEntity;
 
 import org.tdl.vireo.model.SubmissionWorkflowStep;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id" }))
@@ -46,10 +53,11 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-//    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
-//    private List<SubmissionWorkflowStep> submissionWorkflowSteps;
-    
-    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionWorkflowStep.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    //@CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "originatingOrganizationId", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
+    @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)
@@ -204,7 +212,7 @@ public class Submission extends BaseEntity {
      * 
      * @param submissionWorkflowStep
      */
-    public void removeSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+    public void removeSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
     }
 

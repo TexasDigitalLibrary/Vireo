@@ -25,16 +25,19 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originatingOrganizationId" }) )
 public class SubmissionWorkflowStep extends BaseEntity {
     
     @Column(nullable = false)
     private String name;
     
-    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Organization originatingOrganization;
+//    @ManyToOne(cascade = { REFRESH, MERGE }, optional = true)
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+//    @JsonIdentityReference(alwaysAsId = true)
+    // used only to provide a unique key combination for this entity
+    //
+    @Column(nullable = false)
+    private Long originatingOrganizationId;
     
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
@@ -57,7 +60,7 @@ public class SubmissionWorkflowStep extends BaseEntity {
     
     public SubmissionWorkflowStep(String name, Organization originatingOrganization) {
         this(name);
-        setOriginatingOrganization(originatingOrganization);
+        setOriginatingOrganizationId(originatingOrganization.getId());
     }
     
     /**
@@ -94,17 +97,17 @@ public class SubmissionWorkflowStep extends BaseEntity {
     }
     
     /**
-     * @return the originatingOrganization
+     * @return the originatingOrganizationId
      */
-    public Organization getOriginatingOrganization() {
-        return originatingOrganization;
+    public Long getOriginatingOrganizationId() {
+        return originatingOrganizationId;
     }
 
     /**
-     * @param originatingOrganization the originatingOrganization to set
+     * @param originatingOrganizationId the originatingOrganizationId to set
      */
-    public void setOriginatingOrganization(Organization originatingOrganization) {
-        this.originatingOrganization = originatingOrganization;
+    public void setOriginatingOrganizationId(Long originatingOrganizationId) {
+        this.originatingOrganizationId = originatingOrganizationId;
     }
     
     

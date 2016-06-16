@@ -47,6 +47,8 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
+        submissionWorkflowStep = submissionWorkflowStepRepo.create(organization, workflowStep);
+        
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
         
@@ -68,17 +70,21 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addOrganization(organization);
         
         //TODO: This needs to take a submissionworkflowstep
-        //submission.addSubmissionWorkflowStep(workflowStep);
+        submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
+        
+        System.out.println("There is " + submissionWorkflowStepRepo.count() + " submission workflow step.");
+        submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
+        organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
         assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getState());
         assertEquals("Saved submission did not contain the correct submitter!", submitter, submission.getSubmitter());
         assertEquals("Saved submission did not contain the correct organization!", true, submission.getOrganizations().contains(organization));
-        assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(workflowStep));
+        assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
         assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
         assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
@@ -115,6 +121,8 @@ public class SubmissionTest extends AbstractEntityTest {
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
+        SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.create(organization, severableWorkflowStep);
+        
         organization = organizationRepo.findOne(organization.getId());
         
 
@@ -153,14 +161,14 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The organization was deleted!", 2, organizationRepo.count());
         
         
-        severableWorkflowStep = workflowStepRepo.findOne(severableWorkflowStep.getId());
+        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOne(severableSubmissionWorkflowStep.getId());
 
         // test remove pointer workflow step and make sure the workflow step is
         // no longer associated but still exists
-        submission.removeSubmissionWorkflowStep(severableWorkflowStep);
+        submission.removeSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", 1, submission.getSubmissionWorkflowSteps().size());
-        assertEquals("The workflow step was deleted!", 2, workflowStepRepo.count());
+        assertEquals("The workflow step was deleted!", 2, submissionWorkflowStepRepo.count());
         
         
         // test remove field value
@@ -204,6 +212,7 @@ public class SubmissionTest extends AbstractEntityTest {
         workflowStepRepo.findAll().forEach(workflowStep -> {
         	workflowStepRepo.delete(workflowStep);
         });
+        submissionWorkflowStepRepo.deleteAll();
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();

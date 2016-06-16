@@ -24,18 +24,13 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
     @Autowired
     SubmissionNoteRepo submissionNoteStepRepo;
     
-    
-    
     @Override
     public SubmissionWorkflowStep create(Organization originatingOrganization, WorkflowStep originatingWorkflowStep) {
        
         SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findByNameAndOriginatingOrganizationId(originatingWorkflowStep.getName(), originatingOrganization.getId());
         
         if(submissionWorkflowStep == null) {
-            submissionWorkflowStep = new SubmissionWorkflowStep();
-            
-            submissionWorkflowStep.setName(originatingWorkflowStep.getName());
-            submissionWorkflowStep.setOriginatingOrganization(originatingOrganization);
+            submissionWorkflowStep = new SubmissionWorkflowStep(originatingWorkflowStep.getName(), originatingOrganization);
             
             for(FieldProfile fieldProfile : originatingWorkflowStep.getAggregateFieldProfiles()) {
                 SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
