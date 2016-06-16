@@ -73,6 +73,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	
 	$scope.createFieldProfile = function(modalData) {
 		console.info('modalData: ', modalData);
+
+		var fieldPredicate = FieldPredicateModel.findBy("value", modalData.predicateValue)
+
+		FieldProfileModel.addFieldProfile(modalData.predicate);
 		
 	};
 	

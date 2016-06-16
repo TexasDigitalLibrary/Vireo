@@ -1,8 +1,10 @@
 vireo.service("VireoAbstractModel", function($q, WsApi) {
 
+	var VireoAbstractModel = this;
+
 	// Convenience function to create a WS API request dictionary
 	// using a given API, method, and optional data.
-	this.buildRequest = function(api, method, data) {
+	VireoAbstractModel.buildRequest = function(api, method, data) {
 		var builtRequest = angular.copy(api.request);
 		builtRequest.method = method;
 
@@ -16,11 +18,11 @@ vireo.service("VireoAbstractModel", function($q, WsApi) {
 	// Convenience function to abstract common getter logic.
 	// Returns a promise of real data, and caches the real data upon fulfillment
 	// using the given cache.
-	this.getAllPromise = function(api, cache) {
+	VireoAbstractModel.getAllPromise = function(api, cache) {
 		if(cache.ready){
 			return $q.resolve(cache.list);
 		}
-		return WsApi.fetch(this.buildRequest(api, 'all')).then(function(response){
+		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'all')).then(function(response){
 			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
 			angular.forEach(Object.keys(payload), function(key){
@@ -35,7 +37,7 @@ vireo.service("VireoAbstractModel", function($q, WsApi) {
 	};
 
 	// Search a repo by attribute name and attribute value
-	this.findBy = function(api, cache, propertyName, propertyValue) {
+	VireoAbstractModel.findBy = function(api, cache, propertyName, propertyValue) {
 		var retVal = null;
 
 		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.

@@ -1,5 +1,8 @@
 vireo.service("FieldPredicateModel", function($q, WsApi, VireoAbstractModel) {
 
+	var FieldPredicateModel = this;
+	angular.extend(FieldPredicateModel, VireoAbstractModel);
+
 	var cache = {
 		list  : [],
 		ready: false
@@ -13,18 +16,18 @@ vireo.service("FieldPredicateModel", function($q, WsApi, VireoAbstractModel) {
 		}
 	};
 
-	this.getAll = function(sync){
+	FieldPredicateModel.getAll = function(sync){
 		cache.ready = sync ? !sync : cache.ready;
-		VireoAbstractModel.getAllPromise(api, cache);
+		this.getAllPromise(api, cache);
 		return cache.list;
 	};
 
-	this.addPredicate = function(predicate){
-		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'create', predicate));
+	FieldPredicateModel.addPredicate = function(predicate){
+		return WsApi.fetch(FieldPredicateModel.buildRequest(api, 'create', predicate));
 	};
 
-	this.predicateWithValue = function(value) {
-        return VireoAbstractModel.findBy(api, cache, 'value', value);
+	FieldPredicateModel.predicateWithValue = function(value) {
+        return FieldPredicateModel.findBy(api, cache, 'value', value);
 	};
 
 });
