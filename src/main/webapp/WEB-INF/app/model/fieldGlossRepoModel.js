@@ -26,7 +26,7 @@ vireo.service("FieldGlossModel", function($q, WsApi, VireoAbstractModel) {
 	this.glossWithValueExists = function(value) {
 		var retVal = false;
 		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.
-			VireoAbstractModel.getAllPromise().then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
+			VireoAbstractModel.getAllPromise(api, cache).then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
 				angular.forEach(cache.list, function(glossInCache){
 					if (value == glossInCache.value) {
 						retVal = true;

@@ -19,10 +19,14 @@ vireo.service("FieldPredicateModel", function($q, WsApi, VireoAbstractModel) {
 		return cache.list;
 	};
 
+	this.addPredicate = function(predicate){
+		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'create', predicate));
+	};
+
 	this.predicateWithValueExists = function(value) {
 		var retVal = false;
 		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.
-			VireoAbstractModel.getAllPromise().then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
+			VireoAbstractModel.getAllPromise(api, cache).then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
 				angular.forEach(cache.list, function(predicateInCache){
 					if (value == predicateInCache.value) {
 						retVal = true;

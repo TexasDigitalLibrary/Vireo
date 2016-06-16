@@ -51,6 +51,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		var gloss = {'value': glossValue,
 					 'language': 'English'}
 		FieldGlossModel.addGloss(gloss);
+
+		//refresh the local cache with the new gloss
+		//TODO use a broadcast to update this?
+		FieldGlossModel.getAll(true);
 	};
 	
 	$scope.createFieldProfile = function(newFieldProfile) {
