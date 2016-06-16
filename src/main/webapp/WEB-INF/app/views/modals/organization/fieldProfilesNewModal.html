@@ -35,5 +35,5 @@
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
-	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!glossWithValueExists(modalData.gloss) || !predicateWithValueExists(modalData.predicate)" ng-click="createFieldProfile(newFieldProfile)">Create</button>
+	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!glossWithValueExists(modalData.gloss) || !predicateWithValueExists(modalData.predicate)" ng-click="createFieldProfile(modalData)">Create</button>
 </div>

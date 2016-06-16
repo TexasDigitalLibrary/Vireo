@@ -71,7 +71,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		FieldPredicateModel.getAll(true);
 	}
 	
-	$scope.createFieldProfile = function(newFieldProfile) {
+	$scope.createFieldProfile = function(modalData) {
+		console.info('modalData: ', modalData);
 		
 	};
 	
