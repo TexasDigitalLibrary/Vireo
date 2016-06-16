@@ -122,11 +122,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	});
 
 	$scope.predicateWithValueExists = function(fpValue){
-		return FieldPredicateModel.predicateWithValueExists(fpValue);
+		return FieldPredicateModel.predicateWithValue(fpValue) ? true : false;
 	};
 
 	$scope.glossWithValueExists = function(glossValue){
-		return FieldGlossModel.glossWithValueExists(glossValue);
+		return FieldGlossModel.glossWithValue(glossValue) ? true : false;
 	};
 
 });

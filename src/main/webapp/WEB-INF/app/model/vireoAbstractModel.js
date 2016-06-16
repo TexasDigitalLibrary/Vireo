@@ -9,7 +9,7 @@ vireo.service("VireoAbstractModel", function($q, WsApi) {
 		if (angular.isDefined(data)){
 			builtRequest.data = data;
 		}
-		
+
 		return builtRequest;
 	};
 
@@ -32,6 +32,28 @@ vireo.service("VireoAbstractModel", function($q, WsApi) {
 			});
 			cache.ready = true;
 		});
+	};
+
+	// Search a repo by attribute name and attribute value
+	this.findBy = function(api, cache, propertyName, propertyValue) {
+		var retVal = null;
+
+		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.
+			VireoAbstractModel.getAllPromise(api, cache).then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
+				angular.forEach(cache.list, function(entityInCache){
+					if (propertyValue == entityInCache[propertyName]) {
+						retVal = entityInCache[propertyName];
+					}
+				});
+			});
+		}else{ //Cache is available. Evaluate right away.
+			angular.forEach(cache.list, function(entityInCache){
+				if (propertyValue == entityInCache[propertyName]) {
+					retVal = entityInCache[propertyName];
+				}
+			});
+		}
+		return retVal;
 	};
 
 });

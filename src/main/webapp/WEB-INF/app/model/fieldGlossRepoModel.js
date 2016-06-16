@@ -23,24 +23,8 @@ vireo.service("FieldGlossModel", function($q, WsApi, VireoAbstractModel) {
 		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'create', gloss));
 	};
 
-	this.glossWithValueExists = function(value) {
-		var retVal = false;
-		if (!cache.ready) { //If for this function is called before InputTypeService.getAll(), our cache would be empty.
-			VireoAbstractModel.getAllPromise(api, cache).then(function(){ //Now we can be sure the cache is full. Proceed with evaluation.
-				angular.forEach(cache.list, function(glossInCache){
-					if (value == glossInCache.value) {
-						retVal = true;
-					}
-				});
-			});
-		}else{ //Cache is available. Evaluate right away.
-			angular.forEach(cache.list, function(glossInCache){
-				if (value == glossInCache.value) {
-					retVal = true;
-				}
-			});
-		}
-		return retVal;
+	this.glossWithValue = function(value) {
+        return VireoAbstractModel.findBy(api, cache, 'value', value);
 	};
 
 });
