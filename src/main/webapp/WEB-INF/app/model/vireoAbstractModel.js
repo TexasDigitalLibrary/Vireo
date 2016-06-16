@@ -3,7 +3,6 @@ vireo.service("VireoAbstractModel", function($q, WsApi) {
 	// Convenience function to create a WS API request dictionary
 	// using a given API, method, and optional data.
 	this.buildRequest = function(api, method, data) {
-		console.info('in build request api: ', api, ' method ', method, ' data: ', data);
 		var builtRequest = angular.copy(api.request);
 		builtRequest.method = method;
 
