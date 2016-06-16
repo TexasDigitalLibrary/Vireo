@@ -47,6 +47,7 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
+        customActionValueRepo.deleteAll();
         customActionDefinitionRepo.deleteAll();
     }
 }

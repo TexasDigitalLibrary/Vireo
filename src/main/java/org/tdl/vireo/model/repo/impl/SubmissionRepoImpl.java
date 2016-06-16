@@ -46,35 +46,19 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Submission create(Credentials submitterCredentials, Long organizationId) {
         
         User submitter = userRepo.findByEmail(submitterCredentials.getEmail());
-        // Instead of being hardcoded this could be dynamic either at the app level, or per organization
+        // TODO: Instead of being hardcoded this could be dynamic either at the app level, or per organization
         SubmissionState startingState = submissionStateRepo.findByName("In Progress");
         Organization organization = organizationRepo.findOne(organizationId);
+        
+        Submission submission = new Submission(submitter, organization);
+        submission.setState(startingState);
 
-        Submission submission = new Submission(submitter, startingState);
-        
-        organization.getAggregateWorkflowSteps().forEach(workflowStep -> {
-            SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.create(organization, workflowStep);
+        //Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
+        for(WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
+            SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
             submission.addSubmissionWorkflowStep(submissionWorkflowStep);
-        });
-        
-        
-        //for every workflow step on the organization, put a clone of it on the submission
-        List<WorkflowStep> submissionWorkflowSteps = new ArrayList<WorkflowStep>();
-        for(WorkflowStep step : organization.getAggregateWorkflowSteps()) {
-            //for every field profile and note on the the step, put a clone of it on the submission's step
-            //WorkflowStep stepClone = workflowStepRepo.findByNameAndOriginatingOrganization(name, originatingOrganization)
-            
-            List<Note> notes = new ArrayList<Note>();
-            List<FieldProfile> fps = new ArrayList<FieldProfile>();
-            for(Note note : step.getNotes()) {
-                //Note noteClone 
-            }
-            for(FieldProfile fp : step.getAggregateFieldProfiles())
-            {
-                
-            }
         }
-               
+        
         return submissionRepo.save(submission);
     }
 

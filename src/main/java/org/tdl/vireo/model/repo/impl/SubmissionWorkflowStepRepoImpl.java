@@ -25,7 +25,7 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
     SubmissionNoteRepo submissionNoteStepRepo;
     
     @Override
-    public SubmissionWorkflowStep create(Organization originatingOrganization, WorkflowStep originatingWorkflowStep) {
+    public SubmissionWorkflowStep findOrCreate(Organization originatingOrganization, WorkflowStep originatingWorkflowStep) {
        
         SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findByNameAndOriginatingOrganizationId(originatingWorkflowStep.getName(), originatingOrganization.getId());
         

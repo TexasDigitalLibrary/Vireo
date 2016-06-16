@@ -121,8 +121,6 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         namedSearchFilter.addAssignee(assignee);
         namedSearchFilter.addCustomActionValue(customActionValue);
         
-        System.out.println(organization);
-        
         namedSearchFilter.addOrganization(organization);
 
         namedSearchFilter = namedSearchFilterRepo.save(namedSearchFilter);
@@ -141,19 +139,25 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        
         namedSearchFilterRepo.deleteAll();
-        embargoRepo.deleteAll();
-        organizationRepo.deleteAll(); 
-        organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
+        
+        embargoRepo.deleteAll();
+        customActionValueRepo.deleteAll();
+        customActionDefinitionRepo.deleteAll();
+        //organizationRepo.deleteAll();
+        submissionRepo.deleteAll();
+        organizationRepo.findAll().forEach(org -> {
+            organizationRepo.delete(org);
+        });
+        organizationCategoryRepo.deleteAll();
         attachmentRepo.deleteAll();
         attachmentTypeRepo.deleteAll();
-        customActionValueRepo.deleteAll();
-        submissionRepo.deleteAll();
+        
+        
         submissionStateRepo.deleteAll();
         userRepo.deleteAll();
-        customActionDefinitionRepo.deleteAll();
+        
     }
 
 }

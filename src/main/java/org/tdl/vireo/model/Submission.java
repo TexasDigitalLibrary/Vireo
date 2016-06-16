@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
     @OneToOne(optional = false)
@@ -46,9 +46,8 @@ public class Submission extends BaseEntity {
     @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
 
-    //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private Set<Organization> organizations;
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional=false)
+    private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
@@ -56,7 +55,7 @@ public class Submission extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionWorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    //@CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "originatingOrganizationId", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
@@ -74,7 +73,6 @@ public class Submission extends BaseEntity {
     private Set<Attachment> attachments;
 
     public Submission() {
-        setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
@@ -86,10 +84,10 @@ public class Submission extends BaseEntity {
      * @param submitter
      * @param state
      */
-    public Submission(User submitter, SubmissionState state) {
+    public Submission(User submitter, Organization organization) {
         this();
         setSubmitter(submitter);
-        setState(state);
+        setOrganization(organization);
     }
 
     /**
@@ -124,34 +122,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the organizations
+     * @return the organization
      */
-    public Set<Organization> getOrganizations() {
-        return organizations;
+    public Organization getOrganization() {
+        return organization;
     }
 
     /**
-     * @param organizations
-     *            the organizations to set
-     */
-    public void setOrganizations(Set<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
-    /**
-     * 
      * @param organization
+     *            the organization to set
      */
-    public void addOrganization(Organization organization) {
-        getOrganizations().add(organization);
-    }
-
-    /**
-     * 
-     * @param organization
-     */
-    public void removeOrganization(Organization organization) {
-        getOrganizations().remove(organization);
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     /**

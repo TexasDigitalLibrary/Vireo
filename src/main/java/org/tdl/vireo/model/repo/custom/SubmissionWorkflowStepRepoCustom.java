@@ -6,6 +6,6 @@ import org.tdl.vireo.model.WorkflowStep;
 
 public interface SubmissionWorkflowStepRepoCustom {
        
-    public SubmissionWorkflowStep create(Organization originatingOrganization, WorkflowStep originatingWorkflowStep);
+    public SubmissionWorkflowStep findOrCreate(Organization originatingOrganization, WorkflowStep originatingWorkflowStep);
 
 }

@@ -78,11 +78,11 @@ public class ActionLogTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        organizationRepo.deleteAll();
-        organizationCategoryRepo.deleteAll();
         actionLogRepo.deleteAll();
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         userRepo.deleteAll();        
         attachmentRepo.deleteAll();
         attachmentTypeRepo.deleteAll(); 
