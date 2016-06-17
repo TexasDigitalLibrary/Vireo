@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
@@ -9,31 +8,13 @@ import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 
 import edu.tamu.framework.model.BaseEntity;
-import edu.tamu.framework.model.ValidatingBase;
 
 @MappedSuperclass
-//@Inheritance(strategy = InheritanceType.JOINED)
-//@DiscriminatorColumn(name="WS_TYPE")
-//@Table(name="ABSTRACT_WORKFLOW_STEP")
 public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS, FP, N>, 
                                              FP extends AbstractFieldProfile<FP>,
                                              N  extends AbstractNote<N>> 
