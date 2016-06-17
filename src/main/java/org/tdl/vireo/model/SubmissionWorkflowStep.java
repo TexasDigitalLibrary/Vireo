@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -25,31 +26,21 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originatingOrganizationId" }) )
-public class SubmissionWorkflowStep extends BaseEntity {
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
+//@Table(name="SUBMISSION_WORKFLOW_STEP")
+//@DiscriminatorValue("Sub")
+public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkflowStep, SubmissionFieldProfile, SubmissionNote> {
     
-    @Column(nullable = false)
-    private String name;
-    
-//    @ManyToOne(cascade = { REFRESH, MERGE }, optional = true)
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-//    @JsonIdentityReference(alwaysAsId = true)
-    // used only to provide a unique key combination for this entity
-    //
-    @Column(nullable = false)
-    private Long originatingOrganizationId;
-    
-    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @Fetch(FetchMode.SELECT)
-    private List<SubmissionFieldProfile> fieldProfiles;
+    protected Organization originatingOrganization;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionNote> notes;
     
     public SubmissionWorkflowStep() {
-        setFieldProfiles(new ArrayList<SubmissionFieldProfile>());
+        setAggregateFieldProfiles(new ArrayList<SubmissionFieldProfile>());
         setNotes(new ArrayList<SubmissionNote>());
     }
     
@@ -60,54 +51,24 @@ public class SubmissionWorkflowStep extends BaseEntity {
     
     public SubmissionWorkflowStep(String name, Organization originatingOrganization) {
         this(name);
-        setOriginatingOrganizationId(originatingOrganization.getId());
+        setOriginatingOrganization(originatingOrganization);
     }
     
+    
     /**
-     * @return the name
+     * @return the originatingOrganization
      */
-    public String getName() {
-        return name;
+    @Override
+    public Organization getOriginatingOrganization() {
+        return originatingOrganization;
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param originatingOrganization the originatingOrganization to set
      */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    /**
-     * 
-     * @param param
-     */
-    public void setFieldProfiles(List<SubmissionFieldProfile> fieldProfiles) {
-        this.fieldProfiles = fieldProfiles;
-    }
-    
-    public void addFieldProfile(SubmissionFieldProfile fieldProfile)
-    {
-        getFieldProfiles().add(fieldProfile);
-    }
-    
-    public List<SubmissionFieldProfile> getFieldProfiles()
-    {
-        return this.fieldProfiles;
-    }
-    
-    /**
-     * @return the originatingOrganizationId
-     */
-    public Long getOriginatingOrganizationId() {
-        return originatingOrganizationId;
-    }
-
-    /**
-     * @param originatingOrganizationId the originatingOrganizationId to set
-     */
-    public void setOriginatingOrganizationId(Long originatingOrganizationId) {
-        this.originatingOrganizationId = originatingOrganizationId;
+    @Override
+    public void setOriginatingOrganization(Organization originatingOrganization) {
+        this.originatingOrganization = originatingOrganization;
     }
     
     

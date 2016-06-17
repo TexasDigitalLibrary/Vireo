@@ -24,6 +24,12 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        
+        for(FieldProfile fp : fieldProfileRepo.findAll())
+        {
+            System.out.println("here's a field profile! " + fp.getClass() + " " + fp.getId());
+        }
+        
         assertEquals("The repository did not save the entity!", 1, workflowStepRepo.count());
         assertEquals("Saved entity did not contain the name!", TEST_WORKFLOW_STEP_NAME, workflowStep.getName());
         assertEquals("The field profile did not contain the correct value!", TEST_FIELD_PROFILE_INPUT_TYPE, fieldProfile.getInputType());
@@ -1449,9 +1455,13 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         
-        fieldProfileRepo.findAll().forEach(fieldProfile -> {
-            fieldProfileRepo.delete(fieldProfile);
-        });
+        for(FieldProfile fp : fieldProfileRepo.findAll())
+        {
+            fieldProfileRepo.delete(fp);
+        }
+//        fieldProfileRepo.findAll().forEach(fieldProfile -> {
+//            fieldProfileRepo.delete(fieldProfile);
+//        });
         assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
 
         workflowStepRepo.findAll().forEach(workflowStep -> {

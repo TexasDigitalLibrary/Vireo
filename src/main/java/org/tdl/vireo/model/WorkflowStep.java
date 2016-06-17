@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -28,12 +29,16 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
-public class WorkflowStep extends BaseEntity {
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
+//@Table(name="WORKFLOW_STEP")
+//@DiscriminatorValue("Org")
+public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> {
 
-    @Column(nullable = false)
-    private String name;
-
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    protected Organization originatingOrganization;
+   
     // TODO: refactor with correct spelling, remember the getter and setters as well
     @Column(nullable = false)
     private Boolean overrideable;
@@ -43,10 +48,7 @@ public class WorkflowStep extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Organization originatingOrganization;
+    
 
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
@@ -54,11 +56,7 @@ public class WorkflowStep extends BaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> originalFieldProfiles;
     
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
-    @OrderColumn
-    private List<FieldProfile> aggregateFieldProfiles;
-
+    
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<Note> notes;
 
@@ -79,24 +77,11 @@ public class WorkflowStep extends BaseEntity {
         setOriginatingOrganization(originatingOrganization);
     }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
+   
     /**
      * @return the originatingOrganization
      */
+    @Override
     public Organization getOriginatingOrganization() {
         return originatingOrganization;
     }
@@ -104,6 +89,7 @@ public class WorkflowStep extends BaseEntity {
     /**
      * @param originatingOrganization the originatingOrganization to set
      */
+    @Override
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
@@ -196,99 +182,8 @@ public class WorkflowStep extends BaseEntity {
         return res;
     }
     
-    /**
-     * 
-     * @return
-     */
-    public List<FieldProfile> getAggregateFieldProfiles() {
-        return aggregateFieldProfiles;
-    }
-
-    /**
-     * 
-     * @param param
-     */
-    public void setAggregateFieldProfiles(List<FieldProfile> aggregateFieldProfiles) {
-        this.aggregateFieldProfiles = aggregateFieldProfiles;
-    }
-
-    /**
-     * 
-     * @param aggregateFieldProfile
-     */
-    public void addAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
-        if(!getAggregateFieldProfiles().contains(aggregateFieldProfile)) {
-        	getAggregateFieldProfiles().add(aggregateFieldProfile);
-        }
-    }
-
-    /**
-     * 
-     * @param aggregateFieldProfile
-     */
-    public void removeAggregateFieldProfile(FieldProfile aggregateFieldProfile) {
-    	getAggregateFieldProfiles().remove(aggregateFieldProfile);
-    }
     
-    /**
-     * 
-     * @param fp1
-     * @param fp2
-     * @return
-     */
-    public boolean replaceAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {    	
-    	boolean res = false;
-    	int pos = 0;
-    	for(FieldProfile fp : getAggregateFieldProfiles()) {
-    		if(fp.getId().equals(fp1.getId())) {
-    			getAggregateFieldProfiles().remove(fp1);
-    			getAggregateFieldProfiles().add(pos, fp2);
-    			res = true;
-    			break;
-    		}
-    		pos++;
-    	}
-    	return res;
-    }
-    
-    /**
-     * 
-     * @param fp1
-     * @param fp2
-     * @return
-     */
-    public boolean swapAggregateFieldProfile(FieldProfile fp1, FieldProfile fp2) {
-        boolean res = false;
-        
-        int pos1 = getAggregateFieldProfiles().indexOf(fp1), 
-            pos2 = getAggregateFieldProfiles().indexOf(fp2);
-       
-        if(pos1 >= 0 && pos2 >= 0) {
-            Collections.swap(getAggregateFieldProfiles(), pos1, pos2);
-            res = true;
-        }
-        
-        return res;
-    }
-    
-    /**
-     * 
-     * @param fp1
-     * @param fp2
-     * @return
-     */
-    public void reorderAggregateFieldProfile(int src, int dest) {
-        
-        //adjust for index + 1
-        src -= 1;
-        dest -= 1;
-        
-        FieldProfile fieldProfile = getAggregateFieldProfiles().get(src);
-                
-        getAggregateFieldProfiles().remove(src);
-                
-        getAggregateFieldProfiles().add(dest, fieldProfile);
-    }
+
     
     /**
      * 
