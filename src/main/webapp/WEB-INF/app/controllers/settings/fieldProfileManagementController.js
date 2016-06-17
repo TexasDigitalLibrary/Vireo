@@ -39,7 +39,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		});
 
 		$scope.modalData = {
-			inputType: 'INPUT_TEXT'
+			inputType: 'INPUT_TEXT',
+			repeatable: false
 		};
 	};
 
