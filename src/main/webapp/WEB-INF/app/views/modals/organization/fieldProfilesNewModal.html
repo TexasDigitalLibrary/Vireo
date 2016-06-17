@@ -9,15 +9,13 @@
 	<form name="newFieldProfile">
 		<div class="form-group">
        	 	<label for="field-profiles-gloss">Gloss</label>
-        	<input id="field-profiles-gloss" ng-model="modalData.gloss" uib-typeahead="gloss.value for gloss in fieldGlosses | filter:$viewValue" type="text" class="form-control" placeholder="Display gloss for the new field profile" required/>
-			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-click="createGloss(modalData.gloss)" ng-if="!glossWithValueExists(modalData.gloss)">Create New Gloss</button>
+        	<input id="field-profiles-gloss" ng-model="modalData.gloss" uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" type="text" class="form-control" placeholder="Display gloss for the new field profile" required/>
+			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-click="createGloss(modalData.gloss)" ng-if="!modalData.gloss.id">Create New Gloss</button>
     	</div>
     	<div class="form-group field-profile-modal-group">
        	 	<label for="field-profiles-predicate">Predicate</label>
-        	<input id="field-profiles-predicate" ng-model="modalData.predicate" uib-typeahead="fp.value for fp in fieldPredicates | filter:$viewValue" type="text" class="form-control" placeholder="Predicate of the new field profile" required />
-			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-if="!predicateWithValueExists(modalData.predicate)" ng-click="createPredicate(modalData.predicate)">Create New Predicate</button>
-			<!-- <div class="fp-gloss-predicate-status" id="field-predicate-does-not-exist-{{modalData.predicate}}" ng-if="!predicateWithValueExists(modalData.predicate)">Field predicate {{modalData.predicate}} will be created.</div> -->
-			<!-- <div class="fp-gloss-predicate-status" id="field-predicate-exists-{{modalData.predicate}}" ng-if="predicateWithValueExists(modalData.predicate)">Field predicate {{modalData.predicate}} exists.</div> -->
+        	<input id="field-profiles-predicate" ng-model="modalData.predicate" uib-typeahead="fp as fp.value for fp in fieldPredicates" type="text" class="form-control" placeholder="Predicate of the new field profile" required />
+			<button type="button" class="btn btn-default fp-gloss-predicate-button" ng-if="!modalData.predicate.id" ng-click="createPredicate(modalData.predicate)">Create New Predicate</button>
 		</div>
     	<div class="form-group field-profile-modal-group">
        	 	<label for="field-profiles-input-type">Input Type<divlabel>
@@ -35,5 +33,5 @@
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
-	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!glossWithValueExists(modalData.gloss) || !predicateWithValueExists(modalData.predicate)" ng-click="createFieldProfile(modalData)">Create</button>
+	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.gloss.id || !modalData.predicate.id" ng-click="createFieldProfile(modalData)">Create</button>
 </div>

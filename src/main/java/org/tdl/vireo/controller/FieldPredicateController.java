@@ -64,8 +64,7 @@ public class FieldPredicateController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     public ApiResponse createFieldPredicate(@ApiModel FieldPredicate fieldPredicate) {
-        fieldPredicateRepo.create(fieldPredicate.getValue());
-        return null;
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue()));
     }
 
 }

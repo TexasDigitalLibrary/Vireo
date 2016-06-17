@@ -51,23 +51,20 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		var gloss = {'value': glossValue,
 					 'language': 'English'}
 
-		FieldGlossModel.addGloss(gloss);
+		FieldGlossModel.addGloss(gloss).then(function(response){
+			$scope.modalData.gloss = angular.fromJson(response.body).payload.FieldGloss;
+		});
 
-		//refresh the local cache with the new gloss
-		//TODO use a broadcast to update this?
 		FieldGlossModel.getAll(true);
 	};
 
 	$scope.createPredicate = function(predicateValue) {
-		console.info('creating predicate with val ', predicateValue);
-		// TODO set the language dynamically.
-		// For now, the language must be 'English' so that's in name will match that existing on the server.
 		var predicate = {'value': predicateValue}
 
-		FieldPredicateModel.addPredicate(predicate);
+		FieldPredicateModel.addPredicate(predicate).then(function(response){
+			$scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
+		});
 
-		//refresh the local cache with the new predicate
-		//TODO use a broadcast to update this?
 		FieldPredicateModel.getAll(true);
 	}
 	
@@ -75,6 +72,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		console.info('modalData: ', modalData);
 
 		// var fieldPredicate = FieldPredicateModel.findBy("value", modalData.predicateValue)
+
+		var glossID, predicateID, inputType, controlledVocabularyID;
+		glossID = FieldGlossModel
+
 
 		FieldProfileModel.addFieldProfile(modalData.predicate);
 		
@@ -125,13 +126,5 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		reorder: $scope.reorderFieldProfiles,
 		container: '#fieldProfiles'
 	});
-
-	$scope.predicateWithValueExists = function(fpValue){
-		return FieldPredicateModel.predicateWithValue(fpValue) ? true : false;
-	};
-
-	$scope.glossWithValueExists = function(glossValue){
-		return FieldGlossModel.glossWithValue(glossValue) ? true : false;
-	};
 
 });
