@@ -8,7 +8,7 @@ vireo.service("FieldProfileModel", function($q, WsApi, VireoAbstractModel) {
 	var api = {
 		request: {
 			endpoint  : '/private/queue',
-			controller: 'settings/field-profile',
+			controller: 'workflow-step',
 			method    : ''
 		}
 	};
@@ -20,7 +20,7 @@ vireo.service("FieldProfileModel", function($q, WsApi, VireoAbstractModel) {
 	};
 
 	this.addFieldProfile = function(profile){
-		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'createFieldProfile', profile));
+		return WsApi.fetch(VireoAbstractModel.buildRequest(api, profile.requestingOrganizationId + '/add-field-profile', profile));
 	};
 
 });

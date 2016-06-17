@@ -70,15 +70,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	
 	$scope.createFieldProfile = function(modalData) {
 		console.info('modalData: ', modalData);
-
-		// var fieldPredicate = FieldPredicateModel.findBy("value", modalData.predicateValue)
-
-		var glossID, predicateID, inputType, controlledVocabularyID;
-		glossID = FieldGlossModel
-
-
-		FieldProfileModel.addFieldProfile(modalData.predicate);
-		
+		modalData.requestingOrganizationId = $scope.selectedOrganization.id;
+		FieldProfileModel.addFieldProfile(modalData);
 	};
 	
 	$scope.selectFieldProfile = function(index) {
