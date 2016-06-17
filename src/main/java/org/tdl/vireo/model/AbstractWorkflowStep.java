@@ -46,7 +46,7 @@ public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS,
     //TODO:  can't constrain uniquely because we don't know the id column of the concrete class here
     @CollectionTable//(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
     @OrderColumn
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    //@JoinColumn(name = "id", insertable = false, updatable = false)
     private List<FP> aggregateFieldProfiles;
 
 

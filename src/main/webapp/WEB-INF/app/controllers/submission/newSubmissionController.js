@@ -1,4 +1,4 @@
-vireo.controller('NewSubmissionController', function ($controller, $scope, OrganizationRepo, SubmissionRepo) {
+vireo.controller('NewSubmissionController', function ($controller, $scope, $location, OrganizationRepo, SubmissionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -15,7 +15,9 @@ vireo.controller('NewSubmissionController', function ($controller, $scope, Organ
 	};
 
 	$scope.createSubmission = function() {
-		SubmissionRepo.create($scope.getSelectedOrganization().id);
+		SubmissionRepo.create($scope.getSelectedOrganization().id).then(function(newSubmissionId) {
+			$location.path("/submission/"+newSubmissionId);
+		});
 	};
 	
 });

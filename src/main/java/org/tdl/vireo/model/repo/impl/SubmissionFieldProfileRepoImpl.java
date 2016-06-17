@@ -44,8 +44,10 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
         if(submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
             
-            submissionfieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
-            submissionfieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
+            submissionfieldProfile.setPredicate(fieldProfile.getPredicate());
+            
+            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
+            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
             submissionfieldProfile.setInputType(fieldProfile.getInputType());
             submissionfieldProfile.setOptional(fieldProfile.getOptional());

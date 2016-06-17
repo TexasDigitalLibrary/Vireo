@@ -32,4 +32,5 @@ public class SubmissionFieldProfile extends AbstractFieldProfile<SubmissionField
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     } 
+
 }

@@ -31,6 +31,7 @@ import edu.tamu.framework.model.BaseEntity;
 //@DiscriminatorValue("Sub")
 public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkflowStep, SubmissionFieldProfile, SubmissionNote> {
     
+
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
