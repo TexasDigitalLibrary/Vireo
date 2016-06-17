@@ -57,6 +57,15 @@ public class SubmissionFieldProfile extends BaseEntity {
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
     
+    
+    public FieldPredicate getPredicate() {
+        return this.predicate;
+    }
+    
+    public void setPredicate(FieldPredicate predicate) {
+        this.predicate = predicate;
+    }
+    
     /**
      * @return the inputType
      */

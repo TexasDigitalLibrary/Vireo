@@ -40,8 +40,6 @@ public class SubmissionWorkflowStep extends BaseEntity {
     private Long originatingOrganizationId;
     
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<SubmissionFieldProfile> fieldProfiles;
     

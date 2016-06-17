@@ -1,4 +1,4 @@
-vireo.service("SubmissionRepo", function(AbstractModel, WsApi) {
+vireo.service("SubmissionRepo", function($q, AbstractModel, WsApi) {
 
 	var self;
 
@@ -54,7 +54,32 @@ vireo.service("SubmissionRepo", function(AbstractModel, WsApi) {
 		return SubmissionRepo.data;
 	};
 
+	SubmissionRepo.ready = function() {
+		return SubmissionRepo.promise;
+	};
+
+	SubmissionRepo.findById = function(submissionId) {
+		
+		var findByIdDefer = $q.defer();
+
+		var findByIdFetchPromise = WsApi.fetch({
+			endpoint: '/private/queue', 
+			controller: 'submission', 
+			method: 'get-one/'+submissionId,
+		});
+
+		findByIdFetchPromise.then(function(rawRes) {
+			var submission = JSON.parse(rawRes.body).payload.Submission;
+			findByIdDefer.resolve(submission);
+		});
+
+		return findByIdDefer.promise;
+
+	};
+
 	SubmissionRepo.create = function(organizationId) {
+
+		var creationDefer = $q.defer();
 		
 		var createSubmissionPromise = WsApi.fetch({
 			endpoint: '/private/queue', 
@@ -63,7 +88,11 @@ vireo.service("SubmissionRepo", function(AbstractModel, WsApi) {
 			data: {organizationId: organizationId}
 		});
 
-		return createSubmissionPromise;
+		createSubmissionPromise.then(function(rawData) {
+			creationDefer.resolve(JSON.parse(rawData.body).payload.Submission.id);
+		});
+
+		return creationDefer.promise;
 
 	}
 

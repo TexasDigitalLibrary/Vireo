@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Shib;
@@ -45,8 +47,16 @@ public class SubmissionController {
         
     }
     
+    @ApiMapping("/get-one/{submissionId}")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse getOne(@ApiVariable String submissionId) {
+        return new ApiResponse(SUCCESS, submissionRepo.findOne(Long.parseLong(submissionId)));
+    }
+    
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
+    @Transactional
     public ApiResponse createSubmission(@Shib Credentials credentials, @Data String data) {
         
         JsonNode dataNode = null;
@@ -55,10 +65,10 @@ public class SubmissionController {
         } catch (IOException e) {
             new ApiResponse(ERROR, "could not parse data string ["+e.getMessage()+"]");
         }
+                
+        Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
         
-        submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
-        
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, submission);
     }
     
 }

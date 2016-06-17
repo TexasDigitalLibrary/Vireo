@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private User submitter;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
@@ -53,8 +53,6 @@ public class Submission extends BaseEntity {
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionWorkflowStep.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
