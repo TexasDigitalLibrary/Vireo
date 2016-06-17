@@ -103,13 +103,18 @@ public class WorkflowStepController {
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("predicate"), ControlledVocabulary.class);
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
+        Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
+        
         
         System.out.println(gloss.toString());
         System.out.println(predicate.toString());
         System.out.println(controlledVocabulary.toString());
         System.out.println(inputType.toString());
+        System.out.println(repeatable.toString());
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
+//        workflowStep.addOriginalFieldProfile(fieldProfileRepo.cr );
         
         return new ApiResponse(SUCCESS);
     }
