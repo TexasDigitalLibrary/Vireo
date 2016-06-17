@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossModel, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossModel, FieldPredicateModel, FieldProfileModel, InputTypeService, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -74,7 +74,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.createFieldProfile = function(modalData) {
 		console.info('modalData: ', modalData);
 
-		var fieldPredicate = FieldPredicateModel.findBy("value", modalData.predicateValue)
+		// var fieldPredicate = FieldPredicateModel.findBy("value", modalData.predicateValue)
 
 		FieldProfileModel.addFieldProfile(modalData.predicate);
 		

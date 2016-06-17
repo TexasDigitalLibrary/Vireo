@@ -300,6 +300,7 @@
 	    <script src="model/vireoAbstractModel.js"></script>
 	    <script src="model/fieldPredicateModel.js"></script>
 	    <script src="model/fieldGlossRepoModel.js"></script>
+	    <script src="model/fieldProfileRepoModel.js"></script>
 
 
 	    <!-- Controllers -->

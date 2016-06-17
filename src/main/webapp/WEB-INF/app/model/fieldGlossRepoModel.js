@@ -1,5 +1,8 @@
 vireo.service("FieldGlossModel", function($q, WsApi, VireoAbstractModel) {
 
+	var FieldGlossModel = this;
+	angular.extend(FieldGlossModel, VireoAbstractModel);
+
 	var cache = {
 		list  : [],
 		ready: false
@@ -13,18 +16,18 @@ vireo.service("FieldGlossModel", function($q, WsApi, VireoAbstractModel) {
 		}
 	};
 
-	this.getAll = function(sync){
+	FieldGlossModel.getAll = function(sync){
 		cache.ready = sync ? !sync : cache.ready;
-		VireoAbstractModel.getAllPromise(api, cache);
+		FieldGlossModel.getAllPromise(api, cache);
 		return cache.list;
 	};
 
-	this.addGloss = function(gloss){
-		return WsApi.fetch(VireoAbstractModel.buildRequest(api, 'create', gloss));
+	FieldGlossModel.addGloss = function(gloss){
+		return WsApi.fetch(FieldGlossModel.buildRequest(api, 'create', gloss));
 	};
 
-	this.glossWithValue = function(value) {
-        return VireoAbstractModel.findBy(api, cache, 'value', value);
+	FieldGlossModel.glossWithValue = function(value) {
+        return FieldGlossModel.findBy(api, cache, 'value', value);
 	};
 
 });
