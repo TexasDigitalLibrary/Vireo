@@ -30,20 +30,20 @@ import edu.tamu.framework.model.BaseEntity;
 @DiscriminatorValue("Org")
 public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private FieldProfile originatingFieldProfile;
     
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
    
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Boolean overrideable;
     
-    @Column(nullable = false)
+    //@Column(nullable = true)
     private Boolean enabled;
     
     public FieldProfile() {
