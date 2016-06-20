@@ -49,7 +49,17 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Override
-    public void testDuplication() {}
+    public void testDuplication() {
+        workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
+        try{
+            workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
+            assertTrue(false);
+        }
+        catch(Exception e)
+        {
+            //good
+        }
+    }
 
     @Override
     public void testCascade() {
