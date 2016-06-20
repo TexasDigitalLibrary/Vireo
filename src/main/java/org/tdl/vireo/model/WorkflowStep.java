@@ -57,9 +57,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     private List<FieldProfile> originalFieldProfiles;
     
     
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private List<Note> notes;
-
+    
     public WorkflowStep() {
     	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setOriginalFieldProfiles(new ArrayList<FieldProfile>());
@@ -198,24 +196,6 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         return null;
     }
 
-    public List<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
-    }
-
-    public void addNote(Note note) {
-        notes.add(note);
-    }
-
-    public void removeNote(Note note) {
-        notes.remove(note);
-    }
-
-    public void clearAllNotes() {
-        notes.clear();
-    }
+    
     
 }

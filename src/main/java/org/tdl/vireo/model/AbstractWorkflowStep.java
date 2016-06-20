@@ -29,6 +29,10 @@ public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS,
     @OrderColumn
     //@JoinColumn(name = "id", insertable = false, updatable = false)
     private List<FP> aggregateFieldProfiles;
+    
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    private List<N> notes;
+
 
 
     /**
@@ -157,6 +161,24 @@ public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS,
         getAggregateFieldProfiles().add(dest, fieldProfile);
     }
     
-    
+    public List<N> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<N> notes) {
+        this.notes = notes;
+    }
+
+    public void addNote(N note) {
+        notes.add(note);
+    }
+
+    public void removeNote(N note) {
+        notes.remove(note);
+    }
+
+    public void clearAllNotes() {
+        notes.clear();
+    }
     
 }

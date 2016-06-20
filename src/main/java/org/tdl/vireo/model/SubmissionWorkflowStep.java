@@ -37,9 +37,6 @@ public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkf
     @JsonIdentityReference(alwaysAsId = true)
     protected Organization originatingOrganization;
     
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private List<SubmissionNote> notes;
-    
     public SubmissionWorkflowStep() {
         setAggregateFieldProfiles(new ArrayList<SubmissionFieldProfile>());
         setNotes(new ArrayList<SubmissionNote>());
@@ -71,26 +68,5 @@ public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkf
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
-    
-    
-    public List<SubmissionNote> getNotes() {
-        return this.notes;
-    }
-
-    public void setNotes(List<SubmissionNote> notes) {
-        this.notes = notes;
-    }
-
-    public void addNote(SubmissionNote note) {
-        getNotes().add(note);
-    }
-
-    public void removeNote(SubmissionNote note) {
-        getNotes().remove(note);
-    }
-
-    public void clearAllNotes() {
-        getNotes().clear();
-    }
-    
+       
 }
