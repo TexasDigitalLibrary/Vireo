@@ -2,6 +2,8 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,6 +21,8 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     
     @Autowired
     SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    
+    FieldProfile fieldProfile;
 
     
 
@@ -32,19 +36,16 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
         credentials = new Credentials();
         anotherCredentials = new Credentials();
         
-        
-        
+        credentials.setEmail(submitter.getEmail());
+        submission = submissionRepo.create(credentials, organization.getId()); 
+        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     }
 
    
     @Override
     public void testCreate() {
-        credentials.setEmail(submitter.getEmail());
-        submission = submissionRepo.create(credentials, organization.getId()); 
-        workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-        
         
         SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         
@@ -52,20 +53,30 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
         assertFalse("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.equals( sws.getAggregateFieldProfiles().get(0) ) );
         assertEquals("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.getPredicate(), sws.getAggregateFieldProfiles().get(0).getPredicate());
         assertEquals("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.getInputType(), sws.getAggregateFieldProfiles().get(0).getInputType());
-
-        
-        
     }
+
 
     @Override
     public void testDuplication() {
-        // TODO Auto-generated method stub
-        
+        SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
+        SubmissionWorkflowStep sws2 = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
+        assertEquals("The submission workflow step was duplicated!", sws.getId(), sws2.getId());
     }
 
+    
     @Override
     public void testDelete() {
-        // TODO Auto-generated method stub
+    
+        SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
+        
+        long id = sws.getId();
+        long count = submissionWorkflowStepRepo.count();
+        
+        submissionWorkflowStepRepo.delete(sws);
+        count--;
+        
+        assertNull("The submissionWorkflowStep wasn't deleted!", submissionWorkflowStepRepo.findOne(id));
+        assertEquals("The submissionWorkflowStep wasn't deleted!", count, submissionWorkflowStepRepo.count());
         
     }
 
@@ -102,6 +113,8 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
         
         noteRepo.deleteAll();
         assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
+        
+        fieldPredicateRepo.deleteAll();
     }
 
 }
