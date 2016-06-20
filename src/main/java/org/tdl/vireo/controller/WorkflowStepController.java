@@ -89,7 +89,7 @@ public class WorkflowStepController {
 
     @ApiMapping("/{workflowStepId}/add-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse reorderFieldProfiles(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
+    public ApiResponse createFieldProfile(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
         
         JsonNode dataNode = null;
         try {
@@ -98,25 +98,20 @@ public class WorkflowStepController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrganizationId").toString());
         FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
-        ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("predicate"), ControlledVocabulary.class);
+        ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class);
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
         Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
-        
-        
-        System.out.println(gloss.toString());
-        System.out.println(predicate.toString());
-        System.out.println(controlledVocabulary.toString());
-        System.out.println(inputType.toString());
-        System.out.println(repeatable.toString());
+        String help = dataNode.get("help").textValue();
+        String usage = "";
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
-        fieldProfileRepo.create(workflowStep, predicate, inputType, null, null, repeatable, true, true, true);
-//        workflowStep.addOriginalFieldProfile(fieldProfileRepo.cr );
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, true, true, true);
+        createdProfile.addControlledVocabulary(controlledVocabulary);
+        createdProfile.addFieldGloss(gloss);
         
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, fieldProfileRepo.save(createdProfile));
     }
     
     @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
