@@ -12,7 +12,7 @@
 									<span ng-if="triptych.panelHistory.length < 1" class="glyphicon glyphicon-arrow-down"></span>
 								</li>
 								<li ng-repeat="panel in triptych.panelHistory" ng-click="triptych.rewindPanels(panel)">
-									<a href="#">{{panel.selectedOrganization.name}} ({{getCategoryById(panel.selectedOrganization.category).name}})</a>
+									<a href="#">{{panel.selectedOrganization.name}} ({{panel.selectedOrganization.category.name}})</a>
 									<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
 								</li>
 							</ul>
@@ -68,7 +68,7 @@
 											{{organization.name}}
 											<span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
 										</span>
-										<span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{getCategoryById(organization.category).name}}</span>
+										<span class="category-label" ng-if="panel.getUniqueCategories().length > 1">{{organization.category.name}}</span>
 									</li>
 								</ul>
 							</div>

@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
@@ -25,6 +27,9 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
+    
+    @Autowired
+    private SubmissionRepo submissionRepo;
      
     @Override
     public Organization create(String name, OrganizationCategory category) {
@@ -64,11 +69,13 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         	parentOrganizations.add(childOrganization);
         }
         
+        //Have all the parent organizations not have this one as their child anymore
         for(Organization parentOrganization : parentOrganizations) {
             parentOrganization.removeChildOrganization(organization);
             organizationRepo.save(parentOrganization);
         }
         
+        //Have all the child organizations get this one's parents as their parent
         for(Organization childOrganization : organization.getChildrenOrganizations()) {
             childOrganization.removeParentOrganization(organization);
             organizationRepo.save(childOrganization);
@@ -83,6 +90,21 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             organization = organizationRepo.save(organization);
         }
         
+        //Have all the submissions on this organization get this one's parent (one of them, anyway) as their new organization
+        //TODO:  for now, have to delete them if there is no parent org to attach them to.
+        if(organization.getParentOrganizations().iterator().hasNext()){
+            
+            Organization parentOrg = organization.getParentOrganizations().iterator().next();
+            for(Submission sub : submissionRepo.findByOrganization(organization)){
+                sub.setOrganization(parentOrg);
+            }
+        }
+        else
+        {
+            for(Submission sub : submissionRepo.findByOrganization(organization)) {
+                submissionRepo.delete(sub);
+            }
+        }
         
         
         List<WorkflowStep> workflowStepsToDelete = new ArrayList<WorkflowStep>();
