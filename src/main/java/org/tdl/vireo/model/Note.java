@@ -1,12 +1,10 @@
 package org.tdl.vireo.model;
 
-import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
-
-import edu.tamu.framework.model.BaseEntity;
 
 @Entity
+@DiscriminatorValue("Org")
 public class Note extends AbstractNote<Note> {
 
     public Note() {}

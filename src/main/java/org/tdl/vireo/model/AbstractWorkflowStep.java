@@ -15,10 +15,10 @@ import javax.persistence.OrderColumn;
 import edu.tamu.framework.model.BaseEntity;
 
 @MappedSuperclass
-public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS, FP, N>, 
-                                             FP extends AbstractFieldProfile<FP>,
-                                             N  extends AbstractNote<N>> 
-                                             extends BaseEntity {
+public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, FP, N>, 
+                                            FP extends AbstractFieldProfile<FP>,
+                                            N  extends AbstractNote<N>> 
+                                            extends BaseEntity {
     
     @Column(nullable = false)
     private String name;
@@ -27,7 +27,6 @@ public abstract class AbstractWorkflowStep  <WS extends AbstractWorkflowStep<WS,
     //TODO:  can't constrain uniquely because we don't know the id column of the concrete class here
     @CollectionTable//(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
     @OrderColumn
-    //@JoinColumn(name = "id", insertable = false, updatable = false)
     private List<FP> aggregateFieldProfiles;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)

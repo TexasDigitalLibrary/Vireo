@@ -31,7 +31,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 //@Table(name="WORKFLOW_STEP")
-//@DiscriminatorValue("Org")
+@DiscriminatorValue("Org")
 public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
