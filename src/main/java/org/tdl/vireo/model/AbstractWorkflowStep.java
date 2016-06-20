@@ -6,7 +6,6 @@ import static javax.persistence.FetchType.EAGER;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
@@ -24,8 +23,6 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
     private String name;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    //TODO:  can't constrain uniquely because we don't know the id column of the concrete class here
-    @CollectionTable//(uniqueConstraints = @UniqueConstraint(columnNames = { "workflow_step_id", "aggregateFieldProfiles_order", "aggregate_field_profiles_id" }))
     @OrderColumn
     private List<FP> aggregateFieldProfiles;
     

@@ -29,8 +29,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
-//@Table(name="WORKFLOW_STEP")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 @DiscriminatorValue("Org")
 public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> {
 
