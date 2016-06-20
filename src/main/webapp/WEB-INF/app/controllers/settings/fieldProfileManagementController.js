@@ -71,7 +71,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	
 	$scope.createFieldProfile = function(modalData) {
 		console.info('modalData: ', modalData);
-		modalData.requestingOrganizationId = $scope.selectedOrganization.id;
+		modalData.requestingOrgId = $scope.selectedOrganization.id;
+		modalData.workflowStepId = $scope.step.id;
 		FieldProfileModel.addFieldProfile(modalData);
 	};
 	

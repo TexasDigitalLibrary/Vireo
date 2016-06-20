@@ -20,7 +20,7 @@ vireo.service("FieldProfileModel", function($q, WsApi, VireoAbstractModel) {
 	};
 
 	this.addFieldProfile = function(profile){
-		return WsApi.fetch(VireoAbstractModel.buildRequest(api, profile.requestingOrganizationId + '/add-field-profile', profile));
+		return WsApi.fetch(VireoAbstractModel.buildRequest(api, profile.workflowStepId + '/add-field-profile', profile));
 	};
 
 });

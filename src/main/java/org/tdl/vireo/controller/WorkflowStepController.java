@@ -98,6 +98,7 @@ public class WorkflowStepController {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
         
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class);
@@ -110,6 +111,8 @@ public class WorkflowStepController {
         FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, true, true, true);
         createdProfile.addControlledVocabulary(controlledVocabulary);
         createdProfile.addFieldGloss(gloss);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
         return new ApiResponse(SUCCESS, fieldProfileRepo.save(createdProfile));
     }
