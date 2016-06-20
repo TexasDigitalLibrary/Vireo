@@ -113,7 +113,7 @@ public class WorkflowStepController {
         System.out.println(repeatable.toString());
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
-        
+        fieldProfileRepo.create(workflowStep, predicate, inputType, null, null, repeatable, true, true, true);
 //        workflowStep.addOriginalFieldProfile(fieldProfileRepo.cr );
         
         return new ApiResponse(SUCCESS);

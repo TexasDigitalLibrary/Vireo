@@ -17,7 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -129,6 +131,19 @@ public class FieldProfile extends BaseEntity {
     public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         this(originatingWorkflowStep, predicate, inputType, usage, repeatable, overrideable, enabled, optional);
         setHelp(help);
+    }
+
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep);
+        setPredicate(predicate);
+        setInputType(inputType);
+        this.controlledVocabularies.set(0, controlledVocabulary);
+		setUsage(usage);
+		setHelp(help);
+        setRepeatable(repeatable);
+        setOverrideable(overrideable);
+        setEnabled(enabled);
+        setOptional(optional);
     }
 
     /**
