@@ -36,6 +36,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		return temp.textContent || temp.innerText || "";
   	};
   	
+  	stringToBoolean = function(string) {
+  		switch(string.toLowerCase().trim()) {
+  			case "false": case "no": case "0": case "": return false;
+  			default: return true;
+  		}
+  	};
+  	
   	var setServerErrors = function(type, name, data){
   		// since we're a 2d array, make sure our 1d exists first
   		if($scope.serverErrors[type] === undefined) {
@@ -47,6 +54,29 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   	
 	ConfigurableSettings.ready().then(function() {
 
+		$scope.submissionsOpen = function(){
+	  		return stringToBoolean($scope.settings.configurable.application.submissions_open);
+	  	};
+	  	
+	  	$scope.multipleSubmissions = function(){
+	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions);
+	  	};
+	  	
+	  	// TODO: logic
+	  	$scope.hasSubmissions = function() {
+	  		return false;
+	  	};
+	  	
+	  	// TODO: logic
+	  	$scope.submissionInProgress = function() {
+	  		return false;
+	  	};
+	  	
+	  	// TODO: logic
+	  	$scope.submissionNeedsCorrections = function() {
+	  		return false;
+	  	};
+		
 		//TODO:  check these update config settings methods for redundancy and clean up.
 		$scope.delayedUpdateConfigurableSettings = function(type,name) {
 

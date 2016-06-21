@@ -1,13 +1,19 @@
 <div class="col-lg-8 col-lg-offset-2" ng-controller="UserController">
-	<div id="body">
+	<div id="body" ng-controller="SettingsController">
 		<div class="row">
-			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
 		</div>
 		<div class="form-actions row center" style="text-align: center;">
-			<a href="/submit" class="btn btn-primary">Manage/View your submission(s)</a>
+			<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please <span ng-if="isAnonymous()"><a href="" data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login</a> and</span> click on <a href="/submit">Submission History</a>.</p>
+			<a href="" data-toggle="modal" data-target="#loginModal" class="btn btn-primary" ng-if="submissionsOpen() && isAnonymous()">Login</a>
+			<a href="/submit" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && multipleSubmissions() && (hasSubmissions() || submissionInProgress() || submissionNeedsCorrections()) && hasSubmissions()">Manage/View your submission(s)</a>
+			<a href="/submission/1" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && submissionInProgress()">Continue your submission</a>
+			<a href="/submission/1" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
+			<p class="alert alert-danger" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && !submissionNeedsCorrections() && hasSubmissions()">You've already submitted an ETD <a href="/submit" class="btn btn-primary">Submission History</a></p>
+			<a href="/submission/new" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && (!submissionInProgress() || !submissionNeedsCorrections() || !hasSubmissions()) && !hasSubmissions()">Start your submission</a>
 		</div>
 		<div class="row">
-			<div ng-controller="SettingsController" ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
 		</div>
 	</div>
 </div>
