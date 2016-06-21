@@ -251,6 +251,14 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().add(controlledVocabulary);
     }
+    
+    /**
+     * 
+     * @param controlledVocabularies
+     */
+    public void addControlledVocabulary(int index, ControlledVocabulary controlledVocabulary) {
+        getControlledVocabularies().set(index, controlledVocabulary);
+    }
 
     /**
      * 

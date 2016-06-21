@@ -10,7 +10,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -95,7 +97,18 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
         setHelp(help);
     }
 
-    
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep);
+        setPredicate(predicate);
+        setInputType(inputType);
+		setUsage(usage);
+		setHelp(help);
+        setRepeatable(repeatable);
+        setOverrideable(overrideable);
+        setEnabled(enabled);
+        setOptional(optional);
+        addControlledVocabulary(0, controlledVocabulary);
+    }
     
     /**
      * @return the originatingFieldProfile

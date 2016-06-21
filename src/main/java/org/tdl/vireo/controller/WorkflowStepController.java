@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.FieldGloss;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -24,6 +28,7 @@ import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -80,6 +85,36 @@ public class WorkflowStepController {
         }
 
         return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
+    }
+
+    @ApiMapping("/{workflowStepId}/add-field-profile")
+    @Auth(role="MANAGER")
+    public ApiResponse createFieldProfile(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
+        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
+        ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class);
+        InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
+        Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
+        String help = dataNode.get("help").textValue();
+        String usage = "";
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, true, true, true);
+        createdProfile.addControlledVocabulary(controlledVocabulary);
+        createdProfile.addFieldGloss(gloss);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS, fieldProfileRepo.save(createdProfile));
     }
     
     @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")

@@ -1349,6 +1349,10 @@ footer a, footer li, footer p {
   -webkit-text-fill-color: #337ab7;
 }
 
+.field-profile-modal-group {
+	margin-top: 55px;
+}
+
 .submission-workflow-steps-navigation {
   margin-bottom: 25px;
 }
@@ -1373,6 +1377,11 @@ footer a, footer li, footer p {
   background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
 }
 
+.fp-gloss-predicate-button {
+	float:right;
+	margin-top: 10px;
+}
 
-
-
+#fp-repeatable-checkbox {
+	margin-left:-40px;
+}
