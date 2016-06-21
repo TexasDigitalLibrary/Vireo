@@ -98,14 +98,19 @@ public class WorkflowStepController {
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
+        
         // TODO: validation
+        
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
         FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
-        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
+        
+        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
+        
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
-        Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
-        String help = dataNode.get("help").textValue();
+        Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
+        String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
         String usage = "";
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
@@ -142,9 +147,9 @@ public class WorkflowStepController {
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
-        Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
-        String help = dataNode.get("help").textValue();
-        String usage = dataNode.get("usage").textValue();
+        Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
+        String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
+        String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : null;
                 
         
         FieldProfile fieldProfile = fieldProfileRepo.findOne(id);
@@ -228,7 +233,11 @@ public class WorkflowStepController {
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
         
-        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);     
+        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
+        
+        if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            fieldProfileRepo.delete(fieldProfile);
+        }
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
@@ -311,9 +320,14 @@ public class WorkflowStepController {
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
         Note note = noteRepo.findOne(Long.parseLong(noteId));
         
-        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);     
+        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
+        
+        if(note.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            noteRepo.delete(note);
+        }
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         

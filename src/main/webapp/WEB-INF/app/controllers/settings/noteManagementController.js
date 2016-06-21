@@ -66,17 +66,6 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 		});
 	};
 
-	$scope.sortNotes = function(column) {
-		
-		if($scope.sortAction == 'confirm') {
-			$scope.sortAction = 'sort';
-		}
-		else if($scope.sortAction == 'sort') {
-			// TODO
-			console.log('sort note');
-		}
-	};
-
 	$scope.removeNote = function(noteId) {
 		WorkflowStepRepo.removeNote($scope.step.id, noteId).then(function(response) {
      		
