@@ -21,8 +21,6 @@ public abstract class AbstractNote<N> extends BaseEntity {
     @Column(nullable = false)
     private String text;
     
-    @Column(nullable = false)
-    private Boolean overrideable;
         
     public String getName() {
         return name;
@@ -38,14 +36,5 @@ public abstract class AbstractNote<N> extends BaseEntity {
 
     public void setText(String text) {
         this.text = text;
-    }
-    
-    public Boolean getOverrideable() {
-        return overrideable;
-    }
-
-    public void setOverrideable(Boolean overrideable) {
-        this.overrideable = overrideable;
-    }
-    
+    }    
 }

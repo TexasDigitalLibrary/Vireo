@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -25,6 +26,10 @@ public class Note extends AbstractNote<Note> {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
+    
+    @Column
+    private Boolean overrideable;
+
     
     public Note() {
         setOverrideable(true);
@@ -56,5 +61,14 @@ public class Note extends AbstractNote<Note> {
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
+    
+    public Boolean getOverrideable() {
+        return overrideable;
+    }
+
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
+    }
+
 
 }
