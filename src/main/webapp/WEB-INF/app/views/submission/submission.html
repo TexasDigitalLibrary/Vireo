@@ -11,8 +11,8 @@
 	</div>
 </div>
 
-<div class="row submission-workflow-steps">
-	<div class="col-xs-12">
+<div class="row">
+	<div class="col-xs-8 submission-workflow-steps">
 		<ul class="list-unstyled">
 			<li ng-repeat="fieldProfile in activeStep.aggregateFieldProfiles">
 				<div class="form-group">
@@ -22,6 +22,12 @@
 			</li>
 		</ul>
 	</div>
+	<div class="col-xs-4 submission-notes">
+		<ul class="list-unstyled">
+			<li ng-repeat="note in activeStep.aggregateNotes">
+				<b>({{note.name}})</b>
+				<p>{{note.text}}</p>
+			</li>
+		</ul>
+	</div>
 </div>
-
-
