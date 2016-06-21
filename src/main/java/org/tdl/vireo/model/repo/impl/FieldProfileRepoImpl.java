@@ -148,7 +148,8 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
             throw new FieldProfileNonOverrideableException();
         }
         
-        if(workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile && requestingOrganizationOriginatedWorkflowStep) {
+        // workflowStepWithFieldProfileOnRequestingOrganizationOriginatedFieldProfile && 
+        if(requestingOrganizationOriginatedWorkflowStep) {
             resultingFieldProfile = fieldProfileRepo.save(pendingFieldProfile);
         }
         else {
