@@ -36,13 +36,13 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
    
-    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> originalFieldProfiles;
     
-    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)

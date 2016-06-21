@@ -12,9 +12,4 @@ public class SubmissionNote extends AbstractNote<SubmissionNote> {
         setText(text);
     }    
     
-    public SubmissionNote(WorkflowStep originatingWorkflowStep, String name, String text) {
-        this(name, text);
-        setOriginatingWorkflowStep(originatingWorkflowStep);
-    }
-    
 }
