@@ -233,7 +233,11 @@ public class WorkflowStepController {
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
         FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
         
-        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);     
+        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
+        
+        if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            fieldProfileRepo.delete(fieldProfile);
+        }
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
@@ -316,9 +320,14 @@ public class WorkflowStepController {
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
         Note note = noteRepo.findOne(Long.parseLong(noteId));
         
-        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);     
+        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
+        
+        if(note.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            noteRepo.delete(note);
+        }
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
