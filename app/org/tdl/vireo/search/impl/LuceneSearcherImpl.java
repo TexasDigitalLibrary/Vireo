@@ -418,7 +418,7 @@ public class LuceneSearcherImpl implements Searcher {
 		if (filter.getEmbargoTypes().size() > 0) {
 			BooleanQuery orQuery = new BooleanQuery();
 			for(EmbargoType embargo : filter.getEmbargoTypes()) {
-				orQuery.add(new TermQuery(new Term("embargo", embargo.getName())), Occur.SHOULD);
+				orQuery.add(new TermQuery(new Term("embargo", embargo.getName() + " " + embargo.getGuarantor().name())), Occur.SHOULD);
 			}			
 			andQuery.add(orQuery,Occur.MUST);
 		}
