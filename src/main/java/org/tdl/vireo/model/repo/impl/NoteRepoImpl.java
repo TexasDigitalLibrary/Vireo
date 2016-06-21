@@ -124,8 +124,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
             throw new NoteNonOverrideableException();
         }
         
-        // workflowStepWithNoteOnRequestingOrganizationOriginatedNote && 
-        if(requestingOrganizationOriginatedWorkflowStep) {
+        if(workflowStepWithNoteOnRequestingOrganizationOriginatedNote && requestingOrganizationOriginatedWorkflowStep) {
             resultingNote = noteRepo.save(pendingNote);
         }
         else {
