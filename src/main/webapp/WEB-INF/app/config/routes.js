@@ -7,6 +7,10 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			templateUrl: 'views/myprofile.html',
 			controller: 'SettingsController'
 		}).
+		when('/submit', {
+			templateUrl: 'views/student/submit.html',
+			access: ["STUDENT", "ADMINISTRATOR"]
+		}).
 		when('/submission/new', {
 			templateUrl: 'views/submission/newSubmission.html',
 			controller: 'NewSubmissionController',
@@ -26,14 +30,6 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 		when('/admin', {
 			redirectTo: '/admin/list',
 			access: ["ADMINISTRATOR"]
-		}).
-		when('/submit', {
-			templateUrl: 'views/student/submit.html',
-			access: ["STUDENT", "ADMINISTRATOR"]
-		}).
-		when('/submit/personalInfo', {
-			templateUrl: 'views/student/submit.html',
-			access: ["STUDENT", "ADMINISTRATOR"]
 		}).
 		when('/admin/list', {
 			templateUrl: 'views/admin/list.html',
