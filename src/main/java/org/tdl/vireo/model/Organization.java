@@ -50,6 +50,7 @@ public class Organization extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+    //TODO:  verify that this unique constraint works - the aggregateWorkflowSteps_order string doesn't match the database column"
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;

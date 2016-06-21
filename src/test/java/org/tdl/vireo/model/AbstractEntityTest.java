@@ -40,6 +40,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
@@ -364,6 +365,9 @@ public abstract class AbstractEntityTest {
     protected WorkflowStepRepo workflowStepRepo;
 
     @Autowired
+    protected SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
+    
+    @Autowired
     protected EmbargoRepo embargoRepo;
 
     protected FieldPredicate fieldPredicate;
@@ -428,6 +432,8 @@ public abstract class AbstractEntityTest {
     protected User excludedSubmitter;
 
     protected WorkflowStep workflowStep;
+    
+    protected SubmissionWorkflowStep submissionWorkflowStep;
     
     protected VocabularyWord vocabularyWord;
     

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 
+import edu.tamu.framework.model.Credentials;
+
 public class CustomActionValueTest extends AbstractEntityTest {
 
     @Before
@@ -18,7 +20,10 @@ public class CustomActionValueTest extends AbstractEntityTest {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
 
-        testSubmission = submissionRepo.create(testUser, submissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(testUser.getEmail());
+        Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
+        testSubmission = submissionRepo.create(credentials, organization.getId());
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
 
         testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
@@ -59,6 +64,8 @@ public class CustomActionValueTest extends AbstractEntityTest {
     public void cleanUp() {
         customActionValueRepo.deleteAll();
         submissionRepo.deleteAll();
+        organizationRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         userRepo.deleteAll();
         submissionStateRepo.deleteAll();
         customActionDefinitionRepo.deleteAll();

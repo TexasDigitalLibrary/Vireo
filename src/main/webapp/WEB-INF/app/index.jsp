@@ -296,6 +296,7 @@
 	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/workflowStepRepo.js"></script>
+	    <script src="model/submissionRepo.js"></script>
 
 
 	    <!-- Controllers -->
@@ -323,6 +324,8 @@
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>
 	    <script src="controllers/settings/noteManagementController.js"></script>
+	    <script src="controllers/submission/newSubmissionController.js"></script>
+	    <script src="controllers/submission/submissionController.js"></script>
 	    
 	<!-- endbuild -->
 
