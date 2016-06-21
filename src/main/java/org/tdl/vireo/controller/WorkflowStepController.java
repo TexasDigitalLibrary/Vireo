@@ -97,11 +97,11 @@ public class WorkflowStepController {
         } catch (IOException e) {
             return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
         }
-        
+        // TODO: validation
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
-        ControlledVocabulary controlledVocabulary = objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class);
+        ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
         Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
         String help = dataNode.get("help").textValue();
