@@ -5,45 +5,57 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+
 import edu.tamu.framework.model.BaseEntity;
 
+import org.tdl.vireo.model.SubmissionWorkflowStep;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "state_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private User submitter;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<User> assignees;
 
-    @ManyToOne(cascade = { REFRESH }, optional = false)
+    @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
 
-    //TODO:  should we simplify this to ManyToOne since organizations can now represent grant-able degrees?
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private Set<Organization> organizations;
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional=false)
+    private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = false)
-    private Set<WorkflowStep> submissionWorkflowSteps;
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
+    @OrderColumn
+    private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
@@ -59,9 +71,8 @@ public class Submission extends BaseEntity {
     private Set<Attachment> attachments;
 
     public Submission() {
-        setOrganizations(new TreeSet<Organization>());
         setFieldValues(new TreeSet<FieldValue>());
-        setSubmissionWorkflowSteps(new TreeSet<WorkflowStep>());
+        setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());
         setEmbargoTypes(new TreeSet<Embargo>());
         setAttachments(new TreeSet<Attachment>());
@@ -71,10 +82,10 @@ public class Submission extends BaseEntity {
      * @param submitter
      * @param state
      */
-    public Submission(User submitter, SubmissionState state) {
+    public Submission(User submitter, Organization organization) {
         this();
         setSubmitter(submitter);
-        setState(state);
+        setOrganization(organization);
     }
 
     /**
@@ -109,34 +120,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the organizations
+     * @return the organization
      */
-    public Set<Organization> getOrganizations() {
-        return organizations;
+    public Organization getOrganization() {
+        return organization;
     }
 
     /**
-     * @param organizations
-     *            the organizations to set
-     */
-    public void setOrganizations(Set<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
-    /**
-     * 
      * @param organization
+     *            the organization to set
      */
-    public void addOrganization(Organization organization) {
-        getOrganizations().add(organization);
-    }
-
-    /**
-     * 
-     * @param organization
-     */
-    public void removeOrganization(Organization organization) {
-        getOrganizations().remove(organization);
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     /**
@@ -173,23 +168,23 @@ public class Submission extends BaseEntity {
     /**
      * @return the submissionWorkflowSteps
      */
-    public Set<WorkflowStep> getSubmissionWorkflowSteps() {
+    public List<SubmissionWorkflowStep> getSubmissionWorkflowSteps() {
         return submissionWorkflowSteps;
     }
 
     /**
-     * @param submissionWorkflowSteps
+     * @param list
      *            the submissionWorkflowSteps to set
      */
-    public void setSubmissionWorkflowSteps(Set<WorkflowStep> submissionWorkflowSteps) {
-        this.submissionWorkflowSteps = submissionWorkflowSteps;
+    public void setSubmissionWorkflowSteps(List<SubmissionWorkflowStep> list) {
+        this.submissionWorkflowSteps = list;
     }
 
     /**
      * 
      * @param submissionWorkflowStep
      */
-    public void addSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+    public void addSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().add(submissionWorkflowStep);
     }
 
@@ -197,7 +192,7 @@ public class Submission extends BaseEntity {
      * 
      * @param submissionWorkflowStep
      */
-    public void removeSubmissionWorkflowStep(WorkflowStep submissionWorkflowStep) {
+    public void removeSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
     }
 

@@ -9,7 +9,13 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 		}).
 		when('/submission/new', {
 			templateUrl: 'views/submission/newSubmission.html',
-			controller: 'NewSubmissionController'
+			controller: 'NewSubmissionController',
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+		}).
+		when('/submission/:submissionId', {
+			templateUrl: 'views/submission/submission.html',
+			controller: 'SubmissionController',
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/users', {
 			templateUrl: 'views/users.html'
