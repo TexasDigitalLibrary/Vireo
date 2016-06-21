@@ -32,9 +32,14 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	
 	$scope.resetFieldProfiles = function() {
 		
-		var position = 1;	
+		var position = 1;
+
 		angular.forEach($scope.step.aggregateFieldProfiles, function(fieldProfile) {
 			fieldProfile.position = position;
+			// TODO: needs multi glosses
+			fieldProfile.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
+			// TODO: needs multi controlled vocabulary
+			fieldProfile.controlledVocabulary = fieldProfile.controlledVocabularies[0] ? fieldProfile.controlledVocabularies[0] : null;
 			position++;
 		});
 
@@ -49,8 +54,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.createGloss = function(glossValue) {
 		// TODO set the language dynamically.
 		// For now, the language must be 'English' so that's in name will match that existing on the server.
-		var gloss = {'value': glossValue,
-					 'language': 'English'}
+		var gloss = {
+			'value': glossValue, 
+			'language': 'English'
+		};
 
 		FieldGlossModel.addGloss(gloss).then(function(response){
 			$scope.modalData.gloss = angular.fromJson(response.body).payload.FieldGloss;
@@ -77,7 +84,12 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	};
 	
 	$scope.selectFieldProfile = function(index) {
-		$scope.modalData = $scope.step.aggregateFieldProfiles[index];
+		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
+		$scope.modalData = fieldProfile;
+		// TODO: needs multi glosses
+		$scope.modalData.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
+		// TODO: needs multi controlled vocabulary
+		$scope.modalData.controlledVocabulary = fieldProfile.controlledVocabularies[0] ? fieldProfile.controlledVocabularies[0] : null;
 	};
 	
 	$scope.editFieldProfile = function(index) {
@@ -85,25 +97,17 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		angular.element('#fieldProfilesEditModal-' + $scope.step.id).modal('show');
 	};
 	
-	$scope.updateFieldProfile = function() {
-		
+	$scope.updateFieldProfile = function(modalData) {
+		console.info('modalData: ', modalData);
+		modalData.requestingOrgId = $scope.selectedOrganization.id;
+		modalData.workflowStepId = $scope.step.id;
+		FieldProfileModel.updateFieldProfile(modalData);
 	};
 
 	$scope.reorderFieldProfiles = function(src, dest) {
 		WorkflowStepRepo.reorderFieldProfile($scope.step.id, src, dest).then(function() {
 
 		});
-	};
-
-	$scope.sortFieldProfiles = function(column) {
-		
-		if($scope.sortAction == 'confirm') {
-			$scope.sortAction = 'sort';
-		}
-		else if($scope.sortAction == 'sort') {
-			// TODO
-			console.log('sort field profile');
-		}
 	};
 
 	$scope.removeFieldProfile = function(fieldProfileId) {

@@ -4,6 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class WorkflowStepController {
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
-    
+        
     @Autowired
     private NoteRepo noteRepo;
     
@@ -115,6 +116,78 @@ public class WorkflowStepController {
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
         return new ApiResponse(SUCCESS, fieldProfileRepo.save(createdProfile));
+    }
+    
+    @ApiMapping("/{workflowStepId}/update-field-profile")
+    @Auth(role="MANAGER")
+    public ApiResponse updateFieldProfile(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException {
+        
+        JsonNode dataNode = null;
+        try {
+            dataNode = objectMapper.readTree(data);
+        } catch (IOException e) {
+            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
+        }
+        
+        // TODO: validation
+        
+        Long id = Long.parseLong(dataNode.get("id").toString());
+        
+        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        
+        
+        FieldGloss fieldGloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
+        ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
+        
+        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
+        
+        InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
+        Boolean repeatable = Boolean.parseBoolean(dataNode.get("repeatable").toString());
+        String help = dataNode.get("help").textValue();
+        String usage = dataNode.get("usage").textValue();
+                
+        
+        FieldProfile fieldProfile = fieldProfileRepo.findOne(id);
+        
+        fieldProfile.setPredicate(predicate);
+        fieldProfile.setInputType(inputType);
+        fieldProfile.setRepeatable(repeatable);
+        fieldProfile.setHelp(help);
+        fieldProfile.setUsage(usage);
+        
+        
+        // TODO: should add additional field gloss instead of replacing all with newly selected or created
+        //       requires UI changes
+        
+        List<FieldGloss> newFieldGlosses = new ArrayList<FieldGloss>();
+        newFieldGlosses.add(fieldGloss);
+        
+        fieldProfile.setFieldGlosses(newFieldGlosses);
+        
+        
+        // TODO: should add additional controlled vocabulary instead of replacing all with newly selected or created
+        //       requires UI changes
+        
+        if(controlledVocabulary != null) {
+            List<ControlledVocabulary> newControlledVocabularies = new ArrayList<ControlledVocabulary>();
+            newControlledVocabularies.add(controlledVocabulary);
+            
+            fieldProfile.setControlledVocabularies(newControlledVocabularies);
+        }
+        else {
+            fieldProfile.clearControlledVocabulary();
+        }
+        
+        
+        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        
+
+        fieldProfileRepo.update(fieldProfile, requestingOrganization);
+        
+                
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        
+        return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")

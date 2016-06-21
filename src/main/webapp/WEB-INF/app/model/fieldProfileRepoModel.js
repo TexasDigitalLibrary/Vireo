@@ -23,4 +23,8 @@ vireo.service("FieldProfileModel", function($q, WsApi, VireoAbstractModel) {
 		return WsApi.fetch(VireoAbstractModel.buildRequest(api, profile.workflowStepId + '/add-field-profile', profile));
 	};
 
+	this.updateFieldProfile = function(profile){
+		return WsApi.fetch(VireoAbstractModel.buildRequest(api, profile.workflowStepId + '/update-field-profile', profile));
+	};
+
 });
