@@ -4,13 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
-public abstract class AbstractNote<N> extends BaseEntity{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id" }) )
+public abstract class AbstractNote<N> extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -19,6 +21,9 @@ public abstract class AbstractNote<N> extends BaseEntity{
     @Column(nullable = false)
     private String text;
     
+    @Column(nullable = false)
+    private Boolean overrideable;
+        
     public String getName() {
         return name;
     }
@@ -34,4 +39,13 @@ public abstract class AbstractNote<N> extends BaseEntity{
     public void setText(String text) {
         this.text = text;
     }
+    
+    public Boolean getOverrideable() {
+        return overrideable;
+    }
+
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
+    }
+    
 }

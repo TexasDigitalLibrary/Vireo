@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 @DiscriminatorValue("Sub")
 public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkflowStep, SubmissionFieldProfile, SubmissionNote> {
-    
 
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -28,12 +27,13 @@ public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkf
     
     public SubmissionWorkflowStep() {
         setAggregateFieldProfiles(new ArrayList<SubmissionFieldProfile>());
-        setNotes(new ArrayList<SubmissionNote>());
+        setAggregateNotes(new ArrayList<SubmissionNote>());
     }
     
     public SubmissionWorkflowStep(String name) {
         this();
         setName(name);
+        setOverrideable(true);
     }
     
     public SubmissionWorkflowStep(String name, Organization originatingOrganization) {

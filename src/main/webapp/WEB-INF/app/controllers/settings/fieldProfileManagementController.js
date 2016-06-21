@@ -4,13 +4,14 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 	
+	// if we do not want to use a watch, 
+	// the OrganizationRepo can notify a promise that is subscribed here
 	$scope.$watch(
 		"step",
 		function handleStepChanged(newStep, oldStep) {
-			// console.log(newStep)
-			// console.log(oldStep)
 			$scope.resetFieldProfiles();
 
+			$scope.dragControlListeners.getListener().model = $scope.step.aggregateFieldProfiles;
 			$scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
 			$scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
         }
@@ -33,8 +34,7 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	$scope.resetFieldProfiles();
 	
 	$scope.createFieldProfile = function(newFieldProfile) {
-		console.log(newFieldProfile);
-		console.log('create field profile');
+
 	};
 	
 	$scope.selectFieldProfile = function(index) {
@@ -47,13 +47,12 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	};
 	
 	$scope.updateFieldProfile = function() {
-		// TODO
-		console.log('update field profile');
+		
 	};
 
 	$scope.reorderFieldProfiles = function(src, dest) {
-		WorkflowStepRepo.reorder($scope.step.id, src, dest).then(function() {
-			$scope.resetFieldProfiles();
+		WorkflowStepRepo.reorderFieldProfile($scope.step.id, src, dest).then(function() {
+			
 		});
 	};
 
@@ -69,8 +68,8 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 	};
 
 	$scope.removeFieldProfile = function(fieldProfileId) {
-		WorkflowStepRepo.remove($scope.step.id, fieldProfileId).then(function() {
-     		$scope.resetFieldProfiles();
+		WorkflowStepRepo.removeFieldProfile($scope.step.id, fieldProfileId).then(function() {
+     		
      	});
 	};
 
@@ -83,7 +82,5 @@ vireo.controller("FieldProfileManagementController", function ($controller, $sco
 		reorder: $scope.reorderFieldProfiles,
 		container: '#fieldProfiles'
 	});
-
-	$scope.resetFieldProfiles();
 
 });

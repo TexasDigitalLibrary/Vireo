@@ -37,9 +37,9 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
                 submissionWorkflowStep.addFieldProfile(submissionFieldProfile);
             }
             
-            for(Note note : originatingWorkflowStep.getNotes()) {
+            for(Note note : originatingWorkflowStep.getAggregateNotes()) {
                 SubmissionNote submissionNote = submissionNoteStepRepo.create(note);
-                submissionWorkflowStep.addNote(submissionNote);
+                submissionWorkflowStep.addAggregateNote(submissionNote);
             }
             
             submissionWorkflowStep = submissionWorkflowStepRepo.save(submissionWorkflowStep);

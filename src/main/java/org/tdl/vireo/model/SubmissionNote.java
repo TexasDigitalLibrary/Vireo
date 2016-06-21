@@ -11,4 +11,5 @@ public class SubmissionNote extends AbstractNote<SubmissionNote> {
         setName(name);
         setText(text);
     }    
+    
 }

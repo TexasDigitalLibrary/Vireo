@@ -5,17 +5,12 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -26,41 +21,38 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.framework.model.BaseEntity;
-
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 @DiscriminatorValue("Org")
 public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> {
-
+   
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     protected Organization originatingOrganization;
-   
-    // TODO: refactor with correct spelling, remember the getter and setters as well
-    @Column(nullable = false)
-    private Boolean overrideable;
     
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-    
-    
-
+   
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> originalFieldProfiles;
     
-    
-    
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @Fetch(FetchMode.SELECT)
+    private List<Note> originalNotes;
+
     public WorkflowStep() {
     	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setOriginalFieldProfiles(new ArrayList<FieldProfile>());
-        setNotes(new ArrayList<Note>());
+        setAggregateNotes(new ArrayList<Note>());
+        setOriginalNotes(new ArrayList<Note>());
     }
 
     public WorkflowStep(String name) {
@@ -74,7 +66,20 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         setOriginatingOrganization(originatingOrganization);
     }
 
-   
+    /**
+     * @return the originatingWorkflowStep
+     */
+    public WorkflowStep getOriginatingWorkflowStep() {
+        return originatingWorkflowStep;
+    }
+
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
+    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        this.originatingWorkflowStep = originatingWorkflowStep;
+    }
+    
     /**
      * @return the originatingOrganization
      */
@@ -91,36 +96,6 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         this.originatingOrganization = originatingOrganization;
     }
     
-    /**
-     * @return the originatingWorkflowStep
-     */
-    public WorkflowStep getOriginatingWorkflowStep() {
-        return originatingWorkflowStep;
-    }
-
-    /**
-     * @param originatingWorkflowStep the originatingWorkflowStep to set
-     */
-    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
-        this.originatingWorkflowStep = originatingWorkflowStep;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public Boolean getOverrideable() {
-        return overrideable;
-    }
-
-    /**
-     * 
-     * @param overrideable
-     */
-    public void setOverrideable(Boolean overrideable) {
-        this.overrideable = overrideable;
-    }
-
     /**
      * 
      * @return
@@ -195,6 +170,40 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         return null;
     }
 
-    
-    
+    public List<Note> getOriginalNotes() {
+        return originalNotes;
+    }
+
+    public void setOriginalNotes(List<Note> originalNotes) {
+        this.originalNotes = originalNotes;
+    }
+
+    public void addOriginalNote(Note originalNote) {
+        if(!getOriginalNotes().contains(originalNote)) {
+            getOriginalNotes().add(originalNote);
+        }
+        addAggregateNote(originalNote);
+    }
+
+    public void removeOriginalNote(Note originalNote) {
+        getOriginalNotes().remove(originalNote);
+        removeAggregateNote(originalNote);
+    }
+   
+    public boolean replaceOriginalNote(Note n1, Note n2) {
+        boolean res = false;
+        int pos = 0;
+        for(Note n : getOriginalNotes()) {
+            if(n.getId().equals(n1.getId())) {
+                getOriginalNotes().remove(n1);
+                getOriginalNotes().add(pos, n2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        replaceAggregateNote(n1, n2);
+        return res;
+    }
+
 }

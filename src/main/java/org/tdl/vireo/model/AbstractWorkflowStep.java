@@ -22,14 +22,16 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
     @Column(nullable = false)
     private String name;
     
+    @Column(nullable = false)
+    private Boolean overrideable;
+    
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<FP> aggregateFieldProfiles;
     
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private List<N> notes;
-
-
+    @OrderColumn
+    private List<N> aggregateNotes;
 
     /**
      * @return the originatingOrganization
@@ -61,6 +63,22 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
      * 
      * @return
      */
+    public Boolean getOverrideable() {
+        return overrideable;
+    }
+
+    /**
+     * 
+     * @param overrideable
+     */
+    public void setOverrideable(Boolean overrideable) {
+        this.overrideable = overrideable;
+    }
+    
+    /**
+     * 
+     * @return
+     */
     public List<FP> getAggregateFieldProfiles() {
         return aggregateFieldProfiles;
     }
@@ -73,8 +91,7 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
         this.aggregateFieldProfiles = aggregateFieldProfiles;
     }
     
-    public void addFieldProfile(FP fieldProfile)
-    {
+    public void addFieldProfile(FP fieldProfile) {
         getAggregateFieldProfiles().add(fieldProfile);
     }
 
@@ -157,24 +174,64 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
         getAggregateFieldProfiles().add(dest, fieldProfile);
     }
     
-    public List<N> getNotes() {
-        return notes;
+    public List<N> getAggregateNotes() {
+        return aggregateNotes;
     }
 
-    public void setNotes(List<N> notes) {
-        this.notes = notes;
+    public void setAggregateNotes(List<N> aggregateNotes) {
+        this.aggregateNotes = aggregateNotes;
     }
 
-    public void addNote(N note) {
-        notes.add(note);
+    public void addAggregateNote(N aggregateNote) {
+        if(!getAggregateNotes().contains(aggregateNote)) {
+            getAggregateNotes().add(aggregateNote);
+        }
     }
 
-    public void removeNote(N note) {
-        notes.remove(note);
+    public void removeAggregateNote(N aggregateNote) {
+        getAggregateNotes().remove(aggregateNote);
     }
-
-    public void clearAllNotes() {
-        notes.clear();
+    
+    public boolean replaceAggregateNote(N n1, N n2) {       
+        boolean res = false;
+        int pos = 0;
+        for(N n : getAggregateNotes()) {
+            if(n.getId().equals(n1.getId())) {
+                getAggregateNotes().remove(n1);
+                getAggregateNotes().add(pos, n2);
+                res = true;
+                break;
+            }
+            pos++;
+        }
+        return res;
+    }
+    
+    public boolean swapAggregateNote(N n1, N n2) {
+        boolean res = false;
+        
+        int pos1 = getAggregateNotes().indexOf(n1), 
+            pos2 = getAggregateNotes().indexOf(n2);
+       
+        if(pos1 >= 0 && pos2 >= 0) {
+            Collections.swap(getAggregateNotes(), pos1, pos2);
+            res = true;
+        }
+        
+        return res;
+    }
+    
+    public void reorderAggregateNote(int src, int dest) {
+        
+        //adjust for index + 1
+        src -= 1;
+        dest -= 1;
+        
+        N note = getAggregateNotes().get(src);
+                
+        getAggregateNotes().remove(src);
+                
+        getAggregateNotes().add(dest, note);
     }
     
 }

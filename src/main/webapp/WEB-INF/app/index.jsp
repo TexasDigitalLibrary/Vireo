@@ -323,6 +323,7 @@
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>
+	    <script src="controllers/settings/noteManagementController.js"></script>
 	    <script src="controllers/submission/newSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionController.js"></script>
 	    

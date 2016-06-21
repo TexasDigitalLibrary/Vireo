@@ -12,6 +12,7 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
@@ -20,6 +21,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	
 	@PersistenceContext
     private EntityManager em;
+	
+	@Autowired
+    private NoteRepo noteRepo;
 	
 	@Autowired
     private FieldProfileRepo fieldProfileRepo;
@@ -78,6 +82,46 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
     
+    public WorkflowStep reorderNotes(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
+        
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
+            // if requesting organization is not the workflow step's orignating organization                        
+            if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+                // create a new workflow step
+                workflowStep = update(workflowStep, requestingOrganization);
+            }
+    
+            // reorder aggregate field profiles
+            workflowStep.reorderAggregateNote(src, dest);
+            
+            // save workflow step
+            return workflowStepRepo.save(workflowStep);
+        }
+        else {
+            throw new WorkflowStepNonOverrideableException();
+        }
+    }
+    
+    public WorkflowStep swapNotes(Organization requestingOrganization, WorkflowStep workflowStep, Note n1, Note n2) throws WorkflowStepNonOverrideableException {
+        
+        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
+            // if requesting organization is not the workflow step's orignating organization
+            if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+                // create a new workflow step
+                workflowStep = update(workflowStep, requestingOrganization);
+            }
+            
+            // swap aggregate field profiles
+            workflowStep.swapAggregateNote(n1, n2);
+            
+            // save workflow step
+            return workflowStepRepo.save(workflowStep);
+        }
+        else {
+            throw new WorkflowStepNonOverrideableException();
+        }
+    }
+    
     public void disinheritFromOrganization(Organization requestingOrg, WorkflowStep workflowStepToDisinherit) {
         
     	// if requesting organization is the workflow step's orignating organization
@@ -108,7 +152,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             	persistedWorkflowStep.setOverrideable(false);
             	
             	WorkflowStep savedWorkflowStep = workflowStepRepo.save(persistedWorkflowStep);
-            	            	
+            	  	
             	List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);
             	
             	for(WorkflowStep descendentWorkflowStep : descendentWorkflowSteps) {
@@ -118,6 +162,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	            	}
             	}
         		
+            	requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+            	
             	requestingOrganization.addAggregateWorkflowStep(savedWorkflowStep, requestingOrganization.getAggregateWorkflowSteps().indexOf(savedWorkflowStep));
         	    organizationRepo.save(requestingOrganization);
             	
@@ -132,9 +178,14 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	    Boolean overridable = pendingWorkflowStep.getOverrideable();
         	    String name = pendingWorkflowStep.getName();
         	    
-        	    List<Note> notes = new ArrayList<Note>();
-                for(Note n : pendingWorkflowStep.getNotes()) {
-                    notes.add(n);
+        	    List<Note> originalNotes = new ArrayList<Note>();
+                for(Note n : pendingWorkflowStep.getOriginalNotes()) {
+                    originalNotes.add(n);
+                }
+                
+                List<Note> aggregateNotes = new ArrayList<Note>();
+                for(Note n : pendingWorkflowStep.getAggregateNotes()) {
+                    aggregateNotes.add(n);
                 }
         	    
         	    List<FieldProfile> originalFieldProfiles = new ArrayList<FieldProfile>();
@@ -150,7 +201,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 persistedWorkflowStep.setOverrideable(overridable);
                 persistedWorkflowStep.setName(name);
                 
-                persistedWorkflowStep.setNotes(notes);
+                persistedWorkflowStep.setOriginalNotes(originalNotes);
+                persistedWorkflowStep.setAggregateNotes(aggregateNotes);
                 
                 persistedWorkflowStep.setOriginalFieldProfiles(originalFieldProfiles);
                 persistedWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
@@ -171,9 +223,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 					aggregateFieldProfiles.add(fp);
             	}
 				
-				List<Note> notes = new ArrayList<Note>();                
-                for(Note n : pendingWorkflowStep.getNotes()) {
-                    notes.add(n);
+				List<Note> aggregateNotes = new ArrayList<Note>();
+                for(Note n : pendingWorkflowStep.getAggregateNotes()) {
+                    aggregateNotes.add(n);
                 }
             	
             	em.detach(pendingWorkflowStep);
@@ -188,7 +240,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 
                 pendingWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
                 
-                pendingWorkflowStep.setNotes(notes);
+                // this is important, elsewise original notes will be related to this new workflow step as the originator 
+                pendingWorkflowStep.setOriginalNotes(new ArrayList<Note>());
+                
+                persistedWorkflowStep.setAggregateNotes(aggregateNotes);
                 
                 WorkflowStep newWorkflowStep = workflowStepRepo.save(pendingWorkflowStep);
                 
@@ -225,7 +280,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                             workflowStepRepo.delete(descendentWorkflowStep);
                         }
                     }
-                    
+
                 }
 
 
@@ -268,6 +323,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	            ws.setOriginatingWorkflowStep(null);
 	        });
 	        
+	        
 	        List<FieldProfile> fieldProfilesToDelete = new ArrayList<FieldProfile>();
 	        
 	        fieldProfileRepo.findByOriginatingWorkflowStep(workflowStep).forEach(fp -> {
@@ -277,6 +333,17 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 	        fieldProfilesToDelete.forEach(fp -> {
 	           fieldProfileRepo.delete(fp);
 	        });
+	        
+	        
+	        List<Note> notesToDelete = new ArrayList<Note>();
+            
+            noteRepo.findByOriginatingWorkflowStep(workflowStep).forEach(n -> {
+                notesToDelete.add(n);
+            });
+            
+            notesToDelete.forEach(n -> {
+                noteRepo.delete(n);
+            });
 	        
 	        deleteDescendantsOfStep(workflowStep);
 	        

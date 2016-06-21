@@ -1,23 +1,17 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
-import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
-import org.tdl.vireo.model.Organization;
-import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
-import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionFieldProfileRepoCustom;
 
 public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRepoCustom {

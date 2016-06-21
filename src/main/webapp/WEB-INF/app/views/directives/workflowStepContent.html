@@ -1,43 +1,45 @@
 
+<div class="row" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+			
+	<div class="col-md-6">
+  		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
+				key-down="confirmEdit(event, prop)"-->
+  		<textField
+  			class="workflowstep-edit-name" 
+			label="Workflow Step Name:" 
+			scope-value="step.name"
+			hint="'My Workflow Step's name'"
+			on-blur="updateWorkflowStep(step)">
+		</textField>
+  	</div>
+
+	<div class="col-md-3">
+  		<!--ng-click="updateConfigurableSettings('application', 'submissions_open')"-->
+  		<toggleButton 
+			label="Workflow Step is Overridable:"
+			scope-value="step.overrideable"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'
+			ng-click="updateWorkflowStep(step)">
+		</toggleButton>
+	</div>
+
+  	<div class="col-md-3">
+  		<div class="form-group">
+  			<button class="btn btn-danger" data-toggle="modal" data-target="#workflow-step-delete-confirm-{{step.id}}">Delete Workflow Step</button>
+			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
+  		</div>
+  	</div>
+
+	<hr>
+
+</div>
+
+
 <div ng-controller="FieldProfileManagementController">
 
 	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 
-		<div class="row">
-			
-			<div class="col-md-6">
-		  		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
-						key-down="confirmEdit(event, prop)"-->
-		  		<textField
-		  			class="workflowstep-edit-name" 
-					label="Workflow Step Name:" 
-					scope-value="step.name"
-					hint="'My Workflow Step's name'"
-					on-blur="updateWorkflowStep(step)">
-				</textField>
-		  	</div>
-
-			<div class="col-md-3">
-		  		<!--ng-click="updateConfigurableSettings('application', 'submissions_open')"-->
-		  		<toggleButton 
-					label="Workflow Step is Overridable:"
-					scope-value="step.overrideable"
-					toggle-options='[{"true": "Yes"},{"false": "No"}]'
-					ng-click="updateWorkflowStep(step)">
-				</toggleButton>
-			</div>
-
-		  	<div class="col-md-3">
-		  		<div class="form-group">
-		  			<button class="btn btn-danger" data-toggle="modal" data-target="#workflow-step-delete-confirm-{{step.id}}">Delete Workflow Step</button>
-					<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
-		  		</div>
-		  	</div>
-
-
-
-		</div>
-		<hr>
+		
 		<div id="fieldProfiles" class="row">
 
 			<alerts channels="/organization/workflowStep/fieldProfiles" types="ERROR, WARNING" exclusive></alerts>
@@ -98,11 +100,6 @@
 				   modal-backdrop="static">
 			</modal>
 
-			<hr/>
-			
-		  	<div class="col-md-6">
-		    	<div ng-repeat="note in steps[$parent.$index].notes" class="sticky-note">{{note.name}}</div>
-		  	</div>
 		</div>
 	</div>
 
@@ -116,3 +113,84 @@
 	</div>
 
 </div>
+
+<hr>
+
+<div ng-controller="NoteManagementController">
+
+	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+
+		<div id="notes" class="row">
+
+			<alerts channels="/organization/workflowStep/notes" types="ERROR, WARNING" exclusive></alerts>
+
+			<div class="col-sm-6">		
+				
+				<button class="btn btn-default modal-add-btn" 
+						data-toggle="modal" 
+						data-target="#notesNewModal-{{step.id}}">
+					Add Note
+				</button>
+				
+				<div class="glyphicon glyphicon-info-sign tooltip-span move-up" tooltip="Dialog in which allows to create new note."></div>
+
+				<p ng-if="step.aggregateNotes.length == 0">Add New Note</p>
+				 
+				<draganddroplist dragging="dragging"
+								 scope-value="step.aggregateNotes"
+								 properties='["name"]'
+								 item-view='views/directives/dragAndDropNote.html'
+								 listeners='dragControlListeners'
+								 edit='editNote(index)'
+								 sort-label='Notes'
+								 sort-column='name',
+								 sort-action='sortAction'
+								 sort-method='sortNotes(column)'>
+				</draganddroplist>
+		 		
+			</div>
+
+
+			
+			<div class="col-sm-6">
+				<trashcan id="note-trash-{{step.id}}"
+						  dragging="dragging"
+						  listeners='dragControlListeners'>
+				</trashcan>
+			</div>
+
+			<modal modal-id="notesNewModal-{{step.id}}" 
+				   modal-view="views/modals/organization/notesNewModal.html" 
+				   modal-header-class="modal-header-primary"
+				   modal-keyboard="false"
+				   modal-backdrop="static">
+			</modal>
+		 
+			<modal modal-id="notesEditModal-{{step.id}}"  
+				   modal-view="views/modals/organization/notesEditModal.html" 
+				   modal-header-class="modal-header-primary"
+				   modal-keyboard="false"
+				   modal-backdrop="static">
+			</modal>
+		 
+			<modal modal-id="notesConfirmRemoveModal-{{step.id}}" 
+				   modal-view="views/modals/organization/notesConfirmRemoveModal.html" 
+				   modal-header-class="modal-header-danger"
+				   modal-keyboard="false"
+				   modal-backdrop="static">
+			</modal>
+
+		</div>
+	</div>
+
+	<div ng-if="!step.overrideable && step.originatingOrganization != selectedOrganization.id">
+		<h3>Read only. Workflow step is non overrideable.</h3>
+		<ul class="list-unstyled">
+		   <li ng-repeat="note in step.aggregateNotes">
+		      	{{note.position}}. {{note.name}}
+		   </li>
+		</ul>
+	</div>
+
+</div>
+
