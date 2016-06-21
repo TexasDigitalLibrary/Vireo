@@ -4,8 +4,10 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 
-public interface SubmissionRepoCustom {
+import edu.tamu.framework.model.Credentials;
 
-    public Submission create(User submitter, SubmissionState state);
+public interface SubmissionRepoCustom {
+    
+    public Submission create(Credentials submitterCredentials, Long organizationId);
 
 }

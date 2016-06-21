@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import edu.tamu.framework.model.Credentials;
+
 public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @Before
@@ -16,11 +18,21 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         includedSubmitter = userRepo.create(TEST_INCLUDED_SUBMITTER_EMAIL, TEST_INCLUDED_SUBMITTER_FIRSTNAME, TEST_INCLUDED_SUBMITTER_LASTNAME, TEST_SUBMITTER_ROLE);
         includedSubmissionState = submissionStateRepo.create(TEST_INCLUDED_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-        includedSubmission = submissionRepo.create(includedSubmitter, includedSubmissionState);
+        //includedSubmission = submissionRepo.create(includedSubmitter, includedSubmissionState);
+        Credentials credentials = new Credentials();
+        credentials.setEmail(includedSubmitter.getEmail());
+        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
+        includedSubmission = submissionRepo.create(credentials, organization.getId());
+        includedSubmission.setState(includedSubmissionState);
 
         excludedSubmitter = userRepo.create(TEST_EXCLUDED_SUBMITTER_EMAIL, TEST_EXCLUDED_SUBMITTER_FIRSTNAME, TEST_EXCLUDED_SUBMITTER_LASTNAME, TEST_SUBMITTER_ROLE);
+               
         excludedSubmissionState = submissionStateRepo.create(TEST_EXCLUDED_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-        excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
+        //excludedSubmission = submissionRepo.create(excludedSubmitter, excludedSubmissionState);
+        Credentials credentials2 = new Credentials();
+        credentials2.setEmail(excludedSubmitter.getEmail());
+        excludedSubmission = submissionRepo.create(credentials2, organization.getId());
         assertEquals("The submission does not exist!", 2, submissionRepo.count());
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -43,11 +55,9 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         customActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         customActionValue = customActionValueRepo.create(includedSubmission, customActionDefinition, TEST_CUSTOM_ACTION_VALUE);
-        assertEquals("The customActionValue Repo is empty", 1, customActionValueRepo.count());
-        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        assertEquals("The customActionValue Repo is empty", 1, customActionValueRepo.count());        
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
-        organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
-        assertEquals("The organization Repo is empty", 1, organizationRepo.count());
+       
     }
 
     @Override
@@ -110,6 +120,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         namedSearchFilter.addEmbargoType(embargoType);
         namedSearchFilter.addAssignee(assignee);
         namedSearchFilter.addCustomActionValue(customActionValue);
+        
         namedSearchFilter.addOrganization(organization);
 
         namedSearchFilter = namedSearchFilterRepo.save(namedSearchFilter);
@@ -129,19 +140,24 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         namedSearchFilterRepo.deleteAll();
+        actionLogRepo.deleteAll();
+        
         embargoRepo.deleteAll();
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
+        customActionValueRepo.deleteAll();
+        customActionDefinitionRepo.deleteAll();
+        //organizationRepo.deleteAll();
+        submissionRepo.deleteAll();
+        organizationRepo.findAll().forEach(org -> {
+            organizationRepo.delete(org);
         });
         organizationCategoryRepo.deleteAll();
-        actionLogRepo.deleteAll();
         attachmentRepo.deleteAll();
         attachmentTypeRepo.deleteAll();
-        customActionValueRepo.deleteAll();
-        submissionRepo.deleteAll();
+        
+        
         submissionStateRepo.deleteAll();
         userRepo.deleteAll();
-        customActionDefinitionRepo.deleteAll();
+        
     }
 
 }

@@ -1353,6 +1353,30 @@ footer a, footer li, footer p {
 	margin-top: 55px;
 }
 
+.submission-workflow-steps-navigation {
+  margin-bottom: 25px;
+}
+
+.submission-workflow-step-navigation a {
+  width: 95%;
+  color: white;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: -ms-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+}
+
+.submission-workflow-step-navigation a:hover,
+.submission-workflow-step-navigation.active a {
+  cursor: pointer;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+}
+
 .fp-gloss-predicate-button {
 	float:right;
 	margin-top: 10px;
