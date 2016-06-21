@@ -10,9 +10,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.InputType;
-import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;

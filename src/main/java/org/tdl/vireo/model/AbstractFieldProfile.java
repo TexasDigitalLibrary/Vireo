@@ -3,8 +3,8 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.InputType;
 
 import edu.tamu.framework.model.BaseEntity;
@@ -52,10 +54,12 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @Column(nullable = true)
     private String help;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<FieldGloss> fieldGlosses;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
 
     
@@ -240,6 +244,10 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      */
     public void setControlledVocabularies(List<ControlledVocabulary> controlledVocabularies) {
         this.controlledVocabularies = controlledVocabularies;
+    }
+    
+    public void clearControlledVocabulary() {
+        this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
     }
 
     // TODO : Restrict multiple controlled vocabulary with the same language 
