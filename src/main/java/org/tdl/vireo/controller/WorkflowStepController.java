@@ -104,6 +104,7 @@ public class WorkflowStepController {
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
         FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
+        
         ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
         
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
@@ -111,9 +112,17 @@ public class WorkflowStepController {
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
         Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
         String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
-        String usage = "";
+        String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : "";
+        
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        
+        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        
+        if(!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
+            workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+        }
+        
         FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, true, true, true);
         createdProfile.addControlledVocabulary(controlledVocabulary);
         createdProfile.addFieldGloss(gloss);
