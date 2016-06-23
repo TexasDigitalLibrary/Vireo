@@ -171,7 +171,7 @@ public class AppAuthController extends CoreAuthController {
         	userMap.put("firstName", user.getFirstName());
         	userMap.put("netid", user.getNetid());
         	userMap.put("uin", String.valueOf(user.getUin()));
-        	userMap.put("email", user.getEmail());        	        	
+        	userMap.put("email", user.getEmail());
             return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
         } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
             logger.debug("Unable to generate token!");
