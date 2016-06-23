@@ -60,7 +60,6 @@ public class FieldGlossController {
     @Auth(role = "MANAGER")
     public ApiResponse createFieldGloss(@ApiModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
-        
         return new ApiResponse(SUCCESS, fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage));
     }
 

@@ -3,7 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +32,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -69,35 +68,21 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS, map);
     }
     
-    @ApiMapping("/get/{id}")
+    @ApiMapping("/get/{workflowStepId}")
     @Transactional
-    public ApiResponse getStepById(@ApiVariable String id){
+    public ApiResponse getStepById(@ApiVariable Long workflowStepId){
 
-        Long wStepID = null;
-        try {
-            wStepID = Long.valueOf(id);
-        } catch (NumberFormatException e) {
-            return new ApiResponse(ERROR, "Enable to parse long from string: [" + id + "]");
-        }
-
-        WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(wStepID);
+        WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(workflowStepId);
         if (potentiallyExistingStep != null) {
             return new ApiResponse(SUCCESS, potentiallyExistingStep);
         }
 
-        return new ApiResponse(ERROR, "No wStep for id [" + wStepID.toString() + "]");
+        return new ApiResponse(ERROR, "No wStep for id [" + workflowStepId.toString() + "]");
     }
 
     @ApiMapping("/{workflowStepId}/add-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse createFieldProfile(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse createFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
         
         // TODO: validation
         
@@ -115,7 +100,7 @@ public class WorkflowStepController {
         String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : "";
         
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         
@@ -134,15 +119,8 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse updateFieldProfile(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
-        
+    public ApiResponse updateFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException {
+                
         // TODO: validation
         
         Long id = Long.parseLong(dataNode.get("id").toString());
@@ -206,20 +184,13 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
     @Auth(role="MANAGER")
-    public ApiResponse reorderFieldProfiles(@ApiVariable String workflowStepId, @ApiVariable String src, @ApiVariable String dest, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
-        
+    public ApiResponse reorderFieldProfiles(@ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
+                
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
+        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, src, dest);     
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
@@ -228,19 +199,12 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/remove-field-profile/{fieldProfileId}")
     @Auth(role="MANAGER")
-    public ApiResponse removeFieldProfile(@ApiVariable String workflowStepId, @ApiVariable String fieldProfileId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
-        
-    	JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse removeFieldProfile(@ApiVariable Long workflowStepId, @ApiVariable Long fieldProfileId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
-        FieldProfile fieldProfile = fieldProfileRepo.findOne(Long.parseLong(fieldProfileId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
+        FieldProfile fieldProfile = fieldProfileRepo.findOne(fieldProfileId);
         
         fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
         
@@ -257,20 +221,13 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/add-note")
     @Auth(role="MANAGER")
-    public ApiResponse addNote(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse addNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         String name = dataNode.get("noteName").textValue();
         String text = dataNode.get("noteText").textValue();
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         
@@ -287,23 +244,16 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/update-note")
     @Auth(role="MANAGER")
-    public ApiResponse updateNote(@ApiVariable String workflowStepId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        Long id = Long.parseLong(dataNode.get("noteId").toString());
+        Long noteId = Long.parseLong(dataNode.get("noteId").toString());
         String name = dataNode.get("noteName").textValue();
         String text = dataNode.get("noteText").textValue();
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         
-        Note note = noteRepo.findOne(id);
+        Note note = noteRepo.findOne(noteId);
         
         note.setName(name);
         note.setText(text);
@@ -317,20 +267,13 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/remove-note/{noteId}")
     @Auth(role="MANAGER")
-    public ApiResponse removeNote(@ApiVariable String workflowStepId, @ApiVariable String noteId, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse removeNote(@ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        Note note = noteRepo.findOne(Long.parseLong(noteId));
+        Note note = noteRepo.findOne(noteId);
         
         noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
         
@@ -345,20 +288,13 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/reorder-notes/{src}/{dest}")
     @Auth(role="MANAGER")
-    public ApiResponse reorderNotes(@ApiVariable String workflowStepId, @ApiVariable String src, @ApiVariable String dest, @Data String data) throws NumberFormatException, WorkflowStepNonOverrideableException {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
+    public ApiResponse reorderNotes(@ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         
-        WorkflowStep workflowStep = workflowStepRepo.findOne(Long.parseLong(workflowStepId));
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        workflowStepRepo.reorderNotes(organizationRepo.findOne(reqOrgId), workflowStep, Integer.parseInt(src), Integer.parseInt(dest));     
+        workflowStepRepo.reorderNotes(organizationRepo.findOne(reqOrgId), workflowStep, src, dest);     
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         

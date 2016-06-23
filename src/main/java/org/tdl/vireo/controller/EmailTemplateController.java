@@ -136,15 +136,11 @@ public class EmailTemplateController {
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse reorderEmailTemplates(@ApiVariable String src, @ApiVariable String dest) {
+    public ApiResponse reorderEmailTemplates(@ApiVariable Long src, @ApiVariable Long dest) {
         
         // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
         ModelBindingResult modelBindingResult = new ModelBindingResult(src, "emailTemplate");
-        
-        // will attach any errors to the BindingResult when validating the incoming src, dest
-        Long longSrc = validationService.validateLong(src, "position", modelBindingResult);
-        Long longDest = validationService.validateLong(dest, "position", modelBindingResult);
-        
+                
         // build a response based on the BindingResult state
         ApiResponse response = validationService.buildResponse(modelBindingResult);
         
@@ -152,7 +148,7 @@ public class EmailTemplateController {
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Reordering document types");
-                emailTemplateRepo.reorder(longSrc, longDest);
+                emailTemplateRepo.reorder(src, dest);
                 simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
                 break;
             case VALIDATION_WARNING:

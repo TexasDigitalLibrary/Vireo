@@ -116,7 +116,7 @@ public class UserController {
     @ApiMapping("/settings/{key}")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserControllerModel userSetting) {
+    public ApiResponse setSetting(@ApiVariable String key, @Shib Credentials shib, @ApiValidatedModel UserControllerModel userSetting) {
 
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {

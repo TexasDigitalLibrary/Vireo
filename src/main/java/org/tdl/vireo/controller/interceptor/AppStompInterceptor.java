@@ -24,9 +24,6 @@ public class AppStompInterceptor extends CoreStompInterceptor {
     @Value("${app.authority.admins}")
     private String[] admins;
 
-    // @Autowired @Lazy
-    // private SimpMessagingTemplate simpMessagingTemplate;
-
     @Override
     public Credentials confirmCreateUser(Credentials shib) {
 
@@ -54,7 +51,6 @@ public class AppStompInterceptor extends CoreStompInterceptor {
                 }
             }
             
-            // User newUser =
             user = userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
             user.setNetid(shib.getAllCredentials().get(netIdHeader));
             if (shib.getAllCredentials().get(birthYearHeader) != null) {
@@ -67,11 +63,6 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             }
             
             userRepo.save(user);
-            // Map<String, Object> userMap = new HashMap<String, Object>();
-            //
-            // userMap.put("list", userRepo.findAll());
-            //
-            // this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
 
         } else {
 
