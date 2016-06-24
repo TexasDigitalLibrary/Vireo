@@ -6,10 +6,8 @@ vireo.directive("field",  function() {
 		scope: {
 			profile: "="
 		},
-		link: function($scope, element, attr) {
-
-			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name+".html"
-			
+		link: function($scope) {
+			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name+".html";
 		}
 	};
 });
