@@ -46,6 +46,11 @@ public class Note extends AbstractNote<Note> {
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }
     
+    public Note(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
+        this(originatingWorkflowStep, name, text);
+        setOverrideable(overrideable);
+    }
+    
     public Note getOriginatingNote() {
         return originatingNote;
     }

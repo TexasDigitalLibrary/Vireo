@@ -84,16 +84,16 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 
 
 	WorkflowStepRepo.addNote = function(workflowStepId, note) {
+		
+		var data = { requestingOrgId: OrganizationRepo.getSelectedOrganization().id };
+		
+		angular.extend(data, note);
 
 		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
 				method: workflowStepId+'/add-note',
-				data: {
-					requestingOrgId: OrganizationRepo.getSelectedOrganization().id,
-					noteName: note.name,
-					noteText: note.text
-				}
+				data: data
 		});
 
 		return removePromise;
@@ -102,16 +102,15 @@ vireo.service("WorkflowStepRepo", function($route, $q, WsApi, OrganizationRepo, 
 
 	WorkflowStepRepo.updateNote = function(workflowStepId, note) {
 
+		var data = { requestingOrgId: OrganizationRepo.getSelectedOrganization().id };
+		
+		angular.extend(data, note);
+
 		var removePromise = WsApi.fetch({
 				endpoint: '/private/queue', 
 				controller: 'workflow-step', 
 				method: workflowStepId+'/update-note',
-				data: {
-					requestingOrgId: OrganizationRepo.getSelectedOrganization().id,
-					noteId: note.id,
-					noteName: note.name,
-					noteText: note.text
-				}
+				data: data
 		});
 
 		return removePromise;

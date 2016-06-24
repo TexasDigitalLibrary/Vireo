@@ -15,6 +15,11 @@
        	 	<label for="notes-name">Text</label>       	 	
         	<textarea ng-model="modalData.text" type="text" class="form-control" placeholder="Text of note"/></textarea>
     	</div>
+    	<toggleButton 
+			label="Note is Overridable:"
+			scope-value="modalData.overrideable"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+		</toggleButton>
 	</form>
 </div>
 

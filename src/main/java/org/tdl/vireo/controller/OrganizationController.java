@@ -51,14 +51,14 @@ public class OrganizationController {
     }
         
     @ApiMapping("/all")
-    @Auth(role="MANAGER")
+    @Auth(role="STUDENT")
     @Transactional
     public ApiResponse allOrganizations() {        
         return new ApiResponse(SUCCESS, getAll());
     }
     
     @ApiMapping("/get/{id}")
-    @Auth(role="MANAGER")
+    @Auth(role="STUDENT")
     @Transactional
     public ApiResponse getOrganization(@ApiVariable Long id) {        
         Organization org = organizationRepo.findOne(id);
@@ -101,7 +101,7 @@ public class OrganizationController {
     }
     
     @ApiMapping("/{id}/workflow")
-    @Auth(role="MANAGER")
+    @Auth(role="STUDENT")
     @Transactional
     public ApiResponse getWorkflowStepsForOrganization(@ApiVariable Long id) {
         Organization org = organizationRepo.findOne(id);
