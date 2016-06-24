@@ -2,9 +2,9 @@
 	<span>{{ item.position }}. </span>
 	 
 	<!-- TODO: select by appropriate language -->
-	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !item.overrideable}">
+	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({note: item})}">
 		{{ item[property] }}
 	</span>
-	<span ng-if="item.overrideable" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
-	<span ng-if="!item.overrideable" class="glyphicon glyphicon-info-sign text-warning" tooltip="This note is not overrideable."></span>
+	<span ng-if="isEditable({note: item})" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
+	<span ng-if="!isEditable({note: item})" class="glyphicon glyphicon-info-sign text-warning" tooltip="This note is not overrideable."></span>
 </div>

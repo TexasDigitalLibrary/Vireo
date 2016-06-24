@@ -61,7 +61,8 @@
 								 properties='["fieldGlosses"]'
 								 item-view='views/directives/dragAndDropFieldProfile.html'
 								 listeners='dragControlListeners'
-								 edit='editFieldProfile(index)'>
+								 edit='editFieldProfile(index)'
+								 is-editable='isEditable(fieldProfile)'>
 				</draganddroplist>
 		 		
 			</div>
@@ -135,7 +136,8 @@
 								 properties='["name"]'
 								 item-view='views/directives/dragAndDropNote.html'
 								 listeners='dragControlListeners'
-								 edit='editNote(index)'>
+								 edit='editNote(index)'
+								 is-editable='isEditable(note)'>
 				</draganddroplist>
 		 		
 			</div>

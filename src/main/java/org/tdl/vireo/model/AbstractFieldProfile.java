@@ -25,7 +25,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Inheritance
 @DiscriminatorColumn(name="FP_TYPE")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id", "fp_type" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }) )
 public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)

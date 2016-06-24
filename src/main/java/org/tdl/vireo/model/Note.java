@@ -27,7 +27,7 @@ public class Note extends AbstractNote<Note> {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    @Column
+    @Column(nullable = false)
     private Boolean overrideable;
 
     
