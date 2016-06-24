@@ -1,101 +1,39 @@
-vireo.service("SubmissionRepo", function($q, AbstractModel, WsApi) {
+vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 
-	var self;
+	var SubmissionRepo = this;
+	angular.extend(SubmissionRepo, VireoAbstractModel);
 
-	var SubmissionRepo = function(futureData) {
-		self = this;
-
-		//This causes our model to extend AbstractModel
-		angular.extend(self, AbstractModel);
-		
-		self.unwrap(self, futureData);		
-
+	var cache = {
+		list : [],
+		ready: false
 	};
 
-	SubmissionRepo.data = null;
-	
-	SubmissionRepo.listener = null;
-
-	SubmissionRepo.promise = null;
-	
-	SubmissionRepo.set = function(data) {
-		self.unwrap(self, data);
-	};
-
-	SubmissionRepo.get = function() {
-
-		if(SubmissionRepo.promise) return SubmissionRepo.data;
-
-		var newSubmissionRepoPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'all',
-		});
-
-		SubmissionRepo.promise = newSubmissionRepoPromise;
-
-		if(SubmissionRepo.data) {
-			newSubmissionRepoPromise.then(function(data) {
-				SubmissionRepo.set(JSON.parse(data.body).payload.HashMap);
-			});
+	var api = {
+		request: {
+			endpoint  : '/private/queue',
+			controller: 'submission',
+			method    : ''
 		}
-		else {
-			SubmissionRepo.data = new SubmissionRepo(newSubmissionRepoPromise);	
-		}
-
-		SubmissionRepo.listener = WsApi.listen({
-			endpoint: '/channel', 
-			controller: 'submission', 
-			method: '',
-		});
-				
-		SubmissionRepo.set(SubmissionRepo.listener);
-
-		return SubmissionRepo.data;
 	};
 
-	SubmissionRepo.ready = function() {
-		return SubmissionRepo.promise;
+	SubmissionRepo.getAll = function(sync) {
+		cache.ready = sync ? !sync : cache.ready;
+		SubmissionRepo.getAllPromise(api, cache);
+		return cache.list;
 	};
 
 	SubmissionRepo.findById = function(submissionId) {
-		
-		var findByIdDefer = $q.defer();
-
-		var findByIdFetchPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'get-one/'+submissionId,
-		});
-
-		findByIdFetchPromise.then(function(rawRes) {
-			var submission = JSON.parse(rawRes.body).payload.Submission;
-			findByIdDefer.resolve(submission);
-		});
-
-		return findByIdDefer.promise;
-
+		return WsApi.fetch(SubmissionRepo.buildRequest(api, 'get-one/' + submissionId))
+			.then(function(rawResponse){
+				return $q.when(JSON.parse(rawResponse.body).payload.Submission);
+			});
 	};
 
 	SubmissionRepo.create = function(organizationId) {
-
-		var creationDefer = $q.defer();
-		
-		var createSubmissionPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'create',
-			data: {organizationId: organizationId}
-		});
-
-		createSubmissionPromise.then(function(rawData) {
-			creationDefer.resolve(JSON.parse(rawData.body).payload.Submission.id);
-		});
-
-		return creationDefer.promise;
-
-	}
-
-	return SubmissionRepo;
+		return WsApi.fetch(SubmissionRepo.buildRequest(api, 'create', {organizationId: organizationId}))
+			.then(function(rawResponse){
+				return $q.when(JSON.parse(rawResponse.body).payload.Submission.id);
+			});
+	};
 
 });

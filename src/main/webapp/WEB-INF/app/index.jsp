@@ -184,6 +184,7 @@
 
 	<script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
 	<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+	<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
 
 	
 	<!--  Core libraries -->
