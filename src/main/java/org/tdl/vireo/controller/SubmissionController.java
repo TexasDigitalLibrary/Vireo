@@ -14,11 +14,11 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
@@ -47,7 +47,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse createSubmission(@Shib Credentials credentials, @ApiData JsonNode dataNode) {
+    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
         return new ApiResponse(SUCCESS, submission);
     }
