@@ -12,9 +12,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
-import org.tdl.vireo.enums.EmbargoGuarantor;
-import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
 import org.tdl.vireo.model.repo.AttachmentRepo;
@@ -33,6 +32,7 @@ import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
@@ -282,8 +282,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_INCLUDED_SUBMISSION_STATE_NAME = "Test Included Submission State Name";
     protected static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
 
-    protected static final InputType TEST_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
-    protected static final InputType TEST_SEVERABLE_FIELD_PROFILE_INPUT_TYPE = InputType.INPUT_TEXT;
+    protected static final String TEST_FIELD_PROFILE_INPUT_TYPE_NAME = "INPUT_TEXT";
 
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
     
@@ -301,6 +300,9 @@ public abstract class AbstractEntityTest {
     @Autowired
     protected EntityControlledVocabularyService entityControlledVocabularyService;
 
+    @Autowired
+    protected InputTypeRepo inputTypeRepo;
+    
     @Autowired
     protected ActionLogRepo actionLogRepo;
 
@@ -390,6 +392,7 @@ public abstract class AbstractEntityTest {
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;
     
+    protected InputType inputType;
 
     protected ActionLog includedActionLog;
     protected ActionLog excludedActionLog;

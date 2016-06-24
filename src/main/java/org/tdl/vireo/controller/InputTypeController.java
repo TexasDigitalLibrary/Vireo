@@ -2,16 +2,12 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
-import org.tdl.vireo.enums.InputType;
+import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -33,6 +29,9 @@ public class InputTypeController {
     
     @Autowired
     private ValidationService validationService;
+    
+    @Autowired
+    private InputTypeRepo inputTypeRepo;
 
 	/**
      * Endpoint to request all input types.
@@ -42,8 +41,7 @@ public class InputTypeController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getAllInputTypes() {
-        List<InputType> inputTypes = new ArrayList<InputType>(Arrays.asList(InputType.values()));
-        return new ApiResponse(SUCCESS, inputTypes);
+        return new ApiResponse(SUCCESS, inputTypeRepo.findAll());
     }
 
 }

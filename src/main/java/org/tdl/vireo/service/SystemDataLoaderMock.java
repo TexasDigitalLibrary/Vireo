@@ -34,6 +34,12 @@ public class SystemDataLoaderMock implements SystemDataLoader {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public void loadSystemInputTypes() {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     public void generateAllSystemEmailTemplates() {

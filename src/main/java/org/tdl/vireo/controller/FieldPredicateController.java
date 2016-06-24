@@ -2,21 +2,12 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
-import org.tdl.vireo.enums.InputType;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
-import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.service.ValidationService;
 
@@ -24,7 +15,6 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
-import scala.annotation.meta.field;
 
 /**
  * Controller in which to manage controlled vocabulary.

@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
@@ -20,22 +19,19 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.enums.InputType;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
 @DiscriminatorColumn(name="FP_TYPE")
-//@Table(name="ABSTRACT_FIELD_PROFILE")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "originating_workflow_step_id", "fp_type" }) )
 public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate predicate;
     
-    @Enumerated
-    @Column(nullable = false)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(nullable = false)
@@ -43,8 +39,6 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     
     @Column(nullable = false)
     private Boolean optional;
-    
-
     
     @Lob
     @Column(nullable = true, name = "`usage`") // "usage" is a keyword in sql
