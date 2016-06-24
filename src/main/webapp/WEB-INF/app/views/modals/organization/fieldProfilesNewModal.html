@@ -19,7 +19,7 @@
 	</div>
 	<div class="form-group field-profile-modal-group">
 	  <label for="field-profiles-input-type">Input Type<divlabel>
-		<select id="field-profiles-input-type" ng-model="modalData.inputType" ng-options="itype for itype in inputTypes" type="text" class="form-control" required ></select>
+		<select id="field-profiles-input-type" ng-model="modalData.inputType" ng-options="itype.name for itype in inputTypes track by itype.id" type="text" class="form-control" required ></select>
 	  </div>
 	  <div class="form-group">
 		<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>

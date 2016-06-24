@@ -33,6 +33,7 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -47,6 +48,7 @@ import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
@@ -70,10 +72,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private ObjectMapper objectMapper;
 
+    private ResourcePatternResolver resourcePatternResolver;
+    
     private ConfigurationRepo configurationRepo;
 
-    private ResourcePatternResolver resourcePatternResolver;
-
+    private InputTypeRepo inputTypeRepo;
+    
     private EmailTemplateRepo emailTemplateRepo;
 
     private EmbargoRepo embargoRepo;
@@ -106,11 +110,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ConfigurationRepo configurationRepo, ResourcePatternResolver resourcePatternResolver, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService) {
 
         this.objectMapper = objectMapper;
-        this.configurationRepo = configurationRepo;
         this.resourcePatternResolver = resourcePatternResolver;
+        this.configurationRepo = configurationRepo;
+        this.inputTypeRepo = inputTypeRepo;
         this.emailTemplateRepo = emailTemplateRepo;
         this.embargoRepo = embargoRepo;
         this.organizationRepo = organizationRepo;
@@ -126,6 +131,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.submissionStateRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
         this.proquestLanguageCodesService = proquestLanguageCodesService;
+        
+        logger.info("Generating all system input types");
+        loadSystemInputTypes();
 
         logger.info("Generating all system email templates");
         generateAllSystemEmailTemplates();
@@ -284,6 +292,18 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (fieldPredicate == null) {
                     fieldPredicate = fieldPredicateRepo.create(fieldProfile.getPredicate().getValue());
                 }
+                
+                
+                // check to see if the InputType exists
+                InputType inputType = inputTypeRepo.findByName(fieldProfile.getInputType().getName());
+                
+                if (inputType == null) {
+                    inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
+                } else {
+                    inputType.setName(fieldProfile.getInputType().getName());
+                    inputType = inputTypeRepo.save(inputType);
+                }
+                                
 
                 // check to see if the FieldProfile exists
                 FieldProfile newFieldProfile = fieldProfileRepo.findByPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
@@ -293,9 +313,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 	
                 	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
                 	
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
                 } else {
-                    newFieldProfile.setInputType(fieldProfile.getInputType() != null ? fieldProfile.getInputType() : newFieldProfile.getInputType());
+                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
                     newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
                     newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
                     newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
@@ -526,6 +546,27 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             throw new IllegalStateException("Unable to generate system email template: " + name, e);
         }
     }
+    
+    public void loadSystemInputTypes() {
+        try {
+            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
+
+            for (InputType inputType : inputTypes) {
+                InputType newInputType = inputTypeRepo.findByName(inputType.getName());
+                
+                if (newInputType == null) {
+                    newInputType = inputTypeRepo.create(inputType.getName());
+                } else {
+                    newInputType.setName(inputType.getName());
+                    newInputType = inputTypeRepo.save(newInputType);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            System.out.println("\n\nERROR Generating System InputTypes\n\n");
+            e.printStackTrace();
+            logger.debug("Unable to initialize default input types. ", e);
+        }
+    }
 
     public void generateAllSystemEmailTemplates() {
 
@@ -592,8 +633,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {
-            });
+            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
             for (Embargo embargoDefinition : embargoDefinitions) {
                 Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
