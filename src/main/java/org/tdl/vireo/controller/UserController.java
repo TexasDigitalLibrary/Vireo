@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +20,11 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.ValidationService;
 
+import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Shib;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
@@ -45,7 +45,7 @@ public class UserController {
 
     @ApiMapping("/credentials")
     @Auth(role = "STUDENT")
-    public ApiResponse credentials(@Shib Credentials shib) {
+    public ApiResponse credentials(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
 
         if (user == null) {
@@ -102,7 +102,7 @@ public class UserController {
     @ApiMapping("/settings")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse getSettings(@Shib Credentials shib) {
+    public ApiResponse getSettings(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
         
         if(user == null) {
@@ -116,7 +116,7 @@ public class UserController {
     @ApiMapping("/settings/{key}")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse setSetting(@Shib Credentials shib, @ApiVariable String key, @ApiValidatedModel UserControllerModel userSetting) {
+    public ApiResponse setSetting(@ApiVariable String key, @ApiCredentials Credentials shib, @ApiValidatedModel UserControllerModel userSetting) {
 
         User user = userRepo.findByEmail(shib.getEmail());
         if (user == null) {

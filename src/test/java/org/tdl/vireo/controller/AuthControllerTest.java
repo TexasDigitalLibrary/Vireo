@@ -25,8 +25,6 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 
@@ -154,7 +152,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     	data.put("password", TEST_USER_PASSWORD);
     	data.put("confirm", TEST_USER_CONFIRM);
     	
-    	ApiResponse response = authController.registration(objectMapper.convertValue(data, JsonNode.class).toString(), new HashMap<String, String[]>());
+    	ApiResponse response = authController.registration(data, new HashMap<String, String[]>());
    	 
     	User user = (User) response.getPayload().get("User");
     	
@@ -176,7 +174,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     	data.put("email", TEST_USER_EMAIL);
     	data.put("password", TEST_USER_PASSWORD);
     	
-    	ApiResponse response = authController.login(objectMapper.convertValue(data, JsonNode.class).toString());
+    	ApiResponse response = authController.login(data);
     	
     	assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
     }

@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +19,13 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -43,9 +41,6 @@ public class OrganizationController {
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
@@ -65,23 +60,16 @@ public class OrganizationController {
     @ApiMapping("/get/{id}")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse getOrganization(@ApiVariable String id) {        
-        Organization org = organizationRepo.findOne(Long.parseLong(id));
+    public ApiResponse getOrganization(@ApiVariable Long id) {        
+        Organization org = organizationRepo.findOne(id);
         return new ApiResponse(SUCCESS, org);
     }
 
     @ApiMapping("/create")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createOrganization(@Data String data) {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
-        
+    public ApiResponse createOrganization(@ApiData JsonNode dataNode) {
+                
         OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("category").get("id").asLong());
         Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
         
@@ -95,15 +83,8 @@ public class OrganizationController {
      
     @ApiMapping("/update")
     @Auth(role="MANAGER")
-    public ApiResponse updateOrganization(@Data String data) {
-        
-        JsonNode dataNode = null;
-        try {
-            dataNode = objectMapper.readTree(data);
-        } catch (IOException e) {
-            return new ApiResponse(ERROR, "Unable to parse data json ["+e.getMessage()+"]");
-        }
-        
+    public ApiResponse updateOrganization(@ApiData JsonNode dataNode) {
+                
         Organization organization = organizationRepo.findOne(Long.parseLong(dataNode.get("organizationId").toString()));
 
         organization.setName(dataNode.get("organizationName").asText());
@@ -122,16 +103,16 @@ public class OrganizationController {
     @ApiMapping("/{id}/workflow")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse getWorkflowStepsForOrganization(@ApiVariable String id) {
-        Organization org = organizationRepo.findOne(Long.parseLong(id));
+    public ApiResponse getWorkflowStepsForOrganization(@ApiVariable Long id) {
+        Organization org = organizationRepo.findOne(id);
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
     @ApiMapping("/{id}/create-workflow-step/{name}")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable String id, @ApiVariable String name) { 
-        Organization org = organizationRepo.findOne(Long.parseLong(id));
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long id, @ApiVariable String name) { 
+        Organization org = organizationRepo.findOne(id);
         WorkflowStep newWorkflowStep = workflowStepRepo.create(name, org);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, org));
         return new ApiResponse(SUCCESS, newWorkflowStep);
@@ -140,15 +121,14 @@ public class OrganizationController {
     @ApiMapping("/{id}/update-workflow-step")
     @Auth(role="MANAGER")
     @Transactional
-    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable String id, @ApiModel WorkflowStep workflowStepToUpdate) {
-        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(id));
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long id, @ApiModel WorkflowStep workflowStepToUpdate) {
+        Organization requestingOrg = organizationRepo.findOne(id);
                 
         try {
             workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
-            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(id))));
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(id)));
             return new ApiResponse(SUCCESS);
         } catch (WorkflowStepNonOverrideableException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return new ApiResponse(ERROR, "Unable to update workflow step!");
         }
@@ -157,22 +137,22 @@ public class OrganizationController {
     
     @ApiMapping("/{requestingOrgID}/delete-workflow-step/{workflowStepID}")
     @Auth(role="MANAGER")
-    public ApiResponse deleteWorkflowStep(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
-        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
-        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
+        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStepID);
         
         workflowStepRepo.disinheritFromOrganization(requestingOrg, workflowStepToDelete);
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         
         return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/{requestingOrgID}/shift-workflow-step-up/{workflowStepID}")
     @Auth(role="MANAGER")
-    public ApiResponse shiftWorkflowStepUp(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
-        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
-        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+    public ApiResponse shiftWorkflowStepUp(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
         
         int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
         
@@ -181,7 +161,7 @@ public class OrganizationController {
             
             organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
             
-            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         }
         
         return new ApiResponse(SUCCESS);
@@ -189,9 +169,9 @@ public class OrganizationController {
     
     @ApiMapping("/{requestingOrgID}/shift-workflow-step-down/{workflowStepID}")
     @Auth(role="MANAGER")
-    public ApiResponse shiftWorkflowStepDown(@ApiVariable String requestingOrgID, @ApiVariable String workflowStepID) {
-        Organization requestingOrg = organizationRepo.findOne(Long.parseLong(requestingOrgID));
-        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(Long.parseLong(workflowStepID));
+    public ApiResponse shiftWorkflowStepDown(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+        Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
         
         int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
         
@@ -200,7 +180,7 @@ public class OrganizationController {
             
             organizationRepo.reorderWorkflowSteps(requestingOrg, workflowStepToShiftUp, workflowStepToShiftDown);
             
-            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(Long.parseLong(requestingOrgID))));
+            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         }
         
         return new ApiResponse(SUCCESS);

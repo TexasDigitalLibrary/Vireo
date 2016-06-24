@@ -29,10 +29,9 @@ import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.Data;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.controller.CoreAuthController;
 import edu.tamu.framework.model.ApiResponse;
@@ -63,8 +62,8 @@ public class AppAuthController extends CoreAuthController {
     private EmailTemplateRepo emailTemplateRepo;
     
     @ApiMapping(value = "/register")
-    public ApiResponse registration(@Data String data, @Parameters Map<String, String[]> parameters) {
-        
+    public ApiResponse registration(@ApiData Map<String, String> dataMap, @Parameters Map<String, String[]> parameters) {
+
         if(parameters.get("email") != null) {
             
             String email = parameters.get("email")[0];
@@ -94,14 +93,7 @@ public class AppAuthController extends CoreAuthController {
             
             return new ApiResponse(SUCCESS, "An email has been sent to " + email + ". Please confirm email to continue registration.", parameters);
         }
-        
-        Map<String, String> dataMap = new HashMap<String, String>();      
-        try {
-            dataMap = objectMapper.readValue(data, new TypeReference<HashMap<String, String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-                
+
         String token     = dataMap.get("token");
         String firstName = dataMap.get("firstName");
         String lastName  = dataMap.get("lastName");
@@ -147,21 +139,16 @@ public class AppAuthController extends CoreAuthController {
         }
         
         User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
+        
         user.setPassword(authUtility.encodePassword(password));
+        
         user = userRepo.save(user);
         
         return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }
     
     @ApiMapping("/login")
-    public ApiResponse login(@Data String data) {
-        
-        Map<String,String> dataMap = new HashMap<String,String>();      
-        try {
-            dataMap = objectMapper.readValue(data, new TypeReference<HashMap<String,String>>(){});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }  
+    public ApiResponse login(@ApiData Map<String, String> dataMap) {
         
         String email = dataMap.get("email");
         String password = dataMap.get("password");
