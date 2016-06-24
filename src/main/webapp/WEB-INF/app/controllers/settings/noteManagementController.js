@@ -74,6 +74,15 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
      	});
 	};
 
+	$scope.isEditable = function(note) {
+		var editable = note.overrideable;
+		if(!editable) {
+			editable = note.originatingWorkflowStep == $scope.step.id && 
+					   $scope.selectedOrganization.originalWorkflowSteps.indexOf(note.originatingWorkflowStep) > -1;
+		}
+		return editable;
+	}
+
 	$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 		trashId: 'note-trash-' + $scope.step.id,
 		dragging: $scope.dragging,
