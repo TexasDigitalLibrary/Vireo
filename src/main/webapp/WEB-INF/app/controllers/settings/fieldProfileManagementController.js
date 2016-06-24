@@ -44,6 +44,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		});
 
 		$scope.modalData = {
+			overrideable: true,
 			inputType: {
 				"id": 1,
 				"name": "INPUT_TEXT"
@@ -89,7 +90,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.selectFieldProfile = function(index) {
 		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 		$scope.modalData = fieldProfile;
-		console.log($scope.modalData)
 		// TODO: needs multi glosses
 		$scope.modalData.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
 		// TODO: needs multi controlled vocabulary

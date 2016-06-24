@@ -95,6 +95,7 @@ public class WorkflowStepController {
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
+        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
         Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
         String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
         String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : "";
@@ -108,7 +109,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, true, true, true);
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, overrideable, true, true);
         createdProfile.addControlledVocabulary(controlledVocabulary);
         createdProfile.addFieldGloss(gloss);
         
@@ -134,6 +135,7 @@ public class WorkflowStepController {
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
+        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
         Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
         String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
         String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : null;
@@ -143,6 +145,7 @@ public class WorkflowStepController {
         
         fieldProfile.setPredicate(predicate);
         fieldProfile.setInputType(inputType);
+        fieldProfile.setOverrideable(overrideable);
         fieldProfile.setRepeatable(repeatable);
         fieldProfile.setHelp(help);
         fieldProfile.setUsage(usage);
@@ -224,8 +227,9 @@ public class WorkflowStepController {
     public ApiResponse addNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        String name = dataNode.get("noteName").textValue();
-        String text = dataNode.get("noteText").textValue();
+        String name = dataNode.get("name").textValue();
+        String text = dataNode.get("text").textValue();
+        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
@@ -235,7 +239,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        noteRepo.create(workflowStep, name, text);
+        noteRepo.create(workflowStep, name, text, overrideable);
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
         
@@ -247,9 +251,10 @@ public class WorkflowStepController {
     public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        Long noteId = Long.parseLong(dataNode.get("noteId").toString());
-        String name = dataNode.get("noteName").textValue();
-        String text = dataNode.get("noteText").textValue();
+        Long noteId = Long.parseLong(dataNode.get("id").toString());
+        String name = dataNode.get("name").textValue();
+        String text = dataNode.get("text").textValue();
+        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         
@@ -257,6 +262,7 @@ public class WorkflowStepController {
         
         note.setName(name);
         note.setText(text);
+        note.setOverrideable(overrideable);
         
         noteRepo.update(note, requestingOrganization);
                 
