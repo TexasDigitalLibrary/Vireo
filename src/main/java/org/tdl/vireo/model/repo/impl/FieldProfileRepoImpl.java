@@ -8,11 +8,11 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
