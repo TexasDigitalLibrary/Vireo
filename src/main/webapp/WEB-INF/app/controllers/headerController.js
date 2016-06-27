@@ -1,8 +1,15 @@
-vireo.controller("HeaderController", function($scope, $controller, $location, ConfigurableSettings) {
+vireo.controller("HeaderController", function($scope, $controller, $location, ConfigurableSettings, TestRepo, TestRepoTwo) {
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 		
 	$scope.configurable = ConfigurableSettings.get();
+
+	TestRepo.setOnCache({"bar": "foo"});
+
+	setTimeout(function() {
+		TestRepoTwo.setOnCache({"foo": "bar"});
+		console.log(TestRepoTwo.getCache());
+	}, 4000);
 
 	$scope.logoPath = "";
 
