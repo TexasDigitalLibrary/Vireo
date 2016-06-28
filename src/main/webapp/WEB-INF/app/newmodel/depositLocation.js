@@ -1,4 +1,4 @@
-vireo.service("DepositLocation", function(AbstractAppModel, api) {
+vireo.model("DepositLocation", function(AbstractAppModel, api) {
 
 	var DepositLocation = function(data) {
 		var depositLocation = this;

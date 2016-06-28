@@ -7,6 +7,14 @@ var vireo = angular.module('vireo',
 	'vireo.version'
 ]);
 
+vireo.repo = function(recipeName, factoryFunction) {
+	return vireo.factory(recipeName, factoryFunction);	
+};
+
+vireo.model = function(recipeName, factoryFunction) {
+	return vireo.service(recipeName, factoryFunction);	
+};
+
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.
 setUpApp(function(connected) {
 

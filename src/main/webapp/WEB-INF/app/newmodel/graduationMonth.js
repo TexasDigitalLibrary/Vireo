@@ -1,4 +1,4 @@
-vireo.service("GraduationMonth", function(AbstractAppModel, api) {
+vireo.model("GraduationMonth", function(AbstractAppModel, api) {
 
 	var GraduationMonth = function(data) {
 		var graduationMonth = this;

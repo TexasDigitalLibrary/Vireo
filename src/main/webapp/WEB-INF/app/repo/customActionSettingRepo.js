@@ -1,4 +1,4 @@
-vireo.factory("CustomActionSettingRepo", function(AbstractAppRepo, api, CustomActionSetting, WsApi) {
+vireo.repo("CustomActionSettingRepo", function(AbstractAppRepo, api, CustomActionSetting, WsApi) {
 
 	var CustomActionSettingRepo = function() {
 		var customActionSettingRepo = this;

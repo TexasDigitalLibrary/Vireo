@@ -1,4 +1,4 @@
-vireo.service("Language", function(AbstractAppModel, api) {
+vireo.model("Language", function(AbstractAppModel, api) {
 
 	var Language = function(data) {
 		var language = this;

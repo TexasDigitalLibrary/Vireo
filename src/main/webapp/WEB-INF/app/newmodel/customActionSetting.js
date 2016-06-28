@@ -1,4 +1,4 @@
-vireo.service("CustomActionSetting", function(AbstractAppModel, api) {
+vireo.model("CustomActionSetting", function(AbstractAppModel, api) {
 
 	var CustomActionSetting = function(data) {
 		var customActionSetting = this;

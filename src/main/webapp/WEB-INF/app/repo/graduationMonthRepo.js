@@ -1,4 +1,4 @@
-vireo.factory("GraduationMonthRepo", function(AbstractAppRepo, api, GraduationMonth, WsApi) {
+vireo.repo("GraduationMonthRepo", function(AbstractAppRepo, api, GraduationMonth, WsApi) {
 
 	var GraduationMonthRepo = function() {
 		var graduationMonthRepo = this;

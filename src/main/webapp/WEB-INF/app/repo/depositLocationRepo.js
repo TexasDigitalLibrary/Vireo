@@ -1,4 +1,4 @@
-vireo.factory("DepositLocationRepo", function(AbstractAppRepo, api, DepositLocation, WsApi) {
+vireo.repo("DepositLocationRepo", function(AbstractAppRepo, api, DepositLocation, WsApi) {
 
 	var DepositLocationRepo = function() {
 		var depositLocationRepo = this;

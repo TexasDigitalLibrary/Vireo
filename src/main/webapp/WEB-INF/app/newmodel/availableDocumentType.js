@@ -1,4 +1,4 @@
-vireo.service("AvailableDocumentType", function(AbstractAppModel, api) {
+vireo.model("AvailableDocumentType", function(AbstractAppModel, api) {
 
 	var AvailableDocumentType = function(data) {
 		var availableDocumentType = this;

@@ -1,4 +1,4 @@
-vireo.factory("AvailableDocumentTypeRepo", function(AbstractAppRepo, api, AvailableDocumentType, WsApi) {
+vireo.repo("AvailableDocumentTypeRepo", function(AbstractAppRepo, api, AvailableDocumentType, WsApi) {
 
 	var AvailableDocumentTypeRepo = function() {
 		var availableDocumentTypeRepo = this;

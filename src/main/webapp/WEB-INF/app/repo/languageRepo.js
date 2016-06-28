@@ -1,4 +1,4 @@
-vireo.factory("LanguageRepo", function(AbstractAppRepo, api, Language, WsApi) {
+vireo.repo("LanguageRepo", function(AbstractAppRepo, api, Language, WsApi) {
 
 	var LanguageRepo = function() {
 		var languageRepo = this;
@@ -6,7 +6,7 @@ vireo.factory("LanguageRepo", function(AbstractAppRepo, api, Language, WsApi) {
 
 		languageRepo.getProquestLanguageCodes = function() {
 			return WsApi.fetch(api.language.proquest);
-		}
+		};
 
 		return languageRepo;
 	};

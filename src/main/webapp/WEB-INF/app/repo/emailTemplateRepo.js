@@ -1,4 +1,4 @@
-vireo.factory("EmailTemplateRepo", function(AbstractAppRepo, api, EmailTemplate, WsApi) {
+vireo.repo("EmailTemplateRepo", function(AbstractAppRepo, api, EmailTemplate, WsApi) {
 
 	var EmailTemplateRepo = function() {
 		var emailTemplateRepo = this;

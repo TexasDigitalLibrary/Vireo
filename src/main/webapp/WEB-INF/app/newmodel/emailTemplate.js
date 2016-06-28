@@ -1,4 +1,4 @@
-vireo.service("EmailTemplate", function(AbstractAppModel, api) {
+vireo.model("EmailTemplate", function(AbstractAppModel, api) {
 
 	var EmailTemplate = function(data) {
 		var emailTemplate = this;
