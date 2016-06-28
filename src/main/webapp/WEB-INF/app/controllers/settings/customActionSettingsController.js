@@ -1,9 +1,10 @@
-vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionSettings, DragAndDropListenerFactory) {
+vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionSettingRepo, DragAndDropListenerFactory) {
+	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.customActions = CustomActionSettings.get();
+	$scope.customActions = CustomActionSettingRepo.getAll();
 	
-	$scope.ready = $q.all([CustomActionSettings.ready()]);
+	$scope.ready = $q.all([CustomActionSettingRepo.ready()]);
 	
 	$scope.dragging = false;
 	
@@ -30,7 +31,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		$scope.resetCustomAction();
 
 		$scope.createCustomAction = function() {
-			CustomActionSettings.create($scope.modalData).then(function(data) {
+			CustomActionSettingRepo.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
@@ -40,7 +41,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.selectCustomAction = function(index) {
-			$scope.modalData = $scope.customActions.list[index];
+			$scope.modalData = $scope.customActions[index];
 		};
 		
 		$scope.editCustomAction = function(index) {
@@ -50,7 +51,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.updateCustomAction = function() {
-			CustomActionSettings.update($scope.modalData).then(function(data) {
+			CustomActionSettingRepo.update($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
@@ -60,7 +61,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.reorderCustomAction = function(src, dest) {
-			CustomActionSettings.reorder(src, dest).then(function(data) {
+			CustomActionSettingRepo.reorder(src, dest).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
@@ -69,7 +70,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.removeCustomAction = function(index) {
-			CustomActionSettings.remove(index).then(function(data) {
+			CustomActionSettingRepo.deleteById(index).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
@@ -82,7 +83,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectCustomAction,			
-			model: $scope.customActions.list,
+			model: $scope.customActions,
 			confirm: '#customActionConfirmRemoveModal',
 			reorder: $scope.reorderCustomAction,
 			container: '#custom-action'

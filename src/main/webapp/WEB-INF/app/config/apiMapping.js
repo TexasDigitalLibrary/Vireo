@@ -33,6 +33,40 @@ var apiMapping = {
 			'controller': 'settings/document-types'
 		}
 	},
+	customActionSetting: {
+		all: {
+			endpoint: '/private/queue', 
+			controller: 'settings/custom-actions', 
+			method: 'all'
+		},
+		listen: {
+			endpoint: '/channel', 
+			controller: 'settings/custom-actions', 
+			method: ''
+		},
+		create: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/custom-actions', 
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/custom-actions', 
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/custom-actions' 
+		},
+		reorder: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/custom-actions'
+		},
+		sort: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/custom-actions'
+		}
+	},
 	language: {
 		all: {
 			endpoint: '/private/queue', 

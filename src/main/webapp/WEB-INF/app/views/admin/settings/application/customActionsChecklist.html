@@ -12,10 +12,10 @@
 				Add New
 		</button>
 
-		<p ng-if="customActions.list.length == 0">Add new Custom actions</p>
+		<p ng-if="customActions.length == 0">Add new Custom actions</p>
 		
 		<draganddroplist dragging="dragging"
-						 scope-value="customActions.list"
+						 scope-value="customActions"
 						 properties='["label", "isStudentVisible"]'
 						 item-view='views/directives/dragAndDropCustomAction.html'
 						 listeners='dragControlListeners'

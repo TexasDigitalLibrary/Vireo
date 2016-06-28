@@ -283,12 +283,14 @@
 	    <script src="repo/abstractRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
 	    <script src="repo/availableDocumentTypeRepo.js"></script>
+	    <script src="repo/customActionSettingRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
 		<script src="newmodel/abstractModel.js"></script>
 		<script src="newmodel/language.js"></script>
 		<script src="newmodel/availableDocumentType.js"></script>
+		<script src="newmodel/customActionSetting.js"></script>
 
 
 
@@ -298,7 +300,6 @@
 		
 	    <!-- Models -->
 	    <script src="model/configurableSettingsModel.js"></script>
-	    <script src="model/customActionSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
