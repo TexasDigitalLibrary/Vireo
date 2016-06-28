@@ -35,8 +35,6 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		
 	$scope.ready.then(function() {
 
-		console.log($scope.graduationMonths)
-
 		$scope.resetGraduationMonth = function() {
 			$scope.modalData = {};
 			$scope.resetMonthOptions();
