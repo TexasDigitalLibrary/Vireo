@@ -141,7 +141,7 @@ public class OrganizationController {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
         WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStepID);
         
-        workflowStepRepo.disinheritFromOrganization(requestingOrg, workflowStepToDelete);
+        workflowStepRepo.removeFromOrganization(requestingOrg, workflowStepToDelete);
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         

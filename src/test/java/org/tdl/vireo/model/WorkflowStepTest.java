@@ -1243,7 +1243,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
         //now let's delete S1 off the grandchild
-        workflowStepRepo.disinheritFromOrganization(grandChildOrganization, s1);
+        workflowStepRepo.removeFromOrganization(grandChildOrganization, s1);
         
         //but let's also override S1 at the (child) org so that it is a new one derived from S1
         Long s1Id = s1.getId();

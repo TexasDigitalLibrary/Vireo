@@ -41,55 +41,60 @@ public class NoteRepoImpl implements NoteRepoCustom {
         return noteRepo.findOne(note.getId());
     }
     
-    public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, Note noteToDisinherit) throws WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep pendingWorkflowStep, Note noteToRemove) throws WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
-        if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
-            
-            if(noteToDisinherit.getOriginatingWorkflowStep().getId().equals(noteToDisinherit.getId()) || noteToDisinherit.getOverrideable()) {
-            
-                // if requesting organization is not the workflow step's orignating organization                        
-                if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
+        
+        //if requesting organization originates the workflow step or the workflow step is overrideable,
+        if(pendingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || pendingWorkflowStep.getOverrideable()) {
+            //... and if also that workflow step originates the note or the note is overrideable,  
+            if(noteToRemove.getOriginatingWorkflowStep().getId().equals(noteToRemove.getId()) || noteToRemove.getOverrideable()) {
+                //...then the update is permissible.
+                
+                // if requesting organization is not the workflow step's orignating organization,
+                if(!pendingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
                     // create a new workflow step
-                    workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
+                    pendingWorkflowStep = workflowStepRepo.update(pendingWorkflowStep, requestingOrganization);
                     
-                    workflowStep.removeAggregateNote(noteToDisinherit);
+                    //recursive call
+                    pendingWorkflowStep.removeAggregateNote(noteToRemove);
                     
-                    workflowStepRepo.save(workflowStep);
+                    workflowStepRepo.save(pendingWorkflowStep);
                 }
+                // else, requesting organization originates the workflow step
                 else {
                     
-                    List<WorkflowStep> workflowStepsContainingNote = getContainingDescendantWorkflowStep(requestingOrganization, noteToDisinherit);
+                    List<WorkflowStep> workflowStepsContainingNote = getContainingDescendantWorkflowStep(requestingOrganization, noteToRemove);
                     
                     if(workflowStepsContainingNote.size() > 0) {
                         
                         boolean foundNewOriginalOwner = false;
                         
                         for(WorkflowStep workflowStepContainingNote : workflowStepsContainingNote) {
-                            // add field profile as original to first workflow step
+                            // add note as original to first workflow step
                             if(!foundNewOriginalOwner) {
-                                workflowStepContainingNote.addOriginalNote(noteToDisinherit);
+                                workflowStepContainingNote.addOriginalNote(noteToRemove);
                                 foundNewOriginalOwner = true;
                             }
                             else {
-                                workflowStepContainingNote.addAggregateNote(noteToDisinherit);
+                                workflowStepContainingNote.addAggregateNote(noteToRemove);
                             }
                             workflowStepRepo.save(workflowStepContainingNote);
                         }
                         
-                        workflowStep.removeOriginalNote(noteToDisinherit);
+                        pendingWorkflowStep.removeOriginalNote(noteToRemove);
                         
-                        workflowStepRepo.save(workflowStep);
+                        workflowStepRepo.save(pendingWorkflowStep);
                         
                     }
                     else {            
-                        noteRepo.delete(noteToDisinherit);
+                        noteRepo.delete(noteToRemove);
                     }
                 }
-            }
+            }//workflow step doesn't originate the note and  it is non-overrideable
             else {
                 throw new NoteNonOverrideableException();
             }
-        }
+        }//requesting org doesn't originate the note's workflow step, and the workflow step is non-overrideable
         else {
             throw new WorkflowStepNonOverrideableException();
         }
@@ -239,6 +244,13 @@ public class NoteRepoImpl implements NoteRepoCustom {
         });
     }
     
+    
+    /**
+     * Gets a list of WorkflowSteps on the org and its descendants that contain a given note
+     * @param organization
+     * @param note
+     * @return
+     */
     private List<WorkflowStep> getContainingDescendantWorkflowStep(Organization organization, Note note) {
         List<WorkflowStep> descendantWorkflowStepsContainingNote = new ArrayList<WorkflowStep>();
         organization.getAggregateWorkflowSteps().forEach(ws -> {

@@ -209,7 +209,7 @@ public class WorkflowStepController {
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         FieldProfile fieldProfile = fieldProfileRepo.findOne(fieldProfileId);
         
-        fieldProfileRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
+        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
         
         if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
             fieldProfileRepo.delete(fieldProfile);
@@ -281,7 +281,7 @@ public class WorkflowStepController {
         
         Note note = noteRepo.findOne(noteId);
         
-        noteRepo.disinheritFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
+        noteRepo.removeFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
         
         if(note.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
             noteRepo.delete(note);
