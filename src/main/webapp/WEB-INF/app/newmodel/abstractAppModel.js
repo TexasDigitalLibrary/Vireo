@@ -1,8 +1,8 @@
 vireo.service("AbstractAppModel", function(AbstractModelNew) {
 
-	var AbstractAppModel = function (data) {
+	var AbstractAppModel = function (mapping, data) {
 		var abstractAppModel = this;
-		angular.extend(abstractAppModel, new AbstractModelNew(data));
+		angular.extend(abstractAppModel, new AbstractModelNew(mapping, data));
 
 		// additional app level model methods and variables
 
