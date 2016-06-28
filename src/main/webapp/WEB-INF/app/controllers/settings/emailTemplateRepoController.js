@@ -1,7 +1,7 @@
 vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, EmailTemplateRepo, DragAndDropListenerFactory) {
   angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-  $scope.emailTemplates = EmailTemplateRepo.get();
+  $scope.emailTemplates = EmailTemplateRepo.getAll();
   
   $scope.ready = $q.all([EmailTemplateRepo.ready()]);
 
@@ -34,11 +34,11 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     $scope.resetEmailTemplates();
 
     $scope.selectEmailTemplate = function(index){
-    	$scope.modalData = $scope.emailTemplates.list[index];
+    	$scope.modalData = $scope.emailTemplates[index];
     }
 
     $scope.createEmailTemplate = function() {
-      EmailTemplateRepo.add($scope.modalData).then(function(data) {
+      EmailTemplateRepo.create($scope.modalData).then(function(data) {
     	  $scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
     	  if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
     		  $scope.resetEmailTemplates();
@@ -49,7 +49,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     $scope.launchEditModal = function(index) {
     	$scope.serverErrors = [];
-    	$scope.modalData = $scope.emailTemplates.list[index-1];
+    	$scope.modalData = $scope.emailTemplates[index-1];
     	angular.element('#emailTemplatesEditModal').modal('show');
     };
 
@@ -64,7 +64,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     };
 
     $scope.removeEmailTemplate = function(index) {
-      EmailTemplateRepo.remove(index).then(function(data) {
+      EmailTemplateRepo.deleteById(index).then(function(data) {
     	  $scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
     	  if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
     		  $scope.resetEmailTemplates();
@@ -101,7 +101,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
       trashId: $scope.trashCanId,
       dragging: $scope.dragging,
       select: $scope.selectEmailTemplate,     
-      model: $scope.emailTemplates.list,
+      model: $scope.emailTemplates,
       confirm: '#emailTemplatesConfirmRemoveModal',
       reorder: $scope.reorderEmailTemplates,
       container: '#email-templates'

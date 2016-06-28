@@ -101,6 +101,40 @@ var apiMapping = {
 			'controller': 'settings/deposit-locations'
 		}
 	},
+	emailTemplate: {
+		all: {
+			endpoint: '/private/queue', 
+			controller: 'settings/email-templates', 
+			method: 'all'
+		},
+		listen: {
+			endpoint: '/channel', 
+			controller: 'settings/email-templates', 
+			method: ''
+		},
+		create: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/email-templates', 
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/email-templates', 
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/email-templates' 
+		},
+		reorder: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/email-templates'
+		},
+		sort: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/email-templates'
+		}
+	},
 	language: {
 		all: {
 			endpoint: '/private/queue', 
