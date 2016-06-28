@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +38,7 @@ public class DocumentTypesController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allDocumentTypes() {
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc());
     }
     
     @ApiMapping("/create")
@@ -60,10 +56,10 @@ public class DocumentTypesController {
             case VALIDATION_INFO:
                 logger.info("Creating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
                 documentTypesRepo.create(documentType.getName(), documentType.getDegreeLevel());
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel() + " because: " + response.getMeta().getType());
@@ -88,10 +84,10 @@ public class DocumentTypesController {
             case VALIDATION_INFO:
                 logger.info("Updating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
                 documentTypesRepo.save(documentType);
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel() + " because: " + response.getMeta().getType());
@@ -120,10 +116,10 @@ public class DocumentTypesController {
             case VALIDATION_INFO:
                 logger.info("Removing document type with id " + idString);
                 documentTypesRepo.remove(documentType);
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't remove document type with id " + idString + " because: " + response.getMeta().getType());
@@ -153,10 +149,10 @@ public class DocumentTypesController {
             case VALIDATION_INFO:
                 logger.info("Reordering document types");
                 documentTypesRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder document types because: " + response.getMeta().getType());
@@ -185,10 +181,10 @@ public class DocumentTypesController {
             case VALIDATION_INFO:
                 logger.info("Sorting document types by " + column);
                 documentTypesRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort document types because: " + response.getMeta().getType());
@@ -197,10 +193,5 @@ public class DocumentTypesController {
         
         return response;
     }
-    
-    private Map<String, List<DocumentType>> getAll() {
-        Map<String, List<DocumentType>> map = new HashMap<String, List<DocumentType>>();
-        map.put("list", documentTypesRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
+  
 }

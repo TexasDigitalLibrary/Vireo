@@ -45,7 +45,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
     		if($scope.serverErrors !== undefined) {
     			$scope.serverErrors.errors = undefined;
     		}
-    	}
+    	};
 
 		$scope.resetLanguages();
 		

@@ -29,7 +29,6 @@ vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
 			angular.forEach(keys, function(key) {
 				angular.extend(repoObj, payload[key]);
 			})
-			console.log(repoObj);
 			return repoObj;
 		};
 

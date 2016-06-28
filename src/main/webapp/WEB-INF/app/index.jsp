@@ -281,13 +281,14 @@
 	    <!-- Repos -->
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/abstractRepo.js"></script>
-
 	    <script src="repo/languageRepo.js"></script>
+	    <script src="repo/availableDocumentTypeRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
 		<script src="newmodel/abstractModel.js"></script>
 		<script src="newmodel/language.js"></script>
+		<script src="newmodel/availableDocumentType.js"></script>
 
 
 
@@ -307,7 +308,6 @@
 	    <script src="model/emailTemplateRepo.js"></script>
 	    <script src="model/embargoRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
-	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/workflowStepRepo.js"></script>
 	    <script src="model/inputTypeService.js"></script>
