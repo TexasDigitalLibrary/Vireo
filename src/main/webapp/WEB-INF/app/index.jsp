@@ -205,6 +205,7 @@
 
 		<!-- App Configuration -->
 	    <script src="config/appConfig.js"></script>
+	    <script src="config/apiMapping.js"></script>
 
 		<!-- App Modules -->
 		<script src="components/version/version.js"></script>
@@ -280,14 +281,12 @@
 	    <!-- Repos -->
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/abstractRepo.js"></script>
-	    <script src="repo/testRepo.js"></script>
-	    <script src="repo/testRepoTwo.js"></script>
+	    <script src="repo/languageRepoNew.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
 		<script src="newmodel/abstractModel.js"></script>
-		<script src="newmodel/testModel.js"></script>
-		<script src="newmodel/testModelTwo.js"></script>
+		<script src="newmodel/language.js"></script>
 
 
 
@@ -338,7 +337,7 @@
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
-	    <script src="controllers/settings/languageRepoController.js"></script>
+	    <script src="controllers/settings/languagesController.js"></script>
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>

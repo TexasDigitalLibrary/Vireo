@@ -14,6 +14,7 @@ setUpApp(function(connected) {
 	appConfig.connected = connected;
 
 	vireo.constant('appConfig', appConfig);
+	vireo.constant('api', apiMapping);
 
 	angular.element(document).ready(function() {	   	
 	   	try {

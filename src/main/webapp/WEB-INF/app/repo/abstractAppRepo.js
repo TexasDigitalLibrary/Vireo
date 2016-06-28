@@ -1,8 +1,8 @@
 vireo.service("AbstractAppRepo", function AbstractAppRepo(AbstractRepo) {
 
-	var AbstractAppRepo = function (constructor) {
+	var AbstractAppRepo = function (constructor, mapping) {
 		var abstractAppRepo = this;
-		angular.extend(abstractAppRepo, new AbstractRepo(constructor));
+		angular.extend(abstractAppRepo, new AbstractRepo(constructor, mapping));
 
 		// additional app level repo methods and variables
 
