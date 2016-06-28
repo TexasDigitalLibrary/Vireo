@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +53,7 @@ public class LanguageController {
     @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getAllLanguages() {
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc());
     }
     
     /**
@@ -81,10 +77,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Creating language with name " + language.getName());
                 languageRepo.create(language.getName());
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create language with name " + language.getName() + " because: " + response.getMeta().getType());
@@ -115,10 +111,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Updating language with name " + language.getName());
                 languageRepo.save(language);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update language with name " + language.getName() + " because: " + response.getMeta().getType());
@@ -155,7 +151,7 @@ public class LanguageController {
                 logger.info("Removing language with id " + idString);
                 try {
                     languageRepo.remove(language);
-                    simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                    simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 } catch (DataIntegrityViolationException e) {
                     modelBindingResult.addError(new ObjectError("language", "Could not remove language " + language.getName() + ", it's being used!"));
                     response = validationService.buildResponse(modelBindingResult);
@@ -163,7 +159,7 @@ public class LanguageController {
                 }
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't remove language with id " + idString + " because: " + response.getMeta().getType());
@@ -202,10 +198,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Reordering languages");
                 languageRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder languages because: " + response.getMeta().getType());
@@ -241,10 +237,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Sorting languages by " + column);
                 languageRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort languages because: " + response.getMeta().getType());
@@ -264,13 +260,4 @@ public class LanguageController {
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }
     
-    /**
-     * 
-     * @return
-     */
-    private Map<String, List<Language>> getAll() {
-        Map<String, List<Language>> map = new HashMap<String, List<Language>>();
-        map.put("list", languageRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
 }

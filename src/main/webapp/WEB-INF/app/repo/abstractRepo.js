@@ -1,41 +1,111 @@
-vireo.service("AbstractRepo", function AbstractRepo(WsApi) {
+vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
 
 	var AbstractRepo = function (modelConstructor, mapping) {
 
 		var abstractRepo = this;
 
 		var cache = [];
-		var promise = WsApi.fetch(mapping.all);
 
-		promise.then(function(res) {
-			var resObj = angular.fromJson(res.body).payload.HashMap.list;
+		var initialized = false;
 
-			angular.forEach(resObj, function(modelJson) {
-				cache.push(new modelConstructor(modelJson));
+		var defer = $q.defer();
+
+		var build = function(data) {
+			initialized = false;
+			return $q(function(resolve) {
+				cache.length = 0;
+				angular.forEach(data, function(modelJson) {
+					cache.push(new modelConstructor(modelJson));
+				});
+				initialized = true
+				resolve();
 			});
+		};
 
+		var unwrap = function(res) {
+			var repoObj = {};
+			var payload = angular.fromJson(res.body).payload;
+			var keys = Object.keys(payload);
+			angular.forEach(keys, function(key) {
+				angular.extend(repoObj, payload[key]);
+			})
+			console.log(repoObj);
+			return repoObj;
+		};
+
+		WsApi.fetch(mapping.all).then(function(res) {
+			build(unwrap(res)).then(function() {
+				defer.resolve();
+			});
+		});
+
+		WsApi.listen(mapping.listen).then(null, null, function(res) {
+			build(unwrap(res));
 		});
 
 		abstractRepo.getAll = function() {
 			return cache;
 		};
-		abstractRepo.saveAll = function() {};
-		abstractRepo.listen = function() {};
-		abstractRepo.findById = function(id) {};
-		abstractRepo.deleteById = function(id) {};
-		abstractRepo.create = function(model) {};
-		abstractRepo.ready = function() {
-			return promise;
-		};
-		abstractRepo.listen = function() {};
 
+		abstractRepo.saveAll = function() {
+
+		};
+
+		abstractRepo.ready = function() {
+			return defer.promise;
+		};
+
+		abstractRepo.findById = function(id) {
+			var response = {};
+
+			var find = function(id) {
+				for(var key in cache) {
+					if(cache[key].id == id) {
+						return cache[key];
+					}
+				}
+			}
+
+			if(initialized) {
+				angular.extend(response, find(id));
+			}
+			else {
+				abstractRepo.ready().then(function() {
+					angular.extend(response, find(id));
+				});
+			}
+
+			return response;
+		};
+
+		abstractRepo.deleteById = function(id) {
+			angular.extend(mapping.remove,  {'method': 'remove/' + id});
+			return WsApi.fetch(mapping.remove);
+		};
+
+		abstractRepo.create = function(model) {
+			angular.extend(mapping.create, {'data': model});
+			return WsApi.fetch(mapping.create);
+		};
+
+		abstractRepo.update = function(data) {
+			angular.extend(mapping.update, {'data': data});
+			return WsApi.fetch(mapping.update);
+		};
 
 		// additiona core level repo methods and variables
 
 
 		// these should be added through decoration
-		abstractRepo.sort = function(facet) {};
-		abstractRepo.reorder = function(src, dest) {};
+		abstractRepo.sort = function(facet) {
+			angular.extend(mapping.sort, {'method': 'sort/' + facet});
+			return WsApi.fetch(mapping.sort);
+		};
+
+		abstractRepo.reorder = function(src, dest) {
+			angular.extend(mapping.reorder, {'method': 'reorder/' + src + '/' + dest});
+			return WsApi.fetch(mapping.reorder);
+		};
 
 		return abstractRepo;
 	}

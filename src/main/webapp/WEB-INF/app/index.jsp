@@ -281,7 +281,8 @@
 	    <!-- Repos -->
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/abstractRepo.js"></script>
-	    <script src="repo/languageRepoNew.js"></script>
+
+	    <script src="repo/languageRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
@@ -305,7 +306,6 @@
 	    <script src="model/graduationMonthRepoModel.js"></script>
 	    <script src="model/emailTemplateRepo.js"></script>
 	    <script src="model/embargoRepoModel.js"></script>
-	    <script src="model/languageRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>
 	    <script src="model/availableDocumentTypesRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>

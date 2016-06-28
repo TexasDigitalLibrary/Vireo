@@ -10,7 +10,7 @@ var apiMapping = {
 				controller: 'settings/languages', 
 				method: ''
 			},
-			add: {
+			create: {
 				'endpoint': '/private/queue', 
 				'controller': 'settings/languages', 
 				'method': 'create'

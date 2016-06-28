@@ -1,20 +1,18 @@
-vireo.controller("LanguagesController", function ($controller, $q, $scope, LanguageRepo, DragAndDropListenerFactory, LanguageRepoNew) {
+vireo.controller("LanguagesController", function ($timeout, $controller, $q, $scope, LanguageRepo, DragAndDropListenerFactory) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-
-
-	$scope.languages = LanguageRepoNew.getAll();
+	$scope.languages = LanguageRepo.getAll();
 	
 
 	LanguageRepo.getProquestLanguageCodes().then(function(data) {
 		$scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;
 	});
 
-	$scope.ready = $q.all([LanguageRepoNew.ready(), LanguageRepo.getProquestLanguageCodes()]);
+	$scope.ready = $q.all([LanguageRepo.ready(), LanguageRepo.getProquestLanguageCodes()]);
 
 	$scope.dragging = false;
-	
+
 	$scope.serverErrors = [];
 
 	$scope.trashCanId = 'language-trash';
@@ -52,7 +50,7 @@ vireo.controller("LanguagesController", function ($controller, $q, $scope, Langu
 		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
-			LanguageRepo.add($scope.modalData).then(function(data) {
+			LanguageRepo.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetLanguages();
@@ -107,7 +105,7 @@ vireo.controller("LanguagesController", function ($controller, $q, $scope, Langu
 		};
 
 		$scope.removeLanguage = function(index) {
-	    	LanguageRepo.remove(index).then(function(data) {
+	    	LanguageRepo.deleteById(index).then(function(data) {
 	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetLanguages();
