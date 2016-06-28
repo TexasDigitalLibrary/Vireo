@@ -409,6 +409,93 @@ public class NoteTest extends AbstractEntityTest {
                 
     }
     
+    @Test
+    public void testReInheritOverriddenNote() throws WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+        // this test calls for adding a single workflowstep to the parent organization, so get rid of the one at the middle org
+        workflowStepRepo.delete(workflowStep);
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        parentOrganization.addChildOrganization(organization);
+        parentOrganization = organizationRepo.save(parentOrganization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
+        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+      
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        
+        WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
+        
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        //now we have an org hierarchy with a parent, child, and grandchild
+        /////////////////////////////////////////////////////////////////////////
+        String note1Name = TEST_NOTE_NAME + " 1",
+                note2Name = TEST_NOTE_NAME + " 2",
+                note3Name = TEST_NOTE_NAME + " 3";
+         
+         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         
+         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         
+         Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         
+         
+         
+         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+         organization = organizationRepo.findOne(organization.getId());
+         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         
+         //now we have three notes existing at the topmost org
+         //////////////////////////////////////////////////////////////////////
+         
+         //make a note non-overrideable at the grandchild org
+         noteRepo.update(n2, organization);
+         
+         organization = organizationRepo.findOne(organization.getId());
+         
+         //TODO: ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
+         
+         //TODO:  make the note non-overrideable at the child org
+         //TODO: ensure that a new note got made at the child after this override (to non-overrideable :) )
+         //TODO:  ensure that the grandchild's new note is replaced by the child's non-overrideable one
+         
+         //TODO:  make the note non-overrideable at the parent org
+         //TOOO:  ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
+         
+        
+         
+         
+         
+         //now all is restored, except one of the notes is non-overrideable at the parent
+         
+         
+         //TODO:  remove a note at the grandchild
+         //TODO:  make the removed note non-overrideable at the parent
+         //TODO:  ensure that the removed note is reaggregated upon the grandchild who removed it
+         
+         
+         
+         
+         
+         
+    }
+    
     
     
     @Test
