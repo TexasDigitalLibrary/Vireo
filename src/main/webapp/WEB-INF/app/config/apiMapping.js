@@ -135,6 +135,40 @@ var apiMapping = {
 			'controller': 'settings/email-templates'
 		}
 	},
+	graduationMonth: {
+		all: {
+			endpoint: '/private/queue', 
+			controller: 'settings/graduation-months', 
+			method: 'all'
+		},
+		listen: {
+			endpoint: '/channel', 
+			controller: 'settings/graduation-months', 
+			method: ''
+		},
+		create: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-months', 
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-months', 
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-months' 
+		},
+		reorder: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-months'
+		},
+		sort: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/graduation-months'
+		}
+	},
 	language: {
 		all: {
 			endpoint: '/private/queue', 

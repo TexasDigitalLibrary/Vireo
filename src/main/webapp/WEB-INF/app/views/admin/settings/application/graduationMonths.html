@@ -10,9 +10,11 @@
 				data-target="#graduationMonthNewModal">
 			Add Graduation Month
 		</button>
-		<p ng-if="graduationMonths.list.length == 0">Add new Graduation Month</p>
+
+		<p ng-if="graduationMonths.length == 0">Add new Graduation Month</p>
+		
 		<draganddroplist dragging="dragging"
-						 scope-value="graduationMonths.list"
+						 scope-value="graduationMonths"
 						 properties='["month"]'
 						 item-view='views/directives/dragAndDropGraduationMonth.html'
 						 listeners='dragControlListeners'
