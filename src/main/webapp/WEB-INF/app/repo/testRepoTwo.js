@@ -1,14 +1,11 @@
-vireo.service("TestRepoTwo", function TestRepoTwo(AbstractAppRepo, TestModelTwo) {
+vireo.factory("TestRepoTwo", function(AbstractAppRepo, TestModelTwo) {
 
-	var TestRepoTwo = this;
+	var TestRepoTwo = function() {
+		var testRepoTwo = this;
+		angular.extend(testRepoTwo, new AbstractAppRepo(TestModelTwo));
+		return testRepoTwo;
+	}
 
-	angular.extend(this, new AbstractAppRepo(TestModelTwo));
-
-	console.log(TestRepoTwo);
-
-	setTimeout(function() {
-		console.log(TestRepoTwo.getCache());
-	}, 2000);	
+	return new TestRepoTwo();
 	
-	return this;
 });

@@ -1,8 +1,9 @@
 vireo.service("TestModel", function(AbstractAppModel) {
 
 	var TestModel = function(data) {
-		angular.extend(this, new AbstractAppModel(data));
-		return this;
+		var testModel = this;
+		angular.extend(testModel, new AbstractAppModel(data));
+		return testModel;
 	};
 
 	return TestModel;

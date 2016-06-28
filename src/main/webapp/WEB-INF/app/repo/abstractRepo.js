@@ -1,29 +1,31 @@
-vireo.service("AbstractRepo", function() {
+vireo.service("AbstractRepo", function AbstractRepo() {
 
 	var AbstractRepo = function (constructor) {
 
+		var abstractRepo = this;
+
 		var cache = [];
+		var ready = false;
+		var promise = null;
 
-		this.getCache = function() {
-			return cache;
-		};
+		abstractRepo.getAll = function() {};
+		abstractRepo.saveAll = function() {};
+		abstractRepo.listen = function() {};
+		abstractRepo.findById = function(id) {};
+		abstractRepo.deleteById = function(id) {};
+		abstractRepo.create = function(model) {};
+		abstractRepo.ready = function() {};
+		abstractRepo.listen = function() {};
 
-		this.setOnCache = function(obj) {
-			cache.push(new constructor(obj));
-		};
-		
-		this.getAll = function() {};
-		this.saveAll = function() {};
-		this.listen = function() {};
-		this.findById = function(id) {};
-		this.deleteById = function(id) {};
-		this.create = function(model) {};
 
-		//these should be added through decoration
-		this.sort = function(facet) {};
-		this.reorder = function(src, dest) {};
+		// additiona core level repo methods and variables
 
-		return this;
+
+		// these should be added through decoration
+		abstractRepo.sort = function(facet) {};
+		abstractRepo.reorder = function(src, dest) {};
+
+		return abstractRepo;
 	}
 
 	return AbstractRepo;
