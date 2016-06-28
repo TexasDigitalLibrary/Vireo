@@ -67,6 +67,40 @@ var apiMapping = {
 			'controller': 'settings/custom-actions'
 		}
 	},
+	depositLocation: {
+		all: {
+			endpoint: '/private/queue', 
+			controller: 'settings/deposit-locations', 
+			method: 'all'
+		},
+		listen: {
+			endpoint: '/channel', 
+			controller: 'settings/deposit-locations', 
+			method: ''
+		},
+		create: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-locations', 
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-locations', 
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-locations' 
+		},
+		reorder: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-locations'
+		},
+		sort: {
+			'endpoint': '/private/queue', 
+			'controller': 'settings/deposit-locations'
+		}
+	},
 	language: {
 		all: {
 			endpoint: '/private/queue', 

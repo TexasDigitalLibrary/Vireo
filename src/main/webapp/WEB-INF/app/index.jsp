@@ -284,6 +284,7 @@
 	    <script src="repo/languageRepo.js"></script>
 	    <script src="repo/availableDocumentTypeRepo.js"></script>
 	    <script src="repo/customActionSettingRepo.js"></script>
+	    <script src="repo/depositLocationRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
@@ -291,6 +292,7 @@
 		<script src="newmodel/language.js"></script>
 		<script src="newmodel/availableDocumentType.js"></script>
 		<script src="newmodel/customActionSetting.js"></script>
+		<script src="newmodel/depositLocation.js"></script>
 
 
 
@@ -304,7 +306,6 @@
 	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
-	    <script src="model/depositLocationRepoModel.js"></script>
 	    <script src="model/graduationMonthRepoModel.js"></script>
 	    <script src="model/emailTemplateRepo.js"></script>
 	    <script src="model/embargoRepoModel.js"></script>

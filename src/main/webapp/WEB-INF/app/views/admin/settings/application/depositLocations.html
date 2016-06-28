@@ -12,10 +12,10 @@
 			Add Location
 		</button>
 		
-		<p ng-if="depositLocations.list.length == 0">Add new Deposit Location</p>
+		<p ng-if="depositLocations.length == 0">Add new Deposit Location</p>
 
 		<draganddroplist dragging="dragging"
-						 scope-value="depositLocations.list"
+						 scope-value="depositLocations"
 						 properties='["name", "repository"]'
 						 item-view='views/directives/dragAndDropDepositLocation.html'
 						 listeners='dragControlListeners'
