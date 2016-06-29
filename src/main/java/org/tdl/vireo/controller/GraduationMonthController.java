@@ -44,7 +44,7 @@ public class GraduationMonthController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
-        
+
         // will attach any errors to the BindingResult when validating the incoming graduationMonth
         graduationMonth = graduationMonthRepo.validateCreate(graduationMonth);
         

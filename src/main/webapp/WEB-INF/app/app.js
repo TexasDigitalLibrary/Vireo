@@ -7,12 +7,16 @@ var vireo = angular.module('vireo',
 	'vireo.version'
 ]);
 
-vireo.repo = function(recipeName, factoryFunction) {
-	return vireo.factory(recipeName, factoryFunction);	
+vireo.repo = function(delegateName, delageteFunction) {
+	return vireo.factory(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
+      	return angular.extend($delegate, new AbstractAppRepo($delegate.constructor, $delegate.mapping));
+    });
 };
 
-vireo.model = function(recipeName, factoryFunction) {
-	return vireo.service(recipeName, factoryFunction);	
+vireo.model = function(delegateName, delageteFunction) {
+	return vireo.service(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppModel) {
+      	return angular.extend($delegate, new AbstractAppModel());
+    });
 };
 
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.

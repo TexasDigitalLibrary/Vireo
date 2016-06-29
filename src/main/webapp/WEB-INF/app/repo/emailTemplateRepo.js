@@ -1,10 +1,12 @@
-vireo.repo("EmailTemplateRepo", function(AbstractAppRepo, api, EmailTemplate, WsApi) {
+vireo.repo("EmailTemplateRepo", function (api, EmailTemplate, WsApi) {
 
 	var EmailTemplateRepo = function() {
 		var emailTemplateRepo = this;
-		angular.extend(emailTemplateRepo, new AbstractAppRepo(EmailTemplate, api.emailTemplate));
+		emailTemplateRepo.constructor = EmailTemplate;
+		emailTemplateRepo.mapping = api.emailTemplate;
 		return emailTemplateRepo;
 	};
 
 	return new EmailTemplateRepo();
+	
 });

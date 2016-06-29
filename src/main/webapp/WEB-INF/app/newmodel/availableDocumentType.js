@@ -1,8 +1,8 @@
-vireo.model("AvailableDocumentType", function(AbstractAppModel, api) {
+vireo.model("AvailableDocumentType", function () {
 
 	var AvailableDocumentType = function(data) {
 		var availableDocumentType = this;
-		angular.extend(availableDocumentType, new AbstractAppModel(api.availableDocumentType, data));
+		angular.extend(availableDocumentType, data);
 		return availableDocumentType;
 
 	};

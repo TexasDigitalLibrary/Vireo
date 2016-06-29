@@ -1,10 +1,12 @@
-vireo.repo("GraduationMonthRepo", function(AbstractAppRepo, api, GraduationMonth, WsApi) {
+vireo.repo("GraduationMonthRepo", function (api, GraduationMonth, WsApi) {
 
 	var GraduationMonthRepo = function() {
 		var graduationMonthRepo = this;
-		angular.extend(graduationMonthRepo, new AbstractAppRepo(GraduationMonth, api.graduationMonth));
+		graduationMonthRepo.constructor = GraduationMonth;
+		graduationMonthRepo.mapping = api.graduationMonth;
 		return graduationMonthRepo;
 	};
 
 	return new GraduationMonthRepo();
+	
 });

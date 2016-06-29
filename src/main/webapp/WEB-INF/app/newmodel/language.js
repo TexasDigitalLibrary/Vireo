@@ -1,10 +1,11 @@
-vireo.model("Language", function(AbstractAppModel, api) {
+vireo.model("Language", function () {
 
 	var Language = function(data) {
 		var language = this;
-		angular.extend(language, new AbstractAppModel(api.language, data));
+		angular.extend(language, data);
 		return language;
 	};
 
 	return Language;
+
 });

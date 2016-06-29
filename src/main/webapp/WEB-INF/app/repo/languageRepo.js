@@ -1,9 +1,11 @@
-vireo.repo("LanguageRepo", function(AbstractAppRepo, api, Language, WsApi) {
+vireo.repo("LanguageRepo", function (api, Language, WsApi) {
 
 	var LanguageRepo = function() {
 		var languageRepo = this;
-		angular.extend(languageRepo, new AbstractAppRepo(Language, api.language));
 
+		languageRepo.constructor = Language;
+		languageRepo.mapping = api.language;
+		
 		languageRepo.getProquestLanguageCodes = function() {
 			return WsApi.fetch(api.language.proquest);
 		};
@@ -12,4 +14,5 @@ vireo.repo("LanguageRepo", function(AbstractAppRepo, api, Language, WsApi) {
 	};
 
 	return new LanguageRepo();
+
 });

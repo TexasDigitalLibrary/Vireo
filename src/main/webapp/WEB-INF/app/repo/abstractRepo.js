@@ -77,6 +77,10 @@ vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
 			return response;
 		};
 
+		abstractRepo.delete = function(model) {
+			return model.delete();
+		};
+
 		abstractRepo.deleteById = function(id) {
 			angular.extend(mapping.remove,  {'method': 'remove/' + id});
 			return WsApi.fetch(mapping.remove);
@@ -85,6 +89,10 @@ vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
 		abstractRepo.create = function(model) {
 			angular.extend(mapping.create, {'data': model});
 			return WsApi.fetch(mapping.create);
+		};
+
+		abstractRepo.save = function(model) {
+			return model.save();
 		};
 
 		abstractRepo.update = function(data) {

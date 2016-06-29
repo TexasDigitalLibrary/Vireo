@@ -1,8 +1,8 @@
-vireo.model("EmailTemplate", function(AbstractAppModel, api) {
+vireo.model("EmailTemplate", function () {
 
 	var EmailTemplate = function(data) {
 		var emailTemplate = this;
-		angular.extend(emailTemplate, new AbstractAppModel(api.emailTemplate, data));
+		angular.extend(emailTemplate, data);
 		return emailTemplate;
 
 	};

@@ -3,7 +3,6 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.languages = LanguageRepo.getAll();
-	
 
 	LanguageRepo.getProquestLanguageCodes().then(function(data) {
 		$scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;

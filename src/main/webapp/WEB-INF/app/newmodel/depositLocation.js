@@ -1,8 +1,8 @@
-vireo.model("DepositLocation", function(AbstractAppModel, api) {
+vireo.model("DepositLocation", function () {
 
 	var DepositLocation = function(data) {
 		var depositLocation = this;
-		angular.extend(depositLocation, new AbstractAppModel(api.depositLocation, data));
+		angular.extend(depositLocation, data);
 		return depositLocation;
 
 	};

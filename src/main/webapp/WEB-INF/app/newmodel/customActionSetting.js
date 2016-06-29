@@ -1,8 +1,8 @@
-vireo.model("CustomActionSetting", function(AbstractAppModel, api) {
+vireo.model("CustomActionSetting", function () {
 
 	var CustomActionSetting = function(data) {
 		var customActionSetting = this;
-		angular.extend(customActionSetting, new AbstractAppModel(api.customActionSetting, data));
+		angular.extend(customActionSetting, data);
 		return customActionSetting;
 
 	};

@@ -1,14 +1,20 @@
 // TODO: remove AbstractModel and refactor this!!!
 vireo.service("AbstractModelNew", function() {
 
-	var AbstractModelNew = function (mapping, data) {
+	var AbstractModelNew = function () {
 		var abstractModelNew = this;
 
-		angular.extend(abstractModelNew, data);
+		abstractModelNew.save = function() {
+			console.log('save');
+		};
 
-		abstractModelNew.save = function() {};
-		abstractModelNew.delete = function() {};
-		abstractModelNew.listen = function() {};
+		abstractModelNew.delete = function() {
+			console.log('delete');
+		};
+
+		abstractModelNew.listen = function() {
+			console.log('listen');
+		};
 
 		// additional core level model methods and variables
 		

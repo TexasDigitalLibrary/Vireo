@@ -1,8 +1,8 @@
-vireo.model("GraduationMonth", function(AbstractAppModel, api) {
+vireo.model("GraduationMonth", function () {
 
 	var GraduationMonth = function(data) {
 		var graduationMonth = this;
-		angular.extend(graduationMonth, new AbstractAppModel(api.graduationMonth, data));
+		angular.extend(graduationMonth, data);
 		return graduationMonth;
 
 	};

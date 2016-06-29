@@ -1,10 +1,12 @@
-vireo.repo("AvailableDocumentTypeRepo", function(AbstractAppRepo, api, AvailableDocumentType, WsApi) {
+vireo.repo("AvailableDocumentTypeRepo", function (api, AvailableDocumentType, WsApi) {
 
 	var AvailableDocumentTypeRepo = function() {
 		var availableDocumentTypeRepo = this;
-		angular.extend(availableDocumentTypeRepo, new AbstractAppRepo(AvailableDocumentType, api.availableDocumentType));
+		availableDocumentTypeRepo.constructor = AvailableDocumentType;
+		availableDocumentTypeRepo.mapping = api.availableDocumentType;
 		return availableDocumentTypeRepo;
 	};
 
 	return new AvailableDocumentTypeRepo();
+	
 });

@@ -1,10 +1,12 @@
-vireo.repo("DepositLocationRepo", function(AbstractAppRepo, api, DepositLocation, WsApi) {
+vireo.repo("DepositLocationRepo", function (api, DepositLocation, WsApi) {
 
 	var DepositLocationRepo = function() {
 		var depositLocationRepo = this;
-		angular.extend(depositLocationRepo, new AbstractAppRepo(DepositLocation, api.depositLocation));
+		depositLocationRepo.constructor = DepositLocation;
+		depositLocationRepo.mapping = api.depositLocation;
 		return depositLocationRepo;
 	};
 
 	return new DepositLocationRepo();
+	
 });

@@ -1,4 +1,4 @@
-vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', function($routeProvider, $locationProvider) {
+vireo.config(function($routeProvider, $locationProvider) {
 	
 	$locationProvider.html5Mode(true);
 	
@@ -78,4 +78,4 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			redirectTo: '/error/404'
 		});
 
-}]);
+});
