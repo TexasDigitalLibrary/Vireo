@@ -19,6 +19,8 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
   $scope.ready.then(function() {
 
+    console.log($scope.emailTemplates)
+
     $scope.resetEmailTemplates = function() {
       $scope.modalData = {'name':'', 'subject':'', 'message':''};
     }

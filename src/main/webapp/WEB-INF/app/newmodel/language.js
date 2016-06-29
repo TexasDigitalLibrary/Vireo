@@ -1,11 +1,11 @@
 vireo.model("Language", function () {
 
-	var Language = function(data) {
-		var language = this;
-		angular.extend(language, data);
-		return language;
-	};
+	var Language = this;
 
-	return Language;
+	return function Language(data) {
+		angular.extend(this, data);
+		angular.extend(this, Language);
+		return this;
+	};
 
 });

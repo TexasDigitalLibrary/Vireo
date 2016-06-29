@@ -1,14 +1,15 @@
 vireo.repo("LanguageRepo", function (api, Language, WsApi) {
 
-	var LanguageRepo = function() {
+	var LanguageRepo = function () {
 		var languageRepo = this;
-
-		languageRepo.constructor = Language;
+		languageRepo.model = Language;
 		languageRepo.mapping = api.language;
 		
 		languageRepo.getProquestLanguageCodes = function() {
 			return WsApi.fetch(api.language.proquest);
 		};
+
+		// additional app level repo methods and variables
 
 		return languageRepo;
 	};

@@ -1,12 +1,11 @@
 vireo.model("GraduationMonth", function () {
 
-	var GraduationMonth = function(data) {
-		var graduationMonth = this;
-		angular.extend(graduationMonth, data);
-		return graduationMonth;
+	var GraduationMonth = this;
 
+	return function GraduationMonth(data) {
+		angular.extend(this, data);
+		angular.extend(this, GraduationMonth);
+		return this;
 	};
-
-	return GraduationMonth;
 
 });

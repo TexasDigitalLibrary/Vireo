@@ -2,7 +2,7 @@ vireo.repo("AvailableDocumentTypeRepo", function (api, AvailableDocumentType, Ws
 
 	var AvailableDocumentTypeRepo = function() {
 		var availableDocumentTypeRepo = this;
-		availableDocumentTypeRepo.constructor = AvailableDocumentType;
+		availableDocumentTypeRepo.model = AvailableDocumentType;
 		availableDocumentTypeRepo.mapping = api.availableDocumentType;
 		return availableDocumentTypeRepo;
 	};

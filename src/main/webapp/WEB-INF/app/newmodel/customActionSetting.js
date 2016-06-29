@@ -1,12 +1,11 @@
 vireo.model("CustomActionSetting", function () {
 
-	var CustomActionSetting = function(data) {
-		var customActionSetting = this;
-		angular.extend(customActionSetting, data);
-		return customActionSetting;
+	var CustomActionSetting = this;
 
+	return function CustomActionSetting(data) {
+		angular.extend(this, data);
+		angular.extend(this, CustomActionSetting);
+		return this;
 	};
-
-	return CustomActionSetting;
 
 });

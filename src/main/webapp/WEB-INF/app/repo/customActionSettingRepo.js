@@ -2,7 +2,7 @@ vireo.repo("CustomActionSettingRepo", function (api, CustomActionSetting, WsApi)
 
 	var CustomActionSettingRepo = function() {
 		var customActionSettingRepo = this;
-		customActionSettingRepo.constructor = CustomActionSetting;
+		customActionSettingRepo.model = CustomActionSetting;
 		customActionSettingRepo.mapping = api.customActionSetting;
 		return customActionSettingRepo;
 	};

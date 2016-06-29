@@ -1,25 +1,20 @@
 // TODO: remove AbstractModel and refactor this!!!
 vireo.service("AbstractModelNew", function() {
 
-	var AbstractModelNew = function () {
-		var abstractModelNew = this;
+	this.save = function() {
+		console.log('save');
+	};
 
-		abstractModelNew.save = function() {
-			console.log('save');
-		};
+	this.delete = function() {
+		console.log('delete');
+	};
 
-		abstractModelNew.delete = function() {
-			console.log('delete');
-		};
+	this.listen = function() {
+		console.log('listen');
+	};
 
-		abstractModelNew.listen = function() {
-			console.log('listen');
-		};
-
-		// additional core level model methods and variables
-		
-		return abstractModelNew;
-	}
-
-	return AbstractModelNew;
+	// additional core level model methods and variables
+	
+	return this;
+	
 });

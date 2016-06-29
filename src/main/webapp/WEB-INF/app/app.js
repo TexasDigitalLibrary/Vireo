@@ -9,13 +9,13 @@ var vireo = angular.module('vireo',
 
 vireo.repo = function(delegateName, delageteFunction) {
 	return vireo.factory(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
-      	return angular.extend($delegate, new AbstractAppRepo($delegate.constructor, $delegate.mapping));
+      	return angular.extend($delegate, new AbstractAppRepo($delegate.model, $delegate.mapping));
     });
 };
 
 vireo.model = function(delegateName, delageteFunction) {
 	return vireo.service(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppModel) {
-      	return angular.extend($delegate, new AbstractAppModel());
+      	return angular.extend($delegate, AbstractAppModel);
     });
 };
 

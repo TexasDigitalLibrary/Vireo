@@ -1,6 +1,6 @@
-vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
+vireo.service("AbstractRepo", function ($q, WsApi) {
 
-	var AbstractRepo = function (modelConstructor, mapping) {
+	var AbstractRepo = function (model, mapping) {
 
 		var abstractRepo = this;
 
@@ -15,7 +15,7 @@ vireo.service("AbstractRepo", function AbstractRepo($q, WsApi) {
 			return $q(function(resolve) {
 				cache.length = 0;
 				angular.forEach(data, function(modelJson) {
-					cache.push(new modelConstructor(modelJson));
+					cache.push(new model(modelJson));
 				});
 				initialized = true
 				resolve();
