@@ -357,7 +357,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         });
     }
         
-    private List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
+    @Override
+    public List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
         List<WorkflowStep> descendantWorkflowSteps = new ArrayList<WorkflowStep>();
         List<WorkflowStep> currentDescendentsWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
         descendantWorkflowSteps.addAll(currentDescendentsWorkflowSteps);
@@ -367,7 +368,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return descendantWorkflowSteps;
     }
     
-    private List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep) {
+    @Override
+    public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep) {
         List<Organization> descendantOrganizationsContainingWorkflowStep = new ArrayList<Organization>();
         if(organization.getAggregateWorkflowSteps().contains(workflowStep)) {
         	descendantOrganizationsContainingWorkflowStep.add(organization);

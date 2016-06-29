@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
+import java.util.List;
+
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -23,5 +25,9 @@ public interface WorkflowStepRepoCustom {
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException;
     
     public void delete(WorkflowStep workflowStep);
+
+    public List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep);
+
+    public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep);
 
 }
