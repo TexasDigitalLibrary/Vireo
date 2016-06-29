@@ -6,6 +6,7 @@ import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public interface FieldProfileRepoCustom {
@@ -18,7 +19,7 @@ public interface FieldProfileRepoCustom {
     
     public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep requestingWorfklowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException;
 
-    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException;
+    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
     
     public void delete(FieldProfile fieldProfile);
     

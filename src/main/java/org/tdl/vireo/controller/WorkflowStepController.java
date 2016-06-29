@@ -24,6 +24,7 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
@@ -120,7 +121,7 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse updateFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException {
+    public ApiResponse updateFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException, ComponentNotPresentOnOrgException {
                 
         // TODO: validation
         
@@ -248,7 +249,7 @@ public class WorkflowStepController {
     
     @ApiMapping("/{workflowStepId}/update-note")
     @Auth(role="MANAGER")
-    public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+    public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         Long noteId = Long.parseLong(dataNode.get("id").toString());

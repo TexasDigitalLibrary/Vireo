@@ -11,6 +11,7 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.NoteRepo;
+import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.NoteRepoCustom;
 
@@ -24,6 +25,9 @@ public class NoteRepoImpl implements NoteRepoCustom {
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
+    
+    @Autowired
+    private OrganizationRepo organizationRepo;
     
     @Override
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text) {
@@ -90,7 +94,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
                         noteRepo.delete(noteToRemove);
                     }
                 }
-            }//workflow step doesn't originate the note and  it is non-overrideable
+            }//workflow step doesn't originate the note and it is non-overrideable
             else {
                 throw new NoteNonOverrideableException();
             }
@@ -101,7 +105,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
         
     }
     
-    public Note update(Note pendingNote, Organization requestingOrganization) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public Note update(Note pendingNote, Organization requestingOrganization) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Note resultingNote = null;
         
@@ -111,78 +115,101 @@ public class NoteRepoImpl implements NoteRepoCustom {
         
         boolean overridabilityOfOriginatingWorkflowStep = persistedNote.getOriginatingWorkflowStep().getOverrideable();
         
-        
+        //The ws that has the note on the requesting org
         WorkflowStep workflowStepWithNoteOnRequestingOrganization = null;
         
+        //Did the requesting organization originate the workflow step that the note is on?
         boolean requestingOrganizationOriginatedWorkflowStep = false;
         
-        boolean workflowStepWithNoteOnRequestingOrganizationOriginatedNote = false;
+        //Is the workflow step on which the note is found on the requesting organization the workflow step that originates the note?
+        boolean workflowStepOriginatesNote = false;
         
         for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
             if(workflowStep.getAggregateNotes().contains(persistedNote)) {
                 workflowStepWithNoteOnRequestingOrganization = workflowStep;
                 requestingOrganizationOriginatedWorkflowStep = workflowStepWithNoteOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
+                break;
             }
         }
         
+        //A workflow step that has the note on it was found on the requesting organization
         if(workflowStepWithNoteOnRequestingOrganization != null) {
-            workflowStepWithNoteOnRequestingOrganizationOriginatedNote = persistedNote.getOriginatingWorkflowStep().getId().equals(workflowStepWithNoteOnRequestingOrganization.getId());
+            workflowStepOriginatesNote = persistedNote.getOriginatingWorkflowStep().getId().equals(workflowStepWithNoteOnRequestingOrganization.getId());
+        }
+        else {
+            //The requesting org doesn't even have this note anywhere!
+            throw new ComponentNotPresentOnOrgException();
         }
         
         if(!overridabilityOfOriginatingWorkflowStep && !requestingOrganizationOriginatedWorkflowStep) {
             throw new WorkflowStepNonOverrideableException();
         }
         
-        if(!overridabilityOfPersistedNote && !(workflowStepWithNoteOnRequestingOrganizationOriginatedNote && requestingOrganizationOriginatedWorkflowStep)) {
+        if(!overridabilityOfPersistedNote && !(workflowStepOriginatesNote && requestingOrganizationOriginatedWorkflowStep)) {
             throw new NoteNonOverrideableException();
         }
         
-        if(workflowStepWithNoteOnRequestingOrganizationOriginatedNote && requestingOrganizationOriginatedWorkflowStep) {
-            resultingNote = noteRepo.save(pendingNote);
-        }
-        else {
-            
-            em.detach(pendingNote);
-            pendingNote.setId(null);
-
-            WorkflowStep persistedOriginatingWorkflowStep = persistedNote.getOriginatingWorkflowStep();
-            
-            if(!requestingOrganizationOriginatedWorkflowStep) {
-                
-                WorkflowStep existingOriginatingWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(persistedOriginatingWorkflowStep.getName(), requestingOrganization);
-                
-                if(existingOriginatingWorkflowStep == null) {
-                    WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(persistedOriginatingWorkflowStep, requestingOrganization);
-                  
-                    pendingNote.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
-                }
-                else {
-                    pendingNote.setOriginatingWorkflowStep(existingOriginatingWorkflowStep);
-                }
+        //TODO: implement this logic
+        //If the requesting org originates the WS, then we don't need to make a new one
+        if(requestingOrganizationOriginatedWorkflowStep)
+        {
+            //If the WS originates the Note, we don't need a new one
+            if(workflowStepOriginatesNote) {
+                //update note directly
+                resultingNote = noteRepo.save(pendingNote);
+                //TODO:  if change to non-overrideable, replace descendants of this note in subordinate orgs
                 
             }
-          
-          
-            pendingNote.setOriginatingNote(null);
-                      
+            //If the WS didn't originate the Note, we need a new Note to replace it
+            else {
+                //new note
+                em.detach(pendingNote);
+                pendingNote.setId(null);
+                pendingNote.setOriginatingWorkflowStep(workflowStepWithNoteOnRequestingOrganization);
+                
+                //TODO:  replace descendants of the persisted (original) Note with our new Note at subordinate organizations
+                
+                //TODO:  if change to non-overrideable, replace descendants of originating note in subordinate orgs
+                
+            }
+        }
+        //If the requesting org didn't originate the WS, we need a new WS to replace it and to originate a new Note
+        //workflowStepWithNoteOnRequestingOrganization does not originate on the requesting org
+        else {
+            
+            //make the new step; the update call will propagate step replacement in subordinate orgs
+            Long origWSId = workflowStepWithNoteOnRequestingOrganization.getId();
+            workflowStepWithNoteOnRequestingOrganization.setOriginatingWorkflowStep(workflowStepRepo.findOne(origWSId));
+            
+            WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(workflowStepWithNoteOnRequestingOrganization, requestingOrganization);
+            long newOriginatingWorkflowStepId = newOriginatingWorkflowStep.getId();
+            workflowStepWithNoteOnRequestingOrganization = workflowStepRepo.findOne(origWSId);
+            requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+            
+            
+            
+            //new Note on the new WS
+            em.detach(pendingNote);
+            pendingNote.setId(null);
+            pendingNote.setOriginatingNote(persistedNote);
+            pendingNote.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
             Note newNote = noteRepo.save(pendingNote);
-          
-          
+            newOriginatingWorkflowStep.getOriginalNotes().add(newNote);
+            newOriginatingWorkflowStep.replaceAggregateNote(persistedNote, newNote);
+            newOriginatingWorkflowStep = workflowStepRepo.save(newOriginatingWorkflowStep);
+            
+                   
+            requestingOrganization.replaceAggregateWorkflowStep(workflowStepWithNoteOnRequestingOrganization, newOriginatingWorkflowStep);
+            requestingOrganization = organizationRepo.save(requestingOrganization);
+            
+            //replace the note on all descendant orgs aggregate workflows
             for(WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedNote)) {
                 workflowStep.replaceAggregateNote(persistedNote, newNote);
                 workflowStepRepo.save(workflowStep);
             }
           
-          
-            for(WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
-                if(workflowStep.getAggregateNotes().contains(persistedNote)) {
-                    workflowStep.replaceAggregateNote(persistedNote, newNote);
-                    workflowStepRepo.save(workflowStep);
-                }
-            }
-          
-          
-            // if parent organization's workflow step updates a field profile originating form a descendent, the original field profile need to be deleted
+            
+            // if parent organization's workflow step updates a note originating form a descendent, the original note needs to be deleted
             if(workflowStepRepo.findByAggregateNotesId(persistedNote.getId()).size() == 0) {
                 noteRepo.delete(persistedNote);
             }
@@ -191,19 +218,17 @@ public class NoteRepoImpl implements NoteRepoCustom {
                 newNote = noteRepo.save(newNote);
             }
             
-            
-            
-            // TODO: if changed from overrideable to non overrideable, re-inherit
-            
-            
-            
-            
+            //TODO:  if change to non-overrideable, replace descendants of originating note in subordinate orgs
             
             
             
             resultingNote = newNote;
             
+           
+           
         }
+                
+        
  
         return resultingNote;
     }
