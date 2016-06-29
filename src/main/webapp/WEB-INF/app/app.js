@@ -7,6 +7,7 @@ var vireo = angular.module('vireo',
 	'vireo.version'
 ]);
 
+
 vireo.repo = function(delegateName, delageteFunction) {
 	return vireo.factory(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
       	return angular.extend($delegate, new AbstractAppRepo($delegate.model, $delegate.mapping));
@@ -15,7 +16,13 @@ vireo.repo = function(delegateName, delageteFunction) {
 
 vireo.model = function(delegateName, delageteFunction) {
 	return vireo.service(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppModel) {
-      	return angular.extend($delegate, AbstractAppModel);
+      	angular.extend($delegate, AbstractAppModel);
+      	return new Function("inherit", "return function " + delegateName + "(data){ angular.extend(this, inherit(data)); return this;   };")(
+      		function(data) {
+				angular.extend($delegate, data); 
+				return $delegate;
+			}
+		);
     });
 };
 
