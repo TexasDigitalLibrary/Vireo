@@ -8,14 +8,30 @@ var vireo = angular.module('vireo',
 ]);
 
 
-vireo.repo = function(delegateName, delageteFunction) {
-	return vireo.factory(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
+vireo.repo = function(delegateName, delegateFunction) {
+	return vireo.factory(delegateName, delegateFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
       	return angular.extend($delegate, new AbstractAppRepo($delegate.model, $delegate.mapping));
     });
 };
 
-vireo.model = function(delegateName, delageteFunction) {
-	return vireo.service(delegateName, delageteFunction).decorator(delegateName, function ($delegate, AbstractAppModel) {
+vireo.model = function(delegateName, delegateFunction) {
+	return vireo.service(delegateName, function ($injector, AbstractAppModel) {
+
+		var injections = [];
+
+		angular.forEach($injector.annotate(delegateFunction), function(injection) {
+			injections.push($injector.get(injection));
+		});
+
+		angular.extend(delegateFunction.prototype, AbstractAppModel);
+		
+		var delegateConstructor = function() { 
+	    	return delegateFunction.apply(delegateFunction.prototype, injections); 
+	  	};
+
+		return new delegateConstructor();
+		
+	}).decorator(delegateName, function ($delegate, AbstractAppModel) {
       	angular.extend($delegate, AbstractAppModel);
       	return new Function("inherit", "return function " + delegateName + "(data){ angular.extend(this, inherit(data)); return this;   };")(
       		function(data) {
