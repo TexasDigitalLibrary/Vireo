@@ -332,6 +332,7 @@
 	    <script src="controllers/settings/noteManagementController.js"></script>
 	    <script src="controllers/submission/newSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionController.js"></script>
+	    <script src="controllers/submission/submissionViewController.js"></script>
 	    
 	<!-- endbuild -->
 

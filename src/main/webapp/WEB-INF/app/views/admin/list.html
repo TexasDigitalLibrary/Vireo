@@ -1,7 +1,14 @@
 <div class="row admin-page">
-	<div class="col-sm-2"></div>
-	<div class="col-sm-10">
-		<h1>List ETDs</h1>
-		<hr>
-	</div>
+  <div class="col-sm-2"></div>
+  <div class="col-sm-10" ng-controller="SubmissionViewController">
+	<h1>List ETDs</h1>
+	<hr>
+	<h2 ng-click="print()">Click me!</h2>
+	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped">
+	  <tr ng-repeat="row in $data track by row.id">
+		<td title="'ID'" filter="{ name: 'text'}" sortable="'name'">{{row.id}}</td>
+		<td title="'Name'" filter="{ name: 'text'}" sortable="'name'">{{row.organization.name}}</td>
+	  </tr>
+	</table>
+  </div>
 </div>
