@@ -3,11 +3,17 @@
   <div class="col-sm-10" ng-controller="SubmissionViewController">
 	<h1>List ETDs</h1>
 	<hr>
-	<h2 ng-click="print()">Click me!</h2>
 	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped">
 	  <tr ng-repeat="row in $data track by row.id">
 		<td title="'ID'" filter="{ name: 'text'}" sortable="'name'">{{row.id}}</td>
-		<td title="'Name'" filter="{ name: 'text'}" sortable="'name'">{{row.organization.name}}</td>
+		<td title="'Organization'" filter="{ name: 'text'}" sortable="'name'">{{row.organization.name}}</td>
+		<td title="'Student Name'" filter="{ name: 'text'}" sortable="'name'">{{row.submitter.firstName}} {{row.submitter.lastName}}</td>
+		<td title="'Status'" filter="{ name: 'text'}" sortable="'name'">{{row.state.name}}</td>
+		<td title="'Assigned to'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
+		<td title="'Document title'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
+		<td title="'Submission date'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
+		<td title="'Approval date'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
+		<td title="'Embargo type'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
 	  </tr>
 	</table>
   </div>
