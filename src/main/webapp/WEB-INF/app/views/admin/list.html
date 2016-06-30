@@ -5,15 +5,15 @@
 	<hr>
 	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
 	  <tr ng-repeat="row in $data track by row.id">
-		<td title="'ID'" filter="{ name: 'text'}" sortable="'name'">{{row.id}}</td>
-		<td title="'Organization'" filter="{ name: 'text'}" sortable="'name'">{{row.organization.name}}</td>
-		<td title="'Student Name'" filter="{ name: 'text'}" sortable="'name'">{{row.submitter.firstName}} {{row.submitter.lastName}}</td>
-		<td title="'Status'" filter="{ name: 'text'}" sortable="'name'">{{row.state.name}}</td>
-		<td title="'Assigned to'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
-		<td title="'Document title'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
-		<td title="'Submission date'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
-		<td title="'Approval date'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
-		<td title="'Embargo type'" filter="{ name: 'text'}" sortable="'name'">TODO</td>
+		<td title="'ID'">{{row.id}}</td>
+		<td title="'Organization'">{{row.organization.name}}</td>
+		<td title="'Student Name'">{{row.submitter.firstName}} {{row.submitter.lastName}}</td>
+		<td title="'Status'">{{row.state.name}}</td>
+		<td title="'Assigned to'">TODO</td>
+		<td title="'Document title'">TODO</td>
+		<td title="'Submission date'">TODO</td>
+		<td title="'Approval date'">TODO</td>
+		<td title="'Embargo type'">TODO</td>
 	  </tr>
 	</table>
   </div>
