@@ -106,8 +106,6 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 			var meta = resObj.meta;
 
-			console.log(meta);
-
 			if(meta.type != 'ERROR') {
 				var payload = resObj.payload;
 
