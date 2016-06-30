@@ -9,36 +9,34 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 	return function AbstractModelNew() {
 
+		var abstractModel;
+
 		var defer = $q.defer();
+
+		var listenCallbacks = [];
+
+		var shadow = {};
 
 		var cache;
 
-		var shadow;
-
-		this.setData = function(data) {
-			angular.extend(this, data);
-			this.shadow();
-			defer.resolve();
-		};
-
 		this.init = function(data) {
 
+			abstractModel = this;
+
 			if(data) {
-				this.setData(data);
+				setData(data);
 			}
 			else if(cache !== undefined) {
-				this.setData(cache);
+				setData(cache);
 			}
 			else {
-
-				var abstractModel = this;
 				
-				WsApi.fetch(this.mapping.create).then(function(res) {
+				WsApi.fetch(abstractModel.mapping.create).then(function(res) {
 					cache = cache !== undefined ? cache : {};
 
-					abstractModel.processResponse(res);
+					processResponse(res);
 
-					abstractModel.listen();
+					listen();
 				});
 			}
 
@@ -49,41 +47,65 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 		};
 
 		this.save = function() {
-			angular.extend(this.mapping.update, {data: sanitize(this)});
-			return WsApi.fetch(this.mapping.update);
+			return $q(function(resolve) {
+				if(abstractModel.dirty()) {
+					angular.extend(abstractModel.mapping.update, {data: sanitize(abstractModel)});
+					WsApi.fetch(abstractModel.mapping.update).then(function() {
+						resolve(abstractModel);
+					});
+				}
+				else {
+					resolve(abstractModel);
+				}
+			});
+			
 		};
 
 		this.delete = function() {
 			console.log('delete');
 		};
 
-		this.listen = function() {
-			var abstractModel = this;
+		this.listen = function(cb) {
+			listenCallbacks.push(cb);
+		};
 
-			angular.extend(this.mapping.listen, {method: this.id});
+		this.reset = function() {
+			angular.extend(abstractModel, shadow);
+		};
 
-			return WsApi.listen(this.mapping.listen).then(null, null, function(res) {
-				abstractModel.processResponse(res);
+		this.dirty = function() {
+			return angular.toJson(sanitize(abstractModel)) !== angular.toJson(sanitize(shadow));
+		};
+
+		var setData = function(data) {
+			angular.extend(abstractModel, data);
+			shadow = angular.copy(abstractModel);
+			defer.resolve();
+		};
+
+		var listen = function() {
+
+			angular.extend(abstractModel.mapping.listen, {method: abstractModel.id});
+
+			return WsApi.listen(abstractModel.mapping.listen).then(null, null, function(res) {
+				processResponse(res);
+				
+				angular.forEach(listenCallbacks, function(cb) {
+					cb();
+				});
+
 			});
 		};
 
-		this.processResponse = function(res) {
+		var processResponse = function(res) {
 			var payload = angular.fromJson(res.body).payload;
 
 			angular.forEach(payload, function(datum) {
 				angular.extend(cache, datum);
 			});
 
-			angular.extend(this, cache);
-			this.setData(cache);
-		};
-
-		this.shadow = function() {
-			shadow = angular.copy(this);
-		};
-
-		this.reset = function() {
-			angular.extend(this, shadow);
+			angular.extend(abstractModel, cache);
+			setData(cache);
 		};
 		
 		// additional core level model methods and variables
