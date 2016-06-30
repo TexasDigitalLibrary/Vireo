@@ -98,14 +98,25 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 		};
 
 		var processResponse = function(res) {
-			var payload = angular.fromJson(res.body).payload;
 
-			angular.forEach(payload, function(datum) {
-				angular.extend(cache, datum);
-			});
+			var resObj = angular.fromJson(res.body);
 
-			angular.extend(abstractModel, cache);
-			setData(cache);
+			var meta = resObj.meta;
+
+			if(meta.type != 'ERROR') {
+				var payload = resObj.payload;
+
+				angular.forEach(payload, function(datum) {
+					angular.extend(cache, datum);
+				});
+
+				angular.extend(abstractModel, cache);
+				setData(cache);
+			}
+			else {
+				abstractModel.reset();
+			}
+			
 		};
 		
 		// additional core level model methods and variables
