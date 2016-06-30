@@ -11,27 +11,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 	if(!$scope.isAnonymous()) {
 
-		$scope.settings.user = UserSettings.get();
+		$scope.settings.user = new UserSettingsNew();
 
-
-		console.log('instantiate new user settings')
-		$scope.settings.userNew = new UserSettingsNew();
-
-		$scope.settings.userNew.ready().then(function() {
-			console.log($scope.settings.userNew);
-
-
-			$scope.settings.userNew.displayName = "foo";
+		$scope.settings.user.ready().then(function() {
 
 			$timeout(function() {
-				console.log('saving user settings')
-				$scope.settings.userNew.save();
+				console.log('updating user settings');
+				$scope.settings.user.displayName = 'foo';
+				$scope.settings.user.save();
 			}, 5000);
 
-		});
 
-
-		UserSettings.ready().then(function() {
 			$scope.updateUserSetting = function(name, timer) {
 				if($scope.userSettingsForm && Object.keys($scope.userSettingsForm.$error).length) return;
 
@@ -54,7 +44,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		return temp.textContent || temp.innerText || "";
   	};
   	
-  	stringToBoolean = function(string) {
+  	var stringToBoolean = function(string) {
   		switch(string.toLowerCase().trim()) {
   			case "false": case "no": case "0": case "": return false;
   			default: return true;
@@ -135,19 +125,19 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 	$scope.viewMode = function(prop) {
 		$scope["edit"+prop] = false;
-	}
+	};
 
 	$scope.confirmEdit = function($event, prop) {
 		if($event.which == 13) {			
 			if(prop) $scope["edit"+prop] = false;
 			$event.target.blur();
 		}
-	}
+	};
 
 	$scope.hasError = function(field) {
 		if(!field) field = {};
 		return Object.keys(field).length > 0;
-	}
+	};
 
 
 	/**

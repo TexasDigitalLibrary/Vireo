@@ -16,7 +16,7 @@ vireo.repo = function(delegateName, delegateFunction) {
 
 vireo.model = function(delegateName, delegateFunction) {
 	return vireo.factory(delegateName, function ($injector, AbstractModelNew, AbstractAppModel) {
-		return function(data, type) {
+		return function(data) {
 
 			delegateFunction.$inject = $injector.annotate(delegateFunction);
 

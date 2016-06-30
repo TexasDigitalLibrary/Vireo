@@ -221,7 +221,7 @@ var apiMapping = {
 		},
 		listen: {
 			endpoint: '/channel', 
-			controller: 'user/settings/update', 
+			controller: 'user/settings', 
 			method: ''
 		}
 	}

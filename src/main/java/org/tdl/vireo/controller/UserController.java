@@ -141,14 +141,12 @@ public class UserController {
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
-
-        System.out.println(userSettings);
         
         User user = userRepo.findByEmail(shib.getEmail());
         
         user.setSettings(userSettings);
         
-        simpMessagingTemplate.convertAndSend("/channel/user/settings/update", new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
+        simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
         
         return new ApiResponse(SUCCESS);
     }
