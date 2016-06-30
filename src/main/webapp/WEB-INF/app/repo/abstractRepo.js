@@ -47,7 +47,9 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		abstractRepo.saveAll = function() {
-
+			angular.forEach(cache, function(model) {
+				model.save();
+			});
 		};
 
 		abstractRepo.ready = function() {
@@ -55,8 +57,7 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		abstractRepo.findById = function(id) {
-			var response = {};
-
+			
 			var find = function(id) {
 				for(var key in cache) {
 					if(cache[key].id == id) {
@@ -66,15 +67,16 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			}
 
 			if(initialized) {
-				angular.extend(response, find(id));
+				return find(id);
 			}
 			else {
-				abstractRepo.ready().then(function() {
-					angular.extend(response, find(id));
-				});
+				console.error("Repo not initialized!");
+				return null;
+				
+				// abstractRepo.ready().then(function() {
+				// 	angular.extend(response, find(id));
+				// });
 			}
-
-			return response;
 		};
 
 		abstractRepo.delete = function(model) {
@@ -89,10 +91,6 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		abstractRepo.create = function(model) {
 			angular.extend(mapping.create, {'data': model});
 			return WsApi.fetch(mapping.create);
-		};
-
-		abstractRepo.save = function(model) {
-			return model.save();
 		};
 
 		abstractRepo.update = function(model) {

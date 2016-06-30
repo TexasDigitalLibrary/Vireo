@@ -48,13 +48,16 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 		this.save = function() {
 			return $q(function(resolve) {
+				console.log(abstractModel);
 				if(abstractModel.dirty()) {
+					console.log('save')
 					angular.extend(abstractModel.mapping.update, {data: sanitize(abstractModel)});
 					WsApi.fetch(abstractModel.mapping.update).then(function() {
 						resolve(abstractModel);
 					});
 				}
 				else {
+					console.log('skip')
 					resolve(abstractModel);
 				}
 			});
