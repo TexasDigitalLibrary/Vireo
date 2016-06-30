@@ -63,11 +63,11 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.updateEmbargo = function() {
-			EmbargoRepo.update($scope.modalData).then(function(data){
+			EmbargoRepo.update($scope.modalData).then(function(model){
 				if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
-				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
+				$scope.serverErrors[$scope.modalData.guarantor] = model.ValidationResponse;
                 if($scope.serverErrors[$scope.modalData.guarantor] === undefined || $scope.serverErrors[$scope.modalData.guarantor].errors.length == 0) {
                 	$scope.resetEmbargo();
 					$scope.closeModal("embargoEditModal");

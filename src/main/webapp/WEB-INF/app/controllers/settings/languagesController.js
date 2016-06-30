@@ -69,8 +69,11 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 		};
 		
 		$scope.updateLanguage = function() {
-			LanguageRepo.update($scope.modalData).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+			LanguageRepo.update($scope.modalData).then(function(model) {
+				
+				console.log($scope.modalData);
+
+				$scope.serverErrors = model.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetLanguages();
             		$scope.closeModal("languagesEditModal");

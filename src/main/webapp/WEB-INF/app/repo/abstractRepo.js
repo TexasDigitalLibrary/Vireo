@@ -95,9 +95,8 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			return model.save();
 		};
 
-		abstractRepo.update = function(data) {
-			angular.extend(mapping.update, {'data': data});
-			return WsApi.fetch(mapping.update);
+		abstractRepo.update = function(model) {
+			return model.save();
 		};
 
 		// additiona core level repo methods and variables

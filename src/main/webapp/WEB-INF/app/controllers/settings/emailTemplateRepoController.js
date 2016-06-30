@@ -54,8 +54,8 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     };
 
     $scope.updateEmailTemplate = function() {
-      EmailTemplateRepo.update($scope.modalData).then(function(data) {
-    	  $scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+      EmailTemplateRepo.update($scope.modalData).then(function(model) {
+    	  $scope.serverErrors = model.ValidationResponse;
     	  if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
     		  $scope.resetEmailTemplates();
     		  $scope.closeModal("emailTemplatesEditModal");

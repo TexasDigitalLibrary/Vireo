@@ -51,8 +51,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 		
 		$scope.updateDepositLocation = function() {
-			DepositLocationRepo.update($scope.modalData).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+			DepositLocationRepo.update($scope.modalData).then(function(model) {
+				$scope.serverErrors = model.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetDepositLocation();
 					$scope.closeModal("depositLocationEditModal");
