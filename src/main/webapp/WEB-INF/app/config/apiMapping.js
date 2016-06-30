@@ -213,6 +213,16 @@ var apiMapping = {
 			endpoint: '/private/queue', 
 			controller: 'user', 
 			method: 'settings',
+		},
+		update: {
+			endpoint: '/private/queue', 
+			controller: 'user', 
+			method: 'settings/update',
+		},
+		listen: {
+			endpoint: '/channel', 
+			controller: 'user/settings/update', 
+			method: ''
 		}
 	}
 }

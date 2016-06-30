@@ -1,7 +1,10 @@
-vireo.service("AbstractAppModel", function AbstractAppModel() {
+vireo.factory("AbstractAppModel", function AbstractAppModel() {
 
-	// additional app level model methods and variables
+	return function AbstractAppModel() {
 
-	return this;
+		// additional app level model methods and variables
+
+		return this;
+	}
 
 });

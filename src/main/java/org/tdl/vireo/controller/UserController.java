@@ -5,8 +5,10 @@ import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,10 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.ValidationService;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
@@ -130,6 +135,22 @@ public class UserController {
         user.putSetting(key, userSetting.getSettingValue());
 
         return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
+    }
+    
+    @ApiMapping("/settings/update")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
+
+        System.out.println(userSettings);
+        
+        User user = userRepo.findByEmail(shib.getEmail());
+        
+        user.setSettings(userSettings);
+        
+        simpMessagingTemplate.convertAndSend("/channel/user/settings/update", new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
+        
+        return new ApiResponse(SUCCESS);
     }
 
     private Map<String,List<User>> getAll() {

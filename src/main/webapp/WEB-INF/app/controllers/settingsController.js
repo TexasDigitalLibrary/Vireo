@@ -19,9 +19,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.settings.userNew.ready().then(function() {
 			console.log($scope.settings.userNew);
+
+
+			$scope.settings.userNew.displayName = "foo";
+
+			$timeout(function() {
+				console.log('saving user settings')
+				$scope.settings.userNew.save();
+			}, 5000);
+
 		});
 
-		
 
 		UserSettings.ready().then(function() {
 			$scope.updateUserSetting = function(name, timer) {

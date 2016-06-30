@@ -15,20 +15,27 @@ vireo.repo = function(delegateName, delegateFunction) {
 };
 
 vireo.model = function(delegateName, delegateFunction) {
-	return vireo.service(delegateName, function ($injector, AbstractModelNew, AbstractAppModel) {
-		return function(data) {
+	return vireo.factory(delegateName, function ($injector, AbstractModelNew, AbstractAppModel) {
+		return function(data, type) {
 
 			delegateFunction.$inject = $injector.annotate(delegateFunction);
 
 			var modelConstructor = $injector.invoke(delegateFunction, delegateFunction.prototype);
 
-			angular.extend(AbstractAppModel, AbstractModelNew);
+			var abstractModel = new AbstractModelNew();
+			var abstractAppModel = new AbstractAppModel();
 
-			angular.extend(modelConstructor.prototype, AbstractAppModel);
+			angular.extend(abstractAppModel, abstractModel);
+
+			angular.extend(modelConstructor.prototype, abstractAppModel);
 
 			var modelInstance = new modelConstructor();
 
 			modelInstance.init(data);
+
+			angular.extend(abstractAppModel, modelInstance);
+
+			angular.extend(abstractModel, abstractAppModel);
 
 			return modelInstance;
 		};
