@@ -1,5 +1,10 @@
-vireo.model("Language", function Language() {
+vireo.model("Language", function () {
 
-	return this;
+	return function Language() {
+		
+		// additional model methods and variables
+
+		return this;
+	}
 
 });

@@ -15,28 +15,24 @@ vireo.repo = function(delegateName, delegateFunction) {
 };
 
 vireo.model = function(delegateName, delegateFunction) {
-	return vireo.service(delegateName, function ($injector, AbstractAppModel) {
+	return vireo.service(delegateName, function ($injector, AbstractModelNew, AbstractAppModel) {
+		return function(data) {
 
-		var injections = [];
+			delegateFunction.$inject = $injector.annotate(delegateFunction);
 
-		angular.forEach($injector.annotate(delegateFunction), function(injection) {
-			injections.push($injector.get(injection));
-		});
+			var modelConstructor = $injector.invoke(delegateFunction, delegateFunction.prototype);
 
-		angular.extend(this, AbstractAppModel);
+			angular.extend(AbstractAppModel, AbstractModelNew);
 
-		angular.extend(this, delegateFunction.apply(delegateFunction.prototype, injections));
-		
-		return this;
+			angular.extend(modelConstructor.prototype, AbstractAppModel);
 
-	}).decorator(delegateName, function ($delegate, $injector, $timeout) {
-      	return new Function("inherit", "return function " + delegateName + "(data){ angular.extend(this, inherit(data)); return this;   };")(
-      		function(data) {
-  				$delegate.init(data);
-				return $delegate;
-			}
-		);
-    });
+			var modelInstance = new modelConstructor();
+
+			modelInstance.init(data);
+
+			return modelInstance;
+		};
+	});
 };
 
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.

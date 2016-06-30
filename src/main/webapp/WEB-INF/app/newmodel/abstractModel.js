@@ -1,23 +1,20 @@
 // TODO: remove AbstractModel and refactor this!!!
-vireo.service("AbstractModelNew", function($q, $timeout, WsApi) {
+vireo.service("AbstractModelNew", function AbstractModelNew($q, WsApi) {
 
 	var defer = $q.defer();
 
 	var cache;
-	
+
 	this.init = function(data) {
-		if(data !== undefined) {
-			console.log('has data')
+		if(data) {
 			angular.extend(this, data);
 			defer.resolve();
 		}
 		if(cache !== undefined) {
-			console.log('using cache')
 			angular.extend(this, cache);
 			defer.resolve();
 		}
 		else {
-			console.log('has data')
 			var abstractModel = this;
 			WsApi.fetch(this.mapping.create).then(function(res) {
 				cache = {};

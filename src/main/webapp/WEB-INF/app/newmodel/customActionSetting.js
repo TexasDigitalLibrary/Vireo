@@ -1,5 +1,10 @@
-vireo.model("CustomActionSetting", function CustomActionSetting() {
+vireo.model("CustomActionSetting", function () {
 
-	return this;
+	return function CustomActionSetting() {
+		
+		// additional model methods and variables
+
+		return this;
+	}
 
 });

@@ -1,5 +1,10 @@
-vireo.model("GraduationMonth", function GraduationMonth() {
+vireo.model("GraduationMonth", function () {
 
-	return this;
+	return function GraduationMonth() {
+		
+		// additional model methods and variables
+
+		return this;
+	}
 
 });

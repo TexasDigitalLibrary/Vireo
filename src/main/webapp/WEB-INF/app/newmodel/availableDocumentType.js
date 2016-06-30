@@ -1,5 +1,10 @@
 vireo.model("AvailableDocumentType", function AvailableDocumentType() {
 
-	return this;
+	return function AvailableDocumentType() {
+		
+		// additional model methods and variables
+
+		return this;
+	}
 
 });
