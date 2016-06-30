@@ -23,19 +23,16 @@ vireo.model = function(delegateName, delegateFunction) {
 			injections.push($injector.get(injection));
 		});
 
-		angular.extend(delegateFunction.prototype, AbstractAppModel);
-		
-		var delegateConstructor = function() { 
-	    	return delegateFunction.apply(delegateFunction.prototype, injections); 
-	  	};
+		angular.extend(this, AbstractAppModel);
 
-		return new delegateConstructor();
+		angular.extend(this, delegateFunction.apply(delegateFunction.prototype, injections));
 		
-	}).decorator(delegateName, function ($delegate, AbstractAppModel) {
-      	angular.extend($delegate, AbstractAppModel);
+		return this;
+
+	}).decorator(delegateName, function ($delegate, $injector, $timeout) {
       	return new Function("inherit", "return function " + delegateName + "(data){ angular.extend(this, inherit(data)); return this;   };")(
       		function(data) {
-				angular.extend($delegate, data); 
+  				$delegate.init(data);
 				return $delegate;
 			}
 		);

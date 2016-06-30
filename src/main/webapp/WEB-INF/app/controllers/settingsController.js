@@ -1,5 +1,5 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, UserSettingsNew, ConfigurableSettings) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -11,7 +11,17 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 	if(!$scope.isAnonymous()) {
 
-		$scope.settings.user  = UserSettings.get();
+		$scope.settings.user = UserSettings.get();
+
+
+		console.log('instantiate new user settings')
+		$scope.settings.userNew = new UserSettingsNew();
+
+		$scope.settings.userNew.ready().then(function() {
+			console.log($scope.settings.userNew);
+		});
+
+		
 
 		UserSettings.ready().then(function() {
 			$scope.updateUserSetting = function(name, timer) {

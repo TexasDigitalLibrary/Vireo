@@ -207,5 +207,12 @@ var apiMapping = {
 			'controller': 'settings/languages', 
 			'method': 'proquest'
 		}
+	},
+	userSettings: {
+		create: {
+			endpoint: '/private/queue', 
+			controller: 'user', 
+			method: 'settings',
+		}
 	}
 }

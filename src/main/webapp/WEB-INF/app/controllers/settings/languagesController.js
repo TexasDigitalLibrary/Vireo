@@ -22,10 +22,6 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
 	$scope.ready.then(function() {
 
-		console.log(LanguageRepo)
-
-		console.log($scope.languages)
-
 		$scope.resetLanguages = function() {
 			if($scope.uploadAction == 'process') {
 				$scope.uploadAction = 'confirm';

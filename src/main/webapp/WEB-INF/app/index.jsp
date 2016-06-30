@@ -298,6 +298,8 @@
 		<script src="newmodel/emailTemplate.js"></script>
 		<script src="newmodel/graduationMonth.js"></script>
 
+		<script src="newmodel/userSettings.js"></script>
+
 
 
 
