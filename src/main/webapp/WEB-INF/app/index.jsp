@@ -310,7 +310,6 @@
 	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepo.js"></script>
-	    <script src="model/userSettingsModel.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/embargoRepoModel.js"></script>
 	    <script src="model/controlledVocabularyRepoModel.js"></script>

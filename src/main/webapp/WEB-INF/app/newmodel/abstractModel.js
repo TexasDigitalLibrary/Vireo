@@ -26,7 +26,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 			if(data) {
 				this.setData(data);
 			}
-			if(cache !== undefined) {
+			else if(cache !== undefined) {
 				this.setData(cache);
 			}
 			else {

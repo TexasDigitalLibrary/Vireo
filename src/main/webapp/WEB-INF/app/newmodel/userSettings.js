@@ -1,6 +1,6 @@
-vireo.model("UserSettingsNew", function (api) {
+vireo.model("UserSettings", function (api) {
 
-	return function UserSettingsNew() {
+	return function UserSettings() {
 		this.mapping = api.userSettings;
 		
 		// additional model methods and variables

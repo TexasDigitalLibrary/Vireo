@@ -1,22 +1,22 @@
-vireo.directive('displayname', function (UserSettingsNew) {
+vireo.directive('displayname', function (UserSettings) {
 	return {
 		template: '<span>{{userSettings.displayName}}</span>',
 		restrict: 'E',
 		scope:true,
 		link: function($scope, elem) {
-			$scope.userSettings = new UserSettingsNew();
+			$scope.userSettings = new UserSettings();
 		}
 	};
 });
 
-vireo.directive('usersettings', function (UserSettingsNew) {
+vireo.directive('usersettings', function (UserSettings) {
 	return {
 		template: '<span>{{displayValue}}</span>',
 		restrict: 'E',
 		scope:true,
 		link: function($scope, elem, attr) {
 
-			$scope.userSettings = new UserSettingsNew();
+			$scope.userSettings = new UserSettings();
 
 			$scope.displayValue = "";
 
