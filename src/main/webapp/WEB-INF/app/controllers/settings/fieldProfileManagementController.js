@@ -17,7 +17,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         }
     );
 
-	$scope.controlledVocabularies = ControlledVocabularyRepo.get();
+	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
 	$scope.fieldPredicates = FieldPredicateModel.getAll();
 	$scope.fieldGlosses = FieldGlossModel.getAll();

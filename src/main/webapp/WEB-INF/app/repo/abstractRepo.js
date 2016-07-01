@@ -6,7 +6,6 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 
 		abstractRepo.mapping = mapping;
 
-
 		var cache = [];
 
 		var initialized = false;
@@ -88,6 +87,7 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			return match;
 		};
 
+		// TODO: remove
 		abstractRepo.delete = function(model) {
 			return model.delete();
 		};
@@ -101,8 +101,9 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			return WsApi.fetch(abstractRepo.mapping.create);
 		};
 
+		// TODO: remove
 		abstractRepo.update = function(model) {
-			return model.save();
+           return model.save();
 		};
 
 		this.listen = function(cb) {

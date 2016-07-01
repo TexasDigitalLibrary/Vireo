@@ -21,7 +21,7 @@ import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
-@ApiMapping("/settings/graduation-months")
+@ApiMapping("/settings/graduation-month")
 public class GraduationMonthController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
@@ -56,10 +56,10 @@ public class GraduationMonthController {
             case VALIDATION_INFO:
                 logger.info("Creating graduation month with month " + graduationMonth.getMonth());
                 graduationMonthRepo.create(graduationMonth.getMonth());
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create graduation month with month " + graduationMonth.getMonth() + " because: " + response.getMeta().getType());
@@ -84,10 +84,10 @@ public class GraduationMonthController {
             case VALIDATION_INFO:
                 logger.info("Updating graduation month with month " + graduationMonth.getMonth());
                 graduationMonthRepo.save(graduationMonth);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update graduation month with month " + graduationMonth.getMonth() + " because: " + response.getMeta().getType());
@@ -110,10 +110,10 @@ public class GraduationMonthController {
             case VALIDATION_INFO:
                 logger.info("Removing graduation month with id " + graduationMonth.getId());
                 graduationMonthRepo.remove(graduationMonth);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't remove graduation month with id " + graduationMonth.getId() + " because: " + response.getMeta().getType());
@@ -143,10 +143,10 @@ public class GraduationMonthController {
             case VALIDATION_INFO:
                 logger.info("Reordering document types");
                 graduationMonthRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder document types because: " + response.getMeta().getType());
@@ -175,10 +175,10 @@ public class GraduationMonthController {
             case VALIDATION_INFO:
                 logger.info("Sorting graduation months by " + column);
                 graduationMonthRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort graduation months because: " + response.getMeta().getType());

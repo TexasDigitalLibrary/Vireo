@@ -16,10 +16,10 @@
 			
 			<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
 
-			<p ng-if="controlledVocabulary.list.length == 0">Add new Controlled Vocabulary</p>
+			<p ng-if="controlledVocabulary.length == 0">Add new Controlled Vocabulary</p>
 			
 			<draganddroplist dragging="dragging"
-							 scope-value="controlledVocabulary.list"
+							 scope-value="controlledVocabulary"
 							 properties='["name"]'
 							 item-view='views/directives/dragAndDropControlledVocabulary.html'
 							 listeners='dragControlListeners'

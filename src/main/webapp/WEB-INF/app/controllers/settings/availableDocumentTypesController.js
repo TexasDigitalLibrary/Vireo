@@ -52,8 +52,8 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 	    };	
 
         $scope.updateDocumentType = function(){
-            AvailableDocumentTypeRepo.update($scope.modalData).then(function(model) {
-            	$scope.serverErrors = model.ValidationResponse;
+            AvailableDocumentTypeRepo.update($scope.modalData).then(function(data) {
+            	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetDocumentTypes();
             		$scope.closeModal("availableDocumentTypesEditModal");

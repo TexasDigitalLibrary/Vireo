@@ -51,8 +51,8 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.updateCustomAction = function() {
-			CustomActionSettingRepo.update($scope.modalData).then(function(model) {
-				$scope.serverErrors = model.ValidationResponse;
+			$scope.modalData.save().then(function(data) {
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetCustomAction();
 					$scope.closeModal("customActionEditModal");
