@@ -1,13 +1,7 @@
-vireo.repo("AvailableDocumentTypeRepo", function () {
+vireo.repo("AvailableDocumentTypeRepo", function AvailableDocumentTypeRepo() {
 
-	var AvailableDocumentTypeRepo = function() {
+	// additional repo methods and variables
 
-		// additional repo methods and variables
-
-		return this;
-
-	}
-
-	return new AvailableDocumentTypeRepo();
+	return this;
 	
 });

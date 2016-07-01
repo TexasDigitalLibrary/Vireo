@@ -1,13 +1,7 @@
-vireo.repo("CustomActionSettingRepo", function () {
+vireo.repo("CustomActionSettingRepo", function CustomActionSettingRepo() {
 
-	var CustomActionSettingRepo = function() {
+	// additional repo methods and variables
 
-		// additional repo methods and variables
-
-		return this;
-
-	}
-
-	return new CustomActionSettingRepo();
+	return this;
 	
 });

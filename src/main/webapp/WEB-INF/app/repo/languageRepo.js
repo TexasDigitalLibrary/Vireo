@@ -1,18 +1,12 @@
-vireo.repo("LanguageRepo", function (api, WsApi) {
+vireo.repo("LanguageRepo", function LanguageRepo(WsApi) {
 
-	var LanguageRepo = function() {
+	// additional repo methods and variables
 
-		console.log(this);
-		
-		// additional repo methods and variables
+	this.getProquestLanguageCodes = function() {
 
-		this.getProquestLanguageCodes = function() {
-			return WsApi.fetch(api.Language.proquest);
-		};
+		return WsApi.fetch(this.mapping.proquest);
+	};
 
-		return this;
-	}
-
-	return new LanguageRepo();
+	return this;
 
 });

@@ -1,8 +1,11 @@
 vireo.service("AbstractRepo", function ($q, WsApi) {
 
-	var AbstractRepo = function (model, mapping) {
+	return function AbstractRepo(model, mapping) {
 
 		var abstractRepo = this;
+
+		abstractRepo.mapping = mapping;
+
 
 		var cache = [];
 
@@ -32,13 +35,13 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			return repoObj;
 		};
 
-		WsApi.fetch(mapping.all).then(function(res) {
+		WsApi.fetch(abstractRepo.mapping.all).then(function(res) {
 			build(unwrap(res)).then(function() {
 				defer.resolve();
 			});
 		});
 
-		WsApi.listen(mapping.listen).then(null, null, function(res) {
+		WsApi.listen(abstractRepo.mapping.listen).then(null, null, function(res) {
 			build(unwrap(res));
 		});
 
@@ -87,8 +90,8 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		abstractRepo.create = function(model) {
-			angular.extend(mapping.create, {'data': model});
-			return WsApi.fetch(mapping.create);
+			angular.extend(abstractRepo.mapping.create, {'data': model});
+			return WsApi.fetch(abstractRepo.mapping.create);
 		};
 
 		abstractRepo.update = function(model) {
@@ -99,17 +102,16 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 
 		// these should be added through decoration
 		abstractRepo.sort = function(facet) {
-			angular.extend(mapping.sort, {'method': 'sort/' + facet});
-			return WsApi.fetch(mapping.sort);
+			angular.extend(abstractRepo.mapping.sort, {'method': 'sort/' + facet});
+			return WsApi.fetch(abstractRepo.mapping.sort);
 		};
 
 		abstractRepo.reorder = function(src, dest) {
-			angular.extend(mapping.reorder, {'method': 'reorder/' + src + '/' + dest});
-			return WsApi.fetch(mapping.reorder);
+			angular.extend(abstractRepo.mapping.reorder, {'method': 'reorder/' + src + '/' + dest});
+			return WsApi.fetch(abstractRepo.mapping.reorder);
 		};
 
 		return abstractRepo;
 	}
 
-	return AbstractRepo;
 });

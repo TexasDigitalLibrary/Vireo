@@ -1,13 +1,7 @@
-vireo.repo("EmailTemplateRepo", function () {
+vireo.repo("EmailTemplateRepo", function EmailTemplateRepo() {
 
-	var EmailTemplateRepo = function() {
+	// additional repo methods and variables
 
-		// additional repo methods and variables
-
-		return this;
-
-	}
-
-	return new EmailTemplateRepo();
+	return this;
 	
 });
