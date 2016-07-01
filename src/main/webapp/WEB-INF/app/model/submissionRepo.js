@@ -26,11 +26,7 @@ vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 		var defer = $q.defer();
 		var promise = defer.promise();
 		promise.then(function(){
-			console.info('defer then');
 			return SubmissionRepo.getAllPromise(api, cache);
-		}).then(function(foo){
-			console.info('the foo is ', foo);
-
 		});
 		return promise.resolve();
 		// return $q.when(cache.list);
@@ -59,10 +55,9 @@ vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 	//so we must declare a modified version of the getAllPromise method here.
 	SubmissionRepo.manualGetAllPromise = function() {
 		if(cache.ready){
-			console.info('cache was ready!');
 			return $q.resolve(cache.list);
 		}
-		console.info('manual ws get');
+		
 		var wsreq = WsApi.fetch(VireoAbstractModel.buildRequest(api, 'all')).then(function(response){
 			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
@@ -76,7 +71,7 @@ vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 			cache.ready = true;
 			return cache.list;
 		});
-		console.info('ws req is ', wsreq);
+		
 		return wsreq;
 	};
 
