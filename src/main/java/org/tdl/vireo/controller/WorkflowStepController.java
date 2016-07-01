@@ -224,8 +224,8 @@ public class WorkflowStepController {
     public ApiResponse addNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        String name = dataNode.get("noteName").textValue();
-        String text = dataNode.get("noteText").textValue();
+        String name = dataNode.get("name").textValue();
+        String text = dataNode.get("text").textValue();
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
@@ -247,9 +247,9 @@ public class WorkflowStepController {
     public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        Long noteId = Long.parseLong(dataNode.get("noteId").toString());
-        String name = dataNode.get("noteName").textValue();
-        String text = dataNode.get("noteText").textValue();
+        Long noteId = Long.parseLong(dataNode.get("id").toString());
+        String name = dataNode.get("name").textValue();
+        String text = dataNode.get("text").textValue();
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         

@@ -1,4 +1,4 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	$scope.organizationCategories = OrganizationCategoryRepo.get();

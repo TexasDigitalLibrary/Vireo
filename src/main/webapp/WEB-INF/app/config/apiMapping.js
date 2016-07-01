@@ -8,8 +8,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/document-type',
-			'method': ''
+			'controller': 'settings/document-type'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -28,13 +27,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
-			'method': ''
+			'controller': 'settings/document-type'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
-			'method': ''
+			'controller': 'settings/document-type'
 		}
 	},
 	ControlledVocabulary: {
@@ -45,8 +42,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/controlled-vocabulary',
-			'method': ''
+			'controller': 'settings/controlled-vocabulary'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -65,13 +61,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/controlled-vocabulary',
-			'method': ''
+			'controller': 'settings/controlled-vocabulary'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/controlled-vocabulary',
-			'method': ''
+			'controller': 'settings/controlled-vocabulary'
 		},
 		change: {
 			endpoint: '/channel', 
@@ -113,8 +107,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/custom-action',
-			'method': ''
+			'controller': 'settings/custom-action'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -133,13 +126,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/custom-action',
-			'method': ''
+			'controller': 'settings/custom-action'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/custom-action',
-			'method': ''
+			'controller': 'settings/custom-action'
 		}
 	},
 	ConfigurableSetting: {
@@ -150,8 +141,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/configurable',
-			'method': ''
+			'controller': 'settings/configurable'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -182,8 +172,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/deposit-location',
-			'method': ''
+			'controller': 'settings/deposit-location'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -202,13 +191,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/deposit-location',
-			'method': ''
+			'controller': 'settings/deposit-location'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/deposit-location',
-			'method': ''
+			'controller': 'settings/deposit-location'
 		}
 	},
 	EmailTemplate: {
@@ -219,8 +206,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/email-template',
-			'method': ''
+			'controller': 'settings/email-template'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -239,13 +225,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/email-template',
-			'method': ''
+			'controller': 'settings/email-template'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/email-template',
-			'method': ''
+			'controller': 'settings/email-template'
 		}
 	},
 	GraduationMonth: {
@@ -256,8 +240,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/graduation-month',
-			'method': ''
+			'controller': 'settings/graduation-month'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -276,13 +259,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/graduation-month',
-			'method': ''
+			'controller': 'settings/graduation-month'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/graduation-month',
-			'method': ''
+			'controller': 'settings/graduation-month'
 		}
 	},
 	Language: {
@@ -293,8 +274,7 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/language',
-			'method': ''
+			'controller': 'settings/language'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -313,13 +293,11 @@ var apiMapping = {
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/language',
-			'method': ''
+			'controller': 'settings/language'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/language',
-			'method': ''
+			'controller': 'settings/language'
 		},
 		proquest: {
 			'endpoint': '/private/queue',
@@ -340,8 +318,73 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'user/settings',
-			'method': ''
+			'controller': 'user/settings'
 		}
-	}
+	},
+	WorkflowStep: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/workflow-step'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/workflow-step'
+		},
+		addFieldProfile: {
+			'endpoint': '/private/queue',
+			'controller': 'workflow-step'
+		},
+		updateFieldProfile: {
+			'endpoint': '/private/queue',
+			'controller': 'workflow-step'
+		},
+		removeFieldProfile: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		},
+		reorderFieldProfile: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		},
+		addNote: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		},
+		updateNote: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		},
+		removeNote: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		},
+		reorderNote: {
+			'endpoint': '/private/queue', 
+			'controller': 'workflow-step'
+		}
+	},
 }
