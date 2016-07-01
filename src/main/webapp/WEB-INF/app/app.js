@@ -4,6 +4,7 @@ var vireo = angular.module('vireo',
 	'ngSanitize',
 	'ngCsv',
 	'ngFileUpload',
+	'ngTable',
 	'vireo.version'
 ]);
 

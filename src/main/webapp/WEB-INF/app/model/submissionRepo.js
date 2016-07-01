@@ -1,101 +1,83 @@
-vireo.service("SubmissionRepo", function($q, AbstractModel, WsApi) {
+vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 
-	var self;
+	var SubmissionRepo = this;
+	angular.extend(SubmissionRepo, VireoAbstractModel);
 
-	var SubmissionRepo = function(futureData) {
-		self = this;
-
-		//This causes our model to extend AbstractModel
-		angular.extend(self, AbstractModel);
-		
-		self.unwrap(self, futureData);		
-
+	var cache = {
+		list : [],
+		ready: false
 	};
 
-	SubmissionRepo.data = null;
-	
-	SubmissionRepo.listener = null;
-
-	SubmissionRepo.promise = null;
-	
-	SubmissionRepo.set = function(data) {
-		self.unwrap(self, data);
-	};
-
-	SubmissionRepo.get = function() {
-
-		if(SubmissionRepo.promise) return SubmissionRepo.data;
-
-		var newSubmissionRepoPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'all',
-		});
-
-		SubmissionRepo.promise = newSubmissionRepoPromise;
-
-		if(SubmissionRepo.data) {
-			newSubmissionRepoPromise.then(function(data) {
-				SubmissionRepo.set(JSON.parse(data.body).payload.HashMap);
-			});
+	var api = {
+		request: {
+			endpoint  : '/private/queue',
+			controller: 'submission',
+			method    : ''
 		}
-		else {
-			SubmissionRepo.data = new SubmissionRepo(newSubmissionRepoPromise);	
-		}
-
-		SubmissionRepo.listener = WsApi.listen({
-			endpoint: '/channel', 
-			controller: 'submission', 
-			method: '',
-		});
-				
-		SubmissionRepo.set(SubmissionRepo.listener);
-
-		return SubmissionRepo.data;
 	};
 
-	SubmissionRepo.ready = function() {
-		return SubmissionRepo.promise;
+	SubmissionRepo.getAll = function(sync) {
+		cache.ready = sync ? !sync : cache.ready;
+		SubmissionRepo.getAllPromise(api, cache);
+		return cache.list;
+	};
+
+	SubmissionRepo.getCachePromise = function() {
+		var defer = $q.defer();
+		var promise = defer.promise();
+		promise.then(function(){
+			console.info('defer then');
+			return SubmissionRepo.getAllPromise(api, cache);
+		}).then(function(foo){
+			console.info('the foo is ', foo);
+
+		});
+		return promise.resolve();
+		// return $q.when(cache.list);
+	};
+
+
+	SubmissionRepo.getCachePromise = function() {
+		return SubmissionRepo.getAllPromise(api, cache);
 	};
 
 	SubmissionRepo.findById = function(submissionId) {
-		
-		var findByIdDefer = $q.defer();
-
-		var findByIdFetchPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'get-one/'+submissionId,
-		});
-
-		findByIdFetchPromise.then(function(rawRes) {
-			var submission = JSON.parse(rawRes.body).payload.Submission;
-			findByIdDefer.resolve(submission);
-		});
-
-		return findByIdDefer.promise;
-
+		return WsApi.fetch(SubmissionRepo.buildRequest(api, 'get-one/' + submissionId))
+			.then(function(rawResponse){
+				return $q.when(JSON.parse(rawResponse.body).payload.Submission);
+			});
 	};
 
 	SubmissionRepo.create = function(organizationId) {
+		return WsApi.fetch(SubmissionRepo.buildRequest(api, 'create', {organizationId: organizationId}))
+			.then(function(rawResponse){
+				return $q.when(JSON.parse(rawResponse.body).payload.Submission.id);
+			});
+	};
 
-		var creationDefer = $q.defer();
-		
-		var createSubmissionPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'submission', 
-			method: 'create',
-			data: {organizationId: organizationId}
+	//We need access to the promise to refresh ng-table correctly,
+	//so we must declare a modified version of the getAllPromise method here.
+	SubmissionRepo.manualGetAllPromise = function() {
+		if(cache.ready){
+			console.info('cache was ready!');
+			return $q.resolve(cache.list);
+		}
+		console.info('manual ws get');
+		var wsreq = WsApi.fetch(VireoAbstractModel.buildRequest(api, 'all')).then(function(response){
+			var payload = angular.fromJson(response.body).payload;
+			cache.list.length = 0;
+			angular.forEach(Object.keys(payload), function(key){
+				if (key.indexOf('ArrayList') > -1) {
+					angular.extend(cache.list, payload[key]);
+				} else {
+					cache[key] = payload[key];
+				}
+			});
+			cache.ready = true;
+			return cache.list;
 		});
-
-		createSubmissionPromise.then(function(rawData) {
-			creationDefer.resolve(JSON.parse(rawData.body).payload.Submission.id);
-		});
-
-		return creationDefer.promise;
-
-	}
-
-	return SubmissionRepo;
+		console.info('ws req is ', wsreq);
+		return wsreq;
+	};
 
 });
