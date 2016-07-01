@@ -9,7 +9,7 @@
 	<form ng-if="uploadAction == 'confirm'">
     	<div class="form-group">
        	 	<label for="controlledVocabulary-cv">Upload to:</label>
-        	<select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary.list" ng-change="uploadStatus()" ng-init="uploadStatus()"></select>
+        	<select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary" ng-change="uploadStatus()" ng-init="uploadStatus()"></select>
     	</div>
     	<div class="form-group">
     		<div class="input-group">
@@ -34,7 +34,7 @@
     <form ng-if="uploadAction == 'process'">
         <div class="form-group">
             <label for="controlledVocabulary-cv">Upload to:</label>
-            <select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary.list" disabled></select>
+            <select ng-model="uploadModalData.cv" class="form-control" id="controlledVocabulary-cv" name="controlledVocabulary-cv" ng-options="cv.name for cv in controlledVocabulary" disabled></select>
         </div>
         <div class="form-group">
             <div class="input-group">
