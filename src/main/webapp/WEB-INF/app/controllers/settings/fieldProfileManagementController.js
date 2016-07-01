@@ -44,7 +44,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		});
 
 		$scope.modalData = {
-			inputType: 'INPUT_TEXT',
+			overrideable: true,
+			inputType: {
+				"id": 1,
+				"name": "INPUT_TEXT"
+			},
 			repeatable: false
 		};
 	};
@@ -85,6 +89,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.selectFieldProfile = function(index) {
 		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 		$scope.modalData = fieldProfile;
+		console.log($scope.modalData)
 		// TODO: needs multi glosses
 		$scope.modalData.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
 		// TODO: needs multi controlled vocabulary
@@ -113,6 +118,15 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
      	});
 	};
+
+	$scope.isEditable = function(fieldProfile) {
+		var editable = fieldProfile.overrideable;
+		if(!editable) {
+			editable = fieldProfile.originatingWorkflowStep == $scope.step.id && 
+					   $scope.selectedOrganization.originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
+		}
+		return editable;
+	}
 
 	$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 		trashId: 'field-profile-trash-' + $scope.step.id,

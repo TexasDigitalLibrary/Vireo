@@ -33,6 +33,14 @@ public class NoteRepoImpl implements NoteRepoCustom {
         return noteRepo.findOne(note.getId());
     }
     
+    @Override
+    public Note create(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
+        Note note = noteRepo.save(new Note(originatingWorkflowStep, name, text, overrideable));
+        originatingWorkflowStep.addOriginalNote(note);
+        workflowStepRepo.save(originatingWorkflowStep);
+        return noteRepo.findOne(note.getId());
+    }
+    
     public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, Note noteToDisinherit) throws WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {

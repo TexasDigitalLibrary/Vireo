@@ -11,7 +11,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id", "overrideable" }) )
 public abstract class AbstractNote<N> extends BaseEntity {
 
     @Column(nullable = false)

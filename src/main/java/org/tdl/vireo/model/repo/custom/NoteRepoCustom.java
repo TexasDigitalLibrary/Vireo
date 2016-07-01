@@ -10,6 +10,8 @@ public interface NoteRepoCustom {
 
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text);
     
+    public Note create(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable);
+    
     public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep requestingWorfklowStep, Note noteToDisinherit) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException;
 
     public Note update(Note note, Organization requestingOrganization) throws NoteNonOverrideableException, WorkflowStepNonOverrideableException;

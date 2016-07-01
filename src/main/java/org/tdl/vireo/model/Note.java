@@ -27,7 +27,7 @@ public class Note extends AbstractNote<Note> {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
     
-    @Column
+    @Column(nullable = false)
     private Boolean overrideable;
 
     
@@ -44,6 +44,11 @@ public class Note extends AbstractNote<Note> {
     public Note(WorkflowStep originatingWorkflowStep, String name, String text) {
         this(name, text);
         setOriginatingWorkflowStep(originatingWorkflowStep);
+    }
+    
+    public Note(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
+        this(originatingWorkflowStep, name, text);
+        setOverrideable(overrideable);
     }
     
     public Note getOriginatingNote() {

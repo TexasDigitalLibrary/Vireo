@@ -1,12 +1,12 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.enums.InputType;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public interface FieldProfileRepoCustom {
     

@@ -44,7 +44,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -68,7 +70,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -92,7 +96,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -116,7 +122,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 1,
+                    "inputType": {
+                    	"name": "INPUT_EMAIL"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -140,7 +148,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -164,7 +174,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": false,
@@ -188,7 +200,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -212,7 +226,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": false,
@@ -236,7 +252,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -260,7 +278,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -284,7 +304,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 10,
+                    "inputType": {
+                    	"name": "SELECT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -308,7 +330,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -332,7 +356,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -356,7 +382,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -380,7 +408,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 1,
+                    "inputType": {
+                    	"name": "INPUT_EMAIL"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -404,7 +434,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -428,7 +460,9 @@
                     "originatingWorkflowStep": {
                         "name": "Verify Personal Information"
                     },
-                    "inputType": 9,
+                    "inputType": {
+                    	"name": "TEXTAREA"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -465,7 +499,9 @@
                     "originatingWorkflowStep": {
                         "name": "License Agreement"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -489,7 +525,9 @@
                     "originatingWorkflowStep": {
                         "name": "License Agreement"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": false,
@@ -555,7 +593,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -579,7 +619,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 4,
+                    "inputType": {
+                    	"name": "INPUT_DATETIME"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -603,7 +645,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 4,
+                    "inputType": {
+                    	"name": "INPUT_DATETIME"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -627,7 +671,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 10,
+                    "inputType": {
+                    	"name": "SELECT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -651,7 +697,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 9,
+                    "inputType": {
+                    	"name": "TEXTAREA"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -675,7 +723,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 9,
+                    "inputType": {
+                    	"name": "TEXTAREA"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -699,7 +749,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 9,
+                    "inputType": {
+                    	"name": "TEXTAREA"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -723,7 +775,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -747,7 +801,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -771,7 +827,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 1,
+                    "inputType": {
+                    	"name": "INPUT_EMAIL"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -795,7 +853,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 0,
+                    "inputType": {
+                    	"name": "INPUT_TEXT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -819,7 +879,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 10,
+                    "inputType": {
+                    	"name": "SELECT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -843,7 +905,9 @@
                     "originatingWorkflowStep": {
                         "name": "Document Information"
                     },
-                    "inputType": 10,
+                    "inputType": {
+                    	"name": "SELECT"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -902,7 +966,9 @@
                     "originatingWorkflowStep": {
                         "name": "File Upload"
                     },
-                    "inputType": 5,
+                    "inputType": {
+                    	"name": "INPUT_FILE"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -926,7 +992,9 @@
                     "originatingWorkflowStep": {
                         "name": "File Upload"
                     },
-                    "inputType": 5,
+                    "inputType": {
+                    	"name": "INPUT_FILE"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -950,7 +1018,9 @@
                     "originatingWorkflowStep": {
                         "name": "File Upload"
                     },
-                    "inputType": 5,
+                    "inputType": {
+                    	"name": "INPUT_FILE"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,
@@ -974,7 +1044,9 @@
                     "originatingWorkflowStep": {
                         "name": "File Upload"
                     },
-                    "inputType": 5,
+                    "inputType": {
+                    	"name": "INPUT_FILE"
+                    },
                     "repeatable": false,
                     "overrideable": true,
                     "enabled": true,

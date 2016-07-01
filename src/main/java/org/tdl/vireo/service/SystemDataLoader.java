@@ -15,6 +15,8 @@ public interface SystemDataLoader {
     
     public EmailTemplate loadSystemEmailTemplate(String name);
     
+    public void loadSystemInputTypes();
+    
     public void generateAllSystemEmailTemplates();
     
     public void generateAllOrganizationCategories();

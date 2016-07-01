@@ -6,11 +6,10 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
-import org.tdl.vireo.enums.InputType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -30,10 +29,10 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
    
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private Boolean overrideable;
     
-    //@Column(nullable = true)
+    @Column(nullable = true)
     private Boolean enabled;
     
     public FieldProfile() {

@@ -32,6 +32,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 		});
 
 		$scope.modalData = {
+			overrideable: true,
 	    	name: '',
 	    	text: ''
 	    };
@@ -40,6 +41,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	$scope.resetNotes();
 	
 	$scope.createNote = function() {
+		console.info('modalData: ', $scope.modalData);
 		WorkflowStepRepo.addNote($scope.step.id, $scope.modalData).then(function(response) {
 			
 		});
@@ -71,6 +73,15 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
      		
      	});
 	};
+
+	$scope.isEditable = function(note) {
+		var editable = note.overrideable;
+		if(!editable) {
+			editable = note.originatingWorkflowStep == $scope.step.id && 
+					   $scope.selectedOrganization.originalWorkflowSteps.indexOf(note.originatingWorkflowStep) > -1;
+		}
+		return editable;
+	}
 
 	$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 		trashId: 'note-trash-' + $scope.step.id,

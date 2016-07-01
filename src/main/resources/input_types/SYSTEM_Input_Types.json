@@ -1,0 +1,35 @@
+[
+	{
+		"name": "INPUT_TEXT" 
+	},
+	{
+		"name": "INPUT_EMAIL" 
+	},
+	{
+		"name": "INPUT_PASSWORD" 
+	},
+	{
+		"name": "INPUT_CHECKBOX" 
+	},
+	{
+		"name": "INPUT_DATETIME" 
+	},
+	{
+		"name": "INPUT_FILE" 
+	},
+	{
+		"name": "INPUT_RADIO" 
+	},
+	{
+		"name": "INPUT_TEL" 
+	},
+	{
+		"name": "INPUT_URL" 
+	},
+	{
+		"name": "TEXTAREA" 
+	},
+	{
+		"name": "SELECT" 
+	}
+]
