@@ -1,15 +1,11 @@
 // TODO: remove AbstractModel and refactor this!!!
 vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
-	var sanitize = function(obj) {
-		var copy = angular.copy(obj);
-		delete copy.mapping;
-		return copy;
-	};
-
 	return function AbstractModelNew() {
 
 		var abstractModel;
+
+		var mapping;
 
 		var defer = $q.defer();
 
@@ -19,9 +15,11 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 		var cache;
 
-		this.init = function(data) {
+		this.init = function(data, apiMapping) {
 
 			abstractModel = this;
+
+			mapping = apiMapping;
 
 			if(data) {
 				setData(data);
@@ -31,7 +29,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 			}
 			else {
 				
-				WsApi.fetch(abstractModel.mapping.create).then(function(res) {
+				WsApi.fetch(mapping.create).then(function(res) {
 					cache = cache !== undefined ? cache : {};
 
 					processResponse(res);
@@ -48,16 +46,13 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 		this.save = function() {
 			return $q(function(resolve) {
-				console.log(abstractModel);
 				if(abstractModel.dirty()) {
-					console.log('save')
-					angular.extend(abstractModel.mapping.update, {data: sanitize(abstractModel)});
-					WsApi.fetch(abstractModel.mapping.update).then(function() {
+					angular.extend(mapping.update, {data: abstractModel});
+					WsApi.fetch(mapping.update).then(function() {
 						resolve(abstractModel);
 					});
 				}
 				else {
-					console.log('skip')
 					resolve(abstractModel);
 				}
 			});
@@ -77,7 +72,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 		};
 
 		this.dirty = function() {
-			return angular.toJson(sanitize(abstractModel)) !== angular.toJson(sanitize(shadow));
+			return angular.toJson(abstractModel) !== angular.toJson(shadow);
 		};
 
 		var setData = function(data) {
@@ -88,9 +83,9 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 		var listen = function() {
 
-			angular.extend(abstractModel.mapping.listen, {method: abstractModel.id});
+			angular.extend(mapping.listen, {method: abstractModel.id});
 
-			return WsApi.listen(abstractModel.mapping.listen).then(null, null, function(res) {
+			return WsApi.listen(mapping.listen).then(null, null, function(res) {
 				processResponse(res);
 				
 				angular.forEach(listenCallbacks, function(cb) {

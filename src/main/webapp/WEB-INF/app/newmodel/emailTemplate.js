@@ -1,7 +1,7 @@
-vireo.model("EmailTemplate", function (api) {
+vireo.model("EmailTemplate", function () {
 
 	return function EmailTemplate() {
-		this.mapping = api.emailTemplate;
+		
 		// additional model methods and variables
 
 		return this;

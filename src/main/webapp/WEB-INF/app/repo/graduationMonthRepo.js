@@ -3,7 +3,7 @@ vireo.repo("GraduationMonthRepo", function (api, GraduationMonth, WsApi) {
 	var GraduationMonthRepo = function() {
 		var graduationMonthRepo = this;
 		graduationMonthRepo.model = GraduationMonth;
-		graduationMonthRepo.mapping = api.graduationMonth;
+		graduationMonthRepo.mapping = api.GraduationMonth;
 		return graduationMonthRepo;
 	};
 

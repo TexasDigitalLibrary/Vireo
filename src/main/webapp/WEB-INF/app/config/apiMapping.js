@@ -1,228 +1,247 @@
+// CONVENTION: must match model name, case sensitive
 var apiMapping = {
-	availableDocumentType: {
+	AvailableDocumentType: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/document-types', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/document-types', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/document-types',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/document-types', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/document-types', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/document-types' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/document-types'
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/document-types'
+			'endpoint': '/private/queue',
+			'controller': 'settings/document-types',
+			'method': ''
 		}
 	},
-	customActionSetting: {
+	CustomActionSetting: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/custom-actions', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/custom-actions', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/custom-actions',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/custom-actions', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/custom-actions', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/custom-actions' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/custom-actions'
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/custom-actions'
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-actions',
+			'method': ''
 		}
 	},
-	depositLocation: {
+	DepositLocation: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/deposit-locations', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/deposit-locations', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/deposit-locations',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/deposit-locations', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/deposit-locations', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/deposit-locations' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/deposit-locations'
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/deposit-locations'
+			'endpoint': '/private/queue',
+			'controller': 'settings/deposit-locations',
+			'method': ''
 		}
 	},
-	emailTemplate: {
+	EmailTemplate: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/email-templates', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/email-templates', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/email-templates',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/email-templates', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/email-templates', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/email-templates' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/email-templates'
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/email-templates'
+			'endpoint': '/private/queue',
+			'controller': 'settings/email-templates',
+			'method': ''
 		}
 	},
-	graduationMonth: {
+	GraduationMonth: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/graduation-months', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/graduation-months', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/graduation-months',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/graduation-months', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/graduation-months', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/graduation-months' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/graduation-months'
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/graduation-months'
+			'endpoint': '/private/queue',
+			'controller': 'settings/graduation-months',
+			'method': ''
 		}
 	},
-	language: {
+	Language: {
 		all: {
-			endpoint: '/private/queue', 
-			controller: 'settings/languages', 
-			method: 'all'
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
+			'method': 'all'
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'settings/languages', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'settings/languages',
+			'method': ''
 		},
 		create: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
 			'method': 'create'
 		},
 		update: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
 			'method': 'update'
 		},
 		remove: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages' 
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
+			'method': ''
 		},
 		reorder: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages'
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
+			'method': ''
 		},
 		sort: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages'
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
+			'method': ''
 		},
 		proquest: {
-			'endpoint': '/private/queue', 
-			'controller': 'settings/languages', 
+			'endpoint': '/private/queue',
+			'controller': 'settings/languages',
 			'method': 'proquest'
 		}
 	},
-	userSettings: {
+	UserSettings: {
 		create: {
-			endpoint: '/private/queue', 
-			controller: 'user', 
-			method: 'settings',
+			'endpoint': '/private/queue',
+			'controller': 'user',
+			'method': 'settings',
 		},
 		update: {
-			endpoint: '/private/queue', 
-			controller: 'user', 
-			method: 'settings/update',
+			'endpoint': '/private/queue',
+			'controller': 'user',
+			'method': 'settings/update',
 		},
 		listen: {
-			endpoint: '/channel', 
-			controller: 'user/settings', 
-			method: ''
+			'endpoint': '/channel',
+			'controller': 'user/settings',
+			'method': ''
 		}
 	}
 }

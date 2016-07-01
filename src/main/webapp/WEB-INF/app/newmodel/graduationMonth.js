@@ -1,7 +1,7 @@
-vireo.model("GraduationMonth", function (api) {
+vireo.model("GraduationMonth", function () {
 
 	return function GraduationMonth() {
-		this.mapping = api.graduationMonth;
+		
 		// additional model methods and variables
 
 		return this;

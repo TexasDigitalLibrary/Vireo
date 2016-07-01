@@ -9,13 +9,14 @@ var vireo = angular.module('vireo',
 
 
 vireo.repo = function(delegateName, delegateFunction) {
+	console.log(delegateName.replace('Repo', ''))
 	return vireo.factory(delegateName, delegateFunction).decorator(delegateName, function ($delegate, AbstractAppRepo) {
       	return angular.extend($delegate, new AbstractAppRepo($delegate.model, $delegate.mapping));
     });
 };
 
 vireo.model = function(delegateName, delegateFunction) {
-	return vireo.factory(delegateName, function ($injector, AbstractModelNew, AbstractAppModel) {
+	return vireo.factory(delegateName, function ($injector, AbstractModelNew, AbstractAppModel, api) {
 		return function(data) {
 
 			delegateFunction.$inject = $injector.annotate(delegateFunction);
@@ -31,7 +32,7 @@ vireo.model = function(delegateName, delegateFunction) {
 
 			var modelInstance = new modelConstructor();
 
-			modelInstance.init(data);
+			modelInstance.init(data, api[delegateName]);
 
 			angular.extend(abstractAppModel, modelInstance);
 

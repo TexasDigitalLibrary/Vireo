@@ -1,7 +1,7 @@
-vireo.model("CustomActionSetting", function (api) {
+vireo.model("CustomActionSetting", function () {
 
 	return function CustomActionSetting() {
-		this.mapping = api.customActionSetting;
+		
 		// additional model methods and variables
 
 		return this;
