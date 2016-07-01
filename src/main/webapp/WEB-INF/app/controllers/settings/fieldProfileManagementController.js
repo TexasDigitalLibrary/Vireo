@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossModel, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -20,7 +20,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
 	$scope.fieldPredicates = FieldPredicateModel.getAll();
-	$scope.fieldGlosses = FieldGlossModel.getAll();
+	$scope.fieldGlosses = FieldGlossRepo.getAll();
 
 	$scope.inputTypes = InputTypeService.getAll();
 	
@@ -63,11 +63,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			'language': 'English'
 		};
 
-		FieldGlossModel.addGloss(gloss).then(function(response){
+		FieldGlossRepo.create(gloss).then(function(response){
 			$scope.modalData.gloss = angular.fromJson(response.body).payload.FieldGloss;
 		});
 
-		FieldGlossModel.getAll(true);
 	};
 
 	$scope.createPredicate = function(predicateValue) {

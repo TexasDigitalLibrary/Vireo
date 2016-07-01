@@ -292,6 +292,7 @@
 	    <script src="repo/controlledVocabularyRepo.js"></script>
 	    <script src="repo/workflowStepRepo.js"></script>
 	    <script src="repo/embargoRepo.js"></script>
+	    <script src="repo/fieldGlossRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
@@ -307,6 +308,7 @@
 		<script src="newmodel/controlledVocabulary.js"></script>
 		<script src="newmodel/workflowStep.js"></script>
 		<script src="newmodel/embargo.js"></script>
+		<script src="newmodel/fieldGloss.js"></script>
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
@@ -318,8 +320,7 @@
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/inputTypeService.js"></script>
 	    <script src="model/vireoAbstractModel.js"></script>
-	    <script src="model/fieldPredicateModel.js"></script>
-	    <script src="model/fieldGlossRepoModel.js"></script>	    
+	    <script src="model/fieldPredicateModel.js"></script>	    
 	    <script src="model/submissionRepo.js"></script>
 
 

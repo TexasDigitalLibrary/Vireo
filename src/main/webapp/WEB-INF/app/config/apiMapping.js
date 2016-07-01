@@ -266,6 +266,40 @@ var apiMapping = {
 			'controller': 'settings/email-template'
 		}
 	},
+	FieldGloss: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/field-gloss'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-gloss'
+		}
+	},
 	GraduationMonth: {
 		all: {
 			'endpoint': '/private/queue',
