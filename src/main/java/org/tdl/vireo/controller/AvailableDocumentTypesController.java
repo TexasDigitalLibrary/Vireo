@@ -22,7 +22,7 @@ import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/document-types")
-public class DocumentTypesController {
+public class AvailableDocumentTypesController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
@@ -97,24 +97,18 @@ public class DocumentTypesController {
         return response;
     }
     
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeDocumentType(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "document_type_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        DocumentType documentType = documentTypesRepo.validateRemove(idString, modelBindingResult);
-        
+    public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
+
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(documentType);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing document type with id " + idString);
+                logger.info("Removing document type with name " + documentType.getName());
                 documentTypesRepo.remove(documentType);
                 simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
@@ -122,7 +116,7 @@ public class DocumentTypesController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/document-types", new ApiResponse(VALIDATION_WARNING, documentTypesRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove document type with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove document type with name " + documentType.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         

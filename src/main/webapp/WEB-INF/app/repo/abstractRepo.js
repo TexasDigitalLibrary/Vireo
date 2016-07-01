@@ -57,6 +57,7 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		abstractRepo.findById = function(id) {
+			var match;
 			
 			var find = function(id) {
 				for(var key in cache) {
@@ -67,16 +68,14 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 			}
 
 			if(initialized) {
-				return find(id);
+				match = find(id);
 			}
 			else {
+				// TODO: think of a way to find after ready and have binding in cache
 				console.error("Repo not initialized!");
-				return null;
-				
-				// abstractRepo.ready().then(function() {
-				// 	angular.extend(response, find(id));
-				// });
 			}
+
+			return match;
 		};
 
 		abstractRepo.delete = function(model) {
@@ -84,8 +83,7 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		abstractRepo.deleteById = function(id) {
-			angular.extend(mapping.remove,  {'method': 'remove/' + id});
-			return WsApi.fetch(mapping.remove);
+			return abstractRepo.findById(id).delete();
 		};
 
 		abstractRepo.create = function(model) {
@@ -98,7 +96,6 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		};
 
 		// additiona core level repo methods and variables
-
 
 		// these should be added through decoration
 		abstractRepo.sort = function(facet) {

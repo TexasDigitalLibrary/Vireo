@@ -1,11 +1,12 @@
-vireo.repo("GraduationMonthRepo", function (api, GraduationMonth, WsApi) {
+vireo.repo("GraduationMonthRepo", function () {
 
 	var GraduationMonthRepo = function() {
-		var graduationMonthRepo = this;
-		graduationMonthRepo.model = GraduationMonth;
-		graduationMonthRepo.mapping = api.GraduationMonth;
-		return graduationMonthRepo;
-	};
+
+		// additional repo methods and variables
+
+		return this;
+
+	}
 
 	return new GraduationMonthRepo();
 	

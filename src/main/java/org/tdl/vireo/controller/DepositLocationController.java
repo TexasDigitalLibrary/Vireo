@@ -97,24 +97,18 @@ public class DepositLocationController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeDepositLocation(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "deposit_location_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        DepositLocation depositLocation = depositLocationRepo.validateRemove(idString, modelBindingResult);
-        
+    public ApiResponse removeDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
+
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(depositLocation);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing deposit location with id " + idString);
+                logger.info("Removing deposit location with name " + depositLocation.getName());
                 depositLocationRepo.remove(depositLocation);
                 simpMessagingTemplate.convertAndSend("/channel/settings/deposit-locations", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
@@ -122,7 +116,7 @@ public class DepositLocationController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/deposit-locations", new ApiResponse(VALIDATION_WARNING, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove deposit location with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove deposit location with name " + depositLocation.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         

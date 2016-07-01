@@ -94,24 +94,18 @@ public class CustomActionSettingsController {
         return response;
     }
     
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeCustomAction(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "custom_action_definition_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        CustomActionDefinition customActionDefinition = customActionDefinitionRepo.validateRemove(idString, modelBindingResult);
-        
+    public ApiResponse removeCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
+
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(customActionDefinition);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing custom action definition with id " + idString);
+                logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());
                 customActionDefinitionRepo.remove(customActionDefinition);
                 simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
@@ -119,7 +113,7 @@ public class CustomActionSettingsController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove custom action definition with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
                 break;
         }
         

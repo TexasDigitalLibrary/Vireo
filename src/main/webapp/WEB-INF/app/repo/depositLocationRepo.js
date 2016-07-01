@@ -1,11 +1,12 @@
-vireo.repo("DepositLocationRepo", function (api, DepositLocation, WsApi) {
+vireo.repo("DepositLocationRepo", function () {
 
 	var DepositLocationRepo = function() {
-		var depositLocationRepo = this;
-		depositLocationRepo.model = DepositLocation;
-		depositLocationRepo.mapping = api.DepositLocation;
-		return depositLocationRepo;
-	};
+
+		// additional repo methods and variables
+
+		return this;
+
+	}
 
 	return new DepositLocationRepo();
 	

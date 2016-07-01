@@ -58,7 +58,6 @@ public class LanguageController {
     
     /**
      * 
-     * @param data
      * @return
      */
     @ApiMapping("/create")
@@ -92,7 +91,6 @@ public class LanguageController {
     
     /**
      * 
-     * @param data
      * @return
      */
     @ApiMapping("/update")
@@ -125,36 +123,27 @@ public class LanguageController {
     }
     
     /**
-     * Endpoint to remove language by provided index
      * 
-     * @param indexString
-     *            index of language to remove
-     * @return ApiResponse indicating success or error
+     * @return
      */
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional //TODO: this @Transactional throws an exception when we catch DataIntegrityViolation
-    public ApiResponse removeLanguage(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "language_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        Language language = languageRepo.validateRemove(idString, modelBindingResult);
+    public ApiResponse removeLanguage(@ApiValidatedModel Language language) {
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(language);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing language with id " + idString);
+                logger.info("Removing language with name " + language.getName());
                 try {
                     languageRepo.remove(language);
                     simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 } catch (DataIntegrityViolationException e) {
-                    modelBindingResult.addError(new ObjectError("language", "Could not remove language " + language.getName() + ", it's being used!"));
-                    response = validationService.buildResponse(modelBindingResult);
+                    language.getBindingResult().addError(new ObjectError("language", "Could not remove language " + language.getName() + ", it's being used!"));
+                    response = validationService.buildResponse(language);
                     logger.error("Couldn't remove language " + language.getName() + " because: " + e.getLocalizedMessage());
                 }
                 break;
@@ -162,7 +151,7 @@ public class LanguageController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove language with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove language with name " + language.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         

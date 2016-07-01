@@ -97,24 +97,18 @@ public class GraduationMonthController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeGraduationMonth(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "graduation_month_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        GraduationMonth graduationMonth = graduationMonthRepo.validateRemove(idString, modelBindingResult);
+    public ApiResponse removeGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(graduationMonth);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing graduation month with id " + idString);
+                logger.info("Removing graduation month with id " + graduationMonth.getId());
                 graduationMonthRepo.remove(graduationMonth);
                 simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
@@ -122,7 +116,7 @@ public class GraduationMonthController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/graduation-months", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove graduation month with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove graduation month with id " + graduationMonth.getId() + " because: " + response.getMeta().getType());
                 break;
         }
         

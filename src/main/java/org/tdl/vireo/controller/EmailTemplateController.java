@@ -97,24 +97,21 @@ public class EmailTemplateController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeEmailTemplate(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "email_template_id");
-        
+    public ApiResponse removeEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+
         // will attach any errors to the BindingResult when validating the incoming idString
-        EmailTemplate emailTemplate = emailTemplateRepo.validateRemove(idString, modelBindingResult);
+        emailTemplate = emailTemplateRepo.validateRemove(emailTemplate);
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(emailTemplate);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing email template with id " + idString);
+                logger.info("Removing email template with name " + emailTemplate.getName());
                 emailTemplateRepo.remove(emailTemplate);
                 simpMessagingTemplate.convertAndSend("/channel/settings/email-templates", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
@@ -122,7 +119,7 @@ public class EmailTemplateController {
                 simpMessagingTemplate.convertAndSend("/channel/settings/email-templates", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove email template with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove email template with name " + emailTemplate.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         

@@ -24,7 +24,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/document-types',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
@@ -61,7 +61,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/custom-actions',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
@@ -98,7 +98,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/deposit-locations',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
@@ -135,7 +135,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/email-templates',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
@@ -172,7 +172,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/graduation-months',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
@@ -209,7 +209,7 @@ var apiMapping = {
 		remove: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/languages',
-			'method': ''
+			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',

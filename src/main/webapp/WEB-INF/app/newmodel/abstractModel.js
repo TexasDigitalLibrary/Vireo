@@ -60,7 +60,8 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 		};
 
 		this.delete = function() {
-			console.log('delete');
+			angular.extend(mapping.remove, {data: abstractModel});
+			return WsApi.fetch(mapping.remove);
 		};
 
 		this.listen = function(cb) {

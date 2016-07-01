@@ -6,9 +6,6 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.custom.LanguageRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class LanguageRepoImpl implements LanguageRepoCustom {
 
@@ -18,9 +15,6 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
     @Autowired
     private LanguageRepo languageRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public Language create(String name) {
         Language language = new Language(name);
@@ -72,19 +66,5 @@ public class LanguageRepoImpl implements LanguageRepoCustom {
         
         return language;
     }
-    
-    @Override
-    public Language validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        Language toRemove = null;
-        Long id = validationService.validateLong(idString, "language", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = languageRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("language", "Cannot remove language, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }
+
 }

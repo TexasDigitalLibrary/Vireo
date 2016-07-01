@@ -1,11 +1,12 @@
-vireo.repo("EmailTemplateRepo", function (api, EmailTemplate, WsApi) {
+vireo.repo("EmailTemplateRepo", function () {
 
 	var EmailTemplateRepo = function() {
-		var emailTemplateRepo = this;
-		emailTemplateRepo.model = EmailTemplate;
-		emailTemplateRepo.mapping = api.EmailTemplate;
-		return emailTemplateRepo;
-	};
+
+		// additional repo methods and variables
+
+		return this;
+
+	}
 
 	return new EmailTemplateRepo();
 	

@@ -1,11 +1,12 @@
-vireo.repo("AvailableDocumentTypeRepo", function (api, AvailableDocumentType, WsApi) {
+vireo.repo("AvailableDocumentTypeRepo", function () {
 
 	var AvailableDocumentTypeRepo = function() {
-		var availableDocumentTypeRepo = this;
-		availableDocumentTypeRepo.model = AvailableDocumentType;
-		availableDocumentTypeRepo.mapping = api.AvailableDocumentType;
-		return availableDocumentTypeRepo;
-	};
+
+		// additional repo methods and variables
+
+		return this;
+
+	}
 
 	return new AvailableDocumentTypeRepo();
 	
