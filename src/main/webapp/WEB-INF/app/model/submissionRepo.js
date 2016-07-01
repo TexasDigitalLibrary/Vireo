@@ -57,7 +57,6 @@ vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 		if(cache.ready){
 			return $q.resolve(cache.list);
 		}
-		
 		var wsreq = WsApi.fetch(VireoAbstractModel.buildRequest(api, 'all')).then(function(response){
 			var payload = angular.fromJson(response.body).payload;
 			cache.list.length = 0;
@@ -71,7 +70,6 @@ vireo.service("SubmissionRepo", function($q, WsApi, VireoAbstractModel) {
 			cache.ready = true;
 			return cache.list;
 		});
-		
 		return wsreq;
 	};
 

@@ -334,7 +334,8 @@
 	    <script src="controllers/submission/newSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionController.js"></script>
 	    <script src="controllers/submission/submissionViewController.js"></script>
-	    
+	    <script src="controllers/submission/submissionHistoryController.js"></script>
+
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
