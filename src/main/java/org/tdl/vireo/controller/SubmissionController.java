@@ -30,11 +30,10 @@ public class SubmissionController {
     private SubmissionRepo submissionRepo;
 
     @ApiMapping("/all")
-    @Auth(role = "STUDENT")
+    @Auth(role = "MANAGER")
+    @Transactional
     public ApiResponse getAll() {
-        Map<String, List<Submission>> allSubmissions = new HashMap<String, List<Submission>>();
-        allSubmissions.put("list", submissionRepo.findAll());
-        return new ApiResponse(SUCCESS, allSubmissions);
+        return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
     
     @ApiMapping("/get-one/{submissionId}")
@@ -47,7 +46,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
+     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
         return new ApiResponse(SUCCESS, submission);
     }
