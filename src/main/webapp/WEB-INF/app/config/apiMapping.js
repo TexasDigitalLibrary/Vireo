@@ -211,6 +211,43 @@ var apiMapping = {
 			'method': ''
 		}
 	},
+	Embargo: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/embargo',
+			'method': ''
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': ''
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': ''
+		}
+	},
 	EmailTemplate: {
 		all: {
 			'endpoint': '/private/queue',

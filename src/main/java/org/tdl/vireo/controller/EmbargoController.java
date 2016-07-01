@@ -43,7 +43,7 @@ public class EmbargoController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getEmbargoes() {
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
     }
 
     @ApiMapping("/create")
@@ -61,10 +61,10 @@ public class EmbargoController {
             case VALIDATION_INFO:
                 logger.info("Creating embargo with name " + embargo.getName());
                 embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create embargo with name " + embargo.getName() + " because: " + response.getMeta().getType());
@@ -89,10 +89,10 @@ public class EmbargoController {
             case VALIDATION_INFO:
                 logger.info("Updating embargo with name " + embargo.getName());
                 embargoRepo.save(embargo);
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update embargo with name " + embargo.getName() + " because: " + response.getMeta().getType());
@@ -102,32 +102,29 @@ public class EmbargoController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeEmbargo(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "embargo_id");
-        
+    public ApiResponse removeEmbargo(@ApiValidatedModel Embargo embargo) {
+
         // will attach any errors to the BindingResult when validating the incoming idString
-        Embargo embargo = embargoRepo.validateRemove(idString, modelBindingResult);
+        embargo = embargoRepo.validateRemove(embargo);
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(embargo);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing Embargo with id " + idString);
+                logger.info("Removing Embargo:  " + embargo.getName());
                 embargoRepo.remove(embargo);
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove embargo with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove embargo ("+embargo.getName()+") because: " + response.getMeta().getType());
                 break;
         }
         
@@ -155,10 +152,10 @@ public class EmbargoController {
             case VALIDATION_INFO:
                 logger.info("Reordering Embargoes with guarantor " + guarantor);
                 embargoRepo.reorder(longSrc, longDest, guarantor);
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder embargoes with guarantor " + guarantor + " because: " + response.getMeta().getType());
@@ -188,10 +185,10 @@ public class EmbargoController {
             case VALIDATION_INFO:
                 logger.info("Sorting Embargoes with guarantor " + guarantor + " by " + column);
                 embargoRepo.sort(column, guarantor);
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(VALIDATION_WARNING, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort embargoes with guarantor " + guarantor + " because: " + response.getMeta().getType());
@@ -201,9 +198,4 @@ public class EmbargoController {
         return response;
     }
     
-    private Map<String, List<Embargo>> getAll() {
-        Map<String, List<Embargo>> allRet = new HashMap<String, List<Embargo>>();
-        allRet.put("list", embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
-        return allRet;
-    }
 }
