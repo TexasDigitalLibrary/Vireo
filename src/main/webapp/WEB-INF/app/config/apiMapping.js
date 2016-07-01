@@ -198,6 +198,40 @@ var apiMapping = {
 			'controller': 'settings/deposit-location'
 		}
 	},
+	Embargo: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/embargo'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/embargo'
+		}
+	},
 	EmailTemplate: {
 		all: {
 			'endpoint': '/private/queue',
