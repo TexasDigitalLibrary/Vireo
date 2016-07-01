@@ -2,8 +2,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	console.log('do something damnit')
-
 	console.log(ControlledVocabularyRepo);
 
 	$scope.controlledVocabulary = ControlledVocabularyRepo.getAll();
