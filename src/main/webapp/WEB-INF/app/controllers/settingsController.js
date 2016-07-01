@@ -1,5 +1,5 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettings) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettingRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -7,7 +7,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	
 	$scope.serverErrors = [];
 		
-	$scope.settings.configurable = ConfigurableSettings.get();
+	$scope.settings.configurable = ConfigurableSettingRepo.getAllMapByType();
 
 	if(!$scope.isAnonymous()) {
 
@@ -16,11 +16,16 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		$scope.settings.user.ready().then(function() {
 
 			$scope.updateUserSetting = function(name, timer) {
-				if($scope.userSettingsForm && Object.keys($scope.userSettingsForm.$error).length) return;
+				if($scope.userSettingsForm && Object.keys($scope.userSettingsForm.$error).length) {
+					return;
+				}
 
-				timer = typeof timer == "undefined" ? 0 : timer;
+				timer = timer === undefined ? 0 : timer;
 
-				if($scope.typingTimer) clearTimeout($scope.typingTimer);
+				if($scope.typingTimer) {
+					clearTimeout($scope.typingTimer);
+				}
+
 				$scope.typingTimer = setTimeout(function() {
 					$scope.settings.user.save();
 				}, timer);
@@ -53,7 +58,9 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
   	};
   	
-	ConfigurableSettings.ready().then(function() {
+	ConfigurableSettingRepo.ready().then(function() {
+
+		console.log($scope.settings.configurable);
 
 		$scope.submissionsOpen = function(){
 	  		return stringToBoolean($scope.settings.configurable.application.submissions_open);
@@ -78,34 +85,37 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	  		return false;
 	  	};
 		
-		//TODO:  check these update config settings methods for redundancy and clean up.
-		$scope.delayedUpdateConfigurableSettings = function(type,name) {
+		//TODO: check these update config settings methods for redundancy and clean up.
+		$scope.delayedUpdateConfigurableSettings = function(type, name) {
 
-			if($scope.pendingUpdate) $timeout.cancel($scope.updateTimeout);
+			if($scope.pendingUpdate) {
+				$timeout.cancel($scope.updateTimeout);
+			}
 
 			$scope.pendingUpdate = true;
 
 			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfigurableSettings(type,name);
+				$scope.updateConfigurableSettings(type, name);
 				$scope.pendingUpdate = false;
 			}, 500);
 
 		};
 
 		$scope.updateConfigurableSettingsPlainText = function(type,name) {
-			ConfigurableSettings.update(type,name,filterHtml($scope.settings.configurable[type][name])).then(function(data) {
+			$scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
+			$scope.settings.configurable[type][name].save().then(function(data) {
 				setServerErrors(type, name, data);
 			});
 		};
 
 		$scope.updateConfigurableSettings = function(type,name) {
-			ConfigurableSettings.update(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+			$scope.settings.configurable[type][name].save().then(function(data) {
 				setServerErrors(type, name, data);
 			});
 		};
 
 		$scope.resetConfigurableSettings = function(type,name) {
-			ConfigurableSettings.reset(type,name,$scope.settings.configurable[type][name]).then(function(data) {
+			$scope.settings.configurable[type][name].reset().then(function(data) {
 				setServerErrors(type, name, data);
 			});
 		};

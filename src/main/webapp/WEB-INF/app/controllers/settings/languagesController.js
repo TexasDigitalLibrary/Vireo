@@ -4,11 +4,11 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
 	$scope.languages = LanguageRepo.getAll();
 
-	LanguageRepo.getProquestLanguageCodes().then(function(data) {
+	var proquestPromise = LanguageRepo.getProquestLanguageCodes().then(function(data) {
 		$scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;
 	});
 
-	$scope.ready = $q.all([LanguageRepo.ready(), LanguageRepo.getProquestLanguageCodes()]);
+	$scope.ready = $q.all([LanguageRepo.ready(), proquestPromise]);
 
 	$scope.dragging = false;
 

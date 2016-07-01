@@ -1,4 +1,5 @@
 vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsApi, RestApi) {
+
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.modalData = {
@@ -10,8 +11,11 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		$scope.serverErrors[name] = validationResponse;
   	};
 
-	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo; 
-	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo;
+  	console.log($scope.settings.configurable.lookAndFeel.left_logo)
+
+	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value; 
+
+	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
 
 	$scope.previewLogo = function(file) {
 		previewLogo(file).then(function(result) {

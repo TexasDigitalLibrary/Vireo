@@ -287,6 +287,7 @@
 	    <script src="repo/depositLocationRepo.js"></script>
 	    <script src="repo/emailTemplateRepo.js"></script>
 	    <script src="repo/graduationMonthRepo.js"></script>
+	    <script src="repo/configurableSettingRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
@@ -297,8 +298,8 @@
 		<script src="newmodel/depositLocation.js"></script>
 		<script src="newmodel/emailTemplate.js"></script>
 		<script src="newmodel/graduationMonth.js"></script>
-
 		<script src="newmodel/userSettings.js"></script>
+		<script src="newmodel/configurableSetting.js"></script>
 
 
 
@@ -307,7 +308,6 @@
 		<script src="factories/dragAndDropListenerFactory.js"></script>
 		
 	    <!-- Models -->
-	    <script src="model/configurableSettingsModel.js"></script>
 	    <script src="model/organizationRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userRepoModel.js"></script>

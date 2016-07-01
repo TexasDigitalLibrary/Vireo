@@ -1,5 +1,5 @@
 // TODO: remove AbstractModel and refactor this!!!
-vireo.factory("AbstractModelNew", function ($q, WsApi) {
+vireo.factory("AbstractModelNew", function ($q, $sanitize, WsApi) {
 
 	return function AbstractModelNew() {
 
@@ -29,7 +29,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 			}
 			else {
 				
-				WsApi.fetch(mapping.create).then(function(res) {
+				WsApi.fetch(mapping.instantiate).then(function(res) {
 					cache = cache !== undefined ? cache : {};
 
 					processResponse(res);
@@ -40,20 +40,25 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 
 		};
 
+		this.mapping = function() {
+			return mapping;
+		};
+
 		this.ready = function() {
 			return defer.promise;
 		};
 
 		this.save = function() {
 			return $q(function(resolve) {
+				console.log(abstractModel);
 				if(abstractModel.dirty()) {
 					angular.extend(mapping.update, {data: abstractModel});
-					WsApi.fetch(mapping.update).then(function() {
-						resolve(abstractModel);
+					WsApi.fetch(mapping.update).then(function(res) {
+						resolve(res);
 					});
 				}
 				else {
-					resolve(abstractModel);
+					resolve(res);
 				}
 			});
 			
@@ -68,7 +73,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 			listenCallbacks.push(cb);
 		};
 
-		this.reset = function() {
+		this.refresh = function() {
 			angular.extend(abstractModel, shadow);
 		};
 
@@ -113,7 +118,7 @@ vireo.factory("AbstractModelNew", function ($q, WsApi) {
 				setData(cache);
 			}
 			else {
-				abstractModel.reset();
+				abstractModel.refresh();
 			}
 			
 		};

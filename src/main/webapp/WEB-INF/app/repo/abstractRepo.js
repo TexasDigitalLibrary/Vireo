@@ -13,6 +13,9 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 
 		var defer = $q.defer();
 
+		var listenCallbacks = [];
+
+
 		var build = function(data) {
 			initialized = false;
 			return $q(function(resolve) {
@@ -42,7 +45,11 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 		});
 
 		WsApi.listen(abstractRepo.mapping.listen).then(null, null, function(res) {
-			build(unwrap(res));
+			build(unwrap(res)).then(function() {
+				angular.forEach(listenCallbacks, function(cb) {
+					cb();
+				});
+			});
 		});
 
 		abstractRepo.getAll = function() {
@@ -96,6 +103,10 @@ vireo.service("AbstractRepo", function ($q, WsApi) {
 
 		abstractRepo.update = function(model) {
 			return model.save();
+		};
+
+		this.listen = function(cb) {
+			listenCallbacks.push(cb);
 		};
 
 		// additiona core level repo methods and variables

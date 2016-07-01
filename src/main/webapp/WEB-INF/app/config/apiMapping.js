@@ -74,6 +74,38 @@ var apiMapping = {
 			'method': ''
 		}
 	},
+	ConfigurableSetting: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/configurable',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/configurable',
+			'method': ''
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/configurable',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/configurable',
+			'method': 'update'
+		},
+		reset: {
+			endpoint: '/private/queue',
+			controller: 'settings/configurable',
+			method: 'reset'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/configurable',
+			'method': 'remove'
+		}
+	},
 	DepositLocation: {
 		all: {
 			'endpoint': '/private/queue',
@@ -228,7 +260,7 @@ var apiMapping = {
 		}
 	},
 	UserSettings: {
-		create: {
+		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'user',
 			'method': 'settings',
