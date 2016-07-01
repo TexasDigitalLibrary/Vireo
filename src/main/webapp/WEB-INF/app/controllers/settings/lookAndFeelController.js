@@ -11,8 +11,6 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		$scope.serverErrors[name] = validationResponse;
   	};
 
-  	console.log($scope.settings.configurable.lookAndFeel.left_logo)
-
 	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value; 
 
 	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;

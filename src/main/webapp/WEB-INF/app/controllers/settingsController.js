@@ -60,14 +60,12 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   	
 	ConfigurableSettingRepo.ready().then(function() {
 
-		console.log($scope.settings.configurable);
-
 		$scope.submissionsOpen = function(){
-	  		return stringToBoolean($scope.settings.configurable.application.submissions_open);
+	  		return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
 	  	};
 	  	
 	  	$scope.multipleSubmissions = function(){
-	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions);
+	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
 	  	};
 	  	
 	  	// TODO: logic

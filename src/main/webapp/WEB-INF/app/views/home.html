@@ -1,7 +1,7 @@
 <div class="col-lg-8 col-lg-offset-2" ng-controller="UserController">
 	<div id="body" ng-controller="SettingsController">
 		<div class="row">
-			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before.value"></div>
 		</div>
 		<div class="form-actions row center" style="text-align: center;">
 			<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please <span ng-if="isAnonymous()"><a href="" data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login</a> and</span> click on <a href="/submit">Submission History</a>.</p>
@@ -13,7 +13,7 @@
 			<a href="/submission/new" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && (!submissionInProgress() || !submissionNeedsCorrections() || !hasSubmissions()) && !hasSubmissions()">Start your submission</a>
 		</div>
 		<div class="row">
-			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after"></div>
+			<div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_after.value"></div>
 		</div>
 	</div>
 </div>

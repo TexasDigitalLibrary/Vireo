@@ -13,7 +13,7 @@ vireo.controller("HeaderController", function(AbstractRepo, AbstractAppRepo, $sc
 		$scope.logoImage = function() {	
 		
 			if($scope.configurable.lookAndFeel) {
-				$scope.logoPath = $scope.configurable.lookAndFeel.left_logo;
+				$scope.logoPath = $scope.configurable.lookAndFeel.left_logo.value;
 			}
 		
 			if($scope.activeAdminSection()) {

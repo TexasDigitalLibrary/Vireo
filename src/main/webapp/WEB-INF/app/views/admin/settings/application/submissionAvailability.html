@@ -6,14 +6,14 @@
 			<toggleButton 
 				ng-click="updateConfigurableSettings('application', 'submissions_open')"
 				label="Submissions are currently:"
-				scope-value="settings.configurable.application.submissions_open"
+				scope-value="settings.configurable.application.submissions_open.value"
 				toggle-options="{{submissionsOpenOptions}}">
 			</toggleButton>
 
 			<toggleButton 
 				ng-click="updateConfigurableSettings('application', 'allow_multiple_submissions')"
 				label="Multiple Submissions:"
-				scope-value="settings.configurable.application.allow_multiple_submissions"
+				scope-value="settings.configurable.application.allow_multiple_submissions.value"
 				toggle-options="{{allowMultipleSubmissionsOptions}}">
 			</toggleButton>
 
@@ -23,7 +23,7 @@
 			
 			<textField 
 				label="Current submission semester:" 
-				scope-value="settings.configurable.application.current_semester"
+				scope-value="settings.configurable.application.current_semester.value"
 				hint="'Month Year' (i.e. May 2015)"
 				on-blur="updateConfigurableSettings('application', 'current_semester')"
 				key-down="confirmEdit(event, prop)"
@@ -32,7 +32,7 @@
 
 			<textField 
 				label="Degree Granting School:" 
-				scope-value="settings.configurable.application.grantor"
+				scope-value="settings.configurable.application.grantor.value"
 				hint="The full name of the institution awarding degrees."
 				on-blur="updateConfigurableSettings('application', 'grantor')"
 				key-down="confirmEdit(event, prop)"

@@ -14,7 +14,7 @@
 			class="table table-striped table-bordered table-condensed">
 			<caption>
 				<h4>
-					<p class="center red" ng-if="submissionsOpen()">Currently accepting submissions for the {{settings.configurable.application.current_semester}} semester.</p>
+					<p class="center red" ng-if="submissionsOpen()">Currently accepting submissions for the {{settings.configurable.application.current_semester.value}} semester.</p>
 					<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.</p>
 				</h4>
 			</caption>
