@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateModel, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeService, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -19,7 +19,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
-	$scope.fieldPredicates = FieldPredicateModel.getAll();
+	$scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+	console.log($scope.fieldPredicates);
+
 	$scope.fieldGlosses = FieldGlossRepo.getAll();
 
 	$scope.inputTypes = InputTypeService.getAll();
@@ -72,11 +75,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.createPredicate = function(predicateValue) {
 		var predicate = {'value': predicateValue}
 
-		FieldPredicateModel.addPredicate(predicate).then(function(response){
+		FieldPredicateRepo.create(predicate).then(function(response){
 			$scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
 		});
 
-		FieldPredicateModel.getAll(true);
 	}
 	
 	$scope.createFieldProfile = function() {
@@ -88,7 +90,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.selectFieldProfile = function(index) {
 		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 		$scope.modalData = fieldProfile;
-		console.log($scope.modalData)
+
 		// TODO: needs multi glosses
 		$scope.modalData.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
 		// TODO: needs multi controlled vocabulary

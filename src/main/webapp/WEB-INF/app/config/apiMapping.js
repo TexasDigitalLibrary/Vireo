@@ -300,6 +300,40 @@ var apiMapping = {
 			'controller': 'settings/field-gloss'
 		}
 	},
+	FieldPredicate: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/field-predicates'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates'
+		}
+	},
 	GraduationMonth: {
 		all: {
 			'endpoint': '/private/queue',
