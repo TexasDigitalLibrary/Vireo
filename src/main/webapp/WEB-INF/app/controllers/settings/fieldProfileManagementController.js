@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -25,7 +25,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.fieldGlosses = FieldGlossRepo.getAll();
 
-	$scope.inputTypes = InputTypeService.getAll();
+	$scope.inputTypes = InputTypeRepo.getAll();
 	
 	$scope.dragging = false;
 	

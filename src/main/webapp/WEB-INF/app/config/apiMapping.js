@@ -368,6 +368,40 @@ var apiMapping = {
 			'controller': 'settings/graduation-month'
 		}
 	},
+	InputType: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/input-types'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/input-types'
+		}
+	},
 	Language: {
 		all: {
 			'endpoint': '/private/queue',

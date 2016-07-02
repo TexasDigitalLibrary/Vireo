@@ -294,6 +294,7 @@
 	    <script src="repo/embargoRepo.js"></script>
 	    <script src="repo/fieldGlossRepo.js"></script>
 	    <script src="repo/fieldPredicateRepo.js"></script>
+	    <script src="repo/inputTypeRepo.js"></script>
 
 	    <!-- New Models --> 
 		<script src="newmodel/abstractAppModel.js"></script>
@@ -311,6 +312,7 @@
 		<script src="newmodel/embargo.js"></script>
 		<script src="newmodel/fieldGloss.js"></script>
 		<script src="newmodel/fieldPredicate.js"></script>
+		<script src="newmodel/inputType.js"></script>
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
@@ -320,7 +322,6 @@
 	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
-	    <script src="model/inputTypeService.js"></script>
 	    <script src="model/submissionRepo.js"></script>
 
 
