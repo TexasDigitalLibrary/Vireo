@@ -321,7 +321,6 @@
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/inputTypeService.js"></script>
-	    <script src="model/vireoAbstractModel.js"></script>
 	    <script src="model/submissionRepo.js"></script>
 
 
