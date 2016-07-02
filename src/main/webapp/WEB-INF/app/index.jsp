@@ -319,7 +319,6 @@
 		
 	    <!-- Models -->
 	    <script src="model/organizationRepoModel.js"></script>
-	    <script src="model/organizationCategoryRepo.js"></script>
 	    <script src="model/userRepoModel.js"></script>
 	    <script src="model/organizationCategoryRepoModel.js"></script>
 	    <script src="model/submissionRepo.js"></script>
