@@ -122,18 +122,17 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
     
-    public void disinheritFromOrganization(Organization requestingOrg, WorkflowStep workflowStepToDisinherit) {
+    public void removeFromOrganization(Organization requestingOrg, WorkflowStep workflowStepToRemove) {
         
     	// if requesting organization is the workflow step's orignating organization
-        if(requestingOrg.getId().equals(workflowStepToDisinherit.getOriginatingOrganization().getId())) {
+        if(requestingOrg.getId().equals(workflowStepToRemove.getOriginatingOrganization().getId())) {
             //the requesting organization is the owning organization so just delete
-            workflowStepRepo.delete(workflowStepToDisinherit);
+            workflowStepRepo.delete(workflowStepToRemove);
         } else {
           //the requesting organization is not the owning organization so only remove from aggregate workflowsteps
-          requestingOrg.removeAggregateWorkflowStep(workflowStepToDisinherit);
+          requestingOrg.removeAggregateWorkflowStep(workflowStepToRemove);
           organizationRepo.save(requestingOrg);
-        }
-        
+        }        
     }
     
     public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
@@ -358,7 +357,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         });
     }
         
-    private List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
+    @Override
+    public List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
         List<WorkflowStep> descendantWorkflowSteps = new ArrayList<WorkflowStep>();
         List<WorkflowStep> currentDescendentsWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
         descendantWorkflowSteps.addAll(currentDescendentsWorkflowSteps);
@@ -368,7 +368,35 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return descendantWorkflowSteps;
     }
     
-    private List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep) {
+    /**
+     * Get a list of WorkflowSteps that are descendants of a given WorkflowStep and are on an Organization that descends from given Organization 
+     */
+    @Override
+    public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization) {
+        List<WorkflowStep> allDescendants = getDescendantsOfStep(workflowStep);
+        
+        List<WorkflowStep> localDescendants = new ArrayList<WorkflowStep>();
+        
+        for(Organization org : organization.getChildrenOrganizations()) {
+            for(WorkflowStep ws : org.getOriginalWorkflowSteps()) {                
+                if(allDescendants.contains(ws) && !localDescendants.contains(ws)) {
+                    localDescendants.add(ws);
+                }
+            }
+            
+            for(WorkflowStep candidateDescendant : getDescendantsOfStepUnderOrganization(workflowStep, org)) {
+                if(!localDescendants.contains(candidateDescendant)) {
+                    localDescendants.add(candidateDescendant);
+                }
+            }
+        }
+        
+        return localDescendants;    
+        
+    }
+    
+    @Override
+    public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep) {
         List<Organization> descendantOrganizationsContainingWorkflowStep = new ArrayList<Organization>();
         if(organization.getAggregateWorkflowSteps().contains(workflowStep)) {
         	descendantOrganizationsContainingWorkflowStep.add(organization);

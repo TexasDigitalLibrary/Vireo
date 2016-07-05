@@ -57,24 +57,26 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
     
-    public void disinheritFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToDisinherit) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
+    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fieldProfileToRemove) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             
-            if(fieldProfileToDisinherit.getOriginatingWorkflowStep().getId().equals(fieldProfileToDisinherit.getId()) || fieldProfileToDisinherit.getOverrideable()) {
+            if(fieldProfileToRemove.getOriginatingWorkflowStep().getId().equals(fieldProfileToRemove.getId()) || fieldProfileToRemove.getOverrideable()) {
             
             	// if requesting organization is not the workflow step's orignating organization    	    	    	
                 if(!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
                 	// create a new workflow step
                     workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
                     
-                    workflowStep.removeAggregateFieldProfile(fieldProfileToDisinherit);
+                    //recursive call
+                    workflowStep.removeAggregateFieldProfile(fieldProfileToRemove);
                 	
                     workflowStepRepo.save(workflowStep);
                 }
+                // else, requesting organiation originates the workflow step
                 else {
                     
-                    List<WorkflowStep> workflowStepsContainingFieldProfile = getContainingDescendantWorkflowStep(requestingOrganization, fieldProfileToDisinherit);
+                    List<WorkflowStep> workflowStepsContainingFieldProfile = getContainingDescendantWorkflowStep(requestingOrganization, fieldProfileToRemove);
                     
                     if(workflowStepsContainingFieldProfile.size() > 0) {
                         
@@ -83,29 +85,29 @@ public class FieldProfileRepoImpl implements FieldProfileRepoCustom {
                         for(WorkflowStep workflowStepContainingFieldProfile : workflowStepsContainingFieldProfile) {
                             // add field profile as original to first workflow step
                             if(!foundNewOriginalOwner) {
-                                workflowStepContainingFieldProfile.addOriginalFieldProfile(fieldProfileToDisinherit);
+                                workflowStepContainingFieldProfile.addOriginalFieldProfile(fieldProfileToRemove);
                                 foundNewOriginalOwner = true;
                             }
                             else {
-                                workflowStepContainingFieldProfile.addAggregateFieldProfile(fieldProfileToDisinherit);
+                                workflowStepContainingFieldProfile.addAggregateFieldProfile(fieldProfileToRemove);
                             }
                             workflowStepRepo.save(workflowStepContainingFieldProfile);
                         }
                         
-                        workflowStep.removeOriginalFieldProfile(fieldProfileToDisinherit);
+                        workflowStep.removeOriginalFieldProfile(fieldProfileToRemove);
                         
                         workflowStepRepo.save(workflowStep);
                         
                     }
                     else {            
-                        fieldProfileRepo.delete(fieldProfileToDisinherit);
+                        fieldProfileRepo.delete(fieldProfileToRemove);
                     }
                 }
-            }
+            }//workflow step doesn't originate the field profile and it is non-overrideable
             else {
                 throw new FieldProfileNonOverrideableException();
             }
-        }
+        }//requesting org doesn't originate the field's workflow step, and the workflow step is non-overrideable
         else {
             throw new WorkflowStepNonOverrideableException();
         }
