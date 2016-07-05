@@ -23,10 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -43,8 +39,6 @@ public class Submission extends BaseEntity {
     private SubmissionState state;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional=false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
