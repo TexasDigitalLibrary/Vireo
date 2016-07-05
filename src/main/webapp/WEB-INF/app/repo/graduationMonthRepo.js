@@ -1,4 +1,4 @@
-core.repo("GraduationMonthRepo", function GraduationMonthRepo() {
+vireo.repo("GraduationMonthRepo", function GraduationMonthRepo() {
 
 	// additional repo methods and variables
 

@@ -1,4 +1,4 @@
-core.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
+vireo.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
 
 	var configurations = {};
 

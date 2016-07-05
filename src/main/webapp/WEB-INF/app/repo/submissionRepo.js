@@ -1,4 +1,4 @@
-core.repo("SubmissionRepo", function SubmissionRepo(WsApi) {
+vireo.repo("SubmissionRepo", function SubmissionRepo(WsApi) {
 
 	// additional repo methods and variables
 

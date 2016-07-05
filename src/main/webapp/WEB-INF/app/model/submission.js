@@ -1,4 +1,4 @@
-core.model("Submission", function () {
+vireo.model("Submission", function () {
 
 	return function Submission() {
 		

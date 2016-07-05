@@ -1,4 +1,4 @@
-core.repo("UserRepo", function UserRepo() {
+vireo.repo("UserRepo", function UserRepo() {
 
 	return this;
 

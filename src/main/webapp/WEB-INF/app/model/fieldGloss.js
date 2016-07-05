@@ -1,4 +1,4 @@
-core.model("FieldGloss", function () {
+vireo.model("FieldGloss", function () {
 
 	return function FieldGloss() {
 		

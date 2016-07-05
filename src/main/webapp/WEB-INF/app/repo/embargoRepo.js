@@ -1,4 +1,4 @@
-core.repo("EmbargoRepo", function EmbargoRepo(WsApi) {
+vireo.repo("EmbargoRepo", function EmbargoRepo(WsApi) {
 
 	var EmbargoRepo = this;
 

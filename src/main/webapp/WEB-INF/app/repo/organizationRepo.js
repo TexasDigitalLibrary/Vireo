@@ -1,4 +1,4 @@
-core.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
+vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 
 	var selectedOrganization = {};
 

@@ -1,4 +1,4 @@
-core.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi) {
+vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi) {
 
 	// additional repo methods and variables
 

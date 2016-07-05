@@ -1,4 +1,4 @@
-core.repo("DepositLocationRepo", function DepositLocationRepo() {
+vireo.repo("DepositLocationRepo", function DepositLocationRepo() {
 
 	// additional repo methods and variables
 

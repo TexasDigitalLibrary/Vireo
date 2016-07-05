@@ -1,4 +1,4 @@
-core.repo("EmailTemplateRepo", function EmailTemplateRepo() {
+vireo.repo("EmailTemplateRepo", function EmailTemplateRepo() {
 
 	// additional repo methods and variables
 

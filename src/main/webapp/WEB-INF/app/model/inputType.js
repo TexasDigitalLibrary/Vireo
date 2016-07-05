@@ -1,4 +1,4 @@
-core.model("InputType", function () {
+vireo.model("InputType", function () {
 
 	return function InputType() {
 		

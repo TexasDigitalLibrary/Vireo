@@ -15,7 +15,6 @@ vireo.controller('NewSubmissionController', function ($controller, $scope, $loca
 	};
 
 	$scope.createSubmission = function() {
-		console.log('create submission')
 		SubmissionRepo.create({
 			'organizationId': $scope.getSelectedOrganization().id
 		}).then(function(data) {

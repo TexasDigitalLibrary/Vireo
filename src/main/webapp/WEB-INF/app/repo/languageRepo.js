@@ -1,4 +1,4 @@
-core.repo("LanguageRepo", function LanguageRepo(WsApi) {
+vireo.repo("LanguageRepo", function LanguageRepo(WsApi) {
 
 	// additional repo methods and variables
 
