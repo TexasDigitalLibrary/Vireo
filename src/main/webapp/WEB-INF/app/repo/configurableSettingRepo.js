@@ -1,4 +1,4 @@
-vireo.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
+core.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
 
 	var configurations = {};
 
@@ -26,7 +26,6 @@ vireo.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
 		});
 
 		this.listen(function() {
-			console.log('test')
 			mapByType(configurations);
 		});
 		

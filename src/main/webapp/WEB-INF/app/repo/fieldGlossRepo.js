@@ -1,8 +1,8 @@
-vireo.repo("FieldGlossRepo", function() {
+core.repo("FieldGlossRepo", function FieldGlossRepo() {
 
 	var FieldGlossRepo  = this;
 
-	//Repo specific code here
+	// additional repo methods and variables
 
 	return FieldGlossRepo;
 

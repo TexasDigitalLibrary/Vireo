@@ -1,4 +1,4 @@
-vireo.model("WorkflowStep", function () {
+core.model("WorkflowStep", function () {
 
 	return function WorkflowStep() {
 

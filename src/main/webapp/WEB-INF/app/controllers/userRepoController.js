@@ -1,58 +1,74 @@
-vireo.controller('UserRepoController', function ($controller, $location, $route, $q, $scope, StorageService, User, UserRepo) {
+vireo.controller('UserRepoController', function ($controller, $location, $route, $q, $scope, $timeout, StorageService, User, UserRepo) {
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
     
-    $scope.user = User.get();
+    $scope.user = new User();
 
-    $scope.userRepo = UserRepo.get();
+    $scope.users = UserRepo.getAll();
     
-    $scope.ready = $q.all([User.ready()]);
+    $scope.ready = $q.all([$scope.user.ready(), UserRepo.ready()]);
+
+    $scope.roles = {
+    	'ADMINISTRATOR' : 'Administrator',
+        'MANAGER' : 'Manager' ,
+        'REVIEWER': 'Reviewer',
+        'STUDENT' : 'Student'
+    };
+
+    $scope.modalData = {};
+
+    $scope.serverErrors = [];
     
     $scope.ready.then(function() {
 
-		$scope.updateRole = function(userToEdit) {
-			UserRepo.updateRole($scope.user, userToEdit);
-			if($scope.user.email == userToEdit.email) {
-				StorageService.set("role", userToEdit.role);
-				if(userToEdit.role == 'STUDENT' || userToEdit.role == 'REVIEWER') {
-					$location.path('/myprofile');
+		$scope.updateRole = function(user, role) {
+			user.role = role !== undefined ? role : user.role;
+			user.save().then(function(data) {
+				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
+				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
+					angular.element('#addMemberModal').modal('hide');
+					if($scope.serverErrors !== undefined) {
+						$scope.serverErrors.errors = undefined;
+					}
+					$scope.modalData = {};
 				}
-				else {
-					$route.reload();
-				}
-			}
+			});
 		};
 		
 		$scope.allowableRoles = function(userRole) {
 			if(sessionStorage.role == 'ADMINISTRATOR') {				
-				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT'];
+				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
 			}
 			else if(sessionStorage.role == 'MANAGER') {
 				if(userRole == 'ADMINISTRATOR') {
 					return ['ADMINISTRATOR'];
 				}
-				return ['MANAGER', 'REVIEWER', 'STUDENT'];
+				return ['MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
 			}
 			else if(sessionStorage.role == 'REVIEWER') {
 				if(userRole == 'ADMINISTRATOR') {
 					return ['ADMINISTRATOR'];
 				}
-				return ['REVIEWER', 'STUDENT'];
+				return ['REVIEWER', 'STUDENT', 'NONE'];
 			}
 			else {
 				return [userRole];
 			}
 		};
-		
-		UserRepo.listen().then(null, null, function(data) {
 
-	    	if(typeof $scope.user != 'undefined') {
-	    		var payload = angular.fromJson(data.body).payload;
-	    		console.log(payload);
-	    		if(payload.HashMap.changedUserEmail == $scope.user.email) {
-					$scope.user = User.refresh();
-					$route.reload();						
-				}	
-	    	}		
+		$scope.selectUser = function (selectedUser) {
+        	$scope.serverErrors = [];
+            $scope.modalData = selectedUser;
+        }
+		
+		UserRepo.listen(function() {
+	    	$scope.user = new User();
+	    	$timeout(function() {
+		    	if($scope.user.role == 'STUDENT' || $scope.user.role == 'REVIEWER') {
+					$location.path('/myprofile');
+				}
+	    	}, 250);
+	    	
 		});
+
     });
 });

@@ -2,12 +2,13 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	SidebarService.addBox({"title":"Create Organization","viewUrl":"views/sideboxes/organization.html"});
+	SidebarService.addBox({
+		"title": "Create Organization",
+		"viewUrl": "views/sideboxes/organization.html"
+	});
 
-	$scope.organizations = OrganizationRepo.get();
+	$scope.organizations = OrganizationRepo.getAll();
 	
-	console.log($scope.organizations);
-
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
 	$scope.activeManagementPane = 'edit';
@@ -34,7 +35,7 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 	$scope.ready = $q.all([OrganizationRepo.ready()]);
 
 	$scope.ready.then(function() {
-		$scope.newOrganization.parent = $scope.organizations.list[0];
+		$scope.newOrganization.parent = $scope.organizations[0];
 	});
 
 });

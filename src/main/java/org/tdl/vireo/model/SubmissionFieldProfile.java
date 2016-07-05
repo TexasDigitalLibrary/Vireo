@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("Sub")
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "predicate_id", "inputType", "repeatable", "optional", "fp_type"}) )
 public class SubmissionFieldProfile extends AbstractFieldProfile<SubmissionFieldProfile> {
         
     public SubmissionFieldProfile() {

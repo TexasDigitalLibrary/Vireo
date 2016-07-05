@@ -1,6 +1,6 @@
-vireo.model("Language", function () {
+core.model("FieldGloss", function () {
 
-	return function Language() {
+	return function FieldGloss() {
 		
 		// additional model methods and variables
 

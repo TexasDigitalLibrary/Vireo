@@ -1,4 +1,4 @@
-vireo.model("UserSettings", function () {
+core.model("UserSettings", function () {
 
 	return function UserSettings() {
 

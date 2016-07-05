@@ -21,8 +21,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-	console.log($scope.fieldPredicates);
-
 	$scope.fieldGlosses = FieldGlossRepo.getAll();
 
 	$scope.inputTypes = InputTypeRepo.getAll();

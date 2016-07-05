@@ -1,4 +1,4 @@
-vireo.model("ConfigurableSetting", function ($sanitize, WsApi) {
+core.model("ConfigurableSetting", function ($sanitize, WsApi) {
 
 	return function ConfigurableSetting() {
 

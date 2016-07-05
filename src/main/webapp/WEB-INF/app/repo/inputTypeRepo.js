@@ -1,6 +1,6 @@
-vireo.repo("InputTypeRepo", function() {
+core.repo("InputTypeRepo", function InputTypeRepo() {
 
-	// repo specific methods here.
+	// additional repo methods and variables
 
 	return this;
 

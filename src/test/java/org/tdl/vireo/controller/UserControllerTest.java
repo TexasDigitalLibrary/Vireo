@@ -128,14 +128,7 @@ public class UserControllerTest extends AbstractControllerTest {
                    return updateUser((User) invocation.getArguments()[0]);
                }}
         );
-        
-        Mockito.when(userRepo.validateUpdateRole(any(User.class))).then(new Answer<User>() {
-            @Override
-            public User answer(InvocationOnMock invocation) throws Throwable {
-                return validateUpdateRole((User)(invocation.getArguments()[0]));
-            }}
-        );
-        
+                
         Mockito.when(validationService.buildResponse(any(User.class))).then(new Answer<ApiResponse>() {
             @Override
             public ApiResponse answer(InvocationOnMock invocation) throws Throwable {

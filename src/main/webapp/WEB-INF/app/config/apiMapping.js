@@ -280,24 +280,6 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/field-gloss',
 			'method': 'create'
-		},
-		update: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-gloss',
-			'method': 'update'
-		},
-		remove: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-gloss',
-			'method': 'remove'
-		},
-		reorder: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-gloss'
-		},
-		sort: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-gloss'
 		}
 	},
 	FieldPredicate: {
@@ -314,24 +296,6 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/field-predicates',
 			'method': 'create'
-		},
-		update: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-predicates',
-			'method': 'update'
-		},
-		remove: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-predicates',
-			'method': 'remove'
-		},
-		reorder: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-predicates'
-		},
-		sort: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/field-predicates'
 		}
 	},
 	GraduationMonth: {
@@ -382,24 +346,6 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/input-types',
 			'method': 'create'
-		},
-		update: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/input-types',
-			'method': 'update'
-		},
-		remove: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/input-types',
-			'method': 'remove'
-		},
-		reorder: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/input-types'
-		},
-		sort: {
-			'endpoint': '/private/queue',
-			'controller': 'settings/input-types'
 		}
 	},
 	Language: {
@@ -439,6 +385,102 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/language',
 			'method': 'proquest'
+		}
+	},
+	Organization: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'organizations'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'update'
+		}
+	},
+	OrganizationCategory: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/organization-category'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category',
+			'method': 'create'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category',
+			'method': 'update'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category',
+			'method': 'remove'
+		},
+		reorder: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category'
+		},
+		sort: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/organization-category'
+		}
+	},
+	Submission: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'all'
+		},
+		one: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'create'
+		}
+	},
+	User: {
+		instantiate: {
+			'endpoint': '/private/queue', 
+			'controller': 'user', 
+			'method': 'credentials'
+		},
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'user',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'user'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'user',
+			'method': 'update'
 		}
 	},
 	UserSettings: {

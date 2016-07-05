@@ -1,4 +1,4 @@
-vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi, WsApi) {
+core.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi, WsApi) {
 
 	// additional repo methods and variables
 

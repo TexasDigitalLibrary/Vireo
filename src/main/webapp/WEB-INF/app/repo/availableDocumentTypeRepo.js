@@ -1,4 +1,4 @@
-vireo.repo("AvailableDocumentTypeRepo", function AvailableDocumentTypeRepo() {
+core.repo("AvailableDocumentTypeRepo", function AvailableDocumentTypeRepo() {
 
 	// additional repo methods and variables
 

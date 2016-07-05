@@ -1,4 +1,4 @@
-vireo.model("ControlledVocabulary", function () {
+core.model("ControlledVocabulary", function () {
 
 	return function ControlledVocabulary() {
 		

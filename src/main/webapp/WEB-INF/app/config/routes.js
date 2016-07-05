@@ -9,7 +9,7 @@ vireo.config(function($routeProvider, $locationProvider) {
 		}).
 		when('/submit', {
 			templateUrl: 'views/student/submit.html',
-			access: ["STUDENT", "ADMINISTRATOR"]
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/new', {
 			templateUrl: 'views/submission/newSubmission.html',
