@@ -4,9 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -63,9 +61,7 @@ public class WorkflowStepController {
     @ApiMapping("/all")
     @Auth(role="MANAGER")
     public ApiResponse getAll() {
-        Map<String,List<WorkflowStep>> map = new HashMap<String,List<WorkflowStep>>();        
-        map.put("list", workflowStepRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, workflowStepRepo.findAll());
     }
     
     @ApiMapping("/get/{workflowStepId}")

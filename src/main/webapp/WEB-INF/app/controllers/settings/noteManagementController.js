@@ -41,7 +41,6 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	$scope.resetNotes();
 	
 	$scope.createNote = function() {
-		console.info('modalData: ', $scope.modalData);
 		WorkflowStepRepo.addNote($scope.step.id, $scope.modalData).then(function(response) {
 			
 		});
