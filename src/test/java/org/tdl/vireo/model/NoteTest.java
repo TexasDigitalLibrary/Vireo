@@ -1,13 +1,14 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
@@ -61,7 +62,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testInheritNoteViaPointer() {
+    public void testInheritNoteViaPointer() throws ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -136,7 +137,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test(expected=NoteNonOverrideableException.class)
-    public void testCantOverrideNonOverrideableNote() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public void testCantOverrideNonOverrideableNote() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -165,7 +166,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test(expected=WorkflowStepNonOverrideableException.class)
-    public void testCantOverrideNonOverrideableWorkflowStep() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public void testCantOverrideNonOverrideableWorkflowStep() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -201,7 +202,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -408,7 +409,6 @@ public class NoteTest extends AbstractEntityTest {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 
     }
-    
     
     
     @Test
@@ -641,7 +641,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testNoteChangeAtChildOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public void testNoteChangeAtChildOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -763,7 +763,7 @@ public class NoteTest extends AbstractEntityTest {
     }
  
     @Test
-    public void testMaintainNoteOrderWhenOverriding() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
+    public void testMaintainNoteOrderWhenOverriding() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -827,25 +827,32 @@ public class NoteTest extends AbstractEntityTest {
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
+        WorkflowStep newWSWithNewNoteViaOriginals = grandChildOrganization.getOriginalWorkflowSteps().get(0);
+        WorkflowStep newWSWithNewNoteViaAggregation = grandChildOrganization.getAggregateWorkflowSteps().get(0);
         
-        WorkflowStep newWSWithNewNoteViaOriginals = grandChildOrganization.getAggregateWorkflowSteps().get(0);
-        WorkflowStep newWSWithNewNoteViaAggregation = grandChildOrganization.getOriginalWorkflowSteps().get(0);
-        
-        assertEquals("The new aggregated workflow step on the grandchild org was not the one the grandchild org just originated!", newWSWithNewNoteViaOriginals, newWSWithNewNoteViaAggregation);
+          
+        assertEquals("The new aggregated workflow step on the grandchild org was not the one the grandchild org just originated!  Original had id " + newWSWithNewNoteViaOriginals.getId() + " while aggregate had id " + newWSWithNewNoteViaAggregation.getId(), newWSWithNewNoteViaOriginals, newWSWithNewNoteViaAggregation);
         
         
         assertEquals("Updated note was in the wrong order!", n2Updated.getId(), grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1).getId());
         
     }
     
-    //TODO:  this test is not done, development of the full feature deferred for now
+    
+    /**
+     * Test that when a note is overridden at a child org, the override is removed and the original is reattached when 
+     * the note is made non-overrideable at a parent org.
+     * @throws WorkflowStepNonOverrideableException
+     * @throws NoteNonOverrideableException
+     * @throws ComponentNotPresentOnOrgException
+     */
     @Test
-    public void testMakeNoteNonOverrideable() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException {
-        // this test calls for adding a single workflowstep to the parent organization
+    public void testReInheritOverriddenNote() throws WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
+        // this test calls for adding a single workflowstep to the parent organization, so get rid of the one at the middle org
         workflowStepRepo.delete(workflowStep);
         
         organization = organizationRepo.findOne(organization.getId());
-      
+        
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         
@@ -862,87 +869,99 @@ public class NoteTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
       
         
-        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
-        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        
-      
-        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
-        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        
-        
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        Long wsId = workflowStep.getId();
         
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        //now we have an org hierarchy with a parent, child, and grandchild
+        /////////////////////////////////////////////////////////////////////////
         String note1Name = TEST_NOTE_NAME + " 1",
                note2Name = TEST_NOTE_NAME + " 2",
                note3Name = TEST_NOTE_NAME + " 3";
          
-        Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
          
-        Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
          
-        Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.findOne(workflowStep.getId());
-        
-
-        organization = organizationRepo.findOne(organization.getId());
-        
-        n1.setName("Updated Name!");
-        n1.setText("Updated Text!");
-        
-        n1 = noteRepo.update(n1, organization);
-        
-        
-        //change to note recorded on new workflow step at child org, inherited by all descendant orgs
-        workflowStep = workflowStepRepo.findOne(wsId);
-        
-        organization = organizationRepo.findOne(organization.getId());
-        
-        
-        WorkflowStep overriddenWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
-        
-        assertFalse("The child org didn't get a new workflow step when it overrode a note!", overriddenWorkflowStep.getId().equals(wsId));
-        
-        
-        assertEquals("The child org's workflow step didn't originate the new note!", 1, organization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size());
-        
-        
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        
-        
-        n1.setOverrideable(false);
-        
-        n1 = noteRepo.update(n1, parentOrganization);
-        
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        organization = organizationRepo.findOne(organization.getId());
-        
-        //TODO:
-        //assertEquals("The child org's workflow step still had the forbidden note!", 0, organization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size());
-        
-        //should delete new note at child org
-        
-        
-        
-        //TODO:  should we delete workflow step which is now functionally identical to original workflow step and have everybody point back at the original?
-        
-        //TODO:  do we really need the overrideable boolean on notes?
-      
+         Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
+         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
+         
+         
+         
+         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+         organization = organizationRepo.findOne(organization.getId());
+         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         
+         //now we have three notes originating at the topmost org
+         //////////////////////////////////////////////////////////////////////
+         
+         //make a note non-overrideable at the grandchild org
+         long n2Id = n2.getId();
+         n2.setOverrideable(false);
+         Note n2updatedAtGrandchild = noteRepo.update(n2, grandChildOrganization);
+         
+         
+         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         n2 = noteRepo.findOne(n2Id);
+         
+         //ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
+         //old n2 should still be overrideable
+         assertTrue("Note updated at grandchild changed the note at the parent!" , n2.getOverrideable());
+         //old n2 should be different from the new n2 updated at the grandchild
+         assertFalse("Note updated at grandchild didn't get duplicated!", n2.getId().equals(n2updatedAtGrandchild.getId()));
+         assertEquals("A new Note didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size());
+         assertTrue("A new Note didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtGrandchild));
+         
+         //TODO:  make the note non-overrideable at the child org
+         n2.setOverrideable(false);
+         Note n2updatedAtChild = noteRepo.update(n2, organization);
+         
+         organization = organizationRepo.findOne(organization.getId());
+         n2 = noteRepo.findOne(n2Id);
+         
+         // ensure that a new note got made at the child after this override (to non-overrideable :) )
+         //old n2 should still be overrideable
+         assertTrue("Note updated at child didn't get duplicated!" , n2.getOverrideable());
+         //old n2 should be different from the new n2 updated at the grandchild
+         assertFalse("Note updated at child didn't get duplicated!", n2.getId().equals(n2updatedAtChild.getId()));
+         
+         
+         
+         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         
+         //ensure that the grandchild's new note is replaced by the child's non-overrideable one
+         assertTrue("Note made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().isEmpty());
+         assertFalse("Note made non-overrideable still stuck around at the grandchild who'd overridden it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().contains(n2updatedAtGrandchild));
+         
+         //TODO:  make the note non-overrideable at the parent org
+         //TOOO:  ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
+          
+         
+         
+         //now all is restored, except one of the notes is non-overrideable at the parent
+         
+         
+         //TODO:  remove a note at the grandchild
+         //TODO:  make the removed note non-overrideable at the parent
+         //TODO:  ensure that the removed note is reaggregated upon the grandchild who removed it
+         
+         
+         
+         
+         
+         
     }
+
     
-    //TODO:  this test is not done, development of the full feature deferred for now
+    //TODO:  this test is not done, development of the full feature (indefinitely) deferred for now
     @Test
-    public void testDeleteNoteAtDescendantOrganizationAndDuplicateWorkflowStepIsDeletedToo() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException
+    public void testDeleteNoteAtDescendantOrganizationAndDuplicateWorkflowStepIsDeletedToo() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException
     {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -995,6 +1014,9 @@ public class NoteTest extends AbstractEntityTest {
         Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
         
         //override the note at the child
         n1.setName("Updated Name!");

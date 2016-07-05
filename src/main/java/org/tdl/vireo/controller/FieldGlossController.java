@@ -2,16 +2,12 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
@@ -25,14 +21,6 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/field-gloss")
 public class FieldGlossController {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-    
-    @Autowired
-    private ValidationService validationService;
     
     @Autowired
     private FieldGlossRepo fieldGlossRepo;
