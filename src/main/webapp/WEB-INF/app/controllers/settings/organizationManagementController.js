@@ -1,13 +1,18 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo) {
+	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	$scope.organizationCategories = OrganizationCategoryRepo.get();
+	$scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
-	$scope.ready = $q.all([OrganizationRepo.ready(),OrganizationCategoryRepo.ready()]);
+	$scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
 
 	$scope.managedOrganization = null;
 
 	$scope.ready.then(function() {
+
+		OrganizationRepo.listen(function() {
+			// TODO: improve UX of organization triptych during organizaiton creation
+		});
 
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {

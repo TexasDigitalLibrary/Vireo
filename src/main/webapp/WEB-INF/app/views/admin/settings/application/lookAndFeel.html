@@ -15,7 +15,7 @@
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color 
-								<span  class="glyphicon glyphicon-refresh color-reset"
+								<span class="glyphicon glyphicon-refresh color-reset"
 										ng-click="resetConfigurableSettings('lookAndFeel','background_main_color')">
 								</span>
 							</span>
@@ -23,14 +23,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_color}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_color.value}">
 									<input  type="color" 
 										name="background_main_color" 
-										ng-model="settings.configurable.lookAndFeel.background_main_color"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')" ng-model="settings.configurable.lookAndFeel.background_main_color" />
+										ng-model="settings.configurable.lookAndFeel.background_main_color.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_main_color')"/>
 								</label>
 							</span>
 
@@ -44,7 +44,7 @@
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color
-								<span 	class="glyphicon glyphicon-refresh color-reset" 
+								<span class="glyphicon glyphicon-refresh color-reset" 
 										ng-click="resetConfigurableSettings('lookAndFeel','background_highlight_color')">
 								</span>
 							</span>
@@ -53,14 +53,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_color.value}">
 									<input  type="color" 
 										name="background_highlight_color" 
-										ng-model="settings.configurable.lookAndFeel.background_highlight_color"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')" ng-model="settings.configurable.lookAndFeel.background_highlight_color" />
+										ng-model="settings.configurable.lookAndFeel.background_highlight_color.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','background_highlight_color')"/>
 								</label>
 							</span>
 
@@ -87,7 +87,7 @@
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color
-								<span 	class="glyphicon glyphicon-refresh color-reset" 
+								<span class="glyphicon glyphicon-refresh color-reset" 
 										ng-click="resetConfigurableSettings('lookAndFeel','button_main_color_on')">
 								</span>
 							</span>
@@ -96,14 +96,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on}">
-									<input  type="color" 
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_on.value}">
+									<input type="color" 
 										name="button_main_color_on" 
-										ng-model="settings.configurable.lookAndFeel.button_main_color_on"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')" ng-model="settings.configurable.lookAndFeel.button_main_color_on" />
+										ng-model="settings.configurable.lookAndFeel.button_main_color_on.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_on')"/>
 								</label>
 							</span>
 
@@ -117,7 +117,7 @@
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color 
-								<span 	class="glyphicon glyphicon-refresh color-reset" 
+								<span class="glyphicon glyphicon-refresh color-reset" 
 										ng-click="resetConfigurableSettings('lookAndFeel','button_highlight_color_on')">
 								</span>
 							</span>
@@ -126,14 +126,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on}">
-									<input  type="color" 
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_on.value}">
+									<input type="color" 
 										name="button_highlight_color_on" 
-										ng-model="settings.configurable.lookAndFeel.button_highlight_color_on"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_on" />
+										ng-model="settings.configurable.lookAndFeel.button_highlight_color_on.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_on')"/>
 								</label>
 							</span>
 
@@ -161,7 +161,7 @@
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
 							<span>Main Color
-								<span 	class="glyphicon glyphicon-refresh color-reset" 
+								<span class="glyphicon glyphicon-refresh color-reset" 
 										ng-click="resetConfigurableSettings('lookAndFeel','button_main_color_off')">
 								</span>
 							</span>
@@ -169,14 +169,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off}">
-									<input  type="color" 
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_main_color_off.value}">
+									<input type="color" 
 										name="button_main_color_off" 
-										ng-model="settings.configurable.lookAndFeel.button_main_color_off"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')" ng-model="settings.configurable.lookAndFeel.button_main_color_off" />
+										ng-model="settings.configurable.lookAndFeel.button_main_color_off.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_main_color_off')"/>
 								</label>
 							</span>
 
@@ -190,7 +190,7 @@
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
 							<span>Highlight Color 
-								<span 	class="glyphicon glyphicon-refresh color-reset" 
+								<span class="glyphicon glyphicon-refresh color-reset" 
 										ng-click="resetConfigurableSettings('lookAndFeel','button_highlight_color_off')">
 								</span>
 							</span>
@@ -199,14 +199,14 @@
 
 						<div class="input-group color-selector">
 							<span class="input-group-addon">#</span>
-						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" dehashcolor>
+						  	<input class="form-control color-input" ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off.value" dehashcolor>
 						  	
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off}">
-									<input  type="color" 
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.button_highlight_color_off.value}">
+									<input type="color" 
 										name="button_highlight_color_off" 
-										ng-model="settings.configurable.lookAndFeel.button_highlight_color_off"
-										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')" ng-model="settings.configurable.lookAndFeel.button_highlight_color_off" />
+										ng-model="settings.configurable.lookAndFeel.button_highlight_color_off.value"
+										ng-change="delayedUpdateConfigurableSettings('lookAndFeel','button_highlight_color_off')"/>
 										
 								</label>
 							</span>
@@ -293,7 +293,7 @@
 		<lockingtextarea
     		    label="Custom CSS"
     			hint="Customize any styling on the student side using CSS."
-    			scope-value="settings.configurable.lookAndFeel.custom_css"
+    			scope-value="settings.configurable.lookAndFeel.custom_css.value"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'custom_css')"
               	key-down="confirmEdit(event, prop)"
               	wysiwyg="false"
@@ -304,7 +304,7 @@
 		<lockingtextarea
     		    label="Front Page Instructions (before button)"
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_before"
+    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_before.value"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_before')"
               	key-down="confirmEdit(event, prop)"
               	validation-response="serverErrors['lookAndFeel']['front_page_instructions_before']">
@@ -314,7 +314,7 @@
 		<lockingtextarea
     		    label="Front Page Instructions (after button)"
     			hint="These instructions are show on the front page of Vireo to all users. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_after"
+    			scope-value="settings.configurable.lookAndFeel.front_page_instructions_after.value"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'front_page_instructions_after')"
               	key-down="confirmEdit(event, prop)"
               	validation-response="serverErrors['lookAndFeel']['front_page_instructions_after']">
@@ -324,7 +324,7 @@
 		<lockingtextarea
     		    label="Post Submission Instructions"
     			hint="These instructions will be shown on the confirmation page after a student has completed their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-    			scope-value="settings.configurable.lookAndFeel.post_submission_instructions"
+    			scope-value="settings.configurable.lookAndFeel.post_submission_instructions.value"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'post_submission_instructions')"
               	key-down="confirmEdit(event, prop)"
               	validation-response="serverErrors['lookAndFeel']['post_submission_instructions']">
@@ -334,7 +334,7 @@
 		<lockingtextarea
     		  label="Post Correction Instructions"
     			hint="These instructions are shown on the confirmation page after a student has submitted corrections for their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-    			scope-value="settings.configurable.lookAndFeel.post_correction_instructions"
+    			scope-value="settings.configurable.lookAndFeel.post_correction_instructions.value"
     			on-blur="updateConfigurableSettings('lookAndFeel', 'post_correction_instructions')"
               	key-down="confirmEdit(event, prop)"
               	validation-response="serverErrors['lookAndFeel']['post_correction_instructions']">

@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +38,7 @@ public class EmailTemplateController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allEmailTemplates() {       
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc());
     }
 
     @ApiMapping("/create")
@@ -60,10 +56,10 @@ public class EmailTemplateController {
             case VALIDATION_INFO:
                 logger.info("Creating email template with name " + emailTemplate.getName());
                 emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create email template with name " + emailTemplate.getName() + " because: " + response.getMeta().getType());
@@ -88,10 +84,10 @@ public class EmailTemplateController {
             case VALIDATION_INFO:
                 logger.info("Updating email template with name " + emailTemplate.getName());
                 emailTemplateRepo.save(emailTemplate);
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update email template with name " + emailTemplate.getName() + " because: " + response.getMeta().getType());
@@ -101,32 +97,29 @@ public class EmailTemplateController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeEmailTemplate(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "email_template_id");
-        
+    public ApiResponse removeEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+
         // will attach any errors to the BindingResult when validating the incoming idString
-        EmailTemplate emailTemplate = emailTemplateRepo.validateRemove(idString, modelBindingResult);
+        emailTemplate = emailTemplateRepo.validateRemove(emailTemplate);
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(emailTemplate);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing email template with id " + idString);
+                logger.info("Removing email template with name " + emailTemplate.getName());
                 emailTemplateRepo.remove(emailTemplate);
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove email template with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove email template with name " + emailTemplate.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         
@@ -149,10 +142,10 @@ public class EmailTemplateController {
             case VALIDATION_INFO:
                 logger.info("Reordering document types");
                 emailTemplateRepo.reorder(src, dest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder document types because: " + response.getMeta().getType());
@@ -181,10 +174,10 @@ public class EmailTemplateController {
             case VALIDATION_INFO:
                 logger.info("Sorting email templates by " + column);
                 emailTemplateRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(VALIDATION_WARNING, emailTemplateRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort email templates because: " + response.getMeta().getType());
@@ -194,9 +187,4 @@ public class EmailTemplateController {
         return response;
     }
     
-    private Map<String, List<EmailTemplate>> getAll() {
-        Map<String, List<EmailTemplate>> map = new HashMap<String, List<EmailTemplate>>();
-        map.put("list", emailTemplateRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
 }

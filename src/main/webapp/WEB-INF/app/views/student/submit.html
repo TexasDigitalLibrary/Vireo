@@ -1,4 +1,4 @@
-<div id="body" ng-controller="SettingsController">
+<div id="body" ng-controller="SubmissionHistoryController">
 
 	<ul class="breadcrumb">
 		<li><a href="/">Home</a></li>
@@ -9,78 +9,15 @@
 	</div>
 	<br>
 
-	<div class="row">
-		<table id="submissions-table"
-			class="table table-striped table-bordered table-condensed">
-			<caption>
-				<h4>
-					<p class="center red" ng-if="submissionsOpen()">Currently accepting submissions for the {{settings.configurable.application.current_semester}} semester.</p>
-					<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.</p>
-				</h4>
-			</caption>
-			<thead>
-				<tr class="sub-heading">
-					<th>Title</th>
-					<th>Manuscript</th>
-					<th>Status</th>
-					<th>Date Submitted</th>
-					<th>Assigned To</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>The Science of Everything</td>
-					<td>BACA-DISSERTATION-2013.pdf <a
-						href="/submission/81/file/646/BACA-DISSERTATION-2013.pdf">[view]</a>
-					</td>
-					<td>Corrections Received</td>
-					<td>02 February 2015</td>
-					<td>Teacher 1</td>
-					<td><a class="btn btn-primary" href="/submission/81/view">
-							View </a></td>
-				</tr>
-				<tr>
-					<td>This "IS" the title!</td>
-					<td>ADMIN-PROJECTREPORT-2014.pdf <a
-						href="/submission/218/file/625/ADMIN-PROJECTREPORT-2014.pdf">[view]</a>
-					</td>
-					<td>Submitted</td>
-					<td>07 April 2016</td>
-					<td>Unassigned</td>
-					<td><a class="btn btn-primary" href="/submission/218/view">
-							View </a></td>
-				</tr>
-				<tr class="sub-inprogress">
-					<td></td>
-					<td>none</td>
-					<td>In Progress</td>
-					<td>n/a</td>
-					<td>Unassigned</td>
-					<td><a id="submission-continue" class="btn btn-primary"
-						href="/submission/236">Continue</a> <a
-						id="submission-delete_236"
-						class="btn btn-primary submission-delete"
-						href="/submission/236/delete">Delete</a></td>
-				</tr>
-				<tr>
-					<td>Ryan's Demo Dissertation Hooray</td>
-					<td>STEANS-DISSERTATION-2016.pdf <a
-						href="/submission/219/file/622/STEANS-DISSERTATION-2016.pdf">[view]</a>
-					</td>
-					<td>Pending Publication</td>
-					<td>24 March 2016</td>
-					<td>TDL Admin</td>
-					<td><a class="btn btn-primary" href="/submission/219/view">
-							View </a></td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="form-actions row center">
-			<a href="javascript:void(0)" onclick="checkBeforeNewSub()" class="btn btn-primary" ng-if="submissionsOpen() && (multipleSubmissions() || !hasSubmissions())">Start a new submission</a>
-			<p class="alert alert-danger" ng-if="!(multipleSubmissions() || !hasSubmissions())">You've already submitted an ETD or have one in progress!</p>
-		</div>
-	</div>
+	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
+ 	  <tr ng-repeat="row in $data track by row.id">
+		<td title="'Title'">{{row.id}}</td>
+		<td title="'Status'">{{row.state.name}}</td>
+		<td title="'Date Submitted'">TODO</td>
+		<td title="'Assigned To'">TODO</td>
+		<td title="'Actions'">actions...</td>
+	  </tr>
+	</table>
 
 	<div class="modal fade" id="checkBeforeNewSub-modal">
 		<div class="modal-header">

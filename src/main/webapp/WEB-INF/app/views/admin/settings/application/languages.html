@@ -1,10 +1,10 @@
-<div id="languages" class="container-fluid" ng-controller="LanguageRepoController">
+<div id="languages" class="container-fluid" ng-controller="LanguagesController">
 	
 	<validationresponse
 		validation-response="serverErrors">
 	</validationresponse>
 
-	<div class="col-sm-6">		
+	<div class="col-sm-6">
 		
 		<button class="btn btn-default modal-add-btn" 
 				data-toggle="modal" 
@@ -14,10 +14,10 @@
 		
 		<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which allows to create new language."></div>
 
-		<p ng-if="languages.list.length == 0">Add New Language</p>
+		<p ng-if="languages.length == 0">Add New Language</p>
 		
 		<draganddroplist dragging="dragging"
-						 scope-value="languages.list"
+						 scope-value="languages"
 						 properties='["name", "proquestCode"]'
 						 item-view='views/directives/dragAndDropLanguage.html'
 						 listeners='dragControlListeners'

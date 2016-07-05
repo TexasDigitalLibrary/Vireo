@@ -2,7 +2,7 @@ vireo.controller('NewSubmissionController', function ($controller, $scope, $loca
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	$scope.organizations = OrganizationRepo.get();
+	$scope.organizations = OrganizationRepo.getAll();
 
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
@@ -15,8 +15,11 @@ vireo.controller('NewSubmissionController', function ($controller, $scope, $loca
 	};
 
 	$scope.createSubmission = function() {
-		SubmissionRepo.create($scope.getSelectedOrganization().id).then(function(newSubmissionId) {
-			$location.path("/submission/"+newSubmissionId);
+		SubmissionRepo.create({
+			'organizationId': $scope.getSelectedOrganization().id
+		}).then(function(data) {
+			console.log(angular.fromJson(data.body).payload.Submission);
+			$location.path("/submission/" + angular.fromJson(data.body).payload.Submission.id);
 		});
 	};
 	

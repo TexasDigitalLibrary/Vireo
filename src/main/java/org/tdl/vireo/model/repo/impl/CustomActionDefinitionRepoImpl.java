@@ -6,9 +6,6 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.custom.CustomActionDefinitionRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRepoCustom {
     
@@ -18,9 +15,6 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public CustomActionDefinition create(String label, Boolean isStudentVisible) {
         CustomActionDefinition customActionDefinition = new CustomActionDefinition(label, isStudentVisible);
@@ -68,19 +62,5 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
         
         return customActionDefinition;
     }
-    
-    @Override
-    public CustomActionDefinition validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        CustomActionDefinition toRemove = null;
-        Long id = validationService.validateLong(idString, "customActionDefinition", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = customActionDefinitionRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("customActionDefinition", "Cannot remove CustomActionDefinition, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }
+
 }

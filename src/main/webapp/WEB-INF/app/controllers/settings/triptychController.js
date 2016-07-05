@@ -1,11 +1,11 @@
-vireo.controller("TriptychController", function ($controller, $scope, $q, $timeout, OrganizationRepo, OrganizationCategoryRepo) {
+vireo.controller("TriptychController", function ($controller, $scope, $q, $timeout, OrganizationRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	$scope.ready = $q.all([OrganizationRepo.ready()]);
 
 	$scope.ready.then(function() {
 
-        $scope.triptych = new Triptych($scope.organizations.list[0]);
+        $scope.triptych = new Triptych($scope.organizations[0]);
 
         $scope.shiftPanels = function(panel, organization) {
 
@@ -65,19 +65,19 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
 
         $scope.resetPanels = function() {
             $scope.triptych.resetPanels();
-            $scope.newOrganization.parent = $scope.organizations.list[0];
+            $scope.newOrganization.parent = $scope.organizations[0];
         };
 
-        if($scope.organizations.list.length==1) $scope.add = true;
+        if($scope.organizations.length==1) $scope.add = true;
 
         $scope.hasOrganization = function() {
             
-            var hasOrgs = $scope.organizations.list.length < 2;
+            var hasOrgs = $scope.organizations.length < 2;
 
-            if($scope.organizations.list.length == 2 && $scope.add) {
+            if($scope.organizations.length == 2 && $scope.add) {
                 $scope.add = false;
                 $timeout(function() {
-                    $scope.shiftPanels($scope.triptych.rootPanel, $scope.organizations.list[0]);
+                    $scope.shiftPanels($scope.triptych.rootPanel, $scope.organizations[0]);
                 });
             }
 

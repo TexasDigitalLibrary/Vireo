@@ -3,7 +3,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
   angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-  $scope.organizationCategories = OrganizationCategoryRepo.get();
+  $scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
   $scope.ready = $q.all([OrganizationCategoryRepo.ready()]);
 
@@ -31,7 +31,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     
     $scope.selectOrganizationCategory = function(index) {
       $scope.resetOrganizationCategories();
-      $scope.modalData = $scope.organizationCategories.list[index];
+      $scope.modalData = $scope.organizationCategories[index];
     };
 
     $scope.createOrganizationCategory = function() {
@@ -74,7 +74,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
       trashId: $scope.trashCanId,
       dragging: $scope.dragging,
       select: $scope.selectOrganizationCategory,     
-      model: $scope.organizationCategories.list,
+      model: $scope.organizationCategories,
       confirm: '#organizationCategoryConfirmRemoveModal',
       reorder: null,
       container: '#organization-categories'

@@ -2,8 +2,6 @@ package org.tdl.vireo.model.repo.custom;
 
 import org.tdl.vireo.model.EmailTemplate;
 
-import edu.tamu.framework.validation.ModelBindingResult;
-
 public interface EmailTemplateRepoCustom {
 
     public EmailTemplate create(String name, String subject, String message);
@@ -20,5 +18,6 @@ public interface EmailTemplateRepoCustom {
     
     public EmailTemplate validateUpdate(EmailTemplate emailTemplate);
     
-    public EmailTemplate validateRemove(String idString, ModelBindingResult modelBindingResult);
+    public EmailTemplate validateRemove(EmailTemplate emailTemplate);
+    
 }

@@ -6,9 +6,6 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
 	
@@ -17,9 +14,6 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
 	
     @Autowired
     private DepositLocationRepo depositLocationRepo;
-    
-    @Autowired
-    private ValidationService validationService;
 
     @Override
     public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
@@ -72,19 +66,5 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
         
         return depositLocation;
     }
-    
-    @Override
-    public DepositLocation validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        DepositLocation toRemove = null;
-        Long id = validationService.validateLong(idString, "depositLocation", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = depositLocationRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("depositLocation", "Cannot remove deposit location, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }
+
 }

@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -43,18 +39,12 @@ public class OrganizationController {
 
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
-    
-    private Map<String, List<Organization>> getAll() {
-        Map<String, List<Organization>> map = new HashMap<String, List<Organization>>();
-        map.put("list", organizationRepo.findAll());
-        return map;
-    }
-        
+            
     @ApiMapping("/all")
     @Auth(role="STUDENT")
     @Transactional
     public ApiResponse allOrganizations() {        
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, organizationRepo.findAll());
     }
     
     @ApiMapping("/get/{id}")
@@ -75,7 +65,7 @@ public class OrganizationController {
         
         organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
         
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         
         return new ApiResponse(SUCCESS);
         
@@ -94,7 +84,7 @@ public class OrganizationController {
         organization.setCategory(organizationCategory);
         organization = organizationRepo.save(organization);
 
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS,  getAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS,  organizationRepo.findAll()));
         
         return new ApiResponse(SUCCESS);
         

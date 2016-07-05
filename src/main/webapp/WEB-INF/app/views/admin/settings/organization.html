@@ -48,7 +48,7 @@
 							<div class="panel-body">
 								<ul class="list-group">
 									<li class="list-group-item"
-										ng-repeat="organization in organizations.list | filter:{category:panel.filterOn} | orderBy:'name'" 
+										ng-repeat="organization in organizations | filter:{category:panel.filterOn} | orderBy:'name'" 
 										ng-if="filterPanelByParent(panel, organization)" 
 										ng-click="shiftPanels(panel, organization);"
 										ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
@@ -139,7 +139,7 @@
 								<div class="col-sm-4 expanded">
 									<div class="with-tool-tip">
 										<div class="with-hint">
-											<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category.id" ng-options="category.id as category.name for category in organizationCategories.list | filter:{ name : '!system' }">
+											<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category.id" ng-options="category.id as category.name for category in organizationCategories | filter:{ name : '!system' }">
 											</select>
 										</div>
 									</div>
@@ -152,7 +152,7 @@
 								<div class="col-sm-4 expanded">
 									<div class="with-tool-tip">
 										<div class="with-hint">
-											<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations.list | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
+											<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
 										</div>
 									</div>
 								</div>   	

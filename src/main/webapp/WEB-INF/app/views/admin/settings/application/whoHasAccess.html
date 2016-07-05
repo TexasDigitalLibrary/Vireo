@@ -1,4 +1,4 @@
-<div ng-controller="WhoHasAccessController">
+<div ng-controller="UserRepoController">
 <div class="row">
 
 	<validationresponse
@@ -20,11 +20,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in userRepo.list | filter:{role: '!STUDENT'}" ng-init="selectedRole = user.role">
+        <tr ng-repeat="user in users | filter:{role: '!STUDENT'}">
           <td>{{user.firstName}} {{user.lastName}}</td>
           <td>{{user.email}}</td>
           <td>
-            <select ng-options="key as value for (key, value) in roles" class="form-control" ng-model="selectedRole" ng-change="updateRole(user, selectedRole)"></select>
+            <select ng-options="key as value for (key, value) in roles" class="form-control" ng-model="user.role" ng-change="updateRole(user)"></select>
           </td>
         </tr>
       </tbody>

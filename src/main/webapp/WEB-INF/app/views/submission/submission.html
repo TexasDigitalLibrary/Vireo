@@ -14,11 +14,8 @@
 <div class="row">
 	<div class="col-xs-8 submission-workflow-steps">
 		<ul class="list-unstyled">
-			<li ng-repeat="fieldProfile in activeStep.aggregateFieldProfiles">
-				<div class="form-group">
-					<label>{{fieldProfile.fieldGlosses[0].value}}:</label> 
-					({{fieldProfile.inputType}})
-				</div>
+			<li ng-repeat="p in activeStep.aggregateFieldProfiles">
+				<field profile="p"></field>
 			</li>
 		</ul>
 	</div>

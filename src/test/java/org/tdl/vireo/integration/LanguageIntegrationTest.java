@@ -48,7 +48,7 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @Order(value = 1)
     public void testGetAllLanguages() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
-        String responseJson = StompRequest("/settings/languages/all", "");
+        String responseJson = StompRequest("/settings/language/all", "");
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -56,9 +56,7 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 
         @SuppressWarnings("unchecked")
-        Map<String, List<Language>> allLanguagesMap = (Map<String, List<Language>>) payload.get("HashMap");
-        
-        List<Language> allLanguages = allLanguagesMap.get("list");
+        List<Language> allLanguages = (List<Language>) payload.get("ArrayList<Language>");
                 
         assertEquals(TEST_LANGUAGE_NAME1, objectMapper.convertValue(allLanguages.get(0), Language.class).getName());
         assertEquals(TEST_LANGUAGE_NAME2, objectMapper.convertValue(allLanguages.get(1), Language.class).getName());

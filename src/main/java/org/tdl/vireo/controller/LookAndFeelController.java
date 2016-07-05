@@ -68,6 +68,8 @@ public class LookAndFeelController {
     @Auth(role = "MANAGER")
     public ApiResponse resetLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel) {
         
+        Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting());
+        
         // will attach any errors to the BindingResult when validating the incoming lfModel
         lfModel = configurationRepo.validateResetLogo(lfModel);
         
@@ -78,12 +80,11 @@ public class LookAndFeelController {
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Resetting logo " + lfModel.getSetting());
-                Configuration defaultLogoConfig = configurationRepo.reset(lfModel.getSetting());
+                Configuration defaultLogoConfig = configurationRepo.reset(systemLogo);
                 response.getPayload().put(defaultLogoConfig.getClass().getSimpleName(), defaultLogoConfig);
                 //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
                 break;
             case VALIDATION_WARNING:
-                Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting());
                 response.getPayload().put(systemLogo.getClass().getSimpleName(), systemLogo);
                 //simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(VALIDATION_WARNING, toConfigPairsMap(configurationRepo.getAllByType(configuration.getType()))));
                 break;

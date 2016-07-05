@@ -10,9 +10,9 @@
 				data-target="#availableDocumentTypesNewModal">
 			Add Document Type
 		</button>
-		<p ng-if="graduationMonths.list.length == 0">Add new Document Type</p>
+		<p ng-if="graduationMonths.length == 0">Add new Document Type</p>
 		<draganddroplist dragging="dragging"
-						 scope-value="documentTypes.list"
+						 scope-value="documentTypes"
 						 properties='["name", "gradeLevel"]'
 						 item-view='views/directives/dragAndDropDocumentType.html'
 						 listeners='dragControlListeners'

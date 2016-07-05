@@ -2,11 +2,8 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Submission;
@@ -29,27 +26,30 @@ public class SubmissionController {
     @Autowired
     private SubmissionRepo submissionRepo;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @ApiMapping("/all")
-    @Auth(role = "STUDENT")
+    @Auth(role = "MANAGER")
+    @Transactional
     public ApiResponse getAll() {
-        Map<String, List<Submission>> allSubmissions = new HashMap<String, List<Submission>>();
-        allSubmissions.put("list", submissionRepo.findAll());
-        return new ApiResponse(SUCCESS, allSubmissions);
+        return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
-    
+
     @ApiMapping("/get-one/{submissionId}")
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse getOne(@ApiVariable Long submissionId) {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId));
     }
-    
+
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
+        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }
-    
+
 }

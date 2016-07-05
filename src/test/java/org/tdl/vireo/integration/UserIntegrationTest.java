@@ -94,13 +94,10 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     	Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 		 
     	@SuppressWarnings("unchecked")
-        Map<String, Object> contentObj = (Map<String, Object>) responseObject.get("payload");
-		 
+        Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
+    	
     	@SuppressWarnings("unchecked")
-        Map<String, Object> mapObj = (Map<String, Object>) contentObj.get("HashMap");
-		 
-    	@SuppressWarnings("unchecked")
-        List<Map<String, Object>> listMap =  (List<Map<String, Object>>) mapObj.get("list");
+        List<Map<String, Object>> listMap =  (List<Map<String, Object>>) payload.get("ArrayList<User>");
 
     	assertEquals(3, listMap.size());
     	
@@ -134,7 +131,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 	     
 		 userToUpdate.setRole(TEST_USER_ROLE_UPDATE);
 	    	
-		 String responseJson = StompRequest("/user/update-role", userToUpdate);
+		 String responseJson = StompRequest("/user/update", userToUpdate);
 		 
 		 Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 

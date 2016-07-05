@@ -29,7 +29,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
    
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean overrideable;
     
     @Column(nullable = true)

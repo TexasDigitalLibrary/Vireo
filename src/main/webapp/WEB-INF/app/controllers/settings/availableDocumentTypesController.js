@@ -1,9 +1,9 @@
-vireo.controller("AvailableDocumentTypesController", function ($controller, $scope, AvailableDocumentTypesRepo, DragAndDropListenerFactory) {
+vireo.controller("AvailableDocumentTypesController", function ($controller, $scope, AvailableDocumentTypeRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.documentTypes = AvailableDocumentTypesRepo.get();
+	$scope.documentTypes = AvailableDocumentTypeRepo.getAll();
 	
-	$scope.ready = AvailableDocumentTypesRepo.ready();
+	$scope.ready = AvailableDocumentTypeRepo.ready();
 
 	$scope.dragging = false;
 	
@@ -36,7 +36,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         $scope.resetDocumentTypes();
 
         $scope.createNewDocumentType = function(documentType) {
-            AvailableDocumentTypesRepo.add(documentType).then(function(data) {
+            AvailableDocumentTypeRepo.create(documentType).then(function(data) {
             	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetDocumentTypes();
@@ -47,12 +47,12 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
         $scope.launchEditModal = function(index) {
         	$scope.serverErrors = [];
-            $scope.modalData = $scope.documentTypes.list[index -1];
+            $scope.modalData = $scope.documentTypes[index -1];
             angular.element('#availableDocumentTypesEditModal').modal('show');
 	    };	
 
         $scope.updateDocumentType = function(){
-            AvailableDocumentTypesRepo.update($scope.modalData).then(function(data) {
+            AvailableDocumentTypeRepo.update($scope.modalData).then(function(data) {
             	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetDocumentTypes();
@@ -62,7 +62,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         }
 
         $scope.removeDocumentType = function(index){
-            AvailableDocumentTypesRepo.remove(index).then(function(data) {
+            AvailableDocumentTypeRepo.deleteById(index).then(function(data) {
             	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetDocumentTypes();
@@ -72,7 +72,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         }
 
         $scope.reorderDocumentTypes = function(src, dest) {
-            AvailableDocumentTypesRepo.reorder(src, dest).then(function(data) {
+            AvailableDocumentTypeRepo.reorder(src, dest).then(function(data) {
             	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetDocumentTypes();
@@ -81,7 +81,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         };
 
         $scope.selectDocumentType = function(index) {
-            $scope.modalData = $scope.documentTypes.list[index];
+            $scope.modalData = $scope.documentTypes[index];
         };
 
         $scope.sortDocumentTypes = function(column) {
@@ -89,7 +89,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
                 $scope.sortAction = 'sort';
             }
             else if($scope.sortAction == 'sort') {
-                AvailableDocumentTypesRepo.sort(column).then(function(data) {
+                AvailableDocumentTypeRepo.sort(column).then(function(data) {
                 	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
                 	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
                 		$scope.resetDocumentTypes();
@@ -103,7 +103,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             trashId: $scope.trashCanId,
             dragging: $scope.dragging,
             select: $scope.selectDocumentType,
-            model: $scope.documentTypes.list,
+            model: $scope.documentTypes,
             confirm: '#availableDocumentTypesConfirmRemoveModal',
             reorder: $scope.reorderDocumentTypes,
             container: '#available-document-types'

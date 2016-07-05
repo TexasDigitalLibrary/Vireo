@@ -82,12 +82,10 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
         @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
-
-        @SuppressWarnings("unchecked")
-        Map<String, List<ControlledVocabulary>> allControlledVocabulariesMap = (Map<String, List<ControlledVocabulary>>) payload.get("HashMap");
         
-        List<ControlledVocabulary> allControlledVocabularies = allControlledVocabulariesMap.get("list");
-                
+        @SuppressWarnings("unchecked")
+        List<ControlledVocabulary> allControlledVocabularies = (List<ControlledVocabulary>) payload.get("ArrayList<ControlledVocabulary>");
+                        
         assertEquals(TEST_CONTROLLED_VOCABULARY_NAME1, objectMapper.convertValue(allControlledVocabularies.get(0), ControlledVocabulary.class).getName());
         assertEquals(TEST_CONTROLLED_VOCABULARY_NAME2, objectMapper.convertValue(allControlledVocabularies.get(1), ControlledVocabulary.class).getName());
         assertEquals(TEST_CONTROLLED_VOCABULARY_NAME3, objectMapper.convertValue(allControlledVocabularies.get(2), ControlledVocabulary.class).getName());
@@ -164,7 +162,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
         
-        String responseJson = StompRequest("/settings/controlled-vocabulary/remove/" + controlledVocabulary.getId(), "");
+        String responseJson = StompRequest("/settings/controlled-vocabulary/remove", controlledVocabulary);
         
         Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
 
@@ -233,13 +231,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
         
-        System.out.println(payload);
-        
         List<List<String>> rows = (List<List<String>>) ((Map<String, Object>) payload.get("HashMap")).get("rows");
         
         List<String> row = rows.get(0);
-        
-        System.out.println(row.get(0));
         
         assertEquals(row.get(0), TEST_VOCABULARY_WORD_NAME1);
         assertEquals(row.get(1), TEST_VOCABULARY_WORD_DEFINITION1);

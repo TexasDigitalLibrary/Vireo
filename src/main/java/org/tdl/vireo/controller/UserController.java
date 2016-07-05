@@ -4,8 +4,6 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,16 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
-import org.tdl.vireo.controller.model.UserControllerModel;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
@@ -42,15 +38,29 @@ public class UserController {
     
     @Autowired
     private ValidationService validationService;
+    
+    // TODO: make global static method, redundant method in interceptors and here
+    public Credentials getAnonymousCredentials() {
+        Credentials anonymousCredentials = new Credentials();
+        anonymousCredentials.setAffiliation("NA");
+        anonymousCredentials.setLastName("Anonymous");
+        anonymousCredentials.setFirstName("Role");
+        anonymousCredentials.setNetid("anonymous-" + Math.round(Math.random() * 100000));
+        anonymousCredentials.setUin("000000000");
+        anonymousCredentials.setExp("1436982214754");
+        anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
+        anonymousCredentials.setRole("NONE");
+        return anonymousCredentials;
+    }
 
     @ApiMapping("/credentials")
-    @Auth(role = "STUDENT")
+    @Auth(role = "NONE")
     public ApiResponse credentials(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
 
         if (user == null) {
-            logger.debug("User not registered!");
-            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
+            logger.debug("User not registered! Responding with anonymous credentials!");
+            return new ApiResponse(SUCCESS, getAnonymousCredentials());
         }
 
         shib.setRole(user.getRole().toString());
@@ -61,35 +71,36 @@ public class UserController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse allUsers() {            
-        return new ApiResponse(SUCCESS, getAll());
+    public ApiResponse allUsers() {
+        return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @ApiMapping("/update-role")
+    @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse updateRole(@ApiValidatedModel User user) {      
-        
-        // will attach any errors to the BindingResult when validating the incoming user
-        user = userRepo.validateUpdateRole(user);
+    public ApiResponse updateRole(@ApiValidatedModel User user) {
         
         // build a response based on the BindingResult state in the configuration
         ApiResponse response = validationService.buildResponse(user);
         
-        Map<String, Object> retMap = new HashMap<String, Object>();
-        retMap.put("list", userRepo.findAll());
+        // get the persisted user for its encoded password        
+        User persistedUser = userRepo.findOne(user.getId());
+        if(persistedUser != null) {
+            user.setPassword(persistedUser.getPassword());
+        }
+        
+        // all other properties should be on the user from the client request
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Updating role for " + user.getEmail());
-                userRepo.save(user);
-                retMap.put("changedUserEmail", user.getEmail());
+                user = userRepo.save(user);
                 response.getPayload().put(user.getClass().getSimpleName(), user);
-                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
+                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(VALIDATION_WARNING, retMap));
+                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(VALIDATION_WARNING, userRepo.findAll()));
                 break;
             default:
                 logger.warn("Couldn't update role for " + user.getEmail());
@@ -112,29 +123,19 @@ public class UserController {
         
         return new ApiResponse(SUCCESS, user.getSettings());
     }
-
-    @ApiMapping("/settings/{key}")
+    
+    @ApiMapping("/settings/update")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse setSetting(@ApiVariable String key, @ApiCredentials Credentials shib, @ApiValidatedModel UserControllerModel userSetting) {
-
+    public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
+        
         User user = userRepo.findByEmail(shib.getEmail());
-        if (user == null) {
-            userSetting.getBindingResult().addError(new ObjectError("user", "User not registered!"));
-        }
-
-        if (userSetting.getBindingResult().hasErrors()) {
-            return new ApiResponse(VALIDATION_ERROR, userSetting.getBindingResult().getAll());
-        }
-
-        user.putSetting(key, userSetting.getSettingValue());
-
-        return new ApiResponse(SUCCESS, userRepo.save(user).getSettings());
+        
+        user.setSettings(userSettings);
+        
+        simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
+        
+        return new ApiResponse(SUCCESS);
     }
 
-    private Map<String,List<User>> getAll() {
-        Map<String,List<User>> map = new HashMap<String,List<User>>();        
-        map.put("list", userRepo.findAll());
-        return map;
-    }
 }
