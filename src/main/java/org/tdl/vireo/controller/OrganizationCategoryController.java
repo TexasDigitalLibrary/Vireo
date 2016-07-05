@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +16,8 @@ import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/organization-category")
@@ -44,7 +38,7 @@ public class OrganizationCategoryController {
     @Auth(role="MANAGER")
     @Transactional
     public ApiResponse getOrganizationCategories() {
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }
     
     @ApiMapping("/create")
@@ -63,10 +57,10 @@ public class OrganizationCategoryController {
             case VALIDATION_INFO:
                 logger.info("Creating organization category with name " + organizationCategory.getName());
                 organizationCategoryRepo.create(organizationCategory.getName());
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, organizationCategoryRepo.findAll()));
                 break;
             default:
                 logger.warn("Couldn't create organization category with name " + organizationCategory.getName() + " because: " + response.getMeta().getType());
@@ -92,10 +86,10 @@ public class OrganizationCategoryController {
             case VALIDATION_INFO:
                 logger.info("Updating organization category with name " + organizationCategory.getName());
                 organizationCategoryRepo.save(organizationCategory);
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, organizationCategoryRepo.findAll()));
                 break;
             default:
                 logger.warn("Couldn't update organization category with name " + organizationCategory.getName() + " because: " + response.getMeta().getType());
@@ -105,48 +99,38 @@ public class OrganizationCategoryController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeOrganizationCategory(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "organization_category_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        OrganizationCategory organizationCategory = organizationCategoryRepo.validateRemove(idString, modelBindingResult);
+    public ApiResponse removeOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(organizationCategory);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing organization category with id " + idString);
+                logger.info("Removing organization category with name " + organizationCategory.getName());
                 if(organizationCategory.getOrganizations().size() == 0) {
                     organizationCategoryRepo.remove(organizationCategory);
-                    simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, getAll()));
+                    simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
                 }
                 else {
-                    modelBindingResult.addError(new ObjectError("organizationCategory", "Could not remove organization category " + organizationCategory.getName() + ", it's being used!"));
-                    response = validationService.buildResponse(modelBindingResult);
+                    organizationCategory.getBindingResult().addError(new ObjectError("organizationCategory", "Could not remove organization category " + organizationCategory.getName() + ", it's being used!"));
+                    response = validationService.buildResponse(organizationCategory);
                     logger.error("Couldn't remove organization category " + organizationCategory.getName() + " because: is the category of " + organizationCategory.getOrganizations().size() + " organizations!");
                 }
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(VALIDATION_WARNING, organizationCategoryRepo.findAll()));
                 break;
             default:
-                logger.warn("Couldn't remove organization category with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove organization category with name " + organizationCategory.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         
         return response;
     }
     
-    private Map<String,List<OrganizationCategory>> getAll() {
-        Map<String,List<OrganizationCategory>> map = new HashMap<String,List<OrganizationCategory>>();
-        map.put("list", organizationCategoryRepo.findAll());
-        return map;
-    }
+
 }

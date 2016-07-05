@@ -7,61 +7,6 @@ var vireo = angular.module('vireo',
 	'vireo.version'
 ]);
 
-
-vireo.repo = function(delegateName, delegateFunction) {
-	var modelName = delegateName.replace('Repo', '');
-	return vireo.factory(delegateName, function ($injector, AbstractAppRepo, AbstractRepo, api) {
-
-  		delegateFunction.$inject = $injector.annotate(delegateFunction);
-
-  		var abstractRepo = new AbstractRepo($injector.get(modelName), api[modelName]);
-
-		var abstractAppRepo = new AbstractAppRepo();
-
-		angular.extend(abstractAppRepo, abstractRepo);
-
-		angular.extend(delegateFunction.prototype, abstractAppRepo);
-
-		var repoInstance = $injector.invoke(delegateFunction, delegateFunction.prototype);
-
-		angular.extend(abstractAppRepo, repoInstance);
-
-		angular.extend(abstractRepo, abstractAppRepo);
-
-		return repoInstance;
-	});
-      	
-};
-
-vireo.model = function(delegateName, delegateFunction) {
-	return vireo.factory(delegateName, function ($injector, AbstractModelNew, AbstractAppModel, api) {
-		return function(data) {
-
-			delegateFunction.$inject = $injector.annotate(delegateFunction);
-
-			var model = $injector.invoke(delegateFunction, delegateFunction.prototype);
-
-			var abstractModel = new AbstractModelNew();
-			
-			var abstractAppModel = new AbstractAppModel();
-
-			angular.extend(abstractAppModel, abstractModel);
-
-			angular.extend(model.prototype, abstractAppModel);
-
-			var modelInstance = new model();
-
-			modelInstance.init(data, api[delegateName]);
-
-			angular.extend(abstractAppModel, modelInstance);
-
-			angular.extend(abstractModel, abstractAppModel);
-
-			return modelInstance;
-		};
-	});
-};
-
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.
 setUpApp(function(connected) {
 
@@ -70,7 +15,7 @@ setUpApp(function(connected) {
 
 	vireo.constant('appConfig', appConfig);
 	vireo.constant('api', apiMapping);
-
+	
 	angular.element(document).ready(function() {	   	
 	   	try {
 	   		// If the app is already bootstrapped then an error will be thrown

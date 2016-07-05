@@ -2,8 +2,6 @@ package org.tdl.vireo.model.repo.custom;
 
 import org.tdl.vireo.model.OrganizationCategory;
 
-import edu.tamu.framework.validation.ModelBindingResult;
-
 public interface OrganizationCategoryRepoCustom {
 
     public OrganizationCategory create(String name);
@@ -14,5 +12,4 @@ public interface OrganizationCategoryRepoCustom {
     
     public OrganizationCategory validateUpdate(OrganizationCategory organizationCategory);
     
-    public OrganizationCategory validateRemove(String idString, ModelBindingResult modelBindingResult);
 }

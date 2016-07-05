@@ -1,4 +1,4 @@
-vireo.model("CustomActionSetting", function () {
+core.model("CustomActionSetting", function () {
 
 	return function CustomActionSetting() {
 		

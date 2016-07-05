@@ -1,4 +1,4 @@
-vireo.repo("CustomActionSettingRepo", function CustomActionSettingRepo() {
+core.repo("CustomActionSettingRepo", function CustomActionSettingRepo() {
 
 	// additional repo methods and variables
 

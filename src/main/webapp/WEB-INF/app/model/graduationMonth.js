@@ -1,4 +1,4 @@
-vireo.model("GraduationMonth", function () {
+core.model("GraduationMonth", function () {
 
 	return function GraduationMonth() {
 		

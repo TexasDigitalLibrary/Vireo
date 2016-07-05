@@ -13,7 +13,7 @@
     "ng-sortable": "1.3.2",
     "ng-csv": "0.3.2",
     "ng-file-upload": "^12.0.1",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#1.0.0-RC2"
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#faa57061d20fa26e9e67cf8517115f655e6f40b2"
   },
   "resolutions": {
     "angular": "1.4.9"

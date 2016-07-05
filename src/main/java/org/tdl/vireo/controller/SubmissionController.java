@@ -2,10 +2,6 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +28,7 @@ public class SubmissionController {
     @ApiMapping("/all")
     @Auth(role = "STUDENT")
     public ApiResponse getAll() {
-        Map<String, List<Submission>> allSubmissions = new HashMap<String, List<Submission>>();
-        allSubmissions.put("list", submissionRepo.findAll());
-        return new ApiResponse(SUCCESS, allSubmissions);
+        return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
     
     @ApiMapping("/get-one/{submissionId}")

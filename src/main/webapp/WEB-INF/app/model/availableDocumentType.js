@@ -1,4 +1,4 @@
-vireo.model("AvailableDocumentType", function AvailableDocumentType() {
+core.model("AvailableDocumentType", function AvailableDocumentType() {
 
 	return function AvailableDocumentType() {
 		

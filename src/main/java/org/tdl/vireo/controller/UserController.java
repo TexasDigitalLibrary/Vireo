@@ -1,12 +1,9 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -41,15 +38,29 @@ public class UserController {
     
     @Autowired
     private ValidationService validationService;
+    
+    // TODO: make global static method, redundant method in interceptors and here
+    public Credentials getAnonymousCredentials() {
+        Credentials anonymousCredentials = new Credentials();
+        anonymousCredentials.setAffiliation("NA");
+        anonymousCredentials.setLastName("Anonymous");
+        anonymousCredentials.setFirstName("Role");
+        anonymousCredentials.setNetid("anonymous-" + Math.round(Math.random() * 100000));
+        anonymousCredentials.setUin("000000000");
+        anonymousCredentials.setExp("1436982214754");
+        anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
+        anonymousCredentials.setRole("NONE");
+        return anonymousCredentials;
+    }
 
     @ApiMapping("/credentials")
-    @Auth(role = "STUDENT")
+    @Auth(role = "NONE")
     public ApiResponse credentials(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
 
         if (user == null) {
-            logger.debug("User not registered!");
-            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
+            logger.debug("User not registered! Responding with anonymous credentials!");
+            return new ApiResponse(SUCCESS, getAnonymousCredentials());
         }
 
         shib.setRole(user.getRole().toString());
@@ -61,34 +72,32 @@ public class UserController {
     @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse allUsers() {            
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @ApiMapping("/update-role")
+    @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse updateRole(@ApiValidatedModel User user) {      
-        
-        // will attach any errors to the BindingResult when validating the incoming user
-        user = userRepo.validateUpdateRole(user);
+    public ApiResponse updateRole(@ApiValidatedModel User user) {
         
         // build a response based on the BindingResult state in the configuration
         ApiResponse response = validationService.buildResponse(user);
         
-        Map<String, Object> retMap = new HashMap<String, Object>();
-        retMap.put("list", userRepo.findAll());
+        // get the persisted user for its encoded password
+        user.setPassword(userRepo.findOne(user.getId()).getPassword());
+        
+        // all other properties should be on the user from the client request
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
                 logger.info("Updating role for " + user.getEmail());
-                userRepo.save(user);
-                retMap.put("changedUserEmail", user.getEmail());
+                user = userRepo.save(user);
                 response.getPayload().put(user.getClass().getSimpleName(), user);
-                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, retMap));
+                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(VALIDATION_WARNING, retMap));
+                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(VALIDATION_WARNING, userRepo.findAll()));
                 break;
             default:
                 logger.warn("Couldn't update role for " + user.getEmail());
@@ -126,9 +135,4 @@ public class UserController {
         return new ApiResponse(SUCCESS);
     }
 
-    private Map<String,List<User>> getAll() {
-        Map<String,List<User>> map = new HashMap<String,List<User>>();        
-        map.put("list", userRepo.findAll());
-        return map;
-    }
 }
