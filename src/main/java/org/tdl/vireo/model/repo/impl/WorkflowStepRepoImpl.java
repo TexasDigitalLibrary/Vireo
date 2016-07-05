@@ -373,43 +373,22 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
      */
     @Override
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization) {
-        //System.out.println("Who's a ws in a descendant of org " + organization.getName() + "?");
         List<WorkflowStep> allDescendants = getDescendantsOfStep(workflowStep);
-        
         
         List<WorkflowStep> localDescendants = new ArrayList<WorkflowStep>();
         
-        for(Organization org : organization.getChildrenOrganizations())
-        {
-            //System.out.println("Well, I can tell you that org " + org.getName() +" is a descendant... will we find a step?");
-            //System.out.println("it does aggregate ");
-            for(WorkflowStep wsag : org.getAggregateWorkflowSteps())
-            {
-                System.out.print(wsag.getId() + ", ");
-            }
-            //if(org.getOriginalWorkflowSteps().isEmpty()) System.out.println("... but originates none.");
-            for(WorkflowStep ws : org.getOriginalWorkflowSteps())
-            {
-                
-                if(allDescendants.contains(ws) && !localDescendants.contains(ws))
-                {
-                //    System.out.println("Well, this ws is!  " + ws.getName() + "(" + ws.getId() + ")!");
+        for(Organization org : organization.getChildrenOrganizations()) {
+            for(WorkflowStep ws : org.getOriginalWorkflowSteps()) {                
+                if(allDescendants.contains(ws) && !localDescendants.contains(ws)) {
                     localDescendants.add(ws);
                 }
             }
             
-            for(WorkflowStep candidateDescendant : getDescendantsOfStepUnderOrganization(workflowStep, org))
-            {
-                if(!localDescendants.contains(candidateDescendant))
-                {
-                    
-                    //System.out.println("And-, this ws is!  " + candidateDescendant.getName() + "(" + candidateDescendant.getId() + ")!");
-
+            for(WorkflowStep candidateDescendant : getDescendantsOfStepUnderOrganization(workflowStep, org)) {
+                if(!localDescendants.contains(candidateDescendant)) {
                     localDescendants.add(candidateDescendant);
                 }
-                
             }
-
         }
         
         return localDescendants;    
