@@ -132,7 +132,7 @@ public class WorkflowStepController {
         FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
         
         InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
-        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
+        Boolean overrideable = dataNode.get("overrideable") != null ? dataNode.get("overrideable").asBoolean() : true;
         Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
         String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
         String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : null;
@@ -252,8 +252,8 @@ public class WorkflowStepController {
         Long noteId = Long.parseLong(dataNode.get("id").toString());
         String name = dataNode.get("name").textValue();
         String text = dataNode.get("text").textValue();
-
-        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
+        
+        Boolean overrideable = dataNode.get("overrideable") != null ? dataNode.get("overrideable").asBoolean() : true;
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
         

@@ -148,8 +148,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
         if (requestingOrganizationOriginatedWorkflowStep) {
             // If the WS originates the Note, we don't need a new one
             if (workflowStepOriginatesNote) {
-
-                // update note directly
+                                // update note directly
                 resultingNote = noteRepo.save(pendingNote);
 
                 // if change to non-overrideable, replace descendants of this note in subordinate orgs and put it back on ones that deleted it
@@ -227,6 +226,8 @@ public class NoteRepoImpl implements NoteRepoCustom {
 
             resultingNote = newNote;
         }
+        
+        System.out.println(resultingNote.getOverrideable());
 
         return resultingNote;
 

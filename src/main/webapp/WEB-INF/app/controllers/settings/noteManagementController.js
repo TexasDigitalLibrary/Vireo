@@ -56,6 +56,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
 	};
 	
 	$scope.updateNote = function() {
+
+		console.log($scope.modalData);
 		WorkflowStepRepo.updateNote($scope.step.id, $scope.modalData).then(function(response) {
 			
 		});
