@@ -10,9 +10,9 @@
         data-target="#organizationCategoryNewModal">
       Add Organization Category
     </button>
-    <p ng-if="organizationCategories.list.length == 0">Add new Organization Category</p>
+    <p ng-if="organizationCategories.length == 0">Add new Organization Category</p>
     <draganddroplist dragging="dragging"
-             scope-value="organizationCategories.list"
+             scope-value="organizationCategories"
              properties='["name"]'
              item-view='views/directives/dragAndDropOrganizationCategory.html'
              listeners='dragControlListeners'

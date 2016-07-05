@@ -1,7 +1,7 @@
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.depositLocations = DepositLocationRepo.get();
+	$scope.depositLocations = DepositLocationRepo.getAll();
 	
 	$scope.ready = $q.all([DepositLocationRepo.ready()]);
 
@@ -31,7 +31,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		$scope.resetDepositLocation();
 
 		$scope.createDepositLocation = function() {
-			DepositLocationRepo.add($scope.modalData).then(function(data) {
+			DepositLocationRepo.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetDepositLocation();
@@ -41,7 +41,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 		
 		$scope.selectDepositLocation = function(index) {
-			$scope.modalData = $scope.depositLocations.list[index];
+			$scope.modalData = $scope.depositLocations[index];
 		};
 		
 		$scope.editDepositLocation = function(index) {
@@ -51,7 +51,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 		
 		$scope.updateDepositLocation = function() {
-			DepositLocationRepo.update($scope.modalData).then(function(data) {
+			$scope.modalData.save().then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetDepositLocation();
@@ -70,7 +70,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 
 		$scope.removeDepositLocation = function(index) {
-	    	DepositLocationRepo.remove(index).then(function(data) {
+	    	DepositLocationRepo.deleteById(index).then(function(data) {
 	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetDepositLocation();
@@ -83,7 +83,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectDepositLocation,			
-			model: $scope.depositLocations.list,
+			model: $scope.depositLocations,
 			confirm: '#depositLocationConfirmRemoveModal',
 			reorder: $scope.reorderDepositLocation,
 			container: '#deposit-location'

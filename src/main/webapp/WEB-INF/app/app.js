@@ -15,7 +15,8 @@ setUpApp(function(connected) {
 	appConfig.connected = connected;
 
 	vireo.constant('appConfig', appConfig);
-
+	vireo.constant('api', apiMapping);
+	
 	angular.element(document).ready(function() {	   	
 	   	try {
 	   		// If the app is already bootstrapped then an error will be thrown

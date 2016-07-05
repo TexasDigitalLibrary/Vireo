@@ -1,7 +1,7 @@
 vireo.controller("EmbargoRepoController", function($controller, $scope, $q, EmbargoRepo, DragAndDropListenerFactory, $filter) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.embargoes = EmbargoRepo.get();
+	$scope.embargoes = EmbargoRepo.getAll();
 	
 	$scope.ready = $q.all([EmbargoRepo.ready()]);
 	
@@ -22,8 +22,8 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 
 		$scope.resetEmbargo = function() {
 			$scope.modalData = { isActive: false };
-			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "PROQUEST"});
-			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes.list, {guarantor: "DEFAULT"});	
+			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "PROQUEST"});
+			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "DEFAULT"});	
 		};
 		
 		$scope.closeModal = function(modalId) {
@@ -53,7 +53,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.selectEmbargo = function(id) {
-			$scope.modalData = $filter('filter')($scope.embargoes.list, {id: id})[0];
+			$scope.modalData = $filter('filter')($scope.embargoes, {id: id})[0];
 		};
 		
 		$scope.editEmbargo = function(id) {
@@ -63,11 +63,11 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.updateEmbargo = function() {
-			EmbargoRepo.update($scope.modalData).then(function(data){
+			EmbargoRepo.update($scope.modalData).then(function(model){
 				if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
-				$scope.serverErrors[$scope.modalData.guarantor] = angular.fromJson(data.body).payload.ValidationResponse;
+				$scope.serverErrors[$scope.modalData.guarantor] = model.ValidationResponse;
                 if($scope.serverErrors[$scope.modalData.guarantor] === undefined || $scope.serverErrors[$scope.modalData.guarantor].errors.length == 0) {
                 	$scope.resetEmbargo();
 					$scope.closeModal("embargoEditModal");
@@ -76,7 +76,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 		};
 		
 		$scope.removeEmbargo = function(id) {
-            EmbargoRepo.remove(id).then(function(data){
+            EmbargoRepo.deleteById(id).then(function(data){
             	if($scope.serverErrors[$scope.modalData.guarantor] === undefined) {
 					$scope.serverErrors[$scope.modalData.guarantor] = [];
 				}
@@ -138,7 +138,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectEmbargo,			
-			model: $scope.embargoes.list,
+			model: $scope.embargoes,
 			confirm: '#embargoConfirmRemoveModal',
 			reorder: $scope.reorderEmbargoDefault,
 			sortLabel: $scope.sortLabel,
@@ -149,7 +149,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectEmbargo,			
-			model: $scope.embargoes.list,
+			model: $scope.embargoes,
 			confirm: '#embargoConfirmRemoveModal',
 			reorder: $scope.reorderEmbargoProquest,
 			sortLabel: $scope.sortLabel,

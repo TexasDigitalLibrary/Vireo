@@ -229,6 +229,7 @@ public class WorkflowStepController {
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         String name = dataNode.get("name").textValue();
         String text = dataNode.get("text").textValue();
+        
         Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -254,6 +255,7 @@ public class WorkflowStepController {
         Long noteId = Long.parseLong(dataNode.get("id").toString());
         String name = dataNode.get("name").textValue();
         String text = dataNode.get("text").textValue();
+
         Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);

@@ -7,7 +7,7 @@ vireo.controller('AdminController', function ($controller, $scope, $window, $rou
 		UserRepo
 	];
 
-	$scope.user = User.get();
+	$scope.user = User.getAll();
 
 	$scope.$watch('user.role', function() {
 		if($scope.user.role) {

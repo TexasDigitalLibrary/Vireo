@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +38,7 @@ public class DepositLocationController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allDepositLocations() {       
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc());
     }
     
     @ApiMapping("/create")
@@ -60,10 +56,10 @@ public class DepositLocationController {
             case VALIDATION_INFO:
                 logger.info("Creating deposit location with name " + depositLocation.getName());
                 depositLocationRepo.create(depositLocation.getName(), depositLocation.getRepository(), depositLocation.getCollection(), depositLocation.getUsername(), depositLocation.getPassword(), depositLocation.getOnBehalfOf(), depositLocation.getPackager(), depositLocation.getDepositor());
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create deposit location with name " + depositLocation.getName() + " because: " + response.getMeta().getType());
@@ -88,10 +84,10 @@ public class DepositLocationController {
             case VALIDATION_INFO:
                 logger.info("Updating deposit location with name " + depositLocation.getName());
                 depositLocationRepo.save(depositLocation);
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update deposit location with name " + depositLocation.getName() + " because: " + response.getMeta().getType());
@@ -101,32 +97,26 @@ public class DepositLocationController {
         return response;
     }
 
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeDepositLocation(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "deposit_location_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        DepositLocation depositLocation = depositLocationRepo.validateRemove(idString, modelBindingResult);
-        
+    public ApiResponse removeDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
+
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(depositLocation);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing deposit location with id " + idString);
+                logger.info("Removing deposit location with name " + depositLocation.getName());
                 depositLocationRepo.remove(depositLocation);
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove deposit location with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove deposit location with name " + depositLocation.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         
@@ -153,10 +143,10 @@ public class DepositLocationController {
             case VALIDATION_INFO:
                 logger.info("Reordering custom action definitions");
                 depositLocationRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(VALIDATION_WARNING, depositLocationRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder custom action definitions because: " + response.getMeta().getType());
@@ -166,9 +156,4 @@ public class DepositLocationController {
         return response;
     }
     
-    private Map<String, List<DepositLocation>> getAll() {
-        Map<String, List<DepositLocation>> map = new HashMap<String, List<DepositLocation>>();
-        map.put("list", depositLocationRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
 }

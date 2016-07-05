@@ -2,9 +2,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.controlledVocabulary = ControlledVocabularyRepo.get();
+	console.log(ControlledVocabularyRepo);
 
-	$scope.languages = LanguageRepo.get();
+	$scope.controlledVocabulary = ControlledVocabularyRepo.getAll();
+
+	$scope.languages = LanguageRepo.getAll();
 
 	$scope.ready = $q.all([ControlledVocabularyRepo.ready(), LanguageRepo.ready()]);
 
@@ -20,10 +22,12 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 	$scope.ready.then(function() {
 
+		console.log($scope.controlledVocabulary)
+
 		var getDefaultIndex = function() {
 	    	var defaultIndex = 0;
-			for(var i in $scope.controlledVocabulary.list) {
-				var cv = $scope.controlledVocabulary.list[i];
+			for(var i in $scope.controlledVocabulary) {
+				var cv = $scope.controlledVocabulary[i];
 				if(cv.isEntityProperty == false) {
 					defaultIndex = i;
 					break;
@@ -44,7 +48,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			}
 
 			$scope.uploadModalData = {
-				cv: $scope.controlledVocabulary.list[getDefaultIndex()]
+				cv: $scope.controlledVocabulary[getDefaultIndex()]
 			};
 
 			$scope.columnHeaders = "";
@@ -52,7 +56,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			$scope.uploadWordMap = {};
 
 			$scope.modalData = { 
-				language: $scope.languages.list[0] 
+				language: $scope.languages[0] 
 			};
 		};
 		
@@ -66,18 +70,18 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 		$scope.resetControlledVocabulary();
 
-		ControlledVocabularyRepo.listenForChange().then(null, null, function(data) {
+		ControlledVocabularyRepo.change.then(null, null, function(data) {
 			$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 			if($scope.uploadAction != "process") {
 				$scope.uploadStatus();
 				$scope.uploadModalData = {
-					cv: $scope.controlledVocabulary.list[getDefaultIndex()]
+					cv: $scope.controlledVocabulary[getDefaultIndex()]
 				};
 			}
 		});
 		
 		$scope.createControlledVocabulary = function() {
-			ControlledVocabularyRepo.add($scope.modalData).then(function(data) {
+			ControlledVocabularyRepo.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetControlledVocabulary();
@@ -96,7 +100,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		}
 		
 		$scope.selectControlledVocabulary = function(index) {
-			$scope.modalData = $scope.controlledVocabulary.list[index];
+			$scope.modalData = $scope.controlledVocabulary[index];
 		};
 		
 		$scope.editControlledVocabulary = function(index) {
@@ -106,7 +110,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		};
 		
 		$scope.updateControlledVocabulary = function() {
-			ControlledVocabularyRepo.update($scope.modalData).then(function(data) {
+			$scope.modalData.save().then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetControlledVocabulary();
@@ -136,7 +140,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		};
 
 		$scope.removeControlledVocabulary = function(index) {
-	    	ControlledVocabularyRepo.remove(index).then(function(data) {
+	    	ControlledVocabularyRepo.deleteById(index).then(function(data) {
 	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
 	    		if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
 					$scope.resetControlledVocabulary();
@@ -230,7 +234,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectControlledVocabulary,			
-			model: $scope.controlledVocabulary.list,
+			model: $scope.controlledVocabulary,
 			confirm: '#controlledVocabularyConfirmRemoveModal',
 			reorder: $scope.reorderControlledVocabulary,
 			container: '#controlled-vocabulary'

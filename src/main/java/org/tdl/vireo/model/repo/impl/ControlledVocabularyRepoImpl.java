@@ -15,7 +15,6 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -27,9 +26,6 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public ControlledVocabulary create(String name, Language language) {
         ControlledVocabulary controlledVocabulary = new ControlledVocabulary(name, language);
@@ -100,19 +96,11 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     }
     
     @Override
-    public ControlledVocabulary validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        ControlledVocabulary toRemove = null;
-        Long id = validationService.validateLong(idString, "controlledVocabulary", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = controlledVocabularyRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, id did not exist!"));
-            } else if (toRemove.isEnum() || toRemove.isEntityProperty()) {
-                modelBindingResult.addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, it's an internal system one!"));
-            }
+    public ControlledVocabulary validateRemove(ControlledVocabulary controlledVocabulary) {
+        if (controlledVocabulary.isEnum() || controlledVocabulary.isEntityProperty()) {
+            controlledVocabulary.getBindingResult().addError(new ObjectError("controlledVocabulary", "Cannot remove Controlled Vocabulary, it's an internal system one!"));
         }
-        return toRemove;
+        return controlledVocabulary;
     }
     
     @Override

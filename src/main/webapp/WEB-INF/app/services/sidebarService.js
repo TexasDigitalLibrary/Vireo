@@ -1,6 +1,7 @@
 vireo.service("SidebarService", function($rootScope) {
 
 	var SidebarService = this;
+
 	SidebarService.boxes = [];
 
 	SidebarService.getBox = function(target) {

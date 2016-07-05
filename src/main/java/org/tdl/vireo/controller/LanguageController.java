@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +28,7 @@ import edu.tamu.framework.validation.ModelBindingResult;
  * 
  */
 @Controller
-@ApiMapping("/settings/languages")
+@ApiMapping("/settings/language")
 public class LanguageController {
     
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
@@ -57,12 +53,11 @@ public class LanguageController {
     @Auth(role = "MANAGER")
     @Transactional
     public ApiResponse getAllLanguages() {
-        return new ApiResponse(SUCCESS, getAll());
+        return new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc());
     }
     
     /**
      * 
-     * @param data
      * @return
      */
     @ApiMapping("/create")
@@ -81,10 +76,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Creating language with name " + language.getName());
                 languageRepo.create(language.getName());
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create language with name " + language.getName() + " because: " + response.getMeta().getType());
@@ -96,7 +91,6 @@ public class LanguageController {
     
     /**
      * 
-     * @param data
      * @return
      */
     @ApiMapping("/update")
@@ -115,10 +109,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Updating language with name " + language.getName());
                 languageRepo.save(language);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update language with name " + language.getName() + " because: " + response.getMeta().getType());
@@ -129,44 +123,35 @@ public class LanguageController {
     }
     
     /**
-     * Endpoint to remove language by provided index
      * 
-     * @param indexString
-     *            index of language to remove
-     * @return ApiResponse indicating success or error
+     * @return
      */
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional //TODO: this @Transactional throws an exception when we catch DataIntegrityViolation
-    public ApiResponse removeLanguage(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "language_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        Language language = languageRepo.validateRemove(idString, modelBindingResult);
+    public ApiResponse removeLanguage(@ApiValidatedModel Language language) {
         
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(language);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing language with id " + idString);
+                logger.info("Removing language with name " + language.getName());
                 try {
                     languageRepo.remove(language);
-                    simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                    simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 } catch (DataIntegrityViolationException e) {
-                    modelBindingResult.addError(new ObjectError("language", "Could not remove language " + language.getName() + ", it's being used!"));
-                    response = validationService.buildResponse(modelBindingResult);
+                    language.getBindingResult().addError(new ObjectError("language", "Could not remove language " + language.getName() + ", it's being used!"));
+                    response = validationService.buildResponse(language);
                     logger.error("Couldn't remove language " + language.getName() + " because: " + e.getLocalizedMessage());
                 }
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove language with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove language with name " + language.getName() + " because: " + response.getMeta().getType());
                 break;
         }
         
@@ -202,10 +187,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Reordering languages");
                 languageRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder languages because: " + response.getMeta().getType());
@@ -241,10 +226,10 @@ public class LanguageController {
             case VALIDATION_INFO:
                 logger.info("Sorting languages by " + column);
                 languageRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/languages", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(VALIDATION_WARNING, languageRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't sort languages because: " + response.getMeta().getType());
@@ -264,13 +249,4 @@ public class LanguageController {
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }
     
-    /**
-     * 
-     * @return
-     */
-    private Map<String, List<Language>> getAll() {
-        Map<String, List<Language>> map = new HashMap<String, List<Language>>();
-        map.put("list", languageRepo.findAllByOrderByPositionAsc());
-        return map;
-    }
 }

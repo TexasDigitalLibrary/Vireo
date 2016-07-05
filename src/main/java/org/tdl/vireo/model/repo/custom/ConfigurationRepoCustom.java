@@ -25,12 +25,10 @@ public interface ConfigurationRepoCustom {
      * Resets existing configuration to its system value
      * 
      * 
-     * @param name
-     * @param value
-     * @param type
+     * @param configuration
      * @return
      */
-    public Configuration reset(String name);
+    public Configuration reset(Configuration configuration);
     
     /**
      * Get a list of all configurations
