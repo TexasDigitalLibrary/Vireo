@@ -534,35 +534,35 @@ var apiMapping = {
 	WorkflowStep: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step',
+			'controller': 'workflow-step',
 			'method': 'all'
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/workflow-step'
+			'controller': 'workflow-step'
 		},
 		create: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step',
+			'controller': 'workflow-step',
 			'method': 'create'
 		},
 		update: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step',
+			'controller': 'workflow-step',
 			'method': 'update'
 		},
 		remove: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step',
+			'controller': 'workflow-step',
 			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step'
+			'controller': 'workflow-step'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/workflow-step'
+			'controller': 'workflow-step'
 		},
 		addFieldProfile: {
 			'endpoint': '/private/queue',
