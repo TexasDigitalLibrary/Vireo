@@ -877,6 +877,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     public void testMakeFieldNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
+        
         organization = organizationRepo.findOne(organization.getId());
       
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
@@ -894,20 +895,6 @@ public class FieldProfileTest extends AbstractEntityTest {
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
       
-        
-        Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
-        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        
-      
-        Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        
-        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        
         
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         
@@ -931,47 +918,60 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
 
-        organization = organizationRepo.findOne(organization.getId());
-        
-        FieldPredicate newFieldPredicate = fieldPredicateRepo.create("My Random Predicate");
-        
-        fp1.setHelp("Help!");
-        fp1.setPredicate(newFieldPredicate);
-        
-        fp1 = fieldProfileRepo.update(fp1, organization);
-        
-        
-        //change to field profile recorded on new workflow step at child org, inherited by all descendant orgs
-        workflowStep = workflowStepRepo.findOne(wsId);
-        
-        organization = organizationRepo.findOne(organization.getId());
-        
-        
-        WorkflowStep overriddenWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
-        
-        assertFalse("The child org didn't get a new workflow step when it overrode a field profile!", overriddenWorkflowStep.getId().equals(wsId));
-        
-
-        assertEquals("The child org's workflow step didn't originate the new field profile!", 1, organization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size());
-        
-        
-        fp1.setOverrideable(false);
-        
-        fp1 = fieldProfileRepo.update(fp1, parentOrganization);
-        
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+                
+        long fp2Id = fp2.getId();
+        fp2.setOverrideable(false);
         
-        //TODO:
-        //assertEquals("The child org's workflow step still had the forbidden field profile!", 0, organization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size());
-        
-        //should delete new field profile at child org
+        FieldProfile fp2updatedAtGrandchild = fieldProfileRepo.update(fp2, grandChildOrganization);
         
         
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        fp2 = fieldProfileRepo.findOne(fp2Id);
         
-        //TODO:  should we delete workflow step which is now functionally identical to original workflow step and have everybody point back at the original?
         
-        //TODO:  do we really need the overrideable boolean on field profiles?
+        //ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
+        //old n2 should still be overrideable
+        assertTrue("FieldProfile updated at grandchild changed the note at the parent!" , fp2.getOverrideable());
+        //old n2 should be different from the new n2 updated at the grandchild
+        assertFalse("FieldProfile updated at grandchild didn't get duplicated!", fp2.getId().equals(fp2updatedAtGrandchild.getId()));
+        assertEquals("A new FieldProfile didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size());
+        assertTrue("A new FieldProfile didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtGrandchild));
+        
+        //TODO:  make the note non-overrideable at the child org
+        fp2.setOverrideable(false);
+        FieldProfile fp2updatedAtChild = fieldProfileRepo.update(fp2, organization);
+        
+        organization = organizationRepo.findOne(organization.getId());
+        fp2 = fieldProfileRepo.findOne(fp2Id);
+        
+        // ensure that a new note got made at the child after this override (to non-overrideable :) )
+        //old n2 should still be overrideable
+        assertTrue("FieldProfile updated at child didn't get duplicated!" , fp2.getOverrideable());
+        //old n2 should be different from the new n2 updated at the grandchild
+        assertFalse("FieldProfile updated at child didn't get duplicated!", fp2.getId().equals(fp2updatedAtChild.getId()));
+        
+        
+        
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        //ensure that the grandchild's new note is replaced by the child's non-overrideable one
+        assertTrue("FieldProfile made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().isEmpty());
+        assertFalse("FieldProfile made non-overrideable still stuck around at the grandchild who'd overridden it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fp2updatedAtGrandchild));
+        
+        //TODO:  make the note non-overrideable at the parent org
+        //TOOO:  ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
+         
+        
+        
+        //now all is restored, except one of the notes is non-overrideable at the parent
+        
+        
+        //TODO:  remove a note at the grandchild
+        //TODO:  make the removed note non-overrideable at the parent
+        //TODO:  ensure that the removed note is reaggregated upon the grandchild who removed it
       
     }
     
@@ -1032,6 +1032,9 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
+        
+        
+        organization = organizationRepo.findOne(organization.getId());
         
         //override the field profile at the child
         fieldProfile.setHelp("help!");

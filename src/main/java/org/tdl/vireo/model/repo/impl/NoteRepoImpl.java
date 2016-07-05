@@ -189,7 +189,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
             workflowStepWithNoteOnRequestingOrganization.setOriginatingWorkflowStep(workflowStepRepo.findOne(origWSId));
 
             WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(workflowStepWithNoteOnRequestingOrganization, requestingOrganization);
-            long newOriginatingWorkflowStepId = newOriginatingWorkflowStep.getId();
+            
             workflowStepWithNoteOnRequestingOrganization = workflowStepRepo.findOne(origWSId);
             requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
 
