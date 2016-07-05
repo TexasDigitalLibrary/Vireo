@@ -4,9 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -63,9 +61,7 @@ public class WorkflowStepController {
     @ApiMapping("/all")
     @Auth(role="MANAGER")
     public ApiResponse getAll() {
-        Map<String,List<WorkflowStep>> map = new HashMap<String,List<WorkflowStep>>();        
-        map.put("list", workflowStepRepo.findAll());
-        return new ApiResponse(SUCCESS, map);
+        return new ApiResponse(SUCCESS, workflowStepRepo.findAll());
     }
     
     @ApiMapping("/get/{workflowStepId}")
@@ -229,6 +225,7 @@ public class WorkflowStepController {
         Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
         String name = dataNode.get("name").textValue();
         String text = dataNode.get("text").textValue();
+        
         Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -254,6 +251,7 @@ public class WorkflowStepController {
         Long noteId = Long.parseLong(dataNode.get("id").toString());
         String name = dataNode.get("name").textValue();
         String text = dataNode.get("text").textValue();
+
         Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
                 
         Organization requestingOrganization = organizationRepo.findOne(reqOrgId);

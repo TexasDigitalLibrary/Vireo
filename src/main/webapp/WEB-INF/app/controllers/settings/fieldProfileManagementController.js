@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossModel, FieldPredicateModel, FieldProfileModel, InputTypeService, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -17,12 +17,13 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         }
     );
 
-	$scope.controlledVocabularies = ControlledVocabularyRepo.get();
+	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
-	$scope.fieldPredicates = FieldPredicateModel.getAll();
-	$scope.fieldGlosses = FieldGlossModel.getAll();
+	$scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-	$scope.inputTypes = InputTypeService.getAll();
+	$scope.fieldGlosses = FieldGlossRepo.getAll();
+
+	$scope.inputTypes = InputTypeRepo.getAll();
 	
 	$scope.dragging = false;
 	
@@ -63,34 +64,31 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			'language': 'English'
 		};
 
-		FieldGlossModel.addGloss(gloss).then(function(response){
+		FieldGlossRepo.create(gloss).then(function(response){
 			$scope.modalData.gloss = angular.fromJson(response.body).payload.FieldGloss;
 		});
 
-		FieldGlossModel.getAll(true);
 	};
 
 	$scope.createPredicate = function(predicateValue) {
 		var predicate = {'value': predicateValue}
 
-		FieldPredicateModel.addPredicate(predicate).then(function(response){
+		FieldPredicateRepo.create(predicate).then(function(response){
 			$scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
 		});
 
-		FieldPredicateModel.getAll(true);
 	}
 	
-	$scope.createFieldProfile = function(modalData) {
-		console.info('modalData: ', modalData);
-		modalData.requestingOrgId = $scope.selectedOrganization.id;
-		modalData.workflowStepId = $scope.step.id;
-		FieldProfileModel.addFieldProfile(modalData);
+	$scope.createFieldProfile = function() {
+		WorkflowStepRepo.addFieldProfile($scope.step.id, $scope.modalData).then(function() {
+
+		});
 	};
 	
 	$scope.selectFieldProfile = function(index) {
 		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 		$scope.modalData = fieldProfile;
-		console.log($scope.modalData)
+
 		// TODO: needs multi glosses
 		$scope.modalData.gloss = fieldProfile.fieldGlosses[0] ? fieldProfile.fieldGlosses[0] : null;
 		// TODO: needs multi controlled vocabulary
@@ -102,11 +100,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		angular.element('#fieldProfilesEditModal-' + $scope.step.id).modal('show');
 	};
 	
-	$scope.updateFieldProfile = function(modalData) {
-		console.info('modalData: ', modalData);
-		modalData.requestingOrgId = $scope.selectedOrganization.id;
-		modalData.workflowStepId = $scope.step.id;
-		FieldProfileModel.updateFieldProfile(modalData);
+	$scope.updateFieldProfile = function() {
+		WorkflowStepRepo.updateFieldProfile($scope.step.id, $scope.modalData).then(function() {
+
+		});
 	};
 
 	$scope.reorderFieldProfiles = function(src, dest) {

@@ -24,7 +24,7 @@
 	  </div>
 	  <div class="form-group">
 		<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
-		<select id="field-profiles-controlled-vocabulary" ng-model="modalData.controlledVocabulary" ng-options="cv.name for cv in controlledVocabularies.list track by cv.id" type="text" class="form-control">
+		<select id="field-profiles-controlled-vocabulary" ng-model="modalData.controlledVocabulary" ng-options="cv.name for cv in controlledVocabularies track by cv.id" type="text" class="form-control">
 		  <option value="">(None)</option>
 		</select>
 	  </div>
@@ -47,5 +47,5 @@
 
   <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
-	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.gloss.id || !modalData.predicate.id" ng-click="createFieldProfile(modalData)">Create</button>
+	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.gloss.id || !modalData.predicate.id" ng-click="createFieldProfile()">Create</button>
   </div>

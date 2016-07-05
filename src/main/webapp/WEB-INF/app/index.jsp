@@ -206,6 +206,7 @@
 
 		<!-- App Configuration -->
 	    <script src="config/appConfig.js"></script>
+	    <script src="config/apiMapping.js"></script>
 
 		<!-- App Modules -->
 		<script src="components/version/version.js"></script>
@@ -234,19 +235,23 @@
 	  	<script src="bower_components/core/app/services/storageservice.js"></script>
 	  	<script src="bower_components/core/app/services/utilityservice.js"></script>
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
+	  	
+	  	<!-- Repo -->
+	  	<script src="bower_components/core/app/repo/abstractRepo.js"></script>
 
 	  	<!-- Models -->
 	    <script src="bower_components/core/app/model/abstractModel.js"></script>
 	    <script src="bower_components/core/app/model/assumedControlModel.js"></script>
-	    <script src="bower_components/core/app/model/userModel.js"></script>
+		<script src="bower_components/core/app/model/user.js"></script>
 
 	    <!-- Controllers -->
-	    <script src="bower_components/core/app/controllers/userController.js"></script>
+	    <script src="bower_components/core/app/controllers/authenticationController.js"></script>
 	    <script src="bower_components/core/app/controllers/registrationController.js"></script>
 	    <script src="bower_components/core/app/controllers/loginController.js"></script>
-	    <script src="bower_components/core/app/controllers/authenticationController.js"></script>
+	    <script src="bower_components/core/app/controllers/userController.js"></script>
 	    <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
-
+		
+	    
 
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/app_concat.js -->
 
@@ -279,31 +284,50 @@
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
 
+	    <!-- Repos -->	    
+	    <script src="repo/abstractAppRepo.js"></script>
+	    <script src="repo/languageRepo.js"></script>
+	    <script src="repo/availableDocumentTypeRepo.js"></script>
+	    <script src="repo/customActionSettingRepo.js"></script>
+	    <script src="repo/depositLocationRepo.js"></script>
+	    <script src="repo/emailTemplateRepo.js"></script>
+	    <script src="repo/graduationMonthRepo.js"></script>
+	    <script src="repo/configurableSettingRepo.js"></script>
+	    <script src="repo/controlledVocabularyRepo.js"></script>
+	    <script src="repo/workflowStepRepo.js"></script>
+	    <script src="repo/embargoRepo.js"></script>
+
+	    <script src="repo/userRepo.js"></script>
+	    <script src="repo/organizationRepo.js"></script>
+	    <script src="repo/organizationCategoryRepo.js"></script>
+	    <script src="repo/inputTypeRepo.js"></script>
+	    <script src="repo/fieldPredicateRepo.js"></script>
+	    <script src="repo/fieldGlossRepo.js"></script>	    
+	    <script src="repo/submissionRepo.js"></script>
+
+	    <!-- New Models --> 
+		<script src="model/abstractAppModel.js"></script>
+		<script src="model/language.js"></script>
+		<script src="model/availableDocumentType.js"></script>
+		<script src="model/customActionSetting.js"></script>
+		<script src="model/depositLocation.js"></script>
+		<script src="model/emailTemplate.js"></script>
+		<script src="model/graduationMonth.js"></script>
+		<script src="model/userSettings.js"></script>
+		<script src="model/configurableSetting.js"></script>
+		<script src="model/controlledVocabulary.js"></script>
+		<script src="model/workflowStep.js"></script>
+		<script src="model/embargo.js"></script>
+		<script src="model/organization.js"></script>
+		<script src="model/organizationCategory.js"></script>
+	    <script src="model/inputType.js"></script>
+	    <script src="model/fieldPredicate.js"></script>
+	    <script src="model/fieldGloss.js"></script>	    
+	    <script src="model/submission.js"></script>
+		
+
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
-		
-	    <!-- Models -->
-	    <script src="model/configurableSettingsModel.js"></script>
-	    <script src="model/customActionSettingsModel.js"></script>
-	    <script src="model/organizationRepoModel.js"></script>
-	    <script src="model/organizationCategoryRepo.js"></script>
-	    <script src="model/userSettingsModel.js"></script>
-	    <script src="model/userRepoModel.js"></script>
-	    <script src="model/depositLocationRepoModel.js"></script>
-	    <script src="model/graduationMonthRepoModel.js"></script>
-	    <script src="model/emailTemplateRepo.js"></script>
-	    <script src="model/embargoRepoModel.js"></script>
-	    <script src="model/languageRepoModel.js"></script>
-	    <script src="model/controlledVocabularyRepoModel.js"></script>
-	    <script src="model/availableDocumentTypesRepoModel.js"></script>
-	    <script src="model/organizationCategoryRepoModel.js"></script>
-	    <script src="model/workflowStepRepo.js"></script>
-	    <script src="model/inputTypeService.js"></script>
-	    <script src="model/vireoAbstractModel.js"></script>
-	    <script src="model/fieldPredicateModel.js"></script>
-	    <script src="model/fieldGlossRepoModel.js"></script>
-	    <script src="model/fieldProfileRepoModel.js"></script>
-	    <script src="model/submissionRepo.js"></script>
 
 
 	    <!-- Controllers -->
@@ -317,15 +341,14 @@
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  
-	    <script src="controllers/userRepoController.js"></script>  
-	    <script src="controllers/whoHasAccessController.js"></script>
+	    <script src="controllers/userRepoController.js"></script>
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
 	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
 	    <script src="controllers/settings/embargoRepoController.js"></script>
 	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
-	    <script src="controllers/settings/languageRepoController.js"></script>
+	    <script src="controllers/settings/languagesController.js"></script>
 	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
@@ -335,7 +358,6 @@
 	    <script src="controllers/submission/submissionController.js"></script>
 	    <script src="controllers/submission/submissionViewController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
-
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

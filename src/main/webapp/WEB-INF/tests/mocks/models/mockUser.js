@@ -32,40 +32,6 @@ angular.module('mock.user', []).
     service('User', function($q) {
     	
     	var self;
-    	
-    	var User = function(futureData) {
-    		self = this;
-			
-    		if(!futureData.$$state) {
-    			angular.extend(self, futureData);
-    			return;
-    		}
-
-    		futureData.then(null, null, function(data) {
-    			angular.extend(self, data);	
-    		});
-
-    	}
-    	
-    	User.get = function() {
-            return new User(mockUser1);
-        };
-        
-        User.set = function(credentials) {
-        	angular.extend(self, credentials);
-        };
-        
-        User.fetch = function() {
-        	return $q(function(resolve) {            	
-            	resolve(mockUser3);
-            });
-        }; 
-
-        User.ready = function() {
-            return $q(function(resolve) {               
-                resolve(mockUser3);
-            });
-        };
-        
+    	        
         return User;
 });

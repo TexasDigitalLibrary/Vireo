@@ -7,7 +7,6 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -19,9 +18,6 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     @Autowired
     private EmbargoRepo embargoRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);
@@ -111,22 +107,13 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
     
     @Override
-    public Embargo validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        Embargo toRemove = null;
-        Long id = validationService.validateLong(idString, "embargo", modelBindingResult);
+    public Embargo validateRemove(Embargo embargo) {
         
-        if(!modelBindingResult.hasErrors()){
-            toRemove = embargoRepo.findOne(id);
-            if (toRemove != null) {
-                if (toRemove.isSystemRequired()) {
-                    modelBindingResult.addError(new ObjectError("embargo", "Cannot remove a System Embargo!"));
-                }
-            } else {
-                modelBindingResult.addError(new ObjectError("embargo", "Cannot remove Embargo, id did not exist!"));
-            }
+        if (embargo.isSystemRequired()) {
+            embargo.getBindingResult().addError(new ObjectError("embargo", "Cannot remove a System Embargo!"));
         }
         
-        return toRemove;
+        return embargo;
     }
     
     @Override

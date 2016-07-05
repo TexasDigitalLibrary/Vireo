@@ -7,9 +7,6 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.repo.DocumentTypesRepo;
 import org.tdl.vireo.model.repo.custom.DocumentTypesRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
 
@@ -18,9 +15,6 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     
     @Autowired
     private DocumentTypesRepo documentTypesRepo;
-    
-    @Autowired
-    private ValidationService validationService;
     
     @Override
     public void reorder(Long src, Long dest) {
@@ -72,19 +66,5 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
         
         return documentType;
     }
-    
-    @Override
-    public DocumentType validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        DocumentType toRemove = null;
-        Long id = validationService.validateLong(idString, "documentType", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = documentTypesRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("documentType", "Cannot remove document type, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }    
+
 }

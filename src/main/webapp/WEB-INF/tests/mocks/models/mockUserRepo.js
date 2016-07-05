@@ -1,71 +1,65 @@
-var mockUserRepo1 = {
-    'HashMap':{
-        '0':{
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "role": "ADMINISTRATOR"
-        },
-        '1':{
-            "uin": "987654321",
-            "lastName": "Daniels",
-            "firstName": "Jill",
-            "role": "USER"
-        },
-        '2':{
-            "uin": "192837465",
-            "lastName": "Smith",
-            "firstName": "Jacob",
-            "role": "USER"
-        }
+var mockUserRepo1 = [
+    {
+        "uin": "123456789",
+        "lastName": "Daniels",
+        "firstName": "Jack",
+        "role": "ADMINISTRATOR"
+    },
+    {
+        "uin": "987654321",
+        "lastName": "Daniels",
+        "firstName": "Jill",
+        "role": "USER"
+    },
+    {
+        "uin": "192837465",
+        "lastName": "Smith",
+        "firstName": "Jacob",
+        "role": "USER"
     }
-};
+];
 
-var mockUserRepo2 = {
-    'HashMap':{
-        '0':{
-            "uin": "321654987",
-            "lastName": "Daniels",
-            "firstName": "John",
-            "role": "ADMINISTRATOR"
-        },
-        '1':{
-            "uin": "789456123",
-            "lastName": "Daniels",
-            "firstName": "Joann",
-            "role": "USER"
-        },
-        '2':{
-            "uin": "564738291",
-            "lastName": "Smith",
-            "firstName": "Joseph",
-            "role": "USER"
-        }
+var mockUserRepo2 = [
+    {
+        "uin": "321654987",
+        "lastName": "Daniels",
+        "firstName": "John",
+        "role": "ADMINISTRATOR"
+    },
+    {
+        "uin": "789456123",
+        "lastName": "Daniels",
+        "firstName": "Joann",
+        "role": "USER"
+    },
+    {
+        "uin": "564738291",
+        "lastName": "Smith",
+        "firstName": "Joseph",
+        "role": "USER"
     }
-};
+];
 
-var mockUserRepo3 = {
-    'HashMap':{
-        '0':{
-            "uin": "111111111",
-            "lastName": "User1",
-            "firstName": "Test",
-            "role": "ADMINISTRATOR"
-        },
-        '1':{
-            "uin": "222222222",
-            "lastName": "User2",
-            "firstName": "Test",
-            "role": "USER"
-        },
-        '2':{
-            "uin": "333333333",
-            "lastName": "User3",
-            "firstName": "Test",
-            "role": "USER"
-        }
+var mockUserRepo3 = [
+    {
+        "uin": "111111111",
+        "lastName": "User1",
+        "firstName": "Test",
+        "role": "ADMINISTRATOR"
+    },
+    {
+        "uin": "222222222",
+        "lastName": "User2",
+        "firstName": "Test",
+        "role": "USER"
+    },
+    {
+        "uin": "333333333",
+        "lastName": "User3",
+        "firstName": "Test",
+        "role": "USER"
     }
-};
+];
 
 
 angular.module('mock.userRepo', []).
@@ -73,39 +67,6 @@ angular.module('mock.userRepo', []).
         
         var self;
         
-        var UserRepo = function(futureData) {
-            self = this;
-            
-            if(!futureData.$$state) {
-                angular.extend(self, futureData);
-                return;
-            }
-
-            futureData.then(null, null, function(data) {
-                angular.extend(self, data); 
-            });
-
-        }
-        
-        UserRepo.get = function() {
-            return new UserRepo(mockUserRepo1);
-        };
-        
-        UserRepo.set = function(users) {
-            angular.extend(self, users);
-        };
-        
-        UserRepo.fetch = function() {
-            return $q(function(resolve) {               
-                resolve(mockUserRepo3);
-            });
-        }; 
-        
-        UserRepo.listen = function() {
-            return $q(function(resolve) {               
-                resolve(mockUserRepo3);
-            });
-        }; 
         
         return UserRepo;
 });

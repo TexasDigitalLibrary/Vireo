@@ -3,4 +3,5 @@ vireo.controller('SidebarController', function ($controller, $scope, SidebarServ
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
 	$scope.sidebarBoxes = SidebarService.getBoxes();
+
 });

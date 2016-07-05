@@ -19,7 +19,7 @@ public interface EmbargoRepoCustom {
     
     public Embargo validateUpdate(Embargo embargo);
     
-    public Embargo validateRemove(String idString, ModelBindingResult modelBindingResult);
+    public Embargo validateRemove(Embargo embargo);
     
     public EmbargoGuarantor validateGuarantor(String guarantorString, ModelBindingResult modelBindingResult);
 }

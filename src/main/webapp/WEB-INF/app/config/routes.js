@@ -1,4 +1,4 @@
-vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', function($routeProvider, $locationProvider) {
+vireo.config(function($routeProvider, $locationProvider) {
 	
 	$locationProvider.html5Mode(true);
 	
@@ -9,7 +9,7 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 		}).
 		when('/submit', {
 			templateUrl: 'views/student/submit.html',
-			access: ["STUDENT", "ADMINISTRATOR"]
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/new', {
 			templateUrl: 'views/submission/newSubmission.html',
@@ -78,4 +78,4 @@ vireo.config(['$routeProvider', '$locationProvider', '$anchorScrollProvider', fu
 			redirectTo: '/error/404'
 		});
 
-}]);
+});

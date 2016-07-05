@@ -5,7 +5,7 @@
 	  <togglebutton
 				  ng-click="updateConfigurableSettings('orcid', 'orcid_validation')"
 				  label="Validate ORCID ID :"
-				  scope-value="settings.configurable.orcid.orcid_validation"
+				  scope-value="settings.configurable.orcid.orcid_validation.value"
 				  toggle-options="{{orcidValidationOptions}}"
                   tool-tip="This will validate the given ORCID ID with ORCID's API.">
 	  </togglebutton>
@@ -17,7 +17,7 @@
 	  <togglebutton
 				  ng-click="updateConfigurableSettings('orcid', 'orcid_authentication')"
 				  label="Authenticate Orcid ID :"
-				  scope-value="settings.configurable.orcid.orcid_authentication"
+				  scope-value="settings.configurable.orcid.orcid_authentication.value"
                   toggle-options="{{orcidAuthenticationOptions}}"
                   tool-tip="This will compare the user information obtained from ORCID with the Student's first and last name.">
 	  </toggle-button>

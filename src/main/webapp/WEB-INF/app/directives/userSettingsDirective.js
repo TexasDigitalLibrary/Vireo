@@ -3,8 +3,8 @@ vireo.directive('displayname', function (UserSettings) {
 		template: '<span>{{userSettings.displayName}}</span>',
 		restrict: 'E',
 		scope:true,
-		link: function($scope, elem, attr) {
-			$scope.userSettings = UserSettings.get();
+		link: function($scope, elem) {
+			$scope.userSettings = new UserSettings();
 		}
 	};
 });
@@ -16,11 +16,11 @@ vireo.directive('usersettings', function (UserSettings) {
 		scope:true,
 		link: function($scope, elem, attr) {
 
-			$scope.userSettings = UserSettings.get();
+			$scope.userSettings = new UserSettings();
 
 			$scope.displayValue = "";
 
-			UserSettings.ready().then(function() {
+			$scope.userSettings.ready().then(function() {
 				for(var a in attr) {
 					if(a.indexOf("$") == -1 && (typeof $scope.userSettings[a] != 'undefined')) {
 						$scope.displayValue += $scope.userSettings[a] + " ";

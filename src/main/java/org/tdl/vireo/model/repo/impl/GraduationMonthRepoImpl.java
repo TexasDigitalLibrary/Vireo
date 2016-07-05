@@ -6,9 +6,6 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 
@@ -18,9 +15,6 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
     @Autowired
     private GraduationMonthRepo graduationMonthRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public GraduationMonth create(int month) {
         GraduationMonth graduationMonth = new GraduationMonth(month);
@@ -74,19 +68,5 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
         
         return graduationMonth;
     }
-    
-    @Override
-    public GraduationMonth validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        GraduationMonth toRemove = null;
-        Long id = validationService.validateLong(idString, "graduationMonth", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = graduationMonthRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("graduationMonth", "Cannot remove graduation month, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }
+
 }

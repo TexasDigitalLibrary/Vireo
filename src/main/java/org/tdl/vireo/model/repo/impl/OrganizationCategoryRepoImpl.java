@@ -5,18 +5,12 @@ import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationCategoryRepoCustom;
-import org.tdl.vireo.service.ValidationService;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCustom {
 
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
     
-    @Autowired
-    private ValidationService validationService;
-
     @Override
     public OrganizationCategory create(String name) {
         return organizationCategoryRepo.save(new OrganizationCategory(name));
@@ -56,19 +50,5 @@ public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCus
         
         return organizationCategory;
     }
-    
-    @Override
-    public OrganizationCategory validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        OrganizationCategory toRemove = null;
-        Long id = validationService.validateLong(idString, "organizationCategory", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = organizationCategoryRepo.findOne(id);
-            if (toRemove == null) {
-                modelBindingResult.addError(new ObjectError("organizationCategory", "Cannot remove organization category, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
-    }
+
 }

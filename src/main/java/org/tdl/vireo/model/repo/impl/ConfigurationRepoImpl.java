@@ -31,14 +31,11 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     }
 
     @Override
-    public Configuration reset(String name) {
+    public Configuration reset(Configuration configuration) {
 
-        Configuration deletableOverride = configurationRepo.findByNameAndIsSystemRequired(name, false);
-        if (deletableOverride != null) {
-            configurationRepo.delete(deletableOverride);
-        }
+        configurationRepo.delete(configuration);
 
-        return configurationRepo.findByNameAndIsSystemRequired(name, true);
+        return configurationRepo.findByNameAndIsSystemRequired(configuration.getName(), true);
 
     }
 

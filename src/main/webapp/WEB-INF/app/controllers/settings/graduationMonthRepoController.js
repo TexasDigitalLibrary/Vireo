@@ -1,7 +1,7 @@
 vireo.controller("GraduationMonthRepoController", function ($controller, $scope, $q, GraduationMonthRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.graduationMonths = GraduationMonthRepo.get();
+	$scope.graduationMonths = GraduationMonthRepo.getAll();
 
 	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
@@ -28,15 +28,15 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		for(var i in months) {
 			$scope.monthOptions[i] = months[i];
 		}
-		for(var i in $scope.graduationMonths.list) {
-			delete $scope.monthOptions[$scope.graduationMonths.list[i].month];
+		for(var i in $scope.graduationMonths) {
+			delete $scope.monthOptions[$scope.graduationMonths[i].month];
 		}
 	};
 		
 	$scope.ready.then(function() {
 
 		$scope.resetGraduationMonth = function() {
-			$scope.modalData = {'name':'', 'subject':'', 'message':''};
+			$scope.modalData = {};
 			$scope.resetMonthOptions();
 		};
 		
@@ -51,7 +51,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		$scope.resetGraduationMonth();
 
 		$scope.createGraduationMonth = function() {
-			GraduationMonthRepo.add($scope.modalData).then(function(data) {
+			GraduationMonthRepo.create($scope.modalData).then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetGraduationMonth();
@@ -62,7 +62,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		
 		$scope.selectGraduationMonth = function(index) {
 			$scope.resetMonthOptions();
-			$scope.modalData = $scope.graduationMonths.list[index];
+			$scope.modalData = $scope.graduationMonths[index];
 			$scope.modalData.month = $scope.modalData.month.toString();
 		};
 		
@@ -73,7 +73,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 		
 		$scope.updateGraduationMonth = function() {
-			GraduationMonthRepo.update($scope.modalData).then(function(data) {
+			$scope.modalData.save().then(function(data) {
 				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetGraduationMonth();
@@ -108,7 +108,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 
 		$scope.removeGraduationMonth = function(index) {
-	    	GraduationMonthRepo.remove(index).then(function(data) {
+	    	GraduationMonthRepo.deleteById(index).then(function(data) {
 	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
             	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
             		$scope.resetGraduationMonth();
@@ -121,7 +121,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
 			select: $scope.selectGraduationMonth,			
-			model: $scope.graduationMonths.list,
+			model: $scope.graduationMonths,
 			confirm: '#graduationMonthConfirmRemoveModal',
 			reorder: $scope.reorderGraduationMonth,
 			container: '#graduation-month'

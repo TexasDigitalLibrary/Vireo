@@ -6,7 +6,6 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 import org.tdl.vireo.service.OrderedEntityService;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.validation.ModelBindingResult;
 
@@ -17,9 +16,6 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     
     @Autowired
     private OrderedEntityService orderedEntityService;
-    
-    @Autowired
-    private ValidationService validationService;
 
     @Override
     public EmailTemplate create(String name, String subject, String message) {
@@ -101,21 +97,11 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     }
     
     @Override
-    public EmailTemplate validateRemove(String idString, ModelBindingResult modelBindingResult) {
-        EmailTemplate toRemove = null;
-        Long id = validationService.validateLong(idString, "emailTemplate", modelBindingResult);
-        
-        if(!modelBindingResult.hasErrors()){
-            toRemove = emailTemplateRepo.findOne(id);
-            if (toRemove != null) {
-                if (toRemove.isSystemRequired()) {
-                    modelBindingResult.addError(new ObjectError("emailTemplate", "Cannot remove a System email template!"));
-                }
-            } else {
-                modelBindingResult.addError(new ObjectError("emailTemplate", "Cannot remove email template, id did not exist!"));
-            }
-        }
-        
-        return toRemove;
+    public EmailTemplate validateRemove(EmailTemplate emailTemplate) {            
+        if (emailTemplate.isSystemRequired()) {
+            emailTemplate.getBindingResult().addError(new ObjectError("emailTemplate", "Cannot remove a System email template!"));
+        }        
+        return emailTemplate;
     }
+    
 }

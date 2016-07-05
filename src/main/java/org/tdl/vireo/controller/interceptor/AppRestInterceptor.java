@@ -23,9 +23,21 @@ public class AppRestInterceptor extends CoreRestInterceptor {
 
     @Value("${app.authority.admins}")
     private String[] admins;
-
-    // @Autowired @Lazy
-    // private SimpMessagingTemplate simpMessagingTemplate;
+    
+    // TODO: move static values into config
+    @Override
+    public Credentials getAnonymousCredentials() {
+        Credentials anonymousCredentials = new Credentials();
+        anonymousCredentials.setAffiliation("NA");
+        anonymousCredentials.setLastName("Anonymous");
+        anonymousCredentials.setFirstName("Role");
+        anonymousCredentials.setNetid("anonymous-" + Math.round(Math.random() * 100000));
+        anonymousCredentials.setUin("000000000");
+        anonymousCredentials.setExp("1436982214754");
+        anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
+        anonymousCredentials.setRole("NONE");
+        return anonymousCredentials;
+    }
 
     @Override
     public Credentials confirmCreateUser(Credentials shib) {
@@ -67,12 +79,6 @@ public class AppRestInterceptor extends CoreRestInterceptor {
             }
             
             user = userRepo.save(user);
-
-            // Map<String, Object> userMap = new HashMap<String, Object>();
-            //
-            // userMap.put("list", userRepo.findAll());
-            //
-            // this.simpMessagingTemplate.convertAndSend("/channel/users", new ApiResponse(SUCCESS, userMap));
         } else {
 
             if (user.getNetid() != null && !user.getNetid().equals(shib.getAllCredentials().get(netIdHeader))) {

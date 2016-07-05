@@ -4,7 +4,7 @@ vireo.controller('AbstractController', function ($scope, $window, StorageService
 	$scope.storage = StorageService;
 
 	$scope.isAnonymous = function() {
-		return (sessionStorage.role == "NONE" || sessionStorage.role == "ROLE_ANONYMOUS");
+		return (sessionStorage.role == appConfig.anonymousRole);
 	};
 
 	$scope.isUser = function() {

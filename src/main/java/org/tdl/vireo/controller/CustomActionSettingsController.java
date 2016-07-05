@@ -3,10 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +37,7 @@ public class CustomActionSettingsController {
     
     @ApiMapping("/all")
     public ApiResponse getCustomActions() {
-       return new ApiResponse(SUCCESS,getAll());
+       return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
     }
     
     @ApiMapping("/create")
@@ -58,10 +54,10 @@ public class CustomActionSettingsController {
             case VALIDATION_INFO:
                 logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
                 customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(VALIDATION_WARNING, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't create custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
@@ -85,10 +81,10 @@ public class CustomActionSettingsController {
             case VALIDATION_INFO:
                 logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
                 customActionDefinitionRepo.save(customActionDefinition);
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(VALIDATION_WARNING, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't update custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
@@ -98,32 +94,26 @@ public class CustomActionSettingsController {
         return response;
     }
     
-    @ApiMapping("/remove/{idString}")
+    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse removeCustomAction(@ApiVariable String idString) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(idString, "custom_action_definition_id");
-        
-        // will attach any errors to the BindingResult when validating the incoming idString
-        CustomActionDefinition customActionDefinition = customActionDefinitionRepo.validateRemove(idString, modelBindingResult);
-        
+    public ApiResponse removeCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
+
         // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
+        ApiResponse response = validationService.buildResponse(customActionDefinition);
         
         switch(response.getMeta().getType()){
             case SUCCESS:
             case VALIDATION_INFO:
-                logger.info("Removing custom action definition with id " + idString);
+                logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());
                 customActionDefinitionRepo.remove(customActionDefinition);
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(VALIDATION_WARNING, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
-                logger.warn("Couldn't remove custom action definition with id " + idString + " because: " + response.getMeta().getType());
+                logger.warn("Couldn't remove custom action definition with label " + customActionDefinition.getLabel() + " because: " + response.getMeta().getType());
                 break;
         }
         
@@ -150,10 +140,10 @@ public class CustomActionSettingsController {
             case VALIDATION_INFO:
                 logger.info("Reordering custom action definitions");
                 customActionDefinitionRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(SUCCESS, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/custom-actions", new ApiResponse(VALIDATION_WARNING, getAll()));
+                simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(VALIDATION_WARNING, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
                 break;
             default:
                 logger.warn("Couldn't reorder custom action definitions because: " + response.getMeta().getType());
@@ -163,9 +153,4 @@ public class CustomActionSettingsController {
         return response;
     }
     
-    private Map<String, List<CustomActionDefinition>> getAll() {
-        Map<String, List<CustomActionDefinition>> allRet = new HashMap<String, List<CustomActionDefinition>>();
-        allRet.put("list", customActionDefinitionRepo.findAllByOrderByPositionAsc());
-        return allRet;
-    }
 }

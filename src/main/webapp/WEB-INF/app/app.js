@@ -8,6 +8,9 @@ var vireo = angular.module('vireo',
 	'vireo.version'
 ]);
 
+vireo.model = core.model;
+vireo.repo = core.repo;
+
 //This method's callback is passed to stomp and executed on both successfull connection, as well as disconnect.
 setUpApp(function(connected) {
 
@@ -15,7 +18,8 @@ setUpApp(function(connected) {
 	appConfig.connected = connected;
 
 	vireo.constant('appConfig', appConfig);
-
+	vireo.constant('api', apiMapping);
+	
 	angular.element(document).ready(function() {	   	
 	   	try {
 	   		// If the app is already bootstrapped then an error will be thrown

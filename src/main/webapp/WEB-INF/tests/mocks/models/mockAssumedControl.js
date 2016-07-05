@@ -34,33 +34,6 @@ angular.module('mock.AssumedControl', []).
     	
     	var self;
     	
-    	var AssumedControl = function(futureData) {
-    		self = this;
-			
-    		if(!futureData.$$state) {
-    			angular.extend(self, futureData);
-    			return;
-    		}
-
-    		futureData.then(null, null, function(data) {
-    			angular.extend(self, data);	
-    		});
-
-    	}
-    	
-    	AssumedControl.get = function() {
-            return new AssumedControl(mockAssumedControl1);
-        };
-        
-        AssumedControl.set = function(data) {
-        	angular.extend(self, data);
-        };
-        
-        AssumedControl.fetch = function() {
-        	return $q(function(resolve) {            	
-            	resolve(mockAssumedControl3);
-            });
-        }; 
         
         return AssumedControl;
 });
