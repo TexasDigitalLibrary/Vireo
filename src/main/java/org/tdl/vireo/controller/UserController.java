@@ -71,7 +71,7 @@ public class UserController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse allUsers() {            
+    public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
@@ -83,8 +83,11 @@ public class UserController {
         // build a response based on the BindingResult state in the configuration
         ApiResponse response = validationService.buildResponse(user);
         
-        // get the persisted user for its encoded password
-        user.setPassword(userRepo.findOne(user.getId()).getPassword());
+        // get the persisted user for its encoded password        
+        User persistedUser = userRepo.findOne(user.getId());
+        if(persistedUser != null) {
+            user.setPassword(persistedUser.getPassword());
+        }
         
         // all other properties should be on the user from the client request
         
