@@ -20,6 +20,20 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 		});
 	};
 
+
+	this.selectiveListen = function() {
+		var organizationRepo = this;
+		WsApi.listen(this.mapping.selectiveListen).then(null, null, function(rawApiResponse){
+			var broadcastedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
+			if (broadcastedOrg.id == selectedOrganization.id) {
+				organizationRepo.setSelectedOrganization(broadcastedOrg);
+			}
+		});
+	};
+
+	this.selectiveListen();
+
+
 	this.resetNewOrganization = function() {
 		for(var key in this.newOrganization) {
 			delete this.newOrganization[key];
@@ -59,21 +73,24 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 
 		var fetchedOrgDefer = new $q.defer();
 
-		var getOrgPromise = WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'organization', 
-			method: 'get/' + orgId
+		angular.extend(this.mapping.get, {
+			'method': 'get/' + orgId
 		});
+
+		var getOrgPromise = WsApi.fetch(this.mapping.get);
+
+
+		var organizationRepo = this;
 
 		getOrgPromise.then(function(rawApiResponse) {
 			
 			var fetchedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
 
-			var workflowStepsPromise = WsApi.fetch({
-				endpoint: '/private/queue', 
-				controller: 'organization', 
-				method: fetchedOrg.id + '/workflow'
+			angular.extend(organizationRepo.mapping.workflow, {
+				'method': fetchedOrg.id + '/workflow'
 			});
+
+			var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
 
 			workflowStepsPromise.then(function(data) {
 				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
@@ -90,44 +107,39 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 	};
 
 	this.getChildren = function(id) {
-		return WsApi.fetch({
-			endpoint: '/private/queue', 
-			controller: 'organization', 
-			method: 'get-children/' + id,
-		});		
+		angular.extend(this.mapping.children, {
+			'method': 'get-children/' + id
+		});
+		return WsApi.fetch(this.mapping.children);		
 	};
 
 	this.addWorkflowStep = function(newWorkflowStepName) {
-		return WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'organization', 
+		angular.extend(this.mapping.addWorkflowStep, {
 			'method': this.getSelectedOrganization().id + '/create-workflow-step/' + newWorkflowStepName
 		});
+		return WsApi.fetch(this.mapping.addWorkflowStep);
 	};
 
-	this.updateWorkflowStep = function(workflowStepToUpdate) {		
-		return WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'organization', 
-			'method': this.getSelectedOrganization().id+'/update-workflow-step',
+	this.updateWorkflowStep = function(workflowStepToUpdate) {
+		angular.extend(this.mapping.addWorkflowStep, {
+			'method': this.getSelectedOrganization().id + '/update-workflow-step',
 			'data': workflowStepToUpdate
 		});
+		return WsApi.fetch(this.mapping.addWorkflowStep);
 	};
 
 	this.reorderWorkflowStep = function(upOrDown, workflowStepID) {
-		return WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'organization', 
-			'method': this.getSelectedOrganization().id + '/' + 'shift-workflow-step-'+upOrDown+'/' + workflowStepID,
+		angular.extend(this.mapping.addWorkflowStep, {
+			'method': this.getSelectedOrganization().id + '/' + 'shift-workflow-step-' + upOrDown + '/' + workflowStepID
 		});
+		return WsApi.fetch(this.mapping.addWorkflowStep);
 	};
 
 	this.deleteWorkflowStep = function(workflowStepID) {
-		return WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'organization', 
-			'method': this.getSelectedOrganization().id + '/' + 'delete-workflow-step/' + workflowStepID,
+		angular.extend(this.mapping.addWorkflowStep, {
+			'method': this.getSelectedOrganization().id + '/' + 'delete-workflow-step/' + workflowStepID
 		});
+		return WsApi.fetch(this.mapping.addWorkflowStep);
 	};
 
 	return this;

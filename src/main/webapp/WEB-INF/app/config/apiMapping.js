@@ -393,9 +393,17 @@ var apiMapping = {
 			'controller': 'organization',
 			'method': 'all'
 		},
+		get: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'organizations'
+		},
+		selectiveListen: {
+			'endpoint': '/channel',
+			'controller': 'organization'
 		},
 		create: {
 			'endpoint': '/private/queue',
@@ -406,6 +414,30 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'organization',
 			'method': 'update'
+		},
+		workflow: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
+		children: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
+		addWorkflowStep: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
+		updateWorkflowStep: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
+		reorderWorkflowStep: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
+		},
+		deleteWorkflowStep: {
+			'endpoint': '/private/queue',
+			'controller': 'organization'
 		}
 	},
 	OrganizationCategory: {

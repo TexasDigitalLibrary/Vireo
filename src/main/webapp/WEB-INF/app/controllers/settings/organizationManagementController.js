@@ -12,7 +12,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		OrganizationRepo.listen(function() {
 			// TODO: improve UX of organization triptych during organizaiton creation
-		})
+		});
 
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
