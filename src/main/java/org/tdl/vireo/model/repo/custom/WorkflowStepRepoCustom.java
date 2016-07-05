@@ -30,4 +30,6 @@ public interface WorkflowStepRepoCustom {
 
     public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep);
 
+    public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization);
+
 }
