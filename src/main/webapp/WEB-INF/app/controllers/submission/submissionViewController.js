@@ -1,7 +1,5 @@
 vireo.controller("SubmissionViewController", function ($controller, $scope, NgTableParams, SubmissionRepo) {
 
-  	console.info(SubmissionRepo);
-
   	$scope.submissions = SubmissionRepo.getAll();
 
   	SubmissionRepo.ready().then(function() {
