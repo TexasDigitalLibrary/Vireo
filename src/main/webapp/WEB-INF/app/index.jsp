@@ -184,6 +184,7 @@
 
 	<script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
 	<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+	<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
 
 	
 	<!--  Core libraries -->
@@ -355,10 +356,8 @@
 	    <script src="controllers/settings/noteManagementController.js"></script>
 	    <script src="controllers/submission/newSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionController.js"></script>
-	    
-
-	    
-	    
+	    <script src="controllers/submission/submissionViewController.js"></script>
+	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

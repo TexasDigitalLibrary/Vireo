@@ -1414,3 +1414,18 @@ footer a, footer li, footer p {
 #fp-repeatable-checkbox {
 	margin-left:-40px;
 }
+
+/********************
+* ETD Table Styling *
+********************/
+
+
+#etd-table {
+	.header {
+		background: #ffffff;
+		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
+		background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
+		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
+	}
+}
