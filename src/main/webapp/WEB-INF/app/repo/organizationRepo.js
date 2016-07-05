@@ -26,7 +26,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 		WsApi.listen(this.mapping.selectiveListen).then(null, null, function(rawApiResponse){
 			var broadcastedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
 
-			console.log(broadcastedOrg)
 			if (broadcastedOrg.id == selectedOrganization.id) {
 				organizationRepo.setSelectedOrganization(broadcastedOrg);
 			}

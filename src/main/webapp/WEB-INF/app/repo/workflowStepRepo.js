@@ -57,7 +57,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi)
 	};
 
 	this.updateNote = function(workflowStepId, note) {
-		console.log(note);
 		angular.extend(note, {
 			requestingOrgId: OrganizationRepo.getSelectedOrganization().id
 		});
