@@ -11,7 +11,8 @@
 
 	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
  	  <tr ng-repeat="row in $data track by row.id">
-		<td title="'Title'">{{row.id}}</td>
+		<td title="'ID'">{{row.id}}</td>
+		<td title="'Organization'">{{row.organization.name}}</td>
 		<td title="'Status'">{{row.state.name}}</td>
 		<td title="'Date Submitted'">TODO</td>
 		<td title="'Assigned To'">TODO</td>
