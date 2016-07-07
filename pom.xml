@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>edu.tamu.weaverframework</groupId>
 		<artifactId>weaver-webservice-parent</artifactId>
-		<version>1.1.0-DESERIALIZATION-SNAPSHOT</version>
+		<version>1.1.0-VALIDATION-SNAPSHOT</version>
 	</parent>
 
 	<properties>

@@ -227,10 +227,7 @@ public class NoteRepoImpl implements NoteRepoCustom {
             resultingNote = newNote;
         }
         
-        System.out.println(resultingNote.getOverrideable());
-
         return resultingNote;
-
     }
 
     @Override
