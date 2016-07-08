@@ -280,6 +280,7 @@
 	    <script src="directives/dropZoneDirective.js"></script>
 	    <script src="directives/validationResponseDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
+	    <script src="directives/submissionNoteDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
