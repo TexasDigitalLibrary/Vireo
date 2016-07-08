@@ -356,7 +356,7 @@
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>
 	    <script src="controllers/settings/noteManagementController.js"></script>
 	    <script src="controllers/submission/newSubmissionController.js"></script>
-	    <script src="controllers/submission/submissionController.js"></script>
+	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionViewController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	<!-- endbuild -->
