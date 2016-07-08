@@ -1,1 +1,13 @@
-input_text.html
+<form class="field-profile row" name="profile.predicate.value">
+	<div class="form-group">
+		<div class="col-xs-3">
+			<label>{{profile.fieldGlosses[0].value}}:</label>
+		</div>
+		<div class="col-xs-9">
+			<div class="with-tool-tip">
+				<input type="text" class="form-control" name="profile.predicate.value" />
+				<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right" tooltip="{{ profile.help }}"></span>
+			</div>
+		</div>
+	</div>
+</form>
