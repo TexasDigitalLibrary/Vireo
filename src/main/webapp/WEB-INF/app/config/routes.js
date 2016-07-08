@@ -18,7 +18,7 @@ vireo.config(function($routeProvider, $locationProvider) {
 		}).
 		when('/submission/:submissionId', {
 			templateUrl: 'views/submission/submission.html',
-			controller: 'SubmissionController',
+			controller: 'StudentSubmissionController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/users', {
