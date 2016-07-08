@@ -303,6 +303,7 @@
 	    <script src="repo/inputTypeRepo.js"></script>
 	    <script src="repo/fieldPredicateRepo.js"></script>
 	    <script src="repo/fieldGlossRepo.js"></script>	    
+	    <script src="repo/studentSubmissionRepo.js"></script>
 	    <script src="repo/submissionRepo.js"></script>
 
 	    <!-- New Models --> 
