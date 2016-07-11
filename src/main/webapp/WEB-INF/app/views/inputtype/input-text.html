@@ -1,12 +1,17 @@
 <form class="field-profile row" name="profile.predicate.value">
 	<div class="form-group">
 		<div class="col-xs-3">
-			<label>{{profile.fieldGlosses[0].value}}:</label>
+			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
 		</div>
 		<div class="col-xs-9">
-			<div class="with-tool-tip">
-				<input type="text" class="form-control" name="profile.predicate.value" />
-				<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right" tooltip="{{ profile.help }}"></span>
+			<div ng-repeat="i in values track by $index">
+				<br ng-if="!$first">
+				<div class="with-tool-tip">
+					<input type="text" class="form-control" name="profile.predicate.value" ng-required="!profile.optional" ng-model="values[$index]" />
+					<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right" tooltip="{{ profile.help }}"> </span>
+					<button ng-if="values.length > 1 && !$first" class="btn btn-danger field-value-add" ng-click="values.splice($index, 1)">-</button>
+					<button ng-if="profile.repeatable && $first" class="btn btn-primary field-value-add" ng-click="values[values.length] = ''">+</button>
+				</div>
 			</div>
 		</div>
 	</div>
