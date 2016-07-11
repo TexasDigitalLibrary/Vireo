@@ -1415,6 +1415,22 @@ footer a, footer li, footer p {
 	margin-left:-40px;
 }
 
+.field-profile label {
+  font-weight: normal;
+}
+
+.field-profile label.required {
+  font-weight: bold;
+}
+
+.field-profile label.required::before {
+  content: "*  ";
+}
+
+.field-profile .field-value-add {
+  margin-left: 25px;
+}
+
 /********************
 * ETD Table Styling *
 ********************/

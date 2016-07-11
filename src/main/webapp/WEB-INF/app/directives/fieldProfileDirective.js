@@ -7,6 +7,9 @@ vireo.directive("field",  function() {
 			profile: "="
 		},
 		link: function($scope) {
+
+			$scope.values = [""];
+
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};
