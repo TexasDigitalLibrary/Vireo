@@ -9,8 +9,8 @@
 				<div class="with-tool-tip">
 					<input type="text" class="form-control" name="profile.predicate.value" ng-required="!profile.optional" ng-model="values[$index]" />
 					<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right" tooltip="{{ profile.help }}"> </span>
-					<button ng-if="values.length > 1 && !$first" class="btn btn-danger field-value-add" ng-click="values.splice($index, 1)">-</button>
-					<button ng-if="profile.repeatable && $first" class="btn btn-primary field-value-add" ng-click="values[values.length] = ''">+</button>
+					<button ng-if="values.length > 1 && !$first" class="btn btn-danger field-value-add-remove" ng-click="values.splice($index, 1)">-</button>
+					<button ng-if="profile.repeatable && $first" class="btn btn-primary field-value-add-remove" ng-click="values[values.length] = ''">+</button>
 				</div>
 			</div>
 		</div>
