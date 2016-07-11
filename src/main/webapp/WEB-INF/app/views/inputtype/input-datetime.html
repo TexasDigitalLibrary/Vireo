@@ -1,1 +1,23 @@
-input-datetime.html
+<form class="field-profile input-datetime row" name="profile.predicate.value">
+	<div class="form-group">
+		<div class="col-xs-3">
+			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
+		</div>
+		<div class="col-xs-3">
+			<div ng-repeat="i in values track by $index">
+				<br ng-if="!$first">
+				<div class="with-tool-tip">
+					<p class="input-group">
+			          	<input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-model="values[$index]" is-open="date" ng-required="!profile.optional" close-text="Close" />
+			          	<span class="input-group-btn">
+			            	<button type="button" class="btn btn-default" ng-click="date=true"><i class="glyphicon glyphicon-calendar"></i></button>
+			          	</span>
+			        </p>
+					<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right" tooltip="{{ profile.help }}"> </span>
+					<button ng-if="values.length > 1 && !$first" class="btn btn-danger field-value-add-remove" ng-click="values.splice($index, 1)">-</button>
+					<button ng-if="profile.repeatable && $first" class="btn btn-primary field-value-add-remove" ng-click="values[values.length] = ''">+</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
