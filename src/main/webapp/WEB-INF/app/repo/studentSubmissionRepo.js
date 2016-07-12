@@ -1,5 +1,3 @@
-
-// The prefix _MODEL_ 
 vireo.repo("StudentSubmissionRepo", function StudentSubmissionRepo(WsApi) {
 
 	var StudentSubmissionRepo = this;
