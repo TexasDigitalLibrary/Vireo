@@ -598,3 +598,13 @@ var apiMapping = {
 		}
 	},
 }
+
+// OVERRIDES
+
+apiMapping.StudentSubmission = apiMapping.Submission;
+
+apiMapping.StudentSubmission.all = {
+	'endpoint': '/private/queue',
+	'controller': 'submission',
+	'method': 'all-by-user'
+}
