@@ -754,7 +754,7 @@ legend.legendborder {
   border-bottom:none;
 }
 
-.checkbox {
+.my-profile-section .checkbox  {
   display: inline-block;
   width: 170px;
   font-size: .9em;
@@ -841,7 +841,7 @@ footer a, footer li, footer p {
   border-bottom:none;
 }
 
-.checkbox {
+.my-profile-section .checkbox {
   float: left;
   font-size: .9em;
   padding: 0 19px;
@@ -1409,10 +1409,6 @@ footer a, footer li, footer p {
 .fp-gloss-predicate-button {
 	float:right;
 	margin-top: 10px;
-}
-
-#fp-repeatable-checkbox {
-	margin-left:-40px;
 }
 
 .field-profile label {

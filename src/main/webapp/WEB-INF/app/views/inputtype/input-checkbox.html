@@ -5,9 +5,16 @@
 			<label>{{profile.fieldGlosses[0].value}}:</label>
 		</div>
 		<div class="col-xs-9">
-			<div ng-repeat="i in values track by $index">
-				<input type="checkbox" ng-model="values[$index]" ng-true-value="true" ng-false-value="false">
+			<input ng-if="!profile.controlledVocabularies[0]" type="checkbox" ng-model="values[$index]" ng-true-value="true" ng-false-value="false">
+
+
+			<div class="checkbox" ng-repeat="word in profile.controlledVocabularies[0].dictionary">
+				<label>
+					<input type="checkbox" ng-model="values[$index]" ng-true-value="true" ng-false-value="false">
+					{{word.name}}
+				</label>
 			</div>
+
 		</div>
 	</div>
 </form>
