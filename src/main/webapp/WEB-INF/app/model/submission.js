@@ -1,4 +1,4 @@
-vireo.model("Submission", function () {
+var submissionModel = function () {
 
 	return function Submission() {
 		
@@ -7,4 +7,7 @@ vireo.model("Submission", function () {
 		return this;
 	}
 
-});
+}
+
+vireo.model("Submission", submissionModel);
+vireo.model("StudentSubmission", submissionModel);
