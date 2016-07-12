@@ -1448,3 +1448,24 @@ footer a, footer li, footer p {
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
 	}
 }
+
+
+/********
+* NOTES *
+*********/
+
+.note {
+  position: relative;
+  max-width: 225px;
+  padding: 15px 15px 35px 35px;
+  background: #f5e49d;
+  margin-bottom: 25px;
+  box-shadow: 3px 3px 7px 0px #e0ddce;
+}
+
+.note .glyphicon {
+  position: absolute;
+  left: -3px;
+}
+
+
