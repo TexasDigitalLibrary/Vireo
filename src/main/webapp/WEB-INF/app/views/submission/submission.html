@@ -12,14 +12,14 @@
 </div>
 
 <div class="row">
-	<div class="col-xs-8 submission-workflow-steps">
+	<div class="col-xs-12 col-sm-6 col-sm-offset-2 submission-workflow-steps">
 		<ul class="list-unstyled">
-			<li ng-repeat="p in activeStep.aggregateFieldProfiles">
-				<field profile="p"></field>
+			<li ng-repeat="fp in activeStep.aggregateFieldProfiles">
+				<field profile="fp"></field>
 			</li>
 		</ul>
 	</div>
-	<div class="col-xs-4 submission-notes">
+	<div class="col-xs-12 col-sm-3 col-sm-offset-1 submission-notes">
 		<ul class="list-unstyled">
 			<li ng-repeat="note in activeStep.aggregateNotes">
 				<b>({{note.name}})</b>
