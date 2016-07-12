@@ -1,0 +1,16 @@
+<form class="field-profile input-radio row" name="profile.predicate.value">
+	<div class="form-group">
+		<div class="col-xs-3">
+			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
+		</div>
+		<div class="col-xs-3">
+
+			<span class="glyphicon glyphicon-info-sign opaque tooltip-span pull-right radio-tip" tooltip="{{ profile.help }}"> </span>
+
+			<div class="input-radio-container" ng-repeat="word in profile.controlledVocabularies[0].dictionary" ng-click="values[0] = word.defenition ? word.defenition : word.name">
+				<span class="radio-label">{{word.name}}:</span>
+				<input type="radio" ng-model="values[0]" class="pull-right" name="profile.predicate.value" value="{{word.defenition ? word.defenition : word.name}}">
+			</div>
+		</div>
+	</div>
+</form>
