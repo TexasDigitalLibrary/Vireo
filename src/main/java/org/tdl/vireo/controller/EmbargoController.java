@@ -79,7 +79,7 @@ public class EmbargoController {
     @Transactional
     @ApiMapping("/reorder/{guarantorString}/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Embargo.class, params = { "1", "2", "0", "guarantor" }) })
+    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Embargo.class, params = { "1", "2", "guarantor" }) })
     public ApiResponse reorderEmbargoes(@ApiVariable String guarantorString, @ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering Embargoes with guarantor " + guarantorString);
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);

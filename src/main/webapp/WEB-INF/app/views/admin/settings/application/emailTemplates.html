@@ -3,6 +3,8 @@
     class="row" 
     ng-controller="EmailTemplateRepoController">
 
+    {{emailTemplateRepo.getValidationResults()}}
+
     <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
 
     <div class="col-sm-6">

@@ -16,9 +16,9 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.controller.CoreValidationsController;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.util.ValidationUtility;
 import edu.tamu.framework.validation.InputValidator;
 import edu.tamu.framework.validation.Validator;
-import edu.tamu.framework.util.ValidationUtility;
 
 @Controller
 @ApiMapping("/validations")
@@ -26,7 +26,6 @@ public class AppValidationsController extends CoreValidationsController {
 
 	private static final String APP_MODEL_PACKAGE = "org.tdl.vireo.model";
 	
-    @SuppressWarnings("unchecked")
     @ApiMapping("/{entityName}")
     public ApiResponse validations(@ApiVariable String entityName) {
         

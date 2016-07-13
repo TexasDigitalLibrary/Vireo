@@ -1,4 +1,6 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
+
+	<validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
 	
 	<div class="row">
 
@@ -22,8 +24,7 @@
 
 			<button 
 				class="btn btn-default modal-add-btn"
-				ng-click="modalData.guarantor='DEFAULT';"
-				ng-click="openModal('#embargoNewModal')">
+				ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
 				Add New
 			</button>
 
@@ -52,8 +53,7 @@
 
 			<button 
 				class="btn btn-default modal-add-btn"
-				ng-click="modalData.guarantor='PROQUEST';"
-				ng-click="openModal('#embargoNewModal')">
+				ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
 				Add New
 			</button>
 

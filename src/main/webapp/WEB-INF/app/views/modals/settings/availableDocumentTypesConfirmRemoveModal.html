@@ -7,7 +7,7 @@
 
 <form ng-submit="removeDocumentType()" novalidate>
 
-	<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the Document Type: {{modalData.name}}</b></h4>
