@@ -2,6 +2,8 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+    $scope.organizationCategoryRepo = OrganizationCategoryRepo;
+
     $scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
     OrganizationCategoryRepo.listen(function(data) {

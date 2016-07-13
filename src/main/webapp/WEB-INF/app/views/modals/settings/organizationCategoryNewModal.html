@@ -1,21 +1,26 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="resetOrganizationCategories()" aria-label="Close">
-    <span class="modal-close" aria-hidden="true">&times;</span>
-  </button>
-  <h3 class="modal-title">Add Organization Category</h3>
+    <button type="button" class="close" ng-click="resetOrganizationCategories()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Add Organization Category</h3>
 </div>
 
-<div class="modal-body">
+<form ng-submit="createOrganizationCategory()" novalidate>
 
-  <form>
-    <div class="form-group">
-      <label for="organization-catgegory-name">Name:</label>
-      <input id="organization-catgegory-name" ng-model="modalData.name" type="text" class="form-control" placeholder="Name of the new category"/>
+    <validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+        <validatedinput
+            model="modalData"
+            property="name"
+            label="Name"
+            placeholder="Name of the new organization category"
+            results="organizationCategoryRepo.getValidationResults()">
+        </validatedinput>
     </div>
-  </form>
-</div>
 
-<div class="modal-footer">
-  <button type="button" class="btn btn-warning" ng-click="resetOrganizationCategories()">Cancel</button>
-  <button id="organizationCategory-save" type="button" class="btn btn-primary" ng-click="createOrganizationCategory()">Create</button>
-</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="resetOrganizationCategories()">Cancel</button>
+        <button id="organizationCategory-save" type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>

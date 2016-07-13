@@ -1,5 +1,7 @@
 <div id="organization-categories" class="row" ng-controller="OrganizationCategoriesController">
 
+    <validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
+
     <div class="col-sm-6">    
         
         <button class="btn btn-default modal-add-btn" ng-click="openModal('#organizationCategoryNewModal')">

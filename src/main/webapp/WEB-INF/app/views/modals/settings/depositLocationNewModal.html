@@ -15,49 +15,56 @@
             property="name"
             label="Location Name"
             placeholder="Location Name"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedselect
             options="protocols"
             model="modalData"
             property="depositor"
             label="Protocol"
-            results="depositLocationRepo.getValidationResults()"></validatedselect>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedselect>
 
         <validatedselect
             options="packagers"
             model="modalData"
             property="packager"
             label="Format"
-            results="depositLocationRepo.getValidationResults()"></validatedselect>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedselect>
 
         <validatedinput
             model="modalData"
             property="repository"
             label="Repository Location"
             placeholder="Repository Location"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedinput
             model="modalData"
             property="collection"
             label="Collection"
             placeholder="Collection"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedinput
             model="modalData"
             property="timeout"
             label="Repository Timeout"
             placeholder="Repository Timeout (seconds)"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedinput
             model="modalData"
             property="username"
             label="Username"
             placeholder="Username"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedinput
             type="password"
@@ -65,14 +72,16 @@
             property="password"
             label="Password"
             placeholder="Password"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
         <validatedinput
             model="modalData"
             property="onBehalfOf"
             label="On Behalf Of"
             placeholder="On Behalf Of"
-            results="depositLocationRepo.getValidationResults()"></validatedinput>
+            results="depositLocationRepo.getValidationResults()">
+        </validatedinput>
 
     	<div class="form-group">
         	<button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
