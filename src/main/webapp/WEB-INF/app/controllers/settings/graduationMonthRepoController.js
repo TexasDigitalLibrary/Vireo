@@ -1,6 +1,8 @@
 vireo.controller("GraduationMonthRepoController", function ($controller, $scope, $q, GraduationMonthRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+	$scope.graduationMonthRepo = GraduationMonthRepo;
+
 	$scope.graduationMonths = GraduationMonthRepo.getAll();
 
 	GraduationMonthRepo.listen(function(data) {
@@ -27,6 +29,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	};	
 	
 	$scope.resetMonthOptions = function() {
+		$scope.monthOptions = {};
 		for(var i in months) {
 			$scope.monthOptions[i] = months[i];
 		}
@@ -38,8 +41,18 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.resetGraduationMonth = function() {
-			$scope.modalData = {};
+
 			$scope.resetMonthOptions();
+
+			$scope.modalData = {};
+
+			for(var i in $scope.monthOptions) {
+				if($scope.modalData.month === undefined) {
+					$scope.modalData.month = i;
+					break;
+				}
+			}
+
 			$scope.closeModal();
 		};
 				

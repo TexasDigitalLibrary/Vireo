@@ -5,12 +5,17 @@
 	<h3 class="modal-title">Are You Sure?</h3>
 </div>
 
-<div class="modal-body">
-	<h4><b>Click confirm to remove the Graduation Month:</b></h4>
-	<h4>{{toMonthString(modalData.month)}}</h4>
-</div>
+<form ng-submit="removeGraduationMonth()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
-	<button id="graduationMonth-confirm" type="button" class="btn btn-primary" ng-click="removeGraduationMonth()">Confirm</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<h4><b>Click confirm to remove the Graduation Month:</b></h4>
+		<h4>{{toMonthString(modalData.month)}}</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
+		<button id="graduationMonth-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

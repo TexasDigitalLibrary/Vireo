@@ -1,5 +1,7 @@
 <div id="graduation-month" class="row" ng-controller="GraduationMonthRepoController">
 	
+	<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
+
 	<div class="col-sm-6">		
 		<button class="btn btn-default modal-add-btn" ng-click="openModal('#graduationMonthNewModal')">
 			Add Graduation Month

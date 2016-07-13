@@ -5,16 +5,23 @@
 	<h3 class="modal-title">Edit Graduation Month</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-       	 	<label for="graduationMonth-month">Graduation Month</label>
-        	<select ng-model="modalData.month" class="form-control" id="graduationMonth-month" name="depositLocation-depositor" ng-options="key as value for (key, value) in monthOptions"></select>
-    	</div>
-	</form>
-</div>
+<form ng-submit="updateGraduationMonth()" novalidate>
+	<div class="modal-body">
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
-	<button id="graduationMonth-save" type="button" class="btn btn-primary" ng-click="updateGraduationMonth()">Update</button>
-</div>
+		<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+		<validatedselect
+            options="monthOptions"
+            model="modalData"
+            property="month"
+            label="Graduation Month"
+            results="modalData.ValidationResults">
+        </validatedselect>
+
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
+		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>
