@@ -5,12 +5,17 @@
 	<h3 class="modal-title">Are You Sure?</h3>
 </div>
 
-<div class="modal-body">
-	<h4><b>Click confirm to remove the email template:</b></h4>
-	<h4>{{modalData.name}}</h4>
-</div>
+<form ng-submit="removeEmailTemplate()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
-	<button id="emailTemplate-confirm" type="button" class="btn btn-primary" ng-click="removeEmailTemplate()">Confirm</button>
-</div>
+	<validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+
+	<div class="modal-body">
+		<h4><b>Click confirm to remove the email template:</b></h4>
+		<h4>{{modalData.name}}</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
+		<button id="emailTemplate-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

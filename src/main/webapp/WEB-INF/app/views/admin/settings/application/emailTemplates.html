@@ -3,6 +3,8 @@
     class="row" 
     ng-controller="EmailTemplateRepoController">
 
+    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+
     <div class="col-sm-6">
         <button 
             class="btn btn-default modal-add-btn" 
@@ -53,8 +55,7 @@
         modal-id="emailTemplatesConfirmRemoveModal"
         modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html"
         modal-header-class="modal-header-primary"
-        modal-backdrop="static"
-        modal-fullscreen="true">
+        modal-backdrop="static">
     </modal>
 
 </div>

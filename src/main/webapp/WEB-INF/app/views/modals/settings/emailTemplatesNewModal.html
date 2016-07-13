@@ -5,25 +5,39 @@
     <h3 class="modal-title">Create a new email template</h3>
 </div>
 
-<div class="modal-body">
+<form ng-submit="createEmailTemplate()" novalidate>
 
-    <form>
-        <div class="form-group">
-            <label for="email-template-new-modal-name-field">Name:</label>
-            <input ng-model="modalData.name" type="text" class="form-control" id="email-template-new-modal-name-field" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for="email-template-new-modal-subject-field">Subject:</label>
-            <input ng-model="modalData.subject" type="text" class="form-control" id="email-template-new-modal-subject-field" placeholder="Enter subject">
-        </div>
+    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+
+        <validatedinput
+            model="modalData"
+            property="name"
+            label="Name"
+            placeholder="Name of the new email template"
+            results="emailTemplateRepo.getValidationResults()">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="subject"
+            label="Subject"
+            placeholder="Subject of the new email template"
+            results="emailTemplateRepo.getValidationResults()">
+        </validatedinput>
 
         <div class="row">
+
             <div class="col-md-9">
 
-                <div class="form-group">
-                    <label for="email-template-new-modal-message-field">Message Body:</label>
-                    <textarea ng-model="modalData.message" class="form-control" id="email-template-new-modal-message-field" rows="25"></textarea>
-                </div>
+                <validatedtextarea
+                    model="modalData"
+                    property="message"
+                    label="Message Body"
+                    rows="25"
+                    results="emailTemplateRepo.getValidationResults()">
+                </validatedtextarea>
 
             </div>
 
@@ -47,11 +61,13 @@
                 </div>
             </div>
         </div>
-    </form>
+        
 
-</div>
+    </div>
 
-<div class="modal-footer">
-    <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
-    <button id="emailTemplate-save" type="button" class="btn btn-primary" ng-click="createEmailTemplate()">Create</button>
-</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
+        <button id="emailTemplate-save" type="submit" class="btn btn-primary">Create</button>
+    </div>
+
+</form>

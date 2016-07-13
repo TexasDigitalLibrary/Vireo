@@ -2,6 +2,8 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+	$scope.emailTemplateRepo = EmailTemplateRepo;
+
 	$scope.emailTemplates = EmailTemplateRepo.getAll();
 
 	EmailTemplateRepo.listen(function(data) {

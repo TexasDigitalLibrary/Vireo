@@ -53,6 +53,7 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplate);
     }
     
+    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })

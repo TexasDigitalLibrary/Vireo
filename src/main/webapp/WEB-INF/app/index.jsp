@@ -227,6 +227,7 @@
 	    <script src="bower_components/core/app/directives/validationMessageDirective.js"></script>
 	    <script src="bower_components/core/app/directives/validatedInputDirective.js"></script>
 	    <script src="bower_components/core/app/directives/validatedSelectDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedTextAreaDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
