@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.tdl.vireo.model.validation.AttachmentValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -49,6 +51,7 @@ public class Attachment extends BaseEntity {
 	private Set<ActionLog> actionLogs;
 	
 	public Attachment() {
+	    setModelValidator(new AttachmentValidator());
 	    setDate(Calendar.getInstance());
 	}
 	

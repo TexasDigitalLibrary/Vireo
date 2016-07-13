@@ -29,23 +29,23 @@ public class SubmissionController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/all")
+    @Auth(role = "MANAGER")    
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
 
+    @Transactional
     @ApiMapping("/get-one/{submissionId}")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse getOne(@ApiVariable Long submissionId) {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId));
     }
 
+    @Transactional
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));

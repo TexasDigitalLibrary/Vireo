@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetGraduationMonth(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetGraduationMonth()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Add Graduation Month</h3>
@@ -12,12 +12,9 @@
         	<select ng-model="modalData.month" class="form-control" id="graduationMonth-month" name="depositLocation-depositor" ng-options="key as value for (key, value) in monthOptions"></select>
     	</div>
 	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth(); closeModal(attr.modalId)">Cancel</button>
+	<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
 	<button id="graduationMonth-save" type="button" class="btn btn-primary" ng-click="createGraduationMonth()">Create</button>
 </div>

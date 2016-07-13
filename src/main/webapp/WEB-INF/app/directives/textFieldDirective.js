@@ -9,7 +9,6 @@ vireo.directive("textfield", function() {
 			"hint": "@",
 			"onBlur": "&",
 			"keyDown": "&",
-			"validationResponse": "=",
 			"labelWidth": "@",
 			"fieldWidth": "@",
 			"expanded": "="

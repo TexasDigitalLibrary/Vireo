@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.tdl.vireo.model.validation.AddressValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -26,9 +28,12 @@ public class Address extends BaseEntity {
     @Column(nullable = true)
     private String country;
 
-    public Address() { }
+    public Address() { 
+        setModelValidator(new AddressValidator());
+    }
 
     public Address(String address1, String address2, String city, String state, String postalCode, String country) {
+        this();
         setAddress1(address1);
         setAddress2(address2);
         setCity(city);

@@ -1,9 +1,6 @@
-
 <div class="row" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 			
 	<div class="col-md-6">
-  		<!--on-blur="updateConfigurableSettings('application', 'current_semester')"
-				key-down="confirmEdit(event, prop)"-->
   		<textField
   			class="workflowstep-edit-name" 
 			label="Workflow Step Name:" 
@@ -14,7 +11,6 @@
   	</div>
 
 	<div class="col-md-3">
-  		<!--ng-click="updateConfigurableSettings('application', 'submissions_open')"-->
   		<toggleButton 
 			label="Workflow Step is Overridable:"
 			scope-value="step.overrideable"
@@ -25,7 +21,7 @@
 
   	<div class="col-md-3">
   		<div class="form-group">
-  			<button class="btn btn-danger" data-toggle="modal" data-target="#workflow-step-delete-confirm-{{step.id}}">Delete Workflow Step</button>
+  			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step.id)">Delete Workflow Step</button>
 			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
   		</div>
   	</div>
@@ -46,9 +42,7 @@
 
 			<div class="col-sm-6">		
 				
-				<button class="btn btn-default modal-add-btn" 
-						data-toggle="modal" 
-						data-target="#fieldProfilesNewModal-{{step.id}}">
+				<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
 					Add Field Profile
 				</button>
 
@@ -121,9 +115,7 @@
 
 			<div class="col-sm-6">		
 				
-				<button class="btn btn-default modal-add-btn" 
-						data-toggle="modal" 
-						data-target="#notesNewModal-{{step.id}}">
+				<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
 					Add Note
 				</button>
 				

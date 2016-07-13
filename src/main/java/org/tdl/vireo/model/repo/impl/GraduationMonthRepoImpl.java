@@ -1,7 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
@@ -37,36 +36,4 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
         orderedEntityService.remove(graduationMonthRepo, GraduationMonth.class, graduationMonth.getPosition());
     }
     
-    @Override
-    public GraduationMonth validateCreate(GraduationMonth graduationMonth) {
-        GraduationMonth existing = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
-        if(!graduationMonth.getBindingResult().hasErrors() &&  existing != null){
-            graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", graduationMonth.getMonth() + " is already a graduation month!"));
-        }
-        
-        return graduationMonth;
-    }
-    
-    @Override
-    public GraduationMonth validateUpdate(GraduationMonth graduationMonth) {
-        // make sure we're not trying set the month to one that already has that month
-        GraduationMonth existing = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
-        if(existing != null) {
-            graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", "Cannot update a GraduationMonth with an already existing month!"));
-        } else if(graduationMonth.getId() == null) {
-            graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", "Cannot update a GraduationMonth without an id!"));
-        } else {
-            GraduationMonth graduationMonthToUpdate = graduationMonthRepo.findOne(graduationMonth.getId());
-            if(graduationMonthToUpdate == null) {
-                graduationMonth.getBindingResult().addError(new ObjectError("graduationMonth", "Cannot update a GraduationMonth with an invalid id!"));
-            } else {
-                graduationMonthToUpdate.setBindingResult(graduationMonth.getBindingResult());
-                graduationMonthToUpdate.setMonth(graduationMonth.getMonth());
-                graduationMonth = graduationMonthToUpdate;
-            }
-        }
-        
-        return graduationMonth;
-    }
-
 }

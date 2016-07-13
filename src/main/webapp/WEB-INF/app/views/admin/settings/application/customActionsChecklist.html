@@ -1,14 +1,10 @@
 <div id="custom-action" class="row" ng-controller="CustomActionSettingsController">
 	
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
+	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
 	
 	<div class="col-sm-6">
 
-		<button class="btn btn-default modal-add-btn"
-				data-toggle="modal" 
-				data-target="#customActionNewModal">
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#customActionNewModal')">
 				Add New
 		</button>
 

@@ -19,11 +19,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.validation.UserValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -46,7 +44,7 @@ public class User extends BaseEntity implements CoreUser {
     private String netid;
 
     @Column(nullable = false, unique = true)
-    @Email
+    //@Email
     private String email;
 
     // encoded password
@@ -55,11 +53,11 @@ public class User extends BaseEntity implements CoreUser {
     private String password;
     
     @Column(nullable = false)
-    @NotBlank
+    //@NotBlank
     private String firstName;
 
     @Column(nullable = false)
-    @NotBlank
+    //@NotBlank
     private String lastName;
 
     @Column
@@ -87,7 +85,7 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
-    @NotNull
+    //@NotNull
     private AppRole role;
     
     @Column
@@ -97,6 +95,7 @@ public class User extends BaseEntity implements CoreUser {
      * 
      */
     public User() {
+        setModelValidator(new UserValidator());
         setSettings(new TreeMap<String, String>());
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());

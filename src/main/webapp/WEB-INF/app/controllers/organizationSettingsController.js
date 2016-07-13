@@ -24,7 +24,7 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 		return $scope.selectedOrganization;
 	};
 
-	$scope.activateManagementPane = function(pane) {		
+	$scope.activateManagementPane = function(pane) {
 		$scope.activeManagementPane = pane;
 	};
 

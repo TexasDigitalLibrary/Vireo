@@ -1,6 +1,4 @@
-<button class="btn btn-default modal-add-btn" 
-		data-toggle="modal" 
-		data-target="#createOrganizationModal">
+<button class="btn btn-default modal-add-btn" ng-click="openModal('#createOrganizationModal')">
 		Add New
 </button>
 <table class="table">
@@ -11,7 +9,8 @@
 		<td>{{organization.name}}</td>
 	</tr>
 </table>
-<modal modal-id="createOrganizationModal" 
-		modal-view="views/modals/settings/createOrganizationModal.html" 
-		modal-header-class="modal-header-primary">
+<modal 
+	modal-id="createOrganizationModal" 
+	modal-view="views/modals/settings/createOrganizationModal.html" 
+	modal-header-class="modal-header-primary">
 </modal>

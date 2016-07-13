@@ -1,6 +1,6 @@
-vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
+vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi) {
 
-	var selectedOrganization = {};
+	var selectedOrganization = new Organization({});
 
 	// additional repo methods and variables
 
@@ -111,36 +111,56 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, WsApi) {
 		angular.extend(this.mapping.children, {
 			'method': 'get-children/' + id
 		});
-		return WsApi.fetch(this.mapping.children);		
+		var promise = WsApi.fetch(this.mapping.children);
+		promise.then(function(res) {
+			console.log(angular.fromJson(res.body).payload);
+		});
+		return promise;	
 	};
 
 	this.addWorkflowStep = function(newWorkflowStepName) {
 		angular.extend(this.mapping.addWorkflowStep, {
 			'method': this.getSelectedOrganization().id + '/create-workflow-step/' + newWorkflowStepName
 		});
-		return WsApi.fetch(this.mapping.addWorkflowStep);
+		var promise = WsApi.fetch(this.mapping.addWorkflowStep);
+		promise.then(function(res) {
+			console.log(angular.fromJson(res.body).payload);
+		});
+		return promise;
 	};
 
 	this.updateWorkflowStep = function(workflowStepToUpdate) {
-		angular.extend(this.mapping.addWorkflowStep, {
+		angular.extend(this.mapping.updateWorkflowStep, {
 			'method': this.getSelectedOrganization().id + '/update-workflow-step',
 			'data': workflowStepToUpdate
 		});
-		return WsApi.fetch(this.mapping.addWorkflowStep);
+		var promise = WsApi.fetch(this.mapping.updateWorkflowStep);
+		promise.then(function(res) {
+			console.log(angular.fromJson(res.body).payload);
+		});
+		return promise;
 	};
 
 	this.reorderWorkflowStep = function(upOrDown, workflowStepID) {
-		angular.extend(this.mapping.addWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/' + 'shift-workflow-step-' + upOrDown + '/' + workflowStepID
+		angular.extend(this.mapping.reorderWorkflowStep, {
+			'method': this.getSelectedOrganization().id + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID
 		});
-		return WsApi.fetch(this.mapping.addWorkflowStep);
+		var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
+		promise.then(function(res) {
+			console.log(angular.fromJson(res.body).payload);
+		});
+		return promise;
 	};
 
 	this.deleteWorkflowStep = function(workflowStepID) {
-		angular.extend(this.mapping.addWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/' + 'delete-workflow-step/' + workflowStepID
+		angular.extend(this.mapping.deleteWorkflowStep, {
+			'method': this.getSelectedOrganization().id + '/delete-workflow-step/' + workflowStepID
 		});
-		return WsApi.fetch(this.mapping.addWorkflowStep);
+		var promise = WsApi.fetch(this.mapping.deleteWorkflowStep);
+		promise.then(function(res) {
+			console.log(angular.fromJson(res.body).payload);
+		});
+		return promise;
 	};
 
 	return this;

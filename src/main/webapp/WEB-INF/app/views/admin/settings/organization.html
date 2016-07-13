@@ -145,18 +145,6 @@
 									</div>
 								</div>
 							</div>
-							<!--<div class="form-group clearfix">
-								<div class="col-sm-2">
-									<span class="text-field-heading">Parent Organization</span>
-								</div>
-								<div class="col-sm-4 expanded">
-									<div class="with-tool-tip">
-										<div class="with-hint">
-											<input class="form-control" placeholder="Parent Organization..." type="text"  uib-typeahead="organization as organization.name for organization in organizations | filter:$viewValue | limitTo:8" typeahead-editable="false" ng-model="getManagedOrganization().parentOrganizations[0]" typeahead-select-on-blur="true" required />
-										</div>
-									</div>
-								</div>   	
-							</div>-->
 							<div class="modal-footer">
 								<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
 								<input type="submit" class="btn btn-primary" value="Save" />
@@ -169,12 +157,9 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">
 							Manage {{getSelectedOrganization().name}} Workflow</h3>
-							<!-- Manage {{getManagedOrganization().name}} Workflow</h3> -->
 						</div>
 						<div class="panel-body">
-							<button class="btn btn-default modal-add-btn" 
-						        	data-toggle="modal" 
-						        	data-target="#addWorkflowStepModal">
+							<button class="btn btn-default modal-add-btn" ng-click="openModal('#addWorkflowStepModal')">
 						      Add Workflow Step
 						    </button>
 						    <modal  modal-id="addWorkflowStepModal"

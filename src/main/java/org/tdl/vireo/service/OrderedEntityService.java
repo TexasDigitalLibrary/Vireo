@@ -71,6 +71,7 @@ public class OrderedEntityService {
      */
     @SuppressWarnings("unchecked")
     public synchronized void reorder(Class<?> clazz, Long src, Long dest, String whereProp, Object whereVal) {
+
         swap(clazz, src, Long.MAX_VALUE, whereProp, whereVal);
         // increment/decrement position as necessary
         {
@@ -103,6 +104,9 @@ public class OrderedEntityService {
             }
         }
         swap(clazz, Long.MAX_VALUE, dest, whereProp, whereVal);
+
+        entityManager.clear();
+        entityManager.flush();
     }
 
     public synchronized void sort(Class<?> clazz, String property) {

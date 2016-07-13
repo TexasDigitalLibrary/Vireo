@@ -16,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -49,6 +50,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     private List<Note> originalNotes;
 
     public WorkflowStep() {
+        setModelValidator(new WorkflowStepValidator());
     	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setOriginalFieldProfiles(new ArrayList<FieldProfile>());
         setAggregateNotes(new ArrayList<Note>());

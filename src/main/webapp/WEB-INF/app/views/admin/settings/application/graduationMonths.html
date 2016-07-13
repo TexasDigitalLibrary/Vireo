@@ -1,13 +1,7 @@
 <div id="graduation-month" class="row" ng-controller="GraduationMonthRepoController">
 	
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-	
 	<div class="col-sm-6">		
-		<button class="btn btn-default modal-add-btn" 
-				data-toggle="modal" 
-				data-target="#graduationMonthNewModal">
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#graduationMonthNewModal')">
 			Add Graduation Month
 		</button>
 

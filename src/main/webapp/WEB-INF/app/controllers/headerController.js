@@ -1,12 +1,12 @@
-vireo.controller("HeaderController", function(AbstractRepo, AbstractAppRepo, $scope, $controller, $location, ConfigurableSettingRepo) {
+vireo.controller("HeaderController", function(AbstractRepo, AbstractAppRepo, $scope, $controller, $location, ConfigurationRepo) {
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 		
-	$scope.configurable = ConfigurableSettingRepo.getAllMapByType();
+	$scope.configurable = ConfigurationRepo.getAllMapByType();
 
 	$scope.logoPath = "";
 
-	ConfigurableSettingRepo.ready().then(function() {
+	ConfigurationRepo.ready().then(function() {
 		
 		$scope.logoPath = $scope.configurable.lookAndFeel.left_logo;
 

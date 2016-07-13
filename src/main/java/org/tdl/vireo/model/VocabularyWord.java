@@ -12,6 +12,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.validation.VocabularyWordValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -38,9 +39,12 @@ public class VocabularyWord extends BaseEntity {
     @JsonIdentityReference(alwaysAsId=true)
     private ControlledVocabulary controlledVocabulary;
     
-    public VocabularyWord() { }
+    public VocabularyWord() { 
+        setModelValidator(new VocabularyWordValidator());
+    }
     
     public VocabularyWord(String name) {
+        this();
         setName(name);
     }
     

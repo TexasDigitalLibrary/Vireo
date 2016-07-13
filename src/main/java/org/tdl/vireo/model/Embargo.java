@@ -5,10 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.enums.EmbargoGuarantor;
+import org.tdl.vireo.model.validation.EmbargoValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,12 +17,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
-    @NotEmpty
     private String name;
 
     @Lob
     @Column(nullable = false)
-    @NotEmpty
     private String description;
 
     @Column(nullable = true)
@@ -31,22 +28,20 @@ public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
     @JsonProperty("isActive")
-    @NotNull
     private Boolean isActive;
 
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
-    @NotNull
     private Boolean isSystemRequired;
 
     @Column(nullable = false)
-    @NotNull
     private EmbargoGuarantor guarantor;
 
     /**
      * All new Embargo Types use these values as default
      */
     public Embargo() {
+        setModelValidator(new EmbargoValidator());
         isSystemRequired(false);
     }
 
@@ -168,31 +163,21 @@ public class Embargo extends BaseOrderedEntity {
     @Override
     public boolean equals(Object obj) {
         // if we're the same entity and we have the same ID
-        Boolean equalsFromBase = super.equals(obj); 
-        if (equalsFromBase) {
+        if (super.equals(obj)) {
             Embargo embargo = (Embargo) obj;
-            // if we are valid and we don't have any errors
-            if (embargo.getBindingResult() != null && !embargo.getBindingResult().hasErrors()) {
-                // if we have the same name, description, duration and guarantor
-                if(embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())){
-                    // duration is valid as null
-                    Integer tempDuration = embargo.getDuration();
-                    if(tempDuration != null) {
-                        return tempDuration.equals(this.getDuration());
-                    } else {
-                        return tempDuration == this.getDuration();
-                    }
-                }
-                // we're not equal
-                else {
-                    return false;
+            // if we have the same name, description, duration and guarantor
+            if(embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())){
+                // duration is valid as null
+                Integer tempDuration = embargo.getDuration();
+                if(tempDuration != null) {
+                    return tempDuration.equals(this.getDuration());
+                } else {
+                    return tempDuration == this.getDuration();
                 }
             }
-            // if we're here, incoming embargo didn't contain a binding result! We can't tell if we're a valid embargo or not!
-            // INFO: this is only happening during automated testing
+            // we're not equal
             else {
-                // let BaseEntity take care of it.
-                return equalsFromBase;
+                return false;
             }
         }
         return false;

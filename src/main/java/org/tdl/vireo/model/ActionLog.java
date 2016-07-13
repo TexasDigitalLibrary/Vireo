@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.tdl.vireo.model.validation.ActionLogValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -45,14 +47,12 @@ public class ActionLog extends BaseEntity {
 	@Column(nullable = false)
 	private boolean privateFlag;
 	
-	public ActionLog(){
-		setSubmission(submission);
-		setSubmissionState(submissionState);
-		setUser(user);
-		setActionDate(actionDate);		
+	public ActionLog() {
+	    setModelValidator(new ActionLogValidator());
 	}
 	
-	public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry,boolean privateFlag) {
+	public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry, boolean privateFlag) {
+	    this();
 		this.submission = submission;
 		this.submissionState = submissionState;
 		this.user = user;

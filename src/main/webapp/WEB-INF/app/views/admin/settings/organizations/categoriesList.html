@@ -1,6 +1,4 @@
-<button class="btn btn-default modal-add-btn" 
-		data-toggle="modal" 
-		data-target="#createOrganizationCategoryModal">
+<button class="btn btn-default modal-add-btn" ng-click="openModal('#createOrganizationCategoryModal')">
 		Add New
 </button>
 <table class="table">
@@ -13,7 +11,8 @@
 		<td>{{category.level}}</td>
 	</tr>
 </table>
-<modal modal-id="createOrganizationCategoryModal" 
-		modal-view="views/modals/settings/createOrganizationCategoryModal.html" 
-		modal-header-class="modal-header-primary">
+<modal 
+	modal-id="createOrganizationCategoryModal" 
+	modal-view="views/modals/settings/createOrganizationCategoryModal.html" 
+	modal-header-class="modal-header-primary">
 </modal>

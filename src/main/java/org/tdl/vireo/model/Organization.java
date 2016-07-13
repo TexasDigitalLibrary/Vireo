@@ -24,6 +24,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -50,7 +51,6 @@ public class Organization extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    //TODO:  verify that this unique constraint works - the aggregateWorkflowSteps_order string doesn't match the database column"
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
@@ -70,6 +70,7 @@ public class Organization extends BaseEntity {
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
+        setModelValidator(new OrganizationValidator());
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
         setParentOrganizations(new TreeSet<Organization>());
@@ -94,8 +95,7 @@ public class Organization extends BaseEntity {
      * @param category
      */
     public Organization(String name, OrganizationCategory category) {
-        this();
-        setName(name);
+        this(name);
         setCategory(category);
     }
 

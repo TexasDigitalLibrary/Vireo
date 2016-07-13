@@ -3,16 +3,17 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.tdl.vireo.model.validation.LanguageValidator;
 
 @Entity
 public class Language extends BaseOrderedEntity {
 
     @Column(unique = true, nullable = false)
-    @NotEmpty
     private String name;
-    
-    public Language() { }
+
+    public Language() {
+        setModelValidator(new LanguageValidator());
+    }
     
     /**
      * 
@@ -29,6 +30,8 @@ public class Language extends BaseOrderedEntity {
     public String getName() {
         return name;
     }
+    
+    
 
     /**
      * 

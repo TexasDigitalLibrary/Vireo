@@ -5,10 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.tdl.vireo.model.validation.ConfigurationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,28 +16,23 @@ import edu.tamu.framework.model.BaseEntity;
 /**
  * Jpa specific implementation of Vireo's Configuration interface
  * 
- * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
 public class Configuration extends BaseEntity {
 
     @Column(nullable = false, length = 255)
-    @Size(min=1, max=255)
     private String name;
 
     @Lob
     @Column(nullable = false)
-    @NotEmpty
     private String value;
 
     @Column(nullable = false, length = 255)
-    @Size(min=1, max=255)
     private String type;
     
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
-    @NotNull
     private Boolean isSystemRequired;
 
     /**
@@ -48,6 +41,7 @@ public class Configuration extends BaseEntity {
      * By default new ones are not system required.
      */
     public Configuration() {
+        setModelValidator(new ConfigurationValidator());
         isSystemRequired(false);
     }
 

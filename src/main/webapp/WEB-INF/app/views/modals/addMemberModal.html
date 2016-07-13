@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Add Member</h3>
@@ -59,46 +59,5 @@
 
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	<button type="button" class="btn btn-default" ng-click="closeModal()">Close</button>
 </div>
-
-			
-				
-
-
-<!-- 
-<span class="input-group-btn">
-<input id="members-search-query" type="text">  
-<button class="btn btn-default" id="members-search-button" type="submit">
-<span class="glyphicon glyphicon glyphicon-search">
-</button>
-</span>
-
-</form>
-
-
-<div class="input-group">
-  <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2">
-  <span class="input-group-addon" id="basic-addon2">@example.com</span>
-</div>
-
-    		
-
-
-    		<div class="row control-group">
-				<div class="col-sm-3">
-					Add
-				</div>
-				<div class="col-sm-3">
-					Name
-				</div>
-				<div class="col-sm-3">
-					Email
-				</div>
-			</div>
-
-			</form> -->
-
-			
-			
-			

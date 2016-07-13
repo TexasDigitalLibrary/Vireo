@@ -1,11 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
-import javax.servlet.ServletInputStream;
-
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
-
-import edu.tamu.framework.validation.ModelBindingResult;
 
 public interface ControlledVocabularyRepoCustom {
 
@@ -18,18 +14,5 @@ public interface ControlledVocabularyRepoCustom {
     public void sort(String column);
     
     public void remove(ControlledVocabulary controlledVocabulary);
-    
-    public ControlledVocabulary validateCreate(ControlledVocabulary controlledVocabulary);
-    
-    public ControlledVocabulary validateUpdate(ControlledVocabulary controlledVocabulary);
-    
-    public ControlledVocabulary validateRemove(ControlledVocabulary controlledVocabulary);
-    
-    public ControlledVocabulary validateExport(String name, ModelBindingResult modelBindingResult);
-    
-    public ControlledVocabulary validateCompareCV(String name, ModelBindingResult modelBindingResult);
-    
-    public String[] validateCompareRows(ServletInputStream inputStream, ModelBindingResult modelBindingResult);
-    
-    public ControlledVocabulary validateImport(String name, ModelBindingResult modelBindingResult);
+
 }

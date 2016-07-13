@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetEmbargo(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetEmbargo()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
@@ -24,12 +24,9 @@
         	<input ng-if="modalData.duration !== null" ng-model="modalData.duration" type="text" class="form-control" id="embargo-duration" placeholder="Embargo Duration">
     	</div>
 	</form>
-	<validationresponse
-		validation-response="serverErrors[modalData.guarantor]">
-	</validationresponse>
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetEmbargo(); closeModal(attr.modalId)">Cancel</button>
+	<button type="button" class="btn btn-warning" ng-click="resetEmbargo()">Cancel</button>
 	<button id="embargo-save" type="button" class="btn btn-primary" ng-click="createEmbargo()">Create</button>
 </div>

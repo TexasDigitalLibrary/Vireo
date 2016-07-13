@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetControlledVocabulary()" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="resetControlledVocabulary()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Upload Controlled Vocabulary</h3>
@@ -107,14 +107,11 @@
             <h4>No changes.</h4>
         </div>
     </form>
-    <validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
 </div>
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-primary pull-left" ng-csv="exportControlledVocabulary()" csv-header='headers' filename='{{uploadModalData.cv.name}}.csv' ng-disabled="!uploadModalData.cv || uploadAction == 'process'" data-dismiss="modal">Export CSV</button>
-	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()" data-dismiss="modal">Cancel</button>
+	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()">Cancel</button>
     <button ng-if="uploadModalData.cv.inProgress" class="btn btn-danger" ng-click="uploadModalData.cv.inProgress = false">Override</button>
 	<button id="controlledVocabulary-upload" type="button" class="btn btn-primary" ng-disabled="!uploadModalData.file || uploadModalData.cv.isEntityProperty || uploadModalData.cv.inProgress" ng-click="uploadControlledVocabulary()">
         <span ng-if="uploadAction == 'confirm'">Upload</span>

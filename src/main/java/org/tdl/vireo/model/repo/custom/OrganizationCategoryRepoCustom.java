@@ -8,8 +8,4 @@ public interface OrganizationCategoryRepoCustom {
     
     public void remove(OrganizationCategory organizationCategory);
     
-    public OrganizationCategory validateCreate(OrganizationCategory organizationCategory);
-    
-    public OrganizationCategory validateUpdate(OrganizationCategory organizationCategory);
-    
 }

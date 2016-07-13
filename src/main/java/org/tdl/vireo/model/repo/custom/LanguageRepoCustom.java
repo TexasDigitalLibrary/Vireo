@@ -11,9 +11,5 @@ public interface LanguageRepoCustom {
     public void sort(String column);
     
     public void remove(Language language);
-    
-    public Language validateCreate(Language language);
-    
-    public Language validateUpdate(Language language);
 
 }

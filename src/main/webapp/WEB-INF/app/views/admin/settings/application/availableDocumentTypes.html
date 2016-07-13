@@ -1,16 +1,15 @@
 <div id="available-document-types" class="row" ng-controller="AvailableDocumentTypesController">
+
+	<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
 	
-  	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-	
-	<div class="col-sm-6">		
-		<button class="btn btn-default modal-add-btn" 
-				data-toggle="modal" 
-				data-target="#availableDocumentTypesNewModal">
+	<div class="col-sm-6">
+
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#availableDocumentTypesNewModal')">
 			Add Document Type
 		</button>
+
 		<p ng-if="graduationMonths.length == 0">Add new Document Type</p>
+
 		<draganddroplist dragging="dragging"
 						 scope-value="documentTypes"
 						 properties='["name", "gradeLevel"]'

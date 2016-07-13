@@ -1,7 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.framework.enums.MethodValidationType.REORDER;
+import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
+import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.validation.ModelBindingResult;
 
 @Controller
 @ApiMapping("/settings/graduation-month")
@@ -32,9 +37,6 @@ public class GraduationMonthController {
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
-    @Autowired
-    private ValidationService validationService;
-    
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allGraduationMonths() {       
@@ -43,149 +45,55 @@ public class GraduationMonthController {
     
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
-
-        // will attach any errors to the BindingResult when validating the incoming graduationMonth
-        graduationMonth = graduationMonthRepo.validateCreate(graduationMonth);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(graduationMonth);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Creating graduation month with month " + graduationMonth.getMonth());
-                graduationMonthRepo.create(graduationMonth.getMonth());
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't create graduation month with month " + graduationMonth.getMonth() + " because: " + response.getMeta().getType());
-                break;
-        }
-
-        return response;
+        logger.info("Creating graduation month with month " + graduationMonth.getMonth());
+        graduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS, graduationMonth);
     }
     
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
-        
-        // will attach any errors to the BindingResult when validating the incoming graduationMonth
-        graduationMonth = graduationMonthRepo.validateUpdate(graduationMonth);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(graduationMonth);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Updating graduation month with month " + graduationMonth.getMonth());
-                graduationMonthRepo.save(graduationMonth);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't update graduation month with month " + graduationMonth.getMonth() + " because: " + response.getMeta().getType());
-                break;
-        }
-
-        return response;
+        logger.info("Updating graduation month with month " + graduationMonth.getMonth());
+        graduationMonth = graduationMonthRepo.save(graduationMonth);
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS, graduationMonth);
     }
 
+    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(graduationMonth);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Removing graduation month with id " + graduationMonth.getId());
-                graduationMonthRepo.remove(graduationMonth);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't remove graduation month with id " + graduationMonth.getId() + " because: " + response.getMeta().getType());
-                break;
-        }
-        
-        return response;
+        logger.info("Removing graduation month with id " + graduationMonth.getId());
+        graduationMonthRepo.remove(graduationMonth);
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS);
     }
     
+    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @Transactional
-    public ApiResponse reorderGraduationMonths(@ApiVariable String src, @ApiVariable String dest) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(src, "graduationMonth");
-        
-        // will attach any errors to the BindingResult when validating the incoming src, dest
-        Long longSrc = validationService.validateLong(src, "position", modelBindingResult);
-        Long longDest = validationService.validateLong(dest, "position", modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Reordering document types");
-                graduationMonthRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't reorder document types because: " + response.getMeta().getType());
-                break;
-        }
-        
-        return response;
+    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
+    public ApiResponse reorderGraduationMonths(@ApiVariable Long src, @ApiVariable Long dest) {
+        logger.info("Reordering document types");
+        graduationMonthRepo.reorder(src, dest);
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS);
     }
     
+    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = GraduationMonth.class, params = { "0" }) })
     public ApiResponse sortGraduationMonths(@ApiVariable String column) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(column, "graduationMonth");
-        
-        // will attach any errors to the BindingResult when validating the incoming column
-        validationService.validateColumn(GraduationMonth.class, column, modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Sorting graduation months by " + column);
-                graduationMonthRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(VALIDATION_WARNING, graduationMonthRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't sort graduation months because: " + response.getMeta().getType());
-                break;
-        }
-        
-        return response;
+        logger.info("Sorting graduation months by " + column);
+        graduationMonthRepo.sort(column);
+        simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS);
     }
     
 }

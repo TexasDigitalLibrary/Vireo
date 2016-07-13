@@ -1,5 +1,10 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetFieldProfiles()" data-dismiss="modal" aria-label="Close">
+	<button 
+		type="button" 
+		class="close" 
+		ng-click="resetFieldProfiles()" 
+		data-dismiss="modal" 
+		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
@@ -7,13 +12,21 @@
 
 <div class="modal-body">
 	<h4><b>Click confirm to remove the Field Profile:</b></h4>
-
 	<h4>Organization: {{selectedOrganization.name}}</h4>
 	<h4>Workflow Step: {{step.name}}</h4>
 	<h4>Predicate: {{modalData.predicate.value}}</h4>
 </div>
 
 <div class="modal-footer">
-	<button id="field-profiles-confirm" type="button" class="btn btn-danger" data-dismiss="modal" ng-click="removeFieldProfile(modalData.id)">Confirm</button>
-	<button type="button" class="btn btn-default" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
+	<button 
+		id="field-profiles-confirm" 
+		type="button" 
+		class="btn btn-danger" 
+		data-dismiss="modal" 
+		ng-click="removeFieldProfile()">Confirm</button>
+	<button 
+		type="button" 
+		class="btn btn-default" 
+		ng-click="resetFieldProfiles()" 
+		data-dismiss="modal">Cancel</button>
 </div>

@@ -1,5 +1,10 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetNotes()" data-dismiss="modal" aria-label="Close">
+	<button 
+		type="button" 
+		class="close" 
+		ng-click="resetNotes()" 
+		data-dismiss="modal" 
+		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Note</h3>
@@ -9,11 +14,19 @@
 	<form>
     	<div class="form-group">
        	 	<label for="notes-name">Name</label>       	 	
-        	<input ng-model="modalData.name" type="text" class="form-control" placeholder="Name of note"/>
+        	<input 
+        		ng-model="modalData.name" 
+        		type="text" 
+        		class="form-control" 
+        		placeholder="Name of note"/>
     	</div>
     	<div class="form-group">
        	 	<label for="notes-name">Text</label>       	 	
-        	<textarea ng-model="modalData.text" type="text" class="form-control" placeholder="Text of note"/></textarea>
+        	<textarea 
+        		ng-model="modalData.text" 
+        		type="text" 
+        		class="form-control" 
+        		placeholder="Text of note"/></textarea>
     	</div>
     	<toggleButton 
 			label="Note is Overridable:"
@@ -24,6 +37,16 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="resetNotes()">Cancel</button>
-	<button id="notes-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.name && !modalData.text" ng-click="updateNote()">Update</button>
+	<button 
+		type="button" 
+		class="btn btn-warning" 
+		data-dismiss="modal" 
+		ng-click="resetNotes()">Cancel</button>
+	<button 
+		id="notes-save" 
+		type="button" 
+		class="btn btn-primary" 
+		data-dismiss="modal" 
+		ng-disabled="!modalData.name && !modalData.text" 
+		ng-click="updateNote()">Update</button>
 </div>

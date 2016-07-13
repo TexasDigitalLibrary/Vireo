@@ -23,6 +23,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.validation.SubmissionValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -38,7 +40,7 @@ public class Submission extends BaseEntity {
     @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional=false)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
@@ -63,6 +65,7 @@ public class Submission extends BaseEntity {
     private Set<Attachment> attachments;
 
     public Submission() {
+        setModelValidator(new SubmissionValidator());
         setFieldValues(new TreeSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new TreeSet<ActionLog>());

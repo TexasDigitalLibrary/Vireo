@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.tdl.vireo.model.validation.EmailTemplateValidator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,24 +15,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class EmailTemplate extends BaseOrderedEntity {
 
 	@Column(nullable = false)
-	@NotEmpty
 	private String name;
 	
 	@Column(nullable = false)
-	@NotEmpty
 	private String subject;
 
 	@Lob
 	@Column(nullable = false)
-	@NotEmpty
 	private String message;
 	
 	@Column(nullable = false)
 	@JsonProperty("isSystemRequired")
-	@NotNull
 	private Boolean isSystemRequired;
 
 	public EmailTemplate() {
+	    setModelValidator(new EmailTemplateValidator());
 	    isSystemRequired(false);
 	}
 	

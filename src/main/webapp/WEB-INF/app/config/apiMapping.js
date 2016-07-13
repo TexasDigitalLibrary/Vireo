@@ -1,6 +1,6 @@
 // CONVENTION: must match model name, case sensitive
 var apiMapping = {
-	AvailableDocumentType: {
+	DocumentType: {
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/document-type',
@@ -68,9 +68,9 @@ var apiMapping = {
 			'controller': 'settings/controlled-vocabulary'
 		},
 		change: {
-			endpoint: '/channel', 
-			controller: 'settings/controlled-vocabulary', 
-			method: 'change'
+			'endpoint': '/channel', 
+			'controller': 'settings/controlled-vocabulary', 
+			'method': 'change'
 		},
 		downloadCSV: {
 			'endpoint': '/private/queue', 
@@ -99,7 +99,7 @@ var apiMapping = {
 			'method': 'status'
 		}
 	},
-	CustomActionSetting: {
+	CustomActionDefinition: {
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/custom-action',
@@ -133,7 +133,7 @@ var apiMapping = {
 			'controller': 'settings/custom-action'
 		}
 	},
-	ConfigurableSetting: {
+	Configuration: {
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/configurable',
@@ -154,9 +154,9 @@ var apiMapping = {
 			'method': 'update'
 		},
 		reset: {
-			endpoint: '/private/queue',
-			controller: 'settings/configurable',
-			method: 'reset'
+			'endpoint': '/private/queue',
+			'controller': 'settings/configurable',
+			'method': 'reset'
 		},
 		remove: {
 			'endpoint': '/private/queue',

@@ -9,9 +9,5 @@ public interface CustomActionDefinitionRepoCustom {
     public void reorder(Long src, Long dest);
     
     public void remove(CustomActionDefinition customActionDefinition);
-    
-    public CustomActionDefinition validateCreate(CustomActionDefinition customActionDefinition);
-    
-    public CustomActionDefinition validateUpdate(CustomActionDefinition customActionDefinition);
 
 }

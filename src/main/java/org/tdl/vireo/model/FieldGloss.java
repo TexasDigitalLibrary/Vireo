@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.validation.FieldGlossValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -21,7 +23,9 @@ public class FieldGloss extends BaseEntity {
 	@ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
 	private Language language;
 	
-	public FieldGloss() { }
+	public FieldGloss() { 
+	    setModelValidator(new FieldGlossValidator());
+	}
 	
 	/**
 	 * 
@@ -29,6 +33,7 @@ public class FieldGloss extends BaseEntity {
 	 * @param language
 	 */
 	public FieldGloss(String value, Language language) {
+	    this();
 		setValue(value);
 		setLanguage(language);
 	}

@@ -1,90 +1,134 @@
 vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi) {
 
+	var workflowStepRepo = this;
+
 	// additional repo methods and variables
 
-	this.addFieldProfile = function(workflowStepId, fieldProfile) {
-		angular.extend(fieldProfile, {
-			requestingOrgId: OrganizationRepo.getSelectedOrganization().id
-		});
+	this.addFieldProfile = function(workflowStep, fieldProfile) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.addFieldProfile, {
-			'method': workflowStepId + '/add-field-profile',
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-field-profile',
 			'data': fieldProfile
 		});
-		return WsApi.fetch(this.mapping.addFieldProfile);
+		var promise = WsApi.fetch(this.mapping.addFieldProfile);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
+			}
+		});
+		return promise;
 	};
 
-	this.updateFieldProfile = function(workflowStepId, fieldProfile) {
-		angular.extend(fieldProfile, {
-			requestingOrgId: OrganizationRepo.getSelectedOrganization().id
-		});
+	this.updateFieldProfile = function(workflowStep, fieldProfile) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.updateFieldProfile, {
-			'method': workflowStepId + '/update-field-profile',
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-field-profile',
 			'data': fieldProfile
 		});
-		return WsApi.fetch(this.mapping.updateFieldProfile);
+		var promise = WsApi.fetch(this.mapping.updateFieldProfile);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
+			}
+		});
+		return promise;
 	};
 
-	this.removeFieldProfile = function(workflowStepId, fieldProfileId) {
+	this.removeFieldProfile = function(workflowStep, fieldProfile) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.removeFieldProfile, {
-			'method': workflowStepId+'/remove-field-profile/' + fieldProfileId,
-			'data': {
-				requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-field-profile',
+			'data': fieldProfile
+		});
+		var promise = WsApi.fetch(this.mapping.removeFieldProfile);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
 			}
 		});
-		return WsApi.fetch(this.mapping.removeFieldProfile);
+		return promise;
 	};
 
-	this.reorderFieldProfile = function(workflowStepId, src, dest) {
+	this.reorderFieldProfile = function(workflowStep, src, dest) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.reorderFieldProfile, {
-			'method': workflowStepId+'/reorder-field-profiles/'+src+'/'+dest,
-			'data': {
-				requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/reorder-field-profiles/' + src + '/' + dest
+		});
+		var promise = WsApi.fetch(this.mapping.reorderFieldProfile);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
 			}
 		});
-		return WsApi.fetch(this.mapping.reorderFieldProfile);
+		return promise;
 	};
 
 
-	this.addNote = function(workflowStepId, note) {
-		angular.extend(note, {
-			requestingOrgId: OrganizationRepo.getSelectedOrganization().id
-		});
+	this.addNote = function(workflowStep, note) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.addNote, {
-			'method': workflowStepId+'/add-note',
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-note',
 			'data': note
 		});
-		return WsApi.fetch(this.mapping.addNote);
+		var promise = WsApi.fetch(this.mapping.addNote);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
+			}
+		});
+		return promise;
 	};
 
-	this.updateNote = function(workflowStepId, note) {
-		angular.extend(note, {
-			requestingOrgId: OrganizationRepo.getSelectedOrganization().id
-		});
+	this.updateNote = function(workflowStep, note) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.updateNote, {
-			'method': workflowStepId+'/update-note',
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-note',
 			'data': note
 		});
-		return WsApi.fetch(this.mapping.updateNote);
+		var promise = WsApi.fetch(this.mapping.updateNote);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
+			}
+		});
+		return promise;
 	};
 
-	this.removeNote = function(workflowStepId, noteId) {
+	this.removeNote = function(workflowStep, note) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.removeNote, {
-			'method': workflowStepId+'/remove-note/' + noteId,
-			'data': {
-				requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-note',
+			'data': note
+		});
+		var promise = WsApi.fetch(this.mapping.removeNote);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
 			}
 		});
-		return WsApi.fetch(this.mapping.removeNote);
+		return promise;
 	};
 
-	this.reorderNote = function(workflowStepId, src, dest) {
+	this.reorderNote = function(workflowStep, src, dest) {
+		workflowStepRepo.clearValidationResults();
 		angular.extend(this.mapping.reorderNote, {
-			'method': workflowStepId+'/reorder-notes/'+src+'/'+dest,
-			'data': {
-				requestingOrgId: OrganizationRepo.getSelectedOrganization().id
+			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/reorder-notes/' + src + '/' + dest
+		});
+		var promise = WsApi.fetch(this.mapping.reorderNote);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+				console.log(workflowStepRepo);
 			}
 		});
-		return WsApi.fetch(this.mapping.reorderNote);
+		return promise;
 	};
 
 	return this;

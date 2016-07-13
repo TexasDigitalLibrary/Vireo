@@ -1,63 +1,57 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="resetEmailTemplates(); closeModal(attr.modalId)" aria-label="Close">
-    <span class="modal-close" aria-hidden="true">&times;</span>
-  </button>
-  <h3 class="modal-title">Edit an email template</h3>
+    <button type="button" class="close" ng-click="resetEmailTemplates()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Edit an email template</h3>
 </div>
 
 <div class="modal-body">
-  <form>
-    <div class="form-group">
-      <label for="email-template-new-modal-name-field">Name:</label>
-      <input ng-model="modalData.name" type="text" class="form-control" id="email-template-new-modal-name-field" placeholder="Enter name">
-    </div>
-    <div class="form-group">
-      <label for="email-template-new-modal-subject-field">Subject:</label>
-      <input ng-model="modalData.subject" type="text" class="form-control" id="email-template-new-modal-subject-field" placeholder="Enter subject">
-    </div>
 
-
-    <div class="row">
-      <div class="col-md-9">
-
+    <form>
         <div class="form-group">
-          <label for="email-template-new-modal-message-field">Message Body:</label>
-          <textarea ng-model="modalData.message" class="form-control" id="email-template-new-modal-message-field" rows="25"></textarea>
+            <label for="email-template-new-modal-name-field">Name:</label>
+            <input ng-model="modalData.name" type="text" class="form-control" id="email-template-new-modal-name-field" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="email-template-new-modal-subject-field">Subject:</label>
+            <input ng-model="modalData.subject" type="text" class="form-control" id="email-template-new-modal-subject-field" placeholder="Enter subject">
         </div>
 
-      </div>
-      
-      <div class="col-md-3">
-        <div id="email-template-modal-instructions-label">Fields (hover for details):</div>
-        <ul id="email-template-modal-instructions-list" class="list-group">
-          <li class="list-group-item" title="The student's full, official name."><b>FULL_NAME</b></li>
-          <li class="list-group-item" title="The student's first name."><b>FIRST_NAME</b></li>
-          <li class="list-group-item" title="The student's last name."><b>LAST_NAME</b></li>
-          <li class="list-group-item" title="The title of the thesis or dissertation as supplied by the student."><b>DOCUMENT_TITLE</b></li>
-          <li class="list-group-item" title="The document type, typically 'Thesis' or 'Dissertation'. This is defined by your office."><b>DOCUMENT_TYPE</b></li>
-          <li class="list-group-item" title="The deposit id returned by the institutional repository."><b>DEPOSIT_URI</b></li>
-          <li class="list-group-item" title="The semester in which the student indicated they will graduate."><b>GRAD_SEMESTER</b></li>
-          <li class="list-group-item" title="The URL that will allow the student to view or take action on any of their submissions."><b>STUDENT_URL</b></li>
-          <li class="list-group-item" title="The URL that will allow the student to view a submission directly."><b>SUBMISSION_URL</b></li>
-          <li class="list-group-item" title="The URL sent to the student's advisor to request manuscript approval."><b>ADVISOR_URL</b></li>
-          <li class="list-group-item" title="The current status of the submission; e.g. 'Approved', 'Needs Corrections', etc."><b>SUBMISSION_STATUS</b></li>
-          <li class="list-group-item" title="The name of the staff member to which this submission is currently assigned."><b>SUBMISSION_ASSIGNED_TO</b></li>
-          <li class="list-group-item" title="The URL back to Vireo to validate ownership of an email address. (This variable is only available in select SYSTEM templates)"><b>REGISTRATION_URL</b></li>
-        </ul>
-      </div>
+        <div class="row">
+            <div class="col-md-9">
 
-    </div> <!-- end row -->
+                <div class="form-group">
+                    <label for="email-template-new-modal-message-field">Message Body:</label>
+                    <textarea ng-model="modalData.message" class="form-control" id="email-template-new-modal-message-field" rows="25"></textarea>
+                </div>
 
-</div>
+            </div>
 
-
-  </form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
+            <div class="col-md-3">
+                <div id="email-template-modal-instructions-label">Fields (hover for details):</div>
+                    <ul id="email-template-modal-instructions-list" class="list-group">
+                        <li class="list-group-item" title="The student's full, official name."><b>FULL_NAME</b></li>
+                        <li class="list-group-item" title="The student's first name."><b>FIRST_NAME</b></li>
+                        <li class="list-group-item" title="The student's last name."><b>LAST_NAME</b></li>
+                        <li class="list-group-item" title="The title of the thesis or dissertation as supplied by the student."><b>DOCUMENT_TITLE</b></li>
+                        <li class="list-group-item" title="The document type, typically 'Thesis' or 'Dissertation'. This is defined by your office."><b>DOCUMENT_TYPE</b></li>
+                        <li class="list-group-item" title="The deposit id returned by the institutional repository."><b>DEPOSIT_URI</b></li>
+                        <li class="list-group-item" title="The semester in which the student indicated they will graduate."><b>GRAD_SEMESTER</b></li>
+                        <li class="list-group-item" title="The URL that will allow the student to view or take action on any of their submissions."><b>STUDENT_URL</b></li>
+                        <li class="list-group-item" title="The URL that will allow the student to view a submission directly."><b>SUBMISSION_URL</b></li>
+                        <li class="list-group-item" title="The URL sent to the student's advisor to request manuscript approval."><b>ADVISOR_URL</b></li>
+                        <li class="list-group-item" title="The current status of the submission; e.g. 'Approved', 'Needs Corrections', etc."><b>SUBMISSION_STATUS</b></li>
+                        <li class="list-group-item" title="The name of the staff member to which this submission is currently assigned."><b>SUBMISSION_ASSIGNED_TO</b></li>
+                        <li class="list-group-item" title="The URL back to Vireo to validate ownership of an email address. (This variable is only available in select SYSTEM templates)"><b>REGISTRATION_URL</b></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+    
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates(); closeModal(attr.modalId)">Cancel</button>
-  <button id="emailTemplate-save" type="button" class="btn btn-primary" ng-click="updateEmailTemplate()">Save</button>
+    <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
+    <button id="emailTemplate-save" type="button" class="btn btn-primary" ng-click="updateEmailTemplate()">Save</button>
 </div>

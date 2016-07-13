@@ -3,10 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.Range;
+import org.tdl.vireo.model.validation.DepositLocationValidator;
 
 @Entity
 public class DepositLocation extends BaseOrderedEntity {
@@ -15,24 +13,20 @@ public class DepositLocation extends BaseOrderedEntity {
     public static final Integer DEFAULT_TIMEOUT = 60;
 
 	@Column(nullable = false, unique = true)
-	@NotEmpty
 	private String name;
 	
 	// TODO: this is really a URL
 	@Column(nullable = false)
-    @NotEmpty
 	private String repository;
 	
 	@Column(nullable = false)
-    @NotEmpty
 	private String collection;
 	
 	@Column(nullable = false)
-    @NotEmpty
 	private String username;
 	
+	// TODO: encrypt!!!
 	@Column(nullable = false)
-    @NotEmpty
 	private String password;
 	
 	@Column(nullable = true)
@@ -40,21 +34,18 @@ public class DepositLocation extends BaseOrderedEntity {
 
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
 	@Column(nullable = false)
-    @NotEmpty
 	private String packager;
 	
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
 	@Column(nullable = false)
-    @NotEmpty
 	private String depositor;
 	
 	@Column(nullable = false)
-	@NotNull
-    @Range(min=0)
 	private Integer timeout;
 	
 	public DepositLocation() {
-	    this.timeout = DEFAULT_TIMEOUT;
+	    setModelValidator(new DepositLocationValidator());
+	    setTimeout(DEFAULT_TIMEOUT);
     }
 	
 	/**

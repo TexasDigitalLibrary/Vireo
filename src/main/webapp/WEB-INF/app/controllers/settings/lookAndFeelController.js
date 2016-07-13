@@ -6,11 +6,6 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		newLogo: {}
 	};
 	
-	var setServerErrors = function(name, validationResponse){
-  		// either put a ValidationResponse object into the array, or clear it since it'll be "undefined"
-		$scope.serverErrors[name] = validationResponse;
-  	};
-
 	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value; 
 
 	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
@@ -26,12 +21,14 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			angular.element('#newLogoConfirmUploadModal').modal('show');
 
 		});
-	}
+	};
 
 	$scope.modalData.confirmLogoUpload = function() {
 
 		$scope.uplaodLogo = {};
+
 		angular.copy($scope.modalData.newLogo, $scope.uplaodLogo);
+
 		delete $scope.uplaodLogo.file;
 
 		//TODO: This may be better if removed to a service
@@ -46,7 +43,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		uploadPromise.then(
 			function(data) {
 				if(data.payload !== undefined) {
-					setServerErrors($scope.uplaodLogo.setting, data.payload.ValidationResponse);
+					// validation
 				
 	                if(data.payload.Configuration !== undefined) {
 	                	updateLogos(data);
@@ -55,7 +52,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			}, 
 			function(data) {
 				if(data.payload !== undefined) {
-					setServerErrors($scope.uplaodLogo.setting, data.payload.ValidationResponse);
+					// validation
 				}
 				console.log("Error");
 			}
@@ -63,12 +60,12 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 
 		return uploadPromise;
 
-	}
+	};
 
 	$scope.modalData.cancelLogoUpload = function() {
 		$scope.resetModalData();
 		angular.element('#newLogoConfirmUploadModal').modal('hide');
-	}
+	};
 
 	$scope.resetLogo = function(setting) {
 
@@ -84,7 +81,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			function(data) {
 				data = angular.fromJson(data.body);
 				if(data.payload !== undefined) {
-					setServerErrors(setting, data.payload.ValidationResponse);
+					// validation
 				
 	                if(data.payload.Configuration !== undefined) {
 	                	updateLogos(data);
@@ -94,7 +91,7 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			function(data) {
 				data = angular.fromJson(data.body);
 				if(data.payload !== undefined) {
-					setServerErrors(setting, data.payload.ValidationResponse);
+					// validation
 				}
 				console.log("error");
 			}
@@ -120,12 +117,12 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 			$scope.resetModalData();
 		}
 		
-	}
+	};
 
 	$scope.resetModalData = function() {
 		$scope.modalData.newLogo = {};
 		$scope.modalData.newLogo.setting = "left_logo";
-	}
+	};
 
 	var previewLogo = function(file) {
 
@@ -139,8 +136,6 @@ vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsAp
 		reader.readAsDataURL(file);
 
 		return defer.promise;
-
 	};
-
 	
 });

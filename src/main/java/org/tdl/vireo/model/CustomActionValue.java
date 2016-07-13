@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.tdl.vireo.model.validation.CustomActionValueValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -26,7 +28,9 @@ public class CustomActionValue extends BaseEntity {
     @Column(nullable = false)
     private Boolean value;
 
-    public CustomActionValue() {  }
+    public CustomActionValue() { 
+        setModelValidator(new CustomActionValueValidator());
+    }
 
     public CustomActionValue(Submission submission, CustomActionDefinition definition, Boolean value) {
         this();

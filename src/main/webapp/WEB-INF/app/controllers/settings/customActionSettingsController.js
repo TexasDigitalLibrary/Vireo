@@ -1,15 +1,19 @@
-vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionSettingRepo, DragAndDropListenerFactory) {
+vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionDefinitionRepo, DragAndDropListenerFactory) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.customActions = CustomActionSettingRepo.getAll();
+	$scope.customActionRepo = CustomActionDefinitionRepo;
+
+	$scope.customActions = CustomActionDefinitionRepo.getAll();
+
+	CustomActionDefinitionRepo.listen(function(data) {
+        $scope.resetCustomAction();
+	});
 	
-	$scope.ready = $q.all([CustomActionSettingRepo.ready()]);
+	$scope.ready = $q.all([CustomActionDefinitionRepo.ready()]);
 	
 	$scope.dragging = false;
 	
-	$scope.serverErrors = [];
-
 	$scope.trashCanId = 'custom-action-trash';
 	
 	$scope.ready.then(function() {
@@ -18,26 +22,13 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 			$scope.modalData = { 
 				isStudentVisible: false 
 			};
-		}
-		
-		$scope.closeModal = function(modalId) {
-			angular.element('#' + modalId).modal('hide');
-			// clear all errors, but not infos or warnings
-			if($scope.serverErrors !== undefined) {
-				$scope.serverErrors.errors = undefined;
-			}
-		}
+			$scope.closeModal();
+		};
 
 		$scope.resetCustomAction();
 
 		$scope.createCustomAction = function() {
-			CustomActionSettingRepo.create($scope.modalData).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetCustomAction();
-					$scope.closeModal("customActionNewModal");
-				}
-			});
+			CustomActionDefinitionRepo.create($scope.modalData);
 		};
 		
 		$scope.selectCustomAction = function(index) {
@@ -45,40 +36,22 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 		};
 		
 		$scope.editCustomAction = function(index) {
-			$scope.serverErrors = [];
 			$scope.selectCustomAction(index - 1);
-			angular.element('#customActionEditModal').modal('show');
+			$scope.openModal('#customActionEditModal');
 		};
 		
 		$scope.updateCustomAction = function() {
-			$scope.modalData.save().then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetCustomAction();
-					$scope.closeModal("customActionEditModal");
-				}
-			});
-		};
-		
-		$scope.reorderCustomAction = function(src, dest) {
-			CustomActionSettingRepo.reorder(src, dest).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetCustomAction();
-				}
-			});
-		};
-		
-		$scope.removeCustomAction = function(index) {
-			CustomActionSettingRepo.deleteById(index).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetCustomAction();
-					$scope.closeModal("customActionConfirmRemoveModal");
-				}
-			});
+			$scope.modalData.save();
 		};
 
+		$scope.removeCustomAction = function() {
+			$scope.modalData.delete();
+		};
+
+		$scope.reorderCustomAction = function(src, dest) {
+			CustomActionDefinitionRepo.reorder(src, dest);
+		};
+		
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,

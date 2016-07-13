@@ -1,57 +1,35 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDocumentTypes(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetDocumentTypes()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Document Type</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-       	 	<label for="newDocumentNameField">Document Type Name</label>
-        	<input type="text" ng-model="modalData.name" class="form-control" id="newDocumentNameField" name="documentType-name"></input>
-    	</div>
-    	<div class="form-group">
-       	 	<label for="newDocumentDegreeLevelSelector">Degree Level</label>
-        	<select ng-model="modalData.degreeLevel" class="form-control" id="newDocumentDegreeLevel" name="documentType-level" ng-options="key as value for (key, value) in degreeLevels"></select>
 
-    	</div>
-	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="updateDocumentType()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes(); closeModal(attr.modalId)">Cancel</button>
-	<button id="documentTypeUpdateButton" type="button" class="btn btn-primary" ng-click="updateDocumentType()">Update</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
 
-<!-- 
+	<div class="modal-body">
 
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Document Type Name"
+			placeholder="Name of the new document type"
+			results="modalData.ValidationResults"></validatedinput>
 
-     <div class="modal-header {{attr.modalHeaderClass}}">
-     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-     <span class="modal-close" aria-hidden="true">&times;</span>
-     </button>
-     <h3 class="modal-title">Add Document Type</h3>
-     </div>
+		<validatedselect
+			options="degreeLevels"
+			model="modalData"
+			property="degreeLevel"
+			label="Degree Level"
+			results="modalData.ValidationResults"></validatedselect>
 
-     <div class="modal-body">
-     <form>
-     <div class="form-group">
-     <label for="newDocumentNameField">Document Type Name</label>
-     <input type="text" ng-model="modalData.name" class="form-control" id="newDocumentNameField" name="documentType-name"></input>
-     </div>
-     <div class="form-group">
-     <label for="newDocumentDegreeLevelSelector">Degree Level</label>
-     <select ng-model="modalData.degreeLevel" class="form-control" id="newDocumentDegreeLevel" name="documentType-level" ng-options="key as value for (key, value) in degreeLevels"></select>
+	</div>
 
-     </div>
-     </form>
-     </div>
-
-     <div class="modal-footer">
-     <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
-     <button id="graduationMonth-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createNewDocumentType(modalData)">Create</button>
-     </div> -->
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes()">Cancel</button>
+		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>

@@ -12,6 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
+import org.tdl.vireo.model.validation.SubmissionStateValidator;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -55,6 +57,7 @@ public class SubmissionState extends BaseEntity {
     private List<SubmissionState> transitionSubmissionStates;
 
     public SubmissionState() {
+        setModelValidator(new SubmissionStateValidator());
         setTransitionSubmissionStates(new ArrayList<SubmissionState>());
     }
 

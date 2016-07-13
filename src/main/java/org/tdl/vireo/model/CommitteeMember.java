@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.tdl.vireo.model.validation.CommitteeMemberValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -28,9 +30,9 @@ public class CommitteeMember extends BaseEntity {
      * 
      */
     public CommitteeMember() {
-        
+        setModelValidator(new CommitteeMemberValidator());
     }
-    
+
     /**
      * 
      * @param firstName
@@ -38,9 +40,10 @@ public class CommitteeMember extends BaseEntity {
      * @param email
      */
     public CommitteeMember(String firstName, String lastName, String email) {
-       this.firstName = firstName;
-       this.lastName = lastName;
-       this.email = email;
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     /**
@@ -51,7 +54,8 @@ public class CommitteeMember extends BaseEntity {
     }
 
     /**
-     * @param firstName the firstName to set
+     * @param firstName
+     *            the firstName to set
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -65,7 +69,8 @@ public class CommitteeMember extends BaseEntity {
     }
 
     /**
-     * @param lastName the lastName to set
+     * @param lastName
+     *            the lastName to set
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -79,7 +84,8 @@ public class CommitteeMember extends BaseEntity {
     }
 
     /**
-     * @param middleName the middleName to set
+     * @param middleName
+     *            the middleName to set
      */
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
@@ -93,7 +99,8 @@ public class CommitteeMember extends BaseEntity {
     }
 
     /**
-     * @param email the email to set
+     * @param email
+     *            the email to set
      */
     public void setEmail(String email) {
         this.email = email;
