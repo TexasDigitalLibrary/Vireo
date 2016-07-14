@@ -556,12 +556,12 @@ a[title]:hover:after {
   position: absolute;
 }
 
-.glyphicon-info-sign {
+.settings-view .glyphicon-info-sign {
   line-height: 2;
   margin-left: 10px;
 }
 
-.glyphicon-info-sign.opaque {
+.settings-view .glyphicon-info-sign.opaque {
   opacity: .5;
 }
 
@@ -1382,6 +1382,42 @@ footer a, footer li, footer p {
 	margin-top: 55px;
 }
 
+.fp-gloss-predicate-button {
+	float:right;
+	margin-top: 10px;
+}
+
+.field-profile label {
+  font-weight: normal;
+}
+
+.field-profile label.required {
+  font-weight: bold;
+}
+
+.field-profile label.required::before {
+  content: "*  ";
+}
+
+/********************
+* ETD Table Styling *
+********************/
+
+
+#etd-table {
+	.header {
+		background: #ffffff;
+		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
+		background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
+		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
+	}
+}
+
+/***********************
+** STUDENT SUBMISSION **
+************************/
+
 .submission-workflow-steps-navigation {
   margin-bottom: 25px;
 }
@@ -1406,43 +1442,30 @@ footer a, footer li, footer p {
   background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
 }
 
-.fp-gloss-predicate-button {
-	float:right;
-	margin-top: 10px;
+.field-value-input:not(:last-of-type) {
+  margin-bottom: 5px;
 }
 
-.field-profile label {
-  font-weight: normal;
+.select-toggle:hover {
+  cursor: pointer;
 }
 
-.field-profile label.required {
-  font-weight: bold;
+.select-option {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  white-space: nowrap;
 }
 
-.field-profile label.required::before {
-  content: "*  ";
+.select-option:hover {
+  cursor: pointer;
+  background: #efefef;
 }
 
-.field-profile .field-value-add-remove {
-  margin-left: 25px;
-  width: 32px;
-  height: 32px;
-}
-
-
-/********************
-* ETD Table Styling *
-********************/
-
-
-#etd-table {
-	.header {
-		background: #ffffff;
-		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
-		background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
-		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
-	}
+.select-value {
+  white-space: nowrap;
 }
 
 
@@ -1461,7 +1484,8 @@ footer a, footer li, footer p {
 
 .note .glyphicon {
   position: absolute;
-  left: -3px;
+  top: 7px;
+  left: 8px;
 }
 
 

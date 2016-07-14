@@ -1,9 +1,9 @@
-vireo.controller("StudentSubmissionController", function($controller, $scope, $routeParams, StudentSubmissionRepo) {
+vireo.controller("StudentSubmissionController", function($controller, $scope, $routeParams, StudentSubmissionRepo, Submission) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
-		$scope.submission = angular.fromJson(data.body).payload.Submission;
+		$scope.submission = new Submission(angular.fromJson(data.body).payload.Submission);
 		$scope.setAcitveStep($scope.submission.submissionWorkflowSteps[0]);
 	});
 

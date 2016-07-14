@@ -1,3 +1,18 @@
-<div>
-	<div ng-include="includeTemplateUrl"></div>
-</div>
+<form class="field-profile input-text row" name="{{profile.predicate.value}}">
+	<div class="form-group">
+		<div class="col-xs-12 col-sm-3">
+			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
+		</div>
+		<div class="col-xs-12 col-sm-9">
+			<div class="field-value-input row" ng-repeat="value in values track by $index" ng-if="filterValuesByPredicate(value)">
+				<div class="col-sm-7 col-xs-10">
+					<div ng-include="includeTemplateUrl"></div>
+				</div>
+				<div class="col-sm-5 col-xs-2">
+					<button ng-if="showRemove(value)" class="btn btn-danger field-value-add-remove" ng-click="removeFieldValue(value)">-</button>
+					<button ng-if="showAdd(value)" class="btn btn-primary field-value-add-remove" ng-click="addFieldValue()">+</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

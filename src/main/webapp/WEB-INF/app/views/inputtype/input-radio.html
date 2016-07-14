@@ -1,15 +1,18 @@
-<form class="field-profile input-radio row" name="profile.predicate.value">
-	<div class="form-group">
-		<div class="col-xs-3">
-			<span class="glyphicon glyphicon-info-sign opaque tooltip-span" tooltip="{{ profile.help }}"> </span>
-			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
-		</div>
-		<div class="col-xs-3">
+<div class="input-radio-container" ng-repeat="word in profile.controlledVocabularies[0].dictionary" ng-click="values[$parent.$index].value = word.defenition ? word.defenition : word.name">
 
-			<div class="input-radio-container" ng-repeat="word in profile.controlledVocabularies[0].dictionary" ng-click="values[0] = word.defenition ? word.defenition : word.name">
-				<span class="radio-label">{{word.name}}:</span>
-				<input type="radio" ng-model="values[0]" class="pull-right" name="profile.predicate.value" value="{{word.defenition ? word.defenition : word.name}}">
-			</div>
-		</div>
+	<div class="col-xs-8">
+		<span class="radio-label">{{word.name}}:</span>
 	</div>
-</form>
+	<div class="col-xs-2">
+		<input  type="radio" 
+				ng-model="values[$parent.$index].value"
+				ng-click="save(value)" 
+				name="profile.predicate.value" 
+				value="{{word.defenition ? word.defenition : word.name}}" 
+		/>
+	</div>
+	<div class="col-xs-2">
+		<span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+	</div>
+	
+</div>
