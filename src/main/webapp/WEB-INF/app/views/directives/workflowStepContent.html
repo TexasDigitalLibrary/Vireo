@@ -3,8 +3,9 @@
 	<div class="col-md-6">
   		<textField
   			class="workflowstep-edit-name" 
-			label="Workflow Step Name:" 
-			scope-value="step.name"
+			label="Workflow Step Name:"
+			scope-object="step"
+            scope-property="name"
 			hint="'My Workflow Step's name'"
 			on-blur="updateWorkflowStep(step)">
 		</textField>

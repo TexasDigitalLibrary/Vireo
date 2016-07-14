@@ -22,19 +22,23 @@
 		<div class="col-sm-6">
 			
 			<textField 
-				label="Current submission semester:" 
-				scope-value="settings.configurable.application.current_semester.value"
+				label="Current submission semester:"
+				scope-object="settings.configurable.application.current_semester"
+				scope-property="value"
+				expanded="true"
+				field-width="4"
 				hint="'Month Year' (i.e. May 2015)"
-				on-blur="updateConfiguration('application', 'current_semester')"
-				key-down="confirmEdit(event, prop)">
+				on-blur="updateConfiguration('application', 'current_semester')">
 			</textField>
 
 			<textField 
-				label="Degree Granting School:" 
-				scope-value="settings.configurable.application.grantor.value"
+				label="Degree Granting School:"
+				scope-object="settings.configurable.application.grantor"
+				scope-property="value"
+				expanded="true"
+				field-width="4"
 				hint="The full name of the institution awarding degrees."
-				on-blur="updateConfiguration('application', 'grantor')"
-				key-down="confirmEdit(event, prop)">
+				on-blur="updateConfiguration('application', 'grantor')">
 			</textField>
 
 		</div>
