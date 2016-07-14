@@ -33,6 +33,8 @@
 
 <div ng-controller="FieldProfileManagementController">
 
+	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
+
 	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 
 		
@@ -106,6 +108,8 @@
 <hr>
 
 <div ng-controller="NoteManagementController">
+
+	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
 
 	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 

@@ -299,7 +299,6 @@
 	    <script src="repo/controlledVocabularyRepo.js"></script>
 	    <script src="repo/workflowStepRepo.js"></script>
 	    <script src="repo/embargoRepo.js"></script>
-
 	    <script src="repo/userRepo.js"></script>
 	    <script src="repo/organizationRepo.js"></script>
 	    <script src="repo/organizationCategoryRepo.js"></script>
@@ -307,6 +306,8 @@
 	    <script src="repo/fieldPredicateRepo.js"></script>
 	    <script src="repo/fieldGlossRepo.js"></script>	    
 	    <script src="repo/submissionRepo.js"></script>
+	    <script src="repo/noteRepo.js"></script>
+	    <script src="repo/fieldProfileRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
@@ -327,6 +328,8 @@
 	    <script src="model/fieldPredicate.js"></script>
 	    <script src="model/fieldGloss.js"></script>	    
 	    <script src="model/submission.js"></script>
+	    <script src="model/fieldProfile.js"></script>
+	    <script src="model/note.js"></script>
 		
 
 	    <!-- Factories -->

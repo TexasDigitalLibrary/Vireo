@@ -84,11 +84,11 @@ public class WorkflowStepController {
         createdProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
         createdProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
         
-        createdProfile = fieldProfileRepo.save(createdProfile);
+        fieldProfileRepo.save(createdProfile);
         
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
-        return new ApiResponse(SUCCESS, createdProfile);
+        return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-field-profile")

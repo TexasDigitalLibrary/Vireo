@@ -10,9 +10,13 @@
 	<h3 class="modal-title">Update Field Profile</h3>
 </div>
 
-<div class="modal-body">
-	<form name="newFieldProfile">
+<form ng-submit="updateFieldProfile()" novalidate>
 
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<!-- TODO: add validated inputs -->
+
+	<div class="modal-body">
 		<div class="form-group">
 			<label for="field-profiles-gloss">Gloss</label>
 			<input 
@@ -89,21 +93,18 @@
 			scope-value="modalData.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
 		</toggleButton>
-	</form>
-</div>
+	</div>
 
-<div class="modal-footer">
-	<button 
-		type="button" 
-		class="btn btn-warning" 
-		ng-click="resetFieldProfiles()" 
-		data-dismiss="modal">Cancel</button>
-	<button 
-		id="field-profiles-save" 
-		type="button" 
-		class="btn btn-primary" 
-		data-dismiss="modal" 
-		ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id" 
-		ng-click="updateFieldProfile()">Update</button>
-</div>
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetFieldProfiles()" >Cancel</button>
+		<button 
+			id="field-profiles-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id">Update</button>
+	</div>
+</form>
 

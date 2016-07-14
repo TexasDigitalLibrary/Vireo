@@ -2,51 +2,53 @@
 	<button 
 		type="button" 
 		class="close" 
-		ng-click="resetNotes()" 
-		data-dismiss="modal" 
+		ng-click="resetNotes()"
 		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Add Note</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-		<div class="form-group">
-       	 	<label for="notes-name">Name</label>       	 	
-        	<input 
-        		ng-model="modalData.name" 
-        		type="text" 
-        		class="form-control" 
-        		placeholder="Name of note"/>
-    	</div>
-    	<div class="form-group">
-       	 	<label for="notes-name">Text</label>       	 	
-        	<textarea 
-        		ng-model="modalData.text" 
-        		type="text" 
-        		class="form-control" 
-        		placeholder="Text of note"/></textarea>
-    	</div>
+<form ng-submit="createNote()" novalidate>
+
+	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
+
+	<div class="modal-body">
+
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Name"
+			placeholder="Name of the new note"
+			results="workflowStepRepo.getValidationResults()">
+		</validatedinput>
+		
+    	<validatedtextarea
+            model="modalData"
+            property="text"
+            label="Text"
+            rows="5"
+            results="workflowStepRepo.ValidationResults">
+        </validatedtextarea>
+
+		<!-- TODO: move togglebutton into framework and use in validatedinput -->
     	<toggleButton 
 			label="Note is Overridable:"
 			scope-value="modalData.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
 		</toggleButton>
-	</form>
-</div>
+		
+	</div>
 
-<div class="modal-footer">
-	<button 
-		type="button" 
-		class="btn btn-warning" 
-		ng-click="resetNotes()" 
-		data-dismiss="modal">Cancel</button>
-	<button 
-		id="notes-save" 
-		type="button" 
-		class="btn btn-primary" 
-		data-dismiss="modal" 
-		ng-disabled="!modalData.name && !modalData.text" 
-		ng-click="createNote()">Create</button>
-</div>
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetNotes()">Cancel</button>
+		<button 
+			id="notes-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="!modalData.name && !modalData.text">Create</button>
+	</div>
+</form>

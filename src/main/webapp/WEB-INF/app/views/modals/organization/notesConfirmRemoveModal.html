@@ -10,23 +10,19 @@
 	<h3 class="modal-title">Are You Sure?</h3>
 </div>
 
-<div class="modal-body">
-	<h4><b>Click confirm to remove the Note:</b></h4>
-	<h4>Workflow Step: {{step.name}}</h4>
-	<h4>Name: {{modalData.name}}</h4>
-	<h4>Text: {{modalData.text}}</h4>
-</div>
+<form ng-submit="removeNote()" novalidate>
 
-<div class="modal-footer">
-	<button 
-		id="notes-confirm" 
-		type="button" 
-		class="btn btn-danger" 
-		data-dismiss="modal" 
-		ng-click="removeNote()">Confirm</button>
-	<button 
-		type="button" 
-		class="btn btn-default" 
-		ng-click="resetNotes()" 
-		data-dismiss="modal">Cancel</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<h4><b>Click confirm to remove the Note:</b></h4>
+		<h4>Workflow Step: {{step.name}}</h4>
+		<h4>Name: {{modalData.name}}</h4>
+		<h4>Text: {{modalData.text}}</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetNotes()">Cancel</button>
+		<button id="notes-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

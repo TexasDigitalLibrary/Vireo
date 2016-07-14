@@ -1,6 +1,16 @@
-vireo.controller("NoteManagementController", function ($controller, $scope, OrganizationRepo, DragAndDropListenerFactory, WorkflowStepRepo) {
+vireo.controller("NoteManagementController", function ($controller, $scope, DragAndDropListenerFactory, Note, NoteRepo, OrganizationRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+
+
+    $scope.noteRepo = NoteRepo;
+
+    NoteRepo.listen(function(data) {
+        $scope.resetNotes();
+    });
+
+
+    $scope.workflowStepRepo = WorkflowStepRepo;
 
     $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
     
@@ -29,11 +39,13 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
             position++;
         });
 
-        $scope.modalData = {
+        $scope.modalData = new Note({
             overrideable: true,
             name: '',
             text: ''
-        };
+        });
+        
+        $scope.closeModal();
     };
 
     $scope.resetNotes();
@@ -43,12 +55,13 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Orga
     };
     
     $scope.selectNote = function(index) {
-        $scope.modalData = $scope.step.aggregateNotes[index];
+        $scope.modalData = new Note($scope.step.aggregateNotes[index]);
+        console.log($scope.modalData)
     };
     
     $scope.editNote = function(index) {
         $scope.selectNote(index - 1);
-        angular.element('#notesEditModal-' + $scope.step.id).modal('show');
+        $scope.openModal('#notesEditModal-' + $scope.step.id);
     };
     
     $scope.updateNote = function() {

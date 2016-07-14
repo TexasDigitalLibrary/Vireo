@@ -332,6 +332,17 @@ var apiMapping = {
 			'controller': 'settings/graduation-month'
 		}
 	},
+	FieldProfile: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'field-profile',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'field-profile'
+		}
+	},
 	InputType: {
 		all: {
 			'endpoint': '/private/queue',
@@ -385,6 +396,17 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/language',
 			'method': 'proquest'
+		}
+	},
+	Note: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'note',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'note'
 		}
 	},
 	Organization: {
