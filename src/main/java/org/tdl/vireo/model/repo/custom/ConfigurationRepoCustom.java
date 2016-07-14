@@ -1,10 +1,5 @@
 package org.tdl.vireo.model.repo.custom;
 
-import java.util.List;
-
-import javax.servlet.ServletInputStream;
-
-import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.Configuration;
 
 public interface ConfigurationRepoCustom {
@@ -29,26 +24,7 @@ public interface ConfigurationRepoCustom {
      * @return
      */
     public Configuration reset(Configuration configuration);
-    
-    /**
-     * Get a list of all configurations
-     * 
-     * Will always pick a non-isSystemRequired if it exists
-     * 
-     * @return
-     */
-    public List<Configuration> getAll();
-    
-    /**
-     * Gets a list of all the configurations by type
-     * 
-     * Will always pick a non-isSystemRequired if it exists
-     * 
-     * @param type
-     * @return
-     */
-    public List<Configuration> getAllByType(String type);
-    
+        
     /**
      * Gets a Configuration from the repo
      * 
@@ -79,38 +55,5 @@ public interface ConfigurationRepoCustom {
      * @return config value or fallback
      */
     public Integer getValue(String name, Integer fallback);
-    
-    /**
-     * Validates all the business logic for an incoming configuration
-     * 
-     * @param unvalidated {@link Configuration} for updating
-     * @return validated {@link Configuration}
-     */
-    public Configuration validateUpdate(Configuration configuration);
-    
-    /**
-     * Validates all the business logic for an incoming configuration
-     * 
-     * @param unvalidated {@link Configuration} for resetting
-     * @return validated {@link Configuration}
-     */
-    public Configuration validateReset(Configuration configuration);
-    
-    /**
-     * Validates all the business logic for an incoming logo
-     * 
-     * @param unvalidated {@link LookAndFeelControllerModel} for updating
-     * @param inputStream
-     * @return validated {@link LookAndFeelControllerModel}
-     */
-    public LookAndFeelControllerModel validateUploadLogo(LookAndFeelControllerModel lfModel, ServletInputStream inputStream, String path);
-    
-    /**
-     * Validates all the business logic for an incoming reset logo
-     * 
-     * @param unvalidated {@link LookAndFeelControllerModel} for updating
-     * @param inputStream
-     * @return validated {@link LookAndFeelControllerModel} to reset the logo with
-     */
-    public LookAndFeelControllerModel validateResetLogo(LookAndFeelControllerModel lfModel);
+
 }

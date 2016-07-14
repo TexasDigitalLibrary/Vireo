@@ -1,39 +1,38 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetCustomAction(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetCustomAction()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Custom Action Checklist</h3>
 </div>
 
-<div class="modal-body">
-	<div>
-		<form>
-			<div class="row form-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Custom Action</span>
-				</div>
+<form ng-submit="updateCustomAction()" novalidate>
 
-				<div class="col-sm-6">				
-		     		<input ng-model="modalData.label" type="text" class="form-control" placeholder="Label of the editable custom action"/>
-				</div>	
-			</div>
-			<div class="row form-group">
-				<div class="col-sm-3">
-					<span class="pull-right">Is Student Visible</span>
-				</div>
-				<div class="col-sm-6">
-					<input ng-model="modalData.isStudentVisible" type="checkbox"/>
-					<span>Is this action visible to the student?</span>
-				</div>
-			</div>
-		</form>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		
+		<validatedinput
+			type="text"
+			model="modalData"
+			property="label"
+			label="Custom Action"
+			placeholder="Label of the new custom action"
+			results="modalData.ValidationResults">
+		</validatedinput>
+	
+		<validatedinput
+			type="checkbox"
+			model="modalData"
+			property="isStudentVisible"
+			label="Is Student Visible"
+			placeholder="Is this action visible to the student?"
+			results="modalData.ValidationResults">
+		</validatedinput>
+		
 	</div>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
 
-<div class="modal-footer">	
-	<button type="button" class="btn btn-warning" ng-click="resetCustomAction(); closeModal(attr.modalId)">Cancel</button>
-	<button type="button" class="btn btn-primary" ng-click="updateCustomAction()">Save Custom Action</button>
-</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetCustomAction()">Cancel</button>
+		<button id="customAction-save" type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>

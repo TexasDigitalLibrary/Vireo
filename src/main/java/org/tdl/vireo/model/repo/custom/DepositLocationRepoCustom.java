@@ -9,9 +9,5 @@ public interface DepositLocationRepoCustom {
     public void reorder(Long src, Long dest);
     
     public void remove(DepositLocation depositLocation);
-    
-    public DepositLocation validateCreate(DepositLocation depositLocation);
-    
-    public DepositLocation validateUpdate(DepositLocation depositLocation);
 
 }

@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import org.tdl.vireo.model.validation.ContactInfoValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -24,9 +26,12 @@ public class ContactInfo extends BaseEntity {
     @Column(nullable = true)
     private String email;
 
-    public ContactInfo() { }
+    public ContactInfo() { 
+        setModelValidator(new ContactInfoValidator());
+    }
 
     public ContactInfo(Address address, String phone, String email) {
+        this();
         setAddress(address);
         setPhone(phone);
         setEmail(email);

@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
 @Service
 @DependsOn("systemDataLoader")
 public class HashedFile {    
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
     
     @Autowired
     private ConfigurationRepo configurationRepo;

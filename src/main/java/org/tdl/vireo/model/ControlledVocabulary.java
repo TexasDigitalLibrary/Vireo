@@ -12,29 +12,28 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.tdl.vireo.config.SpringContext;
+import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import edu.tamu.framework.SpringContext;
+import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
     
     @Column(nullable = false, unique = true)
-    @NotEmpty
     private String name;
     
     @Column(nullable = true, unique = false)
     private String entityName;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
-    @NotNull
     private Language language;
     
     @ManyToMany(cascade = { ALL }, fetch = EAGER)    
@@ -42,15 +41,14 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     
     @JsonProperty("isEntityProperty")
     @Column(nullable = false)
-    @NotNull
     private Boolean isEntityProperty;
     
     @JsonProperty("isEnum")
     @Column(nullable = false)
-    @NotNull
     private Boolean isEnum;
 
     public ControlledVocabulary() {
+        setModelValidator(new ControlledVocabularyValidator());
         setIsEnum(false);
         setIsEntityProperty(false);
     }

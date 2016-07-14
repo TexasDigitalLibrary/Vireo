@@ -3,7 +3,9 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import org.hibernate.validator.constraints.Range;
+import org.tdl.vireo.model.validation.GraduationMonthValidator;
+
+import edu.tamu.framework.model.BaseOrderedEntity;
 
 /**
  * 
@@ -13,13 +15,13 @@ import org.hibernate.validator.constraints.Range;
 public class GraduationMonth extends BaseOrderedEntity {
 
 	@Column(nullable = false, unique = true)
-	@Range(min=0, max=11)
 	private int month;
 	
 	/**
 	 * 
 	 */
 	public GraduationMonth() {
+	    setModelValidator(new GraduationMonthValidator());
     }
 
 	/**
@@ -29,6 +31,7 @@ public class GraduationMonth extends BaseOrderedEntity {
 	 *            The integer of the month, starting with 0 = january.
 	 */
 	public GraduationMonth(int month) {
+	    this();
 	    setMonth(month);
 	}
 	

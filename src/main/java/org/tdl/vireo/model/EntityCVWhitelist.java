@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
+import org.tdl.vireo.model.validation.EntityCVWhitelistValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -20,9 +22,12 @@ public class EntityCVWhitelist  extends BaseEntity {
     @ElementCollection(fetch = EAGER)
     private List<String> propertyNames;
     
-    public EntityCVWhitelist() { }
+    public EntityCVWhitelist() {
+        setModelValidator(new EntityCVWhitelistValidator());
+    }
     
     public EntityCVWhitelist(String entityName) {
+        this();
         setEntityName(entityName);
         setPropertyNames(new ArrayList<String>());
     }

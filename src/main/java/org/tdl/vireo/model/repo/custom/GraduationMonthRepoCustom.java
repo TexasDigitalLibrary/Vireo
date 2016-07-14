@@ -12,8 +12,4 @@ public interface GraduationMonthRepoCustom {
     
     public void remove(GraduationMonth graduationMonth);
     
-    public GraduationMonth validateCreate(GraduationMonth graduationMonth);
-    
-    public GraduationMonth validateUpdate(GraduationMonth graduationMonth);
-
 }

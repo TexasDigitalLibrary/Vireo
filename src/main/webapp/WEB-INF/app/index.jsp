@@ -60,10 +60,10 @@
 	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">	    					      	
 			      	<ul class="nav navbar-nav navbar-right">
 			      		<li class="dropdown">
-			      			<a href data-toggle="modal" data-target="#loginModal">Login</a>
+			      			<a href ng-click="openModal('#loginModal')">Login</a>
 			      		</li>
 						<li class="dropdown">
-			      			<a href data-toggle="modal" data-target="#verifyEmailModal">Register</a>
+			      			<a href ng-click="openModal('#verifyEmailModal')">Register</a>
 			      		</li>						
 					</ul>
 	    		</div>
@@ -126,7 +126,6 @@
 		</header>
 
 		<alerts types="WARNING, ERROR"></alerts>
-		<alerts second="60" types="VALIDATION_WARNING, VALIDATION_ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 				
 		<div class="container-fluid main">			
@@ -225,6 +224,10 @@
 	    <script src="bower_components/core/app/directives/userDirective.js"></script>
 	    <script src="bower_components/core/app/directives/modalDirective.js"></script>
 	    <script src="bower_components/core/app/directives/alertDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validationMessageDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedInputDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedSelectDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedTextAreaDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
@@ -232,6 +235,7 @@
 	    <script src="bower_components/core/app/services/wsapi.js"></script>
 	    <script src="bower_components/core/app/services/restapi.js"></script>
 	  	<script src="bower_components/core/app/services/authserviceapi.js"></script>
+	  	<script src="bower_components/core/app/services/modalservice.js"></script>
 	  	<script src="bower_components/core/app/services/storageservice.js"></script>
 	  	<script src="bower_components/core/app/services/utilityservice.js"></script>
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
@@ -278,7 +282,6 @@
 	    <script src="directives/trashCanDirective.js"></script>
 	    <script src="directives/selectedDirective.js"></script>
 	    <script src="directives/dropZoneDirective.js"></script>
-	    <script src="directives/validationResponseDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	     <script src="directives/stringToDateDirective.js"></script>
@@ -289,16 +292,15 @@
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
-	    <script src="repo/availableDocumentTypeRepo.js"></script>
-	    <script src="repo/customActionSettingRepo.js"></script>
+	    <script src="repo/documentTypeRepo.js"></script>
+	    <script src="repo/customActionDefinitionRepo.js"></script>
 	    <script src="repo/depositLocationRepo.js"></script>
 	    <script src="repo/emailTemplateRepo.js"></script>
 	    <script src="repo/graduationMonthRepo.js"></script>
-	    <script src="repo/configurableSettingRepo.js"></script>
+	    <script src="repo/configurationRepo.js"></script>
 	    <script src="repo/controlledVocabularyRepo.js"></script>
 	    <script src="repo/workflowStepRepo.js"></script>
 	    <script src="repo/embargoRepo.js"></script>
-
 	    <script src="repo/userRepo.js"></script>
 	    <script src="repo/organizationRepo.js"></script>
 	    <script src="repo/organizationCategoryRepo.js"></script>
@@ -307,17 +309,19 @@
 	    <script src="repo/fieldGlossRepo.js"></script>	    
 	    <script src="repo/studentSubmissionRepo.js"></script>
 	    <script src="repo/submissionRepo.js"></script>
+	    <script src="repo/noteRepo.js"></script>
+	    <script src="repo/fieldProfileRepo.js"></script>
 
-	    <!-- New Models --> 
+	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
 		<script src="model/language.js"></script>
-		<script src="model/availableDocumentType.js"></script>
-		<script src="model/customActionSetting.js"></script>
+		<script src="model/documentType.js"></script>
+		<script src="model/customActionDefinition.js"></script>
 		<script src="model/depositLocation.js"></script>
 		<script src="model/emailTemplate.js"></script>
 		<script src="model/graduationMonth.js"></script>
 		<script src="model/userSettings.js"></script>
-		<script src="model/configurableSetting.js"></script>
+		<script src="model/configuration.js"></script>
 		<script src="model/controlledVocabulary.js"></script>
 		<script src="model/workflowStep.js"></script>
 		<script src="model/embargo.js"></script>
@@ -327,6 +331,8 @@
 	    <script src="model/fieldPredicate.js"></script>
 	    <script src="model/fieldGloss.js"></script>	    
 	    <script src="model/submission.js"></script>
+	    <script src="model/fieldProfile.js"></script>
+	    <script src="model/note.js"></script>
 		
 
 	    <!-- Factories -->

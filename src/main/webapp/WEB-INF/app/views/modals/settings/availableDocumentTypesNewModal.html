@@ -1,28 +1,36 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDocumentTypes(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetDocumentTypes()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Add Document Type</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-       	 	<label for="newDocumentNameField">Document Type Name</label>
-        	<input type="text" ng-model="modalData.name" class="form-control" id="newDocumentNameField" name="documentType-name"></input>
-    	</div>
-    	<div class="form-group">
-       	 	<label for="newDocumentDegreeLevelSelector">Degree Level</label>
-        	<select ng-model="modalData.degreeLevel" class="form-control" id="newDocumentDegreeLevel" name="documentType-level" ng-options="key as value for (key, value) in degreeLevels"></select>
+<form ng-submit="createNewDocumentType()" novalidate>
 
-    	</div>
-	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+	<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes(); closeModal(attr.modalId)">Cancel</button>
-	<button id="graduationMonth-save" type="button" class="btn btn-primary" ng-click="createNewDocumentType(modalData); resetDocumentTypes()">Create</button>
-</div>
+	<div class="modal-body">
+
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Document Type Name"
+			placeholder="Name of the new document type"
+			results="documentTypeRepo.getValidationResults()">
+		</validatedinput>
+
+		<validatedselect
+			options="degreeLevels"
+			model="modalData"
+			property="degreeLevel"
+			label="Degree Level"
+			results="documentTypeRepo.getValidationResults()">
+		</validatedselect>
+
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes()">Cancel</button>
+		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Create</button>
+	</div>
+</form>

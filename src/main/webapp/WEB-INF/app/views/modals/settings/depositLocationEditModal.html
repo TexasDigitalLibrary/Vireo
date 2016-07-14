@@ -1,63 +1,96 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDepositLocation(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Deposit Location</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-        	<label for="depositLocation-name">Location Name</label>
-        	<input ng-model="modalData.name" type="text" class="form-control" id="depositLocation-name" placeholder="Location Name">
-    	</div>
-    	<div class="form-group">
-       	 	<label for="depositLocation-depositor">Protocol</label>
-        	<select ng-model="modalData.depositor" class="form-control" id="depositLocation-depositor" name="depositLocation-depositor">
-                <option value="Sword1Deposit">SWORD Version 1</option>
-                <option value="FileDeposit">File Deposit</option>
-            </select>
-    	</div>
-    	<div class="form-group">
-       	 	<label for="depositLocation-packager">Format</label>
-        	<select ng-model="modalData.packager" class="form-control" id="depositLocation-packager" name="depositLocation-packager">
-                <option value="VireoExport">Vireo Export</option>
-            </select>
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-repository">Repository Location</label>
-        	<input ng-model="modalData.repository" type="text" class="form-control" id="depositLocation-repository" placeholder="Repository Location">
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-collection">Collection</label>
-        	<input ng-model="modalData.collection" type="text" class="form-control" id="depositLocation-collection" placeholder="Collection">
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-timeout">Repository Timeout</label>
-        	<input ng-model="modalData.timeout" type="text" class="form-control" id="depositLocation-timeout" placeholder="Repository Timeout">
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-username">Username</label>
-        	<input ng-model="modalData.username" type="text" class="form-control" id="depositLocation-username" placeholder="Username">
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-password">Password</label>
-        	<input ng-model="modalData.password" type="password" class="form-control" id="depositLocation-password" placeholder="Password">
-    	</div>
-    	<div class="form-group">
-        	<label for="depositLocation-onBehalfOf">On Behalf Of</label>
-        	<input ng-model="modalData.onBehalfOf" type="text" class="form-control" id="depositLocation-onBehalfOf" placeholder="On Behalf Of">
-    	</div>
-    	<div class="form-group">
-        	<button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
-    	</div>
-	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="updateDepositLocation()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetDepositLocation(); closeModal(attr.modalId)">Cancel</button>
-	<button id="depositLocation-save" type="button" class="btn btn-primary" ng-click="updateDepositLocation()">Update</button>
-</div>
+    <validationmessage results="modalData.ValidationResults"></validationmessage>
+
+    <div class="modal-body">
+        <validatedinput
+            model="modalData"
+            property="name"
+            label="Location Name"
+            placeholder="Location Name"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedselect
+            options="protocols"
+            model="modalData"
+            property="depositor"
+            label="Protocol"
+            results="modalData.ValidationResults">
+        </validatedselect>
+
+        <validatedselect
+            options="packagers"
+            model="modalData"
+            property="packager"
+            label="Format"
+            results="modalData.ValidationResults">
+        </validatedselect>
+
+        <validatedinput
+            model="modalData"
+            property="repository"
+            label="Repository Location"
+            placeholder="Repository Location"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="collection"
+            label="Collection"
+            placeholder="Collection"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="timeout"
+            label="Repository Timeout"
+            placeholder="Repository Timeout (seconds)"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="username"
+            label="Username"
+            placeholder="Username"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedinput
+            type="password"
+            model="modalData"
+            property="password"
+            label="Password"
+            placeholder="Password"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="onBehalfOf"
+            label="On Behalf Of"
+            placeholder="On Behalf Of"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <div class="form-group">
+            <button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="resetDepositLocation()">Cancel</button>
+        <button id="depositLocation-save" type="submit" class="btn btn-primary">Update</button>
+    </div>
+
+</form>

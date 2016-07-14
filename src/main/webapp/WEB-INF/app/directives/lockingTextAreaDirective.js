@@ -9,7 +9,6 @@ vireo.directive("lockingtextarea", function($timeout) {
             "hint": "@",
             "onBlur": "&",
             "keyDown": "&",
-            "validationResponse": "=",
             "name": "@",
             "timer": "@",
 			"wysiwyg": "@"

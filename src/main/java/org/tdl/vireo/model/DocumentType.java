@@ -4,11 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.enums.DegreeLevel;
+import org.tdl.vireo.model.validation.DocumentTypeValidator;
+
+import edu.tamu.framework.model.BaseOrderedEntity;
 
 /**
  * 
@@ -18,16 +18,15 @@ import org.tdl.vireo.enums.DegreeLevel;
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "degreeLevel" } ) } )
 public class DocumentType extends BaseOrderedEntity {
 
-	@Column(nullable = false, length=255)
-	@NotEmpty
-	@Size(max=255)
+	@Column(nullable = false, length = 255)
 	private String name;
 
 	@Column(nullable = false)
-	@NotNull
 	private DegreeLevel degreeLevel;
 
-	public DocumentType() {}
+	public DocumentType() {
+	    setModelValidator(new DocumentTypeValidator());
+	}
 
 	/**
 	 * Create a new JpaDocumentTypeImpl
@@ -38,6 +37,7 @@ public class DocumentType extends BaseOrderedEntity {
 	 *            The degreeLevel of the new document type.
 	 */
 	public DocumentType(String name, DegreeLevel degreeLevel) {
+	    this();
 		setName(name);
 		setDegreeLevel(degreeLevel);
 	}

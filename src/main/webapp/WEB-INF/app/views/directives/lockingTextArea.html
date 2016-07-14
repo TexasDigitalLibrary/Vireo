@@ -1,8 +1,5 @@
 <div class="row">
 	<h4>{{ label }}<div tooltip="{{hint}}"><span class="glyphicon glyphicon-info-sign opaque color-reset"></span></div></h4>
-	<validationresponse
-				validation-response="validationResponse">
-	</validationresponse>
 	
 	<div class="lock-control">
     	<a ng-if="locked" ng-click="toggleLock()" class="hover-pointer">
@@ -14,12 +11,12 @@
 		</p>
 		
 		<div ng-show="!locked">
-			<div ng-if="wysiwyg!=='false'">
+			<div ng-if="wysiwyg !== 'false'">
 				<textarea 	ui-tinymce="tinymceOptions" 
 							ng-model="$parent.scopeValue">
 				</textarea>
 			</div>
-			<div ng-if="wysiwyg==='false'">
+			<div ng-if="wysiwyg === 'false'">
 				<textarea 	class="form-control locking-text-area-not-wysiwyg" 
 							ng-model="$parent.scopeValue" 
 							ng-keypress="$parent.nonWysiwygTyping($event)"

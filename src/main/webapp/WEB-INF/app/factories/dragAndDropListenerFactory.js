@@ -1,4 +1,4 @@
-vireo.factory('DragAndDropListenerFactory', function() {
+vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 
 	this.buildDragControls = function(drag) {
 
@@ -59,7 +59,7 @@ vireo.factory('DragAndDropListenerFactory', function() {
 			dragEnd: function(event) {
 				if(listener.dragging) {
 					if(listener.trash.hover) {
-						angular.element(listener.confirm.remove.modal).modal('show');
+						ModalService.openModal(listener.confirm.remove.modal);
 						listener.trash.element.removeClass('dragging');
 					}
 					else {

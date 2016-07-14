@@ -1,10 +1,18 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.framework.enums.MethodValidationType.REORDER;
+import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,12 +20,12 @@ import java.util.Map;
 
 import javax.servlet.ServletInputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -26,15 +34,14 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
+import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.aspect.annotation.InputStream;
 import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.validation.ModelBindingResult;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -58,17 +65,14 @@ public class ControlledVocabularyController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     
-    @Autowired
-    private ValidationService validationService;
-
     /**
      * Endpoint to request all controlled vocabulary.
      * 
      * @return ApiResponse with all controlled vocabulary
      */
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/all")
+    @Auth(role = "MANAGER")    
     public ApiResponse getAllControlledVocabulary() {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc());
     }
@@ -80,9 +84,9 @@ public class ControlledVocabularyController {
      *            Name of controlled vocabulary
      * @return ApiResponse with requested controlled vocabulary
      */
-    @ApiMapping("/{name}")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/{name}")
+    @Auth(role = "MANAGER")    
     public ApiResponse getControlledVocabularyByName(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
     }
@@ -94,35 +98,16 @@ public class ControlledVocabularyController {
      *            Json input data from request
      * @return ApiResponse with indicating success or error
      */
+    @Transactional
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
-        
-        // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
-        controlledVocabulary = controlledVocabularyRepo.validateCreate(controlledVocabulary);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(controlledVocabulary);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
-                controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't create controlled vocabulary with name " + controlledVocabulary.getName() + " because: " + response.getMeta().getType());
-                break;
-        }
-
-        return response;
+        logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
+        controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS, controlledVocabulary);
     }
 
     /**
@@ -132,34 +117,16 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
+    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
-        // will attach any errors to the BindingResult when validating the incoming controlledVocabulary
-        controlledVocabulary = controlledVocabularyRepo.validateUpdate(controlledVocabulary);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(controlledVocabulary);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
-                controlledVocabularyRepo.save(controlledVocabulary);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't update controlled vocabulary with name " + controlledVocabulary.getName() + " because: " + response.getMeta().getType());
-                break;
-        }
-
-        return response;
+        logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
+        controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS, controlledVocabulary);
     }
 
     /**
@@ -169,35 +136,16 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
+    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
-                
-        // will attach any errors to the BindingResult when validating the incoming idString
-        controlledVocabulary = controlledVocabularyRepo.validateRemove(controlledVocabulary);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(controlledVocabulary);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
-                controlledVocabularyRepo.remove(controlledVocabulary);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't remove Controlled Vocabulary with name " + controlledVocabulary.getName() + " because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+        logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
+        controlledVocabularyRepo.remove(controlledVocabulary);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS);
     }
 
     /**
@@ -209,39 +157,16 @@ public class ControlledVocabularyController {
      *            destination position
      * @return ApiResponse indicating success
      */
+    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @Transactional
-    public ApiResponse reorderControlledVocabulary(@ApiVariable String src, @ApiVariable String dest) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(src, "controlled-vocabulary");
-        
-        // will attach any errors to the BindingResult when validating the incoming src and dest
-        Long longSrc = validationService.validateLong(src, "position", modelBindingResult);
-        Long longDest = validationService.validateLong(dest, "position", modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Reordering controlled vocabularies");
-                controlledVocabularyRepo.reorder(longSrc, longDest);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't reorder controlled vocabularies because: " + response.getMeta().getType());
-                break;
-        }
-        
-        return response;
+    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = ControlledVocabulary.class, params = { "0", "1" }) })
+    public ApiResponse reorderControlledVocabulary(@ApiVariable Long src, @ApiVariable Long dest) {
+        logger.info("Reordering controlled vocabularies");
+        controlledVocabularyRepo.reorder(src, dest);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS);
     }
 
     /**
@@ -251,38 +176,16 @@ public class ControlledVocabularyController {
      *            column to sort by
      * @return ApiResponse indicating success
      */
+    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @Transactional
+    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = ControlledVocabulary.class, params = { "0" }) })
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(column, "controlled-vocabulary");
-        
-        // will attach any errors to the BindingResult when validating the incoming column
-        validationService.validateColumn(ControlledVocabulary.class, column, modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Sorting controlled vocabularies by " + column);
-                controlledVocabularyRepo.sort(column);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't sort controlled vocabularies because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+        logger.info("Sorting controlled vocabularies by " + column);
+        controlledVocabularyRepo.sort(column);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS);
     }
 
     /**
@@ -292,47 +195,26 @@ public class ControlledVocabularyController {
      *            name of controlled vocabulary to export
      * @return ApiResponse with map containing csv content
      */
-    @ApiMapping("/export/{name}")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/export/{name}")
+    @Auth(role = "MANAGER")    
     public ApiResponse exportControlledVocabulary(@ApiVariable String name) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
-        
-        // will attach any errors to the BindingResult when validating the incoming cv name
-        ControlledVocabulary cv = controlledVocabularyRepo.validateExport(name, modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Exporting controlled vocabulary for " + name);
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
-                List<List<Object>> rows = new ArrayList<List<Object>>();
-                cv.getDictionary().forEach(vocabularyWord -> {
-                    List<Object> row = new ArrayList<Object>();
-                    VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
-                    row.add(actualVocabularyWord.getName());
-                    row.add(actualVocabularyWord.getDefinition());
-                    row.add(actualVocabularyWord.getIdentifier());
-                    rows.add(row);
-                });
-                map.put("rows", rows);
-                response.getPayload().put(map.getClass().getSimpleName(), map);
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't export controlled vocabulary because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+        logger.info("Exporting controlled vocabulary for " + name);
+        ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
+        List<List<Object>> rows = new ArrayList<List<Object>>();
+        cv.getDictionary().forEach(vocabularyWord -> {
+            List<Object> row = new ArrayList<Object>();
+            VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
+            row.add(actualVocabularyWord.getName());
+            row.add(actualVocabularyWord.getDefinition());
+            row.add(actualVocabularyWord.getIdentifier());
+            rows.add(row);
+        });
+        map.put("rows", rows);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS, map);
     }
 
     /**
@@ -358,33 +240,10 @@ public class ControlledVocabularyController {
     @ApiMapping(value = "/cancel/{name}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse cancelImportControlledVocabulary(@ApiVariable String name) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
-        
-        if(!controlledVocabularyCachingService.doesControlledVocabularyExist(name)){
-            modelBindingResult.addWarning(new ObjectError("controlledVocabulary", "Cannot cancel import for cached Controlled Vocabulary, name did not exist!"));
-        }
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Cancelling import for cached controlled vocabulary " + name);
-                controlledVocabularyCachingService.removeControlledVocabularyCache(name);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                break;
-            default:
-                logger.warn("Couldn't cancel import for cached controlled vocabulary because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+        logger.info("Cancelling import for cached controlled vocabulary " + name);
+        controlledVocabularyCachingService.removeControlledVocabularyCache(name);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS);
     }
 
     /**
@@ -395,43 +254,22 @@ public class ControlledVocabularyController {
      * @param inputStream
      *            csv bitstream
      * @return ApiResponse with map of new words, updating words, and duplicate words
+     * @throws IOException 
      */
-    @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
+    // TODO: implement controller advice to catch exception and handle gracefully
     @Transactional
-    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream ServletInputStream inputStream) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
-        
-        // will attach any errors to the BindingResult when validating the incoming name and inputStream
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.validateCompareCV(name, modelBindingResult);
-        String[] rows = controlledVocabularyRepo.validateCompareRows(inputStream, modelBindingResult);
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        Map<String, Object> wordsMap = null;
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Comparing controlled vocabulary " + name);
-                wordsMap = cacheImport(controlledVocabulary, rows);
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                response.getPayload().put(wordsMap.getClass().getSimpleName(), wordsMap);
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't compare controlled vocabularies because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+    @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
+    @Auth(role = "MANAGER")    
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream ServletInputStream inputStream) throws IOException {
+        logger.info("Comparing controlled vocabulary " + name);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
+        String[] rows = inputStreamToRows(inputStream);
+        Map<String, Object> wordsMap = cacheImport(controlledVocabulary, rows);
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        return new ApiResponse(SUCCESS, wordsMap);
     }
+    
+    
 
     /**
      * Endpoint to import controlled vocabulary after confirmation.
@@ -440,53 +278,29 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiReponse indicating success
      */
-    @ApiMapping(value = "/import/{name}", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping(value = "/import/{name}", method = RequestMethod.POST)
+    @Auth(role = "MANAGER")    
     public ApiResponse importControlledVocabulary(@ApiVariable String name) {
-        
-        // create a ModelBindingResult since we have an @ApiVariable coming in (and not a @ApiValidatedModel)
-        ModelBindingResult modelBindingResult = new ModelBindingResult(name, "controlled-vocabulary");
-        
-        // will attach any errors to the BindingResult when validating the incoming name
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.validateImport(name, modelBindingResult);
-
+        logger.info("Inporting controlled vocabulary " + name);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
-        if(cvCache == null) {
-            modelBindingResult.addError(new ObjectError("controlledVocabulary", "ControlledVocabulary " + name + " is not cached for import"));
-        }
-        
-        // build a response based on the BindingResult state
-        ApiResponse response = validationService.buildResponse(modelBindingResult);
-        
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Comparing controlled vocabulary " + name);
-                cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
-                    newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
-                    controlledVocabulary.addValue(newVocabularyWord);
-                });
-                cvCache.getUpdatingVocabularyWords().parallelStream().forEach(updatingVocabularyWord -> {
-                    VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
-                    updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
-                    updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
-                    updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
-                });
-                controlledVocabularyRepo.save(controlledVocabulary);
-                controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(VALIDATION_WARNING, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-                simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(VALIDATION_WARNING));
-                break;
-            default:
-                logger.warn("Couldn't compare controlled vocabularies because: " + response.getMeta().getType());
-                break;
-        }
-    
-        return response;
+        logger.info("Comparing controlled vocabulary " + name);
+        cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
+            newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
+            controlledVocabulary.addValue(newVocabularyWord);
+        });
+        cvCache.getUpdatingVocabularyWords().parallelStream().forEach(updatingVocabularyWord -> {
+            VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
+            updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
+            updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
+            updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
+        });
+        ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+        controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
        
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String[] rows){
@@ -572,4 +386,22 @@ public class ControlledVocabularyController {
         
         return wordsMap;
     }
+    
+    /**
+     * Converts input stream to array of strings which represent the rows
+     * 
+     * @param ServletInputStream
+     *            csv bitstream
+     * @return string array of the csv rows
+     * @throws IOException
+     */
+    private String[] inputStreamToRows(java.io.InputStream bufferedIn) throws IOException {
+        String csvString = null;
+        String[] imageData = IOUtils.toString(bufferedIn, "UTF-8").split(";");
+        String[] encodedData = imageData[1].split(",");
+        csvString = new String(Base64.getDecoder().decode(encodedData[1]));
+        String[] rows = csvString.split("\\R");
+        return Arrays.copyOfRange(rows, 1, rows.length);
+    }
+    
 }

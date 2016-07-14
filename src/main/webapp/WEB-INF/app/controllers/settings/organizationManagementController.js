@@ -2,6 +2,13 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
+	$scope.organizationRepo = OrganizationRepo;
+
+	OrganizationRepo.listenSelectively(function() {
+		$scope.resetWorkflowSteps();
+	});
+
+
 	$scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
 	$scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
@@ -10,9 +17,14 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.ready.then(function() {
 
-		OrganizationRepo.listen(function() {
-			// TODO: improve UX of organization triptych during organizaiton creation
-		});
+		$scope.resetWorkflowSteps = function() {
+			$scope.modalData = {
+				overrideable: true
+			};
+			$scope.closeModal();
+		};
+
+		$scope.resetWorkflowSteps();
 
 		$scope.updateOrganization = function(organization) {
 			OrganizationRepo.update(organization).then(function() {
@@ -25,28 +37,26 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			var currentOrganization = $scope.getSelectedOrganization();
 			if (currentOrganization !== undefined && currentOrganization) {
 				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
-					$scope.managedOrganization = angular.copy(currentOrganization);
+					$scope.managedOrganization = currentOrganization;
 				}
 			}
 			return $scope.managedOrganization;
 		};
 
 		$scope.resetManagedOrganization = function() {
-			$scope.managedOrganization = angular.copy($scope.getSelectedOrganization());
+			$scope.managedOrganization = $scope.getSelectedOrganization();
 		};
 
-		$scope.addWorkflowStep = function(newWorkflowStepName) {
-			OrganizationRepo.addWorkflowStep(newWorkflowStepName).then(function() {
-				angular.element("#addWorkflowStepModal").modal("hide");		
-			}); 
+		$scope.addWorkflowStep = function() {
+			OrganizationRepo.addWorkflowStep($scope.modalData);
 		};
 
-		$scope.deleteWorkflowStep = function(workflowStepID) {
-			OrganizationRepo.deleteWorkflowStep(workflowStepID);
+		$scope.deleteWorkflowStep = function(workflowStep) {
+			OrganizationRepo.deleteWorkflowStep(workflowStep);
 		};
 		
-		$scope.updateWorkflowStep = function(workflowStepToUpdate) {
-			OrganizationRepo.updateWorkflowStep(workflowStepToUpdate);
+		$scope.updateWorkflowStep = function(workflowStep) {
+			OrganizationRepo.updateWorkflowStep(workflowStep);
 		};
 
 		$scope.reorderWorkflowStepUp = function(workflowStepID) {
@@ -57,5 +67,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
 		};
 
+		$scope.openConfirmDeleteModal = function(step) {
+	        $scope.openModal('#workflow-step-delete-confirm-' + step.id);
+	    };
+
 	});
+
 });

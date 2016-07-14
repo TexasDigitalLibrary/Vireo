@@ -1,28 +1,28 @@
 <div class="row">
-  <form name="orcid">
-	<div class="col-sm-6">
+	<form name="orcid">
+		<div class="col-sm-6">
 
-	  <togglebutton
-				  ng-click="updateConfigurableSettings('orcid', 'orcid_validation')"
-				  label="Validate ORCID ID :"
-				  scope-value="settings.configurable.orcid.orcid_validation.value"
-				  toggle-options="{{orcidValidationOptions}}"
-                  tool-tip="This will validate the given ORCID ID with ORCID's API.">
-	  </togglebutton>
+			<togglebutton
+				ng-click="updateConfiguration('orcid', 'orcid_validation')"
+				label="Validate ORCID ID :"
+				scope-value="settings.configurable.orcid.orcid_validation.value"
+				toggle-options="{{orcidValidationOptions}}"
+				tool-tip="This will validate the given ORCID ID with ORCID's API.">
+			</togglebutton>
 
-	</div>
+		</div>
 
-	<div class="col-sm-6">
+		<div class="col-sm-6">
 
-	  <togglebutton
-				  ng-click="updateConfigurableSettings('orcid', 'orcid_authentication')"
-				  label="Authenticate Orcid ID :"
-				  scope-value="settings.configurable.orcid.orcid_authentication.value"
-                  toggle-options="{{orcidAuthenticationOptions}}"
-                  tool-tip="This will compare the user information obtained from ORCID with the Student's first and last name.">
-	  </toggle-button>
+			<togglebutton
+				ng-click="updateConfiguration('orcid', 'orcid_authentication')"
+				label="Authenticate Orcid ID :"
+				scope-value="settings.configurable.orcid.orcid_authentication.value"
+				toggle-options="{{orcidAuthenticationOptions}}"
+				tool-tip="This will compare the user information obtained from ORCID with the Student's first and last name.">
+			</togglebutton>
 
-	</div>
-  </form>
+		</div>
+	</form>
 </div>
 

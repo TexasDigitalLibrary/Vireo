@@ -1,51 +1,116 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="resetFieldProfiles()" data-dismiss="modal" aria-label="Close">
-	<span class="modal-close" aria-hidden="true">&times;</span>
-  </button>
-  <h3 class="modal-title">Add Field Profile</h3>
+	<button 
+		type="button" 
+		class="close" 
+		ng-click="resetFieldProfiles()" 
+		data-dismiss="modal" 
+		aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Field Profile</h3>
 </div>
 
-<div class="modal-body">
-  <form name="newFieldProfile">
-  	
-	<div class="form-group">
-	  <label for="field-profiles-gloss">Gloss</label>
-	  <input id="field-profiles-gloss" ng-model="modalData.gloss" uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" type="text" class="form-control" placeholder="Display gloss for the new field profile" required/>
-	  <button type="button" class="btn btn-default fp-gloss-predicate-button" ng-click="createGloss(modalData.gloss)" ng-if="!modalData.gloss.id">Create New Gloss</button>
-	</div>
-	<div class="form-group field-profile-modal-group">
-	  <label for="field-profiles-predicate">Predicate</label>
-	  <input id="field-profiles-predicate" ng-model="modalData.predicate" uib-typeahead="fp as fp.value for fp in fieldPredicates" type="text" class="form-control" placeholder="Predicate of the new field profile" required />
-	  <button type="button" class="btn btn-default fp-gloss-predicate-button" ng-if="!modalData.predicate.id" ng-click="createPredicate(modalData.predicate)">Create New Predicate</button>
-	</div>
-	<div class="form-group field-profile-modal-group">
-	  <label for="field-profiles-input-type">Input Type<divlabel>
-		<select id="field-profiles-input-type" ng-model="modalData.inputType" ng-options="itype.name for itype in inputTypes track by itype.id" type="text" class="form-control" required ></select>
-	  </div>
-	  <div class="form-group">
-		<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
-		<select id="field-profiles-controlled-vocabulary" ng-model="modalData.controlledVocabulary" ng-options="cv.name for cv in controlledVocabularies track by cv.id" type="text" class="form-control">
-		  <option value="">(None)</option>
-		</select>
-	  </div>
-	  <div class="form-group">
-		<label for="field-profiles-help">Help</label>
-		<textarea id="field-profiles-help" ng-model="modalData.help" type="text" class="form-control" placeholder="Help of the new field profile" required></textarea>
-	  </div>
-	  <div id="fp-repeatable-checkbox" class="input-group">
-		<div class="checkbox">
-		  <label><input type="checkbox" value="false" ng-model="modalData.repeatable">Repeatable</label>
+<form ng-submit="createFieldProfile()" novalidate>
+
+	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
+
+	<!-- TODO: figure out how to validate glosses and controlled vocabularies -->
+
+	<div class="modal-body">
+
+		<div class="form-group">
+			<label for="field-profiles-gloss">Gloss</label>
+			<input 
+				id="field-profiles-gloss" 
+				ng-model="modalData.fieldGlosses[0]" 
+				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" 
+				type="text" class="form-control" 
+				placeholder="Display gloss for the new field profile" 
+				required/>
+			<button 
+				type="button" 
+				class="btn btn-default fp-gloss-predicate-button" 
+				ng-click="createGloss(modalData.fieldGlosses[0])" 
+				ng-if="!modalData.fieldGlosses[0].id">Create New Gloss</button>
 		</div>
-	  </div>
-	  <toggleButton 
-		label="Field Profile is Overridable:"
-		scope-value="modalData.overrideable"
-		toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-	  </toggleButton>
-  </form>
 
+		<div class="field-profile-modal-group">
+			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+			<validatedinput
+				model="modalData"
+				property="predicate"
+				label="Predicate"
+				placeholder="Predicate of the new field profile"
+				results="fieldPredicateRepo.getValidationResults()">
+			</validatedinput>
+			<button 
+				type="button" 
+				class="btn btn-default fp-gloss-predicate-button" 
+				ng-if="!modalData.predicate.id" 
+				ng-click="createPredicate()">Create New Predicate</button>
+		</div>
 
-  <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetFieldProfiles()" data-dismiss="modal">Cancel</button>
-	<button id="field-profiles-save" type="button" class="btn btn-primary" data-dismiss="modal" ng-disabled="!modalData.gloss.id || !modalData.predicate.id" ng-click="createFieldProfile()">Create</button>
-  </div>
+		<div class="field-profile-modal-group">
+			<validatedselect
+				options="inputTypes"
+				optionproperty="name"
+				model="modalData"
+				property="inputType"
+				label="Input Type"
+				results="workflowStepRepo.getValidationResults()">
+			</validatedselect>
+		</div>
+
+		<div class="form-group">
+			<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
+			<select 
+				id="field-profiles-controlled-vocabulary" 
+				ng-model="modalData.controlledVocabularies[0]" 
+				ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" 
+				type="text" 
+				class="form-control">
+				<option value="">(None)</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<validatedinput
+				model="modalData"
+				property="help"
+				label="Help"
+				placeholder="Help of the new field profile"
+				results="workflowStepRepo.getValidationResults()">
+			</validatedinput>
+		</div>
+
+		<div id="fp-repeatable-checkbox" class="input-group">
+			<div class="checkbox">
+				<label>
+					<input 
+						type="checkbox" 
+						value="false" 
+						ng-model="modalData.repeatable"/>Repeatable</label>
+			</div>
+		</div>
+
+		<toggleButton 
+			label="Field Profile is Overridable:"
+			scope-value="modalData.overrideable"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+		</toggleButton>
+
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetFieldProfiles()">Cancel</button>
+		<button 
+			id="field-profiles-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id">Create</button>
+	</div>
+
+</form>

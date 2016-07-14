@@ -3,6 +3,8 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.tdl.vireo.model.validation.InputTypeValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -15,10 +17,13 @@ public class InputType extends BaseEntity {
     
     // TODO: add url for fetching data, controlled vocabulary, or additional logic if needed
     
-    public InputType() { }
+    public InputType() {
+        setModelValidator(new InputTypeValidator());
+    }
 
     public InputType(String name) {
-        this.name = name;
+        this();
+        setName(name);
     }
 
     /**

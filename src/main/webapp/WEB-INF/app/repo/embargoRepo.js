@@ -1,17 +1,33 @@
 vireo.repo("EmbargoRepo", function EmbargoRepo(WsApi) {
 
-	var EmbargoRepo = this;
+	var embargoRepo = this;
 
-	EmbargoRepo.sort = function(guarantor, facet) {
-		angular.extend(EmbargoRepo.mapping.sort, {'method': 'sort/'+ guarantor +'/'+ facet});
-		return WsApi.fetch(EmbargoRepo.mapping.sort);
+	this.sort = function(guarantor, facet) {
+		embargoRepo.clearValidationResults();
+		angular.extend(this.mapping.sort, {'method': 'sort/'+ guarantor +'/'+ facet});
+		var promise = WsApi.fetch(this.mapping.sort);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(embargoRepo, angular.fromJson(res.body).payload);
+				console.log(embargoRepo);
+			}
+		});
+		return promise;
 	};
 
-	EmbargoRepo.reorder = function(guarantor, src, dest) {
-		angular.extend(EmbargoRepo.mapping.reorder, {'method': 'reorder/'+ guarantor +'/'+ src + '/' + dest});
-		return WsApi.fetch(EmbargoRepo.mapping.reorder);
-	}; 
-
-	return EmbargoRepo;
+	this.reorder = function(guarantor, src, dest) {
+		embargoRepo.clearValidationResults();
+		angular.extend(this.mapping.reorder, {'method': 'reorder/'+ guarantor +'/'+ src + '/' + dest});
+		var promise = WsApi.fetch(this.mapping.reorder);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(embargoRepo, angular.fromJson(res.body).payload);
+				console.log(embargoRepo);
+			}
+		});
+		return promise;
+	};
+	
+	return this;
 	
 });

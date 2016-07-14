@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.validation.SubmissionWorkflowStepValidator;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -26,6 +28,7 @@ public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkf
     protected Organization originatingOrganization;
     
     public SubmissionWorkflowStep() {
+        setModelValidator(new SubmissionWorkflowStepValidator());
         setAggregateFieldProfiles(new ArrayList<SubmissionFieldProfile>());
         setAggregateNotes(new ArrayList<SubmissionNote>());
     }

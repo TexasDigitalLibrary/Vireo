@@ -13,16 +13,12 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.Application;
 
 @Service
 public class FileIOUtility {
     
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-
     public void write(byte[] bytes, String filePath) throws IOException {
         Path path = Paths.get(Application.BASE_PATH + filePath);
         Files.write(path, bytes);

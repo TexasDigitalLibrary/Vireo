@@ -1,11 +1,11 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.ObjectError;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
 	
@@ -32,39 +32,4 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
         orderedEntityService.remove(depositLocationRepo, DepositLocation.class, depositLocation.getPosition());
     }
     
-    @Override
-    public DepositLocation validateCreate(DepositLocation depositLocation) {
-        DepositLocation existing = depositLocationRepo.findByName(depositLocation.getName());
-        if(!depositLocation.getBindingResult().hasErrors() &&  existing != null){
-            depositLocation.getBindingResult().addError(new ObjectError("depositLocation", depositLocation.getName() + " is already a deposit location!"));
-        }
-        return depositLocation;
-    }
-    
-    @Override
-    public DepositLocation validateUpdate(DepositLocation depositLocation) {
-        if(depositLocation.getId() == null) {
-            depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation without an id!"));
-        } else {
-            DepositLocation depositLocationtoUpdate = depositLocationRepo.findOne(depositLocation.getId());
-            if(depositLocationtoUpdate == null) {
-                depositLocation.getBindingResult().addError(new ObjectError("depositLocation", "Cannot update a DepositLocation that doesn't exist!"));
-            } else {
-                depositLocationtoUpdate.setBindingResult(depositLocation.getBindingResult());
-                depositLocationtoUpdate.setName(depositLocation.getName());
-                depositLocationtoUpdate.setRepository(depositLocation.getRepository());
-                depositLocationtoUpdate.setCollection(depositLocation.getCollection());
-                depositLocationtoUpdate.setUsername(depositLocation.getUsername());
-                depositLocationtoUpdate.setPassword(depositLocation.getPassword());
-                depositLocationtoUpdate.setOnBehalfOf(depositLocation.getOnBehalfOf());
-                depositLocationtoUpdate.setPackager(depositLocation.getPackager());
-                depositLocationtoUpdate.setDepositor(depositLocation.getDepositor());
-                depositLocationtoUpdate.setTimeout(depositLocation.getTimeout());
-                depositLocation = depositLocationtoUpdate;
-            }
-        }
-        
-        return depositLocation;
-    }
-
 }

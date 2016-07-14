@@ -1,13 +1,15 @@
 
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurableSettingRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
-	
-	$scope.serverErrors = [];
-		
-	$scope.settings.configurable = ConfigurableSettingRepo.getAllMapByType();
+			
+	$scope.settings.configurable = ConfigurationRepo.getAllMapByType();
+
+	ConfigurationRepo.listen(function(data) {
+
+	});
 
 	if(!$scope.isAnonymous()) {
 
@@ -48,17 +50,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   			default: return true;
   		}
   	};
-  	
-  	var setServerErrors = function(type, name, data){
-  		// since we're a 2d array, make sure our 1d exists first
-  		if($scope.serverErrors[type] === undefined) {
-			$scope.serverErrors[type] = [];
-		}
-  		// either put a ValidationResponse object into the 2d array, or clear it since it'll be "undefined"
-		$scope.serverErrors[type][name] = angular.fromJson(data.body).payload.ValidationResponse;
-  	};
-  	
-	ConfigurableSettingRepo.ready().then(function() {
+  	  	
+	ConfigurationRepo.ready().then(function() {
 
 		$scope.submissionsOpen = function(){
 	  		return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
@@ -84,7 +77,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	  	};
 		
 		//TODO: check these update config settings methods for redundancy and clean up.
-		$scope.delayedUpdateConfigurableSettings = function(type, name) {
+		$scope.delayedUpdateConfiguration = function(type, name) {
 
 			if($scope.pendingUpdate) {
 				$timeout.cancel($scope.updateTimeout);
@@ -93,29 +86,23 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 			$scope.pendingUpdate = true;
 
 			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfigurableSettings(type, name);
+				$scope.updateConfiguration(type, name);
 				$scope.pendingUpdate = false;
 			}, 500);
 
 		};
 
-		$scope.updateConfigurableSettingsPlainText = function(type,name) {
+		$scope.updateConfigurationPlainText = function(type, name) {
 			$scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
-			$scope.settings.configurable[type][name].save().then(function(data) {
-				setServerErrors(type, name, data);
-			});
+			$scope.settings.configurable[type][name].save();
 		};
 
-		$scope.updateConfigurableSettings = function(type,name) {
-			$scope.settings.configurable[type][name].save().then(function(data) {
-				setServerErrors(type, name, data);
-			});
+		$scope.updateConfiguration = function(type, name) {
+			$scope.settings.configurable[type][name].save();
 		};
 
-		$scope.resetConfigurableSettings = function(type,name) {
-			$scope.settings.configurable[type][name].reset().then(function(data) {
-				setServerErrors(type, name, data);
-			});
+		$scope.resetConfiguration = function(type, name) {
+			$scope.settings.configurable[type][name].reset();
 		};
 
 	});	
@@ -129,7 +116,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	};
 
 	$scope.confirmEdit = function($event, prop) {
-		if($event.which == 13) {			
+		if($event.which == 13) {
 			if(prop) $scope["edit"+prop] = false;
 			$event.target.blur();
 		}

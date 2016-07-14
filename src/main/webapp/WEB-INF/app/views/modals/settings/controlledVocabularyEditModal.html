@@ -1,23 +1,35 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetControlledVocabulary(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetControlledVocabulary()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Controlled Vocabulary</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-       	 	<label for="controlledVocabulary-name">Name</label>
-        	<input ng-model="modalData.name" type="text" class="form-control" placeholder="Name of controlled vocabulary"/>
-    	</div>
-	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="updateControlledVocabulary()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary(); closeModal(attr.modalId)">Cancel</button>
-	<button id="controlledVocabulary-save" type="button" class="btn btn-primary" ng-click="updateControlledVocabulary()">Update</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Name"
+			placeholder="Name of the new controlled vocabulary"
+			results="modalData.ValidationResults">
+		</validatedinput>
+
+		<validatedselect
+			options="languages"
+			optionproperty="name"
+			model="modalData"
+			property="language"
+			label="Language"
+			results="modalData.ValidationResults">
+		</validatedselect>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()">Cancel</button>
+		<button id="controlledVocabulary-save" type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>

@@ -1,14 +1,10 @@
 <div id="deposit-location" class="row" ng-controller="DepositLocationRepoController">
-	
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-	
+
+	<validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
+
 	<div class="col-sm-6">
 		
-		<button class="btn btn-default modal-add-btn" 
-				data-toggle="modal" 
-				data-target="#depositLocationNewModal">
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#depositLocationNewModal')">
 			Add Location
 		</button>
 		

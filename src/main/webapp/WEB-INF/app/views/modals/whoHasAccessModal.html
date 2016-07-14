@@ -1,52 +1,48 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-    <span class="modal-close" aria-hidden="true">&times;</span>
-  </button>
-  <h3 class="modal-title">Add Member</h3>
+    <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Add Member</h3>
 </div>
 
 <div class="modal-body">
-  <div>
+    <div>
+        <form action="/admin/settings/members/search">
+            <div class="row">
+                <div class="col-sm-12">
 
-    <form action="/admin/settings/members/search">
-      <div class="row">
-        <div class="col-sm-12">
-          
-          <form>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-addon"><i class="search"></i></div>
-                <input type="text" class="form-control" placeholder="Filter" ng-model="search">
-              </div>      
+                <form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="search"></i></div>
+                            <input type="text" class="form-control" placeholder="Filter" ng-model="search">
+                        </div>      
+                    </div>
+                </form>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="toggle-href" ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in users | filter:search | filter:{role: 'STUDENT'}" ng-click="selectUser(userToAdd)">
+                            <td>{{userToAdd.firstName}} {{userToAdd.lastName}}</td>
+                            <td>{{userToAdd.email}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                </div>
             </div>
-          </form>
 
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="toggle-href" ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in users | filter:search | filter:{role: 'STUDENT'}" ng-click="selectUser(userToAdd)">
-                <td>{{userToAdd.firstName}} {{userToAdd.lastName}}</td>
-                <td>{{userToAdd.email}}</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-
-    </form>
-  </div>
-    <validationresponse
-    validation-response="serverErrors">
-  </validationresponse>
+        </form>
+    </div>
 </div>
 
 <div class="modal-footer">
-  <button ng-click="updateRole(modalData, 'REVIEWER')" type="button" class="btn btn-primary">Add</button>
-  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button ng-click="updateRole(modalData, 'REVIEWER')" type="button" class="btn btn-primary">Add</button>
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Close</button>
 </div>

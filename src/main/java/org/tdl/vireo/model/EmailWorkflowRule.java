@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.enums.RecipientType;
+import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -42,6 +43,7 @@ public class EmailWorkflowRule extends BaseEntity {
 	private EmailTemplate emailTemplate;
 	
 	public EmailWorkflowRule() {
+	    setModelValidator(new EmailWorkflowRuleValidator());
 		isSystem(false);
 		isDisabled(true);
 	}

@@ -13,11 +13,5 @@ public interface EmailTemplateRepoCustom {
     public void sort(String column);
     
     public void remove(EmailTemplate emailTemplate);
-    
-    public EmailTemplate validateCreate(EmailTemplate emailTemplate);
-    
-    public EmailTemplate validateUpdate(EmailTemplate emailTemplate);
-    
-    public EmailTemplate validateRemove(EmailTemplate emailTemplate);
-    
+   
 }

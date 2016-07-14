@@ -1,14 +1,10 @@
 <div id="languages" class="container-fluid" ng-controller="LanguagesController">
 	
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
+	<validationmessage results="languageRepo.getValidationResults()"></validationmessage>
 
 	<div class="col-sm-6">
 		
-		<button class="btn btn-default modal-add-btn" 
-				data-toggle="modal" 
-				data-target="#languagesNewModal">
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#languagesNewModal')">
 			Add Language
 		</button>
 		
@@ -34,8 +30,6 @@
 		</span>
 
 	</div>
-
-
 	
 	<div class="col-sm-6">
 		<trashcan id="{{trashCanId}}"

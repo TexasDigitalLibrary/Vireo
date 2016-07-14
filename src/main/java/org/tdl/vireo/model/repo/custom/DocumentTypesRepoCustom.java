@@ -12,9 +12,5 @@ public interface DocumentTypesRepoCustom {
     public void sort(String column);
 
     public void remove(DocumentType documentType);
-    
-    public DocumentType validateCreate(DocumentType documentType);
-    
-    public DocumentType validateUpdate(DocumentType documentType);
 
 }

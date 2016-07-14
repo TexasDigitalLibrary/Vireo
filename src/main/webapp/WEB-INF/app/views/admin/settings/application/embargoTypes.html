@@ -1,11 +1,12 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
+
+	<validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
 	
 	<div class="row">
-		<validationresponse
-			validation-response="serverErrors['DEFAULT']">
-		</validationresponse>
+
 		<div class="col-sm-12">
 			<h3>Default Embargoes</h3>
+
 	        <draganddroplist
 				dragging="dragging"
 				scope-value="defaultEmbargoes"
@@ -20,21 +21,21 @@
 				sort-action-sort='sortDefault'
 				sort-method='sortEmbargoesDefault(column)'>
 			</draganddroplist>
-			<button class="btn btn-default modal-add-btn"
-				data-toggle="modal"
-				ng-click="modalData.guarantor='DEFAULT'; serverErrors['DEFAULT'] = undefined;"
-				data-target="#embargoNewModal">
+
+			<button 
+				class="btn btn-default modal-add-btn"
+				ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
 				Add New
 			</button>
+
 		</div>
 	</div>
 	
 	<div class="row">
-		<validationresponse
-			validation-response="serverErrors['PROQUEST']">
-		</validationresponse>
+
 		<div class="col-sm-12">
 			<h3>ProQuest Embargoes</h3>
+
 	        <draganddroplist
 				dragging="dragging"
 				scope-value="proquestEmbargoes"
@@ -49,12 +50,13 @@
 				sort-action-sort='sortProquest'
 				sort-method='sortEmbargoesProquest(column)'>
 			</draganddroplist>
-			<button class="btn btn-default modal-add-btn"
-				data-toggle="modal"
-				ng-click="modalData.guarantor='PROQUEST'; serverErrors['PROQUEST'] = undefined;"
-				data-target="#embargoNewModal">
+
+			<button 
+				class="btn btn-default modal-add-btn"
+				ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
 				Add New
 			</button>
+
 		</div>
 	</div>
 	

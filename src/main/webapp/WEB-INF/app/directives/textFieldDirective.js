@@ -4,12 +4,11 @@ vireo.directive("textfield", function() {
 		restrict: 'E',
 		scope: {
 			"label": "@",
-			"scopeValue": "=",
+			"scopeObject": "=",
+			"scopeProperty": "@",
 			"toolTip": "@",
 			"hint": "@",
 			"onBlur": "&",
-			"keyDown": "&",
-			"validationResponse": "=",
 			"labelWidth": "@",
 			"fieldWidth": "@",
 			"expanded": "="

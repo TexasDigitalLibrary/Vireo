@@ -1,4 +1,4 @@
-vireo.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
+vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
 
 	var configurations = {};
 
@@ -10,14 +10,16 @@ vireo.repo("ConfigurableSettingRepo", function ConfigurableSettingRepo() {
 
 	this.getAllMapByType = function() {
 
-		var configurableSettingsRepo = this;
+		var configurationRepo = this;
 
 		var mapByType = function(configurations) {
-			angular.forEach(configurableSettingsRepo.getAll(), function(config) {
+			angular.forEach(configurationRepo.getAll(), function(config) {
 				if(configurations[config.type] === undefined) {
 					configurations[config.type] = {};
 				}
-				configurations[config.type][config.name] = config;
+				if(configurations[config.type][config.name] === undefined || config.isSystemRequired == false) {
+					configurations[config.type][config.name] = config;
+				}
 			});
 		}
 		

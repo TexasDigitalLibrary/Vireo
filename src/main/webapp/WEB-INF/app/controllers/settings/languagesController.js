@@ -2,7 +2,13 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+	$scope.languageRepo = LanguageRepo;
+
 	$scope.languages = LanguageRepo.getAll();
+
+	LanguageRepo.listen(function(data) {
+        $scope.resetLanguages();
+	});
 
 	var proquestPromise = LanguageRepo.getProquestLanguageCodes().then(function(data) {
 		$scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;
@@ -12,8 +18,6 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
 	$scope.dragging = false;
 
-	$scope.serverErrors = [];
-
 	$scope.trashCanId = 'language-trash';
 	
 	$scope.sortAction = "confirm";
@@ -21,10 +25,6 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 	$scope.uploadAction = "confirm";
 
 	$scope.ready.then(function() {
-
-		console.log(LanguageRepo)
-
-		console.log($scope.languages)
 
 		$scope.resetLanguages = function() {
 			if($scope.uploadAction == 'process') {
@@ -40,26 +40,13 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 			$scope.modalData = { 
 				languages: $scope.languages[0] 
 			};
+			$scope.closeModal();
 		};
-		
-		$scope.closeModal = function(modalId) {
-    		angular.element('#' + modalId).modal('hide');
-    		// clear all errors, but not infos or warnings
-    		if($scope.serverErrors !== undefined) {
-    			$scope.serverErrors.errors = undefined;
-    		}
-    	};
 
 		$scope.resetLanguages();
 		
 		$scope.createLanguage = function() {
-			LanguageRepo.create($scope.modalData).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetLanguages();
-            		$scope.closeModal("languagesNewModal");
-            	}
-			});
+			LanguageRepo.create($scope.modalData);
 		};
 		
 		$scope.selectLanguage = function(index) {
@@ -67,54 +54,30 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 		};
 		
 		$scope.editLanguage = function(index) {
-			$scope.serverErrors = [];
 			$scope.selectLanguage(index - 1);
-			angular.element('#languagesEditModal').modal('show');
+			$scope.openModal('#languagesEditModal');
 		};
 		
 		$scope.updateLanguage = function() {
-			$scope.modalData.save().then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetLanguages();
-            		$scope.closeModal("languagesEditModal");
-            	}
-			});
+			$scope.modalData.save();
+		};
+
+		$scope.removeLanguage = function() {
+			$scope.modalData.delete();
 		};
 
 		$scope.reorderLanguages = function(src, dest) {
-	    	LanguageRepo.reorder(src, dest).then(function(data) {
-	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetLanguages();
-            	}
-	    	});
+	    	LanguageRepo.reorder(src+10, dest);
 		};
 
 		$scope.sortLanguages = function(column) {
-			console.log('sorting ' + column)
 			if($scope.sortAction == 'confirm') {
 				$scope.sortAction = 'sort';
 			}
 			else if($scope.sortAction == 'sort') {
-				LanguageRepo.sort(column).then(function(data) {
-					$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-	            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-	            		$scope.resetLanguages();
-	            	}
-					$scope.sortAction = 'confirm';
-				});
+				LanguageRepo.sort(column);
+				$scope.sortAction = 'confirm';
 			}
-		};
-
-		$scope.removeLanguage = function(index) {
-	    	LanguageRepo.deleteById(index).then(function(data) {
-	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetLanguages();
-            		$scope.closeModal("languagesConfirmRemoveModal");
-            	}
-	    	});
 		};
 
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({

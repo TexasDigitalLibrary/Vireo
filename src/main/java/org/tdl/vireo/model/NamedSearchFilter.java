@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -113,6 +115,7 @@ public class NamedSearchFilter extends BaseEntity {
 	private Set<CustomActionValue> customActionValues;
 
 	public NamedSearchFilter() {
+	    setModelValidator(new NamedSearchFilterValidator());
 		isPublicFlag(false);
 		// setName(new String());
 		isUmiRelease(false);

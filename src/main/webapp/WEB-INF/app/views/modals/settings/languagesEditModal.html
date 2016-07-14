@@ -1,23 +1,26 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetLanguages(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetLanguages()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Language</h3>
 </div>
 
-<div class="modal-body">
-	<form>
-    	<div class="form-group">
-       	 	<label for="languages-name">Name</label>
-        	<input ng-model="modalData.name" type="text" class="form-control" placeholder="Name of language"/>
-    	</div>
-	</form>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="updateLanguage()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetLanguages(); closeModal(attr.modalId)">Cancel</button>
-	<button id="languages-save" type="button" class="btn btn-primary" ng-click="updateLanguage()">Update</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Name"
+			placeholder="Name of the new language"
+			results="modalData.ValidationResults">
+		</validatedinput>		
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetLanguages()">Cancel</button>
+		<button id="languages-save" type="submit" class="btn btn-primary">Update</button>
+	</div>
+</form>

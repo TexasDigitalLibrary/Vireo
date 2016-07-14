@@ -1,83 +1,59 @@
-vireo.controller("AvailableDocumentTypesController", function ($controller, $scope, AvailableDocumentTypeRepo, DragAndDropListenerFactory) {
-	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
-
-	$scope.documentTypes = AvailableDocumentTypeRepo.getAll();
+vireo.controller("AvailableDocumentTypesController", function ($controller, $scope, DocumentTypeRepo, DragAndDropListenerFactory) {
 	
-	$scope.ready = AvailableDocumentTypeRepo.ready();
+    angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+
+    $scope.documentTypeRepo = DocumentTypeRepo;
+
+	$scope.documentTypes = DocumentTypeRepo.getAll();
+	
+	DocumentTypeRepo.listen(function(data) {
+        $scope.resetDocumentTypes();
+	});
+	
+	$scope.ready = DocumentTypeRepo.ready();
 
 	$scope.dragging = false;
 	
-	$scope.serverErrors = [];
-
 	$scope.trashCanId = 'available-document-types-trash';
 	
 	$scope.sortAction = "confirm";
 
-    $scope.degreeLevels = { 'UNDERGRADUATE' : 'Undergraduate',
-                            'MASTERS'       : 'Masters'      ,
-                            'DOCTORAL'      : 'Doctoral'     };
+    $scope.degreeLevels = { 
+		'UNDERGRADUATE': 'Undergraduate',
+        'MASTERS': 'Masters',
+    	'DOCTORAL': 'Doctoral'
+    };
 
     $scope.ready.then(function() {
 
-        $scope.resetDocumentTypes = function(){
+    	$scope.resetDocumentTypes = function() {
             $scope.modalData = {
                 degreeLevel: 'UNDERGRADUATE'
             };
+            $scope.closeModal();
         };
-        
-        $scope.closeModal = function(modalId) {
-    		angular.element('#' + modalId).modal('hide');
-    		// clear all errors, but not infos or warnings
-    		if($scope.serverErrors !== undefined) {
-    			$scope.serverErrors.errors = undefined;
-    		}
-    	}
 
         $scope.resetDocumentTypes();
-
-        $scope.createNewDocumentType = function(documentType) {
-            AvailableDocumentTypeRepo.create(documentType).then(function(data) {
-            	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetDocumentTypes();
-            		$scope.closeModal("availableDocumentTypesNewModal");
-            	}
-            });
+        
+        $scope.createNewDocumentType = function() {
+            DocumentTypeRepo.create($scope.modalData);
 	    };	
 
         $scope.launchEditModal = function(index) {
-        	$scope.serverErrors = [];
             $scope.modalData = $scope.documentTypes[index -1];
-            angular.element('#availableDocumentTypesEditModal').modal('show');
+            $scope.openModal('#availableDocumentTypesEditModal');
 	    };	
 
-        $scope.updateDocumentType = function(){
-            AvailableDocumentTypeRepo.update($scope.modalData).then(function(data) {
-            	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetDocumentTypes();
-            		$scope.closeModal("availableDocumentTypesEditModal");
-            	}
-            });
-        }
+        $scope.updateDocumentType = function() {
+            $scope.modalData.save();
+        };
 
-        $scope.removeDocumentType = function(index){
-            AvailableDocumentTypeRepo.deleteById(index).then(function(data) {
-            	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetDocumentTypes();
-            		$scope.closeModal("availableDocumentTypesConfirmRemoveModal");
-            	}
-            });
-        }
+        $scope.removeDocumentType = function() {
+            $scope.modalData.delete();
+        };
 
         $scope.reorderDocumentTypes = function(src, dest) {
-            AvailableDocumentTypeRepo.reorder(src, dest).then(function(data) {
-            	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-            	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-            		$scope.resetDocumentTypes();
-            	}
-            });
+            DocumentTypeRepo.reorder(src, dest);
         };
 
         $scope.selectDocumentType = function(index) {
@@ -89,12 +65,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
                 $scope.sortAction = 'sort';
             }
             else if($scope.sortAction == 'sort') {
-                AvailableDocumentTypeRepo.sort(column).then(function(data) {
-                	$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-                	if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-                		$scope.resetDocumentTypes();
-                	}
-                });
+                DocumentTypeRepo.sort(column);
                 $scope.sortAction = 'confirm';
             }
         };

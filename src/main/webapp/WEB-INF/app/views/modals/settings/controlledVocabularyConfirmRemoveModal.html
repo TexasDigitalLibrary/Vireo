@@ -1,20 +1,22 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetControlledVocabulary(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetControlledVocabulary()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
 </div>
 
-<div class="modal-body">
-	<h4><b>Click confirm to remove the Controlled Vocabulary:</b></h4>
-	<h4>Name: {{modalData.name}}</h4>
-	<h4>Language: {{modalData.language.name}}</h4>
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="removeControlledVocabulary()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary(); closeModal(attr.modalId)">Cancel</button>
-	<button id="controlledVocabulary-confirm" type="button" class="btn btn-primary" ng-click="removeControlledVocabulary(modalData.id)">Confirm</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<h4><b>Click confirm to remove the Controlled Vocabulary:</b></h4>
+		<h4>Name: {{modalData.name}}</h4>
+		<h4>Language: {{modalData.language.name}}</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()">Cancel</button>
+		<button id="controlledVocabulary-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

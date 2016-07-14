@@ -1,21 +1,23 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetCustomAction(); closeModal(attr.modalId)" aria-label="Close">
+	<button type="button" class="close" ng-click="resetCustomAction()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
 </div>
 
-<div class="modal-body">
-	<h4><b>Click confirm to remove the Custom Action:</b></h4>
-	<span ng-show="!modalData.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
-	<span ng-show="modalData.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
-	{{modalData.label}}
-	<validationresponse
-		validation-response="serverErrors">
-	</validationresponse>
-</div>
+<form ng-submit="removeCustomAction()" novalidate>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetCustomAction(); closeModal(attr.modalId)">Cancel</button>
-	<button id="customAction-confirm" type="button" class="btn btn-primary" ng-click="removeCustomAction(modalData.id)">Confirm</button>
-</div>
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<h4><b>Click confirm to remove the Custom Action:</b></h4>
+		<span ng-show="!modalData.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
+		<span ng-show="modalData.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
+		{{modalData.label}}
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="resetCustomAction()">Cancel</button>
+		<button id="customAction-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

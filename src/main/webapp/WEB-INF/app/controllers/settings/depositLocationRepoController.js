@@ -1,14 +1,28 @@
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+	$scope.depositLocationRepo = DepositLocationRepo;
+
 	$scope.depositLocations = DepositLocationRepo.getAll();
+
+	DepositLocationRepo.listen(function(data) {
+        $scope.resetDepositLocation();
+	});
+
+	$scope.protocols = { 
+		"Sword1Deposit": "SWORD Version 1",
+		"FileDeposit": "File Deposit" 
+	};
+
+
+	$scope.packagers = { 
+		"VireoExport": "Vireo Export"
+	};
 	
 	$scope.ready = $q.all([DepositLocationRepo.ready()]);
 
 	$scope.dragging = false;
 	
-	$scope.serverErrors = [];
-
 	$scope.trashCanId = 'deposit-location-trash';
 		
 	$scope.ready.then(function() {
@@ -18,26 +32,13 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 				depositor: 'Sword1Deposit',
 				packager: 'VireoExport'
 			};
-		}
-		
-		$scope.closeModal = function(modalId) {
-			angular.element('#' + modalId).modal('hide');
-			// clear all errors, but not infos or warnings
-			if($scope.serverErrors !== undefined) {
-				$scope.serverErrors.errors = undefined;
-			}
-		}
+			$scope.closeModal();
+		};
 
 		$scope.resetDepositLocation();
 
 		$scope.createDepositLocation = function() {
-			DepositLocationRepo.create($scope.modalData).then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetDepositLocation();
-					$scope.closeModal("depositLocationNewModal");
-				}
-			});
+			DepositLocationRepo.create($scope.modalData);
 		};
 		
 		$scope.selectDepositLocation = function(index) {
@@ -45,38 +46,20 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		};
 		
 		$scope.editDepositLocation = function(index) {
-			$scope.serverErrors = [];
 			$scope.selectDepositLocation(index - 1);
-			angular.element('#depositLocationEditModal').modal('show');
+			$scope.openModal('#depositLocationEditModal');
 		};
 		
 		$scope.updateDepositLocation = function() {
-			$scope.modalData.save().then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetDepositLocation();
-					$scope.closeModal("depositLocationEditModal");
-				}
-			});
+			$scope.modalData.save();
+		};
+
+		$scope.removeDepositLocation = function() {
+			$scope.modalData.delete();
 		};
 
 		$scope.reorderDepositLocation = function(src, dest) {
-	    	DepositLocationRepo.reorder(src, dest).then(function(data) {
-	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetDepositLocation();
-				}
-			});
-		};
-
-		$scope.removeDepositLocation = function(index) {
-	    	DepositLocationRepo.deleteById(index).then(function(data) {
-	    		$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					$scope.resetDepositLocation();
-					$scope.closeModal("depositLocationConfirmRemoveModal");
-				}
-			});
+	    	DepositLocationRepo.reorder(src, dest);
 		};
 
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({

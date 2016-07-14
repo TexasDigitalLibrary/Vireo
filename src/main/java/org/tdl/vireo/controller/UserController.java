@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.VALIDATION_WARNING;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import java.util.Map;
 
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.ValidationService;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
+import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
@@ -35,9 +35,6 @@ public class UserController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
-    @Autowired
-    private ValidationService validationService;
     
     // TODO: make global static method, redundant method in interceptors and here
     public Credentials getAnonymousCredentials() {
@@ -68,20 +65,18 @@ public class UserController {
         return new ApiResponse(SUCCESS, shib);
     }
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/all")
+    @Auth(role = "MANAGER")    
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @ApiMapping("/update")
-    @Auth(role = "MANAGER")
     @Transactional
+    @ApiMapping("/update")
+    @Auth(role = "MANAGER")    
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateRole(@ApiValidatedModel User user) {
-        
-        // build a response based on the BindingResult state in the configuration
-        ApiResponse response = validationService.buildResponse(user);
         
         // get the persisted user for its encoded password        
         User persistedUser = userRepo.findOne(user.getId());
@@ -89,44 +84,26 @@ public class UserController {
             user.setPassword(persistedUser.getPassword());
         }
         
-        // all other properties should be on the user from the client request
+        logger.info("Updating role for " + user.getEmail());
+        user = userRepo.save(user);
         
-        switch(response.getMeta().getType()){
-            case SUCCESS:
-            case VALIDATION_INFO:
-                logger.info("Updating role for " + user.getEmail());
-                user = userRepo.save(user);
-                response.getPayload().put(user.getClass().getSimpleName(), user);
-                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
-                break;
-            case VALIDATION_WARNING:
-                simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(VALIDATION_WARNING, userRepo.findAll()));
-                break;
-            default:
-                logger.warn("Couldn't update role for " + user.getEmail());
-                break;
-        }
+        simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
         
-        return response;
+        return new ApiResponse(SUCCESS, user);
     }
 
-    @ApiMapping("/settings")
-    @Auth(role = "STUDENT")
     @Transactional
+    @ApiMapping("/settings")
+    @Auth(role = "STUDENT")    
+    // TODO: business validation should check if user exists
     public ApiResponse getSettings(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
-        
-        if(user == null) {
-            logger.debug("User not registered!");
-            return new ApiResponse(VALIDATION_ERROR, "User not registered!");
-        }
-        
         return new ApiResponse(SUCCESS, user.getSettings());
     }
     
-    @ApiMapping("/settings/update")
-    @Auth(role = "STUDENT")
     @Transactional
+    @ApiMapping("/settings/update")
+    @Auth(role = "STUDENT")    
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
         
         User user = userRepo.findByEmail(shib.getEmail());

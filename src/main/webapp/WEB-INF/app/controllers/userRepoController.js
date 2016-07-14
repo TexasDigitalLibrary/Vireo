@@ -4,6 +4,11 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     $scope.user = new User();
 
     $scope.users = UserRepo.getAll();
+
+    UserRepo.listen(function(data) {
+    	$scope.modalData = {};
+		$scope.closeModal();
+	});
     
     $scope.ready = $q.all([$scope.user.ready(), UserRepo.ready()]);
 
@@ -15,23 +20,12 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     };
 
     $scope.modalData = {};
-
-    $scope.serverErrors = [];
     
     $scope.ready.then(function() {
 
 		$scope.updateRole = function(user, role) {
 			user.role = role !== undefined ? role : user.role;
-			user.save().then(function(data) {
-				$scope.serverErrors = angular.fromJson(data.body).payload.ValidationResponse;
-				if($scope.serverErrors === undefined || $scope.serverErrors.errors.length == 0) {
-					angular.element('#addMemberModal').modal('hide');
-					if($scope.serverErrors !== undefined) {
-						$scope.serverErrors.errors = undefined;
-					}
-					$scope.modalData = {};
-				}
-			});
+			user.save();
 		};
 		
 		$scope.allowableRoles = function(userRole) {
@@ -56,7 +50,6 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 		};
 
 		$scope.selectUser = function (selectedUser) {
-        	$scope.serverErrors = [];
             $scope.modalData = selectedUser;
         }
 		

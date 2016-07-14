@@ -2,19 +2,18 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-
-import java.util.ArrayList;
-import java.util.List;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.framework.enums.MethodValidationType.LIST_REORDER;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.FieldGloss;
-import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
@@ -28,11 +27,10 @@ import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
+import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
@@ -53,9 +51,6 @@ public class WorkflowStepController {
     @Autowired
     private NoteRepo noteRepo;
     
-    @Autowired
-    private ObjectMapper objectMapper;
-    
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
     
@@ -65,243 +60,172 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS, workflowStepRepo.findAll());
     }
     
-    @ApiMapping("/get/{workflowStepId}")
     @Transactional
-    public ApiResponse getStepById(@ApiVariable Long workflowStepId){
-
-        WorkflowStep potentiallyExistingStep = workflowStepRepo.findOne(workflowStepId);
-        if (potentiallyExistingStep != null) {
-            return new ApiResponse(SUCCESS, potentiallyExistingStep);
-        }
-
-        return new ApiResponse(ERROR, "No wStep for id [" + workflowStepId.toString() + "]");
+    @ApiMapping("/get/{workflowStepId}")    
+    public ApiResponse getStepById(@ApiVariable Long workflowStepId) {
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
+        return (workflowStep != null) ? new ApiResponse(SUCCESS, workflowStep) : new ApiResponse(ERROR, "No wStep for id [" + workflowStepId.toString() + "]");
     }
 
-    @ApiMapping("/{workflowStepId}/add-field-profile")
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/add-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse createFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException {
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
+    public ApiResponse createFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException {
         
-        // TODO: validation
+    	WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        
-        FieldGloss gloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
-        
-        ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
-        
-        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
-        
-        InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
-        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
-        Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
-        String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
-        String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : "";
-        
-        
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        
-        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
         
         if(!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, predicate, inputType, usage, help, repeatable, overrideable, true, true);
-        createdProfile.addControlledVocabulary(controlledVocabulary);
-        createdProfile.addFieldGloss(gloss);
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, fieldProfile.getPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true);
+        createdProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
+        createdProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        fieldProfileRepo.save(createdProfile);
         
-        return new ApiResponse(SUCCESS, fieldProfileRepo.save(createdProfile));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
+        
+        return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/{workflowStepId}/update-field-profile")
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse updateFieldProfile(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException, ComponentNotPresentOnOrgException {
-                
-        // TODO: validation
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException, ComponentNotPresentOnOrgException {
         
-        Long id = Long.parseLong(dataNode.get("id").toString());
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
         
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        persistedFieldProfile.setPredicate(fieldProfile.getPredicate());
+        persistedFieldProfile.setInputType(fieldProfile.getInputType());
+        persistedFieldProfile.setOverrideable(fieldProfile.getOverrideable());
+        persistedFieldProfile.setRepeatable(fieldProfile.getRepeatable());
+        persistedFieldProfile.setHelp(fieldProfile.getHelp());
+        persistedFieldProfile.setUsage(fieldProfile.getUsage());
         
+        persistedFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
         
-        FieldGloss fieldGloss = objectMapper.treeToValue(dataNode.get("gloss"), FieldGloss.class);
-        ControlledVocabulary controlledVocabulary = dataNode.get("controlledVocabulary") != null ? objectMapper.treeToValue(dataNode.get("controlledVocabulary"), ControlledVocabulary.class) : null;
-        
-        FieldPredicate predicate = objectMapper.treeToValue(dataNode.get("predicate"), FieldPredicate.class);
-        
-        InputType inputType = objectMapper.treeToValue(dataNode.get("inputType"), InputType.class);
-        Boolean overrideable = dataNode.get("overrideable") != null ? dataNode.get("overrideable").asBoolean() : true;
-        Boolean repeatable = dataNode.get("repeatable") != null ? Boolean.parseBoolean(dataNode.get("repeatable").toString()) : false;
-        String help = dataNode.get("help") != null ? dataNode.get("help").textValue() : null;
-        String usage = dataNode.get("usage") != null ? dataNode.get("usage").textValue() : null;
-                
-        
-        FieldProfile fieldProfile = fieldProfileRepo.findOne(id);
-        
-        fieldProfile.setPredicate(predicate);
-        fieldProfile.setInputType(inputType);
-        fieldProfile.setOverrideable(overrideable);
-        fieldProfile.setRepeatable(repeatable);
-        fieldProfile.setHelp(help);
-        fieldProfile.setUsage(usage);
+        fieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
         
         
-        // TODO: should add additional field gloss instead of replacing all with newly selected or created
-        //       requires UI changes
+        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
         
-        List<FieldGloss> newFieldGlosses = new ArrayList<FieldGloss>();
-        newFieldGlosses.add(fieldGloss);
-        
-        fieldProfile.setFieldGlosses(newFieldGlosses);
-        
-        
-        // TODO: should add additional controlled vocabulary instead of replacing all with newly selected or created
-        //       requires UI changes
-        
-        if(controlledVocabulary != null) {
-            List<ControlledVocabulary> newControlledVocabularies = new ArrayList<ControlledVocabulary>();
-            newControlledVocabularies.add(controlledVocabulary);
-            
-            fieldProfile.setControlledVocabularies(newControlledVocabularies);
-        }
-        else {
-            fieldProfile.clearControlledVocabulary();
-        }
-        
-        
-        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
-        
-
         fieldProfileRepo.update(fieldProfile, requestingOrganization);
         
                 
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
         return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-field-profile")
     @Auth(role="MANAGER")
-    public ApiResponse reorderFieldProfiles(@ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
-                
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
         
-        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(reqOrgId), workflowStep, src, dest);     
+        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findOne(requestingOrgId), workflowStep, persistedFieldProfile);   
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
-        
-        return new ApiResponse(SUCCESS);
-    }
-    
-    @ApiMapping("/{workflowStepId}/remove-field-profile/{fieldProfileId}")
-    @Auth(role="MANAGER")
-    public ApiResponse removeFieldProfile(@ApiVariable Long workflowStepId, @ApiVariable Long fieldProfileId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
-        
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        FieldProfile fieldProfile = fieldProfileRepo.findOne(fieldProfileId);
-        
-        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, fieldProfile);   
-        
-        if(fieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
-            fieldProfileRepo.delete(fieldProfile);
+        if(persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            fieldProfileRepo.delete(persistedFieldProfile);
         }
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
+    @Auth(role="MANAGER")
+    @ApiValidation(method = { @ApiValidation.Method(value = LIST_REORDER, model = FieldProfile.class, params = { "2", "3", "1", "aggregateFieldProfiles" }) })
+    public ApiResponse reorderFieldProfiles(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest) throws WorkflowStepNonOverrideableException {
+        
+        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
+        
+        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(requestingOrgId), workflowStep, src, dest);     
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
         return new ApiResponse(SUCCESS);
     }
     
     
     
-    @ApiMapping("/{workflowStepId}/add-note")
+    
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/add-note")
     @Auth(role="MANAGER")
-    public ApiResponse addNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
-        
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        String name = dataNode.get("name").textValue();
-        String text = dataNode.get("text").textValue();
-        
-        Boolean overrideable = dataNode.get("overrideable") != null ? Boolean.parseBoolean(dataNode.get("overrideable").toString()) : true;
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
+    public ApiResponse addNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
+        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
         
         if(!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        noteRepo.create(workflowStep, name, text, overrideable);
+        noteRepo.create(workflowStep, note.getName(), note.getText(), note.getOverrideable());
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
-        
-        return new ApiResponse(SUCCESS);
-    }
-    
-    @ApiMapping("/{workflowStepId}/update-note")
-    @Auth(role="MANAGER")
-    public ApiResponse updateNote(@ApiVariable Long workflowStepId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
-        
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
-        Long noteId = Long.parseLong(dataNode.get("id").toString());
-        String name = dataNode.get("name").textValue();
-        String text = dataNode.get("text").textValue();
-        
-        Boolean overrideable = dataNode.get("overrideable") != null ? dataNode.get("overrideable").asBoolean() : true;
-                
-        Organization requestingOrganization = organizationRepo.findOne(reqOrgId);
-        
-        Note note = noteRepo.findOne(noteId);
-        
-        note.setName(name);
-        note.setText(text);
-        note.setOverrideable(overrideable);
-        
-        noteRepo.update(note, requestingOrganization);
-                
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
         return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/{workflowStepId}/remove-note/{noteId}")
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-note")
     @Auth(role="MANAGER")
-    public ApiResponse removeNote(@ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
+
+        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
         
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+        Note persistedNote = noteRepo.findOne(note.getId());
+        
+        persistedNote.setName(note.getName());
+        persistedNote.setText(note.getText());
+        persistedNote.setOverrideable(note.getOverrideable());
+        
+        noteRepo.update(persistedNote, requestingOrganization);
+                
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-note")
+    @Auth(role="MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        Note note = noteRepo.findOne(noteId);
+        Note persistedNote = noteRepo.findOne(note.getId());
         
-        noteRepo.removeFromWorkflowStep(organizationRepo.findOne(reqOrgId), workflowStep, note);
+        noteRepo.removeFromWorkflowStep(organizationRepo.findOne(requestingOrgId), workflowStep, persistedNote);
         
-        if(note.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
-            noteRepo.delete(note);
+        if(persistedNote.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+            noteRepo.delete(persistedNote);
         }
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
         return new ApiResponse(SUCCESS);
     }
     
-    @ApiMapping("/{workflowStepId}/reorder-notes/{src}/{dest}")
+    @ApiMapping("/{requestingOrgId}/{workflowStepId}/reorder-notes/{src}/{dest}")
     @Auth(role="MANAGER")
-    public ApiResponse reorderNotes(@ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest, @ApiData JsonNode dataNode) throws NumberFormatException, WorkflowStepNonOverrideableException {
-        
-        Long reqOrgId = Long.parseLong(dataNode.get("requestingOrgId").toString());
+    @ApiValidation(method = { @ApiValidation.Method(value = LIST_REORDER, model = WorkflowStep.class, params = { "2", "3", "1", "aggregateNotes" }) })
+    public ApiResponse reorderNotes(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest) throws NumberFormatException, WorkflowStepNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         
-        workflowStepRepo.reorderNotes(organizationRepo.findOne(reqOrgId), workflowStep, src, dest);     
+        workflowStepRepo.reorderNotes(organizationRepo.findOne(requestingOrgId), workflowStep, src, dest);     
         
-        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(reqOrgId)));
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
         return new ApiResponse(SUCCESS);
     }
