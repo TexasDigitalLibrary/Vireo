@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.GraduationMonthValidator;
 
+import edu.tamu.framework.model.BaseOrderedEntity;
+
 /**
  * 
  * @author gad

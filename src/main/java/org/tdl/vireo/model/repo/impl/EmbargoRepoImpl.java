@@ -5,7 +5,8 @@ import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class EmbargoRepoImpl implements EmbargoRepoCustom {
 

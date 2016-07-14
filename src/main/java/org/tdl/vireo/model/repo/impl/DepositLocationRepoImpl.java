@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
 	

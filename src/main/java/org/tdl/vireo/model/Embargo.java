@@ -12,6 +12,8 @@ import org.tdl.vireo.model.validation.EmbargoValidator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.tamu.framework.model.BaseOrderedEntity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }) )
 public class Embargo extends BaseOrderedEntity {

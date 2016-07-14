@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.custom.CustomActionDefinitionRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRepoCustom {
     

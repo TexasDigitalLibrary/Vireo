@@ -5,7 +5,8 @@ import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.repo.DocumentTypesRepo;
 import org.tdl.vireo.model.repo.custom.DocumentTypesRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
 

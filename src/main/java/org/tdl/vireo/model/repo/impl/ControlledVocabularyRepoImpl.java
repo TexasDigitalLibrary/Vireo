@@ -5,7 +5,8 @@ import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCustom {
 

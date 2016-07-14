@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.LanguageValidator;
 
+import edu.tamu.framework.model.BaseOrderedEntity;
+
 @Entity
 public class Language extends BaseOrderedEntity {
 

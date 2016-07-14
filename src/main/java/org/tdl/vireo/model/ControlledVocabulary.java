@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.tamu.framework.SpringContext;
+import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
 @Configurable

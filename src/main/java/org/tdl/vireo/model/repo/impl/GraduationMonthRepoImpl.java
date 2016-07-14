@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 

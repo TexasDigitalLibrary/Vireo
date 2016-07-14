@@ -8,6 +8,8 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.validation.DocumentTypeValidator;
 
+import edu.tamu.framework.model.BaseOrderedEntity;
+
 /**
  * 
  * @author gad

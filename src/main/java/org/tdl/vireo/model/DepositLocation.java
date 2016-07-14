@@ -6,6 +6,8 @@ import javax.persistence.Transient;
 
 import org.tdl.vireo.model.validation.DepositLocationValidator;
 
+import edu.tamu.framework.model.BaseOrderedEntity;
+
 @Entity
 public class DepositLocation extends BaseOrderedEntity {
     

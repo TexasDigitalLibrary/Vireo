@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 

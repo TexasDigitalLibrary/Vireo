@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.custom.LanguageRepoCustom;
-import org.tdl.vireo.service.OrderedEntityService;
+
+import edu.tamu.framework.service.OrderedEntityService;
 
 public class LanguageRepoImpl implements LanguageRepoCustom {
 
