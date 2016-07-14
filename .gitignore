@@ -10,3 +10,5 @@ npm-debug.log
 .externalToolBuilders
 /.apt_generated/
 /src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
+.classpath
+.settings
