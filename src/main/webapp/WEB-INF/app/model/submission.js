@@ -1,4 +1,4 @@
-var submissionModel = function () {
+var submissionModel = function (WsApi) {
 
 	return function Submission() {
 		
@@ -55,6 +55,14 @@ var submissionModel = function () {
 
 			return fieldValue;
 
+		};
+
+		submission.saveFieldValue = function(fieldValue) {
+			angular.extend(this.mapping().saveFieldValue, {
+				method: submission.id+"/update-field-value",
+				data: fieldValue
+			});
+			return WsApi.fetch(this.mapping().saveFieldValue);
 		};
 
 		return submission;

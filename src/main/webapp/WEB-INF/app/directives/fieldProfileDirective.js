@@ -12,6 +12,10 @@ vireo.directive("field",  function() {
 
 			$scope.values = $scope.submission.fieldValues;
 
+			$scope.save = function(value) {
+				$scope.submission.saveFieldValue(value);
+			}
+
 			$scope.addFieldValue = function() {
 				$scope.submission.addFieldValue($scope.profile.predicate);
 			};

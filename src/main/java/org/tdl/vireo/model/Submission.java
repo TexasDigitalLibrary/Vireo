@@ -68,6 +68,7 @@ public class Submission extends BaseEntity {
         setActionLog(new TreeSet<ActionLog>());
         setEmbargoTypes(new TreeSet<Embargo>());
         setAttachments(new TreeSet<Attachment>());
+        
     }
 
     /**
@@ -140,7 +141,7 @@ public class Submission extends BaseEntity {
     public void setFieldValues(Set<FieldValue> fieldvalues) {
         this.fieldValues = fieldvalues;
     }
-
+    
     /**
      * 
      * @param fieldValue
