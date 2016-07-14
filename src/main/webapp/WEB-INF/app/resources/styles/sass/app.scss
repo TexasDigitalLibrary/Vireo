@@ -754,7 +754,7 @@ legend.legendborder {
   border-bottom:none;
 }
 
-.checkbox {
+.my-profile-section .checkbox  {
   display: inline-block;
   width: 170px;
   font-size: .9em;
@@ -841,7 +841,7 @@ footer a, footer li, footer p {
   border-bottom:none;
 }
 
-.checkbox {
+.my-profile-section .checkbox {
   float: left;
   font-size: .9em;
   padding: 0 19px;
@@ -1411,9 +1411,24 @@ footer a, footer li, footer p {
 	margin-top: 10px;
 }
 
-#fp-repeatable-checkbox {
-	margin-left:-40px;
+.field-profile label {
+  font-weight: normal;
 }
+
+.field-profile label.required {
+  font-weight: bold;
+}
+
+.field-profile label.required::before {
+  content: "*  ";
+}
+
+.field-profile .field-value-add-remove {
+  margin-left: 25px;
+  width: 32px;
+  height: 32px;
+}
+
 
 /********************
 * ETD Table Styling *
@@ -1429,3 +1444,24 @@ footer a, footer li, footer p {
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
 	}
 }
+
+
+/********
+* NOTES *
+*********/
+
+.note {
+  position: relative;
+  max-width: 225px;
+  padding: 15px 15px 35px 35px;
+  background: #f5e49d;
+  margin-bottom: 25px;
+  box-shadow: 3px 3px 7px 0px #e0ddce;
+}
+
+.note .glyphicon {
+  position: absolute;
+  left: -3px;
+}
+
+

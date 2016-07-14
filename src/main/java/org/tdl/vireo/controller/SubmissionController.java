@@ -7,7 +7,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -25,6 +27,9 @@ public class SubmissionController {
 
     @Autowired
     private SubmissionRepo submissionRepo;
+    
+    @Autowired
+    private UserRepo userRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -34,6 +39,16 @@ public class SubmissionController {
     @Auth(role = "MANAGER")    
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
+    }
+    
+    @ApiMapping("/all-by-user")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse getAllByUser(@ApiCredentials Credentials credentials) {
+        
+        User submitter = userRepo.findByEmail(credentials.getEmail());
+        
+        return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(submitter));
     }
 
     @Transactional

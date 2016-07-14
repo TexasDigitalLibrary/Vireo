@@ -1,0 +1,20 @@
+<form class="field-profile input-checkbox row" name="profile.predicate.value">
+	<div class="form-group">
+		<div class="col-xs-3">
+			<span class="glyphicon glyphicon-info-sign opaque tooltip-span" tooltip="{{ profile.help }}"> </span>
+			<label>{{profile.fieldGlosses[0].value}}:</label>
+		</div>
+		<div class="col-xs-9">
+			<input ng-if="!profile.controlledVocabularies[0]" type="checkbox" ng-model="values[$index]" ng-true-value="true" ng-false-value="false">
+
+
+			<div class="checkbox" ng-repeat="word in profile.controlledVocabularies[0].dictionary">
+				<label>
+					<input type="checkbox" ng-model="values[$index]" ng-true-value="true" ng-false-value="false">
+					{{word.name}}
+				</label>
+			</div>
+
+		</div>
+	</div>
+</form>
