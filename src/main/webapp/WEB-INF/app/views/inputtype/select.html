@@ -3,10 +3,15 @@
 		<span class="caret"></span>
 	</span>
 	 <ul class="dropdown-menu" uib-dropdown-menu>
-		<li class="select-option" ng-click="values[$parent.$index].value = word.name" ng-repeat="word in profile.controlledVocabularies[0].dictionary">{{word.name}}
+		<li class="select-option" 
+			ng-click="values[$parent.$index].value = word.name; save(value);" 
+			ng-repeat="word in profile.controlledVocabularies[0].dictionary">
+			{{word.name}}
 		</li>
 	</ul>
-	<span class="form-control select-value" ng-bind="values[$index].value || 'Choose {{profile.fieldGlosses[0].value}}'"></span>
+	<span   class="form-control select-value" 
+			ng-bind="values[$index].value || 'Choose {{profile.fieldGlosses[0].value}}'">			
+	</span>
 	<span class="input-group-addon">
         <span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     </span>

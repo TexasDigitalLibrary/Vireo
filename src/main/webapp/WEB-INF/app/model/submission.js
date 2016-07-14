@@ -1,4 +1,4 @@
-var submissionModel = function (WsApi) {
+var submissionModel = function ($q, WsApi) {
 
 	return function Submission() {
 		
@@ -58,11 +58,25 @@ var submissionModel = function (WsApi) {
 		};
 
 		submission.saveFieldValue = function(fieldValue) {
+
+			if(fieldValue.value === "") {
+				return $q(function(){});
+			}
+
 			angular.extend(this.mapping().saveFieldValue, {
 				method: submission.id+"/update-field-value",
 				data: fieldValue
 			});
-			return WsApi.fetch(this.mapping().saveFieldValue);
+
+			var promise = WsApi.fetch(this.mapping().saveFieldValue);
+
+			promise.then(function(rawApiResponse) {
+				var updatedFieldValue = JSON.parse(rawApiResponse.body).payload.FieldValue;
+				var index = submission.fieldValues.indexOf(fieldValue);
+				submission.fieldValues[index] = updatedFieldValue;
+			});
+
+			return promise;
 		};
 
 		return submission;

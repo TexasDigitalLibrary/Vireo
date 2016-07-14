@@ -149,6 +149,24 @@ public class Submission extends BaseEntity {
     public void addFieldValue(FieldValue fieldValue) {
         getFieldValues().add(fieldValue);
     }
+    
+    /**
+     * 
+     * @param fieldValue
+     */
+    public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
+      
+        FieldValue foundFieldValue = null;
+        
+        for(FieldValue fieldValue : getFieldValues()) {           
+            if(fieldValue.getValue().equals(value) && fieldValue.getPredicate().equals(fieldPredicate)) {
+                foundFieldValue = fieldValue;
+                break;
+            }
+        }
+        
+        return foundFieldValue;
+    }
 
     /**
      * 

@@ -3,6 +3,7 @@
 			class="form-control" 
 			name="profile.predicate.value" 
 			ng-required="!profile.optional" 
+			ng-blur="save(value)"
 			ng-model="values[$index].value" 
 	/>
 	<span class="input-group-addon">

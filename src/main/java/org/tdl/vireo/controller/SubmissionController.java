@@ -77,14 +77,20 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse updateSubmission(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
-        
+                
         Submission submission = submissionRepo.findOne(submissionId);
-        submission.addFieldValue(fieldValue);
-        submission = submissionRepo.save(submission);
         
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
-        
-        return new ApiResponse(SUCCESS, submission);
+        if(fieldValue.getId() == null) {
+            submission.addFieldValue(fieldValue);
+            submission = submissionRepo.save(submission);
+            fieldValue.getPredicate();
+            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue(), fieldValue.getPredicate());
+        } else {
+            fieldValue = fieldValueRepo.save(fieldValue);
+            submission = submissionRepo.findOne(submissionId);
+        }   
+               
+        return new ApiResponse(SUCCESS, fieldValue);
     }
 
 }
