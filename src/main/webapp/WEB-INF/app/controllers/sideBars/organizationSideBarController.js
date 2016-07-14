@@ -19,9 +19,8 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 		$scope.createNewOrganization = function() {
 			OrganizationRepo.create({
 				"name": OrganizationRepo.newOrganization.name, 
-				"category": OrganizationRepo.newOrganization.category,
-				"parentOrganizationId": OrganizationRepo.newOrganization.parent.id,
-			});
+				"category": OrganizationRepo.newOrganization.category
+			},  OrganizationRepo.newOrganization.parent);
 
 			OrganizationRepo.resetNewOrganization();
 		};

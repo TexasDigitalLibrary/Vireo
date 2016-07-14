@@ -11,7 +11,7 @@
 
 <form ng-submit="createNote()" novalidate>
 
-	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
+	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
 	<div class="modal-body">
 
@@ -20,7 +20,7 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the new note"
-			results="workflowStepRepo.getValidationResults()">
+			results="workflowStepRepo.ValidationResults">
 		</validatedinput>
 		
     	<validatedtextarea

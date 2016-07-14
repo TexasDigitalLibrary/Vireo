@@ -18,7 +18,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo(WsApi) {
 		});
 		return promise;
 	};
-
+	
 	return this;
 
 });

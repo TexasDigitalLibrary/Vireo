@@ -26,8 +26,8 @@ vireo.repo("EmbargoRepo", function EmbargoRepo(WsApi) {
 			}
 		});
 		return promise;
-	}; 
-
+	};
+	
 	return this;
 	
 });

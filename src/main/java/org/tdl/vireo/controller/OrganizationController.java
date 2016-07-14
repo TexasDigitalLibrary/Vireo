@@ -2,25 +2,25 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
-import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
+import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
@@ -31,9 +31,6 @@ public class OrganizationController {
     
     @Autowired
     private OrganizationRepo organizationRepo;
-    
-    @Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
     
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -57,14 +54,13 @@ public class OrganizationController {
     }
 
     @Transactional
-    @ApiMapping("/create")
+    @ApiMapping("/create/{parentOrgID}")
     @Auth(role="MANAGER")
-    public ApiResponse createOrganization(@ApiData JsonNode dataNode) {
-                
-        OrganizationCategory newOrganizationCategory = organizationCategoryRepo.findOne(dataNode.get("category").get("id").asLong());
-        Organization newOrganizationParent = organizationRepo.findOne(dataNode.get("parentOrganizationId").asLong());
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
+    public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
+        Organization parentOrganization = organizationRepo.findOne(parentOrgID);
         
-        organizationRepo.create(dataNode.get("name").asText(), newOrganizationParent, newOrganizationCategory);
+        organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
         
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         
@@ -73,21 +69,19 @@ public class OrganizationController {
      
     @ApiMapping("/update")
     @Auth(role="MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-
         Organization updatedOrganization = organizationRepo.findOne(organization.getId());
         
         updatedOrganization.setName(organization.getName());
         
         updatedOrganization.setCategory(organization.getCategory());
         
-        
         organization = organizationRepo.save(updatedOrganization);
 
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS,  organizationRepo.findAll()));
         
-        return new ApiResponse(SUCCESS, organization);
-        
+        return new ApiResponse(SUCCESS, organization);        
     }
     
     @Transactional
@@ -99,22 +93,24 @@ public class OrganizationController {
     }
     
     @Transactional
-    @ApiMapping("/{requestingOrgID}/create-workflow-step/{name}")
-    @Auth(role="MANAGER")    
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiVariable String name) { 
+    @ApiMapping("/{requestingOrgID}/create-workflow-step")
+    @Auth(role="MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) { 
         Organization org = organizationRepo.findOne(requestingOrgID);
-        WorkflowStep newWorkflowStep = workflowStepRepo.create(name, org);
+        WorkflowStep newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), org);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
     
     @ApiMapping("/{requestingOrgID}/update-workflow-step")
     @Auth(role="MANAGER")    
-    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiModel WorkflowStep workflowStepToUpdate) {
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
                 
         try {
-            workflowStepRepo.update(workflowStepToUpdate, requestingOrg);
+            workflowStepRepo.update(workflowStep, requestingOrg);
             simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
             return new ApiResponse(SUCCESS);
         } catch (WorkflowStepNonOverrideableException e) {
@@ -124,11 +120,12 @@ public class OrganizationController {
         
     }
     
-    @ApiMapping("/{requestingOrgID}/delete-workflow-step/{workflowStepID}")
+    @ApiMapping("/{requestingOrgID}/delete-workflow-step")
     @Auth(role="MANAGER")
-    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
-        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStepID);
+        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStep.getId());
         
         workflowStepRepo.removeFromOrganization(requestingOrg, workflowStepToDelete);
         

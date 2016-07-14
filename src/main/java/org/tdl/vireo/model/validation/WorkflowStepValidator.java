@@ -13,10 +13,10 @@ public class WorkflowStepValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.maxLength, "Workflow Step name cannot be more than 255 characters", nameProperty, 255));
         
         String overrideableProperty = "overrideable";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Workflow Step requires an flag", overrideableProperty, true));
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Workflow Step requires an overrideable flag", overrideableProperty, true));
         
-        String originatingOrganizationProperty = "originatingOrganization";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Workflow Step requires an originating organization", originatingOrganizationProperty, true));
+        //String originatingOrganizationProperty = "originatingOrganization";
+        //this.addInputValidator(new InputValidator(InputValidationType.required, "Workflow Step requires an originating organization", originatingOrganizationProperty, true));
     }
     
 }

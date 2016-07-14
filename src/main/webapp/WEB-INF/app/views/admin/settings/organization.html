@@ -1,4 +1,7 @@
-<div class="row admin-settings" ng-controller="OrganizationSettingsController">
+<div class="admin-settings" ng-controller="OrganizationSettingsController">
+
+	<validationmessage results="organizationRepo.getValidationResults()"></validationmessage>
+
 	<div class="row">
 		<div class="col-xs-12 triptych" ng-controller="TriptychController">
 			<h1>ORGANIZATIONS AND WORKFLOWS</h1>
@@ -158,12 +161,13 @@
 							<h3 class="panel-title">
 							Manage {{getSelectedOrganization().name}} Workflow</h3>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body">		
+
 							<button class="btn btn-default modal-add-btn" ng-click="openModal('#addWorkflowStepModal')">
 						      Add Workflow Step
 						    </button>
 						    <modal  modal-id="addWorkflowStepModal"
-									modal-view="views/modals/settings/addWorkflowStep.html"
+									modal-view="views/modals/settings/workflowStepCreateModal.html"
 									modal-header-class="modal-header-primary"
 									modal-backdrop="static">
 						  	</modal>

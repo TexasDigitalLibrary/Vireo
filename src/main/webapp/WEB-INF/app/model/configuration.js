@@ -6,8 +6,8 @@ vireo.model("Configuration", function ($sanitize, WsApi) {
 
 		this.reset = function() {
 			$sanitize(this.value).replace(new RegExp("&#10;", 'g'), "")
-			angular.extend(this.mapping().reset, {data: this});
-			var promise = WsApi.fetch(this.mapping().reset);
+			angular.extend(this.getMapping().reset, {data: this});
+			var promise = WsApi.fetch(this.getMapping().reset);
 			promise.then(function(res) {
 				console.log(angular.fromJson(res.body).payload);
 			});

@@ -21,7 +21,7 @@
 
   	<div class="col-md-3">
   		<div class="form-group">
-  			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step.id)">Delete Workflow Step</button>
+  			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)">Delete Workflow Step</button>
 			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
   		</div>
   	</div>
@@ -33,10 +33,7 @@
 
 <div ng-controller="FieldProfileManagementController">
 
-	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
-
 	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
-
 		
 		<div id="fieldProfiles" class="row">
 
@@ -108,8 +105,6 @@
 <hr>
 
 <div ng-controller="NoteManagementController">
-
-	<validationmessage results="workflowStepRepo.getValidationResults()"></validationmessage>
 
 	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 

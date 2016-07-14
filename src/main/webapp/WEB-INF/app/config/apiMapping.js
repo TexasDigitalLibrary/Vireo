@@ -429,8 +429,7 @@ var apiMapping = {
 		},
 		create: {
 			'endpoint': '/private/queue',
-			'controller': 'organization',
-			'method': 'create'
+			'controller': 'organization'
 		},
 		update: {
 			'endpoint': '/private/queue',
