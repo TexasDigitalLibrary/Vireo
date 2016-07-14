@@ -1,13 +1,6 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, FieldProfile, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
-
-    $scope.fieldProfileRepo = FieldProfileRepo;
-
-    FieldProfileRepo.listen(function(data) {
-        $scope.resetFieldProfiles();
-    });
-
 
     $scope.workflowStepRepo = WorkflowStepRepo;
 
@@ -26,7 +19,19 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
+    $scope.fieldPredicateRepo = FieldPredicateRepo;
+
+    FieldPredicateRepo.listen(function() {
+        
+    });
+
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.fieldGlossRepo = FieldGlossRepo;
+
+    FieldGlossRepo.listen(function() {
+        
+    });
 
     $scope.fieldGlosses = FieldGlossRepo.getAll();
 
@@ -77,7 +82,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.createPredicate = function() {
         FieldPredicateRepo.create($scope.modalData.predicate).then(function(response) {
-            $scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
+            if(angular.fromJson(response.body).meta.type == "SUCCESS") {
+                $scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
+            }
         });
     };
     

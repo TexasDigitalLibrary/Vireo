@@ -1,14 +1,6 @@
-vireo.controller("NoteManagementController", function ($controller, $scope, DragAndDropListenerFactory, Note, NoteRepo, OrganizationRepo, WorkflowStepRepo) {
+vireo.controller("NoteManagementController", function ($controller, $scope, DragAndDropListenerFactory, Note, OrganizationRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
-
-
-    $scope.noteRepo = NoteRepo;
-
-    NoteRepo.listen(function(data) {
-        $scope.resetNotes();
-    });
-
 
     $scope.workflowStepRepo = WorkflowStepRepo;
 

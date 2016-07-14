@@ -115,6 +115,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		$scope["edit"+prop] = false;
 	};
 
+	$scope.confirmEdit = function($event, prop) {
+		if($event.which == 13) {
+			if(prop) $scope["edit"+prop] = false;
+			$event.target.blur();
+		}
+	};
+
 	$scope.hasError = function(field) {
 		if(!field) field = {};
 		return Object.keys(field).length > 0;
