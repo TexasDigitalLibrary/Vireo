@@ -1,225 +1,262 @@
-<div class="row" ng-controller="SettingsController">
-    <form name="proquest">
+<div class="row">
+    
+    <div class="col-sm-5">
 
-        <div class="col-sm-5">
+    <textfield 
+        form-view="true"
+        label="ProQuest Institution Code:"
+        scope-object="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
+        scope-property="value"
+        validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
+        expanded="true"
+        field-width="5"
+        confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
+        tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+    </textfield>
 
-        <textfield 
-            label="ProQuest Institution Code:"
-            scope-object="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
-            scope-property="value"
-            expanded="true"
-            field-width="5"
-            on-blur="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
-            tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
-        </textfield>
+    <togglebutton
+        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
+        label="Indexed by Search Engines:"
+        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
+        toggle-options="{{proquestIndexingOptions}}"
+        tool-tip="TODO: add some content">
+    </togglebutton>
 
-        <togglebutton
-            ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
-            label="Indexed by Search Engines:"
-            scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
-            toggle-options="{{proquestIndexingOptions}}"
-            tool-tip="TODO: add some content">
-        </togglebutton>
+    </div>
 
-        </div>
-
-        <div class="col-sm-6">
-            <lockingtextarea
-                label="ProQuest License Agreement:"
-                hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-                scope-value="settings.configurable.proquest_umi_degree_code.proquest_license.value"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'proquest_license')"
-                timer="5">
-            </lockingtextarea>
-        </div>
-    </form>
+    <div class="col-sm-6">
+        <lockingtextarea
+            label="ProQuest License Agreement:"
+            hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed: h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+            scope-value="settings.configurable.proquest_umi_degree_code.proquest_license.value"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_license')"
+            timer="5">
+        </lockingtextarea>
+    </div>
+    
 </div>
 
 <hr/>
 
-<div class="row">
-    <form name="degreeCodes" class="degreeCodes">
-        <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
+<div class="row"> <!-- class="degreeCodes" -->
+    
+    <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
 
-        <div class="col-sm-6">
+    <div class="col-sm-6">
 
-            <textfield 
-                label="Doctor of Philosophy:"
-                scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'doctor_of_philosophy')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Doctor of Philosophy:"
+            scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_philosophy')">
+        </textfield>
 
-            <textfield 
-                label="Doctor of Education:"
-                scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_education"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'doctor_of_education')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Doctor of Education:"
+            scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_education"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.doctor_of_education.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_education')">
+        </textfield>
 
-            <textfield 
-                label="Doctor of Engineering:"
-                scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_engineering"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'doctor_of_engineering')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Doctor of Engineering:"
+            scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_engineering"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.doctor_of_engineering.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_engineering')">
+        </textfield>
 
-            <textfield 
-                label="Doctor of Public Health:"
-                scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_public_health"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'doctor_of_public_health')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Doctor of Public Health:"
+            scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_public_health"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.doctor_of_public_health.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_public_health')">
+        </textfield>
 
-            <textfield 
-                label="Doctor of Musical Arts:"
-                scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'doctor_of_musical_arts')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Doctor of Musical Arts:"
+            scope-object="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_musical_arts')">
+        </textfield>
 
-            <textfield 
-                label="Master of Science:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_science"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_science')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Science:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_science"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_science.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_science')">
+        </textfield>
 
-            <textfield 
-                label="Master of Arts:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_arts"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_arts')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Arts:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_arts"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_arts.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_arts')">
+        </textfield>
 
-            <textfield 
-                label="Master of Landscape Architecture:" 
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_landscape_architecture')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Landscape Architecture:" 
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_landscape_architecture')">
+        </textfield>
 
-            <textfield 
-                label="Master of Marine Resources Management:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_marine_resources_management')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Marine Resources Management:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_marine_resources_management')">
+        </textfield>
 
-            <textfield 
-                label="Master of Maritime Administration and Logistics:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_maritime_administration_and_logistics')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Maritime Administration and Logistics:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_maritime_administration_and_logistics')">
+        </textfield>
 
-        </div>
+    </div>
 
-        <div class="col-sm-6">
+    <div class="col-sm-6">
 
-            <textfield 
-                label="Master of Public Affairs:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_public_affairs"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_public_affairs')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Public Affairs:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_public_affairs"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_public_affairs.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_public_affairs')">
+        </textfield>
 
-            <textfield 
-                label="Master of Science Public Health:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_science_public_health"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_science_public_health')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Science Public Health:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_science_public_health"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_science_public_health.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_science_public_health')">
+        </textfield>
 
-            <textfield 
-                label="Master of Urban Planning:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_urban_planning"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_urban_planning')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Urban Planning:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_urban_planning"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_urban_planning.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_urban_planning')">
+        </textfield>
 
-            <textfield 
-                label="Biology:"
-                scope-object="settings.configurable.proquest_umi_degree_code.biology"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'biology')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Biology:"
+            scope-object="settings.configurable.proquest_umi_degree_code.biology"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.biology.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'biology')">
+        </textfield>
 
-            <textfield 
-                label="Biomedical Engineering:"
-                scope-object="settings.configurable.proquest_umi_degree_code.biomedical_engineering"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'biomedical_engineering')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Biomedical Engineering:"
+            scope-object="settings.configurable.proquest_umi_degree_code.biomedical_engineering"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.biomedical_engineering.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'biomedical_engineering')">
+        </textfield>
 
-            <textfield 
-                label="Computer Science:"
-                scope-object="settings.configurable.proquest_umi_degree_code.computer_science"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'computer_science')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Computer Science:"
+            scope-object="settings.configurable.proquest_umi_degree_code.computer_science"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.computer_science.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'computer_science')">
+        </textfield>
 
-            <textfield 
-                label="Master of Public Health:"
-                scope-object="settings.configurable.proquest_umi_degree_code.master_of_public_health"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'master_of_public_health')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Master of Public Health:"
+            scope-object="settings.configurable.proquest_umi_degree_code.master_of_public_health"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.master_of_public_health.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_public_health')">
+        </textfield>
 
-            <textfield 
-                label="Psychology:"
-                scope-object="settings.configurable.proquest_umi_degree_code.psychology"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'psychology')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Psychology:"
+            scope-object="settings.configurable.proquest_umi_degree_code.psychology"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.psychology.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'psychology')">
+        </textfield>
 
-            <textfield 
-                label="Transportation:"
-                scope-object="settings.configurable.proquest_umi_degree_code.transportation"
-                scope-property="value"
-                expanded="true"
-                field-width="4"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'transportation')">
-            </textfield>
+        <textfield 
+            form-view="true"
+            label="Transportation:"
+            scope-object="settings.configurable.proquest_umi_degree_code.transportation"
+            scope-property="value"
+            validations="settings.configurable.proquest_umi_degree_code.transportation.getValidations()"
+            expanded="true"
+            field-width="4"
+            confirm="updateConfiguration('proquest_umi_degree_code', 'transportation')">
+        </textfield>
 
-        </div>
-
-    </form>
+    </div>
 
 </div>

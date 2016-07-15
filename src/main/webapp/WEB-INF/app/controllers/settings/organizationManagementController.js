@@ -1,4 +1,4 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, Organization, OrganizationRepo, OrganizationCategoryRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, Organization, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -7,6 +7,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 	OrganizationRepo.listenSelectively(function() {
 		$scope.resetWorkflowSteps();
 	});
+
+	$scope.workflowStepRepo = WorkflowStepRepo;
 
 
 	$scope.organizationCategories = OrganizationCategoryRepo.getAll();

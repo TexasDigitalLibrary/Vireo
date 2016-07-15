@@ -10,10 +10,10 @@
 				<div class="with-hint">
 					<validatedinput
 						model="scopeObject"
-						property="{{scopeProperty}}"
-						blur="onBlur()"
+						property="{{scopeProperty}}"						
 						blur-enabled="true"
 						form="forms.dynamic"
+						confirm="confirm({type: type, name: name})"
 						validations="validations"
 						results="scopeObject.ValidationResults">
 					</validatedinput>
