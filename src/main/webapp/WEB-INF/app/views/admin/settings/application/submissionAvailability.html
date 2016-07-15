@@ -1,50 +1,49 @@
 <div class="row">
-	<form name="submission-availability">
+	
+	<div class="col-sm-6">
 
-		<div class="col-sm-6">
+		<toggleButton 
+			ng-click="updateConfiguration('application', 'submissions_open')"
+			label="Submissions are currently:"
+			scope-value="settings.configurable.application.submissions_open.value"
+			toggle-options="{{submissionsOpenOptions}}">
+		</toggleButton>
 
-			<toggleButton 
-				ng-click="updateConfiguration('application', 'submissions_open')"
-				label="Submissions are currently:"
-				scope-value="settings.configurable.application.submissions_open.value"
-				toggle-options="{{submissionsOpenOptions}}">
-			</toggleButton>
+		<toggleButton 
+			ng-click="updateConfiguration('application', 'allow_multiple_submissions')"
+			label="Multiple Submissions:"
+			scope-value="settings.configurable.application.allow_multiple_submissions.value"
+			toggle-options="{{allowMultipleSubmissionsOptions}}">
+		</toggleButton>
 
-			<toggleButton 
-				ng-click="updateConfiguration('application', 'allow_multiple_submissions')"
-				label="Multiple Submissions:"
-				scope-value="settings.configurable.application.allow_multiple_submissions.value"
-				toggle-options="{{allowMultipleSubmissionsOptions}}">
-			</toggleButton>
+	</div>		
 
-		</div>		
+	<div class="col-sm-6">
+		
+		<textfield
+			form-view="true"
+			label="Current submission semester:"
+			scope-object="settings.configurable.application.current_semester"
+			scope-property="value"
+			validations="settings.configurable.application.current_semester.getValidations()"
+			expanded="true"
+			field-width="4"
+			hint="'Month Year' (i.e. May 2015)"
+			on-blur="updateConfiguration('application', 'current_semester')">
+		</textfield>
 
-		<div class="col-sm-6">
-			
-			<textfield 
-				label="Current submission semester:"
-				scope-object="settings.configurable.application.current_semester"
-				scope-property="value"
-				validations="settings.configurable.application.current_semester.getValidations()"
-				expanded="true"
-				field-width="4"
-				hint="'Month Year' (i.e. May 2015)"
-				on-blur="updateConfiguration('application', 'current_semester')">
-			</textfield>
+		<textfield
+			form-view="true"
+			label="Degree Granting School:"
+			scope-object="settings.configurable.application.grantor"
+			scope-property="value"				
+			validations="settings.configurable.application.grantor.getValidations()"
+			expanded="true"
+			field-width="4"
+			hint="The full name of the institution awarding degrees."
+			on-blur="updateConfiguration('application', 'grantor')">
+		</textfield>
 
-			<textfield 
-				label="Degree Granting School:"
-				scope-object="settings.configurable.application.grantor"
-				scope-property="value"
-				
-				validations="settings.configurable.application.grantor.getValidations()"
-				expanded="true"
-				field-width="4"
-				hint="The full name of the institution awarding degrees."
-				on-blur="updateConfiguration('application', 'grantor')">
-			</textfield>
-
-		</div>
-
-	</form>
+	</div>
+	
 </div>

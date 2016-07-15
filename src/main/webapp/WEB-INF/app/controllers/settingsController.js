@@ -7,6 +7,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 			
 	$scope.settings.configurable = ConfigurationRepo.getAllMapByType();
 
+	$scope.forms = {};
+
 	if(!$scope.isAnonymous()) {
 
 		$scope.settings.user = new UserSettings();
@@ -94,6 +96,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		};
 
 		$scope.updateConfiguration = function(type, name) {
+			console.log($scope.forms)
 			$scope.settings.configurable[type][name].save();
 		};
 
