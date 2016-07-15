@@ -3,10 +3,12 @@
 				name="profile.predicate.value" 
 				ng-required="!profile.optional" 
 				ng-model="values[$index].value"
-				ng-blur="save(value)" 
+				ng-blur="save(value)"
+				ng-disabled="saving===value.id" 
 				placeholder="Input {{profile.fieldGlosses[0].value}}">			
 	</textarea>
 	<span class="input-group-addon">
-        <span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>

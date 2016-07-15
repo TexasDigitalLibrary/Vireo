@@ -7,12 +7,14 @@
 		<input  type="radio" 
 				ng-model="values[$parent.$index].value"
 				ng-click="save(value)" 
-				name="profile.predicate.value" 
+				name="profile.predicate.value"
+				ng-disabled="saving===value.id" 
 				value="{{word.defenition ? word.defenition : word.name}}" 
 		/>
 	</div>
 	<div class="col-xs-2">
-		<span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
 	</div>
 	
 </div>
