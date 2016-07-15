@@ -19,6 +19,9 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.resetCustomAction = function() {
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				isStudentVisible: false 
 			};

@@ -44,6 +44,9 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 			$scope.resetMonthOptions();
 
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = {};
 
 			for(var i in $scope.monthOptions) {

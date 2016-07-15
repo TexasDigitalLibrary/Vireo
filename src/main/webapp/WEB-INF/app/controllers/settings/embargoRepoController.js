@@ -25,7 +25,12 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.ready.then(function() {
 
 		$scope.resetEmbargo = function() {
-			$scope.modalData = { isActive: false };
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
+			$scope.modalData = { 
+				isActive: false 
+			};
 			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "PROQUEST"});
 			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "DEFAULT"});	
 			$scope.closeModal();

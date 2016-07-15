@@ -27,6 +27,9 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
     $scope.ready.then(function() {
 
     	$scope.resetDocumentTypes = function() {
+    		if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
             $scope.modalData = {
                 degreeLevel: 'UNDERGRADUATE'
             };

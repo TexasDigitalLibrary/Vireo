@@ -21,17 +21,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.fieldPredicateRepo = FieldPredicateRepo;
 
-    FieldPredicateRepo.listen(function() {
-        
-    });
-
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.fieldGlossRepo = FieldGlossRepo;
-
-    FieldGlossRepo.listen(function() {
-        
-    });
 
     $scope.fieldGlosses = FieldGlossRepo.getAll();
 
@@ -52,6 +44,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             position++;
         });
 
+        if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+			$scope.modalData.refresh();
+		}
         $scope.modalData = {
             overrideable: true,
             inputType: {

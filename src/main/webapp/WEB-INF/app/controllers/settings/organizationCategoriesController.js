@@ -19,7 +19,10 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     $scope.ready.then(function() {
 
         $scope.resetOrganizationCategories = function() {
-            $scope.modalData = {'name':''};
+        	if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
+            $scope.modalData = {};
             $scope.closeModal();
         };
 

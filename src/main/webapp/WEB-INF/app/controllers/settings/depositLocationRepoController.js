@@ -28,6 +28,9 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.resetDepositLocation = function() {
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = {
 				depositor: 'Sword1Deposit',
 				packager: 'VireoExport'

@@ -18,6 +18,9 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 	$scope.ready.then(function() {
 
 		$scope.resetWorkflowSteps = function() {
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = {
 				overrideable: true
 			};

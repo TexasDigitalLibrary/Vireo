@@ -36,7 +36,10 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 				var language = $scope.languages[i];
 				language.proquestCode = $scope.proquestLanguageCodes[language.name]
 			}
-
+			
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				languages: $scope.languages[0] 
 			};

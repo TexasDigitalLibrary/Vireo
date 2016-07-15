@@ -7,10 +7,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 			
 	$scope.settings.configurable = ConfigurationRepo.getAllMapByType();
 
-	ConfigurationRepo.listen(function(data) {
-
-	});
-
 	if(!$scope.isAnonymous()) {
 
 		$scope.settings.user = new UserSettings();

@@ -54,6 +54,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 			$scope.uploadWordMap = {};
 
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				language: $scope.languages[0] 
 			};
