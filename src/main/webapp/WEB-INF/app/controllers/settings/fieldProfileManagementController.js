@@ -34,8 +34,15 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
     $scope.sortAction = "confirm";
 
     $scope.uploadAction = "confirm";
+
+    $scope.forms = {};
     
     $scope.resetFieldProfiles = function() {
+        for(var key in $scope.forms) {
+            if(!$scope.forms[key].$pristine) {
+                $scope.forms[key].$setPristine();
+            }
+        }
         
         var position = 1;
 

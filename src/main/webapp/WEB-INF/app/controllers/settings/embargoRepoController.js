@@ -22,9 +22,16 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	
 	$scope.sortLabel = "";
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetEmbargo = function() {
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
     			$scope.modalData.refresh();
     		}

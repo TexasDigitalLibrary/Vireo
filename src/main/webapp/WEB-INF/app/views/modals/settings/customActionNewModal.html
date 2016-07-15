@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Add Custom Action Checklist</h3>
 </div>
 
-<form ng-submit="createCustomAction()" novalidate>
+<form ng-submit="createCustomAction()" name="forms.create" novalidate>
 
 	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
 
@@ -17,6 +17,8 @@
 			property="label"
 			label="Custom Action"
 			placeholder="Label of the new custom action"
+			form="forms.create"
+			validations="customActionRepo.getValidations()"
 			results="customActionRepo.getValidationResults()">
 		</validatedinput>
 	
@@ -26,13 +28,22 @@
 			property="isStudentVisible"
 			label="Is Student Visible"
 			placeholder="Is this action visible to the student?"
+			form="forms.create"
+			validations="customActionRepo.getValidations()"
 			results="customActionRepo.getValidationResults()">
 		</validatedinput>
 		
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetCustomAction()">Cancel</button>
-		<button id="customAction-save" type="submit" class="btn btn-primary">Create</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetCustomAction()">Cancel</button>
+		<button 
+			id="customAction-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

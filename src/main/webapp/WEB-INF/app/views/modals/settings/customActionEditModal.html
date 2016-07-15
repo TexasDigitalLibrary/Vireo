@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Edit Custom Action Checklist</h3>
 </div>
 
-<form ng-submit="updateCustomAction()" novalidate>
+<form ng-submit="updateCustomAction()" name="forms.update" novalidate>
 
 	<validationmessage results="modalData.ValidationResults"></validationmessage>
 
@@ -17,6 +17,8 @@
 			property="label"
 			label="Custom Action"
 			placeholder="Label of the new custom action"
+			form="forms.update"
+			validations="customActionRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
 	
@@ -26,13 +28,22 @@
 			property="isStudentVisible"
 			label="Is Student Visible"
 			placeholder="Is this action visible to the student?"
+			form="forms.update"
+			validations="customActionRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
 		
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetCustomAction()">Cancel</button>
-		<button id="customAction-save" type="submit" class="btn btn-primary">Update</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetCustomAction()">Cancel</button>
+		<button 
+			id="customAction-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.update.$invalid">Update</button>
 	</div>
 </form>

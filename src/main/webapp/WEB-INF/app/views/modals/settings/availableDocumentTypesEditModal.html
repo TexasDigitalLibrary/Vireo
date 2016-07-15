@@ -18,8 +18,8 @@
 			label="Document Type Name"
 			placeholder="Name of the new document type"
 			form="forms.update"
-			results="documentTypeRepo.getValidationResults()"
-			validations="documentTypeRepo.getValidations()">
+			validations="documentTypeRepo.getValidations()"
+			results="modalData.ValidationResults">
 		</validatedinput>
 
 		<validatedselect
@@ -28,14 +28,21 @@
 			property="degreeLevel"
 			label="Degree Level"
 			form="forms.update"
-			results="documentTypeRepo.getValidationResults()"
-			validations="documentTypeRepo.getValidations()">
+			validations="documentTypeRepo.getValidations()"
+			results="modalData.ValidationResults">
 		</validatedselect>
 
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes()">Cancel</button>
-		<button id="graduationMonth-save" type="submit" class="btn btn-primary" ng-disabled="forms.form.$invalid">Update</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetDocumentTypes()">Cancel</button>
+		<button 
+			id="graduationMonth-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.update.$invalid">Update</button>
 	</div>
 </form>

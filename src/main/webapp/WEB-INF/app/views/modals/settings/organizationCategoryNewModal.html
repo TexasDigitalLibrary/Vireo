@@ -5,7 +5,7 @@
     <h3 class="modal-title">Add Organization Category</h3>
 </div>
 
-<form ng-submit="createOrganizationCategory()" novalidate>
+<form ng-submit="createOrganizationCategory()" name="forms.create" novalidate>
 
     <validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
 
@@ -15,12 +15,21 @@
             property="name"
             label="Name"
             placeholder="Name of the new organization category"
+            form="forms.create"
+            validations="organizationCategoryRepo.getValidations()"
             results="organizationCategoryRepo.getValidationResults()">
         </validatedinput>
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="resetOrganizationCategories()">Cancel</button>
-        <button id="organizationCategory-save" type="submit" class="btn btn-primary">Create</button>
+        <button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetOrganizationCategories()">Cancel</button>
+        <button 
+            id="organizationCategory-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.create.$invalid">Create</button>
     </div>
 </form>

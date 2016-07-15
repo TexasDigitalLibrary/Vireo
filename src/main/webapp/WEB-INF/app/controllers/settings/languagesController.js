@@ -24,9 +24,16 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
 	$scope.uploadAction = "confirm";
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetLanguages = function() {
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 			if($scope.uploadAction == 'process') {
 				$scope.uploadAction = 'confirm';
 				$scope.uploadStatus();

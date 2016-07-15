@@ -5,7 +5,7 @@
 	<h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
 </div>
 
-<form ng-submit="createEmbargo()" novalidate>
+<form ng-submit="createEmbargo()" name="forms.create" novalidate>
 
     <validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
 
@@ -16,6 +16,8 @@
             property="name"
             label="Name"
             placeholder="Name of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
     	
@@ -24,6 +26,8 @@
             property="description"
             label="Description"
             placeholder="Description of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
         
@@ -32,6 +36,8 @@
             property="duration"
             label="Duration"
             placeholder="Duration of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
 
@@ -44,6 +50,8 @@
                 placeholder="This embargo duration will be indefinite."
                 truevalue="null"
                 falsevalue=""
+                form="forms.create"
+                validations="embargoRepo.getValidations()"
                 results="embargoRepo.getValidationResults()">
             </validatedinput>
         </div>
@@ -57,6 +65,8 @@
                 truevalue="true"
                 falsevalue="false"
                 placeholder="This embargo option will be available for new submissions."
+                form="forms.create"
+                validations="embargoRepo.getValidations()"
                 results="embargoRepo.getValidationResults()">
             </validatedinput>
         </div>
@@ -64,7 +74,14 @@
     </div>
 
     <div class="modal-footer">
-    	<button type="button" class="btn btn-warning" ng-click="resetEmbargo()">Cancel</button>
-    	<button id="embargo-save" type="submit" class="btn btn-primary">Create</button>
+    	<button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetEmbargo()">Cancel</button>
+    	<button 
+            id="embargo-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.create.$invalid">Create</button>
     </div>
 </form>

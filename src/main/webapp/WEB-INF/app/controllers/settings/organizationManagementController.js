@@ -15,9 +15,16 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.managedOrganization = null;
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetWorkflowSteps = function() {
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
     			$scope.modalData.refresh();
     		}

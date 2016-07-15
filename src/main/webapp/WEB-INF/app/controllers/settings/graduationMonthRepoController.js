@@ -37,10 +37,17 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			delete $scope.monthOptions[$scope.graduationMonths[i].month];
 		}
 	};
+
+	$scope.forms = {};
 		
 	$scope.ready.then(function() {
 
 		$scope.resetGraduationMonth = function() {
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 
 			$scope.resetMonthOptions();
 

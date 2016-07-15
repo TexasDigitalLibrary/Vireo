@@ -24,10 +24,17 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.dragging = false;
 	
 	$scope.trashCanId = 'deposit-location-trash';
+
+	$scope.forms = {};
 		
 	$scope.ready.then(function() {
 
 		$scope.resetDepositLocation = function() {
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
     			$scope.modalData.refresh();
     		}
