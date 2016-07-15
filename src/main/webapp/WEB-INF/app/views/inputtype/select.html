@@ -13,6 +13,7 @@
 			ng-bind="values[$index].value || 'Choose {{profile.fieldGlosses[0].value}}'">			
 	</span>
 	<span class="input-group-addon">
-        <span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!saving" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving" class="glyphicon glyphicon-refresh spinning" tooltip="{{ profile.help }}"> </span>
     </span>
 </div>

@@ -7,12 +7,14 @@
   			uib-datepicker-popup="MM/dd/yyyy" 
   			ng-model="values[$index].value"
   			ng-change="save(value)"
-  			is-open="date" 
+  			is-open="date"
+        ng-dissabled="saving" 
   			ng-required="!profile.optional" 
   			close-text="Close"
         stringtodate 
   	/>
   	<span class="input-group-addon">
-        <span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!saving" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving" class="glyphicon glyphicon-refresh spinning" tooltip="{{ profile.help }}"> </span>
     </span>
 </div>

@@ -2,7 +2,9 @@
 		ng-model="values[$index].value" 
 		ng-true-value="'true'" 
 		ng-false-value="'false'"
+		ng-dissabled="saving"
 		ng-click="save(value)"
 >
-<span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+<span ng-if="!saving" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+<span ng-if="saving" class="glyphicon glyphicon-refresh spinning" tooltip="{{ profile.help }}"> </span>
 

@@ -4,10 +4,12 @@
 		ng-required="!profile.optional" 
 		ng-model="values[$index].value"
 		ng-blur="save(value)"
+		ng-disabled="saving"
 		placeholder="Input {{profile.fieldGlosses[0].value}}" 
 	/>
 	<span class="input-group-addon">
-        <span class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!saving" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving" class="glyphicon glyphicon-refresh spinning" tooltip="{{ profile.help }}"> </span>
     </span>
 </div>
 					    
