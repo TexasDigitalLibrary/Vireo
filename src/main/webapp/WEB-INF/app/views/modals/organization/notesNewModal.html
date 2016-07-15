@@ -9,7 +9,7 @@
 	<h3 class="modal-title">Add Note</h3>
 </div>
 
-<form ng-submit="createNote()" novalidate>
+<form ng-submit="createNote()" name="forms.create" novalidate>
 
 	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
@@ -20,6 +20,8 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the new note"
+			form="forms.create"
+			validations="noteRepo.getValidations()"
 			results="workflowStepRepo.ValidationResults">
 		</validatedinput>
 		
@@ -28,6 +30,8 @@
             property="text"
             label="Text"
             rows="5"
+			form="forms.create"
+			validations="noteRepo.getValidations()"
             results="workflowStepRepo.ValidationResults">
         </validatedtextarea>
 
@@ -49,6 +53,6 @@
 			id="notes-save" 
 			type="submit" 
 			class="btn btn-primary"
-			ng-disabled="!modalData.name && !modalData.text">Create</button>
+			ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

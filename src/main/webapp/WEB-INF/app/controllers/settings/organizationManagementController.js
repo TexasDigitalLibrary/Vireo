@@ -20,6 +20,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 	$scope.ready.then(function() {
 
 		$scope.resetWorkflowSteps = function() {
+			$scope.organizationRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

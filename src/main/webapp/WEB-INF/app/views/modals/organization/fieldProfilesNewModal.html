@@ -10,7 +10,7 @@
 	<h3 class="modal-title">Add Field Profile</h3>
 </div>
 
-<form ng-submit="createFieldProfile()" novalidate>
+<form ng-submit="createFieldProfile()" name="forms.create" novalidate>
 
 	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
@@ -41,6 +41,8 @@
 				property="predicate"
 				label="Predicate"
 				placeholder="Predicate of the new field profile"
+				form="forms.create"
+				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.getValidationResults()">
 			</validatedinput>
 			<button 
@@ -57,7 +59,9 @@
 				model="modalData"
 				property="inputType"
 				label="Input Type"
-				results="workflowStepRepo.getValidationResults()">
+				form="forms.create"
+				validations="fieldProfileRepo.getValidations()"
+				results="workflowStepRepo.ValidationResults">
 			</validatedselect>
 		</div>
 
@@ -79,7 +83,9 @@
 				property="help"
 				label="Help"
 				placeholder="Help of the new field profile"
-				results="workflowStepRepo.getValidationResults()">
+				form="forms.create"
+				validations="fieldProfileRepo.getValidations()"
+				results="workflowStepRepo.ValidationResults">
 			</validatedinput>
 		</div>
 
@@ -110,7 +116,7 @@
 			id="field-profiles-save" 
 			type="submit" 
 			class="btn btn-primary"
-			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id">Create</button>
+			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id || forms.create.$invalid">Create</button>
 	</div>
 
 </form>

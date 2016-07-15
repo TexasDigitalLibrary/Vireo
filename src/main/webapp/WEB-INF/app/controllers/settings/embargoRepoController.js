@@ -27,6 +27,7 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	$scope.ready.then(function() {
 
 		$scope.resetEmbargo = function() {
+			$scope.embargoRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

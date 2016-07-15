@@ -29,6 +29,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 	$scope.ready.then(function() {
 
 		$scope.resetLanguages = function() {
+			$scope.languageRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

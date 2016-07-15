@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -19,6 +19,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
+    $scope.fieldProfileRepo = FieldProfileRepo;
+
     $scope.fieldPredicateRepo = FieldPredicateRepo;
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
@@ -38,6 +40,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
     $scope.forms = {};
     
     $scope.resetFieldProfiles = function() {
+        $scope.workflowStepRepo.clearValidationResults();
+        $scope.fieldProfileRepo.clearValidationResults();
+        $scope.fieldPredicateRepo.clearValidationResults();
+        $scope.fieldGlossRepo .clearValidationResults();
         for(var key in $scope.forms) {
             if(!$scope.forms[key].$pristine) {
                 $scope.forms[key].$setPristine();

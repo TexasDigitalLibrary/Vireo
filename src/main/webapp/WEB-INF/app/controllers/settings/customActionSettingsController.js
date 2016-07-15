@@ -21,6 +21,7 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.resetCustomAction = function() {
+			$scope.customActionRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

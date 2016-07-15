@@ -30,6 +30,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.ready.then(function() {
 
 		$scope.resetDepositLocation = function() {
+			$scope.depositLocationRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

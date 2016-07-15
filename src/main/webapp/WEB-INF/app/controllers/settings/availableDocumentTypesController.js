@@ -29,6 +29,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
     $scope.ready.then(function() {
 
     	$scope.resetDocumentTypes = function() {
+            $scope.documentTypeRepo.clearValidationResults();
     		for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();

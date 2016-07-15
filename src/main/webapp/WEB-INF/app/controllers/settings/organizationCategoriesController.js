@@ -21,6 +21,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     $scope.ready.then(function() {
 
         $scope.resetOrganizationCategories = function() {
+            $scope.organizationCategoryRepo.clearValidationResults();
             for(var key in $scope.forms) {
                 if(!$scope.forms[key].$pristine) {
                     $scope.forms[key].$setPristine();
