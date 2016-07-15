@@ -8,10 +8,17 @@ vireo.directive("textfield", function() {
 			"scopeProperty": "@",
 			"toolTip": "@",
 			"hint": "@",
+			"form": "=",
+			"validations": "=",
 			"onBlur": "&",
 			"labelWidth": "@",
 			"fieldWidth": "@",
 			"expanded": "="
+		},
+		link: function ($scope, element, attr) {
+			
+			console.log($scope)
+
 		}
 	};
 });

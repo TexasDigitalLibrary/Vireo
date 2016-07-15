@@ -1,14 +1,14 @@
 <div class="row" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
 			
 	<div class="col-md-6">
-  		<textField
+  		<textfield
   			class="workflowstep-edit-name" 
 			label="Workflow Step Name:"
 			scope-object="step"
             scope-property="name"
 			hint="'My Workflow Step's name'"
 			on-blur="updateWorkflowStep(step)">
-		</textField>
+		</textfield>
   	</div>
 
 	<div class="col-md-3">
@@ -23,7 +23,7 @@
   	<div class="col-md-3">
   		<div class="form-group">
   			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)">Delete Workflow Step</button>
-			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
+			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/organization/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
   		</div>
   	</div>
 

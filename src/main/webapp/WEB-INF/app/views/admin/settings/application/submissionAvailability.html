@@ -21,25 +21,28 @@
 
 		<div class="col-sm-6">
 			
-			<textField 
+			<textfield 
 				label="Current submission semester:"
 				scope-object="settings.configurable.application.current_semester"
 				scope-property="value"
+				validations="settings.configurable.application.current_semester.getValidations()"
 				expanded="true"
 				field-width="4"
 				hint="'Month Year' (i.e. May 2015)"
 				on-blur="updateConfiguration('application', 'current_semester')">
-			</textField>
+			</textfield>
 
-			<textField 
+			<textfield 
 				label="Degree Granting School:"
 				scope-object="settings.configurable.application.grantor"
 				scope-property="value"
+				
+				validations="settings.configurable.application.grantor.getValidations()"
 				expanded="true"
 				field-width="4"
 				hint="The full name of the institution awarding degrees."
 				on-blur="updateConfiguration('application', 'grantor')">
-			</textField>
+			</textfield>
 
 		</div>
 

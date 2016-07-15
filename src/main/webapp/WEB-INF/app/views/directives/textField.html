@@ -5,15 +5,15 @@
 	<div class="col-sm-{{fieldWidth ? fieldWidth : 6}}" ng-class="{'expanded': expanded}">
 		<div class="with-tool-tip">
 			<div class="with-hint">
-
 				<validatedinput
 					model="scopeObject"
 					property="{{scopeProperty}}"
 					blur="onBlur()"
 					blur-enabled="true"
+					form="form"
+					validations="validations"
 					results="scopeObject.ValidationResults">
 				</validatedinput>
-
 				<span ng-if="hint" class="hint">{{ hint }}</span>
 			</div>
 			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque tooltip-span" tooltip="{{ toolTip }}"></span>
