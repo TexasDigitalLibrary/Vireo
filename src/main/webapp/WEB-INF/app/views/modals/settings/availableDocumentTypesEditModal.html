@@ -6,7 +6,7 @@
 </div>
 
 
-<form ng-submit="updateDocumentType()" novalidate>
+<form ng-submit="updateDocumentType()" name="forms.update" novalidate>
 
 	<validationmessage results="modalData.ValidationResults"></validationmessage>
 
@@ -17,6 +17,8 @@
 			property="name"
 			label="Document Type Name"
 			placeholder="Name of the new document type"
+			form="forms.update"
+			validations="documentTypeRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
 
@@ -25,13 +27,22 @@
 			model="modalData"
 			property="degreeLevel"
 			label="Degree Level"
+			form="forms.update"
+			validations="documentTypeRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedselect>
 
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes()">Cancel</button>
-		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Update</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetDocumentTypes()">Cancel</button>
+		<button 
+			id="graduationMonth-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.update.$invalid">Update</button>
 	</div>
 </form>

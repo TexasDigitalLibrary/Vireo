@@ -22,6 +22,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 	$scope.uploadAction = "confirm";
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		var getDefaultIndex = function() {
@@ -37,6 +39,12 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	    }
 
 		$scope.resetControlledVocabulary = function() {
+			$scope.controlledVocabularyRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 
 			if($scope.uploadAction == 'process') {
 
@@ -54,6 +62,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
 			$scope.uploadWordMap = {};
 
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				language: $scope.languages[0] 
 			};
@@ -80,7 +91,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 			if($scope.uploadModalData.cv != undefined) {
 				ControlledVocabularyRepo.status($scope.uploadModalData.cv.name);
 			}
-		}
+		};
 		
 		$scope.selectControlledVocabulary = function(index) {
 			$scope.modalData = $scope.controlledVocabulary[index];
@@ -92,15 +103,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 		};
 		
 		$scope.updateControlledVocabulary = function() {
-			$scope.modalData.save().then(function(data) {
-
-			});
+			$scope.modalData.save();
 		};
 
 		$scope.removeControlledVocabulary = function() {
-			$scope.modalData.delete().then(function(data) {
-
-			});
+			$scope.modalData.delete();
 		};
 
 		$scope.reorderControlledVocabulary = function(src, dest) {
@@ -122,7 +129,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 				var reader = new FileReader();
 		        reader.onload = function() {
 		            ControlledVocabularyRepo.confirmCSV(reader.result, $scope.uploadModalData.cv.name).then(function(data) {
-
 		            	$scope.uploadWordMap = data.payload.HashMap;		            	
 		            });
 		        };

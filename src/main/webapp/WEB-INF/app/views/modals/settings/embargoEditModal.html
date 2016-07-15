@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Edit {{modalData.guarantor}} Embargo</h3>
 </div>
 
-<form ng-submit="updateEmbargo()" novalidate>
+<form ng-submit="updateEmbargo()" name="forms.update" novalidate>
 
     <validationmessage results="modalData.ValidationResults"></validationmessage>
 
@@ -15,7 +15,9 @@
             model="modalData"
             property="name"
             label="Name"
-            placeholder="Name of the new embargo"
+            placeholder="Name of the embargo"
+            form="forms.update"
+            validations="embargoRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
         
@@ -23,7 +25,9 @@
             model="modalData"
             property="description"
             label="Description"
-            placeholder="Description of the new embargo"
+            placeholder="Description of the embargo"
+            form="forms.update"
+            validations="embargoRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
         
@@ -31,7 +35,9 @@
             model="modalData"
             property="duration"
             label="Duration"
-            placeholder="Duration of the new embargo"
+            placeholder="Duration of the embargo"
+            form="forms.update"
+            validations="embargoRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -44,6 +50,8 @@
                 placeholder="This embargo duration will be indefinite."
                 truevalue="null"
                 falsevalue=""
+                form="forms.update"
+                validations="embargoRepo.getValidations()"
                 results="modalData.ValidationResults">
             </validatedinput>
         </div>
@@ -57,6 +65,8 @@
                 truevalue="true"
                 falsevalue="false"
                 placeholder="This embargo option will be available for new submissions."
+                form="forms.update"
+                validations="embargoRepo.getValidations()"
                 results="modalData.ValidationResults">
             </validatedinput>
         </div>
@@ -64,8 +74,19 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="resetEmbargo()">Cancel</button>
-        <button id="embargo-delete" type="button" class="btn btn-danger" ng-click="removeEmbargo()">Delete</button>
-        <button id="embargo-save" type="submit" class="btn btn-primary">Update</button>
+        <button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetEmbargo()">Cancel</button>
+        <button 
+            id="embargo-delete" 
+            type="button" 
+            class="btn btn-danger" 
+            ng-click="removeEmbargo()">Delete</button>
+        <button 
+            id="embargo-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid">Update</button>
     </div>
 </form>

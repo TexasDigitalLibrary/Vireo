@@ -15,10 +15,21 @@ vireo.controller("CustomActionSettingsController", function($controller, $scope,
 	$scope.dragging = false;
 	
 	$scope.trashCanId = 'custom-action-trash';
+
+	$scope.forms = {};
 	
 	$scope.ready.then(function() {
 
 		$scope.resetCustomAction = function() {
+			$scope.customActionRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				isStudentVisible: false 
 			};

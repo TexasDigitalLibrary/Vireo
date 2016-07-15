@@ -5,7 +5,7 @@
     <h3 class="modal-title">Edit Organization Category</h3>
 </div>
 
-<form ng-submit="updateOrganizationCategory()" novalidate>
+<form ng-submit="updateOrganizationCategory()" name="forms.update" novalidate>
 
     <validationmessage results="modalData.ValidationResults"></validationmessage>
 
@@ -14,13 +14,22 @@
             model="modalData"
             property="name"
             label="Name"
-            placeholder="Name of the new organization category"
+            placeholder="Name of the organization category"
+            form="forms.update"
+            validations="organizationCategoryRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="resetOrganizationCategories()">Cancel</button>
-        <button id="organizationCategory-save" type="submit" class="btn btn-primary">Update</button>
+        <button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetOrganizationCategories()">Cancel</button>
+        <button 
+            id="organizationCategory-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid">Update</button>
     </div>
 </form>

@@ -5,7 +5,7 @@
     <h3 class="modal-title">Edit an email template</h3>
 </div>
 
-<form ng-submit="updateEmailTemplate()" novalidate>
+<form ng-submit="updateEmailTemplate()" name="forms.update" novalidate>
 
     <validationmessage results="modalData.ValidationResults"></validationmessage>
 
@@ -15,7 +15,9 @@
             model="modalData"
             property="name"
             label="Name"
-            placeholder="Name of the new email template"
+            placeholder="Name of the email template"
+            form="forms.update"
+            validations="emailTemplateRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -23,7 +25,9 @@
             model="modalData"
             property="subject"
             label="Subject"
-            placeholder="Subject of the new email template"
+            placeholder="Subject of the email template"
+            form="forms.update"
+            validations="emailTemplateRepo.getValidations()"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -36,6 +40,8 @@
                     property="message"
                     label="Message Body"
                     rows="25"
+                    form="forms.update"
+                    validations="emailTemplateRepo.getValidations()"
                     results="modalData.ValidationResults">
                 </validatedtextarea>
 
@@ -66,8 +72,15 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
-        <button id="emailTemplate-save" type="submit" class="btn btn-primary">Update</button>
+        <button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetEmailTemplates()">Cancel</button>
+        <button 
+            id="emailTemplate-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid">Update</button>
     </div>
 
 </form>

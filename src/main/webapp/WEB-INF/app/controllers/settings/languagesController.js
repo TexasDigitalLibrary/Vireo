@@ -24,9 +24,17 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
 	$scope.uploadAction = "confirm";
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetLanguages = function() {
+			$scope.languageRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 			if($scope.uploadAction == 'process') {
 				$scope.uploadAction = 'confirm';
 				$scope.uploadStatus();
@@ -36,7 +44,10 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 				var language = $scope.languages[i];
 				language.proquestCode = $scope.proquestLanguageCodes[language.name]
 			}
-
+			
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = { 
 				languages: $scope.languages[0] 
 			};

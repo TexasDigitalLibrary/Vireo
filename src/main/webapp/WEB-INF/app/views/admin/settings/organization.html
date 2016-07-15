@@ -1,6 +1,6 @@
 <div class="admin-settings" ng-controller="OrganizationSettingsController">
 
-	<validationmessage results="organizationRepo.getValidationResults()"></validationmessage>
+	<validationmessage results="organizationRepo.ValidationResults"></validationmessage>
 
 	<div class="row">
 		<div class="col-xs-12 triptych" ng-controller="TriptychController">
@@ -127,15 +127,18 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">Manage {{getManagedOrganization().name}}</h3>
 						</div>
-						<form id="updateOrganization" ng-submit="updateOrganization(managedOrganization)">
-							<textField 
+						
+						<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
+							<textfield 
 								label="Name"
 								scope-object="getManagedOrganization()"
 								scope-property="name"
+								form="forms.update"
+								validations="getManagedOrganization().getValidations()"
 								label-width="2"
 								field-width="4"
 								expanded="true">
-							</textField>
+							</textfield>
 							<div class="form-group text-field clearfix">
 								<div class="col-sm-2">
 									<span class="text-field-heading">Category</span>
@@ -150,10 +153,18 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-warning" ng-click="resetManagedOrganization()">Cancel</button>
-								<input type="submit" class="btn btn-primary" value="Save" />
+								<button 
+									type="button" 
+									class="btn btn-warning" 
+									ng-click="resetManagedOrganization()">Cancel</button>
+								<input 
+									type="submit" 
+									class="btn btn-primary" 
+									value="Save" 
+									ng-disabled="forms.update.$invalid"/>
 							</div>
 						</form>
+
 					</div>
 				</div>
 				<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
@@ -168,7 +179,7 @@
 						      Add Workflow Step
 						    </button>
 						    <modal  modal-id="addWorkflowStepModal"
-									modal-view="views/modals/settings/workflowStepCreateModal.html"
+									modal-view="views/modals/organization/workflowStepCreateModal.html"
 									modal-header-class="modal-header-primary"
 									modal-backdrop="static">
 						  	</modal>

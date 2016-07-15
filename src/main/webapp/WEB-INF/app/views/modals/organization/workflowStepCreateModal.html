@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Add Workflow Step</h3>
 </div>
 
-<form ng-submit="addWorkflowStep()" novalidate>
+<form ng-submit="addWorkflowStep()" name="forms.create" novalidate>
 
 	<validationmessage results="organizationRepo.ValidationResults"></validationmessage>
 
@@ -15,12 +15,21 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the new workflow step"
+			form="forms.create"
+			validations="organizationRepo.getValidations()"
 			results="organizationRepo.ValidationResults">
 		</validatedinput>
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetWorkflowSteps()">Cancel</button>
-		<button id="workflow-step-save" type="submit" class="btn btn-primary">Create</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetWorkflowSteps()">Cancel</button>
+		<button 
+			id="workflow-step-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

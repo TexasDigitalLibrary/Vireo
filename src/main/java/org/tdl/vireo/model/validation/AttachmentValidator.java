@@ -9,8 +9,8 @@ public class AttachmentValidator extends BaseModelValidator {
     public AttachmentValidator() {
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Attachment requires a name", nameProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minLength, "Attachment name must be at least 1 characters", nameProperty, 1));
-        this.addInputValidator(new InputValidator(InputValidationType.maxLength, "Attachment name cannot be more than 255 characters", nameProperty, 255));
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Attachment name must be at least 1 characters", nameProperty, 1));
+        this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Attachment name cannot be more than 255 characters", nameProperty, 255));
         
         String typeProperty = "type";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Attachment requires a type", typeProperty, true));

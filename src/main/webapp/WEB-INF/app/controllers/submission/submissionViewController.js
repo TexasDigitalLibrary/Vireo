@@ -12,6 +12,4 @@ vireo.controller("SubmissionViewController", function ($controller, $scope, NgTa
 		$scope.tableParams.reload();
   	});
 
-  	
-
 });

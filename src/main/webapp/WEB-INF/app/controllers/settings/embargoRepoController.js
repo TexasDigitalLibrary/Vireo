@@ -22,10 +22,23 @@ vireo.controller("EmbargoRepoController", function($controller, $scope, $q, Emba
 	
 	$scope.sortLabel = "";
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetEmbargo = function() {
-			$scope.modalData = { isActive: false };
+			$scope.embargoRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
+			$scope.modalData = { 
+				isActive: false 
+			};
 			$scope.proquestEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "PROQUEST"});
 			$scope.defaultEmbargoes = $filter('filter')($scope.embargoes, {guarantor: "DEFAULT"});	
 			$scope.closeModal();

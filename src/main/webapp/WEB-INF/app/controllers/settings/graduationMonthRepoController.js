@@ -37,13 +37,24 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			delete $scope.monthOptions[$scope.graduationMonths[i].month];
 		}
 	};
+
+	$scope.forms = {};
 		
 	$scope.ready.then(function() {
 
 		$scope.resetGraduationMonth = function() {
+			$scope.graduationMonthRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
 
 			$scope.resetMonthOptions();
 
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = {};
 
 			for(var i in $scope.monthOptions) {

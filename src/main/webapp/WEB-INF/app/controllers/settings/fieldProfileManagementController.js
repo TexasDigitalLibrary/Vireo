@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -19,19 +19,13 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
-    $scope.fieldPredicateRepo = FieldPredicateRepo;
+    $scope.fieldProfileRepo = FieldProfileRepo;
 
-    FieldPredicateRepo.listen(function() {
-        
-    });
+    $scope.fieldPredicateRepo = FieldPredicateRepo;
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.fieldGlossRepo = FieldGlossRepo;
-
-    FieldGlossRepo.listen(function() {
-        
-    });
 
     $scope.fieldGlosses = FieldGlossRepo.getAll();
 
@@ -42,8 +36,19 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
     $scope.sortAction = "confirm";
 
     $scope.uploadAction = "confirm";
+
+    $scope.forms = {};
     
     $scope.resetFieldProfiles = function() {
+        $scope.workflowStepRepo.clearValidationResults();
+        $scope.fieldProfileRepo.clearValidationResults();
+        $scope.fieldPredicateRepo.clearValidationResults();
+        $scope.fieldGlossRepo .clearValidationResults();
+        for(var key in $scope.forms) {
+            if(!$scope.forms[key].$pristine) {
+                $scope.forms[key].$setPristine();
+            }
+        }
         
         var position = 1;
 
@@ -52,6 +57,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             position++;
         });
 
+        if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+			$scope.modalData.refresh();
+		}
         $scope.modalData = {
             overrideable: true,
             inputType: {

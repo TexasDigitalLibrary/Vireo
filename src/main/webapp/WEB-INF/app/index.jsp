@@ -135,7 +135,6 @@
 
 	</main>
 
-
 	<footer class="footer">
       <div class="container">
         <p class="text-muted">
@@ -239,6 +238,7 @@
 	  	<script src="bower_components/core/app/services/storageservice.js"></script>
 	  	<script src="bower_components/core/app/services/utilityservice.js"></script>
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
+	  	<script src="bower_components/core/app/services/validationstore.js"></script>
 	  	
 	  	<!-- Repo -->
 	  	<script src="bower_components/core/app/repo/abstractRepo.js"></script>
@@ -274,7 +274,6 @@
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
 	    <script src="directives/checkBoxDirective.js"></script>
-	    <script src="directives/shadowDirective.js"></script>
 	    <script src="directives/tamuFocusDirective.js"></script>
 	    <script src="directives/tooltipDirective.js"></script>
 	    <script src="directives/dragAndDropListDirective.js"></script>
@@ -284,7 +283,7 @@
 	    <script src="directives/dropZoneDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
-	     <script src="directives/stringToDateDirective.js"></script>
+	    <script src="directives/stringToDateDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>

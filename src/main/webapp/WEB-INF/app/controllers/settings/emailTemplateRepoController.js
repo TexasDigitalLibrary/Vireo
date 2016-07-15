@@ -22,9 +22,20 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 		return template.name;
 	};
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 		
 		$scope.resetEmailTemplates = function() {
+			$scope.emailTemplateRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 		  	$scope.modalData = {
 	  			'name': '', 
 	  			'subject': '', 

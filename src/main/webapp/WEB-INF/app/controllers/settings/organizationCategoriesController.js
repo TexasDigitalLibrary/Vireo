@@ -16,10 +16,21 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     $scope.trashCanId = 'organization-category-trash';
 
+    $scope.forms = {};
+
     $scope.ready.then(function() {
 
         $scope.resetOrganizationCategories = function() {
-            $scope.modalData = {'name':''};
+            $scope.organizationCategoryRepo.clearValidationResults();
+            for(var key in $scope.forms) {
+                if(!$scope.forms[key].$pristine) {
+                    $scope.forms[key].$setPristine();
+                }
+            }
+        	if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
+            $scope.modalData = {};
             $scope.closeModal();
         };
 

@@ -12,3 +12,4 @@ npm-debug.log
 /src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .classpath
 .settings
+/bin/

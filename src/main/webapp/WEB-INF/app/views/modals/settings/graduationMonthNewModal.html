@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Add Graduation Month</h3>
 </div>
 
-<form ng-submit="createGraduationMonth()" novalidate>
+<form ng-submit="createGraduationMonth()" name="forms.create" novalidate>
 	<div class="modal-body">
 
 		<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
@@ -15,13 +15,22 @@
             model="modalData"
             property="month"
             label="Graduation Month"
+            form="forms.create"
+            validations="graduationMonthRepo.getValidations()"
             results="graduationMonthRepo.getValidationResults()">
         </validatedselect>
 
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetGraduationMonth()">Cancel</button>
-		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Create</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetGraduationMonth()">Cancel</button>
+		<button 
+			id="graduationMonth-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

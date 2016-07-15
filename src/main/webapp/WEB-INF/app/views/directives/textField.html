@@ -2,20 +2,26 @@
 	<div class="col-sm-{{labelWidth ? labelWidth : 6}}">
 		<span class="text-field-heading">{{ label }}</span>
 	</div>
-	<div class="col-sm-{{fieldWidth ? fieldWidth : 6}}" ng-class="{'expanded': expanded}">
+	<div 
+		class="col-sm-{{fieldWidth ? fieldWidth : 6}}" 
+		ng-class="{'expanded': expanded}">
 		<div class="with-tool-tip">
 			<div class="with-hint">
-
 				<validatedinput
 					model="scopeObject"
 					property="{{scopeProperty}}"
 					blur="onBlur()"
+					blur-enabled="true"
+					form="form"
+					validations="validations"
 					results="scopeObject.ValidationResults">
 				</validatedinput>
-
 				<span ng-if="hint" class="hint">{{ hint }}</span>
 			</div>
-			<span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque tooltip-span" tooltip="{{ toolTip }}"></span>
+			<span 
+				ng-if="toolTip" 
+				class="glyphicon glyphicon-info-sign opaque tooltip-span" 
+				tooltip="{{ toolTip }}"></span>
 		</div>
 	</div>
 </div>

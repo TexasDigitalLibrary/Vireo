@@ -1,4 +1,4 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, OrganizationRepo, OrganizationCategoryRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, Organization, OrganizationRepo, OrganizationCategoryRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -15,9 +15,20 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.managedOrganization = null;
 
+	$scope.forms = {};
+
 	$scope.ready.then(function() {
 
 		$scope.resetWorkflowSteps = function() {
+			$scope.organizationRepo.clearValidationResults();
+			for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
+			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
 			$scope.modalData = {
 				overrideable: true
 			};
@@ -37,7 +48,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			var currentOrganization = $scope.getSelectedOrganization();
 			if (currentOrganization !== undefined && currentOrganization) {
 				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
-					$scope.managedOrganization = currentOrganization;
+					$scope.managedOrganization = new Organization(currentOrganization);
 				}
 			}
 			return $scope.managedOrganization;

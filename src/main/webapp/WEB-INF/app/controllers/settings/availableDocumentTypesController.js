@@ -23,13 +23,24 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
         'MASTERS': 'Masters',
     	'DOCTORAL': 'Doctoral'
     };
-
+    
+    $scope.forms = {};
+    
     $scope.ready.then(function() {
 
     	$scope.resetDocumentTypes = function() {
+            $scope.documentTypeRepo.clearValidationResults();
+    		for(var key in $scope.forms) {
+    			if(!$scope.forms[key].$pristine) {
+    				$scope.forms[key].$setPristine();
+    			}
+    		}
+    		if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+    			$scope.modalData.refresh();
+    		}
             $scope.modalData = {
                 degreeLevel: 'UNDERGRADUATE'
-            };
+            };            
             $scope.closeModal();
         };
 

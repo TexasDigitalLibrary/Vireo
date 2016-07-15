@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Add Document Type</h3>
 </div>
 
-<form ng-submit="createNewDocumentType()" novalidate>
+<form ng-submit="createNewDocumentType()" name="forms.create" novalidate>
 
 	<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
 
@@ -16,6 +16,8 @@
 			property="name"
 			label="Document Type Name"
 			placeholder="Name of the new document type"
+			form="forms.create"
+			validations="documentTypeRepo.getValidations()"
 			results="documentTypeRepo.getValidationResults()">
 		</validatedinput>
 
@@ -24,13 +26,22 @@
 			model="modalData"
 			property="degreeLevel"
 			label="Degree Level"
+			form="forms.create"
+			validations="documentTypeRepo.getValidations()"
 			results="documentTypeRepo.getValidationResults()">
 		</validatedselect>
 
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetDocumentTypes()">Cancel</button>
-		<button id="graduationMonth-save" type="submit" class="btn btn-primary">Create</button>
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetDocumentTypes()">Cancel</button>
+		<button 
+			id="graduationMonth-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

@@ -9,8 +9,8 @@ public class SubmissionWorkflowStepValidator extends BaseModelValidator {
     public SubmissionWorkflowStepValidator() {        
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission Workflow Step requires a name", nameProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minLength, "Submission Workflow Step name must be at least 1 characters", nameProperty, 1));
-        this.addInputValidator(new InputValidator(InputValidationType.maxLength, "Submission Workflow Step name cannot be more than 255 characters", nameProperty, 255));
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Submission Workflow Step name must be at least 1 characters", nameProperty, 1));
+        this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Submission Workflow Step name cannot be more than 255 characters", nameProperty, 255));
         
         String overrideableProperty = "overrideable";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission Workflow Step requires an flag", overrideableProperty, true));

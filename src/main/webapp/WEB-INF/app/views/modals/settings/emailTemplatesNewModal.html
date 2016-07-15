@@ -5,7 +5,7 @@
     <h3 class="modal-title">Create a new email template</h3>
 </div>
 
-<form ng-submit="createEmailTemplate()" novalidate>
+<form ng-submit="createEmailTemplate()" name="forms.create" novalidate>
 
     <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
 
@@ -16,6 +16,8 @@
             property="name"
             label="Name"
             placeholder="Name of the new email template"
+            form="forms.create"
+            validations="emailTemplateRepo.getValidations()"
             results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
@@ -24,6 +26,8 @@
             property="subject"
             label="Subject"
             placeholder="Subject of the new email template"
+            form="forms.create"
+            validations="emailTemplateRepo.getValidations()"
             results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
@@ -36,6 +40,8 @@
                     property="message"
                     label="Message Body"
                     rows="25"
+                    form="forms.create"
+                    validations="emailTemplateRepo.getValidations()"
                     results="emailTemplateRepo.getValidationResults()">
                 </validatedtextarea>
 
@@ -66,8 +72,15 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="resetEmailTemplates()">Cancel</button>
-        <button id="emailTemplate-save" type="submit" class="btn btn-primary">Create</button>
+        <button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetEmailTemplates()">Cancel</button>
+        <button 
+            id="emailTemplate-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.create.$invalid">Create</button>
     </div>
 
 </form>
