@@ -59,8 +59,6 @@ var submissionModel = function ($q, WsApi) {
 
 		submission.saveFieldValue = function(fieldValue) {
 
-			if(fieldValue.value === "") return $q(function(r){r();});
-
 			angular.extend(this.getMapping().saveFieldValue, {
 				method: submission.id+"/update-field-value",
 				data: fieldValue
