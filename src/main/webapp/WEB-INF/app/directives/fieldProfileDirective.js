@@ -8,16 +8,16 @@ vireo.directive("field",  function() {
 		},
 		link: function($scope) {
 
-			$scope.saving = false;
+			$scope.saving = 0;
 
 			$scope.submission = $scope.$parent.submission;
 
 			$scope.values = $scope.submission.fieldValues;
 
 			$scope.save = function(value) {
-				$scope.saving = true;
+				$scope.saving = value.id;
 				$scope.submission.saveFieldValue(value).then(function() {
-					$scope.saving = false;
+					$scope.saving = 0;
 				});
 			};
 

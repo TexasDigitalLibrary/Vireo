@@ -1,8 +1,9 @@
 <div class="input-group" uib-dropdown>
 	<span class="input-group-addon select-toggle" uib-dropdown-toggle>
-		<span class="caret"></span>
+		<span ng-if="saving===0||saving!==value.id" class="caret"></span>
+		<span ng-if="saving===value.id" class="glyphicon glyphicon-remove-circle"> </span>
 	</span>
-	 <ul class="dropdown-menu" uib-dropdown-menu>
+	 <ul ng-if="saving===0||saving!==value.id" class="dropdown-menu" uib-dropdown-menu>
 		<li class="select-option" 
 			ng-click="values[$parent.$index].value = word.name; save(value);" 
 			ng-repeat="word in profile.controlledVocabularies[0].dictionary">
@@ -13,7 +14,7 @@
 			ng-bind="values[$index].value || 'Choose {{profile.fieldGlosses[0].value}}'">			
 	</span>
 	<span class="input-group-addon">
-        <span ng-if="!saving" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="saving" class="glyphicon glyphicon-refresh spinning" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>
