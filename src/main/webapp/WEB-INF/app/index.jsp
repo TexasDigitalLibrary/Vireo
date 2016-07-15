@@ -239,6 +239,7 @@
 	  	<script src="bower_components/core/app/services/storageservice.js"></script>
 	  	<script src="bower_components/core/app/services/utilityservice.js"></script>
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
+	  	<script src="bower_components/core/app/services/validationstore.js"></script>
 	  	
 	  	<!-- Repo -->
 	  	<script src="bower_components/core/app/repo/abstractRepo.js"></script>
