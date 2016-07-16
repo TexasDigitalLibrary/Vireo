@@ -1,4 +1,4 @@
-vireo.controller('ApplicationSettingsController', function ($controller, $scope, $location, $routeParams, User, SidebarService) {
+vireo.controller('ApplicationSettingsController', function ($controller, $scope, SidebarService) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	

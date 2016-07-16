@@ -129,16 +129,18 @@
 						</div>
 						
 						<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
-							<textfield 
-								label="Name"
-								scope-object="getManagedOrganization()"
-								scope-property="name"
-								form="forms.update"
-								validations="getManagedOrganization().getValidations()"
-								label-width="2"
-								field-width="4"
-								expanded="true">
-							</textfield>
+							<div class="form-group text-field clearfix">
+								<textfield 
+									label="Name"
+									scope-object="getManagedOrganization()"
+									scope-property="name"
+									form="forms.update"
+									validations="getManagedOrganization().getValidations()"
+									label-width="2"
+									field-width="4"
+									expanded="true">
+								</textfield>
+							</div>
 							<div class="form-group text-field clearfix">
 								<div class="col-sm-2">
 									<span class="text-field-heading">Category</span>

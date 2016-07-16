@@ -41,35 +41,31 @@
             results="modalData.ValidationResults">
         </validatedinput>
 
-        <div class="row">
-            <validatedinput
-                type="checkbox"
-                model="modalData"
-                property="duration"
-                label="Indefinite"
-                placeholder="This embargo duration will be indefinite."
-                truevalue="null"
-                falsevalue=""
-                form="forms.update"
-                validations="embargoRepo.getValidations()"
-                results="modalData.ValidationResults">
-            </validatedinput>
-        </div>
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="duration"
+            label="Indefinite"
+            placeholder="This embargo duration will be indefinite."
+            truevalue="null"
+            falsevalue="12"
+            form="forms.update"
+            validations="embargoRepo.getValidations()"
+            results="modalData.ValidationResults">
+        </validatedinput>
 
-        <div class="row">
-            <validatedinput
-                type="checkbox"
-                model="modalData"
-                property="isActive"
-                label="Display:"
-                truevalue="true"
-                falsevalue="false"
-                placeholder="This embargo option will be available for new submissions."
-                form="forms.update"
-                validations="embargoRepo.getValidations()"
-                results="modalData.ValidationResults">
-            </validatedinput>
-        </div>
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="isActive"
+            label="Display:"
+            truevalue="true"
+            falsevalue="false"
+            placeholder="This embargo option will be available for new submissions."
+            form="forms.update"
+            validations="embargoRepo.getValidations()"
+            results="modalData.ValidationResults">
+        </validatedinput>
 
     </div>
 

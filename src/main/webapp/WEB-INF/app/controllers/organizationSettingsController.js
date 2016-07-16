@@ -4,10 +4,6 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
 	$scope.organizationRepo = OrganizationRepo;
 
-	OrganizationRepo.listenSelectively(function() {
-		
-	});
-
 	SidebarService.addBox({
 		"title": "Create Organization",
 		"viewUrl": "views/sideboxes/organization.html"

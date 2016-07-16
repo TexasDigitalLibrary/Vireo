@@ -2,25 +2,25 @@
     
     <div class="col-sm-5">
 
-    <textfield 
-        form-view="true"
-        label="ProQuest Institution Code:"
-        scope-object="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
-        scope-property="value"
-        validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
-        expanded="true"
-        field-width="5"
-        confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
-        tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
-    </textfield>
-
-    <togglebutton
-        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
-        label="Indexed by Search Engines:"
-        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
-        toggle-options="{{proquestIndexingOptions}}"
-        tool-tip="TODO: add some content">
-    </togglebutton>
+	    <textfield 
+	        form-view="true"
+	        label="ProQuest Institution Code:"
+	        scope-object="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
+	        scope-property="value"
+	        validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
+	        expanded="true"
+	        field-width="5"
+	        confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
+	        tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+	    </textfield>
+	
+	    <togglebutton
+	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
+	        label="Indexed by Search Engines:"
+	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
+	        toggle-options="{{proquestIndexingOptions}}"
+	        tool-tip="TODO: add some content">
+	    </togglebutton>
 
     </div>
 

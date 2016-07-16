@@ -41,35 +41,31 @@
             results="embargoRepo.getValidationResults()">
         </validatedinput>
 
-        <div class="row">
-            <validatedinput
-                type="checkbox"
-                model="modalData"
-                property="duration"
-                label="Indefinite"
-                placeholder="This embargo duration will be indefinite."
-                truevalue="null"
-                falsevalue=""
-                form="forms.create"
-                validations="embargoRepo.getValidations()"
-                results="embargoRepo.getValidationResults()">
-            </validatedinput>
-        </div>
-
-        <div class="row">
-            <validatedinput
-                type="checkbox"
-                model="modalData"
-                property="isActive"
-                label="Display:"
-                truevalue="true"
-                falsevalue="false"
-                placeholder="This embargo option will be available for new submissions."
-                form="forms.create"
-                validations="embargoRepo.getValidations()"
-                results="embargoRepo.getValidationResults()">
-            </validatedinput>
-        </div>
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="duration"
+            label="Indefinite"
+            placeholder="This embargo duration will be indefinite."
+            truevalue="null"
+            falsevalue="12"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+        
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="isActive"
+            label="Display:"
+            truevalue="true"
+            falsevalue="false"
+            placeholder="This embargo option will be available for new submissions."
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
 
     </div>
 

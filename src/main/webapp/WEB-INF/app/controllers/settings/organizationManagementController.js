@@ -10,7 +10,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 	$scope.workflowStepRepo = WorkflowStepRepo;
 
-
 	$scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
 	$scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
