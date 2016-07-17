@@ -12,6 +12,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Language;
+import org.tdl.vireo.model.FieldGloss;
+import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestLanguageCodesService;
 
@@ -89,7 +91,7 @@ public class LanguageController {
     @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeLanguage(@ApiValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);
