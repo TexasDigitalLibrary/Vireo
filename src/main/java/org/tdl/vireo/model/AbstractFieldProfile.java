@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -40,12 +39,10 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @Column(nullable = false)
     private Boolean optional;
     
-    @Lob
-    @Column(nullable = true, name = "`usage`") // "usage" is a keyword in sql
+    @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
     
-    @Lob
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "text")
     private String help;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)

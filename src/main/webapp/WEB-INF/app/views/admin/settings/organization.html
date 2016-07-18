@@ -130,28 +130,35 @@
 						
 						<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
 							<div class="form-group text-field clearfix">
-								<textfield 
-									label="Name"
-									scope-object="getManagedOrganization()"
-									scope-property="name"
-									form="forms.update"
-									validations="getManagedOrganization().getValidations()"
-									label-width="2"
-									field-width="4"
-									expanded="true">
-								</textfield>
+								<div class="col-sm-2">
+									<span class="text-field-heading">Name</span>
+								</div>
+								<div class="col-sm-4 expanded">
+									<validatedinput
+										model="getManagedOrganization()"
+										property="name"
+										placeholder="Name of the organization"
+										form="forms.update"
+										validations="getManagedOrganization().getValidations()"
+										results="getManagedOrganization().getValidationResults()">
+									</validatedinput>
+								</div>
+
 							</div>
-							<div class="form-group text-field clearfix">
+							<div class="text-field clearfix">
 								<div class="col-sm-2">
 									<span class="text-field-heading">Category</span>
 								</div>
 								<div class="col-sm-4 expanded">
-									<div class="with-tool-tip">
-										<div class="with-hint">
-											<select name="organizationCategory" id="organizationCategory" class="form-control" ng-model="getManagedOrganization().category.id" ng-options="category.id as category.name for category in organizationCategories | filter:{ name : '!system' }">
-											</select>
-										</div>
-									</div>
+									<validatedselect
+										options="organizationCategories"
+										optionproperty="name"
+										model="getManagedOrganization()"
+										property="category"
+										form="forms.update"
+										validations="getManagedOrganization().getValidations()"
+										results="getManagedOrganization().ValidationResults">
+									</validatedselect>
 								</div>
 							</div>
 							<div class="modal-footer">

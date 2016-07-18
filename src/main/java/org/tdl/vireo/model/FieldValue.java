@@ -15,7 +15,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 public class FieldValue extends BaseEntity {
 
-    @Column(columnDefinition = "TEXT", nullable = true)
+    @Column(columnDefinition = "text", nullable = true)
     private String value;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
