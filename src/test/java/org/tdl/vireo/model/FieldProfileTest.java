@@ -77,8 +77,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldProfile = fieldProfileRepo.save(fieldProfile);
 
         // verify field glosses and controlled vocabularies
-        assertEquals("The field profile did not contain the correct field gloss!", fieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[0]);
-        assertEquals("The field profile did not contain the correct severable field gloss!", severableFieldGloss, (FieldGloss) fieldProfile.getFieldGlosses().toArray()[1]);
+        assertEquals("The field profile did not contain the correct field gloss!", fieldGloss, fieldProfile.getFieldGlossByValueAndLanguage(TEST_FIELD_GLOSS_VALUE, language));
+        assertEquals("The field profile did not contain the correct severable field gloss!", severableFieldGloss, fieldProfile.getFieldGlossByValueAndLanguage(TEST_SEVERABLE_FIELD_GLOSS_VALUE, language));
         assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME));
         assertEquals("The field profile did not contain the correct severable controlled vocabulary!", severablecontrolledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME));
 
@@ -509,12 +509,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
         
-        
-        
-        assertEquals("The parentOrganization's original workflow step's first original field profile was not as expected!", fp1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original field profile was not as expected!", fp2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original field profile was not as expected!", fp3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(2));
-        
+                
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
@@ -549,11 +544,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
        
-        
-        assertEquals("The parentOrganization's original workflow step's first original field profile was not as expected!", fp1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original field profile was not as expected!", fp2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original field profile was not as expected!", fp3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(2));
-       
+               
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
@@ -587,11 +578,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
        
-        
-        assertEquals("The parentOrganization's original workflow step's first original field profile was not as expected!", fp1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original field profile was not as expected!", fp2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original field profile was not as expected!", fp3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(2));
-       
+               
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));
@@ -631,11 +618,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         WorkflowStep newWorkflowStep = organization.getOriginalWorkflowSteps().get(0);
          
         
-        
-        assertEquals("The parentOrganization's original workflow step's first original field profile was not as expected!", fp1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original field profile was not as expected!", fp2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original field profile was not as expected!", fp3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalFieldProfiles().get(2));
-       
+               
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!", fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!", fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate field profile was not as expected!", fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2));

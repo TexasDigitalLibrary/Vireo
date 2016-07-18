@@ -169,6 +169,22 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         }
         return null;
     }
+    
+    /**
+     * 
+     * @param String
+     *            value
+     * @param Language
+     *            language
+     * @return The field gloss that matches the language, or null if not found
+     */
+    public FieldGloss getFieldGlossByValueAndLanguage(String value, Language language) {
+        for (FieldGloss fieldGloss : getFieldGlosses()) {
+            if (fieldGloss.getLanguage().equals(language) && fieldGloss.getValue().equals(value))
+                return fieldGloss;
+        }
+        return null;
+    }
 
     /**
      * @param fieldGlosses
@@ -223,7 +239,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      */
     public ControlledVocabulary getControlledVocabularyByName(String name) {
         for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-            if (controlledVocabulary.getName() == name)
+            if (controlledVocabulary.getName().equals(name))
                 return controlledVocabulary;
         }
         return null;

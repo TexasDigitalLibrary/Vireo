@@ -175,7 +175,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             }
         } catch (RuntimeException | IOException e) {
-            System.out.println("\n\nERROR Generating System Embargos\n\n");
+            System.out.println("\n\nERROR Generating System Organization Categories\n\n");
             e.printStackTrace();
             logger.debug("Unable to initialize default embargos. ", e);
         }
