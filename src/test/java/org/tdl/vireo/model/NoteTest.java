@@ -476,10 +476,6 @@ public class NoteTest extends AbstractEntityTest {
         
         
         
-        assertEquals("The parentOrganization's original workflow step's first original note was not as expected!", n1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original note was not as expected!", n2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original note was not as expected!", n3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(2));
-        
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate note was not as expected!", n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate note was not as expected!", n2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate note was not as expected!", n3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(2));
@@ -515,9 +511,6 @@ public class NoteTest extends AbstractEntityTest {
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
        
         
-        assertEquals("The parentOrganization's original workflow step's first original note was not as expected!", n1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original note was not as expected!", n2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original note was not as expected!", n3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(2));
        
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate note was not as expected!", n2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate note was not as expected!", n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1));
@@ -553,9 +546,6 @@ public class NoteTest extends AbstractEntityTest {
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
        
         
-        assertEquals("The parentOrganization's original workflow step's first original note was not as expected!", n1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original note was not as expected!", n2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original note was not as expected!", n3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(2));
        
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate note was not as expected!", n3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate note was not as expected!", n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1));
@@ -597,10 +587,6 @@ public class NoteTest extends AbstractEntityTest {
          
         
         
-        assertEquals("The parentOrganization's original workflow step's first original note was not as expected!", n1, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(0));
-        assertEquals("The parentOrganization's original workflow step's second original note was not as expected!", n2, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(1));
-        assertEquals("The parentOrganization's original workflow step's third original note was not as expected!", n3, parentOrganization.getOriginalWorkflowSteps().get(0).getOriginalNotes().get(2));
-       
         assertEquals("The parentOrganization's aggregate workflow step's first aggregate note was not as expected!", n3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0));
         assertEquals("The parentOrganization's aggregate workflow step's second aggregate note was not as expected!", n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1));
         assertEquals("The parentOrganization's aggregate workflow step's third aggregate note was not as expected!", n2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(2));

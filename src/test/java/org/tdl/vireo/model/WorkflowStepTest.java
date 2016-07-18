@@ -829,9 +829,9 @@ public class WorkflowStepTest extends AbstractEntityTest {
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
     
         
-        assertEquals("The parentOrganization's first original workflow step was not as expected!", s1, parentOrganization.getOriginalWorkflowSteps().get(0));
-        assertEquals("The parentOrganization's second original workflow step was not as expected!", s2, parentOrganization.getOriginalWorkflowSteps().get(1));
-        assertEquals("The parentOrganization's third original workflow step was not as expected!", s3, parentOrganization.getOriginalWorkflowSteps().get(2));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s1));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s2));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s3));
         
         assertEquals("The parentOrganization's first aggregate workflow step was not as expected!", s1, parentOrganization.getAggregateWorkflowSteps().get(0));
         assertEquals("The parentOrganization's second aggregate workflow step was not as expected!", s2, parentOrganization.getAggregateWorkflowSteps().get(1));
@@ -863,9 +863,9 @@ public class WorkflowStepTest extends AbstractEntityTest {
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
         
         
-        assertEquals("The parentOrganization's first original workflow step was not as expected!", s1, parentOrganization.getOriginalWorkflowSteps().get(0));
-        assertEquals("The parentOrganization's second original workflow step was not as expected!", s2, parentOrganization.getOriginalWorkflowSteps().get(1));
-        assertEquals("The parentOrganization's third original workflow step was not as expected!", s3, parentOrganization.getOriginalWorkflowSteps().get(2));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s1));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s2));
+        assertTrue("The parentOrganization's did not contain an expected original workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(s3));
         
         assertEquals("The parentOrganization's first aggregate workflow step was not as expected!", s2, parentOrganization.getAggregateWorkflowSteps().get(0));
         assertEquals("The parentOrganization's second aggregate workflow step was not as expected!", s1, parentOrganization.getAggregateWorkflowSteps().get(1));
