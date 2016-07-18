@@ -57,7 +57,7 @@
 			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
 				<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 
-	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">	    					      	
+	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">		      	
 			      	<ul class="nav navbar-nav navbar-right">
 			      		<li class="dropdown">
 			      			<a href ng-click="openModal('#loginModal')">Login</a>
@@ -239,6 +239,7 @@
 	  	<script src="bower_components/core/app/services/utilityservice.js"></script>
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
 	  	<script src="bower_components/core/app/services/validationstore.js"></script>
+	  	<script src="bower_components/core/app/services/userservice.js"></script>
 	  	
 	  	<!-- Repo -->
 	  	<script src="bower_components/core/app/repo/abstractRepo.js"></script>
