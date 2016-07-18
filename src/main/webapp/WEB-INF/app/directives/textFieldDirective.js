@@ -10,8 +10,8 @@ vireo.directive("textfield", function() {
 			"toolTip": "@",
 			"hint": "@",
 			"form": "=",
+			"confirm": "&",
 			"validations": "=",
-			"onBlur": "&",
 			"labelWidth": "@",
 			"fieldWidth": "@",
 			"expanded": "="

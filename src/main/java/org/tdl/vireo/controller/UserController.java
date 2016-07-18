@@ -61,6 +61,8 @@ public class UserController {
         }
 
         shib.setRole(user.getRole().toString());
+        
+        shib.setModelValidator(user.getModelValidator());
 
         return new ApiResponse(SUCCESS, shib);
     }
