@@ -8,7 +8,6 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,8 +39,7 @@ public class ActionLog extends BaseEntity {
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
 	private Attachment attachment;
 
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "text")
 	private String entry;
 
 	@Column(nullable = false)

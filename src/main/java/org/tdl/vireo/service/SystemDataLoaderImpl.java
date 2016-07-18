@@ -161,13 +161,24 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     }
     
     @Override
-    public void generateAllOrganizationCategories() {
-        organizationCategoryRepo.create("College");
-        organizationCategoryRepo.create("Degree");
-        organizationCategoryRepo.create("Department");
-        organizationCategoryRepo.create("Major");
-        organizationCategoryRepo.create("Program");
-        organizationCategoryRepo.create("Administrative Group");
+    public void generateAllOrganizationCategories() {                
+        try {
+
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+
+            for (OrganizationCategory organizationCategory : organizationCategories) {
+                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
+                
+                if(dbOrganizationCategory == null) {
+                    dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
+                }
+
+            }
+        } catch (RuntimeException | IOException e) {
+            System.out.println("\n\nERROR Generating System Embargos\n\n");
+            e.printStackTrace();
+            logger.debug("Unable to initialize default embargos. ", e);
+        }
     }
     
     /**
@@ -530,15 +541,27 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             String message = data.substring(index);
 
-            if (subject == null || subject.length() == 0)
+            if (subject == null || subject.length() == 0) {
                 throw new IllegalStateException("Unable to identify the template's subject.");
+            }
 
-            if (message == null || message.length() == 0)
+            if (message == null || message.length() == 0) {
                 throw new IllegalStateException("Unable to identify the template's message.");
+            }
 
-            EmailTemplate template = emailTemplateRepo.create(name, subject, message);
-
-            template.isSystemRequired(true);
+            
+            EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            
+            if(template == null) {
+                template = emailTemplateRepo.create(name, subject, message);
+                template.isSystemRequired(true);
+            }
+            else {
+                template.setSubject(subject);
+                template.setMessage(message);                
+            }
+            
+           
 
             return emailTemplateRepo.save(template);
 
@@ -637,50 +660,19 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             for (Embargo embargoDefinition : embargoDefinitions) {
                 Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
-
-                // create template or upgrade the old one, new system embargos are enabled by default unless they have a custom one that already exists
+                
                 if (dbEmbargo == null) {
-                    Embargo possibleCustomEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), false);
-
                     dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     dbEmbargo.isSystemRequired(true);
-                    // if we have a custom one that's named the same, make sure this new one is not active by default
-                    if (possibleCustomEmbargo != null) {
-                        dbEmbargo.isActive(false);
-                    }
-                    logger.info("New System Embargo Type being installed [" + dbEmbargo.getName() + "]@[" + dbEmbargo.getGuarantor().name() + "]");
                     embargoRepo.save(dbEmbargo);
-                } else {
-                    Embargo loadedEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
-                    loadedEmbargo.setGuarantor(embargoDefinition.getGuarantor());
-                    loadedEmbargo.isSystemRequired(true);
-
-                    // if the embargo in the DB doesn't match in content with the one loaded from array
-                    if (!(dbEmbargo.getDescription().equals(loadedEmbargo.getDescription())) || !(dbEmbargo.getDuration() == loadedEmbargo.getDuration()) || !(dbEmbargo.getGuarantor().ordinal() == loadedEmbargo.getGuarantor().ordinal())) {
-                        Embargo possibleCustomEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), false);
-
-                        // if this System template already has a custom template (meaning one named the same but that is !isSystemRequired)
-                        if (possibleCustomEmbargo != null) {
-                            // a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
-                            // upgraded system embargos that have a custom version are disabled by default
-                            dbEmbargo.isActive(false);
-                            dbEmbargo.setDescription(loadedEmbargo.getDescription());
-                            dbEmbargo.setDuration(loadedEmbargo.getDuration());
-                            dbEmbargo.setGuarantor(loadedEmbargo.getGuarantor());
-                            dbEmbargo.isSystemRequired(true);
-                            logger.info("Upgrading Old System Embargo Type for [" + dbEmbargo.getName() + "]@[" + dbEmbargo.getGuarantor().name() + "]");
-                            embargoRepo.save(dbEmbargo);
-                        }
-                        // there is no custom one yet, we need to make the dbEmbargo !isSystemRequired and the save loadedEmbargo
-                        else {
-                            logger.info("Upgrading Old System Embargo Type and creating custom version for [" + dbEmbargo.getName() + "]@[" + dbEmbargo.getGuarantor().name() + "]");
-                            dbEmbargo.isSystemRequired(false);
-                            embargoRepo.save(dbEmbargo);
-                            // upgraded system embargos are disabled by default
-                            loadedEmbargo.isActive(false);
-                            embargoRepo.save(loadedEmbargo);
-                        }
-                    }
+                }
+                else {
+                    dbEmbargo.setDescription(embargoDefinition.getDescription());
+                    dbEmbargo.setDuration(embargoDefinition.getDuration());
+                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    dbEmbargo.isActive(embargoDefinition.isActive());
+                    dbEmbargo.isSystemRequired(embargoDefinition.isSystemRequired());
+                    embargoRepo.save(dbEmbargo);
                 }
             }
         } catch (RuntimeException | IOException e) {

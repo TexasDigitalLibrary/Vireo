@@ -2,9 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
@@ -16,9 +13,6 @@ import org.tdl.vireo.model.repo.custom.SubmissionFieldProfileRepoCustom;
 
 public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRepoCustom {
 	
-	@PersistenceContext
-    private EntityManager em;
-
     @Autowired
     private SubmissionFieldProfileRepo submissionFieldProfileRepo;
     

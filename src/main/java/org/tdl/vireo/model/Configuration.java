@@ -2,7 +2,6 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -24,8 +23,7 @@ public class Configuration extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String value;
 
     @Column(nullable = false, length = 255)

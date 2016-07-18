@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EntityCVWhitelist;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
@@ -72,13 +73,23 @@ public class EntityControlledVocabularyService {
             String ecvwName = ecvw.getEntityName();
             List<String> ecvwPropertyNames = ecvw.getPropertyNames();
             
-            whitelist.put(ecvwName, ecvwPropertyNames);                    
-            entityCVWhitelistRepo.create(ecvwName, ecvwPropertyNames);
+            whitelist.put(ecvwName, ecvwPropertyNames);
+            
+            if(entityCVWhitelistRepo.findByEntityName(ecvwName) == null) {
+                entityCVWhitelistRepo.create(ecvwName, ecvwPropertyNames);
+            }
             
             ecvwPropertyNames.forEach(propertyName -> {
                 // TODO: manage default language accordingly
                 //       and handle duplicate controlled vocabulary names on different entities
-                ControlledVocabulary cv = controlledVocabularyRepo.create(propertyName, ecvwName, languageRepo.findByName("English"));
+                
+                Language language = languageRepo.findByName("English");
+                
+                ControlledVocabulary cv = controlledVocabularyRepo.findByNameAndLanguage(propertyName,language );
+                
+                if(cv == null) {
+                    cv = controlledVocabularyRepo.create(propertyName, ecvwName, language);
+                }
                 
                 if(isPropertyEnum(ecvwName, propertyName)) {
                     cv.setIsEnum(true);
