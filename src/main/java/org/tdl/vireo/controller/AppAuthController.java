@@ -1,6 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.UnsupportedEncodingException;
@@ -35,10 +36,13 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.Parameters;
 import edu.tamu.framework.controller.CoreAuthController;
 import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.framework.validation.ValidationResults;
 
 @Controller
 @ApiMapping("/auth")
 public class AppAuthController extends CoreAuthController {
+    
+    private static final String BUSINESS_MESSAGE_KEY = "business";
     
     private Logger logger = LoggerFactory.getLogger(this.getClass()); 
 
@@ -69,8 +73,10 @@ public class AppAuthController extends CoreAuthController {
             String email = parameters.get("email")[0];
             
             if(userRepo.findByEmail(email) != null) {
-                logger.debug("Account with email " + email + " already exists!");                
-                return new ApiResponse(ERROR, "Account with email " + email + " already exists!");
+                logger.debug("Account with email " + email + " already exists!");
+                ValidationResults invalidEmail = new ValidationResults();
+                invalidEmail.addMessage(BUSINESS_MESSAGE_KEY, "verify", "Account with email " + email + " already exists!");
+                return new ApiResponse(INVALID, invalidEmail);
             }
 
             EmailTemplate emailTemplate = emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE);
@@ -157,12 +163,16 @@ public class AppAuthController extends CoreAuthController {
         
         if(user == null) {
             logger.debug("No user found with email " + email + "!");
-            return new ApiResponse(ERROR, "No user found with email " + email + "!");
+            ValidationResults invalidEmail = new ValidationResults();
+            invalidEmail.addMessage(BUSINESS_MESSAGE_KEY, "login", "No user found with email " + email + "!");
+            return new ApiResponse(INVALID, invalidEmail);
         }
         
         if(!authUtility.validatePassword(password, user.getPassword())) {
             logger.debug("Authentication failed!");
-            return new ApiResponse(ERROR, "Authentication failed!");
+            ValidationResults failedAuthenticationResults = new ValidationResults();
+            failedAuthenticationResults.addMessage(BUSINESS_MESSAGE_KEY, "login", "Authentication failed!");
+            return new ApiResponse(INVALID, failedAuthenticationResults);
         }
         
         try {

@@ -1,24 +1,49 @@
 <div class="view" ng-controller="RegistrationController">
+
+    <validationmessage results="user.getValidationResults()"></validationmessage>
+
 	<h3>Continue registration</h3>
 	<hr>
-	<form class="registration">
-        <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input type="name" ng-model="registration.firstName" class="form-control" id="firstName" placeholder="First Name">
-        </div>
-        <div class="form-group">
-            <label for="lastName">Last Name</label>
-            <input type="name" ng-model="registration.lastName" class="form-control" id="lastName" placeholder="Last Name">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" ng-model="registration.password" class="form-control" id="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="confirm">Confirm Password</label>
-            <input type="password" ng-model="registration.confirm" class="form-control" id="confirm" placeholder="Confirm Password">
-        </div>
-        <button type="submit" class="btn btn-primary" ng-click="register()">Register</button>
+	<form class="registration" name="forms.register" ng-submit="register()" novalidate>
+        <validatedinput
+            model="registration"
+            property="firstName"
+            label="First Name"
+            placeholder="Enter first name"
+            form="forms.register"
+            validations="user.getValidations()"
+            results="user.getValidationResults()">
+        </validatedinput>
+        <validatedinput            
+            model="registration"
+            property="lastName"
+            label="Last Name"
+            placeholder="Enter last name"
+            form="forms.register"
+            validations="user.getValidations()"
+            results="user.getValidationResults()">
+        </validatedinput>
+        <validatedinput
+            type="password"
+            model="registration"
+            property="password"
+            label="Password"
+            placeholder="Enter password"
+            form="forms.register"
+            validations="user.getValidations()"
+            results="user.getValidationResults()">
+        </validatedinput>
+        <validatedinput
+            type="password"
+            model="registration"
+            property="confirm"
+            label="Confirm Password"
+            placeholder="Enter password again"
+            form="forms.register"
+            validations="user.getValidations()"
+            results="user.getValidationResults()">
+        </validatedinput>
+        <button type="submit" class="btn btn-primary" ng-disabled="forms.register.$invalid">Register</button>
     </form>
     <hr>
 </div>

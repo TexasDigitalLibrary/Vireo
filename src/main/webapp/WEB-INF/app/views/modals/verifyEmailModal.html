@@ -1,23 +1,31 @@
-<div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Verify Email</h3>
-</div>
-
-<div class="modal-body verifyEmailModal">
-	<div ng-controller="RegistrationController">
-		<form>
-			<div class="input-group">
-				<input id="email" type="netid" class="form-control" placeholder="Enter email" ng-model="registration.email" ng-pattern="word" ng-trim="false" />
-			    <span class="input-group-btn">
-					<button class="btn btn-primary" type="submit" data-dismiss="modal" ng-click="verifyEmail(registration.email)">Submit</button>
-			    </span>
-		    </div>
-		</form>
+<span ng-controller="RegistrationController">
+	
+	<div class="modal-header {{attr.modalHeaderClass}}">
+		<button type="button" class="close" ng-click="reset()" aria-label="Close">
+			<span class="modal-close" aria-hidden="true">&times;</span>
+		</button>
+		<h3 class="modal-title">Verify Email</h3>
 	</div>
-</div>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="closeModal()">cancel</button>
-</div>
+	<form ng-submit="verifyEmail(registration.email)" name="forms.verifyEmail" novalidate>
+		
+		<validationmessage results="user.getValidationResults()"></validationmessage>
+
+		<div class="modal-body verifyEmailModal">
+			<validatedinput
+				model="registration"
+				property="email"
+				label="Email"
+				placeholder="Enter email"
+				form="forms.verifyEmail"
+				validations="user.getValidations()"
+				results="user.getValidationResults()">
+			</validatedinput>
+		</div>
+
+		<div class="modal-footer">		
+			<button type="button" class="btn btn-warning" ng-click="reset()">cancel</button>
+			<button class="btn btn-primary" type="submit" ng-disabled="forms.verifyEmail.$invalid">Submit</button>
+		</div>
+	</form>
+<span>
