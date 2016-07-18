@@ -27,6 +27,59 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 					$scope.settings.user.save();
 				}, timer);
 			};
+
+			var userSettingsValidations = {
+			    "displayName": {
+			        "minlength": {
+			            "type": "minlength",
+			            "message": "Display name must be at least 2 characters",
+			            "property": "displayName",
+			            "value": 2
+			        },
+			        "maxlength": {
+			            "type": "maxlength",
+			            "message": "Display name cannot be more than 255 characters",
+			            "property": "displayName",
+			            "value": 255
+			        },
+			        "required": {
+			            "type": "required",
+			            "message": "Display requires a name",
+			            "property": "displayName",
+			            "value": true
+			        }
+			    },
+			    "preferedEmail": {
+			        "minlength": {
+			            "type": "minlength",
+			            "message": "Preferred email must be at least 2 characters",
+			            "property": "preferedEmail",
+			            "value": 2
+			        },
+			        "maxlength": {
+			            "type": "maxlength",
+			            "message": "Preferred email cannot be more than 255 characters",
+			            "property": "preferedEmail",
+			            "value": 255
+			        },
+			        "required": {
+			            "type": "required",
+			            "message": "Preferred email requires a name",
+			            "property": "preferedEmail",
+			            "value": true
+			        },
+			        "pattern": {
+			            "type": "pattern",
+			            "message": "Invalid email address",
+			            "property": "preferedEmail",
+			            "value": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+			        }
+			    }
+			};
+
+			$scope.getUserSettingsValidations = function() {
+				return userSettingsValidations;
+			};
 		});
 	}
 
