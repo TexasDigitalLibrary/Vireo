@@ -1,4 +1,4 @@
-vireo.controller("StudentSubmissionController", function($controller, $scope, $routeParams, StudentSubmissionRepo, Submission) {
+vireo.controller("StudentSubmissionController", function ($controller, $scope, $routeParams, StudentSubmissionRepo, Submission) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	

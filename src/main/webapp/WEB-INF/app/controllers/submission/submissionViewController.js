@@ -1,5 +1,7 @@
 vireo.controller("SubmissionViewController", function ($controller, $scope, NgTableParams, SubmissionRepo) {
 
+	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+	
   	$scope.submissions = SubmissionRepo.getAll();
 
   	SubmissionRepo.ready().then(function() {

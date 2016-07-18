@@ -1,25 +1,24 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="reset()" aria-label="Close">
+    <button type="button" class="close" ng-click="" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">Login</h3>
+    <h3 class="modal-title">Customize Results Table</h3>
 </div>
 
 <form name="forms.customize" novalidate>
 
-    <span ng-controller="LoginController">
+    <validationmessage results=""></validationmessage>
 
-        <validationmessage results=""></validationmessage>
+    <div class="modal-body customizeSubmissionViewModal">
+        
+    </div>
 
-        <div class="modal-body customizeSubmissionViewModal">
-            
-        </div>
-
-    </span>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-left" ng-click="login()">Shibboleth Login</button>
-        <button type="button" class="btn btn-warning" ng-click="reset()">Cancel</button>
+    	<button type="button" class="btn btn-warning" ng-click="">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="">Default Columns</button>
+        <button type="button" class="btn btn-primary" ng-click="">Save</button>
+        
     </div>
 
 </form>

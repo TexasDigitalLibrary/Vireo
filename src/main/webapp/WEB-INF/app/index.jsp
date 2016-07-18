@@ -20,8 +20,6 @@
 	
 	<meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool">
 	
-	<link rel="shortcut icon" href="resources/images/favicon.ico" type="image/x-icon" />
-
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
