@@ -11,18 +11,12 @@
 		<h1>List ETDs</h1>
 		<hr>
 		<a href="" ng-click="openModal('#customizeSubmissionViewModal')">Customize view</a>
-		<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
+		
+		 <table ng-table-dynamic="tableParams with userColumns" show-filter="true" class="table table-bordered table-striped" id="etd-table">
 			<tr ng-repeat="row in $data track by row.id">
-				<td title="'ID'">{{row.id}}</td>
-				<td title="'Organization'">{{row.organization.name}}</td>
-				<td title="'Student Name'">{{row.submitter.firstName}} {{row.submitter.lastName}}</td>
-				<td title="'Status'">{{row.state.name}}</td>
-				<td title="'Assigned to'">TODO</td>
-				<td title="'Document title'">TODO</td>
-				<td title="'Submission date'">TODO</td>
-				<td title="'Approval date'">TODO</td>
-				<td title="'Embargo type'">TODO</td>
+				<td ng-repeat="col in $userColumns track by $index">{{row}} {{col}}</td>
 			</tr>
 		</table>
+
 	</div>
 </div>

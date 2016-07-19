@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="" aria-label="Close">
+    <button type="button" class="close" ng-click="resetColumns()" aria-title="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Customize Results Table</h3>
@@ -17,8 +17,8 @@
 	        		<h4>Displayed Columns</h4>
 	        		<div class="column-background">
 			    		<ul class="displayed-column-container" as-sortable="columnOptions" ng-model="userColumns">
-			    			<li ng-class="{'displayed-column': column.status === undefined, 'disabled-column': column.status == 'pervisoulyDisabled'}"ng-repeat="column in userColumns" as-sortable-item>
-			    				<div as-sortable-item-handle>{{column.label}}</div>
+			    			<li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status == 'pervisoulyDisabled'}"ng-repeat="column in userColumns" as-sortable-item>
+			    				<div as-sortable-item-handle>{{column.title}}</div>
 			    			</li>
 			    		</ul>
 			    	</div>
@@ -27,8 +27,8 @@
 		    		<h4>Disabled Columns</h4>
 		    		<div class="column-background">
 			    		<ul class="disabled-column-container" as-sortable="columnOptions" ng-model="columns">
-			    			<li ng-class="{'disabled-column': column.status === undefined, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns" as-sortable-item>
-			    				<div as-sortable-item-handle>{{column.label}}</div>
+			    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns" as-sortable-item>
+			    				<div as-sortable-item-handle>{{column.title}}</div>
 			    			</li>
 			    		</ul>
 			    	</div>
@@ -38,7 +38,7 @@
 	    <div class="row results-per-page-container">
 		    <div class="col-sm-8 col-sm-offset-2">
 			    <form class="form-inline">
-	                <label class="control-label" for="name"><strong>Results per page</strong>:</label>	                
+	                <title class="control-title" for="name"><strong>Results per page</strong>:</title>	                
 	                <select class="form-control results-per-page-select" name="resultsPerPage" ng-model="resultsPerPage" ng-options="rpp for rpp in resultsPerPageOptions">
 	                </select>
 		        </form>
@@ -47,9 +47,9 @@
     </div>
 
     <div class="modal-footer">
-    	<button type="button" class="btn btn-warning" ng-click="">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="">Default Columns</button>
-        <button type="button" class="btn btn-primary" ng-click="">Save</button>        
+    	<button type="button" class="btn btn-warning" ng-click="resetColumns()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="resetColumnsToDefault()">Default Columns</button>
+        <button type="button" class="btn btn-primary" ng-click="saveColumns()">Save</button>        
     </div>
 
 <!-- </form> -->

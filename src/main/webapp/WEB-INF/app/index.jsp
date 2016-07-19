@@ -309,6 +309,8 @@
 	    <script src="repo/submissionRepo.js"></script>
 	    <script src="repo/noteRepo.js"></script>
 	    <script src="repo/fieldProfileRepo.js"></script>
+	    <script src="repo/submissionViewColumnRepo.js"></script>
+	    <script src="repo/managerSubmissionViewColumnRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
@@ -331,6 +333,7 @@
 	    <script src="model/submission.js"></script>
 	    <script src="model/fieldProfile.js"></script>
 	    <script src="model/note.js"></script>
+	    <script src="model/submissionViewColumn.js"></script>
 		
 
 	    <!-- Factories -->

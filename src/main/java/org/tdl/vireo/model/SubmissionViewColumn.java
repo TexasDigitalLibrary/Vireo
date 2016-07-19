@@ -1,35 +1,50 @@
 package org.tdl.vireo.model;
 
-import org.tdl.vireo.enums.Sort;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
-public class SubmissionViewColumn {
+import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.model.validation.SubmissionViewColumnValidator;
+
+import edu.tamu.framework.model.BaseEntity;
+
+@Entity
+public class SubmissionViewColumn extends BaseEntity {
     
-    private String label;
+    @Column(unique = true, nullable = false)
+    private String title;
     
+    @Column(nullable = false)
     private Sort sort;
     
+    @Column(nullable = false)
     private String[] path;
     
     private String status;
     
-    public SubmissionViewColumn(String label, Sort sort, String... path) {
-        this.label = label;
+    public SubmissionViewColumn() {
+        setModelValidator(new SubmissionViewColumnValidator());
+    }
+    
+    public SubmissionViewColumn(String title, Sort sort, String... path) {
+        this();
+        this.title = title;
         this.sort = sort;
         this.path = path;
     }
 
     /**
-     * @return the label
+     * @return the title
      */
-    public String getLabel() {
-        return label;
+    public String getTitle() {
+        return title;
     }
 
     /**
-     * @param label the label to set
+     * @param title the title to set
      */
-    public void setLabel(String label) {
-        this.label = label;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**

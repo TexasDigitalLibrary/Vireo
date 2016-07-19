@@ -14,7 +14,7 @@
     "ng-csv": "0.3.2",
     "ng-file-upload": "^12.0.1",
     "ng-table": "1.0.0",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#f4ac8207c4405ed07ad074f728cc760976ff9c0a"
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#fe413472b3463c11f0df6edb87d6cc2b299be29f"
   },
   "resolutions": {
     "angular": "1.4.9"

@@ -1,4 +1,4 @@
-vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, WsApi) {
+vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionViewColumnRepo, ManagerSubmissionViewColumnRepo, WsApi) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -12,22 +12,48 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.resultsPerPage = 100;
 
-  	var allColumnsPromise = WsApi.fetch({
-		'endpoint': '/private/queue',
-		'controller': 'submission',
-		'method': 'all-columns'
+
+  	var listenForManagersSubmissionColumns = function() {
+  		return $q(function(resolve) {
+  			ManagerSubmissionViewColumnRepo.listen(function() {
+  				resolve();
+  			});
+  		});
+  	};
+
+  	var listenForAllSubmissionColumns = function() {
+  		return $q(function(resolve) {
+  			SubmissionViewColumnRepo.listen(function() {
+  				resolve();
+  			});
+  		});
+  	};
+
+	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready()]).then(function(data) {
+		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
 	});
 
-	var userColumnsPromise = WsApi.fetch({
-		'endpoint': '/private/queue',
-		'controller': 'submission',
-		'method': 'columns-by-user'
-	});
+	$scope.resetColumns = function() {
 
-	$q.all([allColumnsPromise, userColumnsPromise]).then(function(data) {
-		angular.extend($scope.userColumns, angular.fromJson(data[1].body).payload["ArrayList<SubmissionViewColumn>"]);
-		angular.extend($scope.columns, $filter('exclude')(angular.fromJson(data[0].body).payload["ArrayList<SubmissionViewColumn>"], $scope.userColumns, 'label'));
-	});
+		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
+	  		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+			$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+	  	});
+
+		SubmissionViewColumnRepo.reset();
+		ManagerSubmissionViewColumnRepo.reset();
+
+		$scope.closeModal();
+	};
+
+	$scope.resetColumnsToDefault = function() {
+		$scope.closeModal();
+	};
+
+	$scope.saveColumns = function() {
+		$scope.closeModal();
+	};
 
 	$scope.columnOptions = {
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
@@ -35,11 +61,11 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		},
 		itemMoved: function (event) {			
 			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-				event.source.itemScope.column.status = event.source.itemScope.column.status === undefined ? 'previouslyDisplayed' : undefined;
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : undefined;
 				
 			}
 			else {
-				event.source.itemScope.column.status = event.source.itemScope.column.status === undefined ? 'pervisoulyDisabled' : undefined;
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : undefined;
 			}
 		},
 		orderChanged: function (event) {
