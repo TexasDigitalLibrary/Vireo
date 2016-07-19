@@ -1511,3 +1511,50 @@ footer a, footer li, footer p {
   top: 7px;
   left: 8px;
 }
+
+/************************************
+ * Submission View Column Selection *
+ ************************************/
+
+
+ .column-modal {
+  height: 750px;
+  overflow-y: scroll;
+ }
+
+.column-background {
+  list-style-type: none;
+  margin: 0;
+  background: #CCCCCC;
+  padding: 5px;
+}
+
+.displayed-column {
+  color: #468847;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  margin: 5px;
+  padding: 5px;
+}
+
+.displayed-column-container {
+  margin: 0;
+  padding: 0;
+}
+
+.disabled-column {
+  color: #666666;
+  background-color: #EEEEEE;
+  border-color: #CCCCCC;
+  margin: 5px;
+  padding: 5px;
+}
+
+.disabled-column-container {
+  margin: 0;
+  padding: 0;
+}
+
+.results-per-page-container {
+  margin-top: 20px;
+}
