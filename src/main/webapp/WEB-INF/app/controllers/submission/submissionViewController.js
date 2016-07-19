@@ -12,18 +12,14 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.resultsPerPage = 100;
 
-  	var updateColumns = function() {
-  		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
-		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
-  	};
-
   	SubmissionRepo.listen(function() {
 		$scope.tableParams.reload();
   	});
 
-  	ManagerSubmissionViewColumnRepo.listen(function() {
-		updateColumns();
-	});
+  	var updateColumns = function() {
+  		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+  	};
 
   	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready(), SubmissionRepo.ready()]).then(function(data) {
 		updateColumns();
@@ -35,7 +31,6 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
   		});
 
   		$scope.tableParams.reload();
-
 	});
 
   	var listenForManagersSubmissionColumns = function() {
@@ -71,8 +66,9 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	};
 
 	$scope.saveColumns = function() {
-		ManagerSubmissionViewColumnRepo.updateSubmissionViewColumns();
-		$scope.closeModal();
+		ManagerSubmissionViewColumnRepo.updateSubmissionViewColumns().then(function() {
+			$scope.resetColumns();
+		});
 	};
 
 	$scope.getSubmissionProperty = function(row, col) {

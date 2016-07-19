@@ -5,7 +5,6 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.SubmissionViewColumn;
@@ -30,9 +29,6 @@ public class SubmissionViewController {
     @Autowired
     private UserRepo userRepo;
     
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-    
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
     @Transactional
@@ -54,9 +50,8 @@ public class SubmissionViewController {
     public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionViewColumn> submissionViewColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.setSubmissionViewColumns(submissionViewColumns);
-        user = userRepo.save(user);        
-        simpMessagingTemplate.convertAndSend("/channel/managers-submission-view", new ApiResponse(SUCCESS, user.getSubmissionViewColumns()));        
-        return new ApiResponse(SUCCESS);
+        user = userRepo.save(user);
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
 }
