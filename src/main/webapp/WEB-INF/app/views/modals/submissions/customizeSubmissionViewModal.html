@@ -18,7 +18,7 @@
 	        		<div class="column-background">
 			    		<ul class="displayed-column-container" as-sortable="columnOptions" ng-model="userColumns">
 			    			<li class="displayed-column" ng-repeat="column in userColumns" as-sortable-item>
-			    				<div as-sortable-item-handle>{{column}}</div>
+			    				<div as-sortable-item-handle>{{column.label}}</div>
 			    			</li>
 			    		</ul>
 			    	</div>
@@ -28,7 +28,7 @@
 		    		<div class="column-background">
 			    		<ul class="disabled-column-container" as-sortable="columnOptions" ng-model="columns">
 			    			<li class="disabled-column" ng-repeat="column in columns" as-sortable-item>
-			    				<div as-sortable-item-handle>{{column}}</div>
+			    				<div as-sortable-item-handle>{{column.label}}</div>
 			    			</li>
 			    		</ul>
 			    	</div>

@@ -25,8 +25,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	});
 
 	$q.all([allColumnsPromise, userColumnsPromise]).then(function(data) {
-		angular.extend($scope.userColumns, angular.fromJson(data[1].body).payload["ArrayList<String>"]);
-		angular.extend($scope.columns, $filter('exclude')(angular.fromJson(data[0].body).payload["ArrayList<String>"], $scope.userColumns));
+		angular.extend($scope.userColumns, angular.fromJson(data[1].body).payload["ArrayList<SubmissionViewColumn>"]);
+		angular.extend($scope.columns, $filter('exclude')(angular.fromJson(data[0].body).payload["ArrayList<SubmissionViewColumn>"], $scope.userColumns, 'label'));
 	});
 
 	$scope.columnOptions = {
@@ -39,7 +39,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		orderChanged: function (event) {
 
 		},
-		containment: '#column-modal'
+		containment: '#column-modal',
+		additionalPlaceholderClass: 'column-placeholder'
 	};
 
   	SubmissionRepo.ready().then(function() {
