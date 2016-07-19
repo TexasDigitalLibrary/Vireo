@@ -10,6 +10,10 @@ vireo.repo("ManagerSubmissionViewColumnRepo", function ManagerSubmissionViewColu
 		return WsApi.fetch(managerSubmissionViewColumnRepo.mapping.update);
 	};
 
+	this.resetSubmissionViewColumns = function() {
+		return WsApi.fetch(managerSubmissionViewColumnRepo.mapping.reset);
+	};
+
 	return managerSubmissionViewColumnRepo;
 
 });

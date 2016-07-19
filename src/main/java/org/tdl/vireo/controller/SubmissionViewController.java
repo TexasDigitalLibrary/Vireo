@@ -11,6 +11,7 @@ import org.tdl.vireo.model.SubmissionViewColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.SubmissionViewColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.DefaultSubmissionViewColumnService;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -28,6 +29,9 @@ public class SubmissionViewController {
     
     @Autowired
     private UserRepo userRepo;
+    
+    @Autowired
+    private DefaultSubmissionViewColumnService defaultSubmissionViewColumnService;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -53,5 +57,16 @@ public class SubmissionViewController {
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
+    
+    @ApiMapping("/reset-user-columns")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
+        user = userRepo.save(user);
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+    
     
 }

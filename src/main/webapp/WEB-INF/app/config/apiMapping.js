@@ -544,6 +544,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission-view',
 			'method': 'update-user-columns'
+		},
+		reset: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'reset-user-columns'
 		}
 	},
 	User: {

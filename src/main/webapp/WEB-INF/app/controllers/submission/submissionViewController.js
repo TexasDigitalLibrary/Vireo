@@ -62,7 +62,9 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	};
 
 	$scope.resetColumnsToDefault = function() {
-		$scope.closeModal();
+		ManagerSubmissionViewColumnRepo.resetSubmissionViewColumns().then(function() {
+			$scope.resetColumns();
+		});
 	};
 
 	$scope.saveColumns = function() {
