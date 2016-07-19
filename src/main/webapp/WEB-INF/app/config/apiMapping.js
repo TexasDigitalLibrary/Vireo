@@ -519,6 +519,31 @@ var apiMapping = {
 			'controller': 'submission'
 		}
 	},
+	StudentSubmission: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'all-by-user'
+		},
+		one: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission',
+			'method': 'user'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'create'
+		},
+		saveFieldValue: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		}
+	},
 	SubmissionViewColumn: {
 		all: {
 			'endpoint': '/private/queue',
@@ -654,14 +679,4 @@ var apiMapping = {
 			'controller': 'workflow-step'
 		}
 	},
-}
-
-// OVERRIDES ? this doesn't work! all is changed on both!!
-
-apiMapping.StudentSubmission = apiMapping.Submission;
-
-apiMapping.StudentSubmission.all = {
-	'endpoint': '/private/queue',
-	'controller': 'submission',
-	'method': 'all-by-user'
 }

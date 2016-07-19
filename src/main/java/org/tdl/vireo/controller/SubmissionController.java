@@ -47,9 +47,9 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
     
-    @ApiMapping("/all-by-user")
-    @Auth(role = "STUDENT")
     @Transactional
+    @ApiMapping("/all-by-user")
+    @Auth(role = "STUDENT")   
     public ApiResponse getAllByUser(@ApiCredentials Credentials credentials) {
         User submitter = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(submitter));

@@ -62,7 +62,7 @@
 	{
 		"title": "Student email",
 		"sort": "NONE",
-		"path": [],
+		"path": ["submitter", "email"],
 		"status": null
 	},
 	{
