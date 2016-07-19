@@ -16,12 +16,12 @@ public class UserValidator extends BaseModelValidator {
         
         String firstNameProperty = "firstName";
         this.addInputValidator(new InputValidator(InputValidationType.required, "User requires a first name", firstNameProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minlength, "User first name must be at least 1 characters", firstNameProperty, 1));
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "User first name must be at least 2 characters", firstNameProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "User first name cannot be more than 255 characters", firstNameProperty, 255));
         
         String lastNameProperty = "lastName";
         this.addInputValidator(new InputValidator(InputValidationType.required, "User requires a last name", lastNameProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minlength, "User last name must be at least 1 characters", lastNameProperty, 1));
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "User last name must be at least 2 characters", lastNameProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "User last name cannot be more than 255 characters", lastNameProperty, 255));
     
         String passwordProperty = "password";

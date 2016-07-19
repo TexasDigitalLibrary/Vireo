@@ -1,20 +1,22 @@
 <div class="row admin-page">
-  <div class="col-sm-2"></div>
-  <div class="col-sm-10" ng-controller="SubmissionViewController">
-	<h1>List ETDs</h1>
-	<hr>
-	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
-	  <tr ng-repeat="row in $data track by row.id">
-		<td title="'ID'">{{row.id}}</td>
-		<td title="'Organization'">{{row.organization.name}}</td>
-		<td title="'Student Name'">{{row.submitter.firstName}} {{row.submitter.lastName}}</td>
-		<td title="'Status'">{{row.state.name}}</td>
-		<td title="'Assigned to'">TODO</td>
-		<td title="'Document title'">TODO</td>
-		<td title="'Submission date'">TODO</td>
-		<td title="'Approval date'">TODO</td>
-		<td title="'Embargo type'">TODO</td>
-	  </tr>
-	</table>
-  </div>
+	<div class="col-sm-2"></div>
+	<div class="col-sm-10" ng-controller="SubmissionViewController">
+
+		<modal 
+			modal-id="customizeSubmissionViewModal" 
+			modal-view="views/modals/submissions/customizeSubmissionViewModal.html" 
+			modal-header-class="modal-header-primary">
+		</modal>
+
+		<h1>List ETDs</h1>
+		<hr>
+		<a href="" ng-click="openModal('#customizeSubmissionViewModal')">Customize view</a>
+
+		 <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+			<tr ng-repeat="row in $data track by row.id">
+				<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
+			</tr>
+		</table>
+
+	</div>
 </div>

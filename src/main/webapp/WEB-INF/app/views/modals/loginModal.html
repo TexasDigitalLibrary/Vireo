@@ -13,31 +13,29 @@
 
         <div class="modal-body loginModal">
             
-                <form>
+            <validatedinput
+                model="account"
+                property="email"
+                label="Email"
+                placeholder="Enter email"
+                form="forms.login"
+                validations="user.getValidations()"
+                results="user.getValidationResults()">
+            </validatedinput>
 
-                    <validatedinput
-                        model="account"
-                        property="email"
-                        label="Email"
-                        placeholder="Enter email"
-                        form="forms.login"
-                        validations="user.getValidations()"
-                        results="user.getValidationResults()">
-                    </validatedinput>
+            <validatedinput
+                type="password"
+                model="account"
+                property="password"
+                label="Password"
+                placeholder="Enter password"
+                form="forms.login"
+                validations="user.getValidations()"
+                results="user.getValidationResults()">
+            </validatedinput>
 
-                    <validatedinput
-                        model="account"
-                        property="password"
-                        label="Password"
-                        placeholder="Enter password"
-                        form="forms.login"
-                        validations="user.getValidations()"
-                        results="user.getValidationResults()">
-                    </validatedinput>
+            <button class="btn btn-primary" type="submit" ng-click="login()" ng-disabled="forms.login.$invalid">Login</button>
 
-                    <button class="btn btn-primary" type="submit" ng-click="login()" ng-disabled="forms.login.$invalid">Login</button>
-                </form>
-            </div>
         </div>
 
     </span>

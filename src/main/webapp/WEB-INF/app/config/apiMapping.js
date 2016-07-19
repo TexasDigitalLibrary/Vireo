@@ -519,6 +519,38 @@ var apiMapping = {
 			'controller': 'submission'
 		}
 	},
+	SubmissionViewColumn: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'all-columns'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission-view'
+		}
+	},
+	ManagerSubmissionViewColumn: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'columns-by-user'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'managers-submission-view'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'update-user-columns'
+		},
+		reset: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'reset-user-columns'
+		}
+	},
 	User: {
 		instantiate: {
 			'endpoint': '/private/queue', 
@@ -624,7 +656,7 @@ var apiMapping = {
 	},
 }
 
-// OVERRIDES
+// OVERRIDES ? this doesn't work! all is changed on both!!
 
 apiMapping.StudentSubmission = apiMapping.Submission;
 

@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -18,6 +19,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.tdl.vireo.enums.AppRole;
@@ -90,6 +92,10 @@ public class User extends BaseEntity implements CoreUser {
     
     @Column
     private String orcid;
+    
+    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @OrderColumn
+    private List<SubmissionViewColumn> submissionViewColumns;
 
     /**
      * 
@@ -402,6 +408,30 @@ public class User extends BaseEntity implements CoreUser {
     @JsonSerialize(as = AppRole.class)
     public IRole getRole() {
         return role;
+    }
+
+    /**
+     * @return the submissionViewColumn
+     */
+    public List<SubmissionViewColumn> getSubmissionViewColumns() {
+        return submissionViewColumns;
+    }
+
+    /**
+     * @param submissionViewColumn the submissionViewColumn to set
+     */
+    public void setSubmissionViewColumns(List<SubmissionViewColumn> submissionViewColumn) {
+        this.submissionViewColumns = submissionViewColumn;
+    }
+    
+    public void addSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
+        if(!this.submissionViewColumns.contains(submissionViewColumn)) {
+            this.submissionViewColumns.add(submissionViewColumn);
+        }
+    }
+    
+    public void removeSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
+        this.submissionViewColumns.remove(submissionViewColumn);
     }
 
 }

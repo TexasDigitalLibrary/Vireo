@@ -20,8 +20,6 @@
 	
 	<meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool">
 	
-	<link rel="shortcut icon" href="resources/images/favicon.ico" type="image/x-icon" />
-
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
@@ -54,7 +52,7 @@
 			      	</button>
 			    </div>
 			    
-			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>					
+			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>
 				<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 
 	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">		      	
@@ -311,6 +309,8 @@
 	    <script src="repo/submissionRepo.js"></script>
 	    <script src="repo/noteRepo.js"></script>
 	    <script src="repo/fieldProfileRepo.js"></script>
+	    <script src="repo/submissionViewColumnRepo.js"></script>
+	    <script src="repo/managerSubmissionViewColumnRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
@@ -333,6 +333,7 @@
 	    <script src="model/submission.js"></script>
 	    <script src="model/fieldProfile.js"></script>
 	    <script src="model/note.js"></script>
+	    <script src="model/submissionViewColumn.js"></script>
 		
 
 	    <!-- Factories -->

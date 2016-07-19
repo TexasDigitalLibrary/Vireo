@@ -51,9 +51,7 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse getAllByUser(@ApiCredentials Credentials credentials) {
-        
         User submitter = userRepo.findByEmail(credentials.getEmail());
-        
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(submitter));
     }
 
@@ -92,5 +90,4 @@ public class SubmissionController {
                
         return new ApiResponse(SUCCESS, fieldValue);
     }
-
 }

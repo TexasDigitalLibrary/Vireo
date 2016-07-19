@@ -8,6 +8,7 @@ import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.DefaultSubmissionViewColumnService;
 
 import edu.tamu.framework.interceptor.CoreStompInterceptor;
 import edu.tamu.framework.model.Credentials;
@@ -23,6 +24,9 @@ public class AppStompInterceptor extends CoreStompInterceptor {
 
     @Value("${app.authority.admins}")
     private String[] admins;
+    
+    @Autowired
+    private DefaultSubmissionViewColumnService defaultSubmissionViewColumnService;
     
     // TODO: move static values into config
     @Override
@@ -76,6 +80,8 @@ public class AppStompInterceptor extends CoreStompInterceptor {
             if (shib.getAllCredentials().get(institutionalIdentifierHeader) != null) {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
             }
+            
+            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
             
             userRepo.save(user);
 
