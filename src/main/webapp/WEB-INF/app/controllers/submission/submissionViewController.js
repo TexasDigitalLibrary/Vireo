@@ -12,16 +12,23 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.resultsPerPage = 100;
 
+  	var updateColumns = function() {
+  		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+  	};
+
   	SubmissionRepo.listen(function() {
 		$scope.tableParams.reload();
   	});
 
-  	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready(), SubmissionRepo.ready()]).then(function(data) {
-		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
-		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+  	ManagerSubmissionViewColumnRepo.listen(function() {
+		updateColumns();
+	});
 
-  		$scope.tableParams = new NgTableParams({ 
-  		}, 
+  	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready(), SubmissionRepo.ready()]).then(function(data) {
+		updateColumns();
+
+  		$scope.tableParams = new NgTableParams({ }, 
   		{
   			filterDelay: 0, 
   			dataset: $scope.submissions
@@ -50,8 +57,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	$scope.resetColumns = function() {
 
 		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
-	  		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
-			$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+	  		updateColumns();
 	  	});
 
 		SubmissionViewColumnRepo.reset();
@@ -65,6 +71,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	};
 
 	$scope.saveColumns = function() {
+		ManagerSubmissionViewColumnRepo.updateSubmissionViewColumns();
 		$scope.closeModal();
 	};
 

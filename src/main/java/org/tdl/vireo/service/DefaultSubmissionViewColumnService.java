@@ -22,9 +22,12 @@ public class DefaultSubmissionViewColumnService {
     }
     
     public void addDefaultSubmissionViewColumn(SubmissionViewColumn defaultSubmissionViewColumn) {
-        if(!this.defaultSubmissionViewColumns.contains(defaultSubmissionViewColumn)) {
-            this.defaultSubmissionViewColumns.add(defaultSubmissionViewColumn);
-        }
+       if(defaultSubmissionViewColumn != null) {
+           this.defaultSubmissionViewColumns.add(defaultSubmissionViewColumn);
+       }
+       else {
+           System.out.println("Default submission view column is null!!");
+       }
     }
     
     public void removeDefaultSubmissionViewColumn(SubmissionViewColumn defaultSubmissionViewColumn) {

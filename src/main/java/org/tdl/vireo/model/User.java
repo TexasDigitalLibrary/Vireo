@@ -95,7 +95,7 @@ public class User extends BaseEntity implements CoreUser {
     
     @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     @OrderColumn
-    private List<SubmissionViewColumn> submissionViewColumn;
+    private List<SubmissionViewColumn> submissionViewColumns;
 
     /**
      * 
@@ -413,25 +413,25 @@ public class User extends BaseEntity implements CoreUser {
     /**
      * @return the submissionViewColumn
      */
-    public List<SubmissionViewColumn> getSubmissionViewColumn() {
-        return submissionViewColumn;
+    public List<SubmissionViewColumn> getSubmissionViewColumns() {
+        return submissionViewColumns;
     }
 
     /**
      * @param submissionViewColumn the submissionViewColumn to set
      */
-    public void setSubmissionViewColumn(List<SubmissionViewColumn> submissionViewColumn) {
-        this.submissionViewColumn = submissionViewColumn;
+    public void setSubmissionViewColumns(List<SubmissionViewColumn> submissionViewColumn) {
+        this.submissionViewColumns = submissionViewColumn;
     }
     
     public void addSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
-        if(!this.submissionViewColumn.contains(submissionViewColumn)) {
-            this.submissionViewColumn.add(submissionViewColumn);
+        if(!this.submissionViewColumns.contains(submissionViewColumn)) {
+            this.submissionViewColumns.add(submissionViewColumn);
         }
     }
     
     public void removeSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
-        this.submissionViewColumn.remove(submissionViewColumn);
+        this.submissionViewColumns.remove(submissionViewColumn);
     }
 
 }

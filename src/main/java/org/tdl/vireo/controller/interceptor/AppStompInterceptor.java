@@ -81,7 +81,7 @@ public class AppStompInterceptor extends CoreStompInterceptor {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
             }
             
-            user.setSubmissionViewColumn(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
+            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
             
             userRepo.save(user);
 

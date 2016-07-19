@@ -538,7 +538,12 @@ var apiMapping = {
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'submission-view'
+			'controller': 'managers-submission-view'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-view',
+			'method': 'update-user-columns'
 		}
 	},
 	User: {
