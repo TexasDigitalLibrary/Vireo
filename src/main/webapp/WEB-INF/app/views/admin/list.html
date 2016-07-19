@@ -11,10 +11,10 @@
 		<h1>List ETDs</h1>
 		<hr>
 		<a href="" ng-click="openModal('#customizeSubmissionViewModal')">Customize view</a>
-		
-		 <table ng-table-dynamic="tableParams with userColumns" show-filter="true" class="table table-bordered table-striped" id="etd-table">
+
+		 <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
 			<tr ng-repeat="row in $data track by row.id">
-				<td ng-repeat="col in $userColumns track by $index">{{row}} {{col}}</td>
+				<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
 			</tr>
 		</table>
 

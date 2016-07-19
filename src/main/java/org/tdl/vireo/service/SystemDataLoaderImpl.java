@@ -39,6 +39,7 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionViewColumn;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -54,6 +55,7 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionViewColumnRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -103,6 +105,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
     private SubmissionStateRepo submissionStateRepo;
+    
+    private SubmissionViewColumnRepo submissionViewColumnRepo;
+    
+    private DefaultSubmissionViewColumnService defaultSubmissionViewColumnService;
 
     private EntityControlledVocabularyService entityControlledVocabularyService;
 
@@ -110,7 +116,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionViewColumnRepo submissionViewColumnRepo, DefaultSubmissionViewColumnService defaultSubmissionViewColumnService) {
 
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
@@ -131,6 +137,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.submissionStateRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
         this.proquestLanguageCodesService = proquestLanguageCodesService;
+        this.submissionViewColumnRepo = submissionViewColumnRepo;
+        this.defaultSubmissionViewColumnService = defaultSubmissionViewColumnService;
         
         logger.info("Generating all system input types");
         loadSystemInputTypes();
@@ -158,6 +166,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         logger.info("Loading Proquest language codes");
         loadProquestLanguageCodes();
+        
+        logger.info("Loading Submission View Columns");
+        loadDefaultSubmissionViewColumns();
     }
     
     @Override
@@ -461,7 +472,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
     }
-
+    
     /**
      * Recursively map transition submission states from json.
      */
@@ -634,6 +645,44 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
         }
     }
+    
+    public void loadDefaultSubmissionViewColumns() {
+
+        try {
+
+            List<SubmissionViewColumn> submissionViewColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_view_columns/SYSTEM_Submission_View_Columns.json"), new TypeReference<List<SubmissionViewColumn>>() {});
+
+            for (SubmissionViewColumn submissionViewColumn : submissionViewColumns) {
+                SubmissionViewColumn dbSubmissionViewColumn = submissionViewColumnRepo.findByTitle(submissionViewColumn.getTitle());
+                
+                if (dbSubmissionViewColumn == null) {
+                    submissionViewColumnRepo.create(submissionViewColumn.getTitle(), submissionViewColumn.getSort(), submissionViewColumn.getPath());
+                }
+                else {
+                    dbSubmissionViewColumn.setSort(submissionViewColumn.getSort());
+                    dbSubmissionViewColumn.setPath(submissionViewColumn.getPath());
+                    submissionViewColumnRepo.save(dbSubmissionViewColumn);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize submission view columns. ", e);
+        }
+        
+        try {
+            
+            String[] defaultSubmissionViewColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_view_columns/SYSTEM_Default_Submission_View_Column_Titles.json"), new TypeReference<String[]>() {});
+            
+            for(String defaultTitle : defaultSubmissionViewColumnTitles) {
+                defaultSubmissionViewColumnService.addDefaultSubmissionViewColumn(submissionViewColumnRepo.findByTitle(defaultTitle));
+            }
+            
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default submission view column titles. ", e);
+        }
+        
+    }
 
     public List<String> getAllSystemEmailTemplateNames() {
         try {
@@ -676,7 +725,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
             }
         } catch (RuntimeException | IOException e) {
-            System.out.println("\n\nERROR Generating System Embargos\n\n");
             e.printStackTrace();
             logger.debug("Unable to initialize default embargos. ", e);
         }

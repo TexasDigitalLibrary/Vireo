@@ -1,7 +1,11 @@
 package org.tdl.vireo.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.OrderColumn;
 
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.validation.SubmissionViewColumnValidator;
@@ -17,8 +21,9 @@ public class SubmissionViewColumn extends BaseEntity {
     @Column(nullable = false)
     private Sort sort;
     
-    @Column(nullable = false)
-    private String[] path;
+    @ElementCollection
+    @OrderColumn
+    private List<String> path;
     
     private String status;
     
@@ -26,7 +31,7 @@ public class SubmissionViewColumn extends BaseEntity {
         setModelValidator(new SubmissionViewColumnValidator());
     }
     
-    public SubmissionViewColumn(String title, Sort sort, String... path) {
+    public SubmissionViewColumn(String title, Sort sort, List<String> path) {
         this();
         this.title = title;
         this.sort = sort;
@@ -64,14 +69,14 @@ public class SubmissionViewColumn extends BaseEntity {
     /**
      * @return the path
      */
-    public String[] getPath() {
+    public List<String> getPath() {
         return path;
     }
 
     /**
      * @param path the path to set
      */
-    public void setPath(String[] path) {
+    public void setPath(List<String> path) {
         this.path = path;
     }
 

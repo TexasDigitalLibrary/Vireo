@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.SubmissionViewColumn;
@@ -10,13 +12,10 @@ public class SubmissionViewColumnRepoImpl implements SubmissionViewColumnRepoCus
 
     @Autowired
     private SubmissionViewColumnRepo submissionViewColumnRepo;
-    
-
+  
     @Override
-    public SubmissionViewColumn create(String label, Sort sort, String...path) {
-        
-        
-        return null;
+    public SubmissionViewColumn create(String label, Sort sort, List<String> path) {
+        return submissionViewColumnRepo.save(new SubmissionViewColumn(label, sort, path));
     }
 
 }

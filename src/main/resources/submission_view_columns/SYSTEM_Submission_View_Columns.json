@@ -1,0 +1,236 @@
+[
+	{
+		"title": "ID",
+		"sort": "NONE",
+		"path": ["id"],
+		"status": null
+	},
+	{
+		"title": "Student last name",
+		"sort": "NONE",
+		"path": ["submitter", "lastName"],
+		"status": null
+	},
+	{
+		"title": "Student first name",
+		"sort": "NONE",
+		"path": ["submitter", "firstName"],
+		"status": null
+	},
+	{
+		"title": "Status",
+		"sort": "NONE",
+		"path": ["state", "name"],
+		"status": null
+	},
+	{
+		"title": "Assigned to",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document title",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Submission title",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Submission date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Approval date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Embargo type",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Student email",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Institutional ID",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document keywords",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document abstract",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document subjects",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Published material",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document language",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Graduation semester",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Defense date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Primary document",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "License agreement date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Committee approval date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Committee embargo approval date",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Committee members",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Committee contact email",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Degree",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Degree level",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Program",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "College",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Department",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Major",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Document type",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "UMI release",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Custom actions",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Deposit ID",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Notes",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Last event",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "Event time",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	},
+	{
+		"title": "ORCID",
+		"sort": "NONE",
+		"path": [],
+		"status": null
+	}
+]

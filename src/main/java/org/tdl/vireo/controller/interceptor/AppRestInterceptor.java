@@ -8,6 +8,7 @@ import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.DefaultSubmissionViewColumnService;
 
 import edu.tamu.framework.interceptor.CoreRestInterceptor;
 import edu.tamu.framework.model.Credentials;
@@ -20,6 +21,9 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     
     @Autowired
     private ConfigurationRepo configurationRepo;
+    
+    @Autowired
+    private DefaultSubmissionViewColumnService defaultSubmissionViewColumnService;
 
     @Value("${app.authority.admins}")
     private String[] admins;
@@ -77,6 +81,8 @@ public class AppRestInterceptor extends CoreRestInterceptor {
             if (shib.getAllCredentials().get(institutionalIdentifierHeader) != null) {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
             }
+            
+            user.setSubmissionViewColumn(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
             
             user = userRepo.save(user);
         } else {

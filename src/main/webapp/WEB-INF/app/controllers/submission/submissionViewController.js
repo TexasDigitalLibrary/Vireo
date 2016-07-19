@@ -12,6 +12,24 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.resultsPerPage = 100;
 
+  	SubmissionRepo.listen(function() {
+		$scope.tableParams.reload();
+  	});
+
+  	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready(), SubmissionRepo.ready()]).then(function(data) {
+		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+
+  		$scope.tableParams = new NgTableParams({ 
+  		}, 
+  		{
+  			filterDelay: 0, 
+  			dataset: $scope.submissions
+  		});
+
+  		$scope.tableParams.reload();
+
+	});
 
   	var listenForManagersSubmissionColumns = function() {
   		return $q(function(resolve) {
@@ -28,11 +46,6 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
   			});
   		});
   	};
-
-	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready()]).then(function(data) {
-		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
-		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
-	});
 
 	$scope.resetColumns = function() {
 
@@ -55,6 +68,19 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		$scope.closeModal();
 	};
 
+	$scope.getSubmissionProperty = function(row, col) {
+		var value;
+		for(var i in col.path) {
+			if(value === undefined) {
+				value = row[col.path[i]];
+			}
+			else {
+				value = value[col.path[i]];
+			}
+		}
+		return value;
+	};
+
 	$scope.columnOptions = {
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 			return true;
@@ -75,31 +101,21 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		additionalPlaceholderClass: 'column-placeholder'
 	};
 
-  	SubmissionRepo.ready().then(function() {
-  		$scope.tableParams = new NgTableParams({}, {filterDelay: 0, dataset: $scope.submissions}); 
-  		$scope.tableParams.reload();
-  	})
-
-  	SubmissionRepo.listen(function() {
-		$scope.tableParams.reload();
-  	});
-
 });
 
 vireo.filter('exclude', function() {
     return function(input, exclude, prop) {
-        if (!angular.isArray(input))
+        if (!angular.isArray(input)) {
             return input;
-
-        if (!angular.isArray(exclude))
-            exclude = [];
-
+		}
+        if (!angular.isArray(exclude)) {
+        	exclude = [];
+        }
         if (prop) {
             exclude = exclude.map(function byProp(item) {
                 return item[prop];
             });
         }
-
         return input.filter(function byExclude(item) {
             return exclude.indexOf(prop ? item[prop] : item) === -1;
         });
