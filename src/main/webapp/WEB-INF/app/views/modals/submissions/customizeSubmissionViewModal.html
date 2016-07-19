@@ -17,7 +17,7 @@
 	        		<h4>Displayed Columns</h4>
 	        		<div class="column-background">
 			    		<ul class="displayed-column-container" as-sortable="columnOptions" ng-model="userColumns">
-			    			<li class="displayed-column" ng-repeat="column in userColumns" as-sortable-item>
+			    			<li ng-class="{'displayed-column': column.status === undefined, 'disabled-column': column.status == 'pervisoulyDisabled'}"ng-repeat="column in userColumns" as-sortable-item>
 			    				<div as-sortable-item-handle>{{column.label}}</div>
 			    			</li>
 			    		</ul>
@@ -27,7 +27,7 @@
 		    		<h4>Disabled Columns</h4>
 		    		<div class="column-background">
 			    		<ul class="disabled-column-container" as-sortable="columnOptions" ng-model="columns">
-			    			<li class="disabled-column" ng-repeat="column in columns" as-sortable-item>
+			    			<li ng-class="{'disabled-column': column.status === undefined, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns" as-sortable-item>
 			    				<div as-sortable-item-handle>{{column.label}}</div>
 			    			</li>
 			    		</ul>
@@ -36,10 +36,10 @@
 		    </div>
 		</div>
 	    <div class="row results-per-page-container">
-		    <div class="col-sm-6 col-sm-offset-2">
+		    <div class="col-sm-8 col-sm-offset-2">
 			    <form class="form-inline">
 	                <label class="control-label" for="name"><strong>Results per page</strong>:</label>	                
-	                <select class="form-control expand" name="resultsPerPage" ng-model="resultsPerPage" ng-options="rpp for rpp in resultsPerPageOptions">
+	                <select class="form-control results-per-page-select" name="resultsPerPage" ng-model="resultsPerPage" ng-options="rpp for rpp in resultsPerPageOptions">
 	                </select>
 		        </form>
 		    </div>

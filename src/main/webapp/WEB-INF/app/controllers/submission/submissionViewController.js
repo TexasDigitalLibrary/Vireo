@@ -33,8 +33,14 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 			return true;
 		},
-		itemMoved: function (event) {
-
+		itemMoved: function (event) {			
+			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
+				event.source.itemScope.column.status = event.source.itemScope.column.status === undefined ? 'previouslyDisplayed' : undefined;
+				
+			}
+			else {
+				event.source.itemScope.column.status = event.source.itemScope.column.status === undefined ? 'pervisoulyDisabled' : undefined;
+			}
 		},
 		orderChanged: function (event) {
 

@@ -10,6 +10,8 @@ public class SubmissionViewColumn {
     
     private String[] path;
     
+    private String status;
+    
     public SubmissionViewColumn(String label, Sort sort, String... path) {
         this.label = label;
         this.sort = sort;
@@ -56,6 +58,20 @@ public class SubmissionViewColumn {
      */
     public void setPath(String[] path) {
         this.path = path;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }
