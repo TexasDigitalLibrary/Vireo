@@ -12,6 +12,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.resultsPerPage = 100;
 
+  	$scope.itemMoved = false;
+
   	SubmissionRepo.listen(function() {
 		$scope.tableParams.reload();
   	});
@@ -59,6 +61,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		ManagerSubmissionViewColumnRepo.reset();
 
 		$scope.closeModal();
+
+		$scope.itemMoved = false;
 	};
 
 	$scope.resetColumnsToDefault = function() {
@@ -92,15 +96,15 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		},
 		itemMoved: function (event) {			
 			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : undefined;
-				
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;	
 			}
 			else {
-				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : undefined;
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : null;
 			}
+			$scope.itemMoved = true;
 		},
 		orderChanged: function (event) {
-
+			$scope.itemMoved = true;
 		},
 		containment: '#column-modal',
 		additionalPlaceholderClass: 'column-placeholder'
