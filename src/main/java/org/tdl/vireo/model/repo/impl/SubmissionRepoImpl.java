@@ -80,11 +80,22 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     default: break;
                 }
             }
-            
+
         });
-        
+
+        // TODO: use specification for filters
         // new SubmissionSpecification<Submission>(), 
-		return submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+
+        Page<Submission> pageResults;
+
+        if(orders.size() > 0) {
+            pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+        }
+        else {
+            pageResults = submissionRepo.findAll(pageable);
+        }
+
+		return pageResults;
 	}
 
 }

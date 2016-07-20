@@ -650,36 +650,36 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<SubmissionListColumn> submissionViewColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_view_columns/SYSTEM_Submission_View_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
 
-            for (SubmissionListColumn submissionViewColumn : submissionViewColumns) {
-                SubmissionListColumn dbSubmissionViewColumn = submissionListColumnRepo.findByTitle(submissionViewColumn.getTitle());
+            for (SubmissionListColumn submissionListColumn : submissionListColumns) {
+                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
                 
-                if (dbSubmissionViewColumn == null) {
-                    submissionListColumnRepo.create(submissionViewColumn.getTitle(), submissionViewColumn.getSort(), submissionViewColumn.getPath());
+                if (dbSubmissionListColumn == null) {
+                    submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPath());
                 }
                 else {
-                    dbSubmissionViewColumn.setSort(submissionViewColumn.getSort());
-                    dbSubmissionViewColumn.setPath(submissionViewColumn.getPath());
-                    submissionListColumnRepo.save(dbSubmissionViewColumn);
+                    dbSubmissionListColumn.setSort(submissionListColumn.getSort());
+                    dbSubmissionListColumn.setPath(submissionListColumn.getPath());
+                    submissionListColumnRepo.save(dbSubmissionListColumn);
                 }
             }
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
-            logger.debug("Unable to initialize submission view columns. ", e);
+            logger.debug("Unable to initialize submission list columns. ", e);
         }
         
         try {
             
-            String[] defaultSubmissionViewColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_view_columns/SYSTEM_Default_Submission_View_Column_Titles.json"), new TypeReference<String[]>() {});
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {});
             
-            for(String defaultTitle : defaultSubmissionViewColumnTitles) {
-                defaultSubmissionListColumnService.addDefaultSubmissionViewColumn(submissionListColumnRepo.findByTitle(defaultTitle));
+            for(String defaultTitle : defaultSubmissionListColumnTitles) {
+                defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.findByTitle(defaultTitle));
             }
             
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
-            logger.debug("Unable to initialize default submission view column titles. ", e);
+            logger.debug("Unable to initialize default submission list column titles. ", e);
         }
         
     }

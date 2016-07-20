@@ -63,7 +63,7 @@ public class SubmissionListController {
     @Transactional
     public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
-        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionViewColumns());
+        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }

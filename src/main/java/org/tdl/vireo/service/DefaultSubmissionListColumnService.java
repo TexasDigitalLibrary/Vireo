@@ -9,29 +9,29 @@ import org.tdl.vireo.model.SubmissionListColumn;
 @Service
 public class DefaultSubmissionListColumnService {
     
-    private List<SubmissionListColumn> defaultSubmissionViewColumns = new ArrayList<SubmissionListColumn>();
+    private List<SubmissionListColumn> defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
     
     public DefaultSubmissionListColumnService() { }
     
-    public void setDefaultSubmissionViewColumns(List<SubmissionListColumn> defaultSubmissionViewColumns) {
-        this.defaultSubmissionViewColumns = defaultSubmissionViewColumns;
+    public void setDefaultSubmissionListColumns(List<SubmissionListColumn> defaultSubmissionListColumns) {
+        this.defaultSubmissionListColumns = defaultSubmissionListColumns;
     }
     
-    public List<SubmissionListColumn> getDefaultSubmissionViewColumns() {
-        return defaultSubmissionViewColumns;
+    public List<SubmissionListColumn> getDefaultSubmissionListColumns() {
+        return defaultSubmissionListColumns;
     }
     
-    public void addDefaultSubmissionViewColumn(SubmissionListColumn defaultSubmissionViewColumn) {
-       if(defaultSubmissionViewColumn != null) {
-           this.defaultSubmissionViewColumns.add(defaultSubmissionViewColumn);
+    public void addDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
+       if(defaultSubmissionListColumn != null) {
+           this.defaultSubmissionListColumns.add(defaultSubmissionListColumn);
        }
        else {
-           System.out.println("Default submission view column is null!!");
+           System.out.println("Default submission list column is null!!");
        }
     }
     
-    public void removeDefaultSubmissionViewColumn(SubmissionListColumn defaultSubmissionViewColumn) {
-        this.defaultSubmissionViewColumns.remove(defaultSubmissionViewColumn);
+    public void removeDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
+        this.defaultSubmissionListColumns.remove(defaultSubmissionListColumn);
     }
 
 }

@@ -82,7 +82,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
                 user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
             }
             
-            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
+            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
             
             user = userRepo.save(user);
         } else {
