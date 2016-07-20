@@ -43,7 +43,7 @@ vireo.directive("field",  function() {
 			};
 
 			$scope.first = function(value) {
-				return $scope.submission.findFieldValuesByPredicate($scope.profile.predicate).indexOf(value) === 0
+				return $scope.submission.findFieldValuesByPredicate($scope.profile.predicate).indexOf(value) === 0;
 			};
 
 			if(!$scope.submission.findFieldValuesByPredicate($scope.profile.predicate).length) {
