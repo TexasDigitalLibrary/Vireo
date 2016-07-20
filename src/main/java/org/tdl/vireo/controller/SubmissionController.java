@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionViewColumn;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -98,7 +98,7 @@ public class SubmissionController {
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
     @Transactional
-    public ApiResponse querySubmission(@ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionViewColumn> submissionViewColumns) {
-        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(submissionViewColumns, new PageRequest(page, size)));
+    public ApiResponse querySubmission(@ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
+        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(submissionListColumns, new PageRequest(page, size)));
     }
 }

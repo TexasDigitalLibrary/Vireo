@@ -8,12 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
 
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.model.validation.SubmissionViewColumnValidator;
+import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-public class SubmissionViewColumn extends BaseEntity {
+public class SubmissionListColumn extends BaseEntity {
     
     @Column(unique = true, nullable = false)
     private String title;
@@ -27,11 +27,11 @@ public class SubmissionViewColumn extends BaseEntity {
     
     private String status;
     
-    public SubmissionViewColumn() {
-        setModelValidator(new SubmissionViewColumnValidator());
+    public SubmissionListColumn() {
+        setModelValidator(new SubmissionListColumnValidator());
     }
     
-    public SubmissionViewColumn(String title, Sort sort, List<String> path) {
+    public SubmissionListColumn(String title, Sort sort, List<String> path) {
         this();
         this.title = title;
         this.sort = sort;

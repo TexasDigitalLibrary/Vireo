@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.SubmissionViewColumn;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
@@ -64,17 +64,17 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	}
 
 	@Override
-	public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionViewColumn> submissionViewColums, Pageable pageable) {
+	public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 	    
 	    List<Sort.Order> orders = new ArrayList<Sort.Order>();
         
-        submissionViewColums.forEach(submissionViewColumn -> {
+        submissionListColums.forEach(submissionListColumn -> {
             
-            if(submissionViewColumn.getPath().size() > 0) {
+            if(submissionListColumn.getPath().size() > 0) {
             
-                String fullPath = String.join(".", submissionViewColumn.getPath());
+                String fullPath = String.join(".", submissionListColumn.getPath());
 
-                switch(submissionViewColumn.getSort()) {
+                switch(submissionListColumn.getSort()) {
                     case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
                     case DESC: orders.add(new Sort.Order(Sort.Direction.DESC, fullPath)); break;
                     default: break;

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionViewColumn;
+import org.tdl.vireo.model.SubmissionListColumn;
 
 import edu.tamu.framework.model.Credentials;
 
@@ -14,6 +14,6 @@ public interface SubmissionRepoCustom {
     
     public Submission create(Credentials submitterCredentials, Long organizationId);
     
-    public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionViewColumn> submissionViewColums, Pageable pageable);
+    public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionListColumn> submissionListColums, Pageable pageable);
 
 }
