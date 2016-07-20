@@ -2,12 +2,16 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionViewColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -47,9 +51,9 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
     
-    @ApiMapping("/all-by-user")
-    @Auth(role = "STUDENT")
     @Transactional
+    @ApiMapping("/all-by-user")
+    @Auth(role = "STUDENT")   
     public ApiResponse getAllByUser(@ApiCredentials Credentials credentials) {
         User submitter = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(submitter));
@@ -89,5 +93,12 @@ public class SubmissionController {
         }   
                
         return new ApiResponse(SUCCESS, fieldValue);
+    }
+    
+    @ApiMapping("/query/{page}/{size}")
+    @Auth(role = "MANAGER")
+    @Transactional
+    public ApiResponse querySubmission(@ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionViewColumn> submissionViewColumns) {
+        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(submissionViewColumns, new PageRequest(page, size)));
     }
 }

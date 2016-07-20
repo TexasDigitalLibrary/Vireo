@@ -19,6 +19,21 @@ vireo.repo("SubmissionRepo", function SubmissionRepo(WsApi) {
 		return promise;
 	};
 	
+	this.query = function(columns, page, size) {
+		angular.extend(this.mapping.query, {
+			'method': 'query/' + page + '/' + size,
+			'data': columns
+		});
+		var promise = WsApi.fetch(this.mapping.query);
+		promise.then(function(res) {
+			if(angular.fromJson(res.body).meta.type == "INVALID") {
+				angular.extend(submissionRepo, angular.fromJson(res.body).payload);
+				console.log(submissionRepo);
+			}
+		});
+		return promise;
+	};
+	
 	return this;
 
 });

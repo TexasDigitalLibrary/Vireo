@@ -1,38 +1,46 @@
 vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionViewColumnRepo, ManagerSubmissionViewColumnRepo, WsApi) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-
-  	$scope.submissions = SubmissionRepo.getAll();
-
+	
+  	$scope.page = 0;
+  	$scope.pageSize = 10;
+  	
   	$scope.columns = [];
 
   	$scope.userColumns = [];
 
-  	$scope.resultsPerPageOptions = [20, 40, 60, 100, 200, 400, 500, 1000];
+  	$scope.resultsPerPageOptions = [10, 20, 40, 60, 100, 200, 400, 500, 1000];
 
   	$scope.resultsPerPage = 100;
 
   	$scope.itemMoved = false;
 
-  	SubmissionRepo.listen(function() {
-		$scope.tableParams.reload();
-  	});
-
   	var updateColumns = function() {
+  		
   		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+		
 		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+  		
+  		SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
+  			
+			$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
+
+			$scope.tableParams = new NgTableParams({ }, 
+	  		{
+	  			filterDelay: 0, 
+	  			dataset: $scope.submissions
+	  		});
+
+	  		$scope.tableParams.reload();
+		});
   	};
 
-  	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready(), SubmissionRepo.ready()]).then(function(data) {
+  	SubmissionRepo.listen(function() {
 		updateColumns();
+  	});
 
-  		$scope.tableParams = new NgTableParams({ }, 
-  		{
-  			filterDelay: 0, 
-  			dataset: $scope.submissions
-  		});
-
-  		$scope.tableParams.reload();
+  	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready()]).then(function(data) {
+		updateColumns();
 	});
 
   	var listenForManagersSubmissionColumns = function() {
@@ -94,7 +102,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 			return true;
 		},
-		itemMoved: function (event) {			
+		itemMoved: function (event) {
 			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
 				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;	
 			}

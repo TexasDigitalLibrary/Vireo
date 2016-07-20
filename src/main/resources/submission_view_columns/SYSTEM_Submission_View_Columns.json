@@ -1,7 +1,7 @@
 [
 	{
 		"title": "ID",
-		"sort": "NONE",
+		"sort": "ASC",
 		"path": ["id"],
 		"status": null
 	},
@@ -21,6 +21,18 @@
 		"title": "Status",
 		"sort": "NONE",
 		"path": ["state", "name"],
+		"status": null
+	},
+	{
+		"title": "Organization name",
+		"sort": "DESC",
+		"path": ["organization", "name"],
+		"status": null
+	},
+	{
+		"title": "Organization category",
+		"sort": "ASC",
+		"path": ["organization", "category", "name"],
 		"status": null
 	},
 	{
@@ -62,7 +74,7 @@
 	{
 		"title": "Student email",
 		"sort": "NONE",
-		"path": [],
+		"path": ["submitter", "email"],
 		"status": null
 	},
 	{
@@ -148,7 +160,7 @@
 		"sort": "NONE",
 		"path": [],
 		"status": null
-	},
+	},	
 	{
 		"title": "Degree",
 		"sort": "NONE",
