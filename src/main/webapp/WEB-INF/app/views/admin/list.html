@@ -12,11 +12,22 @@
 		<hr>
 		<a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
-		 <table template-pagination="views/submission/list-pagination.html" ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
-			<tr ng-repeat="row in $data track by row.id">
+		 <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+			<tr ng-repeat="row in $data">
 				<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
 			</tr>
 		</table>
+
+		<div class="btn-group pull-right" ng-if="page.totalElements > pageSize">
+			<button 
+				class="btn btn-default" 
+				ng-repeat="i in [] | range:page.totalElements/pageSize"
+				ng-class="{'active': pageNumber===i}"
+				ng-click="selectPage(i)"
+			>
+					{{i*pageSize}}
+			</button>
+		</div>
 
 	</div>
 </div>

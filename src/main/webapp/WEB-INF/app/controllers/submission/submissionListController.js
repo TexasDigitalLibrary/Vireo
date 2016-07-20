@@ -2,9 +2,11 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
-	$scope.page = 0;
+	$scope.page = {};
 
-	$scope.pageSize = 10;
+	$scope.pageNumber = 0;
+
+	$scope.pageSize = 2;
 
 	$scope.columns = [];
 
@@ -28,17 +30,20 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		
 			$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-			SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
+			SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
-				$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
+				angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+
+				console.log($scope.page);
 
 				$scope.tableParams = new NgTableParams({ }, 
 				{
+					counts: [],
 					filterDelay: 0, 
-					dataset: $scope.submissions
+					dataset: $scope.page.content
 				});
 
-				$scope.tableParams.reload();
+				//$scope.tableParams.reload();
 			});
 		});
 		
@@ -64,6 +69,11 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 				resolve();
 			});
 		});
+	};
+
+	$scope.selectPage = function(i) {
+		$scope.pageNumber = i;
+		update();
 	};
 
 	$scope.resetColumns = function() {
@@ -136,4 +146,14 @@ vireo.filter('exclude', function() {
 			return exclude.indexOf(prop ? item[prop] : item) === -1;
 		});
 	};
+});
+
+vireo.filter('range', function() {
+  	return function(val, range) {
+    	range = parseInt(range);
+    	for (var i = 0; i < range; i++) {
+      		val.push(i);
+    	}
+    	return val;
+  	};
 });
