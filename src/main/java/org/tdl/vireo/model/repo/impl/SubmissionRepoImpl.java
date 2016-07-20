@@ -70,13 +70,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         
         submissionViewColums.forEach(submissionViewColumn -> {
             
-            String fullPath = "";
-            for(String property : submissionViewColumn.getPath()) {
-                fullPath += property + ".";
-            }
+            if(submissionViewColumn.getPath().size() > 0) {
             
-            if(fullPath.length() > 0) {                
-                fullPath = fullPath.substring(0, fullPath.length() - 1);            
+                String fullPath = String.join(".", submissionViewColumn.getPath());
+
                 switch(submissionViewColumn.getSort()) {
                     case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
                     case DESC: orders.add(new Sort.Order(Sort.Direction.DESC, fullPath)); break;

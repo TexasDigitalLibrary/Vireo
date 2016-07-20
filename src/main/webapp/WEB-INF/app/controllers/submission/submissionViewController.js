@@ -9,7 +9,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
   	$scope.userColumns = [];
 
-  	$scope.resultsPerPageOptions = [20, 40, 60, 100, 200, 400, 500, 1000];
+  	$scope.resultsPerPageOptions = [10, 20, 40, 60, 100, 200, 400, 500, 1000];
 
   	$scope.resultsPerPage = 100;
 
