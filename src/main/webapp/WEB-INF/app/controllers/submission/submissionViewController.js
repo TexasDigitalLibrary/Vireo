@@ -88,12 +88,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
 		for(var i in col.path) {
-			if(value === undefined) {
-				value = row[col.path[i]];
-			}
-			else {
-				value = value[col.path[i]];
-			}
+			value = (value === undefined) ? row[col.path[i]] : value[col.path[i]];
 		}
 		return value;
 	};
