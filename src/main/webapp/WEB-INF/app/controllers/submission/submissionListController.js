@@ -3,6 +3,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	$scope.page = 0;
+
 	$scope.pageSize = 10;
 
 	$scope.columns = [];
@@ -15,32 +16,39 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.itemMoved = false;
 
-	var updateColumns = function() {
-		$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
+	var update = function() {
+
+		ManagerSubmissionListColumnRepo.reset();
+
+		SubmissionListColumnRepo.reset();
+
+		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
+			
+			$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 		
-		$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
+			$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-		SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
+			SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
 
-			$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
+				$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
 
-			$scope.tableParams = new NgTableParams({ }, 
-			{
-				filterDelay: 0, 
-				dataset: $scope.submissions
+				$scope.tableParams = new NgTableParams({ }, 
+				{
+					filterDelay: 0, 
+					dataset: $scope.submissions
+				});
+
+				$scope.tableParams.reload();
 			});
-
-			$scope.tableParams.reload();
 		});
+		
 	};
 
 	SubmissionRepo.listen(function() {
-		updateColumns();
+		update();
 	});
 
-	$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
-		updateColumns();
-	});
+	update();
 
 	var listenForManagersSubmissionColumns = function() {
 		return $q(function(resolve) {
@@ -60,15 +68,13 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.resetColumns = function() {
 		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
-			updateColumns();
 
-			ManagerSubmissionListColumnRepo.reset();
-			SubmissionListColumnRepo.reset();
+			update();
 
 			$scope.closeModal();
 
 			$scope.itemMoved = false;
-		});
+		});		
 	};
 
 	$scope.resetColumnsToDefault = function() {
