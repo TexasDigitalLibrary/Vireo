@@ -514,6 +514,11 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'create'
 		},
+		query: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'query'
+		},
 		saveFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
