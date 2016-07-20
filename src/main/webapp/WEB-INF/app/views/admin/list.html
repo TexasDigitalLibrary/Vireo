@@ -12,7 +12,7 @@
 		<hr>
 		<a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
-		 <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+		 <table template-pagination="views/submission/list-pagination.html" ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
 			<tr ng-repeat="row in $data track by row.id">
 				<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
 			</tr>
