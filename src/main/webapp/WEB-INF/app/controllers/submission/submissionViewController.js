@@ -1,8 +1,9 @@
-vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, $timeout, NgTableParams, SubmissionRepo, SubmissionViewColumnRepo, ManagerSubmissionViewColumnRepo, WsApi) {
+vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionViewColumnRepo, ManagerSubmissionViewColumnRepo, WsApi) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	$scope.page = 0;
+
 	$scope.pageSize = 10;
 
 	$scope.columns = [];
@@ -15,32 +16,39 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
 	$scope.itemMoved = false;
 
-	var updateColumns = function() {
-		$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
+	var update = function() {
+
+		ManagerSubmissionViewColumnRepo.reset();
+
+		SubmissionViewColumnRepo.reset();
+
+		$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready()]).then(function(data) {
+			
+			$scope.userColumns = ManagerSubmissionViewColumnRepo.getAll();
 		
-		$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
+			$scope.columns = $filter('exclude')(SubmissionViewColumnRepo.getAll(), $scope.userColumns, 'title');
 
-		SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
+			SubmissionRepo.query($scope.userColumns, $scope.page, $scope.pageSize).then(function(data) {
 
-			$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
+				$scope.submissions = angular.fromJson(data.body).payload.PageImpl.content
 
-			$scope.tableParams = new NgTableParams({ }, 
-			{
-				filterDelay: 0, 
-				dataset: $scope.submissions
+				$scope.tableParams = new NgTableParams({ }, 
+				{
+					filterDelay: 0, 
+					dataset: $scope.submissions
+				});
+
+				$scope.tableParams.reload();
 			});
-
-			$scope.tableParams.reload();
 		});
+		
 	};
 
 	SubmissionRepo.listen(function() {
-		updateColumns();
+		update();
 	});
 
-	$q.all([SubmissionViewColumnRepo.ready(), ManagerSubmissionViewColumnRepo.ready()]).then(function(data) {
-		updateColumns();
-	});
+	update();
 
 	var listenForManagersSubmissionColumns = function() {
 		return $q(function(resolve) {
@@ -59,23 +67,17 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 	};
 
 	$scope.resetColumns = function() {
-		$timeout(function() {
-			$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
-				updateColumns();
-			});
+		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
 
-			ManagerSubmissionViewColumnRepo.reset();
-			SubmissionViewColumnRepo.reset();
+			update();
 
 			$scope.closeModal();
 
 			$scope.itemMoved = false;
-		});
+		});		
 	};
 
 	$scope.resetColumnsToDefault = function() {
-		ManagerSubmissionViewColumnRepo.reset();
-		SubmissionViewColumnRepo.reset();
 		ManagerSubmissionViewColumnRepo.resetSubmissionViewColumns().then(function() {
 			$scope.resetColumns();
 		});
