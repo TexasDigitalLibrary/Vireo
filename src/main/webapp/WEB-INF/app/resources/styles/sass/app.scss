@@ -565,9 +565,8 @@ a[title]:hover:after {
   position: absolute;
 }
 
-.settings-view .glyphicon-info-sign {
-  line-height: 2;
-  margin-left: 10px;
+validatedinput .glyphicon {
+  top: 0;
 }
 
 .settings-view .glyphicon-info-sign.opaque {

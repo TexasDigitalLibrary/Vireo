@@ -1,226 +1,210 @@
 <div class="row">	
-	<div class="col-sm-6">
-		<textfield 
-            form-view="true"
-			label="Netid:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Email:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="First Name:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Middle Name:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Last Name:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Birth Year:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Affiliations:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Phone Number:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Postal Address:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Email Address:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Permanent Phone Number:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<validatedinput
+	            type="text"
+	            label="Netid"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Email"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="First Name"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Middle Name"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Last Name"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Birth Year"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Affiliations"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Phone Number"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Postal Address"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Email Address"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Permanent Phone Number"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+    	</div>
 	</div>		
-	<div class="col-sm-6">
-		<textfield 
-            form-view="true"
-			label="Permanent Postal Address:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Permanent Email Address:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Degree:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Department:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current College:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Major:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Graduation Year:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Current Graduation Month:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
-		<textfield 
-            form-view="true"
-			label="Orcid:" 
-			scope-object="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID"
-			scope-property="value"
-        	validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID.getValidations()"
-			confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID')"
-			label-width="4"
-			field-width="8"
-			expanded="true">
-		</textfield>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<validatedinput
+	            type="text"
+	            label="Permanent Postal Address"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Permanent Email Address"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Degree"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Department"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current College"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Major"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Graduation Year"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Current Graduation Month"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+			<validatedinput
+	            type="text"
+	            label="Orcid"
+	            model="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID"
+	            property="value"
+	            validations="settings.configurable.shibboleth.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID.getValidations()"
+	            confirm="updateConfiguration('shibboleth', 'APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+        </div>
 	</div>
 </div>

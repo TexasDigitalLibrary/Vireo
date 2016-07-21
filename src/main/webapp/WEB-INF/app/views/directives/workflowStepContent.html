@@ -1,37 +1,37 @@
-<div class="row" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
-			
-	<div class="col-md-6">
-  		<textfield
-            form-view="true"
-			label="Workflow Step Name:"
-			scope-object="step"
-            scope-property="name"
+<div class="row clearfix" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+				
+	<div class="col-md-4">
+		<validatedinput
+            type="text"
+            label="Workflow Step Name"
+            model="step"
+            property="name"
             validations="workflowStepRepo.getValidations()"
-			hint="'My Workflow Step's name'"
-			confirm="updateWorkflowStep(step)">
-		</textfield>
+            confirm="updateWorkflowStep(step)"
+            form-view="true"
+            tool-tip="todo">
+        </validatedinput>
   	</div>
 
-	<div class="col-md-3">
+  	<div class="col-md-6">
   		<toggleButton 
 			label="Workflow Step is Overridable:"
 			scope-value="step.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'
 			ng-click="updateWorkflowStep(step)">
 		</toggleButton>
-	</div>
-
-  	<div class="col-md-3">
-  		<div class="form-group">
-  			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)">Delete Workflow Step</button>
-			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/organization/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
-  		</div>
   	</div>
 
-	<hr>
+  	<div class="col-md-2">
+		<div class="form-group">
+			<button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)">Delete Workflow Step</button>
+			<modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/organization/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
+		</div>
+	</div>
 
 </div>
 
+<hr>
 
 <div ng-controller="FieldProfileManagementController">
 
