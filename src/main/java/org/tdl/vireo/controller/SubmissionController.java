@@ -85,8 +85,7 @@ public class SubmissionController {
         if(fieldValue.getId() == null) {
             submission.addFieldValue(fieldValue);
             submission = submissionRepo.save(submission);
-            fieldValue.getPredicate();
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue(), fieldValue.getPredicate());
+            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getPredicate());
         } else {
             fieldValue = fieldValueRepo.save(fieldValue);
             submission = submissionRepo.findOne(submissionId);
