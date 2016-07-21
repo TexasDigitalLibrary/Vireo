@@ -42,10 +42,10 @@
 
 		<form class="form-inline pull-right">
 
-            <div class="btn-group" ng-if="page.totalElements > pageSize">				
+            <div class="btn-group" ng-if="page.totalPages > 1">				
 				<button 
 					class="btn btn-default" 
-					ng-repeat="i in [] | range:page.totalElements/pageSize"
+					ng-repeat="i in [] | range:page.totalPages"
 					ng-class="{'active': pageNumber===i}"
 					ng-click="selectPage(i)">
 					{{i*pageSize}}
