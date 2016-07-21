@@ -569,6 +569,11 @@ validatedinput .glyphicon {
   top: 0;
 }
 
+lockingtextarea .glyphicon-info-sign, togglebutton .glyphicon-info-sign {
+  line-height: 2;
+  margin-left: 10px;
+}
+
 .settings-view .glyphicon-info-sign.opaque {
   opacity: .5;
 }
