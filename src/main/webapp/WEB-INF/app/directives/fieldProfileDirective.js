@@ -27,12 +27,15 @@ vireo.directive("field",  function() {
 			};
 
 			$scope.save = function(value) {
-				if (!$scope.submission.dirty()) return;
 
-				$scope.saving = value.id;
-				$scope.submission.saveFieldValue(value).then(function() {
-					$scope.saving = 0;
-				});
+				if ($scope.fieldProfileForm.$dirty) {
+					$scope.saving = value.id;
+					$scope.submission.saveFieldValue(value).then(function() {
+						$scope.saving = 0;
+						$scope.fieldProfileForm.$setPristine();
+					});
+				}
+
 			};
 
 			$scope.addFieldValue = function() {
