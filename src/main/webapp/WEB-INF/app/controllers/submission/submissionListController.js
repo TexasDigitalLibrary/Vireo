@@ -45,6 +45,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 				});
 
 				$scope.change = false;
+				$scope.closeModal();
 			});			
 		});		
 	};
@@ -84,8 +85,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.resetColumns = function() {
 		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
 			update();
-			$scope.closeModal();
-			$scope.change = false;
 		});		
 	};
 
@@ -151,7 +150,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 			return true;
 		},
-		change: function (event) {
+		itemMoved: function (event) {
 			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
 				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;	
 			}
