@@ -39,6 +39,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 				});
 
 				$scope.tableParams.reload();
+
+				console.log($scope.userColumns)
 			});
 		});
 		
@@ -95,6 +97,34 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 			value = (value === undefined) ? row[col.path[i]] : value[col.path[i]];
 		}
 		return value;
+	};
+
+	setTimeout(function() {$scope.sortBy($scope.userColumns[3])}, 10000);
+
+	$scope.sortBy = function(sortColumn) {
+
+		angular.forEach($scope.userColumns, function(userColumn) {
+			if(userColumn.sortOrder !== undefined && userColumn.sortOrder > 0) {
+				
+				if(userColumn.sort != "NONE") {
+					userColumn.sortOrder++;
+					if(userColumn.sortOrder > $scope.userColumns.length - 1) {
+						userColumn.sortOrder = 0;
+						userColumn.sort = "NONE";
+					}
+				}
+				else {
+					userColumn.sortOrder = 0;
+				}
+				
+			}
+			if(userColumn == sortColumn) {
+				userColumn.sort = ($scope.userColumns.sort == "NONE") ? "ASC" : ($scope.userColumns.sort == "ASC") ? "DESC" : "ASC";
+				userColumn.sortOrder = 1;
+			}
+		});
+
+		$scope.saveColumns();		
 	};
 
 	$scope.columnOptions = {

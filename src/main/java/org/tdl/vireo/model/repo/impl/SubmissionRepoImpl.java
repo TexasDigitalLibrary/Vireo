@@ -1,6 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
+import org.tdl.vireo.model.repo.specification.SubmissionSpecification;
 
 import edu.tamu.framework.model.Credentials;
 
@@ -68,7 +71,20 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	    
 	    List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        submissionViewColums.forEach(submissionViewColumn -> {
+	    Collections.sort(submissionViewColums, new Comparator<SubmissionViewColumn>() {
+	        @Override
+	        public int compare(SubmissionViewColumn svc1, SubmissionViewColumn svc2) {
+	            return svc1.getSortOrder().compareTo(svc2.getSortOrder());
+	        }
+	    });
+	    
+	    Boolean filterExists = false;
+	    
+	    for(SubmissionViewColumn submissionViewColumn : submissionViewColums) {
+	        
+	        if(!filterExists && submissionViewColumn.getFilters().size() > 0) {
+	            filterExists = true;
+	        }
 
             if(submissionViewColumn.getPath().size() > 0) {
 
@@ -81,15 +97,17 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             }
 
-        });
-
-        // TODO: use specification for filters
-        // new SubmissionSpecification<Submission>(), 
+        }
 
         Page<Submission> pageResults;
-
+        
         if(orders.size() > 0) {
-            pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            if(filterExists) {
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(submissionViewColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            }
+            else {
+                pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            }
         }
         else {
             pageResults = submissionRepo.findAll(pageable);
@@ -97,7 +115,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
 		return pageResults;
 	}
-
+	
 }
 
 

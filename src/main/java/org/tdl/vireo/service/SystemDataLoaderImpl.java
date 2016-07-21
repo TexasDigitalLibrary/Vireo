@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EmailTemplate;
@@ -672,9 +673,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         try {
             
             String[] defaultSubmissionViewColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_view_columns/SYSTEM_Default_Submission_View_Column_Titles.json"), new TypeReference<String[]>() {});
-            
-            for(String defaultTitle : defaultSubmissionViewColumnTitles) {
-                defaultSubmissionViewColumnService.addDefaultSubmissionViewColumn(submissionViewColumnRepo.findByTitle(defaultTitle));
+            int count = 0; for(String defaultTitle : defaultSubmissionViewColumnTitles) {
+                SubmissionViewColumn dbSubmissionViewColumn = submissionViewColumnRepo.findByTitle(defaultTitle);
+                if(dbSubmissionViewColumn.getSort() != Sort.NONE) {
+                    dbSubmissionViewColumn.setSortOrder(++count);                
+                    defaultSubmissionViewColumnService.addDefaultSubmissionViewColumn(submissionViewColumnRepo.save(dbSubmissionViewColumn));
+                }
+                else {
+                    defaultSubmissionViewColumnService.addDefaultSubmissionViewColumn(dbSubmissionViewColumn);
+                }
             }
             
         } catch (RuntimeException | IOException e) {
