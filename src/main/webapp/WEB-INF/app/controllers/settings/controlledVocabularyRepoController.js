@@ -194,7 +194,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 	    $scope.beginImport = function(file) {
 	    	if(file) {
 	    		$scope.uploadModalData.file = file;
-	    		angular.element('#controlledVocabularyUploadModal').modal('show');
+	    		$scope.openModal('#controlledVocabularyUploadModal');
 	    	}
 	    };
 
