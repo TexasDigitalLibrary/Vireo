@@ -12,9 +12,23 @@ vireo.directive("field",  function() {
 
 			$scope.submission = $scope.$parent.submission;
 
-			$scope.values = $scope.submission.fieldValues;
+			$scope.values = [];
+
+			$scope.getValues = function() {
+				angular.extend($scope.values, $scope.submission.findFieldValuesByPredicate($scope.profile.predicate));
+				if ($scope.values.length === 0) {
+					$scope.values.push({
+						id: null,
+						value: "",
+						predicate: $scope.profile.predicate
+					});
+				}
+				return $scope.values;
+			};
 
 			$scope.save = function(value) {
+				if (!$scope.submission.dirty()) return;
+
 				$scope.saving = value.id;
 				$scope.submission.saveFieldValue(value).then(function() {
 					$scope.saving = 0;
@@ -46,9 +60,6 @@ vireo.directive("field",  function() {
 				return $scope.submission.findFieldValuesByPredicate($scope.profile.predicate).indexOf(value) === 0;
 			};
 
-			if(!$scope.submission.findFieldValuesByPredicate($scope.profile.predicate).length) {
-				$scope.addFieldValue();
-			}
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};
