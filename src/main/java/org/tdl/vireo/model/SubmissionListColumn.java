@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,12 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
 
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.model.validation.SubmissionViewColumnValidator;
+import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-public class SubmissionViewColumn extends BaseEntity {
+public class SubmissionListColumn extends BaseEntity {
     
     @Column(unique = true, nullable = false)
     private String title;
@@ -21,17 +24,27 @@ public class SubmissionViewColumn extends BaseEntity {
     @Column(nullable = false)
     private Sort sort;
     
+    @Column(nullable = false)
+    private Integer sortOrder;
+    
     @ElementCollection
     @OrderColumn
     private List<String> path;
     
+    @ElementCollection
+    @OrderColumn
+    private List<String> filters;
+    
+    @JsonIgnore
     private String status;
     
-    public SubmissionViewColumn() {
-        setModelValidator(new SubmissionViewColumnValidator());
+    public SubmissionListColumn() {
+        setModelValidator(new SubmissionListColumnValidator());
+        this.sortOrder = 0;
+        this.filters = new ArrayList<String>();
     }
     
-    public SubmissionViewColumn(String title, Sort sort, List<String> path) {
+    public SubmissionListColumn(String title, Sort sort, List<String> path) {
         this();
         this.title = title;
         this.sort = sort;
@@ -65,6 +78,20 @@ public class SubmissionViewColumn extends BaseEntity {
     public void setSort(Sort sort) {
         this.sort = sort;
     }
+    
+    /**
+     * @return the sortOrder
+     */
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    /**
+     * @param sortOrder the sortOrder to set
+     */
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
 
     /**
      * @return the path
@@ -78,6 +105,30 @@ public class SubmissionViewColumn extends BaseEntity {
      */
     public void setPath(List<String> path) {
         this.path = path;
+    }
+    
+    /**
+     * @return the filters
+     */
+    public List<String> getFilters() {
+        return filters;
+    }
+
+    /**
+     * @param filters the filters to set
+     */
+    public void setFilters(List<String> filters) {
+        this.filters = filters;
+    }
+    
+    public void addFilter(String filterValue) {
+        if(!this.filters.contains(filterValue)) {
+            this.filters.add(filterValue);
+        }
+    }
+    
+    public void removeFilter(String filterValue) {
+        this.filters.remove(filterValue);
     }
 
     /**
@@ -93,5 +144,6 @@ public class SubmissionViewColumn extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+    
     
 }

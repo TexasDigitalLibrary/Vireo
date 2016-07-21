@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
@@ -93,9 +94,12 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     private String orcid;
     
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @Column(nullable = false)
+    private Integer pageSize;
+    
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = LAZY)
     @OrderColumn
-    private List<SubmissionViewColumn> submissionViewColumns;
+    private List<SubmissionListColumn> submissionViewColumns;
 
     /**
      * 
@@ -105,6 +109,7 @@ public class User extends BaseEntity implements CoreUser {
         setSettings(new TreeMap<String, String>());
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
+        setPageSize(10);
     }
 
     /**
@@ -409,28 +414,42 @@ public class User extends BaseEntity implements CoreUser {
     public IRole getRole() {
         return role;
     }
+    
+    /**
+     * @return the pageSize
+     */
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @param pageSize the pageSize to set
+     */
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     /**
      * @return the submissionViewColumn
      */
-    public List<SubmissionViewColumn> getSubmissionViewColumns() {
+    public List<SubmissionListColumn> getSubmissionViewColumns() {
         return submissionViewColumns;
     }
 
     /**
      * @param submissionViewColumn the submissionViewColumn to set
      */
-    public void setSubmissionViewColumns(List<SubmissionViewColumn> submissionViewColumn) {
+    public void setSubmissionViewColumns(List<SubmissionListColumn> submissionViewColumn) {
         this.submissionViewColumns = submissionViewColumn;
     }
     
-    public void addSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
+    public void addSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
         if(!this.submissionViewColumns.contains(submissionViewColumn)) {
             this.submissionViewColumns.add(submissionViewColumn);
         }
     }
     
-    public void removeSubmissionViewColumn(SubmissionViewColumn submissionViewColumn) {
+    public void removeSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
         this.submissionViewColumns.remove(submissionViewColumn);
     }
 

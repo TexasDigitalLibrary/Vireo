@@ -549,35 +549,40 @@ var apiMapping = {
 			'controller': 'submission'
 		}
 	},
-	SubmissionViewColumn: {
+	SubmissionListColumn: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'submission-view',
+			'controller': 'submission-list',
 			'method': 'all-columns'
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'submission-view'
+			'controller': 'submission-list'
 		}
 	},
-	ManagerSubmissionViewColumn: {
+	ManagerSubmissionListColumn: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'submission-view',
+			'controller': 'submission-list',
 			'method': 'columns-by-user'
+		},
+		pageSize: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'pagesize-by-user'
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'managers-submission-view'
+			'controller': 'managers-submission-list'
 		},
 		update: {
 			'endpoint': '/private/queue',
-			'controller': 'submission-view',
+			'controller': 'submission-list',
 			'method': 'update-user-columns'
 		},
 		reset: {
 			'endpoint': '/private/queue',
-			'controller': 'submission-view',
+			'controller': 'submission-list',
 			'method': 'reset-user-columns'
 		}
 	},

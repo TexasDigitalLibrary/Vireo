@@ -34,8 +34,13 @@
     <div class="row results-per-page-container">
 	    <div class="col-sm-8 col-sm-offset-2">
 		    <form class="form-inline">
-                <title class="control-title" for="name"><strong>Results per page</strong>:</title>	                
-                <select class="form-control results-per-page-select" name="resultsPerPage" ng-model="resultsPerPage" ng-options="rpp for rpp in resultsPerPageOptions">
+                <label class="control-title" for="resultsPerPageOptions"><strong>Results per page</strong>:</label>	                
+                <select 
+                	class="form-control results-per-page-select" 
+                	name="resultsPerPageOptions" 
+                	ng-model="$parent.$parent.pageSize" 
+                	ng-options="ps for ps in pageSizeOptions" 
+                	ng-change="updatePagination()">
                 </select>
 	        </form>
 	    </div>
@@ -45,5 +50,5 @@
 <div class="modal-footer">
 	<button type="button" class="btn btn-warning" ng-click="resetColumns()">Cancel</button>
     <button type="button" class="btn btn-primary" ng-click="resetColumnsToDefault()">Default Columns</button>
-    <button type="button" class="btn btn-primary" ng-disabled="!itemMoved" ng-click="saveColumns()">Save</button>        
+    <button type="button" class="btn btn-primary" ng-disabled="!change" ng-click="saveColumns()">Save</button>        
 </div>

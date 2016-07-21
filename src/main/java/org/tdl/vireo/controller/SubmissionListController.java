@@ -7,37 +7,38 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.SubmissionViewColumn;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.SubmissionViewColumnRepo;
+import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.DefaultSubmissionViewColumnService;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
 @Controller
-@ApiMapping("/submission-view")
-public class SubmissionViewController {
+@ApiMapping("/submission-list")
+public class SubmissionListController {
     
     @Autowired
-    private SubmissionViewColumnRepo submissionViewColumnRepo;
+    private SubmissionListColumnRepo submissionListColumnRepo;
     
     @Autowired
     private UserRepo userRepo;
     
     @Autowired
-    private DefaultSubmissionViewColumnService defaultSubmissionViewColumnService;
+    private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
     @Transactional
     public ApiResponse getSubmissionViewColumns() {
-        return new ApiResponse(SUCCESS, submissionViewColumnRepo.findAll());
+        return new ApiResponse(SUCCESS, submissionListColumnRepo.findAll());
     }
     
     @ApiMapping("/columns-by-user")
@@ -48,11 +49,20 @@ public class SubmissionViewController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
-    @ApiMapping("/update-user-columns")
+    @ApiMapping("/pagesize-by-user")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionViewColumn> submissionViewColumns) {
+    public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());    
+        return new ApiResponse(SUCCESS, user.getPageSize());
+    }
+    
+    @ApiMapping("/update-user-columns/{pageSize}")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
+        user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
@@ -63,7 +73,7 @@ public class SubmissionViewController {
     @Transactional
     public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
-        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionViewColumns());
+        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }

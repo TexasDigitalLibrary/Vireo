@@ -1,6 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.SubmissionViewColumn;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
@@ -21,6 +23,7 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
+import org.tdl.vireo.model.repo.specification.SubmissionSpecification;
 
 import edu.tamu.framework.model.Credentials;
 
@@ -64,32 +67,48 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	}
 
 	@Override
-	public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionViewColumn> submissionViewColums, Pageable pageable) {
+	public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 	    
 	    List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        submissionViewColums.forEach(submissionViewColumn -> {
 
-            if(submissionViewColumn.getPath().size() > 0) {
+	    Collections.sort(submissionListColums, new Comparator<SubmissionListColumn>() {
+	        @Override
+	        public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
+	            return svc1.getSortOrder().compareTo(svc2.getSortOrder());
+	        }
+	    });
+	    
+	    Boolean filterExists = false;
+	    
+	    for(SubmissionListColumn submissionListColumn : submissionListColums) {
+	        
+	        if(!filterExists && submissionListColumn.getFilters().size() > 0) {
+	            filterExists = true;
+	        }
 
-                String fullPath = String.join(".", submissionViewColumn.getPath());
+            if(submissionListColumn.getPath().size() > 0) {
 
-                switch(submissionViewColumn.getSort()) {
+                String fullPath = String.join(".", submissionListColumn.getPath());
+
+                switch(submissionListColumn.getSort()) {
                     case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
                     case DESC: orders.add(new Sort.Order(Sort.Direction.DESC, fullPath)); break;
                     default: break;
                 }
             }
 
-        });
-
-        // TODO: use specification for filters
-        // new SubmissionSpecification<Submission>(), 
+        }
 
         Page<Submission> pageResults;
-
+        
         if(orders.size() > 0) {
-            pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            if(filterExists) {
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(submissionListColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            }
+            else {
+                pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
+            }
         }
         else {
             pageResults = submissionRepo.findAll(pageable);
@@ -97,7 +116,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
 		return pageResults;
 	}
-
+	
 }
 
 
