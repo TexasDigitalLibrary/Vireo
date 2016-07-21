@@ -2,6 +2,7 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 
@@ -93,7 +94,10 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     private String orcid;
     
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @Column(nullable = false)
+    private Integer pageSize;
+    
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = LAZY)
     @OrderColumn
     private List<SubmissionListColumn> submissionViewColumns;
 
@@ -105,6 +109,7 @@ public class User extends BaseEntity implements CoreUser {
         setSettings(new TreeMap<String, String>());
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
+        setPageSize(10);
     }
 
     /**
@@ -408,6 +413,20 @@ public class User extends BaseEntity implements CoreUser {
     @JsonSerialize(as = AppRole.class)
     public IRole getRole() {
         return role;
+    }
+    
+    /**
+     * @return the pageSize
+     */
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @param pageSize the pageSize to set
+     */
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     /**

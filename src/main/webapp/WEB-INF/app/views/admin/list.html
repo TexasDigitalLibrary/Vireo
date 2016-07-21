@@ -13,21 +13,46 @@
 		<a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
 		 <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped" id="etd-table">
-			<tr ng-repeat="row in $data">
-				<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
-			</tr>
+		 	<thead class="header">
+		 		<tr>
+			      	<th ng-repeat="column in userColumns">
+			          	<span>{{column.title}} 
+			          		<span class="pull-right select-toggle" ng-click="sortBy(column)">
+					          	<span ng-if="column.sort == 'ASC'" class="glyphicon glyphicon-chevron-up"></span>
+					          	<span ng-if="column.sort == 'DESC'" class="glyphicon glyphicon-chevron-down"></span>
+					          	<span ng-if="column.sort == 'NONE'" class="glyphicon glyphicon-minus"></span>
+				          	</span>
+			          	</span>
+			      	</th>
+			  </tr>
+		 	</thead>
+		 	<tbody>
+				<tr ng-repeat="row in $data">
+					<td ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
+				</tr>
+			</tbody>
+			<tfoot class="header">
+				<tr>
+					<th colspan="{{userColumns.length}}">
+						{{page.totalElements || 0}} matching records displayed on {{page.totalPages || 0}} pages ({{pageSize || 0}} per page).
+					</th>
+				</tr>
+			</tfoot>
 		</table>
 
-		<div class="btn-group pull-right" ng-if="page.totalElements > pageSize">
-			<button 
-				class="btn btn-default" 
-				ng-repeat="i in [] | range:page.totalElements/pageSize"
-				ng-class="{'active': pageNumber===i}"
-				ng-click="selectPage(i)"
-			>
+		<form class="form-inline pull-right">
+
+            <div class="btn-group" ng-if="page.totalElements > pageSize">				
+				<button 
+					class="btn btn-default" 
+					ng-repeat="i in [] | range:page.totalElements/pageSize"
+					ng-class="{'active': pageNumber===i}"
+					ng-click="selectPage(i)">
 					{{i*pageSize}}
-			</button>
-		</div>
+				</button>
+			</div>
+
+        </form>
 
 	</div>
 </div>

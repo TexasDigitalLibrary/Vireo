@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EmailTemplate;
@@ -38,8 +39,8 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
-import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -54,8 +55,8 @@ import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
+import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -671,10 +672,17 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         
         try {
             
+
             String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {});
-            
-            for(String defaultTitle : defaultSubmissionListColumnTitles) {
-                defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.findByTitle(defaultTitle));
+            int count = 0; for(String defaultTitle : defaultSubmissionListColumnTitles) {
+                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
+                if(dbSubmissionListColumn.getSort() != Sort.NONE) {
+                    dbSubmissionListColumn.setSortOrder(++count);
+                    defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
+                }
+                else {
+                    defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
+                }
             }
             
         } catch (RuntimeException | IOException e) {

@@ -16,6 +16,7 @@ import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
@@ -48,11 +49,20 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
-    @ApiMapping("/update-user-columns")
+    @ApiMapping("/pagesize-by-user")
     @Auth(role = "STUDENT")
     @Transactional
-    public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
+    public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());    
+        return new ApiResponse(SUCCESS, user.getPageSize());
+    }
+    
+    @ApiMapping("/update-user-columns/{pageSize}")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
+        user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());

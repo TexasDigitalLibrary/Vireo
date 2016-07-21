@@ -4,19 +4,17 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	
 	$scope.page = {};
 
+	$scope.pageSize = 10;
+
 	$scope.pageNumber = 0;
 
-	$scope.pageSize = 2;
+	$scope.pageSizeOptions = [5, 10, 20, 40, 60, 100, 200, 400, 500];
 
 	$scope.columns = [];
 
 	$scope.userColumns = [];
 
-	$scope.resultsPerPageOptions = [10, 20, 40, 60, 100, 200, 400, 500, 1000];
-
-	$scope.resultsPerPage = 100;
-
-	$scope.itemMoved = false;
+	$scope.change = false;
 
 	var update = function() {
 
@@ -25,28 +23,30 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		SubmissionListColumnRepo.reset();
 
 		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
-			
-			$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
+
+			ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(data) {
+				
+				$scope.pageSize = angular.fromJson(data.body).payload.Integer;
+
+				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 		
-			$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
+				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-			SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
+				SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
-				angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+					angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
 
-				console.log($scope.page);
-
-				$scope.tableParams = new NgTableParams({ }, 
-				{
-					counts: [],
-					filterDelay: 0, 
-					dataset: $scope.page.content
+					$scope.tableParams = new NgTableParams({ }, 
+					{
+						counts: [],
+						filterDelay: 0, 
+						dataset: $scope.page.content
+					});
 				});
 
-				//$scope.tableParams.reload();
-			});
-		});
-		
+				$scope.change = false;
+			});			
+		});		
 	};
 
 	SubmissionRepo.listen(function() {
@@ -71,6 +71,11 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		});
 	};
 
+	$scope.updatePagination = function() {
+		$scope.pageNumber = 0;
+		$scope.change = true;
+	};
+
 	$scope.selectPage = function(i) {
 		$scope.pageNumber = i;
 		update();
@@ -78,12 +83,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.resetColumns = function() {
 		$q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function() {
-
 			update();
-
 			$scope.closeModal();
-
-			$scope.itemMoved = false;
+			$scope.change = false;
 		});		
 	};
 
@@ -94,7 +96,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.saveColumns = function() {
-		ManagerSubmissionListColumnRepo.updateSubmissionListColumns().then(function() {
+		ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.pageSize).then(function() {
 			$scope.resetColumns();
 		});
 	};
@@ -107,21 +109,59 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return value;
 	};
 
+	$scope.sortBy = function(sortColumn) {
+
+		switch(sortColumn.sort) {
+			case "ASC": {
+				sortColumn.sort = "NONE";
+				sortColumn.sortOrder = 0;
+			} break;
+			case "DESC": {
+				sortColumn.sort = "ASC";
+				sortColumn.sortOrder = 1;
+			} break;
+			case "NONE": {
+				sortColumn.sort = "DESC";
+				sortColumn.sortOrder = 1;
+			} break;
+			default: break;
+		}
+		
+		angular.forEach($scope.userColumns, function(userColumn) {
+			if(userColumn != sortColumn && sortColumn.sortOrder == 1) {
+				if(userColumn.sortOrder > 0) {
+					if(userColumn.sort != "NONE") {
+						userColumn.sortOrder++;
+						if(userColumn.sortOrder > $scope.userColumns.length - 1) {
+							userColumn.sortOrder = 0;
+							userColumn.sort = "NONE";
+						}
+					}
+					else {
+						userColumn.sortOrder = 0;
+					}
+				}
+			}
+		});
+
+		$scope.saveColumns();
+	};
+
 	$scope.columnOptions = {
 		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 			return true;
 		},
-		itemMoved: function (event) {
+		change: function (event) {
 			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
 				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;	
 			}
 			else {
 				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : null;
 			}
-			$scope.itemMoved = true;
+			$scope.change = true;
 		},
 		orderChanged: function (event) {
-			$scope.itemMoved = true;
+			$scope.change = true;
 		},
 		containment: '#column-modal',
 		additionalPlaceholderClass: 'column-placeholder'

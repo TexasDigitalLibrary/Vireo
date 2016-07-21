@@ -566,6 +566,11 @@ var apiMapping = {
 			'controller': 'submission-list',
 			'method': 'columns-by-user'
 		},
+		pageSize: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'pagesize-by-user'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'managers-submission-list'
