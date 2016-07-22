@@ -2,16 +2,22 @@ vireo.controller('SubmissionHistoryController', function ($controller, $scope, N
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
-  	$scope.submissions = StudentSubmissionRepo.getAll();
+	$scope.submissions = StudentSubmissionRepo.getAll();
 
-  	StudentSubmissionRepo.ready().then(function() {
-  		console.log(StudentSubmissionRepo.getAll());
-  		$scope.tableParams = new NgTableParams({}, {filterDelay: 0, dataset: $scope.submissions}); 
-  		$scope.tableParams.reload();
-  	})
+	StudentSubmissionRepo.ready().then(function() {
 
-  	StudentSubmissionRepo.listen(function() {
+		$scope.tableParams = new NgTableParams({}, {
+			counts: [],
+			filterDelay: 0, 
+			dataset: $scope.submissions
+	  	}); 
+
 		$scope.tableParams.reload();
-  	});
+
+	})
+
+	StudentSubmissionRepo.listen(function() {
+	  	$scope.tableParams.reload();
+	});
 
 });
