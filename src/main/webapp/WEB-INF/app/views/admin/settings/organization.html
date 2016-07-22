@@ -127,52 +127,47 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">Manage {{getManagedOrganization().name}}</h3>
 						</div>
-						
-						<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
-							<div class="form-group text-field clearfix">
-								<div class="col-sm-2">
-									<span class="text-field-heading">Name</span>
-								</div>
-								<div class="col-sm-4 expanded">
-									<validatedinput
-										model="getManagedOrganization()"
-										property="name"
-										placeholder="Name of the organization"
-										form="forms.update"
-										validations="getManagedOrganization().getValidations()"
-										results="getManagedOrganization().getValidationResults()">
-									</validatedinput>
-								</div>
 
-							</div>
-							<div class="text-field clearfix">
-								<div class="col-sm-2">
-									<span class="text-field-heading">Category</span>
+						<div class="col-md-6">
+						
+							<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
+								
+								<validatedinput
+									label="Name"
+									model="getManagedOrganization()"
+									property="name"
+									placeholder="Name of the organization"
+									form="forms.update"
+									validations="getManagedOrganization().getValidations()"
+									results="getManagedOrganization().getValidationResults()">
+								</validatedinput>
+
+								<validatedselect
+									label="Category"
+									options="organizationCategories"
+									optionproperty="name"
+									model="getManagedOrganization()"
+									property="category"
+									form="forms.update"
+									validations="getManagedOrganization().getValidations()"
+									results="getManagedOrganization().ValidationResults">
+								</validatedselect>
+							
+								<div class="modal-footer">
+									<button 
+										type="button" 
+										class="btn btn-warning" 
+										ng-click="resetManagedOrganization()">Cancel</button>
+									<input 
+										type="submit" 
+										class="btn btn-primary" 
+										value="Save" 
+										ng-disabled="forms.update.$invalid"/>
 								</div>
-								<div class="col-sm-4 expanded">
-									<validatedselect
-										options="organizationCategories"
-										optionproperty="name"
-										model="getManagedOrganization()"
-										property="category"
-										form="forms.update"
-										validations="getManagedOrganization().getValidations()"
-										results="getManagedOrganization().ValidationResults">
-									</validatedselect>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button 
-									type="button" 
-									class="btn btn-warning" 
-									ng-click="resetManagedOrganization()">Cancel</button>
-								<input 
-									type="submit" 
-									class="btn btn-primary" 
-									value="Save" 
-									ng-disabled="forms.update.$invalid"/>
-							</div>
-						</form>
+								
+							</form>
+
+						</div>
 
 					</div>
 				</div>
