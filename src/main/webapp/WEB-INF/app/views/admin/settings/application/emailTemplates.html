@@ -2,34 +2,39 @@
 
     <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
 
-    <div class="col-sm-6">
-        <button 
-            class="btn btn-default modal-add-btn" 
-            ng-click="openModal('#emailTemplatesNewModal')">
-            Add New Email Template
-        </button>
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <button 
+                class="btn btn-default modal-add-btn" 
+                ng-click="openModal('#emailTemplatesNewModal')">
+                Add New Email Template
+            </button>
 
-        <draganddroplist 
-            dragging="dragging"
-            scope-value="emailTemplates"
-            properties='["name"]'
-            item-view='views/directives/dragAndDropEmailTemplates.html'
-            listeners='dragControlListeners'
-            edit='launchEditModal(index)'
-            sort-label='Email Template'
-            sort-column='name'
-            sort-action='sortAction'
-            sort-method='sortEmailTemplates(column)'>
-        </draganddroplist>
+            <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new email template."></div>
 
+            <draganddroplist 
+                dragging="dragging"
+                scope-value="emailTemplates"
+                properties='["name"]'
+                item-view='views/directives/dragAndDropEmailTemplates.html'
+                listeners='dragControlListeners'
+                edit='launchEditModal(index)'
+                sort-label='Email Template'
+                sort-column='name'
+                sort-action='sortAction'
+                sort-method='sortEmailTemplates(column)'>
+            </draganddroplist>
+        </div>
     </div>
 
-    <div class="col-sm-6">
-        <trashcan 
-            id="{{trashCanId}}"
-            dragging="dragging"
-            listeners='dragControlListeners'>
-        </trashcan>
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <trashcan 
+                id="{{trashCanId}}"
+                dragging="dragging"
+                listeners='dragControlListeners'>
+            </trashcan>
+        </div>
     </div>
 
     <modal 

@@ -2,28 +2,37 @@
 	
 	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
 	
-	<div class="col-sm-6">
+	<div class="col-md-6">
 
-		<button class="btn btn-default modal-add-btn" ng-click="openModal('#customActionNewModal')">
-				Add New
-		</button>
+		<div class="col-md-10 col-md-offset-1">
 
-		<p ng-if="customActions.length == 0">Add new Custom actions</p>
-		
-		<draganddroplist dragging="dragging"
-						 scope-value="customActions"
-						 properties='["label", "isStudentVisible"]'
-						 item-view='views/directives/dragAndDropCustomAction.html'
-						 listeners='dragControlListeners'
-						 edit='editCustomAction(index)'>
-		</draganddroplist>
+			<button class="btn btn-default modal-add-btn" ng-click="openModal('#customActionNewModal')">
+					Add New
+			</button>
+
+			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new custom action."></div>
+
+			<p ng-if="customActions.length == 0">Add new Custom actions</p>
+			
+			<draganddroplist dragging="dragging"
+							 scope-value="customActions"
+							 properties='["label", "isStudentVisible"]'
+							 item-view='views/directives/dragAndDropCustomAction.html'
+							 listeners='dragControlListeners'
+							 edit='editCustomAction(index)'>
+			</draganddroplist>
+
+		<div>
 	</div>
 	
-	<div class="col-sm-6">
-		<trashcan id="{{trashCanId}}"
-				  dragging="dragging"
-				  listeners='dragControlListeners'>
-		</trashcan>
+	<div class="col-md-6">
+
+		<div class="col-md-10 col-md-offset-1">
+			<trashcan id="{{trashCanId}}"
+					  dragging="dragging"
+					  listeners='dragControlListeners'>
+			</trashcan>
+		</div>
 	</div>
 
 	<modal modal-id="customActionNewModal" 

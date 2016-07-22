@@ -68,7 +68,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		};
 		
 		$scope.updateWorkflowStep = function(workflowStep) {
-			OrganizationRepo.updateWorkflowStep(workflowStep);
+			return OrganizationRepo.updateWorkflowStep(workflowStep);
 		};
 
 		$scope.reorderWorkflowStepUp = function(workflowStepID) {

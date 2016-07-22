@@ -518,11 +518,6 @@ togglebutton {
 }
 
 
-textfield {
-  display: block;
-  min-height: 20px;  
-}
-
 .text-field-heading {
   font-size: 1em;
   margin-top: 5px;
@@ -534,10 +529,6 @@ textfield {
   margin-top: 2px;
 }
 
-.with-hint {
-  display: inline-block;
-}
-
 .with-tool-tip {
   display: inline-flex;
 }
@@ -546,8 +537,11 @@ textfield {
   width: 100%;
 }
 
-.tooltip-span {
-  margin-top: 4px;
+.tooltip-span-adjust {
+  margin-left: 10px;
+  margin-bottom: 14px;  
+  line-height: 2;
+  vertical-align: top;
 }
 
 a.tooltip-icon {
@@ -563,10 +557,6 @@ a.tooltip-icon:hover {
 
 a[title]:hover:after {
   position: absolute;
-}
-
-validatedinput .glyphicon {
-  top: 0;
 }
 
 lockingtextarea .glyphicon-info-sign, togglebutton .glyphicon-info-sign {
@@ -590,11 +580,6 @@ h4 {
 .lock-control a {
   color: #666666;
   text-decoration:none;
-}
-
-.move-up {
-  margin-top: 2px;
-  position: absolute;
 }
 
 .deposit-location {

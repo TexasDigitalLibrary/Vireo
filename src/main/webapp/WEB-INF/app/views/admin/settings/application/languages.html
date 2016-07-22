@@ -2,40 +2,42 @@
 	
 	<validationmessage results="languageRepo.getValidationResults()"></validationmessage>
 
-	<div class="col-sm-6">
-		
-		<button class="btn btn-default modal-add-btn" ng-click="openModal('#languagesNewModal')">
-			Add Language
-		</button>
-		
-		<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which allows to create new language."></div>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<button class="btn btn-default modal-add-btn" ng-click="openModal('#languagesNewModal')">
+				Add Language
+			</button>
+			
+			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new language."></div>
 
-		<p ng-if="languages.length == 0">Add New Language</p>
-		
-		<draganddroplist dragging="dragging"
-						 scope-value="languages"
-						 properties='["name", "proquestCode"]'
-						 item-view='views/directives/dragAndDropLanguage.html'
-						 listeners='dragControlListeners'
-						 edit='editLanguage(index)'
-						 sort-label='Languages'
-						 sort-column='name',
-						 sort-action='sortAction'
-						 sort-method='sortLanguages(column)'>
-		</draganddroplist>
+			<p ng-if="languages.length == 0">Add New Language</p>
+			
+			<draganddroplist dragging="dragging"
+							 scope-value="languages"
+							 properties='["name", "proquestCode"]'
+							 item-view='views/directives/dragAndDropLanguage.html'
+							 listeners='dragControlListeners'
+							 edit='editLanguage(index)'
+							 sort-label='Languages'
+							 sort-column='name',
+							 sort-action='sortAction'
+							 sort-method='sortLanguages(column)'>
+			</draganddroplist>
 
-		<br/>
-		<span class="glyphicon glyphicon-tag">
-			<span> Denotes a ProQuest / UMI compatable Language</span>
-		</span>
-
+			<br/>
+			<span class="glyphicon glyphicon-tag">
+				<span> Denotes a ProQuest / UMI compatable Language</span>
+			</span>
+		</div>
 	</div>
 	
-	<div class="col-sm-6">
-		<trashcan id="{{trashCanId}}"
-				  dragging="dragging"
-				  listeners='dragControlListeners'>
-		</trashcan>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<trashcan id="{{trashCanId}}"
+					  dragging="dragging"
+					  listeners='dragControlListeners'>
+			</trashcan>
+		</div>
 	</div>
 
 	<modal modal-id="languagesNewModal" 

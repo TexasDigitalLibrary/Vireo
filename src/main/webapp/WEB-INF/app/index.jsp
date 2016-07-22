@@ -359,7 +359,7 @@
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languagesController.js"></script>
-	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
+	    <script src="controllers/settings/documentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>

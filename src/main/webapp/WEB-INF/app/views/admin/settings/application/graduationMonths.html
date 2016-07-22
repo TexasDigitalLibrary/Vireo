@@ -2,32 +2,38 @@
 	
 	<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
-	<div class="col-sm-6">		
-		<button class="btn btn-default modal-add-btn" ng-click="openModal('#graduationMonthNewModal')">
-			Add Graduation Month
-		</button>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">	
+			<button class="btn btn-default modal-add-btn" ng-click="openModal('#graduationMonthNewModal')">
+				Add Graduation Month
+			</button>
 
-		<p ng-if="graduationMonths.length == 0">Add new Graduation Month</p>
-		
-		<draganddroplist dragging="dragging"
-						 scope-value="graduationMonths"
-						 properties='["month"]'
-						 item-view='views/directives/dragAndDropGraduationMonth.html'
-						 listeners='dragControlListeners'
-						 edit='editGraduationMonth(index)'
-						 to-string='toMonthString(month)'
-						 sort-label='Graduation Months'
-						 sort-column='month'
-						 sort-action='sortAction'
-						 sort-method='sortGraduationMonths(column)'>
-		</draganddroplist>
+			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new graduation month."></div>
+
+			<p ng-if="graduationMonths.length == 0">Add new Graduation Month</p>
+			
+			<draganddroplist dragging="dragging"
+							 scope-value="graduationMonths"
+							 properties='["month"]'
+							 item-view='views/directives/dragAndDropGraduationMonth.html'
+							 listeners='dragControlListeners'
+							 edit='editGraduationMonth(index)'
+							 to-string='toMonthString(month)'
+							 sort-label='Graduation Months'
+							 sort-column='month'
+							 sort-action='sortAction'
+							 sort-method='sortGraduationMonths(column)'>
+			</draganddroplist>
+		</div>
 	</div>
 	
-	<div class="col-sm-6">
-		<trashcan id="{{trashCanId}}"
-				  dragging="dragging"
-				  listeners='dragControlListeners'>
-		</trashcan>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<trashcan id="{{trashCanId}}"
+					  dragging="dragging"
+					  listeners='dragControlListeners'>
+			</trashcan>
+		</div>
 	</div>
 
 	<modal modal-id="graduationMonthNewModal" 
