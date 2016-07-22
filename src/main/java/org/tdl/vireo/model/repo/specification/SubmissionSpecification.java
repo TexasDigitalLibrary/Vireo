@@ -30,9 +30,9 @@ public class SubmissionSpecification<Submission> implements Specification<Submis
                 
                 System.out.println(filter);
                 
-                if(submissionListColumn.getPath().size() > 0) {
+                if(submissionListColumn.getValuePath().size() > 0) {
                     Path<Object> path = null;
-                    for(String property : submissionListColumn.getPath()) {
+                    for(String property : submissionListColumn.getValuePath()) {
                         if(path == null) {
                             path = root.get(property);
                         }
