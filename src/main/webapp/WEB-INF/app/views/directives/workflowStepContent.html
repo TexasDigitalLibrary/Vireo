@@ -39,56 +39,60 @@
 		
 		<div id="fieldProfiles" class="row">
 
-			<alerts channels="/organization/workflowStep/fieldProfiles" types="ERROR, WARNING" exclusive></alerts>
+			<div class="col-md-12">	
 
-			<div class="col-sm-6">		
-				
-				<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
-					Add Field Profile
-				</button>
+				<alerts channels="/organization/workflowStep/fieldProfiles" types="ERROR, WARNING" exclusive></alerts>
 
-				<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new field profile."></div>
+				<div class="col-md-6">		
+					
+					<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
+						Add Field Profile
+					</button>
 
-				<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field Profile</p>
-				 
-				<draganddroplist dragging="dragging"
-								 scope-value="step.aggregateFieldProfiles"
-								 properties='["fieldGlosses"]'
-								 item-view='views/directives/dragAndDropFieldProfile.html'
-								 listeners='dragControlListeners'
-								 edit='editFieldProfile(index)'
-								 is-editable='isEditable(fieldProfile)'>
-				</draganddroplist>
-		 		
+					<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new field profile."></div>
+
+					<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field Profile</p>
+					 
+					<draganddroplist dragging="dragging"
+									 scope-value="step.aggregateFieldProfiles"
+									 properties='["fieldGlosses"]'
+									 item-view='views/directives/dragAndDropFieldProfile.html'
+									 listeners='dragControlListeners'
+									 edit='editFieldProfile(index)'
+									 is-editable='isEditable(fieldProfile)'>
+					</draganddroplist>
+			 		
+				</div>
+
+				<div class="col-md-6">
+					<trashcan id="field-profile-trash-{{step.id}}"
+							  dragging="dragging"
+							  listeners='dragControlListeners'>
+					</trashcan>
+				</div>
+
+				<modal modal-id="fieldProfilesNewModal-{{step.id}}" 
+					   modal-view="views/modals/organization/fieldProfilesNewModal.html" 
+					   modal-header-class="modal-header-primary"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+			 
+				<modal modal-id="fieldProfilesEditModal-{{step.id}}"  
+					   modal-view="views/modals/organization/fieldProfilesEditModal.html" 
+					   modal-header-class="modal-header-primary"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+			 
+				<modal modal-id="fieldProfilesConfirmRemoveModal-{{step.id}}" 
+					   modal-view="views/modals/organization/fieldProfilesConfirmRemoveModal.html" 
+					   modal-header-class="modal-header-danger"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+
 			</div>
-
-			<div class="col-sm-6">
-				<trashcan id="field-profile-trash-{{step.id}}"
-						  dragging="dragging"
-						  listeners='dragControlListeners'>
-				</trashcan>
-			</div>
-
-			<modal modal-id="fieldProfilesNewModal-{{step.id}}" 
-				   modal-view="views/modals/organization/fieldProfilesNewModal.html" 
-				   modal-header-class="modal-header-primary"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
-		 
-			<modal modal-id="fieldProfilesEditModal-{{step.id}}"  
-				   modal-view="views/modals/organization/fieldProfilesEditModal.html" 
-				   modal-header-class="modal-header-primary"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
-		 
-			<modal modal-id="fieldProfilesConfirmRemoveModal-{{step.id}}" 
-				   modal-view="views/modals/organization/fieldProfilesConfirmRemoveModal.html" 
-				   modal-header-class="modal-header-danger"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
 
 		</div>
 	</div>
@@ -112,58 +116,62 @@
 
 		<div id="notes" class="row">
 
-			<alerts channels="/organization/workflowStep/notes" types="ERROR, WARNING" exclusive></alerts>
+			<div class="col-md-12">	
 
-			<div class="col-sm-6">		
+				<alerts channels="/organization/workflowStep/notes" types="ERROR, WARNING" exclusive></alerts>
+
+				<div class="col-md-6">
+					
+					<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
+						Add Note
+					</button>
+					
+					<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new note."></div>
+
+					<p ng-if="step.aggregateNotes.length == 0">Add New Note</p>
+					 
+					<draganddroplist dragging="dragging"
+									 scope-value="step.aggregateNotes"
+									 properties='["name"]'
+									 item-view='views/directives/dragAndDropNote.html'
+									 listeners='dragControlListeners'
+									 edit='editNote(index)'
+									 is-editable='isEditable(note)'>
+					</draganddroplist>
+			 		
+				</div>
+
+
 				
-				<button class="btn btn-default modal-add-btn" ng-click="openNewModal(step.id)">
-					Add Note
-				</button>
-				
-				<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new note."></div>
+				<div class="col-md-6">
+					<trashcan id="note-trash-{{step.id}}"
+							  dragging="dragging"
+							  listeners='dragControlListeners'>
+					</trashcan>
+				</div>
 
-				<p ng-if="step.aggregateNotes.length == 0">Add New Note</p>
-				 
-				<draganddroplist dragging="dragging"
-								 scope-value="step.aggregateNotes"
-								 properties='["name"]'
-								 item-view='views/directives/dragAndDropNote.html'
-								 listeners='dragControlListeners'
-								 edit='editNote(index)'
-								 is-editable='isEditable(note)'>
-				</draganddroplist>
-		 		
+				<modal modal-id="notesNewModal-{{step.id}}" 
+					   modal-view="views/modals/organization/notesNewModal.html" 
+					   modal-header-class="modal-header-primary"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+			 
+				<modal modal-id="notesEditModal-{{step.id}}"  
+					   modal-view="views/modals/organization/notesEditModal.html" 
+					   modal-header-class="modal-header-primary"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+			 
+				<modal modal-id="notesConfirmRemoveModal-{{step.id}}" 
+					   modal-view="views/modals/organization/notesConfirmRemoveModal.html" 
+					   modal-header-class="modal-header-danger"
+					   modal-keyboard="false"
+					   modal-backdrop="static">
+				</modal>
+
 			</div>
-
-
-			
-			<div class="col-sm-6">
-				<trashcan id="note-trash-{{step.id}}"
-						  dragging="dragging"
-						  listeners='dragControlListeners'>
-				</trashcan>
-			</div>
-
-			<modal modal-id="notesNewModal-{{step.id}}" 
-				   modal-view="views/modals/organization/notesNewModal.html" 
-				   modal-header-class="modal-header-primary"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
-		 
-			<modal modal-id="notesEditModal-{{step.id}}"  
-				   modal-view="views/modals/organization/notesEditModal.html" 
-				   modal-header-class="modal-header-primary"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
-		 
-			<modal modal-id="notesConfirmRemoveModal-{{step.id}}" 
-				   modal-view="views/modals/organization/notesConfirmRemoveModal.html" 
-				   modal-header-class="modal-header-danger"
-				   modal-keyboard="false"
-				   modal-backdrop="static">
-			</modal>
 
 		</div>
 	</div>
