@@ -18,9 +18,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	var update = function() {
 
-		ManagerSubmissionListColumnRepo.reset();
-
 		SubmissionListColumnRepo.reset();
+		ManagerSubmissionListColumnRepo.reset();
 
 		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
 
