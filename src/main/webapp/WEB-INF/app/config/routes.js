@@ -7,8 +7,8 @@ vireo.config(function($routeProvider, $locationProvider) {
 			templateUrl: 'views/myprofile.html',
 			controller: 'SettingsController'
 		}).
-		when('/submit', {
-			templateUrl: 'views/student/submit.html',
+		when('/history', {
+			templateUrl: 'views/student/submissionHistory.html',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/new', {

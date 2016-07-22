@@ -24,7 +24,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 				}
 
 				$scope.typingTimer = setTimeout(function() {
-					$scope.settings.user.save();
+					return $scope.settings.user.save();
 				}, timer);
 			};
 
@@ -142,15 +142,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.updateConfigurationPlainText = function(type, name) {
 			$scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
-			$scope.settings.configurable[type][name].save();
+			return $scope.settings.configurable[type][name].save();
 		};
 
 		$scope.updateConfiguration = function(type, name) {
-			$scope.settings.configurable[type][name].save();
+			return $scope.settings.configurable[type][name].save();
 		};
 
 		$scope.resetConfiguration = function(type, name) {
-			$scope.settings.configurable[type][name].reset();
+			return $scope.settings.configurable[type][name].reset();
 		};
 
 	});	

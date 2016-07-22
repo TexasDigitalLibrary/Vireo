@@ -1,41 +1,44 @@
 <div ng-controller="UserRepoController">
     <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-default modal-add-btn" ng-click="openModal('#addMemberModal')">
+                Add Member
+            </button>
 
-        <button class="btn btn-default modal-add-btn" ng-click="openModal('#addMemberModal')">
-            Add Member
-        </button>
+            <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to elevate users access."></div>
 
-        <table  class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="user in users | filter:{role: '!STUDENT'}">
-                    <td>{{user.firstName}} {{user.lastName}}</td>
-                    <td>{{user.email}}</td>
-                    <td>
-                        <select 
-                            ng-options="key as value for (key, value) in roles" 
-                            class="form-control" 
-                            ng-model="user.role" 
-                            ng-change="updateRole(user)"></select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <modal 
-            modal-id="addMemberModal"
-            modal-view="views/modals/whoHasAccessModal.html" 
-            modal-header-class="modal-header-primary"
-            modal-keyboard="false"
-            modal-backdrop="static">
-        </modal>
+            <table  class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in users | filter:{role: '!STUDENT'}">
+                        <td>{{user.firstName}} {{user.lastName}}</td>
+                        <td>{{user.email}}</td>
+                        <td>
+                            <select 
+                                ng-options="key as value for (key, value) in roles" 
+                                class="form-control" 
+                                ng-model="user.role" 
+                                ng-change="updateRole(user)"></select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
+
+    <modal 
+        modal-id="addMemberModal"
+        modal-view="views/modals/whoHasAccessModal.html" 
+        modal-header-class="modal-header-primary"
+        modal-keyboard="false"
+        modal-backdrop="static">
+    </modal>
 
 </div>

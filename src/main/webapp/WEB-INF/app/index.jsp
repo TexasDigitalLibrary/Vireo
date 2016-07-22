@@ -269,7 +269,6 @@
 	    <script src="directives/tabsDirective.js"></script>
 	    <script src="directives/sideBoxDirective.js"></script>
         <script src="directives/toggleButtonDirective.js"></script>
-        <script src="directives/textFieldDirective.js"></script>
 	    <script src="directives/userSettingsDirective.js"></script>
 	    <script src="directives/legendDirective.js"></script>
 	    <script src="directives/checkBoxDirective.js"></script>
@@ -359,7 +358,7 @@
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languagesController.js"></script>
-	    <script src="controllers/settings/availableDocumentTypesController.js"></script>
+	    <script src="controllers/settings/documentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>

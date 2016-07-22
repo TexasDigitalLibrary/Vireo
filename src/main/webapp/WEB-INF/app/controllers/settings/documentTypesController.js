@@ -1,4 +1,4 @@
-vireo.controller("AvailableDocumentTypesController", function ($controller, $scope, DocumentTypeRepo, DragAndDropListenerFactory) {
+vireo.controller("DocumentTypesController", function ($controller, $scope, DocumentTypeRepo, DragAndDropListenerFactory) {
 	
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -14,7 +14,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
 	$scope.dragging = false;
 	
-	$scope.trashCanId = 'available-document-types-trash';
+	$scope.trashCanId = 'document-types-trash';
 	
 	$scope.sortAction = "confirm";
 
@@ -52,7 +52,7 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
 
         $scope.launchEditModal = function(index) {
             $scope.modalData = $scope.documentTypes[index -1];
-            $scope.openModal('#availableDocumentTypesEditModal');
+            $scope.openModal('#documentTypesEditModal');
 	    };	
 
         $scope.updateDocumentType = function() {
@@ -86,9 +86,9 @@ vireo.controller("AvailableDocumentTypesController", function ($controller, $sco
             dragging: $scope.dragging,
             select: $scope.selectDocumentType,
             model: $scope.documentTypes,
-            confirm: '#availableDocumentTypesConfirmRemoveModal',
+            confirm: '#documentTypesConfirmRemoveModal',
             reorder: $scope.reorderDocumentTypes,
-            container: '#available-document-types'
+            container: '#document-types'
         });
 
     });

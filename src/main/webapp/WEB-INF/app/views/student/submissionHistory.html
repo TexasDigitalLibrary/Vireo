@@ -5,11 +5,11 @@
 		<li class="active">Submissions</li>
 	</ul>
 	<div class="row pageHead">
-		<h3 class="span11">Submission Status</h3>
+		<h3 class="span11">Submission History</h3>
 	</div>
 	<br>
 
-	<table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped" id="etd-table">
+	<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
  	  <tr ng-repeat="row in $data track by row.id">
 		<td title="'ID'">{{row.id}}</td>
 		<td title="'Organization'">{{row.organization.name}}</td>

@@ -2,29 +2,37 @@
 
 	<validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
-	<div class="col-sm-6">
-		
-		<button class="btn btn-default modal-add-btn" ng-click="openModal('#depositLocationNewModal')">
-			Add Location
-		</button>
-		
-		<p ng-if="depositLocations.length == 0">Add new Deposit Location</p>
+	<div class="col-md-6">
 
-		<draganddroplist dragging="dragging"
-						 scope-value="depositLocations"
-						 properties='["name", "repository"]'
-						 item-view='views/directives/dragAndDropDepositLocation.html'
-						 listeners='dragControlListeners'
-						 edit='editDepositLocation(index)'>
-		</draganddroplist>
+		<div class="col-md-10 col-md-offset-1">
+		
+			<button class="btn btn-default modal-add-btn" ng-click="openModal('#depositLocationNewModal')">
+				Add Location
+			</button>
+
+			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create deposit location."></div>
+			
+			<p ng-if="depositLocations.length == 0">Add new Deposit Location</p>
+
+			<draganddroplist dragging="dragging"
+							 scope-value="depositLocations"
+							 properties='["name", "repository"]'
+							 item-view='views/directives/dragAndDropDepositLocation.html'
+							 listeners='dragControlListeners'
+							 edit='editDepositLocation(index)'>
+			</draganddroplist>
+
+		</div>
 		
 	</div>
 	
-	<div class="col-sm-6">
-		<trashcan id="{{trashCanId}}"
-			 	  dragging="dragging"
-				  listeners='dragControlListeners'>
-		</trashcan>
+	<div class="col-md-6">
+		<div class="col-md-10 col-md-offset-1">
+			<trashcan id="{{trashCanId}}"
+				 	  dragging="dragging"
+					  listeners='dragControlListeners'>
+			</trashcan>
+		</div>
 	</div>
 
 	<modal modal-id="depositLocationNewModal" 

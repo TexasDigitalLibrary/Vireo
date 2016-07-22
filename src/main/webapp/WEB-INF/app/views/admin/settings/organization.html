@@ -127,14 +127,14 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">Manage {{getManagedOrganization().name}}</h3>
 						</div>
-						
-						<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
-							<div class="form-group text-field clearfix">
-								<div class="col-sm-2">
-									<span class="text-field-heading">Name</span>
-								</div>
-								<div class="col-sm-4 expanded">
+
+						<div class="panel-body">
+							<div class="col-md-6">
+							
+								<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
+									
 									<validatedinput
+										label="Name"
 										model="getManagedOrganization()"
 										property="name"
 										placeholder="Name of the organization"
@@ -142,15 +142,9 @@
 										validations="getManagedOrganization().getValidations()"
 										results="getManagedOrganization().getValidationResults()">
 									</validatedinput>
-								</div>
 
-							</div>
-							<div class="text-field clearfix">
-								<div class="col-sm-2">
-									<span class="text-field-heading">Category</span>
-								</div>
-								<div class="col-sm-4 expanded">
 									<validatedselect
+										label="Category"
 										options="organizationCategories"
 										optionproperty="name"
 										model="getManagedOrganization()"
@@ -159,20 +153,22 @@
 										validations="getManagedOrganization().getValidations()"
 										results="getManagedOrganization().ValidationResults">
 									</validatedselect>
-								</div>
+								
+									<div class="pull-right">
+										<button 
+											type="button" 
+											class="btn btn-warning" 
+											ng-click="resetManagedOrganization()">Cancel</button>
+										<button 
+											type="submit" 
+											class="btn btn-primary"
+											ng-disabled="forms.update.$invalid">Save</button>
+									</div>
+									
+								</form>
+
 							</div>
-							<div class="modal-footer">
-								<button 
-									type="button" 
-									class="btn btn-warning" 
-									ng-click="resetManagedOrganization()">Cancel</button>
-								<input 
-									type="submit" 
-									class="btn btn-primary" 
-									value="Save" 
-									ng-disabled="forms.update.$invalid"/>
-							</div>
-						</form>
+						</div>
 
 					</div>
 				</div>
@@ -187,6 +183,7 @@
 							<button class="btn btn-default modal-add-btn" ng-click="openModal('#addWorkflowStepModal')">
 						      Add Workflow Step
 						    </button>
+						    <div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create workflow step."></div>
 						    <modal  modal-id="addWorkflowStepModal"
 									modal-view="views/modals/organization/workflowStepCreateModal.html"
 									modal-header-class="modal-header-primary"

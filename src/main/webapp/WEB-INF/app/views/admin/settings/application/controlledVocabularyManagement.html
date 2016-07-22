@@ -4,35 +4,41 @@
 	
 	<div class="row">
 
-		<div class="col-sm-6">		
-			
-			<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyNewModal')">
-				Add Controlled Vocabulary
-			</button>
-			
-			<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
+		<div class="col-md-6">	
 
-			<p ng-if="controlledVocabulary.length == 0">Add new Controlled Vocabulary</p>
-			
-			<draganddroplist dragging="dragging"
-							 scope-value="controlledVocabulary"
-							 properties='["name"]'
-							 item-view='views/directives/dragAndDropControlledVocabulary.html'
-							 listeners='dragControlListeners'
-							 edit='editControlledVocabulary(index)'
-							 sort-label='Controlled Vocabulary'
-							 sort-column='name',
-							 sort-action='sortAction'
-							 sort-method='sortControlledVocabulary(column)'>
-			</draganddroplist>
+			<div class="col-md-10 col-md-offset-1">	
+				
+				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyNewModal')">
+					Add Controlled Vocabulary
+				</button>
+				
+				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
+
+				<p ng-if="controlledVocabulary.length == 0">Add new Controlled Vocabulary</p>
+				
+				<draganddroplist dragging="dragging"
+								 scope-value="controlledVocabulary"
+								 properties='["name"]'
+								 item-view='views/directives/dragAndDropControlledVocabulary.html'
+								 listeners='dragControlListeners'
+								 edit='editControlledVocabulary(index)'
+								 sort-label='Controlled Vocabulary'
+								 sort-column='name',
+								 sort-action='sortAction'
+								 sort-method='sortControlledVocabulary(column)'>
+				</draganddroplist>
+
+			</div>
 
 		</div>
 		
-		<div class="col-sm-6">
-			<trashcan id="{{trashCanId}}"
-					  dragging="dragging"
-					  listeners='dragControlListeners'>
-			</trashcan>
+		<div class="col-md-6">
+			<div class="col-md-10 col-md-offset-1">
+				<trashcan id="{{trashCanId}}"
+						  dragging="dragging"
+						  listeners='dragControlListeners'>
+				</trashcan>
+			</div>
 		</div>
 
 	</div>
@@ -41,23 +47,31 @@
 
 	<div class="row">
 
-		<div class="col-sm-6">		
-			
-			<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyUploadModal')" ng-click="uploadStatus()">
-				Upload Controlled Vocabulary
-			</button>
-			
-			<div class="glyphicon glyphicon-info-sign opaque tooltip-span move-up" tooltip="Dialog in which to upload new or append to existing controlled vocabulary. Additionally, able to export existing from here."></div>
+		<div class="col-md-6">	
+
+			<div class="col-md-10 col-md-offset-1">	
+				
+				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyUploadModal')" ng-click="uploadStatus()">
+					Upload Controlled Vocabulary
+				</button>
+				
+				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which to upload new or append to existing controlled vocabulary. Additionally, able to export existing from here."></div>
+
+			</div>
 
 		</div>
 		
-		<div class="col-sm-6">
+		<div class="col-md-6">
 
-			<dropzone id="{{dropZoneId}}"
-					  text="Begin import by dropping csv into drop zone",
-					  patterns=".csv"
-					  drop-method="beginImport(file)">
-			</dropzone>
+			<div class="col-md-10 col-md-offset-1">
+
+				<dropzone id="{{dropZoneId}}"
+						  text="Begin import by dropping csv into drop zone",
+						  patterns=".csv"
+						  drop-method="beginImport(file)">
+				</dropzone>
+
+			</div>
 			
 		</div>
 

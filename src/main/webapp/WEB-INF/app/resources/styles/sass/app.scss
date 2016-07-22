@@ -490,7 +490,8 @@ textarea.locking-text-area-not-wysiwyg {
 togglebutton {
   display: block;
   min-height: 20px;
-  margin-bottom: 45px;
+  margin-bottom: 40px;
+  margin-top: 25px;
 }
 
 .toggle-button-heading {
@@ -518,11 +519,6 @@ togglebutton {
 }
 
 
-textfield {
-  display: block;
-  min-height: 20px;  
-}
-
 .text-field-heading {
   font-size: 1em;
   margin-top: 5px;
@@ -534,10 +530,6 @@ textfield {
   margin-top: 2px;
 }
 
-.with-hint {
-  display: inline-block;
-}
-
 .with-tool-tip {
   display: inline-flex;
 }
@@ -546,8 +538,11 @@ textfield {
   width: 100%;
 }
 
-.tooltip-span {
-  margin-top: 4px;
+.tooltip-span-adjust {
+  margin-left: 10px;
+  margin-bottom: 14px;  
+  line-height: 2;
+  vertical-align: top;
 }
 
 a.tooltip-icon {
@@ -565,7 +560,7 @@ a[title]:hover:after {
   position: absolute;
 }
 
-.settings-view .glyphicon-info-sign {
+lockingtextarea .glyphicon-info-sign, togglebutton .glyphicon-info-sign {
   line-height: 2;
   margin-left: 10px;
 }
@@ -586,11 +581,6 @@ h4 {
 .lock-control a {
   color: #666666;
   text-decoration:none;
-}
-
-.move-up {
-  margin-top: 2px;
-  position: absolute;
 }
 
 .deposit-location {
@@ -1477,21 +1467,12 @@ footer a, footer li, footer p {
   white-space: nowrap;
 }
 
-.glyphicon.spinning {
-    animation: spin 1s infinite linear;
-    -webkit-animation: spin2 1s infinite linear;
-}
 
-@keyframes spin {
-    from { transform: scale(1) rotate(0deg); }
-    to { transform: scale(1) rotate(360deg); }
-}
 
-@-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg); }
-    to { -webkit-transform: rotate(360deg); }
+.organization-create-button {
+  white-space:normal !important;
+  word-wrap:break-word; 
 }
-
 
 /********
 * NOTES *
