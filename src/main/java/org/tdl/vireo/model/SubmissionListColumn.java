@@ -27,9 +27,16 @@ public class SubmissionListColumn extends BaseEntity {
     @Column(nullable = false)
     private Integer sortOrder;
     
+    @Column(nullable = true)
+    private String predicate;
+    
     @ElementCollection
     @OrderColumn
-    private List<String> path;
+    private List<String> predicatePath;
+    
+    @ElementCollection
+    @OrderColumn
+    private List<String> valuePath;
     
     @ElementCollection
     @OrderColumn
@@ -44,11 +51,17 @@ public class SubmissionListColumn extends BaseEntity {
         this.filters = new ArrayList<String>();
     }
     
-    public SubmissionListColumn(String title, Sort sort, List<String> path) {
+    public SubmissionListColumn(String title, Sort sort, List<String> valuePath) {
         this();
         this.title = title;
         this.sort = sort;
-        this.path = path;
+        this.valuePath = valuePath;
+    }
+    
+    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
+        this(title, sort, valuePath);
+        this.predicate = predicate;
+        this.predicatePath = predicatePath;
     }
 
     /**
@@ -78,7 +91,7 @@ public class SubmissionListColumn extends BaseEntity {
     public void setSort(Sort sort) {
         this.sort = sort;
     }
-    
+
     /**
      * @return the sortOrder
      */
@@ -94,19 +107,47 @@ public class SubmissionListColumn extends BaseEntity {
     }
 
     /**
-     * @return the path
+     * @return the predicate
      */
-    public List<String> getPath() {
-        return path;
+    public String getPredicate() {
+        return predicate;
     }
 
     /**
-     * @param path the path to set
+     * @param predicate the predicate to set
      */
-    public void setPath(List<String> path) {
-        this.path = path;
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
     }
-    
+
+    /**
+     * @return the predicatePath
+     */
+    public List<String> getPredicatePath() {
+        return predicatePath;
+    }
+
+    /**
+     * @param predicatePath the predicatePath to set
+     */
+    public void setPredicatePath(List<String> predicatePath) {
+        this.predicatePath = predicatePath;
+    }
+
+    /**
+     * @return the valuePath
+     */
+    public List<String> getValuePath() {
+        return valuePath;
+    }
+
+    /**
+     * @param valuePath the valuePath to set
+     */
+    public void setValuePath(List<String> valuePath) {
+        this.valuePath = valuePath;
+    }
+
     /**
      * @return the filters
      */
@@ -119,16 +160,6 @@ public class SubmissionListColumn extends BaseEntity {
      */
     public void setFilters(List<String> filters) {
         this.filters = filters;
-    }
-    
-    public void addFilter(String filterValue) {
-        if(!this.filters.contains(filterValue)) {
-            this.filters.add(filterValue);
-        }
-    }
-    
-    public void removeFilter(String filterValue) {
-        this.filters.remove(filterValue);
     }
 
     /**
@@ -144,6 +175,5 @@ public class SubmissionListColumn extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
-    
     
 }

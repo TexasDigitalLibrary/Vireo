@@ -657,11 +657,20 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
                 
                 if (dbSubmissionListColumn == null) {
-                    submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPath());
+                    if(submissionListColumn.getPredicate() != null) {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath());
+                    }
+                    else {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath());
+                    }
                 }
                 else {
                     dbSubmissionListColumn.setSort(submissionListColumn.getSort());
-                    dbSubmissionListColumn.setPath(submissionListColumn.getPath());
+                    if(submissionListColumn.getPredicate() != null) {
+                        dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
+                        dbSubmissionListColumn.setPredicatePath(submissionListColumn.getPredicatePath());
+                    }                    
+                    dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
                     submissionListColumnRepo.save(dbSubmissionListColumn);
                 }
             }
