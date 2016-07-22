@@ -18,9 +18,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	var update = function() {
 
-		ManagerSubmissionListColumnRepo.reset();
-
 		SubmissionListColumnRepo.reset();
+		ManagerSubmissionListColumnRepo.reset();
 
 		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
 
@@ -100,10 +99,29 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		});
 	};
 
+	var getValueFromArray = function(array, path, col) {
+		for(var j in array) {
+			if(array[j].predicate.value == col.predicate) {
+				return array[j].value;
+			}
+		}
+	};
+
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
-		for(var i in col.path) {
-			value = (value === undefined) ? row[col.path[i]] : value[col.path[i]];
+		for(var i in col.valuePath) {
+
+			if(value === undefined) {
+				value = row[col.valuePath[i]];
+			}
+			else {
+				if(value instanceof Array) {
+					return getValueFromArray(value, col.predicatePath, col);
+				}
+				else {
+					value = value[col.valuePath[i]];
+				}
+			}
 		}
 		return value;
 	};
