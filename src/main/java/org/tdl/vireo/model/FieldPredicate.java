@@ -13,7 +13,7 @@ public class FieldPredicate extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String value;
     
-    @Column(nullable = true, unique = false) //TODO nullable false
+    @Column(nullable = false, unique = false)
     private Boolean documentTypePredicate;
 
 	public FieldPredicate() { 
@@ -40,9 +40,10 @@ public class FieldPredicate extends BaseEntity {
      * 
      * @param value
      */
-    public FieldPredicate(String value) {
+    public FieldPredicate(String value, Boolean documentTypePredicate) {
         this();
         setValue(value);
+        setDocumentTypePredicate(documentTypePredicate);
     }
 
     /**

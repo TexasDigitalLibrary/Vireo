@@ -11,8 +11,8 @@ public class FieldPredicateRepoImpl implements FieldPredicateRepoCustom {
     private FieldPredicateRepo fieldPredicateRepo;
 
     @Override
-    public FieldPredicate create(String value) {
-        return fieldPredicateRepo.save(new FieldPredicate(value));
+    public FieldPredicate create(String value, Boolean documentTypePredicate) {
+        return fieldPredicateRepo.save(new FieldPredicate(value, documentTypePredicate));
     }
 
 }

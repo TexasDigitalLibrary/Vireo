@@ -20,7 +20,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The repository was not empty!", 0, fieldProfileRepo.count());
         assertEquals("The repository was not empty!", 0, fieldPredicateRepo.count());
         language = languageRepo.create(TEST_LANGUAGE);
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -314,8 +314,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         
         
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
         
         FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
@@ -482,8 +482,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
              
         
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
         
         FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
@@ -819,8 +819,8 @@ public class FieldProfileTest extends AbstractEntityTest {
     	WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
     	
     	
-    	FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
-    	FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+    	FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
+    	FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
     	
     	fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
     	workflowStep = workflowStepRepo.findOne(workflowStep.getId());
@@ -885,8 +885,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         Long wsId = workflowStep.getId();
         
         //put a field profile on the parent org's workflow step
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
         
         FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(wsId);
@@ -1001,8 +1001,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         //put a field profile on the parent org's workflow step
         //and go ahead and put on a couple more field profiles for good measure
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar");
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo");
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
         
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());

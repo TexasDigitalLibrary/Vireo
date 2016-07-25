@@ -29,7 +29,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         assertEquals("The field predicate does not exist!", 1, fieldPredicateRepo.count());
 
         fieldValue = fieldValueRepo.create(fieldPredicate);
@@ -121,7 +121,7 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
         
 
-        FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE);
+        FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE, new Boolean(false));
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();

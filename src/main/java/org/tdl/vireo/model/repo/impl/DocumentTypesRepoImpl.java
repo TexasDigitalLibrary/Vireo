@@ -40,8 +40,7 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     public DocumentType create(String name, DegreeLevel degreeLevel) {
         DocumentType documentType = new DocumentType(name, degreeLevel);
         documentType.setPosition(documentTypesRepo.count() + 1);
-        FieldPredicate documentTypePredicate = new FieldPredicate("_docType_" + name);
-        documentTypePredicate.setDocumentTypePredicate(new Boolean(true));
+        FieldPredicate documentTypePredicate = new FieldPredicate("_docType_" + name, new Boolean(true));
         documentTypePredicate = fieldPredicateRepo.save(documentTypePredicate);
         documentType.setFieldPredicate(documentTypePredicate);
         return documentTypesRepo.save(documentType);

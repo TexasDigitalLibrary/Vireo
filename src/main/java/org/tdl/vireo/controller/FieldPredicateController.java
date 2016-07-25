@@ -46,7 +46,7 @@ public class FieldPredicateController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
-        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue()));
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false)));
     }
 
 }

@@ -8,7 +8,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValue.setValue(TEST_FIELD_VALUE);
         fieldValue = fieldValueRepo.save(fieldValue);
@@ -19,7 +19,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);
         assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
@@ -32,7 +32,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
+        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);
         assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
