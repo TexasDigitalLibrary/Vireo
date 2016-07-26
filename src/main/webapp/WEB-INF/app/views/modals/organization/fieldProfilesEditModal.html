@@ -26,7 +26,7 @@
 				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" 
 				type="text" 
 				class="form-control" 
-				placeholder="Display gloss for the new field" 
+				placeholder="Display label for the new field" 
 				required/>
 			<button 
 				type="button" 
@@ -40,8 +40,8 @@
 			<validatedinput
 				model="modalData"
 				property="predicate"
-				label="Predicate"
-				placeholder="Predicate of the new field"
+				label="Metadata Key"
+				placeholder="Metadata Key of the new field"
 				typeahead="fieldPredicates"
 				typeaheadproperty="value"
 				form="forms.update"
@@ -52,7 +52,7 @@
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
 				ng-if="!modalData.predicate.id" 
-				ng-click="createPredicate()">Create New Predicate</button>
+				ng-click="createPredicate()">Create New Metadata Key</button>
 		</div>
 
 		<div class="field-profile-modal-group">
