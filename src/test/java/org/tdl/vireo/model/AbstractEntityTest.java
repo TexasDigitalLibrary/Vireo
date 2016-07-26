@@ -24,6 +24,7 @@ import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.model.repo.DocumentTypesRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -118,6 +119,9 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_DEPOSIT_ONBEHALFOF = "Test Deposit OnBehalfOf";
     protected static final String TEST_DEPOSIT_PACKAGER = "Test Deposit Packager";
     protected static final String TEST_DEPOSIT_DEPOSITOR = "Test Deposit Depositor";
+    
+    // DocumentType test
+    protected static final String TEST_DOCUMENT_TYPE_NAME = "Test Document Type";
 
     // CustomActionDefinition Test
     protected static final String TEST_CUSTOM_ACTION_DEFINITION_LABEL = "Test Custom Action Definition Label";
@@ -332,6 +336,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected DepositLocationRepo depositLocationRepo;
+    
+    @Autowired
+    protected DocumentTypesRepo documentTypesRepo;
 
     @Autowired
     protected EmailTemplateRepo emailTemplateRepo;
