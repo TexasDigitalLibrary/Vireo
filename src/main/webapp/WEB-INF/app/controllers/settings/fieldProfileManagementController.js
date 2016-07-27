@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
     
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -24,8 +24,16 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
     $scope.fieldPredicateRepo = FieldPredicateRepo;
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+	$scope.filteredPredicates = {};
 
-    $scope.fieldGlossRepo = FieldGlossRepo;
+	FieldPredicateRepo.ready().then(function(){
+		$scope.buildFilteredPredicateList();
+	});
+	FieldPredicateRepo.listen(function(){
+		$scope.buildFilteredPredicateList();
+	});
+
+	$scope.fieldGlossRepo = FieldGlossRepo;
 
     $scope.fieldGlosses = FieldGlossRepo.getAll();
 
@@ -140,9 +148,15 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         dragging: $scope.dragging,
         select: $scope.selectFieldProfile,
         model: $scope.step.aggregateFieldProfiles,
-        confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id, 
+        confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
         reorder: $scope.reorderFieldProfiles,
         container: '#fieldProfiles'
     });
+
+	$scope.buildFilteredPredicateList = function(){
+		$scope.filteredPredicates = $filter('filter')($scope.fieldPredicates, function(predicate){
+			return !predicate.documentTypePredicate;
+		});
+	};
 
 });

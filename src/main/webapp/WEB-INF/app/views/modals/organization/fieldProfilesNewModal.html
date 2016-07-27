@@ -17,7 +17,6 @@
 	<!-- TODO: figure out how to validate glosses and controlled vocabularies -->
 
 	<div class="modal-body">
-
 		<div class="form-group">
 			<label for="field-profiles-gloss">Gloss</label>
 			<input 
@@ -42,7 +41,7 @@
 				property="predicate"
 				label="Predicate"
 				placeholder="Predicate of the new field profile"
-				typeahead="fieldPredicates"
+				typeahead="filteredPredicates"
 				typeaheadproperty="value"
 				form="forms.create"
 				validations="fieldPredicateRepo.getValidations()"
