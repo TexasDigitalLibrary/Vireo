@@ -16,16 +16,20 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.inheritence.AncestorWorkflowStep;
+import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }) )
 @DiscriminatorValue("Org")
-public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> {
+@SuppressWarnings("rawtypes")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }))
+public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements AncestorWorkflowStep {
    
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -206,6 +210,82 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         }
         replaceAggregateNote(n1, n2);
         return res;
+    }
+
+    @Override
+    public void removeAggregateHeritableModel(HeritableBehavior heritableModel) {
+        if(heritableModel.getClass().equals(Note.class)) {
+            removeAggregateNote((Note) heritableModel);
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            removeAggregateFieldProfile((FieldProfile) heritableModel);
+        }
+    }
+
+    @Override
+    public void addOriginalHeritableModel(HeritableBehavior heritableModel) {
+        if(heritableModel.getClass().equals(Note.class)) {
+            addOriginalNote((Note) heritableModel);
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            addOriginalFieldProfile((FieldProfile) heritableModel);
+        }
+    }
+
+    @Override
+    public void addAggregateHeritableModel(HeritableBehavior heritableModel) {
+        if(heritableModel.getClass().equals(Note.class)) {
+            addAggregateNote((Note) heritableModel);
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            addAggregateFieldProfile((FieldProfile) heritableModel);
+        }
+    }
+
+    @Override
+    public void removeOriginalHeritableModel(HeritableBehavior heritableModel) {
+        if(heritableModel.getClass().equals(Note.class)) {
+            removeOriginalNote((Note) heritableModel);
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            removeOriginalFieldProfile((FieldProfile) heritableModel);
+        }
+    }
+
+    @Override
+    public List getOriginalHeritableModels(HeritableBehavior heritableModel) {
+        List results = new ArrayList();
+        if(heritableModel.getClass().equals(Note.class)) {
+            results = getOriginalNotes();
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            results = getOriginalFieldProfiles();
+        }
+        return results;
+    }
+
+    @Override
+    public List getAggregateHeritableModels(HeritableBehavior heritableModel) {
+        List results = new ArrayList();
+        if(heritableModel.getClass().equals(Note.class)) {
+            results = getAggregateNotes();
+        }
+        if(heritableModel.getClass().equals(FieldProfile.class)) {
+            results = getAggregateFieldProfiles();
+        }
+        return results;
+    }
+
+    @Override
+    public boolean replaceAggregateHeritableModel(HeritableBehavior newHeritableModel, HeritableBehavior oldHeritableModel) {
+        boolean results = false;
+        if(newHeritableModel.getClass().equals(Note.class)) {
+            results = replaceAggregateNote((Note) newHeritableModel, (Note) oldHeritableModel);
+        }
+        if(newHeritableModel.getClass().equals(FieldProfile.class)) {
+            results = replaceAggregateFieldProfile((FieldProfile) newHeritableModel, (FieldProfile) oldHeritableModel);
+        }
+        return results;
     }
 
 }

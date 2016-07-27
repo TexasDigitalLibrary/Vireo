@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -405,6 +406,19 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	descendantOrganizationsContainingWorkflowStep.addAll(getContainingDescendantOrganization(descendantOrganization, workflowStep));
         });
         return descendantOrganizationsContainingWorkflowStep;
+    }
+    
+    @Override
+    public List<WorkflowStep> findByAggregateHeritableModel(HeritableBehavior persistedHeritableModel) {
+        if(persistedHeritableModel instanceof FieldProfile) {
+            return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
+        }
+        else if(persistedHeritableModel instanceof Note) {
+            return workflowStepRepo.findByAggregateNotesId(persistedHeritableModel.getId());
+        }
+        else {
+            return new ArrayList<WorkflowStep>();
+        }
     }
     
 }

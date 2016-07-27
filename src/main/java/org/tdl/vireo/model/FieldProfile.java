@@ -11,6 +11,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
+public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements HeritableBehavior<FieldProfile> {
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
@@ -109,7 +110,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
         setOptional(optional);
         addControlledVocabulary(0, controlledVocabulary);
     }
-    
+
     /**
      * @return the originatingFieldProfile
      */
@@ -123,7 +124,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
         this.originatingFieldProfile = originatingFieldProfile;
     }
-    
+
     /**
      * @return the originatingWorkflowStep
      */
@@ -151,20 +152,29 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
+
     /**
-     * 
-     * @return
+     * @return the enabled
      */
     public Boolean getEnabled() {
         return enabled;
     }
 
     /**
-     * 
-     * @param enabled
+     * @param enabled the enabled to set
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public void setOriginating(FieldProfile originatingHeritableModel) {
+        setOriginatingFieldProfile(originatingHeritableModel);
+    }
+
+    @Override
+    public FieldProfile getOriginating() {
+        return getOriginatingFieldProfile();
+    }
+
 }
