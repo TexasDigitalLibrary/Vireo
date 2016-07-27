@@ -39,7 +39,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		$scope.resetWorkflowSteps();
 
 		$scope.updateOrganization = function(organization) {
-			OrganizationRepo.update(organization).then(function() {
+			organization.save().then(function() {
 				// update the parent scoped selected organization 
 				$scope.setSelectedOrganization(organization);
 			});

@@ -40,7 +40,7 @@ import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.InputStream;
+import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.model.ApiResponse;
 
 /**
@@ -98,7 +98,6 @@ public class ControlledVocabularyController {
      *            Json input data from request
      * @return ApiResponse with indicating success or error
      */
-    @Transactional
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -117,7 +116,6 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -136,7 +134,6 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
@@ -157,7 +154,6 @@ public class ControlledVocabularyController {
      *            destination position
      * @return ApiResponse indicating success
      */
-    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = ControlledVocabulary.class, params = { "0", "1" }) })
@@ -176,7 +172,6 @@ public class ControlledVocabularyController {
      *            column to sort by
      * @return ApiResponse indicating success
      */
-    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = ControlledVocabulary.class, params = { "0" }) })
@@ -260,7 +255,7 @@ public class ControlledVocabularyController {
     @Transactional
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")    
-    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @InputStream ServletInputStream inputStream) throws IOException {
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream ServletInputStream inputStream) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         String[] rows = inputStreamToRows(inputStream);

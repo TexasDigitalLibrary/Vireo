@@ -74,7 +74,6 @@ public class UserController {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")    
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -96,8 +95,7 @@ public class UserController {
 
     @Transactional
     @ApiMapping("/settings")
-    @Auth(role = "STUDENT")    
-    // TODO: business validation should check if user exists
+    @Auth(role = "STUDENT")
     public ApiResponse getSettings(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
         return new ApiResponse(SUCCESS, user.getSettings());

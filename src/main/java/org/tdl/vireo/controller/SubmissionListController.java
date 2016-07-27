@@ -41,25 +41,25 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, submissionListColumnRepo.findAll());
     }
     
+    @Transactional
     @ApiMapping("/columns-by-user")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse getSubmissionViewColumnsByUser(@ApiCredentials Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());    
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
+    @Transactional
     @ApiMapping("/pagesize-by-user")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());    
         return new ApiResponse(SUCCESS, user.getPageSize());
     }
     
+    @Transactional
     @ApiMapping("/update-user-columns/{pageSize}")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.setPageSize(pageSize);
@@ -68,9 +68,9 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
+    @Transactional
     @ApiMapping("/reset-user-columns")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());

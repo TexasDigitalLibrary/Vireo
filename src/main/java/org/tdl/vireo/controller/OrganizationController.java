@@ -8,6 +8,8 @@ import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -53,7 +55,6 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org);
     }
 
-    @Transactional
     @ApiMapping("/create/{parentOrgID}")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -67,11 +68,12 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);        
     }
      
-    @ApiMapping("/update")
+    @ApiMapping(value = "/update", method = POST)
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-        Organization updatedOrganization = organizationRepo.findOne(organization.getId());
+    	
+    	Organization updatedOrganization = organizationRepo.findOne(organization.getId());
         
         updatedOrganization.setName(organization.getName());
         
@@ -91,8 +93,7 @@ public class OrganizationController {
         Organization org = organizationRepo.findOne(requestingOrgID);
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
-    
-    @Transactional
+
     @ApiMapping("/{requestingOrgID}/create-workflow-step")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
