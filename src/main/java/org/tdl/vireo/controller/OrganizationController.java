@@ -1,13 +1,11 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
 import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -107,18 +106,13 @@ public class OrganizationController {
     @ApiMapping("/{requestingOrgID}/update-workflow-step")
     @Auth(role="MANAGER")    
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
-                
-        try {
-            workflowStepRepo.update(workflowStep, requestingOrg);
-            simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
-            return new ApiResponse(SUCCESS);
-        } catch (WorkflowStepNonOverrideableException e) {
-            e.printStackTrace();
-            return new ApiResponse(ERROR, "Unable to update workflow step!");
-        }
-        
+           
+        workflowStepRepo.update(workflowStep, requestingOrg);
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
+            
+        return new ApiResponse(SUCCESS);
     }
     
     @ApiMapping("/{requestingOrgID}/delete-workflow-step")

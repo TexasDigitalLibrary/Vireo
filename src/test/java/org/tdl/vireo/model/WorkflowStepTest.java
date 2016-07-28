@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
+import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class WorkflowStepTest extends AbstractEntityTest {
@@ -82,7 +84,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
-        } catch (WorkflowStepNonOverrideableException e) {
+        } catch (WorkflowStepNonOverrideableException | ComponentNotPresentOnOrgException e) {
             e.printStackTrace();
             
             assertTrue("Could not update workflow step", false);
@@ -125,7 +127,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
-        } catch (WorkflowStepNonOverrideableException e) {
+        } catch (WorkflowStepNonOverrideableException | ComponentNotPresentOnOrgException e) {
             e.printStackTrace();
             
             assertTrue("Could not update workflow step", false);
@@ -147,7 +149,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
         try {
             workflowStep = workflowStepRepo.update(workflowStep, organization);
-        } catch (WorkflowStepNonOverrideableException e) {
+        } catch (WorkflowStepNonOverrideableException | ComponentNotPresentOnOrgException e) {
             e.printStackTrace();
             
             assertTrue("Could not update workflow step", false);
@@ -286,7 +288,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testInheritWorkflowStepViaPointer() throws WorkflowStepNonOverrideableException {
+    public void testInheritWorkflowStepViaPointer() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -349,7 +351,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testMaintainHierarchyOnDeletionOfInteriorOrg() throws WorkflowStepNonOverrideableException {
+    public void testMaintainHierarchyOnDeletionOfInteriorOrg() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -420,7 +422,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testWorkflowStepChangeAtChildOrg() throws WorkflowStepNonOverrideableException {
+    public void testWorkflowStepChangeAtChildOrg() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -515,7 +517,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     
     
     @Test(expected=WorkflowStepNonOverrideableException.class)
-    public void testCantOverrideNonOverrideable() throws WorkflowStepNonOverrideableException {
+    public void testCantOverrideNonOverrideable() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         
@@ -536,7 +538,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testPermissionWorkflowChangeNonOverrideableAtOriginatingOrg() throws WorkflowStepNonOverrideableException {
+    public void testPermissionWorkflowChangeNonOverrideableAtOriginatingOrg() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         
@@ -560,7 +562,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testMakeWorkflwoStepWithDescendantsNonOverrideable() throws WorkflowStepNonOverrideableException {
+    public void testMakeWorkflwoStepWithDescendantsNonOverrideable() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         //Step S1 has derivative step S2 which has derivative step S3
         //Test that making S1 non-overrideable will blow away S2 and S3 and replace pointer to them with pointers to S1
@@ -959,7 +961,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testDeleteParentWorkflow() throws WorkflowStepNonOverrideableException {
+    public void testDeleteParentWorkflow() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -1039,6 +1041,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep s2 = workflowStepRepo.update(s1, organization);
         
         
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
         String anotherUpdatedName = "Yet another updated name";
         
@@ -1098,8 +1101,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         
     }
     
-    @Test
-    public void testParentUpdatesWorkflowStepOriginatingAtDescendent() throws WorkflowStepNonOverrideableException {
+    @Test(expected=ComponentNotPresentOnOrgException.class)
+    public void testParentUpdatesWorkflowStepOriginatingAtDescendent() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -1116,27 +1119,16 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
         
-        
-        Long s1Id = s1.getId();
-        
         String updatedName = "Updated Name";
         
         s1.setName(updatedName);
         
-        // should change originating organization
-        WorkflowStep s2 = workflowStepRepo.update(s1, parentOrganization);
-        
-        assertEquals("Incorrect number of workflow steps!", 1, workflowStepRepo.count());
-        
-        assertNotEquals("Updated descendent workflow step on parent organization did not create new row!", s1Id, s2.getId());
-        
-        assertEquals("Original workflow step of descendent was not removed!", null, workflowStepRepo.findOne(s1Id));
-        
+        // should throw ComponentNotPresentOnOrgException
+        workflowStepRepo.update(s1, parentOrganization);   
     }
-
     
     @Test
-    public void testUpdateWorkflowStepAndRevertUpdate() throws WorkflowStepNonOverrideableException {
+    public void testUpdateWorkflowStepAndRevertUpdate() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -1183,7 +1175,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testMakeWSNonOverrideableAndAddBackToOrgsThatDeletedItFromAggregate() throws WorkflowStepNonOverrideableException {
+    public void testMakeWSNonOverrideableAndAddBackToOrgsThatDeletedItFromAggregate() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         //Step S1 will be inherited by the (child) organization, the grandchildren, and the great grandchildren.
         //Test that after deleting S1 from some of these's aggregate steps, it gets added back when made non-overrideable. 
@@ -1300,7 +1292,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     
 
     @Test
-    public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverridable() throws WorkflowStepNonOverrideableException {
+    public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverridable() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());

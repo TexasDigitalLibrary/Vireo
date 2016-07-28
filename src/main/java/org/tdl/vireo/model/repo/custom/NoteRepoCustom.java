@@ -15,7 +15,7 @@ public interface NoteRepoCustom {
     
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable);
     
-    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep requestingWorfklowStep, Note noteToRemove) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException;
+    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep requestingWorfklowStep, Note noteToRemove) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
 
     public Note update(Note note, Organization requestingOrganization) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
     

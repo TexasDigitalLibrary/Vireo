@@ -445,7 +445,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testReorderAggregateFieldProfiles() throws WorkflowStepNonOverrideableException {
+    public void testReorderAggregateFieldProfiles() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);

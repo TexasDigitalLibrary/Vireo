@@ -24,7 +24,7 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
     @Autowired
     private OrganizationRepo organizationRepo;
     
-    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep pendingWorkflowStep, M heritableModelToRemove) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException {
+    public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep pendingWorkflowStep, M heritableModelToRemove) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         // if requesting organization originates the workflow step or the workflow step is overrideable,
         if (pendingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || pendingWorkflowStep.getOverrideable()) {
@@ -125,8 +125,13 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
 
         // If the requesting org originates the WS, then we don't need to make a new one
         if (requestingOrganizationOriginatedWorkflowStep) {
+            
+            
+            
             // If the WS originates the M, we don't need a new one
             if (workflowStepOriginatesHeritableModel) {
+                
+                System.out.println("\nFIELD PROFILE UPDATE\n");
 
                 // update heritableModel directly
                 resultingHeritableModel = heritableRepo.save(pendingHeritableModel);
@@ -138,6 +143,8 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
             }
             // If the WS didn't originate the M, we need a new M to replace it
             else {
+                
+                System.out.println("\nNEW FIELD PROFILE\n");
 
                 M cloneHeritableModel = (M) pendingHeritableModel.clone();
                 
@@ -162,6 +169,8 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
         // If the requesting org didn't originate the WS, we need a new WS to replace it and to originate a new M
         // workflowStepWithHeritableModelOnRequestingOrganization does not originate on the requesting org
         else {
+            
+            System.out.println("\nNEW WORKFLOW STEP FOR NEW FIELD PROFILE\n");
 
             // make the new step; the update call will propagate step replacement in subordinate orgs
             Long origWSId = workflowStepWithHeritableModelOnRequestingOrganization.getId();
@@ -291,6 +300,9 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
 
     @SuppressWarnings("unchecked")
     private void reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(M ancestorHeritableModel, M replacementHeritableModel, WorkflowStep workflowStepWithHeritableModelOnRequestingOrganization, Organization requestingOrganization) {
+        
+        System.out.println("\nREINHERIT\n");
+        
         // First off, heritableModel the HeritableModels that descend from the ancestor heritableModel
         List<M> descendantHeritableModels = getDescendantsOfHeritableModel(ancestorHeritableModel);
 
@@ -301,30 +313,41 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
         for (WorkflowStep ws : workflowStepRepo.getDescendantsOfStepUnderOrganization(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization)) {
         
             boolean aggregatesHeritableModelOrDescendant = ws.getAggregateHeritableModels(replacementHeritableModel).contains(replacementHeritableModel);
+            
             // For every heritableModel on that step (the aggregates will include the originals)
             List<M> copyOfAggregatedHeritableModels = new ArrayList<M>();
+                    
             copyOfAggregatedHeritableModels.addAll(ws.getAggregateHeritableModels(replacementHeritableModel));
-
+            
             for (M n : copyOfAggregatedHeritableModels) {
+                
                 // If that heritableModel is a descendant of the heritableModel in question, replace it with the heritableModel in question and get rid of it
                 if (descendantHeritableModels.contains(n) && !replacementHeritableModel.equals(n)) {
+                    
                     if (ws.replaceAggregateHeritableModel(n, replacementHeritableModel)) {
+                        
+                        System.out.println("REMOVE: " + n);
+                        
                         ws.removeOriginalHeritableModel(n);
-                        workflowStepRepo.save(ws);
+                        
                         heritableModelsToDelete.add(n);
-                        ws = workflowStepRepo.findOne(ws.getId());
+                        
                         aggregatesHeritableModelOrDescendant = true;
                     }
                 }
             }
+            
+           
 
             // If the heritableModel was not found on the aggregates at all, then add it back in
             if (!aggregatesHeritableModelOrDescendant) {
                 ws.addAggregateHeritableModel(replacementHeritableModel);
-                workflowStepRepo.save(ws);
             }
+            
+            workflowStepRepo.save(ws);
         }
         for (M n : heritableModelsToDelete) {
+            System.out.println("DELETE: " + n);
             delete(n);
         }
     }
