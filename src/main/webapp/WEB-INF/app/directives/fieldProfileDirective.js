@@ -64,9 +64,19 @@ vireo.directive("field",  function() {
 			};
 
 			$scope.getPatern = function() {
-				var patern = "";
+				
+				var patern = "*";
 				var cv = $scope.profile.controlledVocabularies[0];
-				//console.log(cv);
+	
+				if(typeof cv !== "undefined") {
+					patern = "";
+					for(var i in cv.dictionary) {
+						var word = cv.dictionary[i];
+						patern+=word.name;
+						if(i+1!==cv.dictionary.length) patern+=",";
+					}
+				}
+
 				return patern;
 			};
 
@@ -77,6 +87,7 @@ vireo.directive("field",  function() {
 			$scope.getPreview = function(index) {
 				var preview = null;
 				if($scope.file.type.includes("image/")) preview = $scope.values[index].value;
+				if($scope.file.type.includes("pdf")) preview = "resources/images/pdf-logo.gif";
 				return preview;
 			};
 

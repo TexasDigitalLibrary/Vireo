@@ -1410,25 +1410,39 @@ footer a, footer li, footer p {
 }
 
 .field-profile .file-info-tip {
-  margin-top: 10px;
-  margin-right: 12px;
+  /*margin-top: 10px;
+  margin-right: 12px;*/
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .field-profile .file-preview {
   display: inline-block;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .field-profile .file-preview img,
 .field-profile .file-preview .glyphicon {
-  min-width: 71px;
-  font-size: 5.5em;
+    display: inline-block;
+    font-size: 6em;
+    max-width: 69px;
 }
 
 .field-profile .file-info {
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block;
+    vertical-align:top;
+}
 
-  line-height: 7px;
-  display: inline-block;
-  vertical-align:top;
+.field-profile .file-info p {
+    margin-bottom: -2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 20ch;
 }
 
 .field-profile .file-info .file-name{
@@ -1437,6 +1451,9 @@ footer a, footer li, footer p {
 
 .file-preview-container {
   padding-top: 35px;
+  padding-left: 0;
+  padding-right: 0;
+
 }
 
 /********************
