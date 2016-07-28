@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
-import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class NoteTest extends AbstractEntityTest {
@@ -115,7 +115,7 @@ public class NoteTest extends AbstractEntityTest {
         
         try {
             noteRepo.update(note, parentOrganization);
-        } catch (NoteNonOverrideableException e) {
+        } catch (HeritableModelNonOverrideableException e) {
             e.printStackTrace();
             assertTrue("The note did not update beacuase it is non overrideable!", false);
             
@@ -136,8 +136,8 @@ public class NoteTest extends AbstractEntityTest {
     
     }
     
-    @Test(expected=NoteNonOverrideableException.class)
-    public void testCantOverrideNonOverrideableNote() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    @Test(expected=HeritableModelNonOverrideableException.class)
+    public void testCantOverrideNonOverrideableNote() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -166,7 +166,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test(expected=WorkflowStepNonOverrideableException.class)
-    public void testCantOverrideNonOverrideableWorkflowStep() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testCantOverrideNonOverrideableWorkflowStep() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -202,7 +202,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -627,7 +627,7 @@ public class NoteTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testNoteChangeAtChildOrg() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testNoteChangeAtChildOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -749,7 +749,7 @@ public class NoteTest extends AbstractEntityTest {
     }
  
     @Test
-    public void testMaintainNoteOrderWhenOverriding() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testMaintainNoteOrderWhenOverriding() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -829,11 +829,11 @@ public class NoteTest extends AbstractEntityTest {
      * Test that when a note is overridden at a child org, the override is removed and the original is reattached when 
      * the note is made non-overrideable at a parent org.
      * @throws WorkflowStepNonOverrideableException
-     * @throws NoteNonOverrideableException
+     * @throws HeritableModelNonOverrideableException
      * @throws ComponentNotPresentOnOrgException
      */
     @Test
-    public void testReInheritOverriddenNote() throws WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testReInheritOverriddenNote() throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         // this test calls for adding a single workflowstep to the parent organization, so get rid of the one at the middle org
         workflowStepRepo.delete(workflowStep);
         
@@ -947,7 +947,7 @@ public class NoteTest extends AbstractEntityTest {
     
     //TODO:  this test is not done, development of the full feature (indefinitely) deferred for now
     @Test
-    public void testDeleteNoteAtDescendantOrganizationAndDuplicateWorkflowStepIsDeletedToo() throws NoteNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException
+    public void testDeleteNoteAtDescendantOrganizationAndDuplicateWorkflowStepIsDeletedToo() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException
     {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);

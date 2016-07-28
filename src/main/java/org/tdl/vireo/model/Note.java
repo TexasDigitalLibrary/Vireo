@@ -9,6 +9,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.validation.NoteValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class Note extends AbstractNote<Note> {
+public class Note extends AbstractNote<Note> implements HeritableBehavior<Note>{
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
@@ -31,7 +32,6 @@ public class Note extends AbstractNote<Note> {
     
     @Column(nullable = true)
     private Boolean overrideable;
-
     
     public Note() {
         setModelValidator(new NoteValidator());
@@ -54,29 +54,69 @@ public class Note extends AbstractNote<Note> {
         setOverrideable(overrideable);
     }
     
+    /**
+     * @return the originatingNote
+     */
     public Note getOriginatingNote() {
         return originatingNote;
     }
 
+    /**
+     * @param originatingNote the originatingNote to set
+     */
     public void setOriginatingNote(Note originatingNote) {
         this.originatingNote = originatingNote;
     }
-    
+
+    /**
+     * @return the originatingWorkflowStep
+     */
     public WorkflowStep getOriginatingWorkflowStep() {
         return originatingWorkflowStep;
     }
 
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
-    
+
+    /**
+     * @return the overrideable
+     */
     public Boolean getOverrideable() {
         return overrideable;
     }
 
+    /**
+     * @param overrideable the overrideable to set
+     */
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
 
+    @Override
+    public void setOriginating(Note originatingHeritableModel) {
+        setOriginatingNote(originatingHeritableModel);
+    }
 
+    @Override
+    public Note getOriginating() {
+        return getOriginatingNote();
+    }
+    
+    @Override
+    public Note clone() {
+        Note clone = new Note();
+        
+        clone.setName(getName());
+        clone.setText(getText());
+        clone.setOverrideable(getOverrideable());
+        clone.setOriginatingNote(getOriginatingNote());
+        clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
+        
+        return clone;
+    }
+    
 }

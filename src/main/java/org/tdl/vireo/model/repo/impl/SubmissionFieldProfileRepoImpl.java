@@ -20,8 +20,8 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
         
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelp(
-                    fieldProfile.getPredicate(), 
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelp(
+                    fieldProfile.getFieldPredicate(), 
                     fieldProfile.getInputType(),
                     fieldProfile.getRepeatable(),
                     fieldProfile.getOptional(),
@@ -32,7 +32,7 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
         if(submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
             
-            submissionfieldProfile.setPredicate(fieldProfile.getPredicate());
+            submissionfieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
             
             submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
             submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));

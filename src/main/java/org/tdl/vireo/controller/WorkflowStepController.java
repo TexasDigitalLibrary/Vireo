@@ -22,8 +22,7 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
-import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
-import org.tdl.vireo.model.repo.impl.NoteNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -80,7 +79,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, fieldProfile.getPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true);
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true);
         createdProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
         createdProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
         
@@ -94,11 +93,11 @@ public class WorkflowStepController {
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, FieldProfileNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         
         FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
         
-        persistedFieldProfile.setPredicate(fieldProfile.getPredicate());
+        persistedFieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
         persistedFieldProfile.setInputType(fieldProfile.getInputType());
         persistedFieldProfile.setOverrideable(fieldProfile.getOverrideable());
         persistedFieldProfile.setRepeatable(fieldProfile.getRepeatable());
@@ -123,7 +122,7 @@ public class WorkflowStepController {
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-field-profile")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, FieldProfileNonOverrideableException {
+    public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
@@ -179,7 +178,7 @@ public class WorkflowStepController {
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-note")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, NoteNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
         
@@ -199,7 +198,7 @@ public class WorkflowStepController {
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-note")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, NoteNonOverrideableException {
+    public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException {
         
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         

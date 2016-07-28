@@ -7,8 +7,8 @@ import edu.tamu.framework.validation.InputValidator;
 public class FieldProfileValidator extends BaseModelValidator {
     
     public FieldProfileValidator() {
-        String predicateProperty = "predicate";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Field Profile requires a predicate", predicateProperty, true));
+        String fieldPredicateProperty = "fieldPredicate";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Field Profile requires a field predicate", fieldPredicateProperty, true));
         
         String inputTypeProperty = "inputType";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Field Profile requires a input type", inputTypeProperty, true));
