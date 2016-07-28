@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-public class FieldProfileNonOverrideableException extends Exception {
+public class HeritableModelNonOverrideableException extends Exception {
 
     /**
      * 
