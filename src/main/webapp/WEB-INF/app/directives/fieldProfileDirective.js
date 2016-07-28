@@ -63,6 +63,34 @@ vireo.directive("field",  function() {
 				return $scope.submission.findFieldValuesByPredicate($scope.profile.fieldPredicate).indexOf(value) === 0;
 			};
 
+			$scope.getPatern = function() {
+				
+				var patern = "*";
+				var cv = $scope.profile.controlledVocabularies[0];
+	
+				if(typeof cv !== "undefined") {
+					patern = "";
+					for(var i in cv.dictionary) {
+						var word = cv.dictionary[i];
+						patern+=word.name;
+						if(i+1!==cv.dictionary.length) patern+=",";
+					}
+				}
+
+				return patern;
+			};
+
+			$scope.begineUpload = function(file) {
+				$scope.file = file;
+			};
+
+			$scope.getPreview = function(index) {
+				var preview = null;
+				if($scope.file.type.includes("image/")) preview = $scope.values[index].value;
+				if($scope.file.type.includes("pdf")) preview = "resources/images/pdf-logo.gif";
+				return preview;
+			};
+
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};

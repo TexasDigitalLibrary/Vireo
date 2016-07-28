@@ -1,14 +1,14 @@
 <form class="field-profile input-text row" name="fieldProfileForm" novalidate>
 	<div class="form-group">
-		<div class="col-xs-12 col-sm-3">
+		<div class="col-xs-12 col-sm-2">
 			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
 		</div>
-		<div class="col-xs-12 col-sm-9">
+		<div class="col-xs-12 col-sm-10">
 			<div class="field-value-input row" ng-repeat="value in getValues() track by $index" ng-if="filterValuesByFieldPredicate(value)">
-				<div class="col-sm-7 col-xs-10">
+				<div class="col-xs-11">
 					<div ng-include="includeTemplateUrl"></div>
 				</div>
-				<div class="col-sm-5 col-xs-2">
+				<div class="col-xs-1">
 					<button ng-if="showRemove(value)" class="btn btn-danger field-value-add-remove" ng-click="removeFieldValue(value)">-</button>
 					<button ng-if="showAdd(value)" class="btn btn-primary field-value-add-remove" ng-click="addFieldValue()">+</button>
 				</div>
