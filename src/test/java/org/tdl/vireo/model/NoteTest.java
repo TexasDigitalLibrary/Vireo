@@ -880,8 +880,6 @@ public class NoteTest extends AbstractEntityTest {
          
          
          
-         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-         organization = organizationRepo.findOne(organization.getId());
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
          
          // now we have three notes originating at the topmost org
@@ -889,32 +887,33 @@ public class NoteTest extends AbstractEntityTest {
          
          // make a note non-overrideable at the grandchild org
          long n2Id = n2.getId();
+         
          n2.setOverrideable(false);
+         
          Note n2updatedAtGrandchild = noteRepo.update(n2, grandChildOrganization);
          
-         
-         System.out.println("\nTO BE REMOVED: " + n2updatedAtGrandchild + "\n");
-         
-         
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         
          n2 = noteRepo.findOne(n2Id);
          
          // ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
          // old n2 should still be overrideable
          assertTrue("Note updated at grandchild changed the note at the parent!" , n2.getOverrideable());
+         
          // old n2 should be different from the new n2 updated at the grandchild
          assertFalse("Note updated at grandchild didn't get duplicated!", n2.getId().equals(n2updatedAtGrandchild.getId()));
          assertEquals("A new Note didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size());
          assertTrue("A new Note didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtGrandchild));
          
+                 
+         organization = organizationRepo.findOne(organization.getId());
+                  
          // TODO: make the note non-overrideable at the child org
          n2.setOverrideable(false);
          Note n2updatedAtChild = noteRepo.update(n2, organization);
+
          
-         organization = organizationRepo.findOne(organization.getId());
          n2 = noteRepo.findOne(n2Id);
-         
-         
          
          // ensure that a new note got made at the child after this override (to non-overrideable :) )
          // old n2 should still be overrideable
@@ -922,20 +921,18 @@ public class NoteTest extends AbstractEntityTest {
          // old n2 should be different from the new n2 updated at the grandchild
          assertFalse("Note updated at child didn't get duplicated!", n2.getId().equals(n2updatedAtChild.getId()));
          
-         
-         
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+         
+         
+         
+         assertFalse("Grand child inherited original note from child organization", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtChild));
          
          // ensure that the grandchild's new note is replaced by the child's non-overrideable one
          assertTrue("Note made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().isEmpty());
          assertFalse("Note made non-overrideable still stuck around at the grandchild who'd overridden it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().contains(n2updatedAtGrandchild));
          
-         
-         
-         
          // TODO: make the note non-overrideable at the parent org
          // TOOO: ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
-          
          
          
          // now all is restored, except one of the notes is non-overrideable at the parent
@@ -944,11 +941,6 @@ public class NoteTest extends AbstractEntityTest {
          // TODO: remove a note at the grandchild
          // TODO: make the removed note non-overrideable at the parent
          // TODO: ensure that the removed note is reaggregated upon the grandchild who removed it
-         
-         
-         
-         
-         
          
     }
 
@@ -1018,7 +1010,6 @@ public class NoteTest extends AbstractEntityTest {
         
         //TODO:  make note non-overrideable, check that fpPrime goes away and the new derivative step goes away
         
-        
     }
     
 
@@ -1027,13 +1018,13 @@ public class NoteTest extends AbstractEntityTest {
         noteRepo.findAll().forEach(note -> {
             noteRepo.delete(note);
         });
-        
+
         workflowStepRepo.findAll().forEach(workflowStep -> {
             workflowStepRepo.delete(workflowStep);
         });
-        
+
         organizationCategoryRepo.deleteAll();
-        
+
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });

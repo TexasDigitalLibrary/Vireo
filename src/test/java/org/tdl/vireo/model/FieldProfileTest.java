@@ -901,8 +901,6 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
 
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         
                 
@@ -924,6 +922,9 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("A new FieldProfile didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size());
         assertTrue("A new FieldProfile didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtGrandchild));
         
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
         //TODO:  make the note non-overrideable at the child org
         fp2.setOverrideable(false);
         FieldProfile fp2updatedAtChild = fieldProfileRepo.update(fp2, organization);
@@ -940,6 +941,9 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        assertFalse("Grand child inherited original field profile from child organization", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtChild));
+        
         
         //ensure that the grandchild's new note is replaced by the child's non-overrideable one
         assertTrue("FieldProfile made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().isEmpty());

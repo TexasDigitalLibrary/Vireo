@@ -95,24 +95,7 @@ public class WorkflowStepController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         
-        FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
-        
-        persistedFieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
-        persistedFieldProfile.setInputType(fieldProfile.getInputType());
-        persistedFieldProfile.setOverrideable(fieldProfile.getOverrideable());
-        persistedFieldProfile.setRepeatable(fieldProfile.getRepeatable());
-        persistedFieldProfile.setHelp(fieldProfile.getHelp());
-        persistedFieldProfile.setUsage(fieldProfile.getUsage());
-        
-        persistedFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
-        
-        fieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
-        
-        
-        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
-        
-        fieldProfileRepo.update(fieldProfile, requestingOrganization);
-        
+        fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
                 
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         
@@ -180,15 +163,7 @@ public class WorkflowStepController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
-        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
-        
-        Note persistedNote = noteRepo.findOne(note.getId());
-        
-        persistedNote.setName(note.getName());
-        persistedNote.setText(note.getText());
-        persistedNote.setOverrideable(note.getOverrideable());
-        
-        noteRepo.update(persistedNote, requestingOrganization);
+        noteRepo.update(note, organizationRepo.findOne(requestingOrgId));
                 
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         

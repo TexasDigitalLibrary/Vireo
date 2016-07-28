@@ -337,8 +337,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     @Override
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization) {
         
-        System.out.println("\nORG: " + organization.getName() + "\n");
-        
         List<WorkflowStep> allDescendants = getDescendantsOfStep(workflowStep);
         
         List<WorkflowStep> localDescendants = new ArrayList<WorkflowStep>();

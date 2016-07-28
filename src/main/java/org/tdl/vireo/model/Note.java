@@ -118,5 +118,5 @@ public class Note extends AbstractNote<Note> implements HeritableBehavior<Note>{
         
         return clone;
     }
-    
+
 }
