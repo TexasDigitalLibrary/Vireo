@@ -2,11 +2,10 @@ vireo.model("Organization", function ($q, RestApi) {
 
 	return function Organization() {
 		
-		var organization = this;
-
-		// Override
-		organization.save = function() {
-
+		this.save = function() {
+			
+			var organization = this;
+			
 			var promise = $q(function(resolve) {
 				if(organization.dirty()) {
 					angular.extend(organization.getMapping().update, {data: organization});
@@ -26,15 +25,18 @@ vireo.model("Organization", function ($q, RestApi) {
 				}
 			});
 			promise.then(function(res) {
+				console.log(res)
 				if(res.meta.type == "INVALID") {
-					angular.extend(organization, angular.fromJson(res.body).payload);
+					angular.extend(organization, res.payload);
 					console.log(organization);
 				}
 			});
 			return promise;
 		};
+		
+		// additional model methods and variables
 
-		return organization;
+		return this;
 	};
 
 });
