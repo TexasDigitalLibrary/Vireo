@@ -7,7 +7,7 @@
 		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Update Field Profile</h3>
+	<h3 class="modal-title">Update Field</h3>
 </div>
 
 <form ng-submit="updateFieldProfile()" name="forms.update" novalidate>
@@ -19,20 +19,20 @@
 	<div class="modal-body">
 
 		<div class="form-group">
-			<label for="field-profiles-gloss">Gloss</label>
+			<label for="field-profiles-gloss">Label</label>
 			<input 
 				id="field-profiles-gloss" 
 				ng-model="modalData.fieldGlosses[0]" 
 				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" 
 				type="text" 
 				class="form-control" 
-				placeholder="Display gloss for the new field profile" 
+				placeholder="Display label for the new field" 
 				required/>
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
 				ng-click="createGloss(modalData.fieldGlosses[0])" 
-				ng-if="!modalData.fieldGlosses[0].id">Create New Gloss</button>
+				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
 
 		<div class="field-profile-modal-group">
@@ -85,7 +85,7 @@
 				model="modalData"
 				property="help"
 				label="Help"
-				placeholder="Help of the new field profile"
+				placeholder="Help of the new field"
 				form="forms.update"
 				validations="modalData.getValidations()"
 				results="modalData.ValidationResults">
@@ -103,7 +103,7 @@
 		</div>
 
 		<toggleButton 
-			label="Field Profile is Overridable:"
+			label="Field is Overridable:"
 			scope-value="modalData.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
 		</toggleButton>
