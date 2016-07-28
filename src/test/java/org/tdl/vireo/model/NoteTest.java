@@ -412,7 +412,7 @@ public class NoteTest extends AbstractEntityTest {
     
     
     @Test
-    public void testReorderAggregateNotes() throws WorkflowStepNonOverrideableException {
+    public void testReorderAggregateNotes() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -884,58 +884,66 @@ public class NoteTest extends AbstractEntityTest {
          organization = organizationRepo.findOne(organization.getId());
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
          
-         //now we have three notes originating at the topmost org
+         // now we have three notes originating at the topmost org
          //////////////////////////////////////////////////////////////////////
          
-         //make a note non-overrideable at the grandchild org
+         // make a note non-overrideable at the grandchild org
          long n2Id = n2.getId();
          n2.setOverrideable(false);
          Note n2updatedAtGrandchild = noteRepo.update(n2, grandChildOrganization);
          
          
+         System.out.println("\nTO BE REMOVED: " + n2updatedAtGrandchild + "\n");
+         
+         
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
          n2 = noteRepo.findOne(n2Id);
          
-         //ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
-         //old n2 should still be overrideable
+         // ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
+         // old n2 should still be overrideable
          assertTrue("Note updated at grandchild changed the note at the parent!" , n2.getOverrideable());
-         //old n2 should be different from the new n2 updated at the grandchild
+         // old n2 should be different from the new n2 updated at the grandchild
          assertFalse("Note updated at grandchild didn't get duplicated!", n2.getId().equals(n2updatedAtGrandchild.getId()));
          assertEquals("A new Note didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size());
          assertTrue("A new Note didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtGrandchild));
          
-         //TODO:  make the note non-overrideable at the child org
+         // TODO: make the note non-overrideable at the child org
          n2.setOverrideable(false);
          Note n2updatedAtChild = noteRepo.update(n2, organization);
          
          organization = organizationRepo.findOne(organization.getId());
          n2 = noteRepo.findOne(n2Id);
          
+         
+         
          // ensure that a new note got made at the child after this override (to non-overrideable :) )
-         //old n2 should still be overrideable
+         // old n2 should still be overrideable
          assertTrue("Note updated at child didn't get duplicated!" , n2.getOverrideable());
-         //old n2 should be different from the new n2 updated at the grandchild
+         // old n2 should be different from the new n2 updated at the grandchild
          assertFalse("Note updated at child didn't get duplicated!", n2.getId().equals(n2updatedAtChild.getId()));
          
          
          
          grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
          
-         //ensure that the grandchild's new note is replaced by the child's non-overrideable one
+         // ensure that the grandchild's new note is replaced by the child's non-overrideable one
          assertTrue("Note made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().isEmpty());
          assertFalse("Note made non-overrideable still stuck around at the grandchild who'd overridden it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().contains(n2updatedAtGrandchild));
          
-         //TODO:  make the note non-overrideable at the parent org
-         //TOOO:  ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
+         
+         
+         
+         // TODO: make the note non-overrideable at the parent org
+         // TOOO: ensure that the child's note is replaced by the original, non-overrideable at both the child and grandchild
           
          
          
-         //now all is restored, except one of the notes is non-overrideable at the parent
+         // now all is restored, except one of the notes is non-overrideable at the parent
          
          
-         //TODO:  remove a note at the grandchild
-         //TODO:  make the removed note non-overrideable at the parent
-         //TODO:  ensure that the removed note is reaggregated upon the grandchild who removed it
+         // TODO: remove a note at the grandchild
+         // TODO: make the removed note non-overrideable at the parent
+         // TODO: ensure that the removed note is reaggregated upon the grandchild who removed it
          
          
          
