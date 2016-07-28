@@ -10,6 +10,7 @@ import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -255,7 +256,7 @@ public class ControlledVocabularyController {
     @Transactional
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")    
-    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream ServletInputStream inputStream) throws IOException {
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream InputStream inputStream) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         String[] rows = inputStreamToRows(inputStream);

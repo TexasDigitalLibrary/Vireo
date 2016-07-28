@@ -63,6 +63,23 @@ vireo.directive("field",  function() {
 				return $scope.submission.findFieldValuesByPredicate($scope.profile.predicate).indexOf(value) === 0;
 			};
 
+			$scope.getPatern = function() {
+				var patern = "";
+				var cv = $scope.profile.controlledVocabularies[0];
+				//console.log(cv);
+				return patern;
+			};
+
+			$scope.begineUpload = function(file) {
+				$scope.file = file;
+			};
+
+			$scope.getPreview = function(index) {
+				var preview = null;
+				if($scope.file.type.includes("image/")) preview = $scope.values[index].value;
+				return preview;
+			};
+
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};
