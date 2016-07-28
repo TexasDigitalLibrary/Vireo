@@ -1397,6 +1397,14 @@ footer a, footer li, footer p {
 	margin-top: 10px;
 }
 
+.field-profile .input-group {
+  max-width: 40%;
+}
+
+.field-profile .input-group.file-input-group {
+  max-width: 100%;
+}
+
 .field-profile label {
   font-weight: normal;
 }
