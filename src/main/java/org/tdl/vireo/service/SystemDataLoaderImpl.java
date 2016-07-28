@@ -309,11 +309,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             for(FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
 
                 // check to see if the FieldPredicate exists
-                FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getPredicate().getValue());
+                FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
 
                 // create new FieldPredicate if not already exists
                 if (fieldPredicate == null) {
-                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getPredicate().getValue());
+                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue());
                 }
                 
                 
@@ -329,7 +329,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                                 
 
                 // check to see if the FieldProfile exists
-                FieldProfile newFieldProfile = fieldProfileRepo.findByPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
+                FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {

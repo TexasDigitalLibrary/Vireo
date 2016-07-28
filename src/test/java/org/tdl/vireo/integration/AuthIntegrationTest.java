@@ -1,6 +1,6 @@
 package org.tdl.vireo.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,9 +75,9 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     	data.put("lastName", TEST_USER_LAST_NAME);
     	data.put("password", TEST_USER_PASSWORD);
     	data.put("confirm", TEST_USER_CONFIRM);    	
-        mockMvc.perform(get("/auth/register")
+        mockMvc.perform(post("/auth/register")
         					.contentType(MediaType.APPLICATION_JSON)
-        					.header("data", objectMapper.convertValue(data, JsonNode.class)))
+        					.content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8")))
            .andExpect(status().isOk())           
            .andExpect(jsonPath("$.meta.type").value("SUCCESS"))
            .andExpect(jsonPath("$.payload.User.email").value(TEST_USER_EMAIL))
@@ -96,9 +96,9 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     	Map<String, String> data = new HashMap<String, String>();
     	data.put("email", TEST_USER_EMAIL);
     	data.put("password", TEST_USER_PASSWORD);
-        mockMvc.perform(get("/auth/login")
+        mockMvc.perform(post("/auth/login")
         					.contentType(MediaType.APPLICATION_JSON)
-        					.header("data", objectMapper.convertValue(data, JsonNode.class)))
+        					.content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8")))
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.meta.type").value("SUCCESS"))
            .andDo(MockMvcResultHandlers.print());

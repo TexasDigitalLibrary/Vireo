@@ -3,10 +3,8 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -18,9 +16,6 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
-	
-	@PersistenceContext
-    private EntityManager em;
 	
 	@Autowired
     private NoteRepo noteRepo;
@@ -42,7 +37,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return workflowStepRepo.findOne(workflowStep.getId());
     }
     
-    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
     	
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
         	// if requesting organization is not the workflow step's orignating organization    	    	    	
@@ -62,7 +57,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
     
-    public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
     	
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
         	// if requesting organization is not the workflow step's orignating organization
@@ -82,7 +77,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
     
-    public WorkflowStep reorderNotes(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep reorderNotes(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating organization                        
@@ -102,7 +97,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
     
-    public WorkflowStep swapNotes(Organization requestingOrganization, WorkflowStep workflowStep, Note n1, Note n2) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep swapNotes(Organization requestingOrganization, WorkflowStep workflowStep, Note n1, Note n2) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         if(workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating organization
@@ -135,13 +130,18 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }        
     }
     
-    public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException {
+    public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
     	
         WorkflowStep resultingWorkflowStep = null;
         
         WorkflowStep persistedWorkflowStep = workflowStepRepo.findOne(pendingWorkflowStep.getId());
         
         boolean overridabilityOfPersistedWorkflowStep = persistedWorkflowStep.getOverrideable();
+        
+        // The requestingOrganization does not have the workflow step being updated
+        if (!requestingOrganization.getAggregateWorkflowSteps().contains(persistedWorkflowStep)) {
+            throw new ComponentNotPresentOnOrgException();
+        }
         
         // if the requestingOrganization originates the workflowStep, make the change directly
         if(requestingOrganization.getId().equals(persistedWorkflowStep.getOriginatingOrganization().getId())) {
@@ -217,51 +217,19 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	
             if(overridabilityOfPersistedWorkflowStep) {
                 
-                List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
-				for(FieldProfile fp : pendingWorkflowStep.getAggregateFieldProfiles()) {
-					aggregateFieldProfiles.add(fp);
-            	}
-				
-				List<Note> aggregateNotes = new ArrayList<Note>();
-                for(Note n : pendingWorkflowStep.getAggregateNotes()) {
-                    aggregateNotes.add(n);
-                }
-            	
-            	em.detach(pendingWorkflowStep);
-                pendingWorkflowStep.setId(null);
-                                
-                pendingWorkflowStep.setOriginatingWorkflowStep(null);
+                WorkflowStep clonedWorkflowStep = pendingWorkflowStep.clone();
+                                                
+                clonedWorkflowStep.setOriginatingWorkflowStep(persistedWorkflowStep);
+                clonedWorkflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                pendingWorkflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                // this is important, elsewise original field profiles will be related to this new workflow step as the originator 
-                pendingWorkflowStep.setOriginalFieldProfiles(new ArrayList<FieldProfile>());
-                
-                pendingWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
-                
-                // this is important, elsewise original notes will be related to this new workflow step as the originator 
-                pendingWorkflowStep.setOriginalNotes(new ArrayList<Note>());
-                
-                persistedWorkflowStep.setAggregateNotes(aggregateNotes);
-                
-                WorkflowStep newWorkflowStep = workflowStepRepo.save(pendingWorkflowStep);
-                
+                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
                 
                 
                 for(Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
                     organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
                     organizationRepo.save(organization);
                 }
-                
-                
-                if(organizationRepo.findByAggregateWorkflowStepsId(persistedWorkflowStep.getId()).size() == 0) {
-                    workflowStepRepo.delete(persistedWorkflowStep);
-                }
-                else {
-                    newWorkflowStep.setOriginatingWorkflowStep(persistedWorkflowStep);
-                    newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
-                }
-
 
                 if(!pendingWorkflowStep.getOverrideable()) {
                     
@@ -282,15 +250,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 }
 
-
                 resultingWorkflowStep = newWorkflowStep;
             }
             //if the workflow step to be updated was not overrideable, then this non-originating organization can't make the change
             else {
-            	
-            	// provide feedback of attempt to override non overrideable
-            	// exceptions may be of better use for unavoidable error handling
-
                 throw new WorkflowStepNonOverrideableException();
             }
             
@@ -373,6 +336,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
      */
     @Override
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization) {
+        
         List<WorkflowStep> allDescendants = getDescendantsOfStep(workflowStep);
         
         List<WorkflowStep> localDescendants = new ArrayList<WorkflowStep>();
@@ -391,8 +355,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
         }
         
-        return localDescendants;    
-        
+        return localDescendants;
     }
     
     @Override
@@ -405,6 +368,19 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	descendantOrganizationsContainingWorkflowStep.addAll(getContainingDescendantOrganization(descendantOrganization, workflowStep));
         });
         return descendantOrganizationsContainingWorkflowStep;
+    }
+    
+    @Override
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableBehavior persistedHeritableModel) {
+        if(persistedHeritableModel instanceof FieldProfile) {
+            return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
+        }
+        else if(persistedHeritableModel instanceof Note) {
+            return workflowStepRepo.findByAggregateNotesId(persistedHeritableModel.getId());
+        }
+        else {
+            return new ArrayList<WorkflowStep>();
+        }
     }
     
 }

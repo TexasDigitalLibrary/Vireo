@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.repo.DocumentTypesRepo;
 
@@ -63,7 +62,6 @@ public class AvailableDocumentTypesController {
         return new ApiResponse(SUCCESS, documentType);
     }
 
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
@@ -74,7 +72,6 @@ public class AvailableDocumentTypesController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DocumentType.class, params = { "0", "1" }) })
@@ -85,7 +82,6 @@ public class AvailableDocumentTypesController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = DocumentType.class, params = { "0" }) })

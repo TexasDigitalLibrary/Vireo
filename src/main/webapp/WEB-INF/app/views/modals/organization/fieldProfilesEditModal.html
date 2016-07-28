@@ -39,7 +39,7 @@
 			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 			<validatedinput
 				model="modalData"
-				property="predicate"
+				property="fieldPredicate"
 				label="Metadata Key"
 				placeholder="Metadata Key of the new field"
 				typeahead="fieldPredicates"
@@ -51,8 +51,8 @@
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
-				ng-if="!modalData.predicate.id" 
-				ng-click="createPredicate()">Create New Metadata Key</button>
+				ng-if="!modalData.fieldPredicate.id" 
+				ng-click="createFieldPredicate()">Create New Metadata Key</button>
 		</div>
 
 		<div class="field-profile-modal-group">
@@ -109,7 +109,7 @@
 		</toggleButton>
 
 	</div>
-
+	
 	<div class="modal-footer">
 		<button 
 			type="button" 
@@ -119,7 +119,7 @@
 			id="field-profiles-save" 
 			type="submit" 
 			class="btn btn-primary" 
-			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id || forms.create.$invalid">Update</button>
+			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.fieldPredicate.id || forms.create.$invalid">Update</button>
 	</div>
 </form>
 

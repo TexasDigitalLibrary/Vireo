@@ -75,9 +75,9 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
     
+    @Transactional
     @ApiMapping("/{submissionId}/update-field-value")
     @Auth(role = "STUDENT")
-    @Transactional
     public ApiResponse updateSubmission(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
                 
         Submission submission = submissionRepo.findOne(submissionId);
@@ -85,7 +85,7 @@ public class SubmissionController {
         if(fieldValue.getId() == null) {
             submission.addFieldValue(fieldValue);
             submission = submissionRepo.save(submission);
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getPredicate());
+            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
         } else {
             fieldValue = fieldValueRepo.save(fieldValue);
             submission = submissionRepo.findOne(submissionId);
@@ -94,9 +94,9 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, fieldValue);
     }
     
+    @Transactional
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
-    @Transactional
     public ApiResponse querySubmission(@ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(submissionListColumns, new PageRequest(page, size)));
     }
