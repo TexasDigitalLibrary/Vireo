@@ -162,7 +162,7 @@ public class Submission extends BaseEntity {
         FieldValue foundFieldValue = null;
         
         for(FieldValue fieldValue : getFieldValues()) {           
-            if(fieldValue.getValue().equals(value) && fieldValue.getPredicate().equals(fieldPredicate)) {
+            if(fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
                 foundFieldValue = fieldValue;
                 break;
             }

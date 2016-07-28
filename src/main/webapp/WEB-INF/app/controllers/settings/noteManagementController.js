@@ -31,7 +31,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
         $scope.workflowStepRepo.clearValidationResults();
         $scope.noteRepo.clearValidationResults();
         for(var key in $scope.forms) {
-            if(!$scope.forms[key].$pristine) {
+            if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                 $scope.forms[key].$setPristine();
             }
         }

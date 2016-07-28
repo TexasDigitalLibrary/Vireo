@@ -15,12 +15,12 @@ vireo.directive("field",  function() {
 			$scope.values = [];
 
 			$scope.getValues = function() {
-				angular.extend($scope.values, $scope.submission.findFieldValuesByPredicate($scope.profile.predicate));
+				angular.extend($scope.values, $scope.submission.findFieldValuesByFieldPredicate($scope.profile.fieldPredicate));
 				if ($scope.values.length === 0) {
 					$scope.values.push({
 						id: null,
 						value: "",
-						predicate: $scope.profile.predicate
+						fieldPredicate: $scope.profile.fieldPredicate
 					});
 				}
 				return $scope.values;
@@ -39,7 +39,7 @@ vireo.directive("field",  function() {
 			};
 
 			$scope.addFieldValue = function() {
-				$scope.submission.addFieldValue($scope.profile.predicate);
+				$scope.submission.addFieldValue($scope.profile.fieldPredicate);
 			};
 
 			$scope.removeFieldValue = function(value) {
@@ -47,8 +47,8 @@ vireo.directive("field",  function() {
 				$scope.submission.fieldValues.splice(indexOfValue, 1);
 			};
 
-			$scope.filterValuesByPredicate = function(value) {
-				return $scope.profile.predicate.id === value.predicate.id;
+			$scope.filterValuesByFieldPredicate = function(value) {
+				return $scope.profile.fieldPredicate.id === value.fieldPredicate.id;
 			};
 
 			$scope.showRemove = function(value) {
@@ -60,7 +60,7 @@ vireo.directive("field",  function() {
 			};
 
 			$scope.first = function(value) {
-				return $scope.submission.findFieldValuesByPredicate($scope.profile.predicate).indexOf(value) === 0;
+				return $scope.submission.findFieldValuesByPredicate($scope.profile.fieldPredicate).indexOf(value) === 0;
 			};
 
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";

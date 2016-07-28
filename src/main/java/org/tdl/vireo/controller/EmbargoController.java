@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -54,7 +53,6 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS, embargo);
     }
 
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -65,7 +63,6 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS, embargo);
     }
 
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
@@ -76,7 +73,6 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @ApiMapping("/reorder/{guarantorString}/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Embargo.class, params = { "1", "2", "guarantor" }) })
@@ -88,7 +84,6 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @ApiMapping("/sort/{guarantorString}/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = Embargo.class, params = { "1", "0", "guarantor" }) })
