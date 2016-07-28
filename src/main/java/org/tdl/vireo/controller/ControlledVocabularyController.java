@@ -10,6 +10,7 @@ import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -17,8 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -35,12 +34,12 @@ import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
+import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.model.ApiResponse;
 
 /**
@@ -255,7 +254,7 @@ public class ControlledVocabularyController {
     @Transactional
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")    
-    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream ServletInputStream inputStream) throws IOException {
+    public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream InputStream inputStream) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         String[] rows = inputStreamToRows(inputStream);

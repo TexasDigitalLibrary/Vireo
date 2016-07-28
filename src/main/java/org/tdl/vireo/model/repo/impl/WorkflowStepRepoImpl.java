@@ -3,9 +3,6 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.FieldProfile;
@@ -19,9 +16,6 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
-	
-	@PersistenceContext
-    private EntityManager em;
 	
 	@Autowired
     private NoteRepo noteRepo;
@@ -218,34 +212,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         	
             if(overridabilityOfPersistedWorkflowStep) {
                 
-                List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
-				for(FieldProfile fp : pendingWorkflowStep.getAggregateFieldProfiles()) {
-					aggregateFieldProfiles.add(fp);
-            	}
-				
-				List<Note> aggregateNotes = new ArrayList<Note>();
-                for(Note n : pendingWorkflowStep.getAggregateNotes()) {
-                    aggregateNotes.add(n);
-                }
-            	
-            	em.detach(pendingWorkflowStep);
-                pendingWorkflowStep.setId(null);
-                                
-                pendingWorkflowStep.setOriginatingWorkflowStep(null);
+                WorkflowStep clonedWorkflowStep = pendingWorkflowStep.clone();
+                                                
+                clonedWorkflowStep.setOriginatingWorkflowStep(null);                
+                clonedWorkflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                pendingWorkflowStep.setOriginatingOrganization(requestingOrganization);
                 
-                // this is important, elsewise original field profiles will be related to this new workflow step as the originator 
-                pendingWorkflowStep.setOriginalFieldProfiles(new ArrayList<FieldProfile>());
-                
-                pendingWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
-                
-                // this is important, elsewise original notes will be related to this new workflow step as the originator 
-                pendingWorkflowStep.setOriginalNotes(new ArrayList<Note>());
-                
-                persistedWorkflowStep.setAggregateNotes(aggregateNotes);
-                
-                WorkflowStep newWorkflowStep = workflowStepRepo.save(pendingWorkflowStep);
+                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
                 
                 
                 
@@ -283,15 +256,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 }
 
-
                 resultingWorkflowStep = newWorkflowStep;
             }
             //if the workflow step to be updated was not overrideable, then this non-originating organization can't make the change
             else {
-            	
-            	// provide feedback of attempt to override non overrideable
-            	// exceptions may be of better use for unavoidable error handling
-
                 throw new WorkflowStepNonOverrideableException();
             }
             
@@ -392,8 +360,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
         }
         
-        return localDescendants;    
-        
+        return localDescendants;
     }
     
     @Override
@@ -409,7 +376,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
-    public List<WorkflowStep> findByAggregateHeritableModel(HeritableBehavior persistedHeritableModel) {
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableBehavior persistedHeritableModel) {
         if(persistedHeritableModel instanceof FieldProfile) {
             return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
         }

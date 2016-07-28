@@ -32,7 +32,6 @@ public class Note extends AbstractNote<Note> implements HeritableBehavior<Note>{
     
     @Column(nullable = true)
     private Boolean overrideable;
-
     
     public Note() {
         setModelValidator(new NoteValidator());
@@ -105,6 +104,19 @@ public class Note extends AbstractNote<Note> implements HeritableBehavior<Note>{
     @Override
     public Note getOriginating() {
         return getOriginatingNote();
+    }
+    
+    @Override
+    public Note clone() {
+        Note clone = new Note();
+        
+        clone.setName(getName());
+        clone.setText(getText());
+        clone.setOverrideable(getOverrideable());
+        clone.setOriginatingNote(getOriginatingNote());
+        clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
+        
+        return clone;
     }
     
 }

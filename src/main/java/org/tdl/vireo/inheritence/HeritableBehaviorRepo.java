@@ -3,9 +3,6 @@ package org.tdl.vireo.inheritence;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
@@ -17,9 +14,6 @@ import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 @SuppressWarnings("rawtypes")
 public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends HeritableJpaRepo<M>> {
-    
-    @PersistenceContext
-    private EntityManager em;
     
     @Autowired
     private R heritableRepo;
@@ -41,7 +35,7 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
                 // if requesting organization is not the workflow step's orignating organization,
                 if (!pendingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
                     // create a new workflow step
-                    pendingWorkflowStep =  workflowStepRepo.update(pendingWorkflowStep, requestingOrganization);
+                    pendingWorkflowStep = workflowStepRepo.update(pendingWorkflowStep, requestingOrganization);
 
                     // recursive call
                     pendingWorkflowStep.removeAggregateHeritableModel(heritableModelToRemove);
@@ -110,7 +104,6 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
             if (workflowStep.getAggregateHeritableModels(persistedHeritableModel).contains(persistedHeritableModel)) {
                 workflowStepWithHeritableModelOnRequestingOrganization = workflowStep;
                 requestingOrganizationOriginatedWorkflowStep = workflowStepWithHeritableModelOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
-                break;
             }
         }
 
@@ -146,11 +139,11 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
             // If the WS didn't originate the M, we need a new M to replace it
             else {
 
-                // new heritableModel
-                em.detach(pendingHeritableModel);
-                pendingHeritableModel.setOriginating(persistedHeritableModel);
-                pendingHeritableModel.setId(null);
-                pendingHeritableModel.setOriginatingWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization);
+                M cloneHeritableModel = (M) pendingHeritableModel.clone();
+                
+                cloneHeritableModel.setOriginating(persistedHeritableModel);
+                cloneHeritableModel.setOriginatingWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization);
+                
                 M newHeritableModel = heritableRepo.save(pendingHeritableModel);
 
                 // replace descendants of the persisted (original) M with our new M at subordinate organizations
@@ -172,6 +165,7 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
 
             // make the new step; the update call will propagate step replacement in subordinate orgs
             Long origWSId = workflowStepWithHeritableModelOnRequestingOrganization.getId();
+            
             workflowStepWithHeritableModelOnRequestingOrganization.setOriginatingWorkflowStep(workflowStepRepo.findOne(origWSId));
 
             WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);
@@ -179,17 +173,22 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
             workflowStepWithHeritableModelOnRequestingOrganization = workflowStepRepo.findOne(origWSId);
             requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
 
-            // new M on the new WS
-            em.detach(pendingHeritableModel);
-            pendingHeritableModel.setId(null);
-            pendingHeritableModel.setOriginating(persistedHeritableModel);
-            pendingHeritableModel.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
-            M newHeritableModel = heritableRepo.save(pendingHeritableModel);
+
+            M cloneHeritableModel = (M) pendingHeritableModel.clone();
+            
+            cloneHeritableModel.setOriginating(persistedHeritableModel);            
+            cloneHeritableModel.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
+            
+            M newHeritableModel = heritableRepo.save(cloneHeritableModel);
+            
             newOriginatingWorkflowStep.getOriginalHeritableModels(newHeritableModel).add(newHeritableModel);
+            
             newOriginatingWorkflowStep.replaceAggregateHeritableModel(persistedHeritableModel, newHeritableModel);
+            
             newOriginatingWorkflowStep = workflowStepRepo.save(newOriginatingWorkflowStep);
 
             requestingOrganization.replaceAggregateWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization, newOriginatingWorkflowStep);
+            
             requestingOrganization = organizationRepo.save(requestingOrganization);
 
             // replace the heritableModel on all descendant orgs aggregate workflows
@@ -205,7 +204,7 @@ public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends Herita
                 newHeritableModel.setOriginating(persistedHeritableModel);
                 newHeritableModel = heritableRepo.save(newHeritableModel);
             }
-
+            
             // if change to non-overrideable, replace descendants of originating heritableModel in subordinate orgs
             if (overridabilityOfPersistedHeritableModel && !newHeritableModel.getOverrideable()) {
                 reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(persistedHeritableModel, newHeritableModel, workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);

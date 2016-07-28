@@ -79,7 +79,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, fieldProfile.getPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true);
+        FieldProfile createdProfile = fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true);
         createdProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
         createdProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
         
@@ -97,7 +97,7 @@ public class WorkflowStepController {
         
         FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
         
-        persistedFieldProfile.setPredicate(fieldProfile.getPredicate());
+        persistedFieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
         persistedFieldProfile.setInputType(fieldProfile.getInputType());
         persistedFieldProfile.setOverrideable(fieldProfile.getOverrideable());
         persistedFieldProfile.setRepeatable(fieldProfile.getRepeatable());

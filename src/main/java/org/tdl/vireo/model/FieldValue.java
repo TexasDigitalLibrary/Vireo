@@ -19,7 +19,7 @@ public class FieldValue extends BaseEntity {
     private String value;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    private FieldPredicate predicate;
+    private FieldPredicate fieldPredicate;
 
     public FieldValue() {
         setModelValidator(new FieldValueValidator());
@@ -31,7 +31,7 @@ public class FieldValue extends BaseEntity {
      */
     public FieldValue(FieldPredicate predicate) {
         this();
-        setPredicate(predicate);
+        setFieldPredicate(predicate);
     }
 
     /**
@@ -52,16 +52,16 @@ public class FieldValue extends BaseEntity {
     /**
      * @return the predicate
      */
-    public FieldPredicate getPredicate() {
-        return predicate;
+    public FieldPredicate getFieldPredicate() {
+        return fieldPredicate;
     }
 
     /**
      * @param predicate
      *            the predicate to set
      */
-    public void setPredicate(FieldPredicate predicate) {
-        this.predicate = predicate;
+    public void setFieldPredicate(FieldPredicate fieldPredicate) {
+        this.fieldPredicate = fieldPredicate;
     }
     
 }

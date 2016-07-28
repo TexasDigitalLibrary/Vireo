@@ -24,6 +24,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.organizationRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
+    				console.log(key)
+    				console.log($scope.forms[key])
     				$scope.forms[key].$setPristine();
     			}
     		}

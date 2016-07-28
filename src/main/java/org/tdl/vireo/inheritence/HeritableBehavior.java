@@ -17,5 +17,7 @@ public interface HeritableBehavior<M> {
     public WorkflowStep getOriginatingWorkflowStep();
     
     public Boolean getOverrideable();
+    
+    public M clone();
 
 }

@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.inheritence.AncestorWorkflowStep;
+import org.tdl.vireo.inheritence.HeratibleWorkflowStepBehavior;
 import org.tdl.vireo.inheritence.HeritableBehavior;
 import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @DiscriminatorValue("Org")
 @SuppressWarnings("rawtypes")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }))
-public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements AncestorWorkflowStep {
+public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements HeratibleWorkflowStepBehavior {
    
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -170,7 +170,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
      */
     public FieldProfile getFieldProfileByPredicate(FieldPredicate fieldPredicate) {
         for (FieldProfile fieldProfile : getOriginalFieldProfiles()) {
-            if (fieldProfile.getPredicate().equals(fieldPredicate))
+            if (fieldProfile.getFieldPredicate().equals(fieldPredicate))
                 return fieldProfile;
         }
         return null;
@@ -286,6 +286,35 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
             results = replaceAggregateFieldProfile((FieldProfile) newHeritableModel, (FieldProfile) oldHeritableModel);
         }
         return results;
+    }
+    
+    @Override
+    public WorkflowStep clone() {
+        
+        // not cloning id or originals
+        
+        WorkflowStep clone = new WorkflowStep();
+        
+        List<Note> aggregateNotes = new ArrayList<Note>();
+        for(Note n : getAggregateNotes()) {
+            aggregateNotes.add(n);
+        }
+        
+        List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();                
+        for(FieldProfile fp : getAggregateFieldProfiles()) {
+            aggregateFieldProfiles.add(fp);
+        }
+        
+        clone.setName(getName());
+        clone.setOverrideable(getOverrideable());
+        clone.setOriginatingOrganization(getOriginatingOrganization());
+        clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
+        
+        clone.setAggregateNotes(aggregateNotes);
+        
+        clone.setAggregateFieldProfiles(aggregateFieldProfiles);
+        
+        return clone;
     }
 
 }

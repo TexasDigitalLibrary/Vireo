@@ -2,8 +2,10 @@ package org.tdl.vireo.inheritence;
 
 import java.util.List;
 
+import org.tdl.vireo.model.WorkflowStep;
+
 @SuppressWarnings("rawtypes")
-public interface AncestorWorkflowStep<M extends HeritableBehavior> {
+public interface HeratibleWorkflowStepBehavior<M extends HeritableBehavior> {
     
     public void removeAggregateHeritableModel(M heritableModel);
     
@@ -18,5 +20,7 @@ public interface AncestorWorkflowStep<M extends HeritableBehavior> {
     public List<M> getAggregateHeritableModels(M heritableModel);
     
     public boolean replaceAggregateHeritableModel(M srcHM, M detHM);
+    
+    public WorkflowStep clone();
 
 }
