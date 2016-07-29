@@ -12,7 +12,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.tdl.vireo.inheritence.HeritableBehavior;
+import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements HeritableBehavior<FieldProfile> {
+public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements Heritable<FieldProfile> {
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")

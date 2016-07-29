@@ -3,14 +3,14 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.inheritence.HeritableBehaviorRepo;
+import org.tdl.vireo.inheritence.HeritableRepo;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.NoteRepoCustom;
 
-public class NoteRepoImpl extends HeritableBehaviorRepo<Note, NoteRepo> implements NoteRepoCustom {
+public class NoteRepoImpl extends HeritableRepo<Note, NoteRepo> implements NoteRepoCustom {
     
     @Autowired
     private NoteRepo noteRepo;

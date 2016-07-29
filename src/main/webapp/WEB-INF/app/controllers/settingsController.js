@@ -12,20 +12,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
 		$scope.settings.user.ready().then(function() {
 
-			$scope.updateUserSetting = function(name, timer) {
-				if($scope.userSettingsForm && Object.keys($scope.userSettingsForm.$error).length) {
-					return;
-				}
-
-				timer = timer === undefined ? 0 : timer;
-
-				if($scope.typingTimer) {
-					clearTimeout($scope.typingTimer);
-				}
-
-				$scope.typingTimer = setTimeout(function() {
-					return $scope.settings.user.save();
-				}, timer);
+			$scope.updateUserSetting = function(name) {
+				return $scope.settings.user.save();
 			};
 
 			var userSettingsValidations = {

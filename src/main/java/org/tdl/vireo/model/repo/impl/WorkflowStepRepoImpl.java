@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.inheritence.HeritableBehavior;
+import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -371,7 +371,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
     
     @Override
-    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableBehavior persistedHeritableModel) {
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") Heritable persistedHeritableModel) {
         if(persistedHeritableModel instanceof FieldProfile) {
             return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
         }

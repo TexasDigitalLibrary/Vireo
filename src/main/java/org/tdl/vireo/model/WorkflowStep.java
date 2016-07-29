@@ -16,8 +16,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.inheritence.HeratibleWorkflowStepBehavior;
-import org.tdl.vireo.inheritence.HeritableBehavior;
+import org.tdl.vireo.inheritence.HeratibleWorkflowStep;
+import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @DiscriminatorValue("Org")
 @SuppressWarnings("rawtypes")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }))
-public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements HeratibleWorkflowStepBehavior {
+public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements HeratibleWorkflowStep {
    
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
@@ -213,7 +213,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void removeAggregateHeritableModel(HeritableBehavior heritableModel) {
+    public void removeAggregateHeritableModel(Heritable heritableModel) {
         if(heritableModel.getClass().equals(Note.class)) {
             removeAggregateNote((Note) heritableModel);
         }
@@ -223,7 +223,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void addOriginalHeritableModel(HeritableBehavior heritableModel) {
+    public void addOriginalHeritableModel(Heritable heritableModel) {
         if(heritableModel.getClass().equals(Note.class)) {
             addOriginalNote((Note) heritableModel);
         }
@@ -233,7 +233,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void addAggregateHeritableModel(HeritableBehavior heritableModel) {
+    public void addAggregateHeritableModel(Heritable heritableModel) {
         if(heritableModel.getClass().equals(Note.class)) {
             addAggregateNote((Note) heritableModel);
         }
@@ -243,7 +243,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void removeOriginalHeritableModel(HeritableBehavior heritableModel) {
+    public void removeOriginalHeritableModel(Heritable heritableModel) {
         if(heritableModel.getClass().equals(Note.class)) {
             removeOriginalNote((Note) heritableModel);
         }
@@ -253,7 +253,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public List getOriginalHeritableModels(HeritableBehavior heritableModel) {
+    public List getOriginalHeritableModels(Heritable heritableModel) {
         List results = new ArrayList();
         if(heritableModel.getClass().equals(Note.class)) {
             results = getOriginalNotes();
@@ -265,7 +265,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public List getAggregateHeritableModels(HeritableBehavior heritableModel) {
+    public List getAggregateHeritableModels(Heritable heritableModel) {
         List results = new ArrayList();
         if(heritableModel.getClass().equals(Note.class)) {
             results = getAggregateNotes();
@@ -277,7 +277,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public boolean replaceAggregateHeritableModel(HeritableBehavior newHeritableModel, HeritableBehavior oldHeritableModel) {
+    public boolean replaceAggregateHeritableModel(Heritable newHeritableModel, Heritable oldHeritableModel) {
         boolean results = false;
         if(newHeritableModel.getClass().equals(Note.class)) {
             results = replaceAggregateNote((Note) newHeritableModel, (Note) oldHeritableModel);
