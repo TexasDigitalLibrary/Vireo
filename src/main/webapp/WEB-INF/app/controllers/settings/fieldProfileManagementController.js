@@ -24,6 +24,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.fieldPredicateRepo = FieldPredicateRepo;
 
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
+
 	$scope.filteredPredicates = {};
 
 	FieldPredicateRepo.ready().then(function(){
@@ -84,7 +85,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.resetFieldProfiles();
 
-	$scope.createGloss = function(glossValue) {
+	$scope.createFieldGloss = function(glossValue) {
 		// TODO set the language dynamically.
 		// For now, the language must be 'English' so that's in name will match that existing on the server.
 		$scope.modalData.fieldGlosses[0] = {
@@ -96,10 +97,13 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		});
 	};
 
-	$scope.createPredicate = function() {
-		FieldPredicateRepo.create($scope.modalData.predicate).then(function(response) {
+	$scope.createFieldPredicate = function() {
+		FieldPredicateRepo.create({
+			value: $scope.modalData.fieldPredicate,
+			documentTypePredicate: false
+		}).then(function(response) {
 			if(angular.fromJson(response.body).meta.type == "SUCCESS") {
-				$scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
+				$scope.modalData.fieldPredicate = angular.fromJson(response.body).payload.FieldPredicate;
 			}
 		});
 	};

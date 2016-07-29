@@ -14,6 +14,8 @@
 
 	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
+	<validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
+
 	<!-- TODO: figure out how to validate glosses and controlled vocabularies -->
 
 	<div class="modal-body">
@@ -22,7 +24,8 @@
 			<input 
 				id="field-profiles-gloss" 
 				ng-model="modalData.fieldGlosses[0]" 
-				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" 
+				autocomplete="off"
+				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses | filter:$viewValue" 
 				type="text"
 				class="form-control" 
 				placeholder="Display label for the new field" 
@@ -30,7 +33,7 @@
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
-				ng-click="createGloss(modalData.fieldGlosses[0])" 
+				ng-click="createFieldGloss(modalData.fieldGlosses[0])" 
 				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
 
@@ -39,27 +42,16 @@
 
 			<validatedinput
 				model="modalData"
-				property="predicate"
-				label="Predicate"
-				placeholder="Predicate of the new field profile"
+				property="fieldPredicate"
+				label="Metadata Key"
+				placeholder="Metadata Key of the field"
+				autocomplete="off"
 				typeahead="filteredPredicates"
 				typeaheadproperty="value"
 				form="forms.create"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.getValidationResults()">
 			</validatedinput>
-
-			<!-- <validatedinput -->
-			<!-- model="modalData" -->
-			<!-- property="fieldPredicate" -->
-			<!-- label="Metadata Key" -->
-			<!-- placeholder="Metadata Key of the new field" -->
-			<!-- typeahead="fieldPredicates" -->
-			<!-- typeaheadproperty="value" -->
-			<!-- form="forms.create" -->
-			<!-- validations="fieldPredicateRepo.getValidations()" -->
-			<!-- results="fieldPredicateRepo.getValidationResults()"> -->
-			<!-- </validatedinput> -->
 
 			<button 
 				type="button" 

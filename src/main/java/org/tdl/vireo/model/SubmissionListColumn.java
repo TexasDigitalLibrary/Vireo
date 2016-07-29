@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate" }) )
 public class SubmissionListColumn extends BaseEntity {
     
     @Column(unique = true, nullable = false)
