@@ -1,0 +1,140 @@
+[
+	{
+		"title": "ID",
+		"sort": "ASC",
+		"valuePath": ["id"],
+		"status": null
+	},
+	{
+		"title": "Status",
+		"sort": "NONE",
+		"valuePath": ["state", "name"],
+		"status": null
+	},
+	{
+		"title": "Organization name",
+		"sort": "DESC",
+		"valuePath": ["organization", "name"],
+		"status": null
+	},
+	{
+		"title": "Organization category",
+		"sort": "ASC",
+		"valuePath": ["organization", "category", "name"],
+		"status": null
+	},
+	{
+		"title": "Assigned to",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Submission title",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Submission date",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Approval date",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Embargo type",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Institutional ID",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Graduation semester",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Primary document",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "License agreement date",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Committee approval date",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Committee embargo approval date",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Committee members",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Committee contact email",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Degree level",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Custom actions",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Deposit ID",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Notes",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Last event",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	},
+	{
+		"title": "Event time",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null
+	}
+]

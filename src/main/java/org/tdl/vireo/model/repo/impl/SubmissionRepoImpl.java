@@ -87,9 +87,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	            filterExists = true;
 	        }
 
-            if(submissionListColumn.getPath().size() > 0) {
-
-                String fullPath = String.join(".", submissionListColumn.getPath());
+            if(submissionListColumn.getValuePath().size() > 0) {
+                
+                String fullPath = String.join(".", submissionListColumn.getValuePath());
 
                 switch(submissionListColumn.getSort()) {
                     case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
