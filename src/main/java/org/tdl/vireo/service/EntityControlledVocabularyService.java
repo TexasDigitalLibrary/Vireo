@@ -39,7 +39,8 @@ public class EntityControlledVocabularyService {
     // default whitelist, Embargo guarantor and Attatchment type
     private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] {
             new EntityCVWhitelist("Embargo", Arrays.asList(new String[] {"guarantor"})), 
-            new EntityCVWhitelist("Attachment", Arrays.asList(new String[] {"type"}))
+            new EntityCVWhitelist("Attachment", Arrays.asList(new String[] {"type"})),
+            new EntityCVWhitelist("DocumentType", Arrays.asList(new String[] {"name"}))
     };
     
     @PersistenceContext
@@ -80,15 +81,14 @@ public class EntityControlledVocabularyService {
             }
             
             ecvwPropertyNames.forEach(propertyName -> {
-                // TODO: manage default language accordingly
-                //       and handle duplicate controlled vocabulary names on different entities
                 
+                // TODO: manage default language accordingly and handle duplicate controlled vocabulary names on different entities                
                 Language language = languageRepo.findByName("English");
                 
-                ControlledVocabulary cv = controlledVocabularyRepo.findByNameAndLanguage(propertyName,language );
+                ControlledVocabulary cv = controlledVocabularyRepo.findByNameAndLanguage(ecvwName + "." + propertyName, language);
                 
                 if(cv == null) {
-                    cv = controlledVocabularyRepo.create(propertyName, ecvwName, language);
+                    cv = controlledVocabularyRepo.create(ecvwName + "." + propertyName, ecvwName, language);
                 }
                 
                 if(isPropertyEnum(ecvwName, propertyName)) {
