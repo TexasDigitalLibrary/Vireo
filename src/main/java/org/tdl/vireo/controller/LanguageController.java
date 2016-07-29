@@ -1,9 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-
-import static edu.tamu.framework.enums.BusinessValidationType.*;
-import static edu.tamu.framework.enums.MethodValidationType.*;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.framework.enums.MethodValidationType.REORDER;
+import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.Language;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.FieldGloss;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestLanguageCodesService;
 
@@ -58,7 +62,6 @@ public class LanguageController {
      * 
      * @return
      */
-    @Transactional
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -73,7 +76,6 @@ public class LanguageController {
      * 
      * @return
      */
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -88,7 +90,6 @@ public class LanguageController {
      * 
      * @return
      */
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }), @ApiValidation.Business(value = NONEXISTS) })
@@ -108,7 +109,6 @@ public class LanguageController {
      *            destination position
      * @return ApiResponse indicating success
      */
-    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Language.class, params = { "0", "1" }) })
@@ -126,7 +126,6 @@ public class LanguageController {
      *            column to sort by
      * @return ApiResponse indicating success
      */
-    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = Language.class, params = { "0" }) })

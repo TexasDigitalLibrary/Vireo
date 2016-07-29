@@ -1,7 +1,11 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.*;
+import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
+import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
+import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +41,6 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }
     
-    @Transactional
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -48,7 +51,6 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategory);
     }
     
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -59,7 +61,6 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategory);
     }
 
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "organizations" }), @ApiValidation.Business(value = NONEXISTS) })

@@ -14,7 +14,7 @@ public class FieldValueTest extends AbstractEntityTest {
         fieldValue = fieldValueRepo.save(fieldValue);
         assertEquals("The repository did not save the entity!", 1, fieldValueRepo.count());
         assertEquals("Saved entity did not contain the value!", TEST_FIELD_VALUE, fieldValue.getValue());
-        assertEquals("Saved entity did not contain the predicate value!", TEST_FIELD_PREDICATE_VALUE, fieldValue.getPredicate().getValue());
+        assertEquals("Saved entity did not contain the predicate value!", TEST_FIELD_PREDICATE_VALUE, fieldValue.getFieldPredicate().getValue());
     }
 
     @Override

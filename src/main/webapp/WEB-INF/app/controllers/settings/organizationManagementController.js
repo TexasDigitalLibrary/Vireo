@@ -24,6 +24,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.organizationRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
+    				console.log(key)
+    				console.log($scope.forms[key])
     				$scope.forms[key].$setPristine();
     			}
     		}
@@ -39,7 +41,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 		$scope.resetWorkflowSteps();
 
 		$scope.updateOrganization = function(organization) {
-			OrganizationRepo.update(organization).then(function() {
+			organization.save().then(function() {
 				// update the parent scoped selected organization 
 				$scope.setSelectedOrganization(organization);
 			});

@@ -3,6 +3,8 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -33,7 +35,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.Parameters;
+import edu.tamu.framework.aspect.annotation.ApiParameters;
 import edu.tamu.framework.controller.CoreAuthController;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.util.ValidationUtility;
@@ -64,8 +66,8 @@ public class AppAuthController extends CoreAuthController {
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
     
-    @ApiMapping(value = "/register")
-    public ApiResponse registration(@ApiData Map<String, String> dataMap, @Parameters Map<String, String[]> parameters) {
+    @ApiMapping(value = "/register", method = { POST, GET })
+    public ApiResponse registration(@ApiData Map<String, String> dataMap, @ApiParameters Map<String, String[]> parameters) {
 
         if(parameters.get("email") != null) {
             
@@ -152,7 +154,7 @@ public class AppAuthController extends CoreAuthController {
         return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }
     
-    @ApiMapping("/login")
+    @ApiMapping(value = "/login", method = POST)
     public ApiResponse login(@ApiData Map<String, String> dataMap) {
         
         String email = dataMap.get("email");

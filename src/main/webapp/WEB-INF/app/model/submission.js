@@ -7,7 +7,7 @@ var submissionModel = function ($q, WsApi) {
 		// additional model methods and variables
 
 
-		submission.findFieldValuesByPredicate = function(predicate) {
+		submission.findFieldValuesByFieldPredicate = function(fieldPredicate) {
 
 			var foundFieldValues = [];
 
@@ -15,7 +15,7 @@ var submissionModel = function ($q, WsApi) {
 
 				var fieldValue = submission.fieldValues[i];
 
-				if(fieldValue.predicate.value == predicate.value) {
+				if(fieldValue.fieldPredicate.value == fieldPredicate.value) {
 					foundFieldValues.push(fieldValue);
 				}
 
@@ -44,11 +44,11 @@ var submissionModel = function ($q, WsApi) {
 
 		};
 
-		submission.addFieldValue = function(predicate) {
+		submission.addFieldValue = function(fieldPredicate) {
 			var fieldValue = {
 				id: null,
 				value: "",
-				predicate: predicate
+				fieldPredicate: fieldPredicate
 			};
 
 			submission.fieldValues.push(fieldValue);

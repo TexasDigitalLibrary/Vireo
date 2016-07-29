@@ -86,6 +86,7 @@ public class DocumentTypeTest extends AbstractEntityTest{
     	fieldValueRepo.deleteAll();
         documentTypesRepo.deleteAll();
         submissionRepo.deleteAll();
+        organizationCategoryRepo.deleteAll();
         organizationRepo.deleteAll();
     }
 
