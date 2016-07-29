@@ -2,7 +2,7 @@ package org.tdl.vireo.model.repo.custom;
 
 import java.util.List;
 
-import org.tdl.vireo.inheritence.HeritableBehavior;
+import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
@@ -34,6 +34,6 @@ public interface WorkflowStepRepoCustom {
 
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization);
     
-    public List<WorkflowStep> findByAggregateHeritableModel(HeritableBehavior persistedHeritableModel);
+    public List<WorkflowStep> findByAggregateHeritableModel(Heritable persistedHeritableModel);
     
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.tdl.vireo.model.WorkflowStep;
 
 @SuppressWarnings("rawtypes")
-public interface HeratibleWorkflowStepBehavior<M extends HeritableBehavior> {
+public interface HeratibleWorkflowStep<M extends Heritable> {
     
     public void removeAggregateHeritableModel(M heritableModel);
     

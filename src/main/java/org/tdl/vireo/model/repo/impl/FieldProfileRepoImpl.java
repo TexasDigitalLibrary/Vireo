@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.inheritence.HeritableBehaviorRepo;
+import org.tdl.vireo.inheritence.HeritableRepo;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.InputType;
@@ -13,7 +13,7 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
-public class FieldProfileRepoImpl extends HeritableBehaviorRepo<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
+public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
     
     @Autowired
     private FieldProfileRepo fieldProfileRepo;

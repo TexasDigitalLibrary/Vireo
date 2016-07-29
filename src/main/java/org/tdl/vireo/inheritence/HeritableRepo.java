@@ -13,7 +13,7 @@ import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 @SuppressWarnings("rawtypes")
-public class HeritableBehaviorRepo<M extends HeritableBehavior, R extends HeritableJpaRepo<M>> {
+public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
     
     @Autowired
     private R heritableRepo;
