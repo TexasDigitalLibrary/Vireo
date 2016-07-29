@@ -100,16 +100,14 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep);
-        setFieldPredicate(fieldPredicate);
-        setInputType(inputType);
-		setUsage(usage);
-		setHelp(help);
-        setRepeatable(repeatable);
-        setOverrideable(overrideable);
-        setEnabled(enabled);
-        setOptional(optional);
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional);
         addControlledVocabulary(0, controlledVocabulary);
+    }
+    
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional);
+        setControlledVocabularies(controlledVocabularies);
+        setFieldGlosses(fieldGlosses);
     }
 
     /**

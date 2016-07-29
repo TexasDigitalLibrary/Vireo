@@ -101,7 +101,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	var getValueFromArray = function(array, path, col) {
 		for(var j in array) {
-			if(array[j].predicate.value == col.predicate) {
+			if(array[j].fieldPredicate.value == col.predicate) {
 				return array[j].value;
 			}
 		}
