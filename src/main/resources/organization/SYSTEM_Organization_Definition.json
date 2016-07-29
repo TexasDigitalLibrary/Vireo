@@ -55,7 +55,7 @@
                     "help": "Enter your first name.",
                     "fieldGlosses": [
                         {
-                            "value": "First Name",
+                            "value": "First name",
                             "language": {
                                 "name": "English"
                             }
@@ -81,7 +81,7 @@
                     "help": "Enter your middle name or initial.",
                     "fieldGlosses": [
                         {
-                            "value": "Middle Name",
+                            "value": "Middle name",
                             "language": {
                                 "name": "English"
                             }
@@ -107,7 +107,7 @@
                     "help": "Enter your last name.",
                     "fieldGlosses": [
                         {
-                            "value": "Last Name",
+                            "value": "Last name",
                             "language": {
                                 "name": "English"
                             }

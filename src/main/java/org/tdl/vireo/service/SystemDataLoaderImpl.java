@@ -326,55 +326,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     inputType.setName(fieldProfile.getInputType().getName());
                     inputType = inputTypeRepo.save(inputType);
                 }
-                                
-
-                // check to see if the FieldProfile exists
-                FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
-
-                // create new FieldProfile if not already exists
-                if (newFieldProfile == null) {
-                	
-                	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
-                	
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional());
-                } else {
-                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
-                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
-                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
-                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
-                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
-                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
-                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
-                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
-                }
-
-                // temporary list of FieldGloss
-                List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
-
-                fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
-
-                    // check to see if the Language exists
-                    Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
-
-                    // create new Language if not already exists
-                    if (language == null) {
-                        language = languageRepo.create(fieldGloss.getLanguage().getName());
-                    }
-
-                    // check to see if the FieldGloss exists
-                    FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
-
-                    // create new FieldGloss if not already exists
-                    if (newFieldGloss == null) {
-                        newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
-                    }
-
-                    fieldGlosses.add(newFieldGloss);
-
-                });
-
-                newFieldProfile.setFieldGlosses(fieldGlosses);
-
+                          
+                
+                
                 // temporary list of ControlledVocabulary
                 List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
 
@@ -400,9 +354,59 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 });
 
-                newFieldProfile.setControlledVocabularies(controlledVocabularies);
+                
+                // temporary list of FieldGloss
+                List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
 
-                newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+                fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
+
+                    // check to see if the Language exists
+                    Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
+
+                    // create new Language if not already exists
+                    if (language == null) {
+                        language = languageRepo.create(fieldGloss.getLanguage().getName());
+                    }
+
+                    // check to see if the FieldGloss exists
+                    FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
+
+                    // create new FieldGloss if not already exists
+                    if (newFieldGloss == null) {
+                        newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
+                    }
+
+                    fieldGlosses.add(newFieldGloss);
+
+                });
+                
+                
+
+                // check to see if the FieldProfile exists
+                FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
+
+                // create new FieldProfile if not already exists
+                if (newFieldProfile == null) {
+                	
+                	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                	
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), controlledVocabularies, fieldGlosses);
+                } else {
+                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
+                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
+                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
+                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
+                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
+                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
+                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
+                    newFieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
+                    newFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
+                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+                }
+
+                
+
+               
                 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
                 
@@ -651,17 +655,26 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
                 
                 if (dbSubmissionListColumn == null) {
-                    submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPath());
+                    if(submissionListColumn.getPredicate() != null) {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath());
+                    }
+                    else {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath());
+                    }
                 }
                 else {
                     dbSubmissionListColumn.setSort(submissionListColumn.getSort());
-                    dbSubmissionListColumn.setPath(submissionListColumn.getPath());
+                    if(submissionListColumn.getPredicate() != null) {
+                        dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
+                        dbSubmissionListColumn.setPredicatePath(submissionListColumn.getPredicatePath());
+                    }                    
+                    dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
                     submissionListColumnRepo.save(dbSubmissionListColumn);
                 }
             }
