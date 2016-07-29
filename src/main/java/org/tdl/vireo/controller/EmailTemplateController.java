@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 
@@ -53,7 +52,6 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplate);
     }
     
-    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -64,7 +62,6 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplate);
     }
 
-    @Transactional
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
@@ -75,7 +72,6 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS);
     }
     
-    @Transactional
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = EmailTemplate.class, params = { "0", "1" }) })
@@ -86,7 +82,6 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS);
     }
     
-    @Transactional
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = EmailTemplate.class, params = { "0" }) })

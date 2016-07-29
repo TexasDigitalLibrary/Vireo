@@ -45,7 +45,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope.fieldPredicateRepo.clearValidationResults();
         $scope.fieldGlossRepo .clearValidationResults();
         for(var key in $scope.forms) {
-            if(!$scope.forms[key].$pristine) {
+            if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                 $scope.forms[key].$setPristine();
             }
         }
@@ -88,10 +88,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         });
     };
 
-    $scope.createPredicate = function() {
-        FieldPredicateRepo.create($scope.modalData.predicate).then(function(response) {
+    $scope.createFieldPredicate = function() {
+        FieldPredicateRepo.create($scope.modalData.fieldPredicate).then(function(response) {
             if(angular.fromJson(response.body).meta.type == "SUCCESS") {
-                $scope.modalData.predicate = angular.fromJson(response.body).payload.FieldPredicate;
+                $scope.modalData.fieldPredicate = angular.fromJson(response.body).payload.FieldPredicate;
             }
         });
     };

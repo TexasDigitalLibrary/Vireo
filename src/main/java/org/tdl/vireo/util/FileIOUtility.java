@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class FileIOUtility {
         write(bytes, filePath);
     }
 
-    public void writeImage(ServletInputStream stream, String filePath) throws IOException {
+    public void writeImage(InputStream stream, String filePath) throws IOException {
 
         String inputData = IOUtils.toString(stream, "UTF-8");
         String[] imageData = inputData.split(";");

@@ -7,7 +7,7 @@
 		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Add Field Profile</h3>
+	<h3 class="modal-title">Add Field</h3>
 </div>
 
 <form ng-submit="createFieldProfile()" name="forms.create" novalidate>
@@ -19,29 +19,29 @@
 	<div class="modal-body">
 
 		<div class="form-group">
-			<label for="field-profiles-gloss">Gloss</label>
+			<label for="field-profiles-gloss">Label</label>
 			<input 
 				id="field-profiles-gloss" 
 				ng-model="modalData.fieldGlosses[0]" 
 				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses" 
 				type="text"
 				class="form-control" 
-				placeholder="Display gloss for the new field profile" 
+				placeholder="Display label for the new field" 
 				required/>
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
 				ng-click="createGloss(modalData.fieldGlosses[0])" 
-				ng-if="!modalData.fieldGlosses[0].id">Create New Gloss</button>
+				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
 
 		<div class="field-profile-modal-group">
 			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 			<validatedinput
 				model="modalData"
-				property="predicate"
-				label="Predicate"
-				placeholder="Predicate of the new field profile"
+				property="fieldPredicate"
+				label="Metadata Key"
+				placeholder="Metadata Key of the new field"
 				typeahead="fieldPredicates"
 				typeaheadproperty="value"
 				form="forms.create"
@@ -51,8 +51,8 @@
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
-				ng-if="!modalData.predicate.id" 
-				ng-click="createPredicate()">Create New Predicate</button>
+				ng-if="!modalData.fieldPredicate.id" 
+				ng-click="createFieldPredicate()">Create New Metadata Key</button>
 		</div>
 
 		<div class="field-profile-modal-group">
@@ -85,7 +85,7 @@
 				model="modalData"
 				property="help"
 				label="Help"
-				placeholder="Help of the new field profile"
+				placeholder="Help of the new field"
 				form="forms.create"
 				validations="fieldProfileRepo.getValidations()"
 				results="workflowStepRepo.ValidationResults">
@@ -103,7 +103,7 @@
 		</div>
 
 		<toggleButton 
-			label="Field Profile is Overridable:"
+			label="Field is Overridable:"
 			scope-value="modalData.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
 		</toggleButton>
@@ -119,7 +119,7 @@
 			id="field-profiles-save" 
 			type="submit" 
 			class="btn btn-primary"
-			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.predicate.id || forms.create.$invalid">Create</button>
+			ng-disabled="!modalData.fieldGlosses[0].id || !modalData.fieldPredicate.id || forms.create.$invalid">Create</button>
 	</div>
 
 </form>
