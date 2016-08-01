@@ -4,8 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.RESET;
 
 import java.io.IOException;
-
-import javax.servlet.ServletInputStream;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +18,11 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.util.FileIOUtility;
 
+import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.aspect.annotation.InputStream;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
@@ -44,7 +43,7 @@ public class LookAndFeelController {
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     // TODO: implement controller advice to handle exception gracefully
-    public ApiResponse uploadLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel, @InputStream ServletInputStream inputStream) throws IOException {
+    public ApiResponse uploadLogo(@ApiValidatedModel LookAndFeelControllerModel lfModel, @ApiInputStream InputStream inputStream) throws IOException {
         
         String logoName = lfModel.getSetting();
         String logoFileName = logoName + "." + lfModel.getFileType();
