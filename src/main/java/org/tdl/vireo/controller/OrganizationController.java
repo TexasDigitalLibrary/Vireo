@@ -84,6 +84,15 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, organization);        
     }
     
+    @ApiMapping("/delete/{organizationId}")
+    @Auth(role="MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = {"originalWorkflowStep"}) })
+    public ApiResponse deleteOrganization(@ApiVariable Long organizationId) {
+    	Organization org = organizationRepo.findOne(organizationId);
+    	organizationRepo.delete(org);
+    	return new ApiResponse(SUCCESS);
+    }
+    
     @Transactional
     @ApiMapping("/{requestingOrgID}/workflow")
     @Auth(role="STUDENT")   
@@ -92,7 +101,7 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
-    @Transactional
+    @Transactional //TODO remove
     @ApiMapping("/{requestingOrgID}/create-workflow-step")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
