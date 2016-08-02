@@ -3,7 +3,9 @@ package org.tdl.vireo.model.repo.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.DocumentTypesRepo;
+import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.custom.DocumentTypesRepoCustom;
 
 import edu.tamu.framework.service.OrderedEntityService;
@@ -15,6 +17,9 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     
     @Autowired
     private DocumentTypesRepo documentTypesRepo;
+    
+    @Autowired
+    private FieldPredicateRepo fieldPredicateRepo;
     
     @Override
     public void reorder(Long src, Long dest) {
@@ -35,6 +40,9 @@ public class DocumentTypesRepoImpl implements DocumentTypesRepoCustom {
     public DocumentType create(String name, DegreeLevel degreeLevel) {
         DocumentType documentType = new DocumentType(name, degreeLevel);
         documentType.setPosition(documentTypesRepo.count() + 1);
+        FieldPredicate documentTypePredicate = new FieldPredicate("_docType_" + name, new Boolean(true));
+        documentTypePredicate = fieldPredicateRepo.save(documentTypePredicate);
+        documentType.setFieldPredicate(documentTypePredicate);
         return documentTypesRepo.save(documentType);
     }
     
