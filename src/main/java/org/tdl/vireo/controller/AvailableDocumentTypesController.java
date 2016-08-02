@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.DocumentTypesRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -64,7 +65,7 @@ public class AvailableDocumentTypesController {
 
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldValue.class }, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
         documentTypesRepo.remove(documentType);
