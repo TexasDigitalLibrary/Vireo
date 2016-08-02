@@ -61,6 +61,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 			$scope.managedOrganization = $scope.getSelectedOrganization();
 		};
 
+		$scope.deleteOrganization = function(organization) {
+			organization.delete();
+		};
+
 		$scope.addWorkflowStep = function() {
 			OrganizationRepo.addWorkflowStep($scope.modalData);
 		};
