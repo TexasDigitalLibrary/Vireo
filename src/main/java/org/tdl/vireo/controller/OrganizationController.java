@@ -88,8 +88,7 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = {"originalWorkflowStep"}) })
     public ApiResponse deleteOrganization(@ApiVariable Long organizationId) {
-    	Organization org = organizationRepo.findOne(organizationId);
-    	organizationRepo.delete(org);
+    	organizationRepo.delete(organizationRepo.findOne(organizationId));
     	return new ApiResponse(SUCCESS);
     }
     
