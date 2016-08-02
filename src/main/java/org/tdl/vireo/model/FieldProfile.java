@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,7 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
+public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements Heritable<FieldProfile> {
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
@@ -57,15 +59,15 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
 
     /**
      * 
-     * @param predicate
+     * @param fieldPredicate
      * @param inputType
      * @param repeatable
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
         this(originatingWorkflowStep);
-        setPredicate(predicate);
+        setFieldPredicate(fieldPredicate);
         setInputType(inputType);
         setRepeatable(repeatable);
         setOverrideable(overrideable);
@@ -75,45 +77,43 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     
     /**
      * 
-     * @param predicate
+     * @param fieldPredicate
      * @param inputType
      * @param usage
      * @param repeatable
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, repeatable, overrideable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional);
         setUsage(usage);
     }
     
     /**
      * 
-     * @param predicate
+     * @param fieldPredicate
      * @param inputType
      * @param usage
      * @param repeatable
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep, predicate, inputType, usage, repeatable, overrideable, enabled, optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional);
         setHelp(help);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate predicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
-        this(originatingWorkflowStep);
-        setPredicate(predicate);
-        setInputType(inputType);
-		setUsage(usage);
-		setHelp(help);
-        setRepeatable(repeatable);
-        setOverrideable(overrideable);
-        setEnabled(enabled);
-        setOptional(optional);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional);
         addControlledVocabulary(0, controlledVocabulary);
     }
     
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional);
+        setControlledVocabularies(controlledVocabularies);
+        setFieldGlosses(fieldGlosses);
+    }
+
     /**
      * @return the originatingFieldProfile
      */
@@ -127,7 +127,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
         this.originatingFieldProfile = originatingFieldProfile;
     }
-    
+
     /**
      * @return the originatingWorkflowStep
      */
@@ -155,20 +155,64 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> {
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
+
     /**
-     * 
-     * @return
+     * @return the enabled
      */
     public Boolean getEnabled() {
         return enabled;
     }
 
     /**
-     * 
-     * @param enabled
+     * @param enabled the enabled to set
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public void setOriginating(FieldProfile originatingHeritableModel) {
+        setOriginatingFieldProfile(originatingHeritableModel);
+    }
+
+    @Override
+    public FieldProfile getOriginating() {
+        return getOriginatingFieldProfile();
+    }
+
+    @Override
+    public FieldProfile clone() {
+        FieldProfile clone = new FieldProfile();
+        
+        List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
+        for(ControlledVocabulary cv : getControlledVocabularies()) {
+            controlledVocabularies.add(cv);
+        }
+        
+        List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();                
+        for(FieldGloss fg : getFieldGlosses()) {
+            fieldGlosses.add(fg);
+        }
+       
+        clone.setHelp(getHelp());
+        clone.setUsage(getUsage());
+        clone.setEnabled(getEnabled());
+        clone.setOptional(getOptional());
+        clone.setRepeatable(getRepeatable());
+        
+        clone.setOverrideable(getOverrideable());
+        
+        clone.setInputType(getInputType());
+        clone.setFieldPredicate(getFieldPredicate());
+        
+        clone.setOriginatingFieldProfile(getOriginatingFieldProfile());
+        clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
+        
+        clone.setControlledVocabularies(controlledVocabularies);
+        
+        clone.setFieldGlosses(fieldGlosses);
+        
+        return clone;
+    }
+
 }

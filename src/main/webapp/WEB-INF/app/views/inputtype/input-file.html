@@ -1,1 +1,25 @@
-input-file.html
+<div class="col-md-5 col-sm-12">
+	<div class="input-group file-input-group">
+			<span class="pull-right file-info-tip">
+				<span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+			    <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
+		    </span>
+			<dropzone 
+				file-model="values[$index].value"
+				text="Drop a file here to begin upload",
+				patterns="{{getPatern()}}"
+				drop-method="begineUpload(file)">
+			</dropzone>
+	</div>
+</div>
+<div class="col-md-7 col-sm-12 file-preview-container">
+		<div class="file-preview">
+			<img ng-if="file && getPreview($index)" ngf-src="getPreview($index)">
+			<span ng-if="file && !getPreview($index)" class="glyphicon glyphicon-file"></span>
+		</div>
+		<div class="file-info" ng-if="file">
+			<p class="file-name">{{file.name}}</p>
+			<p class="file-type">{{file.type}}</p>
+			<p class="file-size">{{file.size + " mb"}}</p>
+		</div>
+</div>

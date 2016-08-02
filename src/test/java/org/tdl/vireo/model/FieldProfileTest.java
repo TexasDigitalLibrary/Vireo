@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
-import org.tdl.vireo.model.repo.impl.FieldProfileNonOverrideableException;
+import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 public class FieldProfileTest extends AbstractEntityTest {
@@ -33,7 +33,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     public void testCreate() {
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         assertEquals("The repository did not save the entity!", 1, fieldProfileRepo.count());
-        assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getPredicate());
+        assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getFieldPredicate());
         assertEquals("The field predicate did not contain the correct value!", inputType, fieldProfile.getInputType());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_USAGE, fieldProfile.getUsage());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_REPEATABLE, fieldProfile.getRepeatable());
@@ -155,12 +155,12 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertTrue("The child organization's workflow did not contain the aggregate fieldProfile", childOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fieldProfile));
         assertTrue("The grandchild organization's workflow did not contain the aggregate fieldProfile", grandchildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().contains(fieldProfile));
         
-        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), parentFieldProfile.getPredicate().getId());
-        assertEquals("The child organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), childFieldProfile.getPredicate().getId());
-        assertEquals("The grandchild organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getPredicate().getId(), childFieldProfile.getPredicate().getId());
+        assertEquals("The parent organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getFieldPredicate().getId(), parentFieldProfile.getFieldPredicate().getId());
+        assertEquals("The child organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getFieldPredicate().getId(), childFieldProfile.getFieldPredicate().getId());
+        assertEquals("The grandchild organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getFieldPredicate().getId(), childFieldProfile.getFieldPredicate().getId());
         
         String updatedFieldPredicateValue = "Updated Value";
-        parentFieldProfile.getPredicate().setValue(updatedFieldPredicateValue);
+        parentFieldProfile.getFieldPredicate().setValue(updatedFieldPredicateValue);
         
         
         fieldProfileRepo.save(parentFieldProfile);
@@ -170,12 +170,12 @@ public class FieldProfileTest extends AbstractEntityTest {
         grandchildFieldProfile = fieldProfileRepo.findOne(grandchildFieldProfile.getId());
         
         
-        assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getPredicate().getValue());
-        assertEquals("The grand child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, grandchildFieldProfile.getPredicate().getValue());
+        assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getFieldPredicate().getValue());
+        assertEquals("The grand child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, grandchildFieldProfile.getFieldPredicate().getValue());
     }
     
-    @Test(expected=FieldProfileNonOverrideableException.class)
-    public void testCantOverrideNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    @Test(expected=HeritableModelNonOverrideableException.class)
+    public void testCantOverrideNonOverrideable() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -196,13 +196,13 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         
-        fieldProfile.getPredicate().setValue("Updated Value");
+        fieldProfile.getFieldPredicate().setValue("Updated Value");
         
         fieldProfileRepo.update(fieldProfile, childOrganization);
     }
     
     @Test(expected=WorkflowStepNonOverrideableException.class)
-    public void testCantOverrideNonOverrideableWorkflowStep() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testCantOverrideNonOverrideableWorkflowStep() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -231,13 +231,13 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         assertFalse("The workflowstep was not made non-overrideable!", workflowStep.getOverrideable());
         
-        fieldProfile.getPredicate().setValue("Updated Value");
+        fieldProfile.getFieldPredicate().setValue("Updated Value");
         
         fieldProfileRepo.update(fieldProfile, childOrganization);
     }
         
     @Test
-    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testCanOverrideNonOverrideableAtOriginatingOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
     	
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -445,7 +445,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testReorderAggregateFieldProfiles() throws WorkflowStepNonOverrideableException {
+    public void testReorderAggregateFieldProfiles() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -659,7 +659,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
     
     @Test
-    public void testFieldProfileChangeAtChildOrg() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testFieldProfileChangeAtChildOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
     	
     	// this test calls for adding a single workflowstep to the parent organization
     	workflowStepRepo.delete(workflowStep);
@@ -779,7 +779,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
  
     @Test
-    public void testMaintainFieldOrderWhenOverriding() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testMaintainFieldOrderWhenOverriding() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
@@ -857,7 +857,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     
     //TODO:  this test is not done, development of the full feature deferred for now
     @Test
-    public void testMakeFieldNonOverrideable() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testMakeFieldProfileNonOverrideable() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
         
@@ -901,9 +901,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
         
 
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
                 
         long fp2Id = fp2.getId();
         fp2.setOverrideable(false);
@@ -923,6 +922,9 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("A new FieldProfile didn't get originated at an org that overrode it!", 1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size());
         assertTrue("A new FieldProfile didn't get originated at an org that overrode it!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtGrandchild));
         
+        
+        organization = organizationRepo.findOne(organization.getId());
+        
         //TODO:  make the note non-overrideable at the child org
         fp2.setOverrideable(false);
         FieldProfile fp2updatedAtChild = fieldProfileRepo.update(fp2, organization);
@@ -939,6 +941,9 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        
+        assertFalse("Grand child inherited original field profile from child organization", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtChild));
+        
         
         //ensure that the grandchild's new note is replaced by the child's non-overrideable one
         assertTrue("FieldProfile made non-overrideable didn't blow away an inferior override at descendant org!", grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().isEmpty());
@@ -960,7 +965,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     
     //TODO:  this test is not done, development of the full feature deferred for now
     @Test
-    public void testDeleteFPAtDescendantOrgAndDuplicateWSIsDeletedToo() throws FieldProfileNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException
+    public void testDeleteFPAtDescendantOrgAndDuplicateWSIsDeletedToo() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException
     {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);

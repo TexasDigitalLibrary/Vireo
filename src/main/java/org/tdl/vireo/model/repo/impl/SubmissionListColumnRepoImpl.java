@@ -17,5 +17,10 @@ public class SubmissionListColumnRepoImpl implements SubmissionListColumnRepoCus
     public SubmissionListColumn create(String label, Sort sort, List<String> path) {
         return submissionListColumnRepo.save(new SubmissionListColumn(label, sort, path));
     }
+    
+    @Override
+    public SubmissionListColumn create(String label, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
+        return submissionListColumnRepo.save(new SubmissionListColumn(label, sort, predicate, predicatePath, valuePath));
+    }
 
 }

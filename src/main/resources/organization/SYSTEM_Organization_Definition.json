@@ -38,7 +38,7 @@
             ],
             "originalFieldProfiles": [
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "firstName"
                     },
                     "originatingWorkflowStep": {
@@ -55,7 +55,7 @@
                     "help": "Enter your first name.",
                     "fieldGlosses": [
                         {
-                            "value": "First Name",
+                            "value": "First name",
                             "language": {
                                 "name": "English"
                             }
@@ -64,7 +64,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "middleName"
                     },
                     "originatingWorkflowStep": {
@@ -81,7 +81,7 @@
                     "help": "Enter your middle name or initial.",
                     "fieldGlosses": [
                         {
-                            "value": "Middle Name",
+                            "value": "Middle name",
                             "language": {
                                 "name": "English"
                             }
@@ -90,7 +90,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "lastName"
                     },
                     "originatingWorkflowStep": {
@@ -107,7 +107,7 @@
                     "help": "Enter your last name.",
                     "fieldGlosses": [
                         {
-                            "value": "Last Name",
+                            "value": "Last name",
                             "language": {
                                 "name": "English"
                             }
@@ -116,7 +116,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "email"
                     },
                     "originatingWorkflowStep": {
@@ -142,7 +142,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "orcidId"
                     },
                     "originatingWorkflowStep": {
@@ -168,7 +168,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "birthYear"
                     },
                     "originatingWorkflowStep": {
@@ -194,7 +194,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "school"
                     },
                     "originatingWorkflowStep": {
@@ -220,7 +220,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "college"
                     },
                     "originatingWorkflowStep": {
@@ -246,7 +246,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "program"
                     },
                     "originatingWorkflowStep": {
@@ -272,7 +272,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "department"
                     },
                     "originatingWorkflowStep": {
@@ -298,7 +298,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "degree"
                     },
                     "originatingWorkflowStep": {
@@ -324,7 +324,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "major"
                     },
                     "originatingWorkflowStep": {
@@ -350,7 +350,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "permanentPhone"
                     },
                     "originatingWorkflowStep": {
@@ -376,7 +376,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "permanentAddress"
                     },
                     "originatingWorkflowStep": {
@@ -402,7 +402,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "permanentEmail"
                     },
                     "originatingWorkflowStep": {
@@ -428,7 +428,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "currentPhone"
                     },
                     "originatingWorkflowStep": {
@@ -454,7 +454,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "currentAddress"
                     },
                     "originatingWorkflowStep": {
@@ -493,7 +493,7 @@
             "originalNotes": [],
             "originalFieldProfiles": [
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "licenseAgreement"
                     },
                     "originatingWorkflowStep": {
@@ -519,7 +519,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "umiPublication"
                     },
                     "originatingWorkflowStep": {
@@ -587,7 +587,7 @@
             ],
             "originalFieldProfiles": [
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "title"
                     },
                     "originatingWorkflowStep": {
@@ -613,7 +613,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "degreeDate"
                     },
                     "originatingWorkflowStep": {
@@ -639,7 +639,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "defenseDate"
                     },
                     "originatingWorkflowStep": {
@@ -665,7 +665,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "documentType"
                     },
                     "originatingWorkflowStep": {
@@ -691,7 +691,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "abstract"
                     },
                     "originatingWorkflowStep": {
@@ -717,7 +717,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "keywords"
                     },
                     "originatingWorkflowStep": {
@@ -743,7 +743,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "subjects"
                     },
                     "originatingWorkflowStep": {
@@ -769,7 +769,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "language"
                     },
                     "originatingWorkflowStep": {
@@ -795,7 +795,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "yourCommittee"
                     },
                     "originatingWorkflowStep": {
@@ -821,7 +821,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "chairsContactEmail"
                     },
                     "originatingWorkflowStep": {
@@ -847,7 +847,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "previouslyPublishedMaterial"
                     },
                     "originatingWorkflowStep": {
@@ -873,7 +873,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "defaultEmbargos"
                     },
                     "originatingWorkflowStep": {
@@ -899,7 +899,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "proQuestEmbargos"
                     },
                     "originatingWorkflowStep": {
@@ -960,7 +960,7 @@
             ],
             "originalFieldProfiles": [
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "manuscriptInPdf"
                     },
                     "originatingWorkflowStep": {
@@ -986,7 +986,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "supplementalFiles"
                     },
                     "originatingWorkflowStep": {
@@ -1012,7 +1012,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "sourceFiles"
                     },
                     "originatingWorkflowStep": {
@@ -1038,7 +1038,7 @@
                     "controlledVocabularies": []
                 },
                 {
-                    "predicate": {
+                    "fieldPredicate": {
                         "value": "administrativeFiles"
                     },
                     "originatingWorkflowStep": {

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
@@ -36,7 +35,6 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configurationRepo.findAll());
     }
 
-    @Transactional
     @ApiMapping("/update")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
@@ -46,7 +44,6 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configuration);
     }
 
-    @Transactional
     @ApiMapping("/reset")
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
