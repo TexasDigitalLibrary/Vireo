@@ -419,6 +419,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'organization'
 		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'delete'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'organizations'
