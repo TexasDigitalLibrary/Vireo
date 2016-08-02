@@ -71,14 +71,8 @@ public class OrganizationController {
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-    	
-    	Organization updatedOrganization = organizationRepo.findOne(organization.getId());
         
-        updatedOrganization.setName(organization.getName());
-        
-        updatedOrganization.setCategory(organization.getCategory());
-        
-        organization = organizationRepo.save(updatedOrganization);
+        organization = organizationRepo.save(organization);
 
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS,  organizationRepo.findAll()));
         
