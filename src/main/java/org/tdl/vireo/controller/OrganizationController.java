@@ -7,6 +7,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -53,7 +54,6 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org);
     }
 
-    @Transactional
     @ApiMapping("/create/{parentOrgID}")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -84,11 +84,11 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, organization);        
     }
     
-    @ApiMapping("/delete/{organizationId}")
+    @ApiMapping(value = "/delete", method = POST)
     @Auth(role="MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = {"originalWorkflowStep"}) })
-    public ApiResponse deleteOrganization(@ApiVariable Long organizationId) {
-    	organizationRepo.delete(organizationRepo.findOne(organizationId));
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = {"originalWorkflowSteps"}) })
+    public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
+    	organizationRepo.delete(organization);
     	return new ApiResponse(SUCCESS);
     }
     
@@ -100,7 +100,6 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
     
-    @Transactional //TODO remove
     @ApiMapping("/{requestingOrgID}/create-workflow-step")
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
