@@ -129,29 +129,32 @@
 						</div>
 
 						<div class="panel-body">
+
+							<validationmessage results="managedOrganization.ValidationResults"></validationmessage>
+
 							<div class="col-md-6">
 
 								<form ng-submit="updateOrganization(managedOrganization)" name="forms.update" novalidate>
 
 									<validatedinput
 										label="Name"
-										model="getManagedOrganization()"
+										model="managedOrganization"
 										property="name"
 										placeholder="Name of the organization"
 										form="forms.update"
-										validations="getManagedOrganization().getValidations()"
-										results="getManagedOrganization().getValidationResults()">
+										validations="managedOrganization.getValidations()"
+										results="managedOrganization.ValidationResults">
 									</validatedinput>
 
 									<validatedselect
 										label="Category"
 										options="organizationCategories"
 										optionproperty="name"
-										model="getManagedOrganization()"
+										model="managedOrganization"
 										property="category"
 										form="forms.update"
-										validations="getManagedOrganization().getValidations()"
-										results="getManagedOrganization().ValidationResults">
+										validations="managedOrganization.getValidations()"
+										results="managedOrganization.ValidationResults">
 									</validatedselect>
 
 									<div class="pull-right">
