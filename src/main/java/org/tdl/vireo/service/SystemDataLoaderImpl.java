@@ -162,14 +162,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         logger.info("Generating system defaults");
         generateSystemDefaults();
 
-        logger.info("Initializing default entity controlled vocabulary");
-        this.entityControlledVocabularyService.init();
-
         logger.info("Loading Proquest language codes");
         loadProquestLanguageCodes();
         
         logger.info("Loading Submission List Columns");
         loadDefaultSubmissionListColumns();
+        
+        logger.info("Initializing default entity controlled vocabulary");
+        this.entityControlledVocabularyService.init();
     }
     
     @Override
@@ -347,7 +347,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                     // create new ControlledVocabulary if not already exists
                     if (newControlledVocabulary == null) {
-                        newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
+                        if(controlledVocabulary.getEntityName() != null) {
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getEntityName(), language);
+                        }
+                        else {
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
+                        }
                     }
 
                     controlledVocabularies.add(newControlledVocabulary);

@@ -55,7 +55,7 @@
                     "help": "Enter your first name.",
                     "fieldGlosses": [
                         {
-                            "value": "First name",
+                            "value": "First Name",
                             "language": {
                                 "name": "English"
                             }
@@ -81,7 +81,7 @@
                     "help": "Enter your middle name or initial.",
                     "fieldGlosses": [
                         {
-                            "value": "Middle name",
+                            "value": "Middle Name",
                             "language": {
                                 "name": "English"
                             }
@@ -107,7 +107,7 @@
                     "help": "Enter your last name.",
                     "fieldGlosses": [
                         {
-                            "value": "Last name",
+                            "value": "Last Name",
                             "language": {
                                 "name": "English"
                             }
@@ -688,7 +688,16 @@
                             }
                         }
                     ],
-                    "controlledVocabularies": []
+                    "controlledVocabularies": [
+                    	{
+                    		"name": "DocumentType.name",
+                    		"entityName": "DocumentType",
+                    		"isEntityProperty": true,
+                    		"language": {
+                                "name": "English"
+                            }
+                    	}
+                    ]
                 },
                 {
                     "fieldPredicate": {

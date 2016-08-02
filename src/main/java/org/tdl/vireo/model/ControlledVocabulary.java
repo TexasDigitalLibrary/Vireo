@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import edu.tamu.framework.SpringContext;
 import edu.tamu.framework.model.BaseOrderedEntity;
 
@@ -39,11 +36,9 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToMany(cascade = { ALL }, fetch = EAGER)    
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
-    @JsonProperty("isEntityProperty")
     @Column(nullable = false)
     private Boolean isEntityProperty;
     
-    @JsonProperty("isEnum")
     @Column(nullable = false)
     private Boolean isEnum;
 
@@ -119,19 +114,23 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      */
     public List<VocabularyWord> getDictionary() {
         List<VocabularyWord> values = new ArrayList<VocabularyWord>();
-        if(!isEntityProperty()) {
+        if(!getIsEntityProperty()) {
             values.addAll(dictionary);
         }
         else {
             try {                
                 EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
-                values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, name));
+                values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, craftPropertyName()));
             }
             catch(ClassNotFoundException e) {
                 System.out.println("Entity " + entityName + " not found!\n");
             }
         }
         return values;
+    }
+    
+    private String craftPropertyName() {
+        return name.substring(name.indexOf(getEntityName()) + getEntityName().length() + 1, name.length());
     }
     
     /**
@@ -155,7 +154,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      *            the values to set
      */
     public void setDictionary(List<VocabularyWord> values) {
-        if(!isEntityProperty()) {
+        if(!getIsEntityProperty()) {
             dictionary = values;
         }
     }
@@ -165,7 +164,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param value
      */
     public void addValue(VocabularyWord value) {
-        if(!isEntityProperty() && !dictionary.contains(value)) {
+        if(!getIsEntityProperty() && !dictionary.contains(value)) {
             dictionary.add(value);
         }
     }
@@ -175,25 +174,21 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param value
      */
     public void removeValue(VocabularyWord value) {
-        if(!isEntityProperty()) {
+        if(!getIsEntityProperty()) {
             dictionary.remove(value);
         }
     }
 
     /**
-     * 
-     * @return
+     * @return the isEntityProperty
      */
-    @JsonIgnore
-    public Boolean isEntityProperty() {
+    public Boolean getIsEntityProperty() {
         return isEntityProperty;
     }
 
     /**
-     * 
-     * @param isEntityProperty
+     * @param isEntityProperty the isEntityProperty to set
      */
-    @JsonIgnore
     public void setIsEntityProperty(Boolean isEntityProperty) {
         this.isEntityProperty = isEntityProperty;
     }
@@ -201,17 +196,15 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     /**
      * @return the isEnum
      */
-    @JsonIgnore
-    public Boolean isEnum() {
+    public Boolean getIsEnum() {
         return isEnum;
     }
 
     /**
      * @param isEnum the isEnum to set
      */
-    @JsonIgnore
     public void setIsEnum(Boolean isEnum) {
         this.isEnum = isEnum;
     }
-    
+
 }

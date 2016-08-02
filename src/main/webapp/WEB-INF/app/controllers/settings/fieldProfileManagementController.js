@@ -43,7 +43,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope.workflowStepRepo.clearValidationResults();
         $scope.fieldProfileRepo.clearValidationResults();
         $scope.fieldPredicateRepo.clearValidationResults();
-        $scope.fieldGlossRepo .clearValidationResults();
+        $scope.fieldGlossRepo.clearValidationResults();
         for(var key in $scope.forms) {
             if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                 $scope.forms[key].$setPristine();
@@ -76,7 +76,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.resetFieldProfiles();
 
-    $scope.createGloss = function(glossValue) {
+    $scope.createFieldGloss = function(glossValue) {
         // TODO set the language dynamically.
         // For now, the language must be 'English' so that's in name will match that existing on the server.
     	$scope.modalData.fieldGlosses[0] = {
