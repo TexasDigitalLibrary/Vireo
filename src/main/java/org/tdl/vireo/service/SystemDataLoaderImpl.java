@@ -313,7 +313,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldPredicate if not already exists
                 if (fieldPredicate == null) {
-                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue());
+                     fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), new Boolean(false));
                 }
                 
                 

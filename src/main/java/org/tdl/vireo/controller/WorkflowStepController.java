@@ -68,7 +68,7 @@ public class WorkflowStepController {
 
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/add-field-profile")
     @Auth(role="MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
         
     	WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -88,7 +88,7 @@ public class WorkflowStepController {
     
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));

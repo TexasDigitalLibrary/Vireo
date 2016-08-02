@@ -1,148 +1,166 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
-    
-    angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
 
-    $scope.workflowStepRepo = WorkflowStepRepo;
+	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-    $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
-    
-    $scope.$watch(
-        "step",
-        function handleStepChanged(newStep, oldStep) {
-            $scope.resetFieldProfiles();
-            
-            $scope.dragControlListeners.getListener().model = $scope.step.aggregateFieldProfiles;
-            $scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
-            $scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
-        }
-    );
+	$scope.workflowStepRepo = WorkflowStepRepo;
 
-    $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
+	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
-    $scope.fieldProfileRepo = FieldProfileRepo;
+	$scope.$watch(
+		"step",
+		function handleStepChanged(newStep, oldStep) {
+			$scope.resetFieldProfiles();
 
-    $scope.fieldPredicateRepo = FieldPredicateRepo;
+			$scope.dragControlListeners.getListener().model = $scope.step.aggregateFieldProfiles;
+			$scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
+			$scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
+		}
+	);
 
-    $scope.fieldPredicates = FieldPredicateRepo.getAll();
+	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
-    $scope.fieldGlossRepo = FieldGlossRepo;
+	$scope.fieldProfileRepo = FieldProfileRepo;
 
-    $scope.fieldGlosses = FieldGlossRepo.getAll();
+	$scope.fieldPredicateRepo = FieldPredicateRepo;
 
-    $scope.inputTypes = InputTypeRepo.getAll();
-    
-    $scope.dragging = false;
-    
-    $scope.sortAction = "confirm";
+	$scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-    $scope.uploadAction = "confirm";
+	$scope.filteredPredicates = {};
 
-    $scope.forms = {};
-    
-    $scope.resetFieldProfiles = function() {
-        $scope.workflowStepRepo.clearValidationResults();
-        $scope.fieldProfileRepo.clearValidationResults();
-        $scope.fieldPredicateRepo.clearValidationResults();
-        $scope.fieldGlossRepo.clearValidationResults();
-        for(var key in $scope.forms) {
-            if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-                $scope.forms[key].$setPristine();
-            }
-        }
-        
-        var position = 1;
+	FieldPredicateRepo.ready().then(function(){
+		$scope.buildFilteredPredicateList();
+	});
+	FieldPredicateRepo.listen(function(){
+		$scope.buildFilteredPredicateList();
+	});
 
-        angular.forEach($scope.step.aggregateFieldProfiles, function(fieldProfile) {
-            fieldProfile.position = position;
-            position++;
-        });
+	$scope.fieldGlossRepo = FieldGlossRepo;
 
-        if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+	$scope.fieldGlosses = FieldGlossRepo.getAll();
+
+	$scope.inputTypes = InputTypeRepo.getAll();
+
+	$scope.dragging = false;
+
+	$scope.sortAction = "confirm";
+
+	$scope.uploadAction = "confirm";
+
+	$scope.forms = {};
+
+	$scope.resetFieldProfiles = function() {
+		$scope.workflowStepRepo.clearValidationResults();
+		$scope.fieldProfileRepo.clearValidationResults();
+		$scope.fieldPredicateRepo.clearValidationResults();
+		$scope.fieldGlossRepo .clearValidationResults();
+		for(var key in $scope.forms) {
+			if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+				$scope.forms[key].$setPristine();
+			}
+		}
+
+		var position = 1;
+
+		angular.forEach($scope.step.aggregateFieldProfiles, function(fieldProfile) {
+			fieldProfile.position = position;
+			position++;
+		});
+
+		if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
 			$scope.modalData.refresh();
 		}
-        $scope.modalData = {
-            overrideable: true,
-            inputType: {
-                "id": 1,
-                "name": "INPUT_TEXT"
-            },
-            repeatable: false,
-            fieldGlosses: [],
-            controlledVocabularies: []
-        };
+		$scope.modalData = {
+			overrideable: true,
+			inputType: {
+				"id": 1,
+				"name": "INPUT_TEXT"
+			},
+			repeatable: false,
+			fieldGlosses: [],
+			controlledVocabularies: []
+		};
 
-        $scope.closeModal();
-    };
+		$scope.closeModal();
+	};
 
-    $scope.resetFieldProfiles();
+	$scope.resetFieldProfiles();
 
-    $scope.createFieldGloss = function(glossValue) {
-        // TODO set the language dynamically.
-        // For now, the language must be 'English' so that's in name will match that existing on the server.
-    	$scope.modalData.fieldGlosses[0] = {
-        	'value': glossValue, 
-            'language': 'English'
-        };
-        FieldGlossRepo.create($scope.modalData.fieldGlosses[0]).then(function(response) {
-        	angular.extend($scope.modalData.fieldGlosses[0], angular.fromJson(response.body).payload.FieldGloss);
-        });
-    };
+	$scope.createFieldGloss = function(glossValue) {
+		// TODO set the language dynamically.
+		// For now, the language must be 'English' so that's in name will match that existing on the server.
+		$scope.modalData.fieldGlosses[0] = {
+			'value': glossValue,
+			'language': 'English'
+		};
+		FieldGlossRepo.create($scope.modalData.fieldGlosses[0]).then(function(response) {
+			angular.extend($scope.modalData.fieldGlosses[0], angular.fromJson(response.body).payload.FieldGloss);
+		});
+	};
 
-    $scope.createFieldPredicate = function() {
-        FieldPredicateRepo.create($scope.modalData.fieldPredicate).then(function(response) {
-            if(angular.fromJson(response.body).meta.type == "SUCCESS") {
-                $scope.modalData.fieldPredicate = angular.fromJson(response.body).payload.FieldPredicate;
-            }
-        });
-    };
-    
-    $scope.createFieldProfile = function() {
-        WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData);
-    };
-    
-    $scope.selectFieldProfile = function(index) {
-        var fieldProfile = $scope.step.aggregateFieldProfiles[index];
-        $scope.modalData = fieldProfile;
-    };
-    
-    $scope.editFieldProfile = function(index) {
-        $scope.selectFieldProfile(index - 1);
-        $scope.openModal('#fieldProfilesEditModal-' + $scope.step.id);
-    };
-    
-    $scope.updateFieldProfile = function() {
-        WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData);
-    };
+	$scope.createFieldPredicate = function() {
+		FieldPredicateRepo.create({
+			value: $scope.modalData.fieldPredicate,
+			documentTypePredicate: false
+		}).then(function(response) {
+			if(angular.fromJson(response.body).meta.type == "SUCCESS") {
+				$scope.modalData.fieldPredicate = angular.fromJson(response.body).payload.FieldPredicate;
+			}
+		});
+	};
 
-    $scope.removeFieldProfile = function() {
-        WorkflowStepRepo.removeFieldProfile($scope.step, $scope.modalData);
-    };
+	$scope.createFieldProfile = function() {
+		WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData);
+	};
 
-    $scope.reorderFieldProfiles = function(src, dest) {
-        WorkflowStepRepo.reorderFieldProfile($scope.step, src, dest);
-    };
+	$scope.selectFieldProfile = function(index) {
+		var fieldProfile = $scope.step.aggregateFieldProfiles[index];
+		$scope.modalData = fieldProfile;
+	};
 
-    $scope.isEditable = function(fieldProfile) {
-        var editable = fieldProfile.overrideable;
-        if(!editable) {
-            editable = fieldProfile.originatingWorkflowStep == $scope.step.id && 
-                       $scope.selectedOrganization.originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
-        }
-        return editable;
-    };
+	$scope.editFieldProfile = function(index) {
+		$scope.selectFieldProfile(index - 1);
+		$scope.openModal('#fieldProfilesEditModal-' + $scope.step.id);
+	};
 
-    $scope.openNewModal = function(id) {
-        $scope.openModal('#fieldProfilesNewModal-' + id);
-    };
+	$scope.updateFieldProfile = function() {
+		WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData);
+	};
 
-    $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
-        trashId: 'field-profile-trash-' + $scope.step.id,
-        dragging: $scope.dragging,
-        select: $scope.selectFieldProfile,
-        model: $scope.step.aggregateFieldProfiles,
-        confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id, 
-        reorder: $scope.reorderFieldProfiles,
-        container: '#fieldProfiles'
-    });
+	$scope.removeFieldProfile = function() {
+		WorkflowStepRepo.removeFieldProfile($scope.step, $scope.modalData);
+	};
+
+	$scope.reorderFieldProfiles = function(src, dest) {
+		WorkflowStepRepo.reorderFieldProfile($scope.step, src, dest);
+	};
+
+	$scope.isEditable = function(fieldProfile) {
+		var editable = fieldProfile.overrideable;
+		if(!editable) {
+			editable = fieldProfile.originatingWorkflowStep == $scope.step.id &&
+					   $scope.selectedOrganization.originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
+		}
+		return editable;
+	};
+
+	$scope.openNewModal = function(id) {
+		$scope.openModal('#fieldProfilesNewModal-' + id);
+	};
+
+	$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
+		trashId: 'field-profile-trash-' + $scope.step.id,
+		dragging: $scope.dragging,
+		select: $scope.selectFieldProfile,
+		model: $scope.step.aggregateFieldProfiles,
+		confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
+		reorder: $scope.reorderFieldProfiles,
+		container: '#fieldProfiles'
+	});
+
+	$scope.buildFilteredPredicateList = function(){
+		$scope.filteredPredicates = $filter('filter')($scope.fieldPredicates, function(predicate){
+			return !predicate.documentTypePredicate;
+		});
+	};
 
 });
