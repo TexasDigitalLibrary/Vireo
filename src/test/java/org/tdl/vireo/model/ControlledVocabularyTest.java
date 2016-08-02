@@ -34,7 +34,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, entityControlledVocabulary.getName());
         assertEquals("Saved entity did not contain the entity name!", TEST_CONTROLLED_VOCABULARY_EMBARGO, entityControlledVocabulary.getEntityName());
         assertEquals("Saved entity did not contain the language!", language, entityControlledVocabulary.getLanguage());
-        assertEquals("Saved entity did not contain the is entity!", true, entityControlledVocabulary.isEntityProperty());
+        assertEquals("Saved entity did not contain the is entity!", true, entityControlledVocabulary.getIsEntityProperty());
         
         List<VocabularyWord> guarantors = null;
         try {

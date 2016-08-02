@@ -79,6 +79,14 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, organization);        
     }
     
+    @ApiMapping(value = "/delete", method = POST)
+    @Auth(role="MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = {"originalWorkflowSteps"}) })
+    public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
+    	organizationRepo.delete(organization);
+    	return new ApiResponse(SUCCESS);
+    }
+    
     @Transactional
     @ApiMapping("/{requestingOrgID}/workflow")
     @Auth(role="STUDENT")   

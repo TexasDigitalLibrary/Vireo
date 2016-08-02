@@ -688,7 +688,16 @@
                             }
                         }
                     ],
-                    "controlledVocabularies": []
+                    "controlledVocabularies": [
+                    	{
+                    		"name": "DocumentType.name",
+                    		"entityName": "DocumentType",
+                    		"isEntityProperty": true,
+                    		"language": {
+                                "name": "English"
+                            }
+                    	}
+                    ]
                 },
                 {
                     "fieldPredicate": {

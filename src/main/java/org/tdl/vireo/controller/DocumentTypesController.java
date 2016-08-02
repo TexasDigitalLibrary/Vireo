@@ -27,7 +27,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 @Controller
 @ApiMapping("/settings/document-type")
-public class AvailableDocumentTypesController {
+public class DocumentTypesController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
