@@ -33,6 +33,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.filteredPredicates = {};
 
+	$scope.documentData = {
+		documentType: {}
+	};
+
 	$scope.forms = {};
 
 	$scope.ready = $q.all([
@@ -113,9 +117,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				controlledVocabularies: []
 			};
 
-			$scope.documentData = {
-				documentType: $scope.documentTypes[0]
-			};
+			angular.extend($scope.documentData.documentType, $scope.documentTypes[0]);
 
 			$scope.closeModal();
 		};
@@ -152,6 +154,17 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		$scope.selectFieldProfile = function(index) {
 			var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 			$scope.modalData = fieldProfile;
+			
+
+			if($scope.modalData.fieldPredicate.documentTypePredicate) {
+				angular.forEach($scope.documentTypes, function(documentType) {
+					if(documentType.fieldPredicate.id == $scope.modalData.fieldPredicate.id) {
+						angular.extend($scope.documentData.documentType, documentType);
+						$scope.inputTypeChanged();
+					}
+				});
+			}
+			
 		};
 
 		$scope.editFieldProfile = function(index) {

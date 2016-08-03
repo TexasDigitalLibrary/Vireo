@@ -49,7 +49,7 @@
 				autocomplete="off"
 				typeahead="filteredPredicates"
 				typeaheadproperty="value"
-				form="forms.create"
+				form="forms.update"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.getValidationResults()">
 			</validatedinput>
@@ -65,10 +65,10 @@
 			<validatedselect
 				options="documentTypes"
 				optionproperty="name"
-				model="modalData"
+				model="documentData"
 				property="documentType"
 				label="Document Type"
-				form="forms.create"
+				form="forms.update"
 				change="documentTypeChanged()"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.ValidationResults">
@@ -84,8 +84,8 @@
 				label="Input Type"
 				form="forms.update"
 				change="inputTypeChanged()"
-				validations="modalData.getValidations()"
-				results="modalData.ValidationResults">
+				validations="fieldProfileRepo.getValidations()"
+				results="workflowStepRepo.ValidationResults">
 			</validatedselect>
 		</div>
 

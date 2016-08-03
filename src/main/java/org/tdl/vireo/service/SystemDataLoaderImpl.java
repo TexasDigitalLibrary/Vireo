@@ -161,12 +161,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         logger.info("Generating system organization catagories");
         generateAllOrganizationCategories();
         
+        logger.info("Load default document types");
+        loadDefaultDocumentTypes();
+        
         logger.info("Generating system organization");
         loadSystemOrganization();
         
-        logger.info("Load default document types");
-        loadDefaultDocumentTypes();
-
         logger.info("Generating system defaults");
         generateSystemDefaults();
 
@@ -321,7 +321,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // create new FieldPredicate if not already exists
                 if (fieldPredicate == null) {
-                     fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), new Boolean(false));
+                     fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
+                }
+                else {
+                    fieldPredicate.setValue(fieldProfile.getFieldPredicate().getValue());
+                    fieldPredicate.setDocumentTypePredicate(fieldProfile.getFieldPredicate().getDocumentTypePredicate());
+                    fieldPredicate = fieldPredicateRepo.save(fieldPredicate);
                 }
                 
                 

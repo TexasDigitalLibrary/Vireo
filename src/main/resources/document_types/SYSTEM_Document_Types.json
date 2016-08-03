@@ -62,5 +62,37 @@
 			"value": "_doctype_project_capstone",
 			"documentTypePredicate": true
 		}
+	},
+	{
+		"name": "Administrative Files",
+		"degreeLevel": 0,
+		"fieldPredicate": {
+			"value": "_doctype_administrative_files",
+			"documentTypePredicate": true
+		}
+	},
+	{
+		"name": "Source Files",
+		"degreeLevel": 0,
+		"fieldPredicate": {
+			"value": "_doctype_source_files",
+			"documentTypePredicate": true
+		}
+	},
+	{
+		"name": "Supplemental Files",
+		"degreeLevel": 0,
+		"fieldPredicate": {
+			"value": "_doctype_supplemental_files",
+			"documentTypePredicate": true
+		}
+	},
+	{
+		"name": "Manuscript in PDF",
+		"degreeLevel": 0,
+		"fieldPredicate": {
+			"value": "_doctype_manuscript_in_pdf",
+			"documentTypePredicate": true
+		}
 	}
 ]

@@ -32,7 +32,9 @@ vireo.directive("field",  function() {
 					$scope.saving = value.id;
 					$scope.submission.saveFieldValue(value).then(function() {
 						$scope.saving = 0;
-						$scope.fieldProfileForm.$setPristine();
+						if($scope.fieldProfileForm !== undefined) {
+							$scope.fieldProfileForm.$setPristine();
+						}
 					});
 				}
 
