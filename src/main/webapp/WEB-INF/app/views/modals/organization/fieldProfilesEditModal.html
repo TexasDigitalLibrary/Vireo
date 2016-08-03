@@ -49,7 +49,7 @@
 				autocomplete="off"
 				typeahead="filteredPredicates"
 				typeaheadproperty="value"
-				form="forms.create"
+				form="forms.update"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.getValidationResults()">
 			</validatedinput>
@@ -68,7 +68,7 @@
 				model="documentData"
 				property="documentType"
 				label="Document Type"
-				form="forms.create"
+				form="forms.update"
 				change="documentTypeChanged()"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.ValidationResults">
@@ -82,7 +82,7 @@
 				model="modalData"
 				property="inputType"
 				label="Input Type"
-				form="forms.create"
+				form="forms.update"
 				change="inputTypeChanged()"
 				validations="fieldProfileRepo.getValidations()"
 				results="workflowStepRepo.ValidationResults">
