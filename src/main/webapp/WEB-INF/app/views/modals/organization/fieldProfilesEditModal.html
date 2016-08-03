@@ -65,7 +65,7 @@
 			<validatedselect
 				options="documentTypes"
 				optionproperty="name"
-				model="modalData"
+				model="documentData"
 				property="documentType"
 				label="Document Type"
 				form="forms.create"
@@ -82,10 +82,10 @@
 				model="modalData"
 				property="inputType"
 				label="Input Type"
-				form="forms.update"
+				form="forms.create"
 				change="inputTypeChanged()"
-				validations="modalData.getValidations()"
-				results="modalData.ValidationResults">
+				validations="fieldProfileRepo.getValidations()"
+				results="workflowStepRepo.ValidationResults">
 			</validatedselect>
 		</div>
 

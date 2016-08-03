@@ -17,7 +17,7 @@ public class DocumentTypeTest extends AbstractEntityTest{
 		DocumentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME, DegreeLevel.MASTERS);
         assertEquals("The document type name was wrong!", docType.getName(), TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The degree level enum was wrong!", docType.getDegreeLevel(), DegreeLevel.MASTERS);
-        assertEquals("The associated field predicate was wrong!", docType.getFieldPredicate().getValue(), "_docType_" + TEST_DOCUMENT_TYPE_NAME);
+        assertEquals("The associated field predicate was wrong!", docType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
 	}
 
 	@Override
