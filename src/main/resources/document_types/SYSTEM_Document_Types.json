@@ -3,64 +3,64 @@
 		"name": "Dissertation",
 		"degreeLevel": 3,
 		"fieldPredicate": {
-			"value": "_docType_Dissertation",
-			"documentTypePredicate": false
+			"value": "_doctype_dissertation",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Project Report",
 		"degreeLevel": 2,
 		"fieldPredicate": {
-			"value": "_docType_Project Report",
-			"documentTypePredicate": false
+			"value": "_doctype_project_report",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Thesis",
 		"degreeLevel": 2,
 		"fieldPredicate": {
-			"value": "_docType_Thesis",
-			"documentTypePredicate": false
+			"value": "_doctype_thesis",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Capstone Project",
 		"degreeLevel": 2,
 		"fieldPredicate": {
-			"value": "_docType_Capstone Project",
-			"documentTypePredicate": false
+			"value": "_doctype_capstone_project",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Honors Thesis",
 		"degreeLevel": 1,
 		"fieldPredicate": {
-			"value": "_docType_Honors Thesis",
-			"documentTypePredicate": false
+			"value": "_doctype_honors_thesis",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Treatise",
 		"degreeLevel": 3,
 		"fieldPredicate": {
-			"value": "_docType_Treatise",
-			"documentTypePredicate": false
+			"value": "_doctype_treatise",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Performance Piece",
 		"degreeLevel": 2,
 		"fieldPredicate": {
-			"value": "_docType_Performance Piece",
-			"documentTypePredicate": false
+			"value": "_doctype_performance_piece",
+			"documentTypePredicate": true
 		}
 	},
 	{
 		"name": "Project Capstone",
 		"degreeLevel": 2,
 		"fieldPredicate": {
-			"value": "_docType_Project Capstone",
-			"documentTypePredicate": false
+			"value": "_doctype_project_capstone",
+			"documentTypePredicate": true
 		}
 	}
 ]

@@ -38,7 +38,7 @@ public class DocumentTypeRepoImpl implements DocumentTypeRepoCustom {
 
     @Override
     public DocumentType create(String name, DegreeLevel degreeLevel) {
-        return create(name, degreeLevel, fieldPredicateRepo.save(new FieldPredicate("_docType_" + name, new Boolean(true))));
+        return create(name, degreeLevel, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), new Boolean(true))));
     }
     
     @Override
