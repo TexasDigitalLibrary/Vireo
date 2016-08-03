@@ -88,7 +88,7 @@ public class WorkflowStepController {
     
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-field-profile")
     @Auth(role="MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) }) //, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // needs a condition field profile input type is not INPUT_FILE
     public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
