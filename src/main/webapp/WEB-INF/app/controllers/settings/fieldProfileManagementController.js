@@ -72,7 +72,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				$scope.inputFile = false;
 				delete $scope.modalData.fieldPredicate;
 			}
-			console.log($scope.documentData)
 		};
 
 		$scope.documentTypeChanged = function() {
