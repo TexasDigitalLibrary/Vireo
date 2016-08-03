@@ -1,5 +1,7 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -12,7 +14,7 @@ import org.tdl.vireo.model.validation.DocumentTypeValidator;
 import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "degreeLevel" } ) } )
+@Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "degreeLevel", "field_predicate_id" } ) } )
 public class DocumentType extends BaseOrderedEntity {
 
 	@Column(nullable = false, length = 255)
@@ -21,7 +23,7 @@ public class DocumentType extends BaseOrderedEntity {
 	@Column(nullable = false)
 	private DegreeLevel degreeLevel;
 
-	@OneToOne(cascade = javax.persistence.CascadeType.DETACH, orphanRemoval = true, optional = false)
+	@OneToOne(cascade = DETACH, orphanRemoval = true, optional = false)
 	private FieldPredicate fieldPredicate;
 
 	public DocumentType() {
@@ -41,6 +43,11 @@ public class DocumentType extends BaseOrderedEntity {
 		setName(name);
 		setDegreeLevel(degreeLevel);
 	}
+	
+	public DocumentType(String name, DegreeLevel degreeLevel, FieldPredicate fieldPredicate) {
+        this(name, degreeLevel);
+        setFieldPredicate(fieldPredicate);
+    }
 
     /**
      * @return the name

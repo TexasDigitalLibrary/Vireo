@@ -37,7 +37,7 @@
 				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
 
-		<div class="field-profile-modal-group">
+		<div ng-if="!inputFile" class="field-profile-modal-group">
 			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 
 			<validatedinput
@@ -60,6 +60,20 @@
 				ng-click="createFieldPredicate()">Create New Metadata Key</button>
 		</div>
 
+		<div ng-if="inputFile" class="field-profile-modal-group">
+			<validatedselect
+				options="documentTypes"
+				optionproperty="name"
+				model="documentData"
+				property="documentType"
+				label="Document Type"
+				form="forms.create"
+				change="documentTypeChanged()"
+				validations="fieldPredicateRepo.getValidations()"
+				results="fieldPredicateRepo.ValidationResults">
+			</validatedselect>
+		</div>
+
 		<div class="field-profile-modal-group">
 			<validatedselect
 				options="inputTypes"
@@ -68,6 +82,7 @@
 				property="inputType"
 				label="Input Type"
 				form="forms.create"
+				change="inputTypeChanged()"
 				validations="fieldProfileRepo.getValidations()"
 				results="workflowStepRepo.ValidationResults">
 			</validatedselect>

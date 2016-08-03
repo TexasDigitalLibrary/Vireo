@@ -20,22 +20,6 @@ public class FieldPredicate extends BaseEntity {
         setModelValidator(new FieldPredicateValidator());
     }
 	
-	/**
-	 * 
-	 * @return documentTypePredicate
-	 */
-    public Boolean getDocumentTypePredicate() {
-		return documentTypePredicate;
-	}
-
-    /**
-     * 
-     * @param documentTypePredicate
-     */
-	public void setDocumentTypePredicate(Boolean documentTypePredicate) {
-		this.documentTypePredicate = documentTypePredicate;
-	}
-	
     /**
      * 
      * @param value
@@ -59,6 +43,22 @@ public class FieldPredicate extends BaseEntity {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    /**
+     * 
+     * @return documentTypePredicate
+     */
+    public Boolean getDocumentTypePredicate() {
+        return documentTypePredicate;
+    }
+
+    /**
+     * 
+     * @param documentTypePredicate
+     */
+    public void setDocumentTypePredicate(Boolean documentTypePredicate) {
+        this.documentTypePredicate = documentTypePredicate;
     }
 
 }
