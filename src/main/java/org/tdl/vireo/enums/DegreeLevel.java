@@ -7,10 +7,10 @@ package org.tdl.vireo.enums;
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public enum DegreeLevel {
-	NONE(1),
-	UNDERGRADUATE(2),
-	MASTERS(3),
-	DOCTORAL(4);
+	NONE(0),
+	UNDERGRADUATE(1),
+	MASTERS(2),
+	DOCTORAL(3);
 	
 	// The value for this degree level.
 	private int value;

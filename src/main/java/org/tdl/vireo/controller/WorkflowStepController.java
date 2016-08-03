@@ -68,7 +68,7 @@ public class WorkflowStepController {
 
     @ApiMapping("/{requestingOrgId}/{workflowStepId}/add-field-profile")
     @Auth(role="MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = EXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) }) // , path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // This was an incorrect assumption to validate restricting create of field profile when predicate is a document type field predicate
     public ApiResponse createFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
         
     	WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);

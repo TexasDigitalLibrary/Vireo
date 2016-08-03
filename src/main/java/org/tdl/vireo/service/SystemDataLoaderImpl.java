@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
@@ -44,6 +45,7 @@ import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -102,6 +104,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
     private LanguageRepo languageRepo;
+    
+    private DocumentTypeRepo documentTypeRepo;
 
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
@@ -117,7 +121,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService) {
 
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
@@ -134,6 +138,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.fieldGlossRepo = fieldGlossRepo;
         this.controlledVocabularyRepo = controlledVocabularyRepo;
         this.languageRepo = languageRepo;
+        this.documentTypeRepo = documentTypeRepo;
         this.emailWorkflowRuleRepo = emailWorkflowRuleRepo;
         this.submissionStateRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
@@ -158,6 +163,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         
         logger.info("Generating system organization");
         loadSystemOrganization();
+        
+        logger.info("Load default document types");
+        loadDefaultDocumentTypes();
 
         logger.info("Generating system defaults");
         generateSystemDefaults();
@@ -792,6 +800,44 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+    }
+    
+    public void loadDefaultDocumentTypes() {
+
+        try {
+
+            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
+
+            for (DocumentType documentType : documentTypes) {
+                
+                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
+                
+                FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
+                if(dbFieldPredicate == null) {
+                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(true));
+                }
+                else {
+                    dbFieldPredicate.setValue(fieldPredicate.getValue());
+                    dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
+                    dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
+                }
+                
+                DocumentType dbDocumentType = documentTypeRepo.findByNameAndDegreeLevelAndFieldPredicate(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                
+                if (dbDocumentType == null) {
+                    dbDocumentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                }
+                else {
+                    dbDocumentType.setName(documentType.getName());
+                    dbDocumentType.setDegreeLevel(documentType.getDegreeLevel());
+                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
+                    documentTypeRepo.save(dbDocumentType);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default document types. ", e);
         }
     }
 

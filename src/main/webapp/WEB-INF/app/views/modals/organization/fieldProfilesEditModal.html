@@ -38,25 +38,41 @@
 				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
 
-		<div class="field-profile-modal-group">
+		<div ng-if="!inputFile" class="field-profile-modal-group">
 			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+
 			<validatedinput
 				model="modalData"
 				property="fieldPredicate"
 				label="Metadata Key"
-				placeholder="Metadata Key of the new field"
+				placeholder="Metadata Key of the field"
 				autocomplete="off"
 				typeahead="filteredPredicates"
 				typeaheadproperty="value"
-				form="forms.update"
+				form="forms.create"
 				validations="fieldPredicateRepo.getValidations()"
 				results="fieldPredicateRepo.getValidationResults()">
 			</validatedinput>
+
 			<button 
 				type="button" 
 				class="btn btn-default fp-gloss-predicate-button" 
 				ng-if="!modalData.fieldPredicate.id" 
 				ng-click="createFieldPredicate()">Create New Metadata Key</button>
+		</div>
+
+		<div ng-if="inputFile" class="field-profile-modal-group">
+			<validatedselect
+				options="documentTypes"
+				optionproperty="name"
+				model="modalData"
+				property="documentType"
+				label="Document Type"
+				form="forms.create"
+				change="documentTypeChanged()"
+				validations="fieldPredicateRepo.getValidations()"
+				results="fieldPredicateRepo.ValidationResults">
+			</validatedselect>
 		</div>
 
 		<div class="field-profile-modal-group">
@@ -67,6 +83,7 @@
 				property="inputType"
 				label="Input Type"
 				form="forms.update"
+				change="inputTypeChanged()"
 				validations="modalData.getValidations()"
 				results="modalData.ValidationResults">
 			</validatedselect>

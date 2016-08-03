@@ -34,6 +34,7 @@ public interface WorkflowStepRepoCustom {
 
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization);
     
+    @SuppressWarnings("rawtypes")
     public List<WorkflowStep> findByAggregateHeritableModel(Heritable persistedHeritableModel);
     
 }

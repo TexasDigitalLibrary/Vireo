@@ -16,7 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.repo.DocumentTypesRepo;
+import org.tdl.vireo.model.repo.DocumentTypeRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -27,12 +27,12 @@ import edu.tamu.framework.model.ApiResponse;
 
 @Controller
 @ApiMapping("/settings/document-type")
-public class DocumentTypesController {
+public class DocumentTypeController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private DocumentTypesRepo documentTypesRepo;
+    private DocumentTypeRepo documentTypeRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -40,7 +40,7 @@ public class DocumentTypesController {
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allDocumentTypes() {
-        return new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc());
+        return new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc());
     }
 
     @ApiMapping("/create")
@@ -48,8 +48,8 @@ public class DocumentTypesController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Creating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
-        documentType = documentTypesRepo.create(documentType.getName(), documentType.getDegreeLevel());
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
+        documentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel());
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
     }
 
@@ -58,8 +58,8 @@ public class DocumentTypesController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Updating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
-        documentType = documentTypesRepo.save(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
+        documentType = documentTypeRepo.save(documentType);
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
     }
 
@@ -68,8 +68,8 @@ public class DocumentTypesController {
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldValue.class }, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
-        documentTypesRepo.remove(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
+        documentTypeRepo.remove(documentType);
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -78,8 +78,8 @@ public class DocumentTypesController {
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DocumentType.class, params = { "0", "1" }) })
     public ApiResponse reorderDocumentTypes(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering document types");
-        documentTypesRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
+        documentTypeRepo.reorder(src, dest);
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -88,8 +88,8 @@ public class DocumentTypesController {
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = DocumentType.class, params = { "0" }) })
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         logger.info("Sorting document types by " + column);
-        documentTypesRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypesRepo.findAllByOrderByPositionAsc()));
+        documentTypeRepo.sort(column);
+        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
