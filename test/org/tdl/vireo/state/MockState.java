@@ -21,6 +21,7 @@ public class MockState implements State {
 	public boolean inProgress = false;
 	public boolean isActive = false;
 	public boolean isArchived = false;
+	public boolean isMetadataEditable = false;
 	public boolean isEditableByStudent = false;
 	public boolean isEditableByReviewer = false;
 	public boolean isDeletable = false;
@@ -51,6 +52,11 @@ public class MockState implements State {
 	@Override
 	public boolean isArchived() {
 		return isArchived;
+	}
+	
+	@Override
+	public boolean isMetadataEditable() {
+		return isMetadataEditable;
 	}
 
 	@Override

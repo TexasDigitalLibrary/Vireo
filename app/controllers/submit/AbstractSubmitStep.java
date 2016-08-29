@@ -67,7 +67,9 @@ public class AbstractSubmitStep extends AbstractVireoController {
 		
 		// And check that it is in the initial state.
 		State initialState = stateManager.getInitialState();
-		if (sub.getState() != initialState)
+		State currentState = sub.getState();
+		
+		if (!currentState.isMetadataEditable() && currentState != initialState)
 			error("This submission is no longer editable.");
 		
 		return sub;

@@ -41,6 +41,11 @@ public interface State {
 	public boolean isArchived();
 
 	/**
+	 * @return Whether the student can edit the metadata of a submission.
+	 */
+	public boolean isMetadataEditable();
+	
+	/**
 	 * @return Whether the student can edit the submission during this state.
 	 */
 	public boolean isEditableByStudent();
