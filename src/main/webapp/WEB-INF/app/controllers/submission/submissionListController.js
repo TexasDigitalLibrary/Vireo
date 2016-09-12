@@ -126,6 +126,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return value;
 	};
 
+	// var previousSortColumnToggled;
+
 	$scope.sortBy = function(sortColumn) {
 
 		switch(sortColumn.sort) {
@@ -146,12 +148,22 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 		angular.forEach($scope.userColumns, function(userColumn) {
 			if(sortColumn.title != userColumn.title) {
-				userColumn.sortOrder = 0;
 				userColumn.sort = "NONE";
+				userColumn.sortOrder = 0;
 			}
 		});
 
+		// if(previousSortColumnToggled === undefined || sortColumn.title != previousSortColumnToggled.title) {
+		// 	angular.forEach($scope.userColumns, function(userColumn) {
+		// 		if(sortColumn.title != userColumn.title) {
+		// 			if(userColumn.sort != "NONE") {
+		// 				userColumn.sortOrder++;
+		// 			}
+		// 		}
+		// 	});
+		// }
 		
+		// previousSortColumnToggled = sortColumn;
 
 		$scope.saveColumns();
 	};
