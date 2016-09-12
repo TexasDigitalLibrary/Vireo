@@ -164,6 +164,16 @@ public class SubmissionListColumn extends BaseEntity {
     public void setFilters(List<String> filters) {
         this.filters = filters;
     }
+    
+    public void addFilter(String filter) {
+        if(!filters.contains(filter)) {
+            filters.add(filter);
+        }
+    }
+    
+    public void removeFilter(String filter) {
+        filters.remove(filter);
+    }
 
     /**
      * @return the status

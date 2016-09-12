@@ -143,23 +143,15 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			} break;
 			default: break;
 		}
-		
+
 		angular.forEach($scope.userColumns, function(userColumn) {
-			if(userColumn != sortColumn && sortColumn.sortOrder == 1) {
-				if(userColumn.sortOrder > 0) {
-					if(userColumn.sort != "NONE") {
-						userColumn.sortOrder++;
-						if(userColumn.sortOrder > $scope.userColumns.length - 1) {
-							userColumn.sortOrder = 0;
-							userColumn.sort = "NONE";
-						}
-					}
-					else {
-						userColumn.sortOrder = 0;
-					}
-				}
+			if(sortColumn.title != userColumn.title) {
+				userColumn.sortOrder = 0;
+				userColumn.sort = "NONE";
 			}
 		});
+
+		
 
 		$scope.saveColumns();
 	};

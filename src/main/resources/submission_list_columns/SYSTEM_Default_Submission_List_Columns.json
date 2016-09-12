@@ -1,11 +1,5 @@
 [
 	{
-		"title": "ID",
-		"sort": "ASC",
-		"valuePath": ["id"],
-		"status": null
-	},
-	{
 		"title": "Status",
 		"sort": "NONE",
 		"valuePath": ["state", "name"],
@@ -13,13 +7,13 @@
 	},
 	{
 		"title": "Organization name",
-		"sort": "DESC",
+		"sort": "NONE",
 		"valuePath": ["organization", "name"],
 		"status": null
 	},
 	{
 		"title": "Organization category",
-		"sort": "ASC",
+		"sort": "NONE",
 		"valuePath": ["organization", "category", "name"],
 		"status": null
 	},
