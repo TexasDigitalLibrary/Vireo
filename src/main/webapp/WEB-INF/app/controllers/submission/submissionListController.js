@@ -29,8 +29,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 
-				console.log($scope.userColumns);
-		
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
 				SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
@@ -44,8 +42,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 						dataset: $scope.page.content
 					});
 				});
-
-				console.log($scope.page)
 
 				$scope.change = false;
 				$scope.closeModal();

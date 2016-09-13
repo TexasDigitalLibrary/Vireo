@@ -65,14 +65,9 @@ public class SubmissionSpecification<E> implements Specification<E> {
                 }
 
                 switch (submissionListColumn.getSort()) {
-                case ASC:
-                    _orders.add(cb.asc(path));
-                    break;
-                case DESC:
-                    _orders.add(cb.desc(path));
-                    break;
-                default:
-                    break;
+                    case ASC: _orders.add(cb.asc(path)); break;
+                    case DESC: _orders.add(cb.desc(path)); break;
+                    default:  break;
                 }
 
             }

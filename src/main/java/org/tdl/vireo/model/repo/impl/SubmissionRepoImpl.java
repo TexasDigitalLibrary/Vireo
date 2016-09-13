@@ -108,14 +108,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             if (submissionListColumn.getValuePath().size() > 0) {
                 String fullPath = String.join(".", submissionListColumn.getValuePath());
                 switch (submissionListColumn.getSort()) {
-                case ASC:
-                    orders.add(new Sort.Order(Sort.Direction.ASC, fullPath));
-                    break;
-                case DESC:
-                    orders.add(new Sort.Order(Sort.Direction.DESC, fullPath));
-                    break;
-                default:
-                    break;
+                    case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
+                    case DESC: orders.add(new Sort.Order(Sort.Direction.DESC, fullPath)); break;
+                    default: break;
                 }
             }
         }
