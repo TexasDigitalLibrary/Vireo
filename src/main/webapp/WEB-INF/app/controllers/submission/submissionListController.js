@@ -28,6 +28,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 				$scope.pageSize = angular.fromJson(data.body).payload.Integer;
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
+
+				console.log($scope.userColumns);
 		
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
@@ -42,6 +44,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 						dataset: $scope.page.content
 					});
 				});
+
+				console.log($scope.page)
 
 				$scope.change = false;
 				$scope.closeModal();
@@ -126,7 +130,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return value;
 	};
 
-	// var previousSortColumnToggled;
+	var previousSortColumnToggled;
 
 	$scope.sortBy = function(sortColumn) {
 
@@ -146,24 +150,20 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			default: break;
 		}
 
-		angular.forEach($scope.userColumns, function(userColumn) {
-			if(sortColumn.title != userColumn.title) {
-				userColumn.sort = "NONE";
-				userColumn.sortOrder = 0;
-			}
-		});
-
-		// if(previousSortColumnToggled === undefined || sortColumn.title != previousSortColumnToggled.title) {
-		// 	angular.forEach($scope.userColumns, function(userColumn) {
-		// 		if(sortColumn.title != userColumn.title) {
-		// 			if(userColumn.sort != "NONE") {
-		// 				userColumn.sortOrder++;
-		// 			}
-		// 		}
-		// 	});
-		// }
+		if(previousSortColumnToggled === undefined || sortColumn.title != previousSortColumnToggled.title) {
+			angular.forEach($scope.userColumns, function(userColumn) {
+				if(sortColumn.title != userColumn.title) {
+					if(userColumn.sort != "NONE") {
+						userColumn.sortOrder++;
+					}
+					else {
+						userColumn.sortOrder = 0;
+					}
+				}
+			});
+		}
 		
-		// previousSortColumnToggled = sortColumn;
+		previousSortColumnToggled = sortColumn;
 
 		$scope.saveColumns();
 	};

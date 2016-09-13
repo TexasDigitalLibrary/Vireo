@@ -1,4 +1,10 @@
 [
+    {
+		"title": "ID",
+		"sort": "ASC",
+		"valuePath": ["id"],
+		"status": null
+	},
 	{
 		"title": "Status",
 		"sort": "NONE",

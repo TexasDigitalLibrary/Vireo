@@ -17,42 +17,40 @@ import org.springframework.data.jpa.domain.Specification;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
-    
+
     List<SubmissionListColumn> submissionListColums;
-    
+
     public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
         this.submissionListColums = submissionListColums;
     }
-    
+
     @Override
+    @SuppressWarnings("unchecked")
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        
+
+        List<Predicate> _predicates = new ArrayList<Predicate>();
+
         List<Order> _orders = new ArrayList<Order>();
-        
+
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
 
-        Predicate combinedPrediacte = null;
-        
-        Join<?, ?> join = root.join("fieldValues", JoinType.LEFT);
+        _groupings.add(root.get("id"));
+
+        int i = 0;
 
         for (SubmissionListColumn submissionListColumn : submissionListColums) {
             Path<?> path = null;
-
             if (submissionListColumn.getValuePath().size() > 0) {
-
                 if (submissionListColumn.getPredicate() != null) {
-
-                    path = join.get("value");
-
-                    Path<?> predicatePath = join.get("fieldPredicate").get("value");
-
-                    combinedPrediacte = cb.and(cb.equal(predicatePath, submissionListColumn.getPredicate()));
-
-                    if (submissionListColumn.getSortOrder() > 0) {
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                        Join<?, ?> join = (Join<?, ?>) root.join("fieldValues", JoinType.LEFT).alias("fv" + i);
+                        path = join.get("value");
+                        Path<?> predicatePath = join.get("fieldPredicate").get("value");
                         _groupings.add(predicatePath);
+                        _predicates.add(cb.equal(predicatePath, submissionListColumn.getPredicate()));
+                        i++;
                     }
                 } else {
-
                     for (String property : submissionListColumn.getValuePath()) {
                         if (path == null) {
                             path = root.get(property);
@@ -60,27 +58,28 @@ public class SubmissionSpecification<E> implements Specification<E> {
                             path = path.get(property);
                         }
                     }
-
-                    combinedPrediacte = cb.and(cb.isNotNull(path));
                 }
 
                 for (String filter : submissionListColumn.getFilters()) {
-                    combinedPrediacte = cb.and(cb.equal(path, filter));
+                    _predicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
                 }
 
                 switch (submissionListColumn.getSort()) {
-                    case ASC: _orders.add(cb.asc(path)); break;
-                    case DESC: _orders.add(cb.desc(path)); break;
-                    default: break;
+                case ASC:
+                    _orders.add(cb.asc(path));
+                    break;
+                case DESC:
+                    _orders.add(cb.desc(path));
+                    break;
+                default:
+                    break;
                 }
 
             }
         }
 
-        _groupings.add(root.get("id"));
-
         query.groupBy(_groupings).orderBy(_orders);
-        
-        return combinedPrediacte;
+
+        return cb.and(_predicates.toArray(new Predicate[_predicates.size()]));
     }
 }
