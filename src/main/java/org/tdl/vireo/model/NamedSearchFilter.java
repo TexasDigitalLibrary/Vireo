@@ -16,20 +16,11 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilter extends BaseEntity {
     
-    @Column(nullable = false)
-    private Boolean publicFlag;
-
-    @Column(nullable = false)
-    private Boolean umiRelease;
-    
     @ManyToOne(optional = false)
     private User user;
 
     @Column(nullable = false)
     private String name;
-    
-    @ManyToOne(optional = false)
-    private SubmissionListColumn submissionListColumn;
     
     @Column(nullable = true)
     private String value;
@@ -45,16 +36,27 @@ public class NamedSearchFilter extends BaseEntity {
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar rangeEnd;
+    
+    @Column(nullable = false)
+    private Boolean publicFlag;
+
+    @Column(nullable = false)
+    private Boolean umiRelease;
+    
+    @Column(nullable = false)
+    private Boolean fullSearch;
+    
+    @ManyToOne(optional = false)
+    private SubmissionListColumn submissionListColumn;
 
     public NamedSearchFilter() {
         setPublicFlag(false);
         setUmiRelease(false);
+        setFullSearch(false);
     }
     
     public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn) {
-        this();
-        setPublicFlag(false);
-        setUmiRelease(false);
+        this();        
         setUser(user);
         setName(name);
         setSubmissionListColumn(submissionListColumn);
@@ -77,31 +79,17 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @return the publicFlag
+     * @return the user
      */
-    public Boolean getPublicFlag() {
-        return publicFlag;
+    public User getUser() {
+        return user;
     }
 
     /**
-     * @param publicFlag the publicFlag to set
+     * @param user the user to set
      */
-    public void setPublicFlag(Boolean publicFlag) {
-        this.publicFlag = publicFlag;
-    }
-
-    /**
-     * @return the umiRelease
-     */
-    public Boolean getUmiRelease() {
-        return umiRelease;
-    }
-
-    /**
-     * @param umiRelease the umiRelease to set
-     */
-    public void setUmiRelease(Boolean umiRelease) {
-        this.umiRelease = umiRelease;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     /**
@@ -131,7 +119,7 @@ public class NamedSearchFilter extends BaseEntity {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * @return the dateValue
      */
@@ -175,17 +163,45 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @return the user
+     * @return the publicFlag
      */
-    public User getUser() {
-        return user;
+    public Boolean getPublicFlag() {
+        return publicFlag;
     }
 
     /**
-     * @param user the user to set
+     * @param publicFlag the publicFlag to set
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setPublicFlag(Boolean publicFlag) {
+        this.publicFlag = publicFlag;
+    }
+
+    /**
+     * @return the umiRelease
+     */
+    public Boolean getUmiRelease() {
+        return umiRelease;
+    }
+
+    /**
+     * @param umiRelease the umiRelease to set
+     */
+    public void setUmiRelease(Boolean umiRelease) {
+        this.umiRelease = umiRelease;
+    }
+
+    /**
+     * @return the fullSearch
+     */
+    public Boolean getFullSearch() {
+        return fullSearch;
+    }
+
+    /**
+     * @param fullSearch the fullSearch to set
+     */
+    public void setFullSearch(Boolean fullSearch) {
+        this.fullSearch = fullSearch;
     }
 
     /**
