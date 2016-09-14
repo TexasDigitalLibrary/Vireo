@@ -16,7 +16,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
-	var sort = function() {
+	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
 			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
@@ -45,7 +45,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-				sort();
+				query();
 
 				$scope.change = false;
 				$scope.closeModal();
@@ -82,7 +82,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.selectPage = function(i) {
 		$scope.pageNumber = i;
-		update();
+		query();
 	};
 
 	$scope.resetColumns = function() {
@@ -165,7 +165,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		
 		previousSortColumnToggled = sortColumn;
 
-		sort();
+		query();
 	};
 
 	$scope.columnOptions = {
