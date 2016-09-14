@@ -20,10 +20,13 @@ import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
     
+    List<String> fullSearchFilters;
+    
     List<SubmissionListColumn> submissionListColums;
 
-    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
+    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums, List<String> fullSearchFilters) {
         this.submissionListColums = submissionListColums;
+        this.fullSearchFilters = fullSearchFilters;
     }
     
     @Override
@@ -36,6 +39,8 @@ public class SubmissionSpecification<E> implements Specification<E> {
         List<Predicate> _filterPredicates = new ArrayList<Predicate>();
 
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
+        
+        Path<?> fieldValuePath = root.joinSet("fieldValues", JoinType.LEFT).get("value");
 
         _groupings.add(root.get("id"));
 
@@ -65,13 +70,21 @@ public class SubmissionSpecification<E> implements Specification<E> {
                 }
                 
                 for (String filter : submissionListColumn.getFilters()) {
-                    _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
+                    _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
                 }
-
+                
                 switch (submissionListColumn.getSort()) {
                     case ASC: _orders.add(cb.asc(path)); break;
                     case DESC: _orders.add(cb.desc(path)); break;
                     default:  break;
+                }
+                
+                if(path == null) {
+                    path = fieldValuePath;
+                }
+                
+                for (String filter : fullSearchFilters) {
+                    _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
                 }
             }
         }

@@ -54,7 +54,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-    
+
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
 
@@ -86,6 +86,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
+
+        List<String> fullSearchFilters = new ArrayList<String>();
         
         List<NamedSearchFilter> activeFilters = user.getActiveFilters();
         
@@ -110,6 +112,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     slc.addFilter(activeFilter.getValue());
                     break;
                 }
+            }
+            if(activeFilter.getFullSearch()) {
+                fullSearchFilters.add(activeFilter.getValue());
             }
         });
         
@@ -145,12 +150,16 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             }
         }
+        
+        if(fullSearchFilters.size() > 0) {
+            filterExists = true;
+        }
 
         Page<Submission> pageResults = null;
 
         if (filterExists || orders.size() > 0) {
             if (filterExists || predicateExists) {
-                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums, fullSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
             }
