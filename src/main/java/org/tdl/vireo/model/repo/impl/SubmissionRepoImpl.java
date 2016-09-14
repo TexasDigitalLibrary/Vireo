@@ -94,6 +94,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         User user = userRepo.findByEmail(credentials.getEmail());
         
+        List<String> fullSearchFilters = new ArrayList<String>();
+        
         List<NamedSearchFilter> activeFilters = user.getActiveFilters();
         
         List<SubmissionListColumn> allSubmissionListColums = submissionListColumnRepo.findAll();
@@ -116,6 +118,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     slc.addFilter(activeFilter.getValue());
                     break;
                 }
+            }
+            if(activeFilter.getFullSearch()) {
+                fullSearchFilters.add(activeFilter.getValue());
             }
         });
         
@@ -151,12 +156,16 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             }
         }
+        
+        if(fullSearchFilters.size() > 0) {
+            filterExists = true;
+        }
 
         Page<Submission> pageResults = null;
 
         if (filterExists || orders.size() > 0) {
             if (filterExists || predicateExists) {
-                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(submissionListColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(submissionListColums, fullSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
             }

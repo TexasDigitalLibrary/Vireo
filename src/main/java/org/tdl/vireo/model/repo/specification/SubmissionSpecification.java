@@ -19,11 +19,14 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
+    
+    List<String> fullSearchFilters;
 
     List<SubmissionListColumn> submissionListColums;
 
-    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
+    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums, List<String> fullSearchFilters) {
         this.submissionListColums = submissionListColums;
+        this.fullSearchFilters = fullSearchFilters;
     }
     
     // TODO: determine how to handle date range on filter
@@ -35,8 +38,10 @@ public class SubmissionSpecification<E> implements Specification<E> {
         List<Order> _orders = new ArrayList<Order>();
         
         List<Predicate> _groupPredicates = new ArrayList<Predicate>();
+        
+        List<Predicate> _fullSearchPredicates = new ArrayList<Predicate>();
 
-        List<Predicate> _columnFilterPredicates = new ArrayList<Predicate>();
+        List<Predicate> _filterPredicates = new ArrayList<Predicate>();
 
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
 
@@ -66,9 +71,13 @@ public class SubmissionSpecification<E> implements Specification<E> {
                         }
                     }
                 }
-
+                
                 for (String filter : submissionListColumn.getFilters()) {
-                    _columnFilterPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
+                    _filterPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
+                }
+                
+                for (String filter : fullSearchFilters) {
+                    _fullSearchPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
                 }
 
                 switch (submissionListColumn.getSort()) {
@@ -81,13 +90,17 @@ public class SubmissionSpecification<E> implements Specification<E> {
 
         query.groupBy(_groupings).orderBy(_orders);
         
+        if(_fullSearchPredicates.size() > 0) {
+            _filterPredicates.addAll(_fullSearchPredicates);
+        }
+        
         Predicate returnPredicate = null;
         
-        if(_columnFilterPredicates.size() == 0) {
+        if(_filterPredicates.size() == 0) {
             returnPredicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
         }
         else {
-            returnPredicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_columnFilterPredicates.toArray(new Predicate[_columnFilterPredicates.size()])));
+            returnPredicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
         }
         
         return returnPredicate;

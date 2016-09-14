@@ -46,7 +46,7 @@ public class NamedSearchFilter extends BaseEntity {
     @Column(nullable = false)
     private Boolean fullSearch;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private SubmissionListColumn submissionListColumn;
 
     public NamedSearchFilter() {
