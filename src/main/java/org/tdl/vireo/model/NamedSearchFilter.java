@@ -33,6 +33,10 @@ public class NamedSearchFilter extends BaseEntity {
     
     @Column(nullable = true)
     private String value;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar dateValue;
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
@@ -59,6 +63,11 @@ public class NamedSearchFilter extends BaseEntity {
     public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, String value) {
         this(user, name, submissionListColumn);
         setValue(value);
+    }
+    
+    public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, Calendar dateValue) {
+        this(user, name, submissionListColumn);
+        setDateValue(dateValue);
     }
     
     public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, Calendar rangeStart, Calendar rangeEnd) {
@@ -121,6 +130,20 @@ public class NamedSearchFilter extends BaseEntity {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    /**
+     * @return the dateValue
+     */
+    public Calendar getDateValue() {
+        return dateValue;
+    }
+
+    /**
+     * @param dateValue the dateValue to set
+     */
+    public void setDateValue(Calendar dateValue) {
+        this.dateValue = dateValue;
     }
 
     /**

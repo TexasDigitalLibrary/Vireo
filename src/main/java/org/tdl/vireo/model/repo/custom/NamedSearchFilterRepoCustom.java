@@ -12,6 +12,8 @@ public interface NamedSearchFilterRepoCustom {
     
     public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, String value);
     
+    public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, Calendar dateValue);
+    
     public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, Calendar rangeStart, Calendar rangeEnd);
 
 }

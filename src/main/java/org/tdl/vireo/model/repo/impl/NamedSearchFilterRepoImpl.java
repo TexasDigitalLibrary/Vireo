@@ -23,6 +23,11 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
     public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, String value) {
         return namedSearchFilterRepo.save(new NamedSearchFilter(user, name, submissionListColumn, value));
     }
+    
+    @Override
+    public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, Calendar dateValue) {
+        return namedSearchFilterRepo.save(new NamedSearchFilter(user, name, submissionListColumn, dateValue));
+    }
 
     @Override
     public NamedSearchFilter create(User user, String name, SubmissionListColumn submissionListColumn, Calendar rangeStart, Calendar rangeEnd) {
