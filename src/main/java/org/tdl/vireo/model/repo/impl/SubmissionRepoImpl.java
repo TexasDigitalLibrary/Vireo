@@ -54,7 +54,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-
+    
+    @Autowired
+    private NamedSearchFilterRepo namedSearchFilterRepo;
+    
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
 
@@ -86,7 +89,19 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
-
+        
+        if(user.getActiveFilters().isEmpty()) {
+            NamedSearchFilter activeFilter = namedSearchFilterRepo.create(user, "Full Search", "bob");
+            user.addActiveFilter(activeFilter);
+        }
+        
+        if(user.getActiveFilters().size() == 1) {
+            NamedSearchFilter tf = namedSearchFilterRepo.create(user, "Id Search", "2");
+            tf.setSubmissionListColumn(submissionListColumnRepo.findByTitle("ID"));
+            tf = namedSearchFilterRepo.save(tf);
+            user.addActiveFilter(tf);
+        }
+        
         List<String> fullSearchFilters = new ArrayList<String>();
         
         List<NamedSearchFilter> activeFilters = user.getActiveFilters();
@@ -108,7 +123,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         activeFilters.forEach(activeFilter -> {
             for(SubmissionListColumn slc : allSubmissionListColums) {
                 if(!activeFilter.getFullSearch() && activeFilter.getSubmissionListColumn() != null && activeFilter.getSubmissionListColumn().equals(slc)) {
-                    System.out.println(activeFilter.getValue());
                     slc.addFilter(activeFilter.getValue());
                     break;
                 }
