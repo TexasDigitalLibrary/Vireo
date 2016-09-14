@@ -10,6 +10,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -17,6 +21,8 @@ import edu.tamu.framework.model.BaseEntity;
 public class NamedSearchFilter extends BaseEntity {
     
     @ManyToOne(optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private User user;
 
     @Column(nullable = false)

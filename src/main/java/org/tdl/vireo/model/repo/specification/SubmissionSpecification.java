@@ -20,27 +20,19 @@ import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
     
-    List<String> fullSearchFilters;
-
     List<SubmissionListColumn> submissionListColums;
 
-    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums, List<String> fullSearchFilters) {
+    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
         this.submissionListColums = submissionListColums;
-        this.fullSearchFilters = fullSearchFilters;
     }
     
-    // TODO: determine how to handle date range on filter
-
     @Override
-    @SuppressWarnings("unchecked")
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
         List<Order> _orders = new ArrayList<Order>();
         
         List<Predicate> _groupPredicates = new ArrayList<Predicate>();
         
-        List<Predicate> _fullSearchPredicates = new ArrayList<Predicate>();
-
         List<Predicate> _filterPredicates = new ArrayList<Predicate>();
 
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
@@ -73,11 +65,7 @@ public class SubmissionSpecification<E> implements Specification<E> {
                 }
                 
                 for (String filter : submissionListColumn.getFilters()) {
-                    _filterPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
-                }
-                
-                for (String filter : fullSearchFilters) {
-                    _fullSearchPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
+                    _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
                 }
 
                 switch (submissionListColumn.getSort()) {
@@ -89,10 +77,6 @@ public class SubmissionSpecification<E> implements Specification<E> {
         }
 
         query.groupBy(_groupings).orderBy(_orders);
-        
-        if(_fullSearchPredicates.size() > 0) {
-            _filterPredicates.addAll(_fullSearchPredicates);
-        }
         
         Predicate returnPredicate = null;
         

@@ -20,6 +20,7 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -80,15 +81,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         return submissionRepo.save(submission);
     }
-    
-    // TODO: determine how to handle date range on filter
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
-        
-        List<String> fullSearchFilters = new ArrayList<String>();
         
         List<NamedSearchFilter> activeFilters = user.getActiveFilters();
         
@@ -108,13 +105,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         // add filters to columns that are active on user
         activeFilters.forEach(activeFilter -> {
             for(SubmissionListColumn slc : allSubmissionListColums) {
-                if(activeFilter.getSubmissionListColumn().equals(slc)) {
+                if(!activeFilter.getFullSearch() && activeFilter.getSubmissionListColumn() != null && activeFilter.getSubmissionListColumn().equals(slc)) {
+                    System.out.println(activeFilter.getValue());
                     slc.addFilter(activeFilter.getValue());
                     break;
                 }
-            }
-            if(activeFilter.getFullSearch()) {
-                fullSearchFilters.add(activeFilter.getValue());
             }
         });
         
@@ -150,16 +145,12 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             }
         }
-        
-        if(fullSearchFilters.size() > 0) {
-            filterExists = true;
-        }
 
         Page<Submission> pageResults = null;
 
         if (filterExists || orders.size() > 0) {
             if (filterExists || predicateExists) {
-                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(submissionListColums, fullSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
             }
