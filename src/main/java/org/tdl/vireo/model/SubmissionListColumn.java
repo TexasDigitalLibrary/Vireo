@@ -42,11 +42,11 @@ public class SubmissionListColumn extends BaseEntity {
     @Column(nullable = true)
     private String predicate;
     
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     @OrderColumn
     private List<String> predicatePath;
     
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     @OrderColumn
     private List<String> valuePath;
     

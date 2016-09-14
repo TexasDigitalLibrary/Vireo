@@ -43,8 +43,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 
-				console.log($scope.userColumns)
-
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
 				sort();
