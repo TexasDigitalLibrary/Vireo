@@ -52,28 +52,27 @@ public class NamedSearchFilter extends BaseEntity {
     public NamedSearchFilter() {
         setPublicFlag(false);
         setUmiRelease(false);
-        setFullSearch(false);
+        setFullSearch(true);
     }
     
-    public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn) {
+    public NamedSearchFilter(User user, String name) {
         this();        
         setUser(user);
         setName(name);
-        setSubmissionListColumn(submissionListColumn);
     }
     
-    public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, String value) {
-        this(user, name, submissionListColumn);
+    public NamedSearchFilter(User user, String name, String value) {
+        this(user, name);
         setValue(value);
     }
     
-    public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, Calendar dateValue) {
-        this(user, name, submissionListColumn);
+    public NamedSearchFilter(User user, String name, Calendar dateValue) {
+        this(user, name);
         setDateValue(dateValue);
     }
     
-    public NamedSearchFilter(User user, String name, SubmissionListColumn submissionListColumn, Calendar rangeStart, Calendar rangeEnd) {
-        this(user, name, submissionListColumn);
+    public NamedSearchFilter(User user, String name, Calendar rangeStart, Calendar rangeEnd) {
+        this(user, name);
         setRangeStart(rangeStart);
         setRangeEnd(rangeEnd);
     }
@@ -216,6 +215,12 @@ public class NamedSearchFilter extends BaseEntity {
      */
     public void setSubmissionListColumn(SubmissionListColumn submissionListColumn) {
         this.submissionListColumn = submissionListColumn;
+        if(this.submissionListColumn != null) {
+            setFullSearch(false);
+        }
+        else {
+            setFullSearch(true);
+        }
     }
     
 }

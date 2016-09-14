@@ -5,9 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,9 +33,6 @@ import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
     private SubmissionRepo submissionRepo;
 
@@ -59,7 +53,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-
+    
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
 
