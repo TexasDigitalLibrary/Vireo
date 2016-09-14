@@ -45,7 +45,7 @@ public class SubmissionListController {
     @ApiMapping("/columns-by-user")
     @Auth(role = "STUDENT")
     public ApiResponse getSubmissionViewColumnsByUser(@ApiCredentials Credentials credentials) {
-        User user = userRepo.findByEmail(credentials.getEmail());    
+        User user = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     

@@ -58,6 +58,7 @@ public class SubmissionListColumn extends BaseEntity {
     
     public SubmissionListColumn() {
         setModelValidator(new SubmissionListColumnValidator());
+        this.sort = Sort.NONE;
         this.sortOrder = 0;
         this.filters = new ArrayList<String>();
     }

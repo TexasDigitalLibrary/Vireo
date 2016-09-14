@@ -132,7 +132,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        for (SubmissionListColumn submissionListColumn : submissionListColums) {
+        for (SubmissionListColumn submissionListColumn : allSubmissionListColums) {
 
             if (submissionListColumn.getFilters().size() > 0) {
                 filterExists = true;

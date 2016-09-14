@@ -16,6 +16,20 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
+	var sort = function() {
+		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
+
+			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+
+			$scope.tableParams = new NgTableParams({ }, 
+			{
+				counts: [],
+				filterDelay: 0, 
+				dataset: $scope.page.content
+			});
+		});
+	};
+
 	var update = function() {
 
 		SubmissionListColumnRepo.reset();
@@ -29,19 +43,11 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 
+				console.log($scope.userColumns)
+
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-				SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
-
-					angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
-
-					$scope.tableParams = new NgTableParams({ }, 
-					{
-						counts: [],
-						filterDelay: 0, 
-						dataset: $scope.page.content
-					});
-				});
+				sort();
 
 				$scope.change = false;
 				$scope.closeModal();
@@ -161,7 +167,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		
 		previousSortColumnToggled = sortColumn;
 
-		$scope.saveColumns();
+		sort();
 	};
 
 	$scope.columnOptions = {
