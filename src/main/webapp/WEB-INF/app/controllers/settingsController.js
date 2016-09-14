@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -86,6 +86,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   			default: return true;
   		}
   	};
+
+  	var submissions = StudentSubmissionRepo.getAll();
   	  	
 	ConfigurationRepo.ready().then(function() {
 
@@ -97,19 +99,34 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
 	  	};
 	  	
-	  	// TODO: logic
 	  	$scope.hasSubmissions = function() {
-	  		return false;
+	  		return submissions.length > 0;
 	  	};
 	  	
-	  	// TODO: logic
 	  	$scope.submissionInProgress = function() {
-	  		return false;
+	  		var isInProgress = false;
+	  		for(var i in submissions) {
+	  			var submission = submissions[i];
+	  			if(submission.state.name === "In Progress") {
+	  				isInProgress = true;
+	  				break;
+	  			}
+	  		}
+
+	  		return isInProgress;
 	  	};
 	  	
-	  	// TODO: logic
 	  	$scope.submissionNeedsCorrections = function() {
-	  		return false;
+	  		var isInProgress = false;
+	  		for(var i in submissions) {
+	  			var submission = submissions[i];
+	  			if(submission.state.name === "Needs Corrections") {
+	  				isInProgress = true;
+	  				break;
+	  			}
+	  		}
+
+	  		return isInProgress;
 	  	};
 		
 		//TODO: check these update config settings methods for redundancy and clean up.
