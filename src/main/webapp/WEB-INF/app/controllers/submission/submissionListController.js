@@ -16,6 +16,20 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
+	var query = function() {
+		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
+
+			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+
+			$scope.tableParams = new NgTableParams({ }, 
+			{
+				counts: [],
+				filterDelay: 0, 
+				dataset: $scope.page.content
+			});
+		});
+	};
+
 	var update = function() {
 
 		SubmissionListColumnRepo.reset();
@@ -28,20 +42,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 				$scope.pageSize = angular.fromJson(data.body).payload.Integer;
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
-		
+
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-				SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
-
-					angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
-
-					$scope.tableParams = new NgTableParams({ }, 
-					{
-						counts: [],
-						filterDelay: 0, 
-						dataset: $scope.page.content
-					});
-				});
+				query();
 
 				$scope.change = false;
 				$scope.closeModal();
@@ -78,7 +82,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.selectPage = function(i) {
 		$scope.pageNumber = i;
-		update();
+		query();
 	};
 
 	$scope.resetColumns = function() {
@@ -126,6 +130,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return value;
 	};
 
+	var previousSortColumnToggled;
+
 	$scope.sortBy = function(sortColumn) {
 
 		switch(sortColumn.sort) {
@@ -143,25 +149,23 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			} break;
 			default: break;
 		}
-		
-		angular.forEach($scope.userColumns, function(userColumn) {
-			if(userColumn != sortColumn && sortColumn.sortOrder == 1) {
-				if(userColumn.sortOrder > 0) {
+
+		if(previousSortColumnToggled === undefined || sortColumn.title != previousSortColumnToggled.title) {
+			angular.forEach($scope.userColumns, function(userColumn) {
+				if(sortColumn.title != userColumn.title) {
 					if(userColumn.sort != "NONE") {
 						userColumn.sortOrder++;
-						if(userColumn.sortOrder > $scope.userColumns.length - 1) {
-							userColumn.sortOrder = 0;
-							userColumn.sort = "NONE";
-						}
 					}
 					else {
 						userColumn.sortOrder = 0;
 					}
 				}
-			}
-		});
+			});
+		}
+		
+		previousSortColumnToggled = sortColumn;
 
-		$scope.saveColumns();
+		query();
 	};
 
 	$scope.columnOptions = {

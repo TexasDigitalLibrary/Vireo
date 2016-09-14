@@ -31,7 +31,7 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/submission")
 public class SubmissionController {
-
+    
     @Autowired
     private SubmissionRepo submissionRepo;
     
@@ -97,7 +97,8 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
-    public ApiResponse querySubmission(@ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
-        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(submissionListColumns, new PageRequest(page, size)));
+    public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
+        
+        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
     }
 }

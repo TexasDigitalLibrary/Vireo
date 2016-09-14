@@ -65,7 +65,7 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         workflowStepRepo.save(originatingWorkflowStep);
         
         fieldGlosses.forEach(fieldGloss -> {
-            submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH);
+            submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
         });
         
         return fieldProfileRepo.findOne(fieldProfile.getId());

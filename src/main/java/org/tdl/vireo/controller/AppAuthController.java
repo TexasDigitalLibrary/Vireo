@@ -29,6 +29,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,6 +66,9 @@ public class AppAuthController extends CoreAuthController {
     
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
+    
+    @Autowired
+    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
     
     @ApiMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@ApiData Map<String, String> dataMap, @ApiParameters Map<String, String[]> parameters) {
@@ -148,6 +152,8 @@ public class AppAuthController extends CoreAuthController {
         User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
         
         user.setPassword(authUtility.encodePassword(password));
+        
+        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
         
         user = userRepo.save(user);
         

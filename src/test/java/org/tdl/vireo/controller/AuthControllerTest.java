@@ -3,6 +3,7 @@ package org.tdl.vireo.controller;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +22,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
@@ -40,6 +43,9 @@ public class AuthControllerTest extends AbstractControllerTest {
 	
 	@Mock
     private EmailTemplateRepo emailTemplateRepo;
+	
+	@Mock
+    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 	
 	@InjectMocks
     private AppAuthController authController;
@@ -120,6 +126,13 @@ public class AuthControllerTest extends AbstractControllerTest {
                 EmailTemplate emailTemplate = new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
                 emailTemplate.setPosition(emailTemplatePosition++);
                 return emailTemplate;
+            }}
+        );
+        
+        Mockito.when(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns()).then(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return new ArrayList<SubmissionListColumn>();
             }}
         );
         

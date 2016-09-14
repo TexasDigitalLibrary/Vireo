@@ -677,13 +677,23 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
+
+                // check to see if the InputType exists
+                InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
+                
+                if (inputType == null) {
+                    inputType = inputTypeRepo.create(submissionListColumn.getInputType().getName());
+                } else {
+                    inputType.setName(submissionListColumn.getInputType().getName());
+                    inputType = inputTypeRepo.save(inputType);
+                }
                 
                 if (dbSubmissionListColumn == null) {
                     if(submissionListColumn.getPredicate() != null) {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath());
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath(), inputType);
                     }
                     else {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath());
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
                     }
                 }
                 else {
