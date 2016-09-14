@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -23,6 +24,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
@@ -54,6 +56,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
+    
+    @Autowired
+    private SubmissionListColumnRepo submissionListColumnRepo;
 
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
@@ -72,6 +77,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
             submission.addSubmissionWorkflowStep(submissionWorkflowStep);
 
+            // pre populate field values for all field profiles in aggregate workflow
+            // this is undesirable but currently only way to get dynamic query to function correctly
             for (FieldProfile fp : aws.getAggregateFieldProfiles()) {
                 submission.addFieldValue(fieldValueRepo.create(fp.getFieldPredicate()));
             }
@@ -79,13 +86,41 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         return submissionRepo.save(submission);
     }
+    
+    // TODO: determine how to handle date range on filter
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
-
-        Collections.sort(submissionListColums, new Comparator<SubmissionListColumn>() {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        
+        List<NamedSearchFilter> activeFilters = user.getActiveFilters();
+        
+        List<SubmissionListColumn> allSubmissionListColums = submissionListColumnRepo.findAll();
+        
+        // set sort and sort order on all submission list columns that are set on users submission list columns
+        submissionListColums.forEach(submissionListColumn -> {
+            for(SubmissionListColumn slc : allSubmissionListColums) {
+                if(submissionListColumn.equals(slc)) {
+                    slc.setSort(submissionListColumn.getSort());
+                    slc.setSortOrder(submissionListColumn.getSortOrder());
+                    break;
+                }
+            }
+        });
+        
+        // add filters to columns that are active on user
+        activeFilters.forEach(activeFilter -> {
+            for(SubmissionListColumn slc : allSubmissionListColums) {
+                if(activeFilter.getSubmissionListColumn().equals(slc)) {
+                    slc.addFilter(activeFilter.getValue());
+                    break;
+                }
+            }
+        });
+        
+        // sort all submission list columns by sort order provided by users submission list columns
+        Collections.sort(allSubmissionListColums, new Comparator<SubmissionListColumn>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
                 return svc1.getSortOrder().compareTo(svc2.getSortOrder());
@@ -94,6 +129,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         Boolean filterExists = false;
         Boolean predicateExists = false;
+        
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
         for (SubmissionListColumn submissionListColumn : submissionListColums) {
 

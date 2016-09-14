@@ -6,14 +6,16 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
@@ -23,14 +25,18 @@ public class SubmissionSpecification<E> implements Specification<E> {
     public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
         this.submissionListColums = submissionListColums;
     }
+    
+    // TODO: determine how to handle date range on filter
 
     @Override
     @SuppressWarnings("unchecked")
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
-        List<Predicate> _predicates = new ArrayList<Predicate>();
-
         List<Order> _orders = new ArrayList<Order>();
+        
+        List<Predicate> _groupPredicates = new ArrayList<Predicate>();
+
+        List<Predicate> _columnFilterPredicates = new ArrayList<Predicate>();
 
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
 
@@ -43,11 +49,12 @@ public class SubmissionSpecification<E> implements Specification<E> {
             if (submissionListColumn.getValuePath().size() > 0) {
                 if (submissionListColumn.getPredicate() != null) {
                     if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
-                        Join<?, ?> join = (Join<?, ?>) root.join("fieldValues", JoinType.LEFT).alias("fv" + i);
+                        SetJoin<Submission, FieldValue> join = root.joinSet("fieldValues", JoinType.LEFT);
+                        join.alias("fv" + i);
                         path = join.get("value");
                         Path<?> predicatePath = join.get("fieldPredicate").get("value");
                         _groupings.add(predicatePath);
-                        _predicates.add(cb.equal(predicatePath, submissionListColumn.getPredicate()));
+                        _groupPredicates.add(cb.equal(predicatePath, submissionListColumn.getPredicate()));
                         i++;
                     }
                 } else {
@@ -61,7 +68,7 @@ public class SubmissionSpecification<E> implements Specification<E> {
                 }
 
                 for (String filter : submissionListColumn.getFilters()) {
-                    _predicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
+                    _columnFilterPredicates.add(cb.like((Expression<String>) path, "%" + filter + "%"));
                 }
 
                 switch (submissionListColumn.getSort()) {
@@ -69,12 +76,20 @@ public class SubmissionSpecification<E> implements Specification<E> {
                     case DESC: _orders.add(cb.desc(path)); break;
                     default:  break;
                 }
-
             }
         }
 
         query.groupBy(_groupings).orderBy(_orders);
-
-        return cb.and(_predicates.toArray(new Predicate[_predicates.size()]));
+        
+        Predicate returnPredicate = null;
+        
+        if(_columnFilterPredicates.size() == 0) {
+            returnPredicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
+        }
+        else {
+            returnPredicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_columnFilterPredicates.toArray(new Predicate[_columnFilterPredicates.size()])));
+        }
+        
+        return returnPredicate;
     }
 }

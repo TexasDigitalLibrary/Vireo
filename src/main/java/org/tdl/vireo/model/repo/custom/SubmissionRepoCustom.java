@@ -14,6 +14,6 @@ public interface SubmissionRepoCustom {
     
     public Submission create(Credentials submitterCredentials, Long organizationId);
     
-    public Page<Submission> pageableDynamicSubmissionQuery(List<SubmissionListColumn> submissionListColums, Pageable pageable);
+    public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable);
 
 }

@@ -4,8 +4,10 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +18,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
@@ -66,7 +67,7 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     private String middleName;
 
-    @ElementCollection(fetch=FetchType.EAGER)
+    @ElementCollection(fetch=EAGER)
     @MapKeyColumn(name="setting")
     @Column(name="value")
     Map<String, String> settings;
@@ -74,7 +75,7 @@ public class User extends BaseEntity implements CoreUser {
     @Column
     private Integer birthYear;
 
-    @ElementCollection(fetch=FetchType.EAGER)
+    @ElementCollection(fetch=EAGER)
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
@@ -97,9 +98,15 @@ public class User extends BaseEntity implements CoreUser {
     @Column(nullable = false)
     private Integer pageSize;
     
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> submissionViewColumns;
+    
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    private List<NamedSearchFilter> activeFilters;
+    
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    private List<NamedSearchFilter> savedFilters;
 
     /**
      * 
@@ -109,6 +116,9 @@ public class User extends BaseEntity implements CoreUser {
         setSettings(new TreeMap<String, String>());
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
+        setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
+        setActiveFilters(new ArrayList<NamedSearchFilter>());
+        setSavedFilters(new ArrayList<NamedSearchFilter>());
         setPageSize(10);
     }
 
@@ -125,6 +135,19 @@ public class User extends BaseEntity implements CoreUser {
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role);
+    }
+    
+    /**
+     * 
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @param role
+     * @param submissionViewColumns
+     */
+    public User(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> submissionViewColumns) {
+        this(email, firstName, lastName, role);
+        setSubmissionViewColumns(submissionViewColumns);
     }
 
     /**
@@ -453,4 +476,52 @@ public class User extends BaseEntity implements CoreUser {
         this.submissionViewColumns.remove(submissionViewColumn);
     }
 
+    /**
+     * @return the activeFilters
+     */
+    public List<NamedSearchFilter> getActiveFilters() {
+        return activeFilters;
+    }
+
+    /**
+     * @param activeFilters the activeFilters to set
+     */
+    public void setActiveFilters(List<NamedSearchFilter> activeFilters) {
+        this.activeFilters = activeFilters;
+    }
+    
+    public void addActiveFilter(NamedSearchFilter activeFilter) {
+        if(!this.activeFilters.contains(activeFilter)) {
+            this.activeFilters.add(activeFilter);
+        }
+    }
+    
+    public void removeActiveFilter(NamedSearchFilter activeFilter) {
+        this.activeFilters.remove(activeFilter);
+    }
+
+    /**
+     * @return the savedFilters
+     */
+    public List<NamedSearchFilter> getSavedFilters() {
+        return savedFilters;
+    }
+
+    /**
+     * @param savedFilters the savedFilters to set
+     */
+    public void setSavedFilters(List<NamedSearchFilter> savedFilters) {
+        this.savedFilters = savedFilters;
+    }
+    
+    public void addSavedFilter(NamedSearchFilter savedFilter) {
+        if(!this.savedFilters.contains(savedFilter)) {
+            this.savedFilters.add(savedFilter);
+        }
+    }
+    
+    public void removeSavedFilter(NamedSearchFilter savedFilter) {
+        this.savedFilters.remove(savedFilter);
+    }
+    
 }

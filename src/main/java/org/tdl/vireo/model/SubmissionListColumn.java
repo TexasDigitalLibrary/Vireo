@@ -1,13 +1,19 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.enums.Sort;
@@ -18,16 +24,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }) )
 public class SubmissionListColumn extends BaseEntity {
+    
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    private InputType inputType;
     
     @Column(unique = true, nullable = false)
     private String title;
     
-    @Column(nullable = false)
+    @Transient
     private Sort sort;
     
-    @Column(nullable = false)
+    @Transient
     private Integer sortOrder;
     
     @Column(nullable = true)
@@ -41,8 +50,7 @@ public class SubmissionListColumn extends BaseEntity {
     @OrderColumn
     private List<String> valuePath;
     
-    @ElementCollection
-    @OrderColumn
+    @Transient
     private List<String> filters;
     
     @JsonIgnore
@@ -61,10 +69,20 @@ public class SubmissionListColumn extends BaseEntity {
         this.valuePath = valuePath;
     }
     
+    public SubmissionListColumn(String title, Sort sort, List<String> valuePath, InputType inputType) {
+        this(title, sort, valuePath);
+        this.inputType = inputType;
+    }
+    
     public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
         this(title, sort, valuePath);
         this.predicate = predicate;
         this.predicatePath = predicatePath;
+    }
+    
+    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
+        this(title, sort, predicate, predicatePath, valuePath);
+        this.inputType = inputType;
     }
 
     /**
@@ -187,6 +205,20 @@ public class SubmissionListColumn extends BaseEntity {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     * @return the inputType
+     */
+    public InputType getInputType() {
+        return inputType;
+    }
+
+    /**
+     * @param inputType the inputType to set
+     */
+    public void setInputType(InputType inputType) {
+        this.inputType = inputType;
     }
     
 }
