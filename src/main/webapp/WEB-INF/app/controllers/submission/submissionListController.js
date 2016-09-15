@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, ActiveFilters) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -15,6 +15,16 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.userColumns = [];
 
 	$scope.change = false;
+
+	$scope.activeFilters = [];
+
+	SidebarService.addBoxes([
+	    {
+	        "title": "Now filtering By:",
+	        "viewUrl": "views/sideboxes/nowfiltering.html",
+			"data": $scope.test
+	    }
+	]);
 
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {

@@ -694,4 +694,15 @@ var apiMapping = {
 			'controller': 'workflow-step'
 		}
 	},
+	ActiveFilters: {
+		instantiate: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'active-filters'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'active-filters'
+		}
+	},
 }

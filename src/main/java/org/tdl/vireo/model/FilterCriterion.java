@@ -15,18 +15,25 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class FilterCriterion extends BaseEntity {
+	
+	private String name;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+	@ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private List<SubmissionListColumn> submissionListColumns;
     
     @ElementCollection(fetch = EAGER)
     private List<String> filterStrings;
     
     public FilterCriterion() {
+    	this("default");
+    }
+
+    public FilterCriterion(String name) {
+    	setName(name);
         setSubmissionListColumns(new ArrayList<SubmissionListColumn>());
         setFilterStrings(new ArrayList<String>());
     }
-
+    
     /**
      * @return the submissionListColumn
      */
@@ -74,5 +81,13 @@ public class FilterCriterion extends BaseEntity {
     public void removeFilterString(String filterString) {
         filterStrings.remove(filterString);
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
     
 }
