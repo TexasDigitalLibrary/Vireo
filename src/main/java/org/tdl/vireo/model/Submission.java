@@ -7,9 +7,9 @@ import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -66,11 +66,11 @@ public class Submission extends BaseEntity {
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
-        setFieldValues(new TreeSet<FieldValue>());
+        setFieldValues(new HashSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
-        setActionLog(new TreeSet<ActionLog>());
-        setEmbargoTypes(new TreeSet<Embargo>());
-        setAttachments(new TreeSet<Attachment>());
+        setActionLog(new HashSet<ActionLog>());
+        setEmbargoTypes(new HashSet<Embargo>());
+        setAttachments(new HashSet<Attachment>());
         
     }
 

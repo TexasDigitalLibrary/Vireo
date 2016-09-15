@@ -17,28 +17,38 @@ import edu.tamu.framework.model.BaseEntity;
 public class FilterCriterion extends BaseEntity {
 
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<SubmissionListColumn> submissionListColumn;
+    private List<SubmissionListColumn> submissionListColumns;
     
     @ElementCollection(fetch = EAGER)
     private List<String> filterStrings;
     
     public FilterCriterion() {
-        setSubmissionListColumn(new ArrayList<SubmissionListColumn>());
+        setSubmissionListColumns(new ArrayList<SubmissionListColumn>());
         setFilterStrings(new ArrayList<String>());
     }
 
     /**
      * @return the submissionListColumn
      */
-    public List<SubmissionListColumn> getSubmissionListColumn() {
-        return submissionListColumn;
+    public List<SubmissionListColumn> getSubmissionListColumns() {
+        return submissionListColumns;
     }
 
     /**
      * @param submissionListColumn the submissionListColumn to set
      */
-    public void setSubmissionListColumn(List<SubmissionListColumn> submissionListColumn) {
-        this.submissionListColumn = submissionListColumn;
+    public void setSubmissionListColumns(List<SubmissionListColumn> submissionListColumns) {
+        this.submissionListColumns = submissionListColumns;
+    }
+    
+    public void addSubmissionListColumn(SubmissionListColumn submissionListColumn) {
+        if(!submissionListColumns.contains(submissionListColumn)) {
+            submissionListColumns.add(submissionListColumn);
+        }
+    }
+    
+    public void removeSubmissionListColumn(SubmissionListColumn submissionListColumn) {
+        submissionListColumns.remove(submissionListColumn);
     }
 
     /**
@@ -53,6 +63,16 @@ public class FilterCriterion extends BaseEntity {
      */
     public void setFilterStrings(List<String> filterStrings) {
         this.filterStrings = filterStrings;
+    }
+    
+    public void addFilterString(String filterString) {
+        if(!filterStrings.contains(filterString)) {
+            filterStrings.add(filterString);
+        }
+    }
+    
+    public void removeFilterString(String filterString) {
+        filterStrings.remove(filterString);
     }
     
 }

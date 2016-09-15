@@ -54,16 +54,20 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
     
+//    @Autowired
+//    private NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
+    
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
 
         User submitter = userRepo.findByEmail(submitterCredentials.getEmail());
 
-        // TODO: Instead of being hardcoded this could be dynamic either at the app level, or per organization
         SubmissionState startingState = submissionStateRepo.findByName("In Progress");
+        
         Organization organization = organizationRepo.findOne(organizationId);
-
+        
         Submission submission = new Submission(submitter, organization);
+        
         submission.setState(startingState);
 
         // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
@@ -85,6 +89,28 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
+        
+//        if(user.getActiveFilter() == null) {
+//            NamedSearchFilterCriteria filter = namedSearchFilterCriteriaRepo.create(user, "Full Search For Bob");
+//            
+//            FilterCriterion fc = new FilterCriterion();
+//            
+//            fc.addFilterString("Bob");
+//            
+//            fc.setSubmissionListColumns(submissionListColumnRepo.findAll());
+//                    
+//            filter.setFilterCriteria(new ArrayList<FilterCriterion>());
+//            
+//            filter.addFilterCriterion(fc);
+//            
+//            filter = namedSearchFilterCriteriaRepo.save(filter);
+//            
+//            user.addSavedFilter(filter);
+//            
+//            user.setActiveFilter(filter);
+//            
+//            user = userRepo.save(user);
+//        }
 
         NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
         
@@ -101,11 +127,16 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
         });
         
+        // ALL COLUMN SEARCH DOES NOT WORK!!
+        
         // add filters to columns that are active on user
         if(activeFilter != null) {
             activeFilter.getFilterCriteria().forEach(filterCriterion -> {
-                filterCriterion.getSubmissionListColumn().forEach(submissionListColumn -> {
+                filterCriterion.getSubmissionListColumns().forEach(submissionListColumn -> {
                     filterCriterion.getFilterStrings().forEach(filterString -> {
+                        // ***************************************************************************************
+                        // confirm this places filter on allSubmissionListColums, which is passed to specification
+                        // also, confirm does not effect all users, i.e. thread safe
                         submissionListColumn.addFilter(filterString);
                     });
                 });
