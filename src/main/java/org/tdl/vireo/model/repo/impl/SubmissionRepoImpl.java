@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -20,7 +20,6 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldValueRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -36,10 +35,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionRepo submissionRepo;
-
+    
     @Autowired
     private FieldValueRepo fieldValueRepo;
-
+    
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
 
@@ -54,9 +53,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-    
-    @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
     
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
@@ -74,7 +70,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
             SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
             submission.addSubmissionWorkflowStep(submissionWorkflowStep);
-
+            
             // pre populate field values for all field profiles in aggregate workflow
             // this is undesirable but currently only way to get dynamic query to function correctly
             for (FieldProfile fp : aws.getAggregateFieldProfiles()) {
@@ -89,22 +85,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
-        
-        if(user.getActiveFilters().isEmpty()) {
-            NamedSearchFilter activeFilter = namedSearchFilterRepo.create(user, "Full Search", "bob");
-            user.addActiveFilter(activeFilter);
-        }
-        
-        if(user.getActiveFilters().size() == 1) {
-            NamedSearchFilter tf = namedSearchFilterRepo.create(user, "Id Search", "2");
-            tf.setSubmissionListColumn(submissionListColumnRepo.findByTitle("ID"));
-            tf = namedSearchFilterRepo.save(tf);
-            user.addActiveFilter(tf);
-        }
-        
-        List<String> fullSearchFilters = new ArrayList<String>();
-        
-        List<NamedSearchFilter> activeFilters = user.getActiveFilters();
+
+        NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
         
         List<SubmissionListColumn> allSubmissionListColums = submissionListColumnRepo.findAll();
         
@@ -120,17 +102,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         });
         
         // add filters to columns that are active on user
-        activeFilters.forEach(activeFilter -> {
-            for(SubmissionListColumn slc : allSubmissionListColums) {
-                if(!activeFilter.getFullSearch() && activeFilter.getSubmissionListColumn() != null && activeFilter.getSubmissionListColumn().equals(slc)) {
-                    slc.addFilter(activeFilter.getValue());
-                    break;
-                }
-            }
-            if(activeFilter.getFullSearch()) {
-                fullSearchFilters.add(activeFilter.getValue());
-            }
-        });
+        if(activeFilter != null) {
+            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+                filterCriterion.getSubmissionListColumn().forEach(submissionListColumn -> {
+                    filterCriterion.getFilterStrings().forEach(filterString -> {
+                        submissionListColumn.addFilter(filterString);
+                    });
+                });
+            });
+        }
         
         // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColums, new Comparator<SubmissionListColumn>() {
@@ -164,16 +144,12 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             }
         }
-        
-        if(fullSearchFilters.size() > 0) {
-            filterExists = true;
-        }
 
         Page<Submission> pageResults = null;
 
         if (filterExists || orders.size() > 0) {
             if (filterExists || predicateExists) {
-                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums, fullSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
+                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
             }
