@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
@@ -100,13 +101,13 @@ public class User extends BaseEntity implements CoreUser {
     
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @OrderColumn
-    private List<SubmissionListColumn> submissionViewColumns;
+    private List<SubmissionListColumn> displayedSubmissionColumns;
+    
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    private NamedSearchFilterCriteria activeFilter;
     
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<NamedSearchFilter> activeFilters;
-    
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<NamedSearchFilter> savedFilters;
+    private List<NamedSearchFilterCriteria> savedFilters;
 
     /**
      * 
@@ -117,8 +118,7 @@ public class User extends BaseEntity implements CoreUser {
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
-        setActiveFilters(new ArrayList<NamedSearchFilter>());
-        setSavedFilters(new ArrayList<NamedSearchFilter>());
+        setSavedFilters(new ArrayList<NamedSearchFilterCriteria>());
         setPageSize(10);
     }
 
@@ -143,11 +143,11 @@ public class User extends BaseEntity implements CoreUser {
      * @param firstName
      * @param lastName
      * @param role
-     * @param submissionViewColumns
+     * @param displayedSubmissionColumns
      */
-    public User(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> submissionViewColumns) {
+    public User(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> displayedSubmissionColumns) {
         this(email, firstName, lastName, role);
-        setSubmissionViewColumns(submissionViewColumns);
+        setSubmissionViewColumns(displayedSubmissionColumns);
     }
 
     /**
@@ -456,71 +456,61 @@ public class User extends BaseEntity implements CoreUser {
      * @return the submissionViewColumn
      */
     public List<SubmissionListColumn> getSubmissionViewColumns() {
-        return submissionViewColumns;
+        return displayedSubmissionColumns;
     }
 
     /**
      * @param submissionViewColumn the submissionViewColumn to set
      */
-    public void setSubmissionViewColumns(List<SubmissionListColumn> submissionViewColumn) {
-        this.submissionViewColumns = submissionViewColumn;
+    public void setSubmissionViewColumns(List<SubmissionListColumn> displayedSubmissionColumn) {
+        this.displayedSubmissionColumns = displayedSubmissionColumn;
     }
     
-    public void addSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
-        if(!this.submissionViewColumns.contains(submissionViewColumn)) {
-            this.submissionViewColumns.add(submissionViewColumn);
+    public void addSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
+        if(!this.displayedSubmissionColumns.contains(displayedSubmissionColumn)) {
+            this.displayedSubmissionColumns.add(displayedSubmissionColumn);
         }
     }
     
-    public void removeSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
-        this.submissionViewColumns.remove(submissionViewColumn);
+    public void removeSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
+        this.displayedSubmissionColumns.remove(displayedSubmissionColumn);
     }
 
     /**
-     * @return the activeFilters
+     * @return the activeFilter
      */
-    public List<NamedSearchFilter> getActiveFilters() {
-        return activeFilters;
+    public NamedSearchFilterCriteria getActiveFilter() {
+        return activeFilter;
     }
 
     /**
-     * @param activeFilters the activeFilters to set
+     * @param activeFilter the activeFilter to set
      */
-    public void setActiveFilters(List<NamedSearchFilter> activeFilters) {
-        this.activeFilters = activeFilters;
-    }
-    
-    public void addActiveFilter(NamedSearchFilter activeFilter) {
-        if(!this.activeFilters.contains(activeFilter)) {
-            this.activeFilters.add(activeFilter);
-        }
-    }
-    
-    public void removeActiveFilter(NamedSearchFilter activeFilter) {
-        this.activeFilters.remove(activeFilter);
+    public void setActiveFilter(NamedSearchFilterCriteria activeFilter) {
+        this.activeFilter = activeFilter;
     }
 
     /**
      * @return the savedFilters
      */
-    public List<NamedSearchFilter> getSavedFilters() {
+    public List<NamedSearchFilterCriteria> getSavedFilters() {
         return savedFilters;
     }
 
     /**
      * @param savedFilters the savedFilters to set
      */
-    public void setSavedFilters(List<NamedSearchFilter> savedFilters) {
+    public void setSavedFilters(List<NamedSearchFilterCriteria> savedFilters) {
         this.savedFilters = savedFilters;
     }
     
-    public void addSavedFilter(NamedSearchFilter savedFilter) {
+    public void addSavedFilter(NamedSearchFilterCriteria savedFilter) {
         if(!this.savedFilters.contains(savedFilter)) {
             this.savedFilters.add(savedFilter);
         }
     }
     
-    public void removeSavedFilter(NamedSearchFilter savedFilter) {
+    public void removeSavedFilter(NamedSearchFilterCriteria savedFilter) {
         this.savedFilters.remove(savedFilter);
     }
     
