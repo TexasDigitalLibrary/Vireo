@@ -29,6 +29,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,6 +51,7 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
+import org.tdl.vireo.model.repo.specification.SubmissionSpecification;
 
 import edu.tamu.framework.model.Credentials;
 
@@ -142,6 +144,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
         });
           
+        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if(activeFilter != null) {
             activeFilter.getFilterCriteria().forEach(filterCriterion -> {
             	if(filterCriterion.getAllColumnSearch()) {
@@ -200,20 +203,20 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         if (filterExists || orders.size() > 0) {
             if (filterExists || predicateExists) {
 
-            	CriteriaBuilder cb = em.getCriteriaBuilder();
-            	
-            	CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
-            	
-            	Root<Submission> root = query.from(Submission.class);
-            	
-            	List<Order> _orders = new ArrayList<Order>();
-                
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+
+                CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
+
+                Root<Submission> root = query.from(Submission.class);
+
+                List<Order> _orders = new ArrayList<Order>();
+
                 List<Predicate> _groupPredicates = new ArrayList<Predicate>();
-                
+
                 List<Predicate> _filterPredicates = new ArrayList<Predicate>();
-                
-                Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?,?>>();
-                
+
+                Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?, ?>>();
+
                 Path<?> fieldValueFetchPath = null;
 
                 for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
@@ -221,14 +224,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     if (submissionListColumn.getValuePath().size() > 0) {
                         if (submissionListColumn.getPredicate() != null) {
                             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
-                                
-                            	Join<?, ?> join = (Join<?, ?>) root.fetch("fieldValues", JoinType.LEFT);
-                                
-                            	path = join.get("value");
+
+                                Join<?, ?> join = (Join<?, ?>) root.fetch("fieldValues", JoinType.LEFT);
+
+                                path = join.get("value");
 
                                 Subquery<Submission> subquery = query.subquery(Submission.class);
                                 Root<Submission> subQueryRoot = subquery.from(Submission.class);
-                                                                
+
                                 subquery.select(subQueryRoot.get("id")).distinct(true);
                                 subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
 
@@ -236,46 +239,50 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                             }
                         } else {
-                            
+
                             String navPath = null;
-                            
+
                             for (String property : submissionListColumn.getValuePath()) {
-                            	if (path == null) {                            	    
-                            	    navPath = property;
-                            	    if(requiresFetch(root, property)) {
+                                if (path == null) {
+                                    navPath = property;
+                                    if (requiresFetch(root, property)) {
                                         Fetch<?, ?> fetch = fetches.get(navPath);
-                                        path = (Path<?>) ((fetch == null) ? root.fetch(property) : fetch);
-                                    }
-                                    else {
+                                        if(fetch == null) {
+                                            fetch = root.fetch(property);
+                                            fetches.put(navPath, fetch);
+                                        }
+                                        path = (Path<?>) fetch;
+                                    } else {
                                         path = root.get(property);
                                     }
-                            	}
-                            	else {
-                            	    navPath = "." + property;
-                            	    if(requiresFetch(path, property)) {
+                                } else {
+                                    navPath += "." + property;
+                                    if (requiresFetch(path, property)) {
                                         Fetch<?, ?> fetch = fetches.get(navPath);
-                                        path = (Path<?>) ((fetch == null) ? ((Fetch<?, ?>) path).fetch(property) : fetch);
-                                    }
-                                    else {
+                                        if(fetch == null) {
+                                            fetch = ((Fetch<?, ?>) path).fetch(property);
+                                            fetches.put(navPath, fetch);
+                                        }
+                                        path = (Path<?>) fetch;
+                                    } else {
                                         path = path.get(property);
                                     }
-                            	}
+                                }
                             }
 
                         }
-                        
+
                         for (String filter : submissionListColumn.getFilters()) {
                             _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
                         }
-                        
+
                         for (String filter : allColumnSearchFilters) {
                             if (submissionListColumn.getPredicate() != null) {
-                                if(fieldValueFetchPath == null) {
+                                if (fieldValueFetchPath == null) {
                                     fieldValueFetchPath = (Path<?>) root.fetch("fieldValues");
                                 }
                                 _filterPredicates.add(cb.like(fieldValueFetchPath.get("value").as(String.class), "%" + filter + "%"));
-                            }
-                            else {
+                            } else {
                                 _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
                             }
                         }
@@ -283,32 +290,32 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         switch (submissionListColumn.getSort()) {
                             case ASC: _orders.add(cb.asc(path)); break;
                             case DESC: _orders.add(cb.desc(path)); break;
-                            default:  break;
+                            default: break;
                         }
                     }
                 }
 
                 Predicate predicate = null;
-                
-                if(_filterPredicates.size() == 0) {
-                	predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
+
+                if (_filterPredicates.size() == 0) {
+                    predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
+                } else {
+                    predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
                 }
-                else {
-                	predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
-                }
-                
+
                 query.select(root).distinct(true).where(predicate).orderBy(_orders);
-                
-                
+
                 TypedQuery<Submission> typedQuery = em.createQuery(query);
-				              
-				long total = typedQuery.getResultList().size();
-				typedQuery.setFirstResult(pageable.getOffset());
-				typedQuery.setMaxResults(pageable.getPageSize());
-				
-				pageResults = new PageImpl<Submission>(typedQuery.getResultList(), pageable, total);
                 
-              
+                
+                System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
+
+                long total = typedQuery.getResultList().size();
+                typedQuery.setFirstResult(pageable.getOffset());
+                typedQuery.setMaxResults(pageable.getPageSize());
+
+                pageResults = new PageImpl<Submission>(typedQuery.getResultList(), pageable, total);
+                  
 //                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColumns, allColumnSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
