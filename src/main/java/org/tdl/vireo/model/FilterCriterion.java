@@ -4,12 +4,13 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -18,68 +19,73 @@ public class FilterCriterion extends BaseEntity {
 	
 	private String name;
 
-	@ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<SubmissionListColumn> submissionListColumns;
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    private SubmissionListColumn submissionListColumn;
     
     @ElementCollection(fetch = EAGER)
-    private List<String> filterStrings;
+    private Set<String> filters;
+    
+    @Column(nullable = false)
+    private Boolean allColumnSearch;
     
     public FilterCriterion() {
-    	this("default");
+        setFilters(new HashSet<String>());
+        setAllColumnSearch(true);
     }
-
-    public FilterCriterion(String name) {
-    	setName(name);
-        setSubmissionListColumns(new ArrayList<SubmissionListColumn>());
-        setFilterStrings(new ArrayList<String>());
+    
+    public FilterCriterion(SubmissionListColumn submissionListColumn) {
+        this();
+        setAllColumnSearch(false);
+        setSubmissionListColumn(submissionListColumn);
     }
     
     /**
      * @return the submissionListColumn
      */
-    public List<SubmissionListColumn> getSubmissionListColumns() {
-        return submissionListColumns;
+    public SubmissionListColumn getSubmissionListColumn() {
+        return submissionListColumn;
     }
 
     /**
      * @param submissionListColumn the submissionListColumn to set
      */
-    public void setSubmissionListColumns(List<SubmissionListColumn> submissionListColumns) {
-        this.submissionListColumns = submissionListColumns;
-    }
-    
-    public void addSubmissionListColumn(SubmissionListColumn submissionListColumn) {
-        if(!submissionListColumns.contains(submissionListColumn)) {
-            submissionListColumns.add(submissionListColumn);
+    public void setSubmissionListColumn(SubmissionListColumn submissionListColumn) {
+        this.submissionListColumn = submissionListColumn;
+        if(this.submissionListColumn != null) {
+            setAllColumnSearch(false);
+        }
+        else {
+            setAllColumnSearch(true);
         }
     }
-    
-    public void removeSubmissionListColumn(SubmissionListColumn submissionListColumn) {
-        submissionListColumns.remove(submissionListColumn);
-    }
-
     /**
-     * @return the filterStrings
+     * @return the filters
      */
-    public List<String> getFilterStrings() {
-        return filterStrings;
+    public Set<String> getFilters() {
+        return filters;
     }
 
     /**
      * @param filterStrings the filterStrings to set
      */
-    public void setFilterStrings(List<String> filterStrings) {
-        this.filterStrings = filterStrings;
+    public void setFilters(Set<String> filters) {
+        this.filters = filters;
     }
     
-    public void addFilterString(String filterString) {
-        if(!filterStrings.contains(filterString)) {
-            filterStrings.add(filterString);
-        }
+    public void addFilter(String filter) {
+    	filters.add(filter);
     }
     
-    public void removeFilterString(String filterString) {
-        filterStrings.remove(filterString);
+    public void removeFilter(String filter) {
+    	filters.remove(filter);
+    }
+    
+    public Boolean getAllColumnSearch() {
+    	return allColumnSearch;
+    }
+    
+    public void setAllColumnSearch(Boolean allColumnSearch) {
+    	this.allColumnSearch = allColumnSearch;
     }
 
 	public String getName() {

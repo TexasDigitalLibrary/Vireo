@@ -12,6 +12,7 @@ import org.tdl.vireo.model.FilterCriterion;
 import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.FilterCriterionRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -42,10 +43,10 @@ public class SubmissionListController {
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
     
     @Autowired
-    private NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
+    private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private FilterCriterionRepo filterCriterionRepo;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -95,21 +96,6 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-    	if (user.getActiveFilter() == null) {
-	    	NamedSearchFilterCriteria filters = new NamedSearchFilterCriteria();
-	    	
-	    	FilterCriterion fc = new FilterCriterion("Great Filter");
-	    	fc.addFilterString("Test String");
-	    	fc.addFilterString("Another Test String");
-	    	filters.addFilterCriterion(fc);
-	    	filters.setName("Alabama");
-	    	filters.setUser(user);
-	    	
-	    	user.setActiveFilter(filters);
-	    	namedSearchFilterCriteriaRepo.save(filters);
-	    	userRepo.save(user);
-    	}
-    	System.out.println("filtcrit: "+user.getActiveFilter().getFilterCriteria().size());
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
 
@@ -120,10 +106,10 @@ public class SubmissionListController {
     	User user = userRepo.findByEmail(credentials.getEmail());
     	NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
     	FilterCriterion filterCriterion = activeFilter.getFilterCriterion(filterCriterionId);
-    	filterCriterion.removeFilterString(filterString);
+    	filterCriterion.removeFilter(filterString);
 
     	
-    	if (filterCriterion.getFilterStrings().size() == 0) {
+    	if (filterCriterion.getFilters().size() == 0) {
         	user.getActiveFilter().removeFilterCriterion(filterCriterion);
     	}
     	userRepo.save(user);
