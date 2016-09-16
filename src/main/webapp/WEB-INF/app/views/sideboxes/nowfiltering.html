@@ -2,6 +2,6 @@
 <div ng-repeat="filterCriterion in box.activeFilters.filterCriteria">
 	<sideboxsub>{{filterCriterion.name}}</sideboxsub>
 	<ul>
-		<li ng-repeat="filterString in filterCriterion.filterStrings">X {{filterString}}</li>
+		<li ng-repeat="filterString in filterCriterion.filterStrings"><a href="#" ng-click="box.removeFilter(filterCriterion.id,filterString)">X {{filterString}}</a></li>
 	</ul>
 </div>

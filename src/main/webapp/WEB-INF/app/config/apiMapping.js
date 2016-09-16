@@ -703,6 +703,11 @@ var apiMapping = {
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'active-filters'
+		},
+		removeFilter: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'clear-filter-criterion'
 		}
 	},
 }

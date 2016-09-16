@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     @Column(nullable = false)
     private Boolean umiRelease;
     
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = {REFRESH, MERGE}, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
     
     public NamedSearchFilterCriteria() {
@@ -131,5 +132,16 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     public void removeFilterCriterion(FilterCriterion filterCriterion) {
         filterCriteria.remove(filterCriterion);
     }
+
+	public FilterCriterion getFilterCriterion(Long criteriaId) {
+		for (FilterCriterion filterCriterion:filterCriteria) {
+			System.out.println(filterCriterion.getId()+" = "+criteriaId);
+			if (filterCriterion.getId() == criteriaId) {
+				System.out.println("we did it as a team");
+				return filterCriterion;
+			}
+		}
+		return null;
+	}
     
 }

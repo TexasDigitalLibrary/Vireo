@@ -20,11 +20,16 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	console.log($scope.activeFilters);
 
+	$scope.removeFilter = function(filterCriterionId,filterString) {
+		$scope.activeFilters.removeFilter(filterCriterionId,filterString);
+	};
+
 	SidebarService.addBoxes([
 	    {
 	        "title": "Now filtering By:",
 	        "viewUrl": "views/sideboxes/nowfiltering.html",
-			"activeFilters": $scope.activeFilters
+			"activeFilters": $scope.activeFilters,
+			"removeFilter": $scope.removeFilter
 	    }
 	]);
 

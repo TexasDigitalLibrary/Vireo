@@ -5,17 +5,22 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FilterCriterion;
 import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
@@ -35,6 +40,12 @@ public class SubmissionListController {
     
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
+    
+    @Autowired
+    private NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -84,14 +95,39 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-    	NamedSearchFilterCriteria filters = new NamedSearchFilterCriteria();
-    	
-    	FilterCriterion fc = new FilterCriterion("Great Filter");
-    	fc.addFilterString("Test String");
-    	fc.addFilterString("Another Test String");
-    	filters.addFilterCriterion(fc);
-    	user.setActiveFilter(filters);
+    	if (user.getActiveFilter() == null) {
+	    	NamedSearchFilterCriteria filters = new NamedSearchFilterCriteria();
+	    	
+	    	FilterCriterion fc = new FilterCriterion("Great Filter");
+	    	fc.addFilterString("Test String");
+	    	fc.addFilterString("Another Test String");
+	    	filters.addFilterCriterion(fc);
+	    	filters.setName("Alabama");
+	    	filters.setUser(user);
+	    	
+	    	user.setActiveFilter(filters);
+	    	namedSearchFilterCriteriaRepo.save(filters);
+	    	userRepo.save(user);
+    	}
+    	System.out.println("filtcrit: "+user.getActiveFilter().getFilterCriteria().size());
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
-    
+
+    @ApiMapping("/clear-filter-criterion/{filterCriterionId}")
+    @Auth(role = "MANAGER")
+    public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials, @ApiVariable Long filterCriterionId, @ApiData JsonNode data) {
+    	String filterString = data.get("filterString").asText();
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
+    	FilterCriterion filterCriterion = activeFilter.getFilterCriterion(filterCriterionId);
+    	filterCriterion.removeFilterString(filterString);
+
+    	
+    	if (filterCriterion.getFilterStrings().size() == 0) {
+        	user.getActiveFilter().removeFilterCriterion(filterCriterion);
+    	}
+    	userRepo.save(user);
+        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, user.getActiveFilter()));
+    	return new ApiResponse(SUCCESS);
+    }
 }
