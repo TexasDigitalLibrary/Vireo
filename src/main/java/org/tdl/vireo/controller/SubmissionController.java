@@ -10,8 +10,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.FilterCriterion;
-import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
@@ -104,14 +102,4 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
     }
     
-    
-    @ApiMapping("/active-filters")
-    @Auth(role = "MANAGER")
-    public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
-    	User user = userRepo.findByEmail(credentials.getEmail());
-    	NamedSearchFilterCriteria filters = new NamedSearchFilterCriteria();
-    	filters.addFilterCriterion(new FilterCriterion("Great Filter"));
-    	user.setActiveFilter(filters);
-        return new ApiResponse(SUCCESS,user.getActiveFilter());
-    }
 }

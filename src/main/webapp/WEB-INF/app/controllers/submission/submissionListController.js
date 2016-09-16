@@ -16,13 +16,15 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
-	$scope.activeFilters = [];
+	$scope.activeFilters = new ActiveFilters();
+
+	console.log($scope.activeFilters);
 
 	SidebarService.addBoxes([
 	    {
 	        "title": "Now filtering By:",
 	        "viewUrl": "views/sideboxes/nowfiltering.html",
-			"data": $scope.test
+			"activeFilters": $scope.activeFilters
 	    }
 	]);
 

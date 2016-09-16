@@ -1,4 +1,7 @@
-<sideboxsub>EMAIL</sideboxsub>
-<ul>
-	<li>{{box.data.test}}</li>
-</ul>
+
+<div ng-repeat="filterCriterion in box.activeFilters.filterCriteria">
+	<sideboxsub>{{filterCriterion.name}}</sideboxsub>
+	<ul>
+		<li ng-repeat="filterString in filterCriterion.filterStrings">X {{filterString}}</li>
+	</ul>
+</div>

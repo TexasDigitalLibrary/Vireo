@@ -697,7 +697,7 @@ var apiMapping = {
 	ActiveFilters: {
 		instantiate: {
 			'endpoint': '/private/queue',
-			'controller': 'submission',
+			'controller': 'submission-list',
 			'method': 'active-filters'
 		},
 		listen: {

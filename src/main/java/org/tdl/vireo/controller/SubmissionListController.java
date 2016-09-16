@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.FilterCriterion;
+import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
@@ -78,5 +80,18 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
+    @ApiMapping("/active-filters")
+    @Auth(role = "MANAGER")
+    public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	NamedSearchFilterCriteria filters = new NamedSearchFilterCriteria();
+    	
+    	FilterCriterion fc = new FilterCriterion("Great Filter");
+    	fc.addFilterString("Test String");
+    	fc.addFilterString("Another Test String");
+    	filters.addFilterCriterion(fc);
+    	user.setActiveFilter(filters);
+        return new ApiResponse(SUCCESS,user.getActiveFilter());
+    }
     
 }
