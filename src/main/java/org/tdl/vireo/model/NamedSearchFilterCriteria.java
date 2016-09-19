@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -38,6 +41,7 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     @Column(nullable = false)
     private Boolean umiRelease;
     
+    @Fetch(FetchMode.SELECT)
     @OneToMany(cascade = {REFRESH, MERGE}, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
     

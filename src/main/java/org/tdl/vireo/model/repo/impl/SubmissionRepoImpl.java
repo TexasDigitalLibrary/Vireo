@@ -308,7 +308,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 TypedQuery<Submission> typedQuery = em.createQuery(query);
                 
                 
-                System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
+                //System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
 
                 long total = typedQuery.getResultList().size();
                 typedQuery.setFirstResult(pageable.getOffset());

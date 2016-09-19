@@ -95,20 +95,8 @@ public class SubmissionListController {
     @ApiMapping("/active-filters")
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
-    	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-    		
-    		NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterion = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterion.setName("ID");
-        	filterCriterion.addFilter("Test");
-        	filterCriterion.addFilter("Another Test");
- 
-        	activeFilter.addFilterCriterion(filterCriterion);
-        	
-        	userRepo.save(user);
-    	}
+    	User user = userRepo.findByEmail(credentials.getEmail());
     	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
@@ -116,18 +104,22 @@ public class SubmissionListController {
     @ApiMapping("/clear-filter-criterion/{filterCriterionId}")
     @Auth(role = "MANAGER")
     public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials, @ApiVariable Long filterCriterionId, @ApiData JsonNode data) {
+    	
     	String filterString = data.get("filterString").asText();
     	User user = userRepo.findByEmail(credentials.getEmail());
     	NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
     	FilterCriterion filterCriterion = activeFilter.getFilterCriterion(filterCriterionId);
+    	
     	filterCriterion.removeFilter(filterString);
-
     	
     	if (filterCriterion.getFilters().size() == 0) {
         	user.getActiveFilter().removeFilterCriterion(filterCriterion);
     	}
+    	
     	userRepo.save(user);
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, user.getActiveFilter()));
-    	return new ApiResponse(SUCCESS);
+        
+    	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+
+        return new ApiResponse(SUCCESS);
     }
 }

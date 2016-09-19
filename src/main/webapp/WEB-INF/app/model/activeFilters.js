@@ -10,9 +10,9 @@ vireo.model("ActiveFilters", function (WsApi) {
 			var promise = WsApi.fetch(activeFilters.getMapping().removeFilter);
 
 			return promise;
-		}
-		
+		};
+
 		return activeFilters;
-	}
+	};
 
 });
