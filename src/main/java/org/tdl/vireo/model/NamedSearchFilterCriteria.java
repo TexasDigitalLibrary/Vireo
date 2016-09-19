@@ -139,9 +139,7 @@ public class NamedSearchFilterCriteria extends BaseEntity {
 
 	public FilterCriterion getFilterCriterion(Long criteriaId) {
 		for (FilterCriterion filterCriterion:filterCriteria) {
-			System.out.println(filterCriterion.getId()+" = "+criteriaId);
 			if (filterCriterion.getId() == criteriaId) {
-				System.out.println("we did it as a team");
 				return filterCriterion;
 			}
 		}
