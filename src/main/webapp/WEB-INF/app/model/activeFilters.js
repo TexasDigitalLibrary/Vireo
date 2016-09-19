@@ -5,10 +5,16 @@ vireo.model("ActiveFilters", function (WsApi) {
 
 		activeFilters.removeFilter = function(filterCriterionId,filterString) {
 			angular.extend(apiMapping.ActiveFilters.removeFilter, {
-																	"method": "clear-filter-criterion/"+filterCriterionId,
-																	"data": {"filterString":filterString}});
+				"method": "clear-filter-criterion/"+filterCriterionId,
+				"data": {"filterString":filterString}
+			});
 			var promise = WsApi.fetch(activeFilters.getMapping().removeFilter);
 
+			return promise;
+		};
+
+		activeFilters.clearFilters = function() {
+			var promise = WsApi.fetch(activeFilters.getMapping().clearFilters);
 			return promise;
 		};
 

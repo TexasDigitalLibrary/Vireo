@@ -13,7 +13,6 @@ import org.tdl.vireo.model.NamedSearchFilterCriteria;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FilterCriterionRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
@@ -96,12 +95,33 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
+  
+    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
+    		
+    		NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
+        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
+        	filterCriterionOne.setName("ID");
+        	filterCriterionOne.addFilter("1");
+        	filterCriterionOne.addFilter("2");
+        	
+        	activeFilter.addFilterCriterion(filterCriterionOne);
+        	
+        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
+        	filterCriterionTwo.setName("Last Name");
+        	filterCriterionTwo.addFilter("Huff");
+        	filterCriterionTwo.addFilter("Daniels");
+ 
+        	activeFilter.addFilterCriterion(filterCriterionTwo);
+        	
+        	userRepo.save(user);
+    	}
+    	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
 
     @ApiMapping("/clear-filter-criterion/{filterCriterionId}")
     @Auth(role = "MANAGER")
-    public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials, @ApiVariable Long filterCriterionId, @ApiData JsonNode data) {
+    public ApiResponse clearFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable Long filterCriterionId, @ApiData JsonNode data) {
     	
     	String filterString = data.get("filterString").asText();
     	User user = userRepo.findByEmail(credentials.getEmail());
@@ -120,4 +140,20 @@ public class SubmissionListController {
 
         return new ApiResponse(SUCCESS);
     }
+    
+    @ApiMapping("/clear-filter-criteria")
+    @Auth(role = "MANAGER")
+    public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials) {
+    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	user.getActiveFilter().getFilterCriteria().clear();
+    	
+    	userRepo.save(user);
+            	
+    	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+
+        return new ApiResponse(SUCCESS);
+    }
+    
 }
