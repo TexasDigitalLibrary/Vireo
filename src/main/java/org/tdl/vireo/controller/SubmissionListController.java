@@ -96,20 +96,6 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-  
-    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-    		
-    		NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterion = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterion.setName("ID");
-        	filterCriterion.addFilter("Test");
-        	filterCriterion.addFilter("Another Test");
- 
-        	activeFilter.addFilterCriterion(filterCriterion);
-        	
-        	userRepo.save(user);
-    	}
-    	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
 
