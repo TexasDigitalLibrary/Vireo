@@ -1,7 +1,7 @@
 
-<div ng-repeat="filterCriterion in box.activeFilters.filterCriteria">
+<div class="now-filtering-by" ng-repeat="filterCriterion in box.activeFilters.filterCriteria">
 	<sideboxsub>{{filterCriterion.name}}</sideboxsub>
 	<ul>
-		<li ng-repeat="filters in filterCriterion.filters"><a href="#" ng-click="box.removeFilter(filterCriterion.id,filters)">X {{filters}}</a></li>
+		<li ng-repeat="filters in filterCriterion.filters"><span class="glyphicon glyphicon-trash"></span> <a href="#" ng-click="box.removeFilter(filterCriterion.id,filters)">{{filters}}</a></li>
 	</ul>
 </div>
