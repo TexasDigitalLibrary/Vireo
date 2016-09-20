@@ -219,8 +219,6 @@ public class SubmissionListController {
     	
     	userRepo.save(user);
             	
-    	simpMessagingTemplate.convertAndSend("/channel/saved-filters/"+namedSearchFilter.getId(), new ApiResponse(SUCCESS, user.getSavedFilters()));
-
         return new ApiResponse(SUCCESS);
     }
     
