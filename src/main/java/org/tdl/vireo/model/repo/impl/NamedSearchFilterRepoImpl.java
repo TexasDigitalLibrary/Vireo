@@ -16,9 +16,6 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
     	NamedSearchFilter newNamedSearchFilter = new NamedSearchFilter();
     	newNamedSearchFilter.setUser(user);
     	
-    	System.out.println(user);
-    	System.out.println(newNamedSearchFilter);
-    	
         return namedSearchFilterCriteriaRepo.save(newNamedSearchFilter);
     }
     
