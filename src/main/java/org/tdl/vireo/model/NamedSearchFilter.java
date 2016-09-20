@@ -9,13 +9,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -25,7 +28,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
-public class NamedSearchFilterCriteria extends BaseEntity {
+public class NamedSearchFilter extends BaseEntity {
     
     @ManyToOne(optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
@@ -37,25 +40,29 @@ public class NamedSearchFilterCriteria extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean publicFlag;
+    
+    @Column(nullable = false)
+    private Boolean columnsFlag;
 
     @Column(nullable = false)
     private Boolean umiRelease;
+    
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OrderColumn
+    private List<SubmissionListColumn> savedColumns;
     
     @Fetch(FetchMode.SELECT)
     @OneToMany(cascade = {REFRESH, MERGE}, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
     
-    public NamedSearchFilterCriteria() {
+    public NamedSearchFilter() {
         setPublicFlag(false);
+        setColumnsFlag(false);
         setUmiRelease(false);
         setFilterCriteria(new ArrayList<FilterCriterion>());
+        setModelValidator(new NamedSearchFilterValidator());
     }
     
-    public NamedSearchFilterCriteria(User user, String name) {
-        this();
-        setUser(user);
-        setName(name);
-    }
 
     /**
      * @return the user
@@ -99,7 +106,15 @@ public class NamedSearchFilterCriteria extends BaseEntity {
         this.publicFlag = publicFlag;
     }
 
-    /**
+    public Boolean getColumnsFlag() {
+		return columnsFlag;
+	}
+
+	public void setColumnsFlag(Boolean columnsFlag) {
+		this.columnsFlag = columnsFlag;
+	}
+
+	/**
      * @return the umiRelease
      */
     public Boolean getUmiRelease() {

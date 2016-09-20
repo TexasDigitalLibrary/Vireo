@@ -694,7 +694,7 @@ var apiMapping = {
 			'controller': 'workflow-step'
 		}
 	},
-	ActiveFilters: {
+	NamedSearchFilter: {
 		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',

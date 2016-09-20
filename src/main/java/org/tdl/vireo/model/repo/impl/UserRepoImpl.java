@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.AppRole;
-import org.tdl.vireo.model.NamedSearchFilterCriteria;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
@@ -26,7 +26,7 @@ public class UserRepoImpl implements UserRepoCustom {
         
         newUser = userRepo.save(newUser);
         
-        NamedSearchFilterCriteria activeFilter = namedSearchFilterCriteriaRepo.create(newUser, "Default");
+        NamedSearchFilter activeFilter = namedSearchFilterCriteriaRepo.create(newUser);
         
         newUser.putSetting("id", newUser.getId().toString());
         newUser.putSetting("displayName", newUser.getFirstName() +" "+ newUser.getLastName());

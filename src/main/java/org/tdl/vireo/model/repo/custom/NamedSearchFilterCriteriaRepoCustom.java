@@ -1,10 +1,12 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.model.NamedSearchFilterCriteria;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.User;
 
 public interface NamedSearchFilterCriteriaRepoCustom {
 
-    public NamedSearchFilterCriteria create(User user, String name);
+    public NamedSearchFilter create(User user);
+    
+    public NamedSearchFilter create(User user, String name);
 
 }

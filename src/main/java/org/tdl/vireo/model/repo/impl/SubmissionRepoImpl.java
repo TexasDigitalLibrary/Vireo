@@ -36,7 +36,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.tdl.vireo.model.NamedSearchFilterCriteria;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -128,7 +128,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
-        NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
+        NamedSearchFilter activeFilter = user.getActiveFilter();
         
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
         

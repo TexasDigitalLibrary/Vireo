@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, ActiveFilters) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -16,7 +16,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
-	$scope.activeFilters = new ActiveFilters();
+	$scope.activeFilters = new NamedSearchFilter();
 
 	console.log($scope.activeFilters);
 
@@ -26,6 +26,16 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.clearFilters = function() {
 		$scope.activeFilters.clearFilters();
+	};
+
+	$scope.saveFilter = function() {
+		console.log("SAVE");
+		console.log($scope.activeFilters);
+	};
+
+	$scope.resetSaveFilter = function() {
+		console.log("Reset");
+		console.log($scope.activeFilters);
 	};
 
 	SidebarService.addBoxes([
@@ -38,7 +48,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	    {
 	        "title": "Filter Options:",
 	        "viewUrl": "views/sideboxes/filterOptions.html",
-			"clearFilters": $scope.clearFilters
+	        "activeFilters": $scope.activeFilters,
+			"clearFilters": $scope.clearFilters,
+			"saveFilter": $scope.saveFilter,
+			"resetSaveFilter": $scope.resetSaveFilter
 	    }
 	]);
 
