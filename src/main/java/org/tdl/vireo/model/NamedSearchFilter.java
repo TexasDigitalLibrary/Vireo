@@ -35,7 +35,7 @@ public class NamedSearchFilter extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name;
 
     @Column(nullable = false)
