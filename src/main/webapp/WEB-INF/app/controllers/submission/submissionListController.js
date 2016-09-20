@@ -46,24 +46,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		//Todo: reset the data in the modal
 	};
 
-	SidebarService.addBoxes([
-	    {
-	        "title": "Now filtering By:",
-	        "viewUrl": "views/sideboxes/nowfiltering.html",
-			"activeFilters": $scope.activeFilters,
-			"removeFilter": $scope.removeFilter
-	    },
-	    {
-	        "title": "Filter Options:",
-	        "viewUrl": "views/sideboxes/filterOptions.html",
-	        "activeFilters": $scope.activeFilters,
-			"clearFilters": $scope.clearFilters,
-			"saveFilter": $scope.saveFilter,
-			"savedFilters": $scope.savedFilters,
-			"resetSaveFilter": $scope.resetSaveFilter
-	    }
-	]);
-
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -99,7 +81,25 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.change = false;
 				$scope.closeModal();
-			});			
+			});
+
+			SidebarService.addBoxes([
+			    {
+			        "title": "Now filtering By:",
+			        "viewUrl": "views/sideboxes/nowfiltering.html",
+					"activeFilters": $scope.activeFilters,
+					"removeFilter": $scope.removeFilter
+			    },
+			    {
+			        "title": "Filter Options:",
+			        "viewUrl": "views/sideboxes/filterOptions.html",
+			        "activeFilters": $scope.activeFilters,
+					"clearFilters": $scope.clearFilters,
+					"saveFilter": $scope.saveFilter,
+					"savedFilters": $scope.savedFilters,
+					"resetSaveFilter": $scope.resetSaveFilter
+			    }
+			]);	
 		});		
 	};
 
