@@ -399,7 +399,7 @@ sidebox .sidebox-heading {
   padding: 6px 5px 0 5px;;
 }
 
-sidebox > .form-group {
+sidebox .sidebox-body form > .form-group {
   text-align: center;
   padding: 5px;
 }
