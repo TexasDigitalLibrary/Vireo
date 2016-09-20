@@ -35,7 +35,7 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -394,7 +394,7 @@ public abstract class AbstractEntityTest {
     protected OrganizationRepo organizationRepo;
 
     @Autowired
-    protected NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
+    protected NamedSearchFilterRepo namedSearchFilterCriteriaRepo;
     
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;

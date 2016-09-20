@@ -715,4 +715,20 @@ var apiMapping = {
 			'method': 'clear-filter-criteria'
 		}
 	},
+	SavedFilter: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'all-saved-filter-criteria'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'saved-filters'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'save-filter-criteria'
+		}
+	}
 }

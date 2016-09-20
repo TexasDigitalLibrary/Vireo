@@ -12,11 +12,11 @@
 	<ul>
 		<li class="sideboxsub-sub">Without Columns</li>
 		<ul>
-			<li>None ...</li>
+			<li ng-repeat="filter in box.savedFilters" ng-if="!filter.columnsFlag">{{filter.name}}</li>
 		</ul>
 		<li class="sideboxsub-sub">With Columns</li>
 		<ul>
-			<li>Test Filter</li>
+			<li ng-repeat="filter in box.savedFilters" ng-if="filter.columnsFlag">{{filter.name}}</li>
 		</ul>
 	</ul>
 

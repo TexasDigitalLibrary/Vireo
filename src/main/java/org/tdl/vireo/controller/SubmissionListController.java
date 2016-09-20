@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FilterCriterionRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
@@ -47,6 +49,9 @@ public class SubmissionListController {
     
     @Autowired
     private FilterCriterionRepo filterCriterionRepo;
+    
+    @Autowired
+    private NamedSearchFilterRepo namedSearchFilterRepo;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -187,17 +192,34 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
     
+    @ApiMapping("/all-saved-filter-criteria")
+    @Auth(role = "MANAGER")
+    public ApiResponse getAllSaveFilterCriteria(@ApiCredentials Credentials credentials) { 	
+    	    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	List<NamedSearchFilter> userSavedFilters = user.getSavedFilters();
+    	List<NamedSearchFilter> publicSavedFilters = namedSearchFilterRepo.findByPublicFlagTrue();
+    	
+    	List<NamedSearchFilter> allSavedFilters = new ArrayList<NamedSearchFilter>();
+    	allSavedFilters.addAll(userSavedFilters);
+    	allSavedFilters.addAll(publicSavedFilters);
+    	
+
+        return new ApiResponse(SUCCESS, userSavedFilters);
+    }
+    
     @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
     public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter namedSearchFilter) {
-    	
+    	    	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	    	
     	user.getSavedFilters().add(namedSearchFilter);
     	
     	userRepo.save(user);
             	
-    	simpMessagingTemplate.convertAndSend("/channel/saved-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getSavedFilters()));
+    	simpMessagingTemplate.convertAndSend("/channel/saved-filters/"+namedSearchFilter.getId(), new ApiResponse(SUCCESS, user.getSavedFilters()));
 
         return new ApiResponse(SUCCESS);
     }

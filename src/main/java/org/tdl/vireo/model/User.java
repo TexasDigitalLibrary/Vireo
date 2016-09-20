@@ -25,6 +25,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
@@ -106,6 +108,7 @@ public class User extends BaseEntity implements CoreUser {
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilter activeFilter;
     
+    @Fetch(FetchMode.SELECT)
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private List<NamedSearchFilter> savedFilters;
 

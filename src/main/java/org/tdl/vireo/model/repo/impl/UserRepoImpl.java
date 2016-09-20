@@ -7,7 +7,7 @@ import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.NamedSearchFilterCriteriaRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 
@@ -17,7 +17,7 @@ public class UserRepoImpl implements UserRepoCustom {
     private UserRepo userRepo;
     
     @Autowired
-    private NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
+    private NamedSearchFilterRepo namedSearchFilterCriteriaRepo;
 
     @Override
     public User create(String email, String firstName, String lastName, AppRole role) {
