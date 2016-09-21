@@ -5,6 +5,9 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -52,6 +55,9 @@ public class SubmissionListController {
     
     @Autowired
     private NamedSearchFilterRepo namedSearchFilterRepo;
+    
+    @PersistenceContext
+    EntityManager em;
     
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -103,7 +109,7 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-  
+
     	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
     		
     		NamedSearchFilter activeFilter = user.getActiveFilter();
@@ -123,7 +129,7 @@ public class SubmissionListController {
         	
         	userRepo.save(user);
     	}
-    	
+	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
     
@@ -212,14 +218,25 @@ public class SubmissionListController {
     @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
     public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter namedSearchFilter) {
-    	    	
+    	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	    	
-    	user.getSavedFilters().add(namedSearchFilter);
+    	user.getSavedFilters().add(cloneFilter(namedSearchFilter));
     	
     	userRepo.save(user);
             	
         return new ApiResponse(SUCCESS);
     }
-    
+
+    private NamedSearchFilter cloneFilter(NamedSearchFilter namedSearchFilter) {
+    	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
+    	newNamedSearchFilter.setName(namedSearchFilter.getName());
+    	newNamedSearchFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
+    	newNamedSearchFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
+    	namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
+    		em.detach(filterCriterion);
+    		newNamedSearchFilter.addFilterCriterion(filterCriterion);
+    	});
+    	return namedSearchFilterRepo.save(newNamedSearchFilter);
+    }
 }
