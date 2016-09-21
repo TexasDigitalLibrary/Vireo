@@ -47,6 +47,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	};
 
+	$scope.applyFilter = function(filter) {
+		console.log(filter);
+	};
+
 	$scope.resetSaveFilter = function() {
 		$scope.closeModal();
 		$scope.activeFilters.refresh()
@@ -104,7 +108,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"clearFilters": $scope.clearFilters,
 					"saveFilter": $scope.saveFilter,
 					"savedFilters": $scope.savedFilters,
-					"resetSaveFilter": $scope.resetSaveFilter
+					"resetSaveFilter": $scope.resetSaveFilter,
+					"applyFilter": $scope.applyFilter
 			    }
 			]);	
 		});		

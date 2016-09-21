@@ -9,15 +9,19 @@
 	</ul>
 
 	<sideboxsub>Saved Filters</sideboxsub>
-	<ul>
-		<li class="sideboxsub-sub">Without Columns</li>
-		<ul>
-			<li ng-repeat="filter in box.savedFilters" ng-if="!filter.columnsFlag">{{filter.name}}</li>
-		</ul>
-		<li class="sideboxsub-sub">With Columns</li>
-		<ul>
-			<li ng-repeat="filter in box.savedFilters" ng-if="filter.columnsFlag">{{filter.name}}</li>
-		</ul>
+	<ul class="saved-filters">
+		<li class="sideboxsub-sub">Without Columns
+			<ul class="list">
+				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:false})" ng-click="box.applyFilter(filter)">{{filter.name}}</li>
+				<li ng-hide="columnFilters.length">None</li>
+			</ul>
+		</li>
+		<li class="sideboxsub-sub">With Columns
+			<ul class="list">
+				<li class="columns" ng-repeat="filter in noColumnFilters = (box.savedFilters | filter: {columnsFlag:true})" ng-click="box.applyFilter(filter)">{{filter.name}}</li>
+				<li ng-hide="noColumnFilters.length">None</li>
+			</ul>
+		</li>
 	</ul>
 
 </div>
