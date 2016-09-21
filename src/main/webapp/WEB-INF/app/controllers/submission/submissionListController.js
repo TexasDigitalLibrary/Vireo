@@ -37,10 +37,14 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.saveFilter = function() {
+		if ($scope.activeFilters.columnsFlag) {
+			$scope.activeFilters.savedColumns = $scope.userColumns;
+		}
 		SavedFilterRepo.create($scope.activeFilters).then(function() {
 			$scope.closeModal();
 			SavedFilterRepo.reset();
 		});
+
 	};
 
 	$scope.resetSaveFilter = function() {

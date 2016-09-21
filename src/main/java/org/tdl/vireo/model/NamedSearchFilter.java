@@ -61,6 +61,7 @@ public class NamedSearchFilter extends BaseEntity {
         setColumnsFlag(false);
         setUmiRelease(false);
         setFilterCriteria(new ArrayList<FilterCriterion>());
+        setSavedColumns(new ArrayList<SubmissionListColumn>());
         setModelValidator(new NamedSearchFilterValidator());
     }
     
@@ -122,7 +123,27 @@ public class NamedSearchFilter extends BaseEntity {
         return umiRelease;
     }
 
-    /**
+    public List<SubmissionListColumn> getSavedColumns() {
+		return savedColumns;
+	}
+
+
+	public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
+		this.savedColumns = savedColumns;
+	}
+	
+    public void addSavedColumn(SubmissionListColumn submissionListColumn) {
+        if(!savedColumns.contains(submissionListColumn)) {
+        	savedColumns.add(submissionListColumn);
+        }
+    }
+    
+    public void removeSavedColumn(SubmissionListColumn submissionListColumn) {
+        savedColumns.remove(submissionListColumn);
+    }
+
+
+	/**
      * @param umiRelease the umiRelease to set
      */
     public void setUmiRelease(Boolean umiRelease) {

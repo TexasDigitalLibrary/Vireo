@@ -218,9 +218,7 @@ public class SubmissionListController {
     @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
     public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter namedSearchFilter) {
-    	
     	User user = userRepo.findByEmail(credentials.getEmail());
-    	    	
     	user.getSavedFilters().add(cloneFilter(namedSearchFilter));
     	
     	userRepo.save(user);
@@ -233,10 +231,16 @@ public class SubmissionListController {
     	newNamedSearchFilter.setName(namedSearchFilter.getName());
     	newNamedSearchFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
     	newNamedSearchFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
+    	newNamedSearchFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
     	namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
     		em.detach(filterCriterion);
     		newNamedSearchFilter.addFilterCriterion(filterCriterion);
     	});
+    	
+    	namedSearchFilter.getSavedColumns().forEach(column -> {
+    		newNamedSearchFilter.addSavedColumn(column);
+    	});
+
     	return namedSearchFilterRepo.save(newNamedSearchFilter);
     }
 }
