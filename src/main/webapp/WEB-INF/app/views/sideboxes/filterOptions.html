@@ -12,7 +12,10 @@
 	<ul class="saved-filters">
 		<li class="sideboxsub-sub">Without Columns
 			<ul class="list">
-				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:false})" ng-click="box.applyFilter(filter)">{{filter.name}}</li>
+				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:false})" ng-click="box.applyFilter(filter)">
+					<span ng-class="{'glyphicon-globe':filter.publicFlag,'glyphicon-user':!filter.publicFlag}" class="glyphicon"></span>
+					{{filter.name}}
+				</li>
 				<li ng-hide="columnFilters.length">None</li>
 			</ul>
 		</li>
