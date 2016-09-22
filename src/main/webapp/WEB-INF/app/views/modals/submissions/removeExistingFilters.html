@@ -16,7 +16,9 @@
 		 	</thead>
 		 	<tbody>
 				<tr ng-repeat="filter in box.savedFilters">
-					<td>Remove</td>
+					<td>
+				        <button type="button" class="btn" ng-click="box.removeFilter(filter)">Remove</button>
+					</td>
 					<td>{{filter.name}}</td>
 					<td>{{filter.columnsFlag}}</td>
 					<td>Your {{filter.publicFlag ? 'public':'private'}} filter</td>
@@ -25,13 +27,6 @@
 		</table>
 	</div>
 	<div class="modal-footer">        
-        <button type="button" class="btn btn-warning" ng-click="box.resetRemoveFilters()">Cancel</button>
-        <button 
-        	id="filter-manage" 
-			type="submit" 
-			class="btn btn-primary"
-			ng-disabled="forms.removeFilters.$invalid">
-			Remove Filters
-		</button>
+        <button type="button" class="btn btn-warning" ng-click="box.resetRemoveFilters()">Close</button>
     </div>
 </form>

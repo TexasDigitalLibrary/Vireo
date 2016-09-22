@@ -202,6 +202,17 @@ public class SubmissionListController {
     	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
+    
+    @ApiMapping("/remove-saved-filter")
+    @Auth(role = "MANAGER")
+    public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) { 	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	user.getSavedFilters().remove(savedFilter);
+    	userRepo.save(user);
+    	namedSearchFilterRepo.delete(savedFilter.getId());
+    	
+        return getSavedFilters(credentials);
+    }
 
     @ApiMapping("/remove-filter-criterion")
     @Auth(role = "MANAGER")
@@ -282,7 +293,7 @@ public class SubmissionListController {
             	
         return new ApiResponse(SUCCESS);
     }
-
+    
     private NamedSearchFilter cloneFilter(NamedSearchFilter namedSearchFilter) {
     	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
     	newNamedSearchFilter.setName(namedSearchFilter.getName());

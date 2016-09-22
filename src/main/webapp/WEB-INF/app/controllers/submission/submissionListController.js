@@ -21,7 +21,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 	$scope.savedFilters = SavedFilterRepo.getAll();
 
 	$scope.removeFilter = function(criterionName, filterValue) {
-
 		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
 			query();
 		});
@@ -54,11 +53,13 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 		//Todo: reset the data in the modal
 	};
 
-	$scope.removeFilters = function() {
-		console.log($scope.removeFilters);
+	$scope.removeFilter = function(filter) {
+		SavedFilterRepo.delete(filter).then(function() {
+			SavedFilterRepo.reset();
+		});
 	};
 
-	$scope.resetRemoveFilters = function() {
+	$scope.resetRemoveFilter = function() {
 		$scope.closeModal();
 	};
 
@@ -116,7 +117,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 					"resetSaveFilter": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,
-					"removeFilters": $scope.removeFilters
+					"removeFilter": $scope.removeFilter
 			    }
 			]);	
 		});		
