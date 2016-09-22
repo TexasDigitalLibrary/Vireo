@@ -21,7 +21,7 @@
 					</td>
 					<td>{{filter.name}}</td>
 					<td>{{filter.columnsFlag}}</td>
-					<td>Your {{filter.publicFlag ? 'public':'private'}} filter</td>
+					<td>{{box.getUserById(filter.user).firstName}} {{box.getUserById(filter.user).lastName}} {{filter.publicFlag ? 'public':'private'}} filter</td>
 				</tr>
 			</tbody>
 		</table>

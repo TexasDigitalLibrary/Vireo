@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $timeout, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo,UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -19,6 +19,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 	$scope.activeFilters = new NamedSearchFilter();
 
 	$scope.savedFilters = SavedFilterRepo.getAll();
+
+	$scope.getUserById = function(userId) {
+		return UserRepo.findById(userId);
+	};
 
 	$scope.removeFilter = function(criterionName, filterValue) {
 		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
@@ -117,7 +121,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 					"resetSaveFilter": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,
-					"removeFilter": $scope.removeFilter
+					"removeFilter": $scope.removeFilter,
+					"getUserById": $scope.getUserById
 			    }
 			]);	
 		});		
