@@ -59,7 +59,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $ti
 		});
 	};
 
-	$scope.resetRemoveFilter = function() {
+	$scope.resetRemoveFilters = function() {
 		$scope.closeModal();
 	};
 
