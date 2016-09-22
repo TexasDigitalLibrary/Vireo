@@ -57,6 +57,14 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		//Todo: reset the data in the modal
 	};
 
+	$scope.removeFilters = function() {
+		console.log($scope.removeFilters);
+	};
+
+	$scope.resetRemoveFilters = function() {
+		$scope.closeModal();
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -109,7 +117,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"saveFilter": $scope.saveFilter,
 					"savedFilters": $scope.savedFilters,
 					"resetSaveFilter": $scope.resetSaveFilter,
-					"applyFilter": $scope.applyFilter
+					"applyFilter": $scope.applyFilter,
+					"resetRemoveFilters": $scope.resetRemoveFilters,
+					"removeFilters": $scope.removeFilters
 			    }
 			]);	
 		});		

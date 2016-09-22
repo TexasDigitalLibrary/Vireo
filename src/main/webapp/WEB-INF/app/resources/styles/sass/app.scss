@@ -1469,7 +1469,7 @@ footer a, footer li, footer p {
 ********************/
 
 
-#etd-table {
+#etd-table, .etd-table {
 	.header {
 		background: #ffffff;
 		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
@@ -1477,6 +1477,10 @@ footer a, footer li, footer p {
 		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
 	}
+
+  th {
+    text-transform: capitalize;
+  }
 }
 
 /***********************
