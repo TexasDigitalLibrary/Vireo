@@ -700,6 +700,11 @@ var apiMapping = {
 			'controller': 'submission-list',
 			'method': 'active-filters'
 		},
+		setFilter: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'set-active-filter'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'active-filters'
@@ -707,7 +712,7 @@ var apiMapping = {
 		removeFilter: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
-			'method': 'clear-filter-criterion'
+			'method': 'remove-filter-criterion'
 		},
 		clearFilters: {
 			'endpoint': '/private/queue',

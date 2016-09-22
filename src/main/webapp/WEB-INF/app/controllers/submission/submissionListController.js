@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $timeout, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -20,12 +20,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.savedFilters = SavedFilterRepo.getAll();
 
-	console.log($scope.activeFilters);
-	console.log(SavedFilterRepo);
-	console.log(SavedFilterRepo.getAll());
+	$scope.removeFilter = function(criterionName, filterValue) {
 
-	$scope.removeFilter = function(filterCriterionId,filterString) {
-		$scope.activeFilters.removeFilter(filterCriterionId,filterString).then(function() {
+		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
 			query();
 		});
 	};
@@ -48,12 +45,12 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.applyFilter = function(filter) {
-		console.log(filter);
+		$scope.activeFilters.set(filter);
 	};
 
 	$scope.resetSaveFilter = function() {
 		$scope.closeModal();
-		$scope.activeFilters.refresh()
+		$scope.activeFilters.refresh();
 		//Todo: reset the data in the modal
 	};
 

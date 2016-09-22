@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FilterCriterion;
+import org.tdl.vireo.model.FilterString;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
@@ -103,7 +104,25 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
-    
+    @ApiMapping("/set-active-filter")
+    @Auth(role = "MANAGER")
+    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter filter) {
+    	    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	filter.setName(null);
+    	NamedSearchFilter filterCopy = cloneFilter(filter);
+    	
+    	user.loadActiveFilter(filterCopy);
+    	
+    	namedSearchFilterRepo.delete(filterCopy);
+    	
+    	userRepo.save(user);
+    	
+    	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+    	    	
+    	return new ApiResponse(SUCCESS);
+    }
     
     @ApiMapping("/active-filters")
     @Auth(role = "MANAGER")
@@ -161,22 +180,33 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
 
-    @ApiMapping("/clear-filter-criterion/{filterCriterionId}")
+    @ApiMapping("/remove-filter-criterion")
     @Auth(role = "MANAGER")
-    public ApiResponse clearFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable Long filterCriterionId, @ApiData JsonNode data) {
+    public ApiResponse clearFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
     	
-    	String filterString = data.get("filterString").asText();
+    	String criterionName = data.get("criterionName").asText();
+    	String filterValue = data.get("filterValue").asText();
+    	
     	User user = userRepo.findByEmail(credentials.getEmail());
+    	
     	NamedSearchFilter activeFilter = user.getActiveFilter();
-    	FilterCriterion filterCriterion = activeFilter.getFilterCriterion(filterCriterionId);
     	
-    	filterCriterion.removeFilter(filterString);
-    	
-    	if (filterCriterion.getFilters().size() == 0) {
-        	user.getActiveFilter().removeFilterCriterion(filterCriterion);
+    	for(FilterCriterion criterion : activeFilter.getFilterCriteria()) {
+    		if(criterion.getName().equals(criterionName)) {
+	    		for(String filter : criterion.getFilters()) {
+	    			if(filter.equals(filterValue)) {
+	    				criterion.removeFilter(filterValue);
+	    				if (criterion.getFilters().size() == 0) {
+	    					activeFilter.removeFilterCriterion(criterion);    					
+	    		    	}
+	    				break;
+	    			}
+	    		}
+	    		break;
+    		}
     	}
-    	
-    	userRepo.save(user);
+    	    	
+    	user = userRepo.save(user);
         
     	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -233,8 +263,7 @@ public class SubmissionListController {
     	newNamedSearchFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
     	newNamedSearchFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
     	namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
-    		em.detach(filterCriterion);
-    		newNamedSearchFilter.addFilterCriterion(filterCriterion);
+    		newNamedSearchFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
     	});
     	
     	namedSearchFilter.getSavedColumns().forEach(column -> {
@@ -243,4 +272,15 @@ public class SubmissionListController {
 
     	return namedSearchFilterRepo.save(newNamedSearchFilter);
     }
+
+	private FilterCriterion cloneFilterCriterion(FilterCriterion filterCriterion) {
+		FilterCriterion newFilterCriterion = filterCriterionRepo.create(filterCriterion.getSubmissionListColumn());
+		
+		newFilterCriterion.setName(filterCriterion.getName());
+		filterCriterion.getFilters().forEach(filter -> {
+			newFilterCriterion.addFilter(filter);
+		});
+		
+		return filterCriterionRepo.save(newFilterCriterion);
+	}
 }

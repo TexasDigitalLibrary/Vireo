@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -53,7 +52,7 @@ public class NamedSearchFilter extends BaseEntity {
     private List<SubmissionListColumn> savedColumns;
     
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = {REFRESH, MERGE}, fetch = EAGER)
+    @OneToMany(cascade = {REFRESH, MERGE}, fetch = EAGER, orphanRemoval=true)
     private List<FilterCriterion> filterCriteria;
     
     public NamedSearchFilter() {
