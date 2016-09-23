@@ -13,7 +13,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FilterCriterion;
-import org.tdl.vireo.model.FilterString;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
@@ -107,15 +106,28 @@ public class SubmissionListController {
     @ApiMapping("/set-active-filter")
     @Auth(role = "MANAGER")
     public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter filter) {
-    	    	
+    	
     	User user = userRepo.findByEmail(credentials.getEmail());
+    	filter.getFilterCriteria().forEach(criterion -> {
+    		System.out.println(criterion.getId());
+    	});
     	
-    	filter.setName(null);
-    	NamedSearchFilter filterCopy = cloneFilter(filter);
+    	clearFilterCriteria(credentials);
     	
-    	user.loadActiveFilter(filterCopy);
+    	NamedSearchFilter activeFilter = user.getActiveFilter();
+  
+    	activeFilter.setPublicFlag(filter.getPublicFlag());
+    	activeFilter.setUmiRelease(filter.getUmiRelease());
+    	activeFilter.setColumnsFlag(filter.getColumnsFlag());
     	
-    	namedSearchFilterRepo.delete(filterCopy);
+    	activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+    		System.out.println("Adding filter criterion " + filterCriterion.getId());
+    		activeFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
+    	});
+    	
+    	activeFilter.getSavedColumns().forEach(column -> {
+    		activeFilter.addSavedColumn(column);
+    	});
     	
     	userRepo.save(user);
     	
@@ -222,6 +234,10 @@ public class SubmissionListController {
     	user.getActiveFilter().getFilterCriteria().clear();
     	
     	userRepo.save(user);
+    	
+      	user.getActiveFilter().getFilterCriteria().forEach(filterCriterion -> {
+    		filterCriterionRepo.delete(filterCriterion);
+    	});
             	
     	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
