@@ -108,8 +108,19 @@ public class SubmissionListController {
     public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter filter) {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
-    	filter.getFilterCriteria().forEach(criterion -> {
-    		System.out.println(criterion.getId());
+    	
+    	List<Long> ids = new ArrayList<Long>();
+    	
+    	user.getActiveFilter().getFilterCriteria().forEach(filterCriterion -> {
+    		ids.add(filterCriterion.getId());
+    	});
+    	
+    	user.getActiveFilter().getFilterCriteria().clear();
+    	
+    	user = userRepo.save(user);
+    	
+    	ids.forEach(id -> {
+    		filterCriterionRepo.delete(id);
     	});
     	
     	clearFilterCriteria(credentials);
@@ -120,7 +131,7 @@ public class SubmissionListController {
     	activeFilter.setUmiRelease(filter.getUmiRelease());
     	activeFilter.setColumnsFlag(filter.getColumnsFlag());
     	
-    	activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+    	filter.getFilterCriteria().forEach(filterCriterion -> {
     		System.out.println("Adding filter criterion " + filterCriterion.getId());
     		activeFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
     	});
@@ -129,7 +140,7 @@ public class SubmissionListController {
     		activeFilter.addSavedColumn(column);
     	});
     	
-    	userRepo.save(user);
+    	user = userRepo.save(user);
     	
     	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
     	    	
