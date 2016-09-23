@@ -57,9 +57,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		//Todo: reset the data in the modal
 	};
 
-	$scope.removeFilter = function(filter) {
-		SavedFilterRepo.delete(filter).then(function() {
-			SavedFilterRepo.reset();
+
+	$scope.removeFilter = function(criterionName, filterValue) {
+		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
+			query();
 		});
 	};
 
