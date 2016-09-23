@@ -10,22 +10,13 @@
 
 	<sideboxsub>Saved Filters</sideboxsub>
 	<ul class="saved-filters">
-		<li class="sideboxsub-sub">Without Columns
+		<li ng-repeat="filterType in ['Without Columns','With Columns']" class="sideboxsub-sub">{{filterType}}
 			<ul class="list">
-				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:false})" ng-click="box.applyFilter(filter)">
+				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:($index > 0 ? true:false)})" ng-click="box.applyFilter(filter)">
 					<span ng-class="{'glyphicon-globe':filter.publicFlag,'glyphicon-user':!filter.publicFlag}" class="glyphicon"></span>
-					{{filter.name}}
+					<a href="#" ng-click="activateFilter(filter)">{{filter.name}}</a>
 				</li>
 				<li ng-hide="columnFilters.length">None</li>
-			</ul>
-		</li>
-		<li class="sideboxsub-sub">With Columns
-			<ul class="list">
-				<li class="columns" ng-repeat="filter in noColumnFilters = (box.savedFilters | filter: {columnsFlag:true})" ng-click="box.applyFilter(filter)">
-					<span ng-class="{'glyphicon-globe':filter.publicFlag,'glyphicon-user':!filter.publicFlag}" class="glyphicon"></span>
-					{{filter.name}}
-				</li>
-				<li ng-hide="noColumnFilters.length">None</li>
 			</ul>
 		</li>
 	</ul>
