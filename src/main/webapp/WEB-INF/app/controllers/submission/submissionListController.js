@@ -24,7 +24,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return UserRepo.findById(userId);
 	};
 
-	$scope.removeFilter = function(criterionName, filterValue) {
+	$scope.removeFilterValue = function(criterionName, filterValue) {
 		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
 			query();
 		});
@@ -61,9 +61,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 
-	$scope.removeFilter = function(criterionName, filterValue) {
-		$scope.activeFilters.removeFilter(criterionName, filterValue).then(function() {
-			query();
+	$scope.removeFilter = function(filter) {
+		SavedFilterRepo.delete(filter).then(function() {
+			SavedFilterRepo.reset();
 		});
 	};
 
@@ -113,7 +113,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			        "title": "Now filtering By:",
 			        "viewUrl": "views/sideboxes/nowfiltering.html",
 					"activeFilters": $scope.activeFilters,
-					"removeFilter": $scope.removeFilter
+					"removeFilterValue": $scope.removeFilterValue
 			    },
 			    {
 			        "title": "Filter Options:",
