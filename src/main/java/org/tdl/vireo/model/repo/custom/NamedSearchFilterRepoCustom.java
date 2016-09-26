@@ -8,5 +8,9 @@ public interface NamedSearchFilterRepoCustom {
     public NamedSearchFilter create(User user);
     
     public NamedSearchFilter create(User user, String name);
+    
+    public NamedSearchFilter clone(NamedSearchFilter newNamedSearchFilter, NamedSearchFilter namedSearchFilter);
+    
+    public NamedSearchFilter createFromFilter(NamedSearchFilter namedSearchFilter);
 
 }

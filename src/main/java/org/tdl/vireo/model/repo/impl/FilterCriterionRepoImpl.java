@@ -17,5 +17,16 @@ public class FilterCriterionRepoImpl implements FilterCriterionRepoCustom {
 		fc.setSubmissionListColumn(submissionListColumn);
         return filterCriterionRepo.save(fc);
 	}
+	
+	public FilterCriterion cloneFilterCriterion(FilterCriterion filterCriterion) {
+		FilterCriterion newFilterCriterion = filterCriterionRepo.create(filterCriterion.getSubmissionListColumn());
+		
+		newFilterCriterion.setName(filterCriterion.getName());
+		filterCriterion.getFilters().forEach(filter -> {
+			newFilterCriterion.addFilter(filter);
+		});
+		
+		return filterCriterionRepo.save(newFilterCriterion);
+	}
 
 }

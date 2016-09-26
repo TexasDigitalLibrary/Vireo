@@ -124,7 +124,7 @@ public class SubmissionListController {
     	});
     	
     	NamedSearchFilter activeFilter = user.getActiveFilter();
-    	activeFilter = cloneFilter(activeFilter,filter);
+    	activeFilter = namedSearchFilterRepo.clone(activeFilter,filter);
 
     	user = userRepo.save(user);
     	
@@ -278,7 +278,7 @@ public class SubmissionListController {
     	NamedSearchFilter existingFilter = namedSearchFilterRepo.findByNameAndPublicFlagTrue(namedSearchFilter.getName());
     	
     	if(existingFilter != null) {
-    		existingFilter = cloneFilter(existingFilter,namedSearchFilter);
+    		existingFilter = namedSearchFilterRepo.clone(existingFilter,namedSearchFilter);
         	user = userRepo.findByEmail(credentials.getEmail());
     		
 		} else {
@@ -288,7 +288,7 @@ public class SubmissionListController {
 			for(NamedSearchFilter filter : user.getSavedFilters()) {
 				if(filter.getName().equals(namedSearchFilter.getName())) {
 					filter.getFilterCriteria().clear();
-					filter = cloneFilter(filter,namedSearchFilter);
+					filter = namedSearchFilterRepo.clone(filter,namedSearchFilter);
 					foundFilter = true;
 					break;
 				
@@ -297,7 +297,7 @@ public class SubmissionListController {
 			
 			if(!foundFilter) {
 				System.out.println("Did not find private filter by name, creating new.");
-				user.getSavedFilters().add(createFilter(namedSearchFilter));
+				user.getSavedFilters().add(namedSearchFilterRepo.createFromFilter(namedSearchFilter));
 			}
 			
 		}
@@ -307,36 +307,4 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
     
-    private NamedSearchFilter cloneFilter(NamedSearchFilter newNamedSearchFilter, NamedSearchFilter namedSearchFilter) {
-    	newNamedSearchFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
-    	newNamedSearchFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
-    	newNamedSearchFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
-    	namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
-    		newNamedSearchFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
-    	});
-    	
-    	namedSearchFilter.getSavedColumns().forEach(column -> {
-    		newNamedSearchFilter.addSavedColumn(column);
-    	});
-
-    	return newNamedSearchFilter;
-    }
-    
-    private NamedSearchFilter createFilter(NamedSearchFilter namedSearchFilter) {
-    	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
-    	newNamedSearchFilter.setName(namedSearchFilter.getName());
-    	
-    	return namedSearchFilterRepo.save(cloneFilter(newNamedSearchFilter, namedSearchFilter));
-    }
-
-	private FilterCriterion cloneFilterCriterion(FilterCriterion filterCriterion) {
-		FilterCriterion newFilterCriterion = filterCriterionRepo.create(filterCriterion.getSubmissionListColumn());
-		
-		newFilterCriterion.setName(filterCriterion.getName());
-		filterCriterion.getFilters().forEach(filter -> {
-			newFilterCriterion.addFilter(filter);
-		});
-		
-		return filterCriterionRepo.save(newFilterCriterion);
-	}
 }

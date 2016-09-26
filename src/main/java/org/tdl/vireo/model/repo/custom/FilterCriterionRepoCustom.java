@@ -5,4 +5,6 @@ import org.tdl.vireo.model.SubmissionListColumn;
 
 public interface FilterCriterionRepoCustom {
 	public FilterCriterion create(SubmissionListColumn submissionListColumn);
+	
+	public FilterCriterion cloneFilterCriterion(FilterCriterion filterCriterion);
 }
