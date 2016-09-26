@@ -286,8 +286,63 @@ public class SubmissionListController {
     @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
     public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter namedSearchFilter) {
+    	
     	User user = userRepo.findByEmail(credentials.getEmail());
-    	user.getSavedFilters().add(cloneFilter(namedSearchFilter));
+    	
+    	NamedSearchFilter existingFilter = namedSearchFilterRepo.findByNameAndPublicFlagTrue(namedSearchFilter.getName());
+    	
+    	if(existingFilter != null) {
+    		
+    		existingFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
+    		existingFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
+    		existingFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
+			
+    		existingFilter.getFilterCriteria().clear();
+			
+			namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
+				existingFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
+			});
+			
+			namedSearchFilter.getSavedColumns().forEach(column -> {
+				existingFilter.addSavedColumn(column);
+			});
+    		
+        	user = userRepo.findByEmail(credentials.getEmail());
+    		
+		} else {
+			
+			boolean foundFilter = false;
+			
+			for(NamedSearchFilter filter : user.getSavedFilters()) {
+				if(filter.getName().equals(namedSearchFilter.getName())) {
+					
+					filter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
+					filter.setPublicFlag(namedSearchFilter.getPublicFlag());
+					filter.setUmiRelease(namedSearchFilter.getUmiRelease());
+					
+					filter.getFilterCriteria().clear();
+					
+					namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
+						filter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
+					});
+					
+					namedSearchFilter.getSavedColumns().forEach(column -> {
+						filter.addSavedColumn(column);
+					});
+			    	
+					foundFilter = true;
+			
+					break;
+				
+				}
+			}
+			
+			if(!foundFilter) {
+				System.out.println("Did not find private filter by name, creating new.");
+				user.getSavedFilters().add(cloneFilter(namedSearchFilter));
+			}
+			
+		}
     	
     	userRepo.save(user);
             	

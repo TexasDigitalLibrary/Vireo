@@ -10,4 +10,6 @@ public interface NamedSearchFilterRepo extends JpaRepository<NamedSearchFilter, 
 	
 	public List<NamedSearchFilter> findByPublicFlagTrue();
 
+	public NamedSearchFilter findByNameAndPublicFlagTrue(String name);
+
 }
