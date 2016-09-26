@@ -106,7 +106,7 @@ public class SubmissionListController {
     @ApiMapping("/set-active-filter")
     @Auth(role = "MANAGER")
     public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter filter) {
-    	
+
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
     	List<Long> ids = new ArrayList<Long>();
@@ -123,23 +123,9 @@ public class SubmissionListController {
     		filterCriterionRepo.delete(id);
     	});
     	
-    	clearFilterCriteria(credentials);
-    	
     	NamedSearchFilter activeFilter = user.getActiveFilter();
-  
-    	activeFilter.setPublicFlag(filter.getPublicFlag());
-    	activeFilter.setUmiRelease(filter.getUmiRelease());
-    	activeFilter.setColumnsFlag(filter.getColumnsFlag());
-    	
-    	filter.getFilterCriteria().forEach(filterCriterion -> {
-    		System.out.println("Adding filter criterion " + filterCriterion.getId());
-    		activeFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
-    	});
-    	
-    	activeFilter.getSavedColumns().forEach(column -> {
-    		activeFilter.addSavedColumn(column);
-    	});
-    	
+    	activeFilter = cloneFilter(activeFilter,filter);
+
     	user = userRepo.save(user);
     	
     	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
@@ -292,21 +278,7 @@ public class SubmissionListController {
     	NamedSearchFilter existingFilter = namedSearchFilterRepo.findByNameAndPublicFlagTrue(namedSearchFilter.getName());
     	
     	if(existingFilter != null) {
-    		
-    		existingFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
-    		existingFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
-    		existingFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
-			
-    		existingFilter.getFilterCriteria().clear();
-			
-			namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
-				existingFilter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
-			});
-			
-			namedSearchFilter.getSavedColumns().forEach(column -> {
-				existingFilter.addSavedColumn(column);
-			});
-    		
+    		existingFilter = cloneFilter(existingFilter,namedSearchFilter);
         	user = userRepo.findByEmail(credentials.getEmail());
     		
 		} else {
@@ -315,23 +287,9 @@ public class SubmissionListController {
 			
 			for(NamedSearchFilter filter : user.getSavedFilters()) {
 				if(filter.getName().equals(namedSearchFilter.getName())) {
-					
-					filter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
-					filter.setPublicFlag(namedSearchFilter.getPublicFlag());
-					filter.setUmiRelease(namedSearchFilter.getUmiRelease());
-					
 					filter.getFilterCriteria().clear();
-					
-					namedSearchFilter.getFilterCriteria().forEach(filterCriterion -> {
-						filter.addFilterCriterion(cloneFilterCriterion(filterCriterion));
-					});
-					
-					namedSearchFilter.getSavedColumns().forEach(column -> {
-						filter.addSavedColumn(column);
-					});
-			    	
+					filter = cloneFilter(filter,namedSearchFilter);
 					foundFilter = true;
-			
 					break;
 				
 				}
@@ -339,7 +297,7 @@ public class SubmissionListController {
 			
 			if(!foundFilter) {
 				System.out.println("Did not find private filter by name, creating new.");
-				user.getSavedFilters().add(cloneFilter(namedSearchFilter));
+				user.getSavedFilters().add(createFilter(namedSearchFilter));
 			}
 			
 		}
@@ -349,9 +307,7 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
     
-    private NamedSearchFilter cloneFilter(NamedSearchFilter namedSearchFilter) {
-    	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
-    	newNamedSearchFilter.setName(namedSearchFilter.getName());
+    private NamedSearchFilter cloneFilter(NamedSearchFilter newNamedSearchFilter, NamedSearchFilter namedSearchFilter) {
     	newNamedSearchFilter.setPublicFlag(namedSearchFilter.getPublicFlag());
     	newNamedSearchFilter.setUmiRelease(namedSearchFilter.getUmiRelease());
     	newNamedSearchFilter.setColumnsFlag(namedSearchFilter.getColumnsFlag());
@@ -363,7 +319,14 @@ public class SubmissionListController {
     		newNamedSearchFilter.addSavedColumn(column);
     	});
 
-    	return namedSearchFilterRepo.save(newNamedSearchFilter);
+    	return newNamedSearchFilter;
+    }
+    
+    private NamedSearchFilter createFilter(NamedSearchFilter namedSearchFilter) {
+    	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
+    	newNamedSearchFilter.setName(namedSearchFilter.getName());
+    	
+    	return namedSearchFilterRepo.save(cloneFilter(newNamedSearchFilter, namedSearchFilter));
     }
 
 	private FilterCriterion cloneFilterCriterion(FilterCriterion filterCriterion) {
