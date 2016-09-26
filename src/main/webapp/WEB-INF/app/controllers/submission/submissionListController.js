@@ -48,7 +48,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.applyFilter = function(filter) {
-		$scope.activeFilters.set(filter);
+		$scope.activeFilters.set(filter).then(function() {
+			query();
+		});
 	};
 
 	$scope.resetSaveFilter = function() {

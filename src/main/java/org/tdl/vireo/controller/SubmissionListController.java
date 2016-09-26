@@ -142,9 +142,9 @@ public class SubmissionListController {
     		
     		NamedSearchFilter activeFilter = user.getActiveFilter();
         	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterionOne.setName("ID");
-        	filterCriterionOne.addFilter("1");
-        	filterCriterionOne.addFilter("2");
+        	filterCriterionOne.setName("First Name");
+        	filterCriterionOne.addFilter("Jeremy");
+        	filterCriterionOne.addFilter("Jack");
         	
         	activeFilter.addFilterCriterion(filterCriterionOne);
         	
@@ -170,9 +170,9 @@ public class SubmissionListController {
     		
     		NamedSearchFilter activeFilter = user.getActiveFilter();
         	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterionOne.setName("ID");
-        	filterCriterionOne.addFilter("1");
-        	filterCriterionOne.addFilter("2");
+        	filterCriterionOne.setName("First Name");
+        	filterCriterionOne.addFilter("Jeremy");
+        	filterCriterionOne.addFilter("Jack");
         	
         	activeFilter.addFilterCriterion(filterCriterionOne);
         	
