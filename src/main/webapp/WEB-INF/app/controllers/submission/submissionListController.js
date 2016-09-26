@@ -48,6 +48,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.applyFilter = function(filter) {
+		$scope.userColumns = filter.savedColumns;
 		$scope.activeFilters.set(filter).then(function() {
 			query();
 		});
