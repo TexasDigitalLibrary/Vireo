@@ -39,9 +39,11 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
     		newNamedSearchFilter.addFilterCriterion(filterCriterionRepo.cloneFilterCriterion(filterCriterion));
     	});
     	
-    	namedSearchFilter.getSavedColumns().forEach(column -> {
-    		newNamedSearchFilter.addSavedColumn(column);
-    	});
+    	if(newNamedSearchFilter.getColumnsFlag()) {
+    		namedSearchFilter.getSavedColumns().forEach(column -> {
+        		newNamedSearchFilter.addSavedColumn(column);
+        	});
+    	}
 
     	return newNamedSearchFilter;
     }

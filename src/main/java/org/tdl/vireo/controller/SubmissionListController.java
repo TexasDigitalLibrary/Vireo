@@ -90,6 +90,7 @@ public class SubmissionListController {
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
+                
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
     
@@ -125,6 +126,11 @@ public class SubmissionListController {
     	
     	NamedSearchFilter activeFilter = user.getActiveFilter();
     	activeFilter = namedSearchFilterRepo.clone(activeFilter,filter);
+    	
+    	if(activeFilter.getColumnsFlag()) {
+    		user.getSubmissionViewColumns().clear();
+    		user.getSubmissionViewColumns().addAll(user.getActiveFilter().getSavedColumns());     		
+    	}
 
     	user = userRepo.save(user);
     	
@@ -296,7 +302,6 @@ public class SubmissionListController {
 			}
 			
 			if(!foundFilter) {
-				System.out.println("Did not find private filter by name, creating new.");
 				user.getSavedFilters().add(namedSearchFilterRepo.createFromFilter(namedSearchFilter));
 			}
 			
