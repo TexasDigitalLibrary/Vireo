@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi, SidebarService) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, UserRepo, WsApi, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -22,8 +22,25 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	var submissionStates = SubmissionStateRepo.getAll();
 
+	var findFirstAssignable = function() {
+		var firstAssignable;
+		for(var i in allUsers) {
+			if(allUsers[i].role === "ADMINISTRATOR" || allUsers[i].role === "MANAGER") {
+				firstAssignable = allUsers[i];
+				break;	
+			}	
+		}
+		return firstAssignable;
+	};
+
+	UserRepo.ready().then(function() {
+		$scope.advancedfeaturesBox.assignee = findFirstAssignable();
+	});
+
+	var allUsers = UserRepo.getAll();
+
 	var resetBatchUpdateStatus = function() {
-		$scope.advancedfeaturesBox.newStatus = submissionStates[0];	
+		$scope.advancedfeaturesBox.assignee = findFirstAssignable();
 		$scope.closeModal();
 	};
 
@@ -35,11 +52,19 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	var resetBatchAssignTo = function() {
+		$scope.advancedfeaturesBox.assignee = allUsers[0];	
 		$scope.closeModal();
 	};
 
-	var batchAssignTo = function() {
-		console.log("batchAssignTo");
+	var batchAssignTo = function(assignee) {
+		SubmissionRepo.batchAssignTo(assignee).then(function() {
+			resetBatchUpdateStatus();
+			query();	
+		});
+	};
+
+	var assignable = function(user) {
+		return user.role === "MANAGER" || user.role === "ADMINISTRATOR";
 	};
 
 	var resetBatchCommentEmail = function() {
@@ -64,7 +89,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
         "resetBatchUpdateStatus": resetBatchUpdateStatus,
         "batchUpdateStatus": batchUpdateStatus,
         "submissionStates": submissionStates,
+        "allUsers": allUsers,
         "resetBatchAssignTo": resetBatchAssignTo,
+        "assignable": assignable,
         "batchAssignTo": batchAssignTo,
         "resetBatchCommentEmail": resetBatchCommentEmail,
         "batchCommentEmail": batchCommentEmail,
@@ -76,6 +103,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
 			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+
+			console.log($scope.page);
 
 			$scope.tableParams = new NgTableParams({ }, 
 			{
@@ -172,6 +201,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
+
 		for(var i in col.valuePath) {
 
 			if(value === undefined) {
@@ -182,7 +212,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					return getValueFromArray(value, col.predicatePath, col);
 				}
 				else {
-					value = value[col.valuePath[i]];
+					if(value !== null) {
+						value = value[col.valuePath[i]];
+					}
 				}
 			}
 		}

@@ -121,12 +121,23 @@ public class SubmissionController {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	System.out.println(submissionState.getId());
-    	System.out.println(submissionState.getTransitionSubmissionStates());
-    	System.out.println(submissionState.getName());
-    	
     	submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
     		sub.setState(submissionState);
+    		submissionRepo.save(sub);
+    	});;
+    	
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @Transactional
+    @ApiMapping("/batch-assign-to")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
+    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+    		sub.setAssignee(assignee);
     		submissionRepo.save(sub);
     	});;
     	

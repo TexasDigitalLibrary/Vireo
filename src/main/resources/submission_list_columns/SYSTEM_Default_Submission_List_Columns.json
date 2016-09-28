@@ -38,7 +38,7 @@
 	{
 		"title": "Assigned to",
 		"sort": "NONE",
-		"valuePath": [],
+		"valuePath": ["assignee", "email"],
 		"status": null,
 		"inputType": {
 			"name": "INPUT_TEXT"

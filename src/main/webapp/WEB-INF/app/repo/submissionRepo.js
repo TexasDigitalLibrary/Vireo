@@ -46,6 +46,19 @@ vireo.repo("SubmissionRepo", function SubmissionRepo(WsApi) {
 		return promise;
 
 	};
+
+	this.batchAssignTo = function(assignee) {
+
+		console.log(assignee);
+
+		angular.extend(this.mapping.batchAssignTo, {
+			'data': assignee
+		});
+		var promise = WsApi.fetch(this.mapping.batchAssignTo);
+		
+		return promise;
+
+	};
 	
 	return this;
 
