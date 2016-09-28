@@ -84,6 +84,31 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         return submissionRepo.save(submission);
     }
+    
+    public List<Submission> dynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums) {
+
+        User user = userRepo.findByEmail(credentials.getEmail());
+
+        NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
+        
+        List<SubmissionListColumn> allSubmissionListColums = submissionListColumnRepo.findAll();
+        
+        // add filters to columns that are active on user
+        if(activeFilter != null) {
+            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+                filterCriterion.getSubmissionListColumns().forEach(submissionListColumn -> {
+                    filterCriterion.getFilterStrings().forEach(filterString -> {
+                        // ***************************************************************************************
+                        // confirm this places filter on allSubmissionListColums, which is passed to specification
+                        // also, confirm does not effect all users, i.e. thread safe
+                        submissionListColumn.addFilter(filterString);
+                    });
+                });
+            });
+        }
+        
+        return submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColums));
+    }
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {

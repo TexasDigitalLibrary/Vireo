@@ -23,6 +23,8 @@ public interface SubmissionRepo extends JpaRepository<Submission, Long>, Submiss
 
     public Page<Submission> findAll(Specification<Submission> specification, Pageable pageable);
     
+    public List<Submission> findAll(Specification<Submission> specification);
+    
     public Page<Submission> findAll(Pageable pageable);
 
 }

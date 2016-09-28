@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +39,9 @@ public class SubmissionController {
     
     @Autowired
     private FieldValueRepo fieldValueRepo;
+    
+    @Autowired
+    private SubmissionStateRepo submissionStateRepo;
     
     @Autowired
     private UserRepo userRepo;
@@ -101,4 +106,33 @@ public class SubmissionController {
         
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
     }
+    
+    @ApiMapping("/all-submission-state")
+    @Auth(role = "MANAGER")
+    public ApiResponse getAllSubmissionStates() {
+        return new ApiResponse(SUCCESS, submissionStateRepo.findAll());
+    }
+    
+    
+    @Transactional
+    @ApiMapping("/batch-update-state")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
+    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	System.out.println(submissionState.getId());
+    	System.out.println(submissionState.getTransitionSubmissionStates());
+    	System.out.println(submissionState.getName());
+    	
+    	submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+    		sub.setState(submissionState);
+    		submissionRepo.save(sub);
+    	});;
+    	
+        return new ApiResponse(SUCCESS);
+    }
+    
+    
+    
 }

@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -15,6 +15,62 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.userColumns = [];
 
 	$scope.change = false;
+
+	SubmissionStateRepo.ready().then(function() {
+		$scope.advancedfeaturesBox.newStatus = submissionStates[0];	
+	});
+
+	var submissionStates = SubmissionStateRepo.getAll();
+
+	var resetBatchUpdateStatus = function() {
+		$scope.advancedfeaturesBox.newStatus = submissionStates[0];	
+		$scope.closeModal();
+	};
+
+	var batchUpdateStatus = function(newStatus) {
+		SubmissionRepo.batchUpdateStatus(newStatus).then(function() {
+			resetBatchUpdateStatus();
+			query();	
+		});
+	};
+
+	var resetBatchAssignTo = function() {
+		$scope.closeModal();
+	};
+
+	var batchAssignTo = function() {
+		console.log("batchAssignTo");
+	};
+
+	var resetBatchCommentEmail = function() {
+		$scope.closeModal();
+	};
+
+	var batchCommentEmail = function() {
+		console.log("batchCommentEmail");
+	};
+
+	var resetBatchDownloadExport = function() {
+		$scope.closeModal();
+	};
+
+	var batchDownloadExport = function() {
+		console.log("batchDownloadExport");
+	};
+
+	$scope.advancedfeaturesBox = {
+        "title": "Advanced Features:",
+        "viewUrl": "views/sideboxes/advancedFeatures.html",
+        "resetBatchUpdateStatus": resetBatchUpdateStatus,
+        "batchUpdateStatus": batchUpdateStatus,
+        "submissionStates": submissionStates,
+        "resetBatchAssignTo": resetBatchAssignTo,
+        "batchAssignTo": batchAssignTo,
+        "resetBatchCommentEmail": resetBatchCommentEmail,
+        "batchCommentEmail": batchCommentEmail,
+        "resetBatchDownloadExport": resetBatchDownloadExport,
+        "batchDownloadExport": batchDownloadExport
+    };
 
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
@@ -49,7 +105,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.change = false;
 				$scope.closeModal();
-			});			
+			});
+
+			SidebarService.addBox($scope.advancedfeaturesBox);	
+
 		});		
 	};
 
