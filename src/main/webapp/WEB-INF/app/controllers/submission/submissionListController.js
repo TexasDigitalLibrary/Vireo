@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo,UserRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -19,6 +19,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.activeFilters = new NamedSearchFilter();
 
 	$scope.savedFilters = SavedFilterRepo.getAll();
+
+	//This is for piping the user/all columns through to the customizeFilters modal
+	$scope.filterColumns = {};
 
 	$scope.getUserById = function(userId) {
 		return UserRepo.findById(userId);
@@ -71,6 +74,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		$scope.closeModal();
 	};
 
+	$scope.getFilterColumns = function() {
+		return $scope.filterColumns;
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -102,6 +109,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
+				$scope.filterColumns.userFilterColumns = ManagerSubmissionListColumnRepo.getAllFilterColumns();
+				$scope.filterColumns.inactiveFilterColumns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title');
+
 				query();
 
 				$scope.change = false;
@@ -122,6 +132,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"clearFilters": $scope.clearFilters,
 					"saveFilter": $scope.saveFilter,
 					"savedFilters": $scope.savedFilters,
+					"getFilterColumns": $scope.getFilterColumns,
 					"resetSaveFilter": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,

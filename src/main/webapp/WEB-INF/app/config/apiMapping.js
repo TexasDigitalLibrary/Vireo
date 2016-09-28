@@ -571,6 +571,11 @@ var apiMapping = {
 			'controller': 'submission-list',
 			'method': 'columns-by-user'
 		},
+		allFilterColumns: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'filter-columns-by-user'
+		},
 		pageSize: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',

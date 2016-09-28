@@ -105,6 +105,10 @@ public class User extends BaseEntity implements CoreUser {
     @OrderColumn
     private List<SubmissionListColumn> displayedSubmissionColumns;
     
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OrderColumn
+    private List<SubmissionListColumn> filterColumns;
+    
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilter activeFilter;
     
@@ -121,6 +125,7 @@ public class User extends BaseEntity implements CoreUser {
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
+        setFilterColumns(new ArrayList<SubmissionListColumn>());
         setSavedFilters(new ArrayList<NamedSearchFilter>());
         setPageSize(10);
     }
@@ -525,5 +530,12 @@ public class User extends BaseEntity implements CoreUser {
 		this.activeFilter.setColumnsFlag(filter.getColumnsFlag());
 		
 	}
-    
+
+	public List<SubmissionListColumn> getFilterColumns() {
+		return filterColumns;
+	}
+
+	public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
+		this.filterColumns = filterColumns;
+	}
 }

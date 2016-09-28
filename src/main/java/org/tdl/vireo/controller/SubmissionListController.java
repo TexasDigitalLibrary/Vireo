@@ -75,6 +75,14 @@ public class SubmissionListController {
     }
     
     @Transactional
+    @ApiMapping("/filter-columns-by-user")
+    @Auth(role = "STUDENT")
+    public ApiResponse getFilterColumnsByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getFilterColumns());
+    }
+    
+    @Transactional
     @ApiMapping("/pagesize-by-user")
     @Auth(role = "STUDENT")
     public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
