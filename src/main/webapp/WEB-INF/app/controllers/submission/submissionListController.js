@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -15,6 +15,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.userColumns = [];
 
 	$scope.change = false;
+
+	$scope.filterChange = false;
 
 	$scope.activeFilters = new NamedSearchFilter();
 
@@ -78,6 +80,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterColumns;
 	};
 
+	$scope.getFilterColumnOptions = function() {
+		return $scope.filterColumnOptions;
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -99,7 +105,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		SubmissionListColumnRepo.reset();
 		ManagerSubmissionListColumnRepo.reset();
 
-		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function(data) {
+		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), ManagerFilterColumnRepo.ready()]).then(function(data) {
 
 			ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(data) {
 				
@@ -109,7 +115,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
 
-				$scope.filterColumns.userFilterColumns = ManagerSubmissionListColumnRepo.getAllFilterColumns();
+				$scope.filterColumns.userFilterColumns = ManagerFilterColumnRepo.getAll();
 				$scope.filterColumns.inactiveFilterColumns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title');
 
 				query();
@@ -133,13 +139,15 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"saveFilter": $scope.saveFilter,
 					"savedFilters": $scope.savedFilters,
 					"getFilterColumns": $scope.getFilterColumns,
+					"getFilterColumnOptions": $scope.getFilterColumnOptions,
 					"resetSaveFilter": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,
 					"removeFilter": $scope.removeFilter,
 					"getUserById": $scope.getUserById
 			    }
-			]);	
+			]);
+
 		});		
 	};
 
@@ -275,6 +283,25 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			$scope.change = true;
 		},
 		containment: '#column-modal',
+		additionalPlaceholderClass: 'column-placeholder'
+	};
+
+	$scope.filterColumnOptions = {
+		accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
+			return true;
+		},
+		itemMoved: function (event) {
+			if(event.source.sortableScope.$id < event.dest.sortableScope.$id) {
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;	
+			}
+			else {
+				event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'prreviouslyDisabled' : null;
+			}
+			$scope.filterChange = true;
+		},
+		orderChanged: function (event) {
+			$scope.filterChange = true;
+		},
 		additionalPlaceholderClass: 'column-placeholder'
 	};
 

@@ -311,6 +311,7 @@
 	    <script src="repo/fieldProfileRepo.js"></script>
 	    <script src="repo/submissionListColumnRepo.js"></script>
 	    <script src="repo/managerSubmissionListColumnRepo.js"></script>
+	    <script src="repo/managerFilterColumnRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>

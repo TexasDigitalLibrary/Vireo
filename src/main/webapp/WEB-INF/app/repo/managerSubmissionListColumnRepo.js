@@ -18,10 +18,6 @@ vireo.repo("ManagerSubmissionListColumnRepo", function ManagerSubmissionListColu
 		return WsApi.fetch(managerSubmissionListColumnRepo.mapping.reset);
 	};
 
-	this.getAllFilterColumns = function() {
-		return WsApi.fetch(managerSubmissionListColumnRepo.mapping.allFilterColumns);
-	}
-
 	return managerSubmissionListColumnRepo;
 
 });

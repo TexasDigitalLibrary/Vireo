@@ -571,11 +571,6 @@ var apiMapping = {
 			'controller': 'submission-list',
 			'method': 'columns-by-user'
 		},
-		allFilterColumns: {
-			'endpoint': '/private/queue',
-			'controller': 'submission-list',
-			'method': 'filter-columns-by-user'
-		},
 		pageSize: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
@@ -594,6 +589,22 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
 			'method': 'reset-user-columns'
+		}
+	},
+	ManagerFilterColumn: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'filter-columns-by-user'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'filter-columns'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'update-user-filter-columns'
 		}
 	},
 	User: {

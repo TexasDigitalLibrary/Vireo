@@ -11,3 +11,4 @@ var submissionListColumnModel = function () {
 
 vireo.model("SubmissionListColumn", submissionListColumnModel);
 vireo.model("ManagerSubmissionListColumn", submissionListColumnModel);
+vireo.model("ManagerFilterColumn", submissionListColumnModel);
