@@ -147,6 +147,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"saveUserFilters": $scope.saveUserFilters,
 					"getFilterChange": $scope.getFilterChange,
 					"resetSaveFilter": $scope.resetSaveFilter,
+					"resetSaveUserFilters": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,
 					"removeFilter": $scope.removeFilter,
@@ -208,7 +209,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	$scope.saveUserFilters = function() {
-		ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns);
+		ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns).then(function() {
+			$scope.closeModal();
+			update();			
+		});
 	};
 
 	var getValueFromArray = function(array, path, col) {

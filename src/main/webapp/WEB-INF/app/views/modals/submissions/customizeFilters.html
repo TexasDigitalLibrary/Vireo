@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" aria-title="Close">
+    <button type="button" class="close" aria-title="Close" ng-click="box.resetSaveUserFilters()">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Customize Filters</h3>
@@ -33,5 +33,6 @@
 </div>
 
 <div class="modal-footer">
+    <button type="button" class="btn btn-warning" ng-click="box.resetSaveUserFilters()">Cancel</button>        
     <button type="button" class="btn btn-primary" ng-disabled="!box.getFilterChange()" ng-click="box.saveUserFilters()">Save</button>        
 </div>
