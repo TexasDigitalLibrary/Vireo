@@ -84,6 +84,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterColumnOptions;
 	};
 
+	$scope.getFilterChange = function() {
+		return $scope.filterChange;
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -140,6 +144,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"savedFilters": $scope.savedFilters,
 					"getFilterColumns": $scope.getFilterColumns,
 					"getFilterColumnOptions": $scope.getFilterColumnOptions,
+					"saveUserFilters": $scope.saveUserFilters,
+					"getFilterChange": $scope.getFilterChange,
 					"resetSaveFilter": $scope.resetSaveFilter,
 					"applyFilter": $scope.applyFilter,
 					"resetRemoveFilters": $scope.resetRemoveFilters,
@@ -199,6 +205,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.pageSize).then(function() {
 			$scope.resetColumns();
 		});
+	};
+
+	$scope.saveUserFilters = function() {
+		ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns);
 	};
 
 	var getValueFromArray = function(array, path, col) {

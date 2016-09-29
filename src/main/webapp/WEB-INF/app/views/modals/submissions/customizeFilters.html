@@ -32,9 +32,6 @@
 	</div>
 </div>
 
-<!--
 <div class="modal-footer">
-	<button type="button" class="btn btn-warning" ng-click="resetFilters()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="resetFiltersToDefault()">Default Filters</button>
-    <button type="button" class="btn btn-primary" ng-disabled="!change" ng-click="saveFilters()">Save</button>        
-</div>-->
+    <button type="button" class="btn btn-primary" ng-disabled="!box.getFilterChange()" ng-click="box.saveUserFilters()">Save</button>        
+</div>
