@@ -104,9 +104,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
 
-			console.log($scope.page);
-
-			$scope.tableParams = new NgTableParams({ }, 
+			$scope.tableParams = new NgTableParams({
+				count: $scope.page.totalElements
+			}, 
 			{
 				counts: [],
 				filterDelay: 0, 

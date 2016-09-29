@@ -6,6 +6,8 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -24,202 +26,227 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
 public class SubmissionListColumn extends BaseEntity {
-    
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
-    private InputType inputType;
-    
-    @Column(unique = true, nullable = false)
-    private String title;
-    
-    @Transient
-    private Sort sort;
-    
-    @Transient
-    private Integer sortOrder;
-    
-    @Column(nullable = true)
-    private String predicate;
-    
-    @ElementCollection(fetch = EAGER)
-    @OrderColumn
-    private List<String> predicatePath;
-    
-    @ElementCollection(fetch = EAGER)
-    @OrderColumn
-    private List<String> valuePath;
-    
-    @Transient
-    private List<String> filters;
-    
-    @JsonIgnore
-    private String status;
-    
-    public SubmissionListColumn() {
-        setModelValidator(new SubmissionListColumnValidator());
-        this.sort = Sort.NONE;
-        this.sortOrder = 0;
-        this.filters = new ArrayList<String>();
-    }
-    
-    public SubmissionListColumn(String title, Sort sort, List<String> valuePath) {
-        this();
-        this.title = title;
-        this.sort = sort;
-        this.valuePath = valuePath;
-    }
-    
-    public SubmissionListColumn(String title, Sort sort, List<String> valuePath, InputType inputType) {
-        this(title, sort, valuePath);
-        this.inputType = inputType;
-    }
-    
-    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
-        this(title, sort, valuePath);
-        this.predicate = predicate;
-        this.predicatePath = predicatePath;
-    }
-    
-    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
-        this(title, sort, predicate, predicatePath, valuePath);
-        this.inputType = inputType;
-    }
 
-    /**
-     * @return the title
-     */
-    public String getTitle() {
-        return title;
-    }
+	@ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+	private InputType inputType;
 
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	@Column(unique = true, nullable = false)
+	private String title;
 
-    /**
-     * @return the sort
-     */
-    public Sort getSort() {
-        return sort;
-    }
+	@Column(nullable = true)
+	private String predicate;
 
-    /**
-     * @param sort the sort to set
-     */
-    public void setSort(Sort sort) {
-        this.sort = sort;
-    }
+	@ElementCollection(fetch = EAGER)
+	@OrderColumn
+	private List<String> predicatePath;
 
-    /**
-     * @return the sortOrder
-     */
-    public Integer getSortOrder() {
-        return sortOrder;
-    }
+	@ElementCollection(fetch = EAGER)
+	@OrderColumn
+	private List<String> valuePath;
 
-    /**
-     * @param sortOrder the sortOrder to set
-     */
-    public void setSortOrder(Integer sortOrder) {
-        this.sortOrder = sortOrder;
-    }
+	@Transient
+	private Set<String> filters;
 
-    /**
-     * @return the predicate
-     */
-    public String getPredicate() {
-        return predicate;
-    }
+	@Transient
+	private Integer sortOrder;
 
-    /**
-     * @param predicate the predicate to set
-     */
-    public void setPredicate(String predicate) {
-        this.predicate = predicate;
-    }
+	@Transient
+	private Boolean visible;
 
-    /**
-     * @return the predicatePath
-     */
-    public List<String> getPredicatePath() {
-        return predicatePath;
-    }
+	@Transient
+	private Sort sort;
 
-    /**
-     * @param predicatePath the predicatePath to set
-     */
-    public void setPredicatePath(List<String> predicatePath) {
-        this.predicatePath = predicatePath;
-    }
+	@JsonIgnore
+	private String status;
 
-    /**
-     * @return the valuePath
-     */
-    public List<String> getValuePath() {
-        return valuePath;
-    }
+	public SubmissionListColumn() {
+		setModelValidator(new SubmissionListColumnValidator());
+		this.visible = false;
+		this.sortOrder = 0;
+		this.sort = Sort.NONE;
+		this.filters = new HashSet<String>();
+	}
 
-    /**
-     * @param valuePath the valuePath to set
-     */
-    public void setValuePath(List<String> valuePath) {
-        this.valuePath = valuePath;
-    }
+	public SubmissionListColumn(String title, Sort sort, List<String> valuePath) {
+		this();
+		this.title = title;
+		this.sort = sort;
+		this.valuePath = valuePath;
+	}
 
-    /**
-     * @return the filters
-     */
-    public List<String> getFilters() {
-        return filters;
-    }
+	public SubmissionListColumn(String title, Sort sort, List<String> valuePath, InputType inputType) {
+		this(title, sort, valuePath);
+		this.inputType = inputType;
+	}
 
-    /**
-     * @param filters the filters to set
-     */
-    public void setFilters(List<String> filters) {
-        this.filters = filters;
-    }
-    
-    public void addFilter(String filter) {
-        if(!filters.contains(filter)) {
-            filters.add(filter);
-        }
-    }
-    
-    public void removeFilter(String filter) {
-        filters.remove(filter);
-    }
+	public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
+		this(title, sort, valuePath);
+		this.predicate = predicate;
+		this.predicatePath = predicatePath;
+	}
 
-    /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
-    }
+	public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
+		this(title, sort, predicate, predicatePath, valuePath);
+		this.inputType = inputType;
+	}
 
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    /**
-     * @return the inputType
-     */
-    public InputType getInputType() {
-        return inputType;
-    }
+	/**
+	 * @param title
+	 *            the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    /**
-     * @param inputType the inputType to set
-     */
-    public void setInputType(InputType inputType) {
-        this.inputType = inputType;
-    }
-    
+	/**
+	 * @return the predicate
+	 */
+	public String getPredicate() {
+		return predicate;
+	}
+
+	/**
+	 * @param predicate
+	 *            the predicate to set
+	 */
+	public void setPredicate(String predicate) {
+		this.predicate = predicate;
+	}
+
+	/**
+	 * @return the predicatePath
+	 */
+	public List<String> getPredicatePath() {
+		return predicatePath;
+	}
+
+	/**
+	 * @param predicatePath
+	 *            the predicatePath to set
+	 */
+	public void setPredicatePath(List<String> predicatePath) {
+		this.predicatePath = predicatePath;
+	}
+
+	/**
+	 * @return the valuePath
+	 */
+	public List<String> getValuePath() {
+		return valuePath;
+	}
+
+	/**
+	 * @param valuePath
+	 *            the valuePath to set
+	 */
+	public void setValuePath(List<String> valuePath) {
+		this.valuePath = valuePath;
+	}
+
+	/**
+	 * @return the filters
+	 */
+	public Set<String> getFilters() {
+		return filters;
+	}
+
+	/**
+	 * @param filters
+	 *            the filters to set
+	 */
+	public void setFilters(Set<String> filters) {
+		this.filters = filters;
+	}
+
+	public void addFilter(String filter) {
+		if (!filters.contains(filter)) {
+			filters.add(filter);
+		}
+	}
+	
+	public void addAllFilters(Set<String> filters) {
+		this.filters.addAll(filters);
+	}
+
+	public void removeFilter(String filter) {
+		filters.remove(filter);
+	}
+
+	/**
+	 * @return the inputType
+	 */
+	public InputType getInputType() {
+		return inputType;
+	}
+
+	/**
+	 * @param inputType
+	 *            the inputType to set
+	 */
+	public void setInputType(InputType inputType) {
+		this.inputType = inputType;
+	}
+
+	/**
+	 * @return the sortOrder
+	 */
+	public Integer getSortOrder() {
+		return sortOrder;
+	}
+
+	/**
+	 * @param sortOrder
+	 *            the sortOrder to set
+	 */
+	public void setSortOrder(Integer sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	/**
+	 * @return the sort
+	 */
+	public Sort getSort() {
+		return sort;
+	}
+
+	/**
+	 * @param sort
+	 *            the sort to set
+	 */
+	public void setSort(Sort sort) {
+		this.sort = sort;
+	}
+
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 }
