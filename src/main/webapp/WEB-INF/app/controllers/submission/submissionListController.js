@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo,UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -16,12 +16,65 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.change = false;
 
+	$scope.activeFilters = new NamedSearchFilter();
+
+	$scope.savedFilters = SavedFilterRepo.getAll();
+
+		$scope.getUserById = function(userId) {
+			return UserRepo.findById(userId);
+		};
+
+	$scope.removeFilter = function(filterCriterionId,filterString) {
+		$scope.activeFilters.removeFilter(filterCriterionId,filterString).then(function() {
+			query();
+		});
+	};
+
+	$scope.clearFilters = function() {
+		$scope.activeFilters.clearFilters().then(function() {
+			query();
+		});
+	};
+
+	$scope.saveFilter = function() {
+		if ($scope.activeFilters.columnsFlag) {
+			$scope.activeFilters.savedColumns = $scope.userColumns;
+		}
+		SavedFilterRepo.create($scope.activeFilters).then(function() {
+			$scope.closeModal();
+			SavedFilterRepo.reset();
+		});
+
+	};
+
+	$scope.applyFilter = function(filter) {
+		console.log(filter);
+	};
+
+	$scope.resetSaveFilter = function() {
+		$scope.closeModal();
+		$scope.activeFilters.refresh()
+		//Todo: reset the data in the modal
+	};
+
+	$scope.removeFilter = function(filter) {
+		SavedFilterRepo.delete(filter).then(function() {
+			SavedFilterRepo.reset();
+		});
+	};
+
+	$scope.resetRemoveFilters = function() {
+		$scope.closeModal();
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
 			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
 
-			$scope.tableParams = new NgTableParams({ }, 
+			$scope.tableParams = new NgTableParams({
+				count: $scope.page.totalElements
+			}, 
 			{
 				counts: [],
 				filterDelay: 0, 
@@ -49,7 +102,29 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 				$scope.change = false;
 				$scope.closeModal();
-			});			
+			});
+
+			SidebarService.addBoxes([
+			    {
+			        "title": "Now filtering By:",
+			        "viewUrl": "views/sideboxes/nowfiltering.html",
+					"activeFilters": $scope.activeFilters,
+					"removeFilter": $scope.removeFilter
+			    },
+			    {
+			        "title": "Filter Options:",
+			        "viewUrl": "views/sideboxes/filterOptions.html",
+			        "activeFilters": $scope.activeFilters,
+					"clearFilters": $scope.clearFilters,
+					"saveFilter": $scope.saveFilter,
+					"savedFilters": $scope.savedFilters,
+					"resetSaveFilter": $scope.resetSaveFilter,
+					"applyFilter": $scope.applyFilter,
+					"resetRemoveFilters": $scope.resetRemoveFilters,
+					"removeFilter": $scope.removeFilter,
+					"getUserById": $scope.getUserById
+			    }
+			]);	
 		});		
 	};
 

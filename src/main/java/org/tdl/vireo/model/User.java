@@ -25,6 +25,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
@@ -104,10 +106,11 @@ public class User extends BaseEntity implements CoreUser {
     private List<SubmissionListColumn> displayedSubmissionColumns;
     
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
-    private NamedSearchFilterCriteria activeFilter;
+    private NamedSearchFilter activeFilter;
     
+    @Fetch(FetchMode.SELECT)
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<NamedSearchFilterCriteria> savedFilters;
+    private List<NamedSearchFilter> savedFilters;
 
     /**
      * 
@@ -118,7 +121,7 @@ public class User extends BaseEntity implements CoreUser {
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
-        setSavedFilters(new ArrayList<NamedSearchFilterCriteria>());
+        setSavedFilters(new ArrayList<NamedSearchFilter>());
         setPageSize(10);
     }
 
@@ -479,38 +482,38 @@ public class User extends BaseEntity implements CoreUser {
     /**
      * @return the activeFilter
      */
-    public NamedSearchFilterCriteria getActiveFilter() {
+    public NamedSearchFilter getActiveFilter() {
         return activeFilter;
     }
 
     /**
      * @param activeFilter the activeFilter to set
      */
-    public void setActiveFilter(NamedSearchFilterCriteria activeFilter) {
+    public void setActiveFilter(NamedSearchFilter activeFilter) {
         this.activeFilter = activeFilter;
     }
 
     /**
      * @return the savedFilters
      */
-    public List<NamedSearchFilterCriteria> getSavedFilters() {
+    public List<NamedSearchFilter> getSavedFilters() {
         return savedFilters;
     }
 
     /**
      * @param savedFilters the savedFilters to set
      */
-    public void setSavedFilters(List<NamedSearchFilterCriteria> savedFilters) {
+    public void setSavedFilters(List<NamedSearchFilter> savedFilters) {
         this.savedFilters = savedFilters;
     }
     
-    public void addSavedFilter(NamedSearchFilterCriteria savedFilter) {
+    public void addSavedFilter(NamedSearchFilter savedFilter) {
         if(!this.savedFilters.contains(savedFilter)) {
             this.savedFilters.add(savedFilter);
         }
     }
     
-    public void removeSavedFilter(NamedSearchFilterCriteria savedFilter) {
+    public void removeSavedFilter(NamedSearchFilter savedFilter) {
         this.savedFilters.remove(savedFilter);
     }
     

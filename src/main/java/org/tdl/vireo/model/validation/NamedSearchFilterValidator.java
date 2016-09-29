@@ -12,8 +12,11 @@ public class NamedSearchFilterValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Named Search Filter name must be at least 2 characters", nameProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Named Search Filter name cannot be more than 50 characters", nameProperty, 50));
         
-        String creatorProperty = "creator";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Field Value requires a creator", creatorProperty, true));
+        
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Named Search Filter requires a public flag", "publicFlag", true));
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Named Search Filter requires a columns flag", "columnsFlag", true));
+//        String creatorProperty = "creator";
+//        this.addInputValidator(new InputValidator(InputValidationType.required, "Field Value requires a creator", creatorProperty, true));
     }
     
 }

@@ -101,4 +101,5 @@ public class SubmissionController {
         
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
     }
+    
 }

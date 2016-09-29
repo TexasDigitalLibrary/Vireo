@@ -399,7 +399,7 @@ sidebox .sidebox-heading {
   padding: 6px 5px 0 5px;;
 }
 
-sidebox .form-group {
+sidebox .sidebox-body form > .form-group {
   text-align: center;
   padding: 5px;
 }
@@ -1469,7 +1469,7 @@ footer a, footer li, footer p {
 ********************/
 
 
-#etd-table {
+#etd-table, .etd-table {
 	.header {
 		background: #ffffff;
 		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
@@ -1477,6 +1477,10 @@ footer a, footer li, footer p {
 		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
 	}
+
+  th {
+    text-transform: capitalize;
+  }
 }
 
 /***********************
@@ -1618,4 +1622,23 @@ footer a, footer li, footer p {
 .results-per-page-select {
   width: 50% !important;
   margin-left: 5px;
+}
+
+// Now Filtering By Side Module
+.now-filtering-by .glyphicon {
+  font-size: 0.75em;
+}
+
+.now-filtering-by a {
+  color:inherit;
+}
+
+// Saved Filters
+
+.filter-options ul.saved-filters ul.list li.columns {
+  cursor: pointer;
+}
+
+.filter-options ul.saved-filters ul.list li.columns:hover {
+  text-decoration: underline;
 }
