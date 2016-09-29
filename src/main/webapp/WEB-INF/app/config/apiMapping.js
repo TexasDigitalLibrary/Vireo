@@ -591,6 +591,22 @@ var apiMapping = {
 			'method': 'reset-user-columns'
 		}
 	},
+	ManagerFilterColumn: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'filter-columns-by-user'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'filter-columns'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'update-user-filter-columns'
+		}
+	},
 	User: {
 		instantiate: {
 			'endpoint': '/private/queue', 

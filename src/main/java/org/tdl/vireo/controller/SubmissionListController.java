@@ -75,6 +75,14 @@ public class SubmissionListController {
     }
     
     @Transactional
+    @ApiMapping("/filter-columns-by-user")
+    @Auth(role = "STUDENT")
+    public ApiResponse getFilterColumnsByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getFilterColumns());
+    }
+    
+    @Transactional
     @ApiMapping("/pagesize-by-user")
     @Auth(role = "STUDENT")
     public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
@@ -102,6 +110,17 @@ public class SubmissionListController {
         user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+    
+    @Transactional
+    @ApiMapping("/update-user-filter-columns")
+    @Auth(role = "STUDENT")
+    public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> filterColumns) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.setFilterColumns(filterColumns);
+        user = userRepo.save(user);
+                
+        return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
     
     @ApiMapping("/set-active-filter")
