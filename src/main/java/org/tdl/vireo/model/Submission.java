@@ -34,8 +34,8 @@ public class Submission extends BaseEntity {
     @ManyToOne(optional = false)
     private User submitter;
     
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private Set<User> assignees;
+    @ManyToOne
+    private User assignee;
 
     @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
@@ -99,8 +99,25 @@ public class Submission extends BaseEntity {
     public void setSubmitter(User submitter) {
         this.submitter = submitter;
     }
+    
 
     /**
+     * 
+     * @return the assignee
+     */
+    public User getAssignee() {
+		return assignee;
+	}
+
+    /**
+     * 
+     * @param assignee
+     */
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
+	}
+
+	/**
      * @return the state
      */
     public SubmissionState getState() {
