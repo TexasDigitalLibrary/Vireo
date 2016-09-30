@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,29 +33,32 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/submission")
 public class SubmissionController {
-    
-    @Autowired
-    private SubmissionRepo submissionRepo;
-    
-    @Autowired
-    private FieldValueRepo fieldValueRepo;
-    
+
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private SubmissionRepo submissionRepo;
+
+    @Autowired
+    private FieldValueRepo fieldValueRepo;
+
+    @Autowired
+    private SubmissionStateRepo submissionStateRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Transactional
     @ApiMapping("/all")
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
-    
+
     @Transactional
     @ApiMapping("/all-by-user")
-    @Auth(role = "STUDENT")   
+    @Auth(role = "STUDENT")
     public ApiResponse getAllByUser(@ApiCredentials Credentials credentials) {
         User submitter = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(submitter));
@@ -63,7 +68,9 @@ public class SubmissionController {
     @ApiMapping("/get-one/{submissionId}")
     @Auth(role = "STUDENT")
     public ApiResponse getOne(@ApiVariable Long submissionId) {
-        return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId));
+        Submission submission = submissionRepo.findOne(submissionId);
+        submission.setSubmitter(submission.getSubmitter());
+        return new ApiResponse(SUCCESS, submission);
     }
 
     @Transactional
@@ -74,32 +81,60 @@ public class SubmissionController {
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }
-    
+
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value")
     @Auth(role = "STUDENT")
     public ApiResponse updateSubmission(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
-                
+
         Submission submission = submissionRepo.findOne(submissionId);
-        
-        if(fieldValue.getId() == null) {
+
+        if (fieldValue.getId() == null) {
             submission.addFieldValue(fieldValue);
             submission = submissionRepo.save(submission);
             fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
         } else {
             fieldValue = fieldValueRepo.save(fieldValue);
             submission = submissionRepo.findOne(submissionId);
-        }   
-               
+        }
+
         return new ApiResponse(SUCCESS, fieldValue);
     }
-    
+
     @Transactional
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
-        
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
     }
-    
+
+    // TODO: put in its own controller
+    @ApiMapping("/all-submission-state")
+    @Auth(role = "MANAGER")
+    public ApiResponse getAllSubmissionStates() {
+        return new ApiResponse(SUCCESS, submissionStateRepo.findAll());
+    }
+
+    @Transactional
+    @ApiMapping("/batch-update-state")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
+        submissionRepo.dynamicSubmissionQuery(credentials).forEach(sub -> {
+            sub.setState(submissionState);
+            submissionRepo.save(sub);
+        });
+        return new ApiResponse(SUCCESS);
+    }
+
+    @Transactional
+    @ApiMapping("/batch-assign-to")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
+        submissionRepo.dynamicSubmissionQuery(credentials).forEach(sub -> {
+            sub.setAssignee(assignee);
+            submissionRepo.save(sub);
+        });
+        return new ApiResponse(SUCCESS);
+    }
+
 }

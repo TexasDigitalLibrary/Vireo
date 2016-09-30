@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -91,6 +91,115 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterChange;
 	};
 
+	SubmissionStateRepo.ready().then(function() {
+		$scope.advancedfeaturesBox.newStatus = submissionStates[0];	
+	});
+
+	var submissionStates = SubmissionStateRepo.getAll();
+
+	var findFirstAssignable = function() {
+		var firstAssignable;
+		for(var i in allUsers) {
+			if(allUsers[i].role === "ADMINISTRATOR" || allUsers[i].role === "MANAGER") {
+				firstAssignable = allUsers[i];
+				break;	
+			}	
+		}
+		return firstAssignable;
+	};
+
+	UserRepo.ready().then(function() {
+		$scope.advancedfeaturesBox.assignee = findFirstAssignable();
+	});
+
+	var allUsers = UserRepo.getAll();
+
+	var resetBatchUpdateStatus = function() {
+		$scope.advancedfeaturesBox.assignee = findFirstAssignable();
+		$scope.closeModal();
+	};
+
+	var batchUpdateStatus = function(newStatus) {
+		SubmissionRepo.batchUpdateStatus(newStatus).then(function() {
+			resetBatchUpdateStatus();
+			query();	
+		});
+	};
+
+	var resetBatchAssignTo = function() {
+		$scope.advancedfeaturesBox.assignee = allUsers[0];	
+		$scope.closeModal();
+	};
+
+	var batchAssignTo = function(assignee) {
+		SubmissionRepo.batchAssignTo(assignee).then(function() {
+			resetBatchUpdateStatus();
+			query();	
+		});
+	};
+
+	var assignable = function(user) {
+		return user.role === "MANAGER" || user.role === "ADMINISTRATOR";
+	};
+
+	var resetBatchCommentEmail = function() {
+		$scope.closeModal();
+	};
+
+	var batchCommentEmail = function() {
+		console.log("batchCommentEmail");
+	};
+
+	var resetBatchDownloadExport = function() {
+		$scope.closeModal();
+	};
+
+	var batchDownloadExport = function() {
+		console.log("batchDownloadExport");
+	};
+
+	$scope.advancedfeaturesBox = {
+		"title": "Advanced Features:",
+		"viewUrl": "views/sideboxes/advancedFeatures.html",
+		"resetBatchUpdateStatus": resetBatchUpdateStatus,
+		"batchUpdateStatus": batchUpdateStatus,
+		"submissionStates": submissionStates,
+		"allUsers": allUsers,
+		"resetBatchAssignTo": resetBatchAssignTo,
+		"assignable": assignable,
+		"batchAssignTo": batchAssignTo,
+		"resetBatchCommentEmail": resetBatchCommentEmail,
+		"batchCommentEmail": batchCommentEmail,
+		"resetBatchDownloadExport": resetBatchDownloadExport,
+		"batchDownloadExport": batchDownloadExport
+	};
+
+	$scope.nowFilteringByBox = {
+		"title": "Now filtering By:",
+		"viewUrl": "views/sideboxes/nowfiltering.html",
+		"activeFilters": $scope.activeFilters,
+		"removeFilterValue": $scope.removeFilterValue
+	};
+
+	$scope.filterOptionsBox = {
+		"title": "Filter Options:",
+		"viewUrl": "views/sideboxes/filterOptions.html",
+		"activeFilters": $scope.activeFilters,
+		"clearFilters": $scope.clearFilters,
+		"saveFilter": $scope.saveFilter,
+		"savedFilters": $scope.savedFilters,
+		"getFilterColumns": $scope.getFilterColumns,
+		"getFilterColumnOptions": $scope.getFilterColumnOptions,
+		"saveUserFilters": $scope.saveUserFilters,
+		"getFilterChange": $scope.getFilterChange,
+		"resetSaveFilter": $scope.resetSaveFilter,
+		"resetSaveUserFilters": $scope.resetSaveFilter,
+		"applyFilter": $scope.applyFilter,
+		"resetRemoveFilters": $scope.resetRemoveFilters,
+		"removeFilter": $scope.removeFilter,
+		"getUserById": $scope.getUserById
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -98,7 +207,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 			$scope.tableParams = new NgTableParams({
 				count: $scope.page.totalElements
-			}, 
+			},
 			{
 				counts: [],
 				filterDelay: 0, 
@@ -132,33 +241,12 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 			});
 
 			SidebarService.addBoxes([
-			    {
-			        "title": "Now filtering By:",
-			        "viewUrl": "views/sideboxes/nowfiltering.html",
-					"activeFilters": $scope.activeFilters,
-					"removeFilterValue": $scope.removeFilterValue
-			    },
-			    {
-			        "title": "Filter Options:",
-			        "viewUrl": "views/sideboxes/filterOptions.html",
-			        "activeFilters": $scope.activeFilters,
-					"clearFilters": $scope.clearFilters,
-					"saveFilter": $scope.saveFilter,
-					"savedFilters": $scope.savedFilters,
-					"getFilterColumns": $scope.getFilterColumns,
-					"getFilterColumnOptions": $scope.getFilterColumnOptions,
-					"saveUserFilters": $scope.saveUserFilters,
-					"getFilterChange": $scope.getFilterChange,
-					"resetSaveFilter": $scope.resetSaveFilter,
-					"resetSaveUserFilters": $scope.resetSaveFilter,
-					"applyFilter": $scope.applyFilter,
-					"resetRemoveFilters": $scope.resetRemoveFilters,
-					"removeFilter": $scope.removeFilter,
-					"getUserById": $scope.getUserById
-			    }
+				$scope.nowFilteringByBox,
+				$scope.filterOptionsBox,
+				$scope.advancedfeaturesBox
 			]);
 
-		});		
+		});
 	};
 
 	SubmissionRepo.listen(function() {
@@ -214,7 +302,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.saveUserFilters = function() {
 		ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns).then(function() {
 			$scope.closeModal();
-			update();			
+			update();
 		});
 	};
 
@@ -228,6 +316,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
+
 		for(var i in col.valuePath) {
 
 			if(value === undefined) {
@@ -238,14 +327,14 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					return getValueFromArray(value, col.predicatePath, col);
 				}
 				else {
-					value = value[col.valuePath[i]];
+					if(value !== null) {
+						value = value[col.valuePath[i]];
+					}
 				}
 			}
 		}
 		return value;
 	};
-
-	var previousSortColumnToggled;
 
 	$scope.sortBy = function(sortColumn) {
 
@@ -259,26 +348,19 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 				sortColumn.sortOrder = 1;
 			} break;
 			case "NONE": {
+				console.log('none')
 				sortColumn.sort = "DESC";
 				sortColumn.sortOrder = 1;
 			} break;
 			default: break;
 		}
 
-		if(previousSortColumnToggled === undefined || sortColumn.title != previousSortColumnToggled.title) {
-			angular.forEach($scope.userColumns, function(userColumn) {
-				if(sortColumn.title != userColumn.title) {
-					if(userColumn.sort != "NONE") {
-						userColumn.sortOrder++;
-					}
-					else {
-						userColumn.sortOrder = 0;
-					}
-				}
-			});
-		}
-		
-		previousSortColumnToggled = sortColumn;
+		angular.forEach($scope.userColumns, function(userColumn) {
+			if(sortColumn.title !== userColumn.title) {
+				userColumn.sort = "NONE";
+				userColumn.sortOrder = 0;
+			}
+		});
 
 		query();
 	};
@@ -344,11 +426,11 @@ vireo.filter('exclude', function() {
 });
 
 vireo.filter('range', function() {
-  	return function(val, range) {
-    	range = parseInt(range);
-    	for (var i = 0; i < range; i++) {
-      		val.push(i);
-    	}
-    	return val;
-  	};
+	return function(val, range) {
+		range = parseInt(range);
+		for (var i = 0; i < range; i++) {
+			val.push(i);
+		}
+		return val;
+	};
 });

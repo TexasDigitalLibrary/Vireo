@@ -138,6 +138,10 @@ main footer {
   min-height: 600px
 }
 
+.modal-header-primary {
+  background-color: #43606e;
+}
+
 .modal-add-btn {
   margin-bottom: 25px;
 }
@@ -1480,8 +1484,11 @@ footer a, footer li, footer p {
 
   th {
     text-transform: capitalize;
+    padding: 0px;
   }
+
 }
+
 
 /***********************
 ** STUDENT SUBMISSION **
@@ -1635,11 +1642,15 @@ footer a, footer li, footer p {
 }
 
 // Saved Filters
-
 .filter-options ul.saved-filters ul.list li.columns {
   cursor: pointer;
 }
 
 .filter-options ul.saved-filters ul.list li.columns:hover {
   text-decoration: underline;
+}
+
+.advanced-options ul li:hover {
+  cursor:pointer;
+  text-decoration:underline;
 }

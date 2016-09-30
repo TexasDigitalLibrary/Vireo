@@ -1,9 +1,7 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,38 +29,38 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private User submitter;
-    
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private Set<User> assignees;
 
-    @ManyToOne(cascade = { REFRESH })
+    @ManyToOne(fetch = EAGER, optional = true)
+    private User assignee;
+
+    @ManyToOne(fetch = EAGER, optional = false)
     private SubmissionState state;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    private Set<ActionLog> actionLog;
+
+    @ManyToMany(fetch = EAGER)
+    private Set<Embargo> embargoTypes;
+
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    private Set<Attachment> attachments;
+
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar dateOfGraduation;
-
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<ActionLog> actionLog;
-
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
-    private Set<Embargo> embargoTypes;
-
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<Attachment> attachments;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -71,7 +69,7 @@ public class Submission extends BaseEntity {
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setAttachments(new HashSet<Attachment>());
-        
+
     }
 
     /**
@@ -98,6 +96,22 @@ public class Submission extends BaseEntity {
      */
     public void setSubmitter(User submitter) {
         this.submitter = submitter;
+    }
+
+    /**
+     * 
+     * @return the assignee
+     */
+    public User getAssignee() {
+        return assignee;
+    }
+
+    /**
+     * 
+     * @param assignee
+     */
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -144,7 +158,7 @@ public class Submission extends BaseEntity {
     public void setFieldValues(Set<FieldValue> fieldvalues) {
         this.fieldValues = fieldvalues;
     }
-    
+
     /**
      * 
      * @param fieldValue
@@ -152,22 +166,22 @@ public class Submission extends BaseEntity {
     public void addFieldValue(FieldValue fieldValue) {
         getFieldValues().add(fieldValue);
     }
-    
+
     /**
      * 
      * @param fieldValue
      */
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
-      
+
         FieldValue foundFieldValue = null;
-        
-        for(FieldValue fieldValue : getFieldValues()) {           
-            if(fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
                 foundFieldValue = fieldValue;
                 break;
             }
         }
-        
+
         return foundFieldValue;
     }
 
@@ -278,7 +292,7 @@ public class Submission extends BaseEntity {
     public void addEmbargoType(Embargo embargoType) {
         getEmbargoTypes().add(embargoType);
     }
-    
+
     /**
      * 
      * @param embargoType

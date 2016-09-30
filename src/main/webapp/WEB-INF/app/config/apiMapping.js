@@ -527,6 +527,16 @@ var apiMapping = {
 		saveFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
+		},
+		batchUpdateSubmissionState: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'batch-update-state'
+		},
+		batchAssignTo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'batch-assign-to'
 		}
 	},
 	StudentSubmission: {
@@ -563,6 +573,17 @@ var apiMapping = {
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'submission-list'
+		}
+	},
+	SubmissionState: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'all-submission-state'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission-state'
 		}
 	},
 	ManagerSubmissionListColumn: {

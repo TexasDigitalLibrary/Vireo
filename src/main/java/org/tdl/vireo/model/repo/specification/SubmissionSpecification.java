@@ -6,13 +6,13 @@ import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
-import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.tdl.vireo.model.FieldValue;
@@ -32,21 +32,21 @@ public class SubmissionSpecification<E> implements Specification<E> {
 
     @Override
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        
+
         Predicate predicate = null;
 
         List<Order> _orders = new ArrayList<Order>();
-        
-        //List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
+
+        List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
 
         List<Predicate> _groupPredicates = new ArrayList<Predicate>();
 
         List<Predicate> _filterPredicates = new ArrayList<Predicate>();
 
         SetJoin<Submission, FieldValue> fieldValueJoinSet = null;
-                
-        //_groupings.add(root.get("id"));
-        
+
+        _groupings.add(root.get("id"));
+
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
             Path<?> path = null;
             if (submissionListColumn.getValuePath().size() > 0) {
@@ -54,18 +54,12 @@ public class SubmissionSpecification<E> implements Specification<E> {
                     if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
                         SetJoin<Submission, FieldValue> join = root.joinSet("fieldValues", JoinType.LEFT);
                         path = join.get("value");
-                        
-                        Subquery<Submission> subquery = query.subquery(Submission.class);
-                        Root<Submission> subQueryRoot = subquery.from(Submission.class);
 
-                        subquery.select(subQueryRoot.get("id")).distinct(true);
-                        subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
-                        
                         Path<?> predicatePath = join.get("fieldPredicate").get("value");
-                        //_groupings.add(predicatePath);
-                        
-                        _groupPredicates.add(cb.or(cb.equal(predicatePath, submissionListColumn.getPredicate()), root.get("id").in(subquery).not()));
-                        
+                        _groupings.add(predicatePath);
+
+                        _groupPredicates.add(cb.equal(predicatePath, submissionListColumn.getPredicate()));
+
                     }
                 } else {
                     for (String property : submissionListColumn.getValuePath()) {
@@ -93,9 +87,14 @@ public class SubmissionSpecification<E> implements Specification<E> {
                 }
 
                 switch (submissionListColumn.getSort()) {
-                    case ASC: _orders.add(cb.asc(path)); break;
-                    case DESC: _orders.add(cb.desc(path)); break;
-                    default: break;
+                case ASC:
+                    _orders.add(cb.asc(path));
+                    break;
+                case DESC:
+                    _orders.add(cb.desc(path));
+                    break;
+                default:
+                    break;
                 }
             }
         }
@@ -105,12 +104,8 @@ public class SubmissionSpecification<E> implements Specification<E> {
         } else {
             predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
         }
-        
-        query.distinct(true);
-        
-        //query.groupBy(_groupings);
-        
-        //query.groupBy(_groupings).orderBy(_orders);
+
+        query.groupBy(_groupings).orderBy(_orders);
 
         return predicate;
     }

@@ -6,5 +6,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.repo.custom.FilterCriterionRepoCustom;
 
 public interface FilterCriterionRepo extends JpaRepository<FilterCriterion, Long>, FilterCriterionRepoCustom {
-	//public FilterCriterion findBySubmissionListColumn(SubmissionListColumn submissionListColumn);
+
+    public FilterCriterion findBySubmissionListColumn(SubmissionListColumn submissionListColumn);
+
 }
