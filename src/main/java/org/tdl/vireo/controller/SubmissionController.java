@@ -89,22 +89,10 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-field-value")
+    @ApiMapping("/update-field-value")
     @Auth(role = "STUDENT")
-    public ApiResponse updateSubmission(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
-
-        Submission submission = submissionRepo.findOne(submissionId);
-
-        if (fieldValue.getId() == null) {
-            submission.addFieldValue(fieldValue);
-            submission = submissionRepo.save(submission);
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-        } else {
-            fieldValue = fieldValueRepo.save(fieldValue);
-            submission = submissionRepo.findOne(submissionId);
-        }
-
-        return new ApiResponse(SUCCESS, fieldValue);
+    public ApiResponse updateSubmission(@ApiModel FieldValue fieldValue) {
+        return new ApiResponse(SUCCESS, fieldValueRepo.save(fieldValue));
     }
 
     @Transactional

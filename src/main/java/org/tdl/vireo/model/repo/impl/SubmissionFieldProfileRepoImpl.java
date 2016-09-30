@@ -21,13 +21,13 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
         
         SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelp(
-                    fieldProfile.getFieldPredicate(), 
-                    fieldProfile.getInputType(),
-                    fieldProfile.getRepeatable(),
-                    fieldProfile.getOptional(),
-                    fieldProfile.getUsage(),
-                    fieldProfile.getHelp()
-                );
+            fieldProfile.getFieldPredicate(), 
+            fieldProfile.getInputType(),
+            fieldProfile.getRepeatable(),
+            fieldProfile.getOptional(),
+            fieldProfile.getUsage(),
+            fieldProfile.getHelp()
+        );
                         
         if(submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();

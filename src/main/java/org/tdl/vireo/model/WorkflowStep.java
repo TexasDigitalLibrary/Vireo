@@ -89,7 +89,6 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     /**
      * @return the originatingOrganization
      */
-    @Override
     public Organization getOriginatingOrganization() {
         return originatingOrganization;
     }
@@ -97,7 +96,6 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     /**
      * @param originatingOrganization the originatingOrganization to set
      */
-    @Override
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
