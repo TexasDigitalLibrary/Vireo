@@ -32,17 +32,6 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<N> aggregateNotes;
-
-    /**
-     * @return the originatingOrganization
-     */
-    public abstract Organization getOriginatingOrganization();
-
-    /**
-     * @param originatingOrganization the originatingOrganization to set
-     */
-    public abstract void setOriginatingOrganization(Organization originatingOrganization);
-
     
     /**
      * @return the name

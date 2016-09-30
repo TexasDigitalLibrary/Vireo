@@ -12,15 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -52,15 +51,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Submission create(User submitter, Organization organization, SubmissionState startingState) {
 
         Submission submission = new Submission(submitter, organization, startingState);
-
-        // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
-        for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
-            SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
-            submission.addSubmissionWorkflowStep(submissionWorkflowStep);
-
+        
+        submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
+        
+        for(SubmissionWorkflowStep sws : submission.getSubmissionWorkflowSteps()) {
             // Pre-populate field values for dynamic query to function correctly
-            for (FieldProfile fp : aws.getAggregateFieldProfiles()) {
-                submission.addFieldValue(fieldValueRepo.create(fp.getFieldPredicate()));
+            for(SubmissionFieldProfile sfp : sws.getAggregateFieldProfiles()) {
+                submission.addFieldValue(fieldValueRepo.create(sfp.getFieldPredicate()));
             }
         }
 
@@ -112,7 +109,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColumns, Pageable pageable) {
-
+        
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
         User user = userRepo.findByEmail(credentials.getEmail());

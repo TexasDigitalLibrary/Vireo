@@ -1,11 +1,12 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
-import org.tdl.vireo.model.SubmissionFieldProfile;
-import org.tdl.vireo.model.SubmissionNote;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -16,39 +17,46 @@ import org.tdl.vireo.model.repo.custom.SubmissionWorkflowStepRepoCustom;
 public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRepoCustom {
 
     @Autowired
-    SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
-    
+    private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
+
     @Autowired
-    SubmissionFieldProfileRepo submissionFieldProfileRepo;
-    
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+
     @Autowired
-    SubmissionNoteRepo submissionNoteStepRepo;
+    private SubmissionNoteRepo submissionNoteStepRepo;
+
+    // a submission workflow must be created each time a new submission is created
     
+    // if retrieved from the database from a previous submission creation,
+    // the organizations workflow steps could have been modified
+    // therefore, each new submission would have an out of date workflow
+
     @Override
-    public SubmissionWorkflowStep findOrCreate(Organization originatingOrganization, WorkflowStep originatingWorkflowStep) {
-       
-        SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findByNameAndOriginatingOrganizationId(originatingWorkflowStep.getName(), originatingOrganization.getId());
-        
-        if(submissionWorkflowStep == null) {
-            submissionWorkflowStep = new SubmissionWorkflowStep(originatingWorkflowStep.getName(), originatingOrganization);
-            
-            for(FieldProfile fieldProfile : originatingWorkflowStep.getAggregateFieldProfiles()) {
-                SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-                submissionWorkflowStep.addFieldProfile(submissionFieldProfile);
-            }
-            
-            for(Note note : originatingWorkflowStep.getAggregateNotes()) {
-                SubmissionNote submissionNote = submissionNoteStepRepo.create(note);
-                submissionWorkflowStep.addAggregateNote(submissionNote);
-            }
-            
-            submissionWorkflowStep = submissionWorkflowStepRepo.save(submissionWorkflowStep);
-            
+    public List<SubmissionWorkflowStep> cloneWorkflow(Organization organization) {
+
+        List<SubmissionWorkflowStep> submissionWorkflow = new ArrayList<SubmissionWorkflowStep>();
+
+        for (WorkflowStep workflowStep : organization.getAggregateWorkflowSteps()) {
+            submissionWorkflow.add(cloneWorkflowStep(workflowStep));
         }
-        
-        return submissionWorkflowStep;
-        
+
+        return submissionWorkflow;
     }
-    
-    
+
+    @Override
+    public SubmissionWorkflowStep cloneWorkflowStep(WorkflowStep workflowStep) {
+
+        SubmissionWorkflowStep submissionWorkflowStep = new SubmissionWorkflowStep(workflowStep.getName());
+
+        for (FieldProfile fieldProfile : workflowStep.getAggregateFieldProfiles()) {
+            submissionWorkflowStep.addFieldProfile(submissionFieldProfileRepo.create(fieldProfile));
+        }
+
+        for (Note note : workflowStep.getAggregateNotes()) {
+            submissionWorkflowStep.addAggregateNote(submissionNoteStepRepo.create(note));
+        }
+
+        return submissionWorkflowStepRepo.save(submissionWorkflowStep);
+    }
+
 }

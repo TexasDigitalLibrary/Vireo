@@ -6,7 +6,5 @@ import org.tdl.vireo.model.repo.custom.SubmissionWorkflowStepRepoCustom;
 
 public interface SubmissionWorkflowStepRepo extends JpaRepository<SubmissionWorkflowStep, Long>, SubmissionWorkflowStepRepoCustom {
     
-    public SubmissionWorkflowStep findByNameAndOriginatingOrganizationId(String name, Long originatingeOrganizationId);
-    
 }
 

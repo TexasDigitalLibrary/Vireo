@@ -2,8 +2,7 @@
 	<div class="col-xs-12">
 		<ul class="nav nav-pills nav-justified">
 			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
-				<a ng-click="setAcitveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span 	class="glyphicon glyphicon-arrow-right pull-right"
-						ng-if="!$last">
+				<a ng-click="setAcitveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right" ng-if="!$last">
 				</span> </a>
 			</li>
 		</ul>

@@ -526,7 +526,8 @@ var apiMapping = {
 		},
 		saveFieldValue: {
 			'endpoint': '/private/queue',
-			'controller': 'submission'
+			'controller': 'submission',
+			'method': 'update-field-value',
 		},
 		batchUpdateSubmissionState: {
 			'endpoint': '/private/queue',
