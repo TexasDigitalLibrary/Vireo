@@ -13,6 +13,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,24 +24,26 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private LanguageRepo languageRepo;
-    
-    //need this to clear the user created by the StopConnect() call in setup
+
     @Autowired
     private UserRepo userRepo;
-        
+
+    @Autowired
+    private NamedSearchFilterRepo namedSearchFilterRepo;
+
     @Override
     public void setup() {
-        
+
         languageRepo.create(TEST_LANGUAGE_NAME1);
         languageRepo.create(TEST_LANGUAGE_NAME2);
         languageRepo.create(TEST_LANGUAGE_NAME3);
-        
+
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-                        
+
         brokerChannelInterceptor = new MockChannelInterceptor();
-        
+
         brokerChannel.addInterceptor(brokerChannelInterceptor);
-        
+
         StompConnect();
 
     }
@@ -49,15 +52,16 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Order(value = 1)
     public void testGetAllLanguages() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         String responseJson = StompRequest("/settings/language/all", "");
-        
-        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>(){});
+
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
+        });
 
         @SuppressWarnings("unchecked")
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 
         @SuppressWarnings("unchecked")
         List<Language> allLanguages = (List<Language>) payload.get("ArrayList<Language>");
-                
+
         assertEquals(TEST_LANGUAGE_NAME1, objectMapper.convertValue(allLanguages.get(0), Language.class).getName());
         assertEquals(TEST_LANGUAGE_NAME2, objectMapper.convertValue(allLanguages.get(1), Language.class).getName());
         assertEquals(TEST_LANGUAGE_NAME3, objectMapper.convertValue(allLanguages.get(2), Language.class).getName());
@@ -66,6 +70,9 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Override
     public void cleanup() {
         languageRepo.deleteAll();
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
         userRepo.deleteAll();
     }
 

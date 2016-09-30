@@ -15,6 +15,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -33,6 +34,8 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/submission")
 public class SubmissionController {
+    
+    private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
 
     @Autowired
     private UserRepo userRepo;
@@ -42,6 +45,9 @@ public class SubmissionController {
 
     @Autowired
     private FieldValueRepo fieldValueRepo;
+    
+    @Autowired
+    private OrganizationRepo organizationRepo;
 
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
@@ -77,7 +83,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
-        Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
+        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME));
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }

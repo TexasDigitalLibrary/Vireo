@@ -394,7 +394,7 @@ public abstract class AbstractEntityTest {
     protected OrganizationRepo organizationRepo;
 
     @Autowired
-    protected NamedSearchFilterRepo namedSearchFilterCriteriaRepo;
+    protected NamedSearchFilterRepo namedSearchFilterRepo;
     
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;

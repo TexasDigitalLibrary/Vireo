@@ -1,5 +1,6 @@
 h2/
 bin/
+logs/
 public/
 target/
 attachments/
@@ -14,5 +15,4 @@ src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .classpath
 .settings
 .tern-project
-*.log*
-
+vireo.log*

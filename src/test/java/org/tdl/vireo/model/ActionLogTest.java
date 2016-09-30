@@ -5,13 +5,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 
-import edu.tamu.framework.model.Credentials;
-
 public class ActionLogTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
-        
+
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
@@ -21,12 +19,10 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The attachmentType repository is not empty!", 1, attachmentTypeRepo.count());
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
-        
-        Credentials credentials = new Credentials();
-        credentials.setEmail(testUser.getEmail());
+
         OrganizationCategory category = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-        testSubmission = submissionRepo.create(credentials, organization.getId());
+        testSubmission = submissionRepo.create(testUser, organization, submissionState);
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
 
@@ -83,9 +79,12 @@ public class ActionLogTest extends AbstractEntityTest {
         submissionStateRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
-        userRepo.deleteAll();        
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
+        userRepo.deleteAll();
         attachmentRepo.deleteAll();
-        attachmentTypeRepo.deleteAll(); 
+        attachmentTypeRepo.deleteAll();
     }
 
 }

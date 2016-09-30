@@ -69,7 +69,6 @@ public class Submission extends BaseEntity {
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setAttachments(new HashSet<Attachment>());
-
     }
 
     /**
@@ -80,6 +79,15 @@ public class Submission extends BaseEntity {
         this();
         setSubmitter(submitter);
         setOrganization(organization);
+    }
+
+    /**
+     * @param submitter
+     * @param state
+     */
+    public Submission(User submitter, Organization organization, SubmissionState state) {
+        this(submitter, organization);
+        setState(state);
     }
 
     /**

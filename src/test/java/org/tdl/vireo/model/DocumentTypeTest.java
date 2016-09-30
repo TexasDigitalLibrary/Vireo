@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.enums.DegreeLevel;
 
-import edu.tamu.framework.model.Credentials;
-
 public class DocumentTypeTest extends AbstractEntityTest{
 
 	@Override
@@ -60,15 +58,14 @@ public class DocumentTypeTest extends AbstractEntityTest{
 		// Create a submission.
 		submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
         assertEquals("The user does not exist!", 1, userRepo.count());
-		Credentials creds = new Credentials();
-		creds.setEmail(submitter.getEmail());
+
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
-		Submission submission = submissionRepo.create(creds, organization.getId());
+		Submission submission = submissionRepo.create(submitter, organization, submissionState);
 		
 		// Create a document type with implicitly created field predicate.
 		DocumentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME, DegreeLevel.MASTERS);
@@ -88,6 +85,9 @@ public class DocumentTypeTest extends AbstractEntityTest{
         submissionRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         organizationRepo.deleteAll();
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
         userRepo.deleteAll();
     }
 

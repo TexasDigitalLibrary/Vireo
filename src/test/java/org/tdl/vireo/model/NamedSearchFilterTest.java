@@ -11,7 +11,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     
     @Before
     public void setUp() {
-        assertEquals("SearchFilter Repo is not empty", 0, namedSearchFilterCriteriaRepo.count());
+        assertEquals("SearchFilter Repo is not empty", 0, namedSearchFilterRepo.count());
         creator = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
     }
 
@@ -37,7 +37,9 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        namedSearchFilterCriteriaRepo.deleteAll();        
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
         userRepo.deleteAll();        
     }
 

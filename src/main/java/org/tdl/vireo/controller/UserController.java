@@ -83,6 +83,7 @@ public class UserController {
         User persistedUser = userRepo.findOne(user.getId());
         if(persistedUser != null) {
             user.setPassword(persistedUser.getPassword());
+            user.setActiveFilter(persistedUser.getActiveFilter());
         }
         
         logger.info("Updating role for " + user.getEmail());

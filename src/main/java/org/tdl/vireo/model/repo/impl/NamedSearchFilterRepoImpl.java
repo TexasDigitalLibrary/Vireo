@@ -5,6 +5,7 @@ import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FilterCriterionRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterRepoCustom;
 
 public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
@@ -14,12 +15,14 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
     
     @Autowired
     private FilterCriterionRepo filterCriterionRepo;
+    
+    @Autowired
+    private UserRepo userRepo;
 
     @Override
     public NamedSearchFilter create(User user) {
     	NamedSearchFilter newNamedSearchFilter = new NamedSearchFilter();
     	newNamedSearchFilter.setUser(user);
-    	
         return namedSearchFilterRepo.save(newNamedSearchFilter);
     }
     
@@ -51,8 +54,18 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
     public NamedSearchFilter createFromFilter(NamedSearchFilter namedSearchFilter) {
     	NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getUser());
     	newNamedSearchFilter.setName(namedSearchFilter.getName());
-    	
     	return namedSearchFilterRepo.save(clone(newNamedSearchFilter, namedSearchFilter));
+    }
+
+    @Override
+    public void delete(NamedSearchFilter namedSearchFilter) {
+        User user = namedSearchFilter.getUser();
+        user.setActiveFilter(null);
+        userRepo.save(user);
+        namedSearchFilter.setUser(null);
+        namedSearchFilter.setFilterCriteria(null);
+        namedSearchFilter.setSavedColumns(null);
+        namedSearchFilterRepo.delete(namedSearchFilter.getId());
     }
 
 }

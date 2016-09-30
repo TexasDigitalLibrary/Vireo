@@ -12,5 +12,7 @@ public interface NamedSearchFilterRepoCustom {
     public NamedSearchFilter clone(NamedSearchFilter newNamedSearchFilter, NamedSearchFilter namedSearchFilter);
     
     public NamedSearchFilter createFromFilter(NamedSearchFilter namedSearchFilter);
+    
+    public void delete(NamedSearchFilter namedSearchFilter);
 
 }

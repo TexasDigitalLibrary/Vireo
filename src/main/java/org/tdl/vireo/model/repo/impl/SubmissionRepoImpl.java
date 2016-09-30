@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +22,8 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldValueRepo;
-import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
@@ -38,51 +33,33 @@ import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
-    @PersistenceContext
-    private EntityManager em;
-    
     @Autowired
     private UserRepo userRepo;
-
 
     @Autowired
     private SubmissionRepo submissionRepo;
 
     @Autowired
-    private SubmissionStateRepo submissionStateRepo;
-   
+    private FieldValueRepo fieldValueRepo;
+
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
 
-    @Autowired
-    private FieldValueRepo fieldValueRepo;
-    
-    @Autowired
-    private OrganizationRepo organizationRepo;
-
     @Override
-    public Submission create(Credentials submitterCredentials, Long organizationId) {
+    public Submission create(User submitter, Organization organization, SubmissionState startingState) {
 
-        User submitter = userRepo.findByEmail(submitterCredentials.getEmail());
-
-        SubmissionState startingState = submissionStateRepo.findByName("In Progress");
-
-        Organization organization = organizationRepo.findOne(organizationId);
-
-        Submission submission = new Submission(submitter, organization);
-
-        submission.setState(startingState);
+        Submission submission = new Submission(submitter, organization, startingState);
 
         // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
         for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
             SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
             submission.addSubmissionWorkflowStep(submissionWorkflowStep);
-            
+
             // Pre-populate field values for dynamic query to function correctly
-            for(FieldProfile fp : aws.getAggregateFieldProfiles()) {
+            for (FieldProfile fp : aws.getAggregateFieldProfiles()) {
                 submission.addFieldValue(fieldValueRepo.create(fp.getFieldPredicate()));
             }
         }
@@ -95,7 +72,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
         User user = userRepo.findByEmail(credentials.getEmail());
-        
+
         List<SubmissionListColumn> submissionListColumns = user.getSubmissionViewColumns();
 
         NamedSearchFilter activeFilter = user.getActiveFilter();
@@ -172,8 +149,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             });
         }
 
-        // sort all submission list columns by sort order provided by users
-        // submission list columns
+        // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
