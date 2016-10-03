@@ -34,7 +34,7 @@ public class Submission extends BaseEntity {
     @ManyToOne(optional = false)
     private User submitter;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
     private User assignee;
 
     @ManyToOne(cascade = { REFRESH })
