@@ -1,0 +1,34 @@
+<div ng-controller="SubmissionHistoryController">
+
+	<ul class="breadcrumb">
+		<li><a href="/">Home</a></li>
+		<li class="active">Submissions</li>
+	</ul>
+
+	<div class="row pageHead">
+		<h3 class="span11">Submission History</h3>
+	</div>
+	
+	<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+ 	  <tr ng-repeat="row in $data track by row.id">
+		<td title="'ID'">{{row.id}}</td>
+		<td title="'Organization'">{{row.organization.name}}</td>
+		<td title="'Status'">{{row.state.name}}</td>
+		<td title="'Date Submitted'">TODO</td>
+		<td title="'Assigned To'">TODO</td>
+		<td title="'Actions'">actions...</td>
+	  </tr>
+	</table>
+
+	<div ng-controller="SettingsController">
+		<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
+
+		<modal 
+			modal-id="confirmNewSubmission" 
+			modal-view="views/modals/submissions/confirmNewSubmission.html" 
+			modal-header-class="modal-header-danger"
+			static="true">
+		</modal>
+	</div>
+
+</div>
