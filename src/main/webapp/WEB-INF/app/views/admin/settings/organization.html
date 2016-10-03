@@ -52,7 +52,7 @@
 							<div class="panel-body">
 								<ul class="list-group">
 									<li class="list-group-item"
-										ng-repeat="organization in organizations | filter:{category: {id:panel.filterOn}} | orderBy:'name'"
+										ng-repeat="organization in organizations | filter:{category: {id:panel.filterOn}} | orderBy:['category.name', 'name']"
 										ng-if="filterPanelByParent(panel, organization)"
 										ng-click="shiftPanels(panel, organization);"
 										ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
