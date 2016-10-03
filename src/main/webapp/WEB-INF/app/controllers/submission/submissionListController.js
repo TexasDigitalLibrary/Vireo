@@ -125,7 +125,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					return getValueFromArray(value, col.predicatePath, col);
 				}
 				else {
-					value = value[col.valuePath[i]];
+					if(value !== null) {
+						value = value[col.valuePath[i]];
+					}
 				}
 			}
 		}

@@ -51,18 +51,17 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
-import org.tdl.vireo.model.repo.specification.SubmissionSpecification;
 
 import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
-    
+
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     private SubmissionRepo submissionRepo;
-    
+
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
 
@@ -74,24 +73,21 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
-    
+
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
 
-//    @Autowired
-//    private NamedSearchFilterCriteriaRepo namedSearchFilterCriteriaRepo;
-    
     @Override
     public Submission create(Credentials submitterCredentials, Long organizationId) {
 
         User submitter = userRepo.findByEmail(submitterCredentials.getEmail());
 
         SubmissionState startingState = submissionStateRepo.findByName("In Progress");
-        
+
         Organization organization = organizationRepo.findOne(organizationId);
-        
+
         Submission submission = new Submission(submitter, organization);
-        
+
         submission.setState(startingState);
 
         // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
@@ -107,60 +103,41 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
-        
-//        if(user.getActiveFilter() == null) {
-//            NamedSearchFilterCriteria filter = namedSearchFilterCriteriaRepo.create(user, "Full Search For Bob");
-//            
-//            FilterCriterion fc = new FilterCriterion();
-//            
-//            fc.addFilter("Bob");
-//
-//            filter.addFilterCriterion(fc);
-//            
-//            filter = namedSearchFilterCriteriaRepo.save(filter);
-//            
-//            user.addSavedFilter(filter);
-//            
-//            user.setActiveFilter(filter);
-//            
-//            user = userRepo.save(user);
-//        }
-        
+
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
         NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
-        
+
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
-        
+
         // set sort and sort order on all submission list columns that are set on users submission list columns
         submissionListColums.forEach(submissionListColumn -> {
-            for(SubmissionListColumn slc : allSubmissionListColumns) {
-                if(submissionListColumn.equals(slc)) {
-                	slc.setVisible(true);
+            for (SubmissionListColumn slc : allSubmissionListColumns) {
+                if (submissionListColumn.equals(slc)) {
+                    slc.setVisible(true);
                     slc.setSort(submissionListColumn.getSort());
                     slc.setSortOrder(submissionListColumn.getSortOrder());
                     break;
                 }
             }
         });
-          
+
         // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
-        if(activeFilter != null) {
+        if (activeFilter != null) {
             activeFilter.getFilterCriteria().forEach(filterCriterion -> {
-            	if(filterCriterion.getAllColumnSearch()) {
-            		allColumnSearchFilters.addAll(filterCriterion.getFilters());
-            	}
-            	else {
-            		for(SubmissionListColumn slc : allSubmissionListColumns) {
-                        if(filterCriterion.getSubmissionListColumn().equals(slc)) {
-                        	slc.addAllFilters(filterCriterion.getFilters());
+                if (filterCriterion.getAllColumnSearch()) {
+                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+                } else {
+                    for (SubmissionListColumn slc : allSubmissionListColumns) {
+                        if (filterCriterion.getSubmissionListColumn().equals(slc)) {
+                            slc.addAllFilters(filterCriterion.getFilters());
                             break;
                         }
                     }
-            	}
+                }
             });
         }
-        
+
         // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
             @Override
@@ -171,7 +148,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         Boolean filterExists = false;
         Boolean predicateExists = false;
-        
+
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
@@ -187,15 +164,20 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             if (submissionListColumn.getValuePath().size() > 0) {
                 String fullPath = String.join(".", submissionListColumn.getValuePath());
                 switch (submissionListColumn.getSort()) {
-                    case ASC: orders.add(new Sort.Order(Sort.Direction.ASC, fullPath)); break;
-                    case DESC: orders.add(new Sort.Order(Sort.Direction.DESC, fullPath)); break;
-                    default: break;
+                case ASC:
+                    orders.add(new Sort.Order(Sort.Direction.ASC, fullPath));
+                    break;
+                case DESC:
+                    orders.add(new Sort.Order(Sort.Direction.DESC, fullPath));
+                    break;
+                default:
+                    break;
                 }
             }
         }
-        
-        if(!filterExists && !allColumnSearchFilters.isEmpty()) {
-        	filterExists = true;
+
+        if (!filterExists && !allColumnSearchFilters.isEmpty()) {
+            filterExists = true;
         }
 
         Page<Submission> pageResults = null;
@@ -247,8 +229,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                                     navPath = property;
                                     if (requiresFetch(root, property)) {
                                         Fetch<?, ?> fetch = fetches.get(navPath);
-                                        if(fetch == null) {
-                                            fetch = root.fetch(property);
+                                        if (fetch == null) {
+                                            fetch = root.fetch(property, JoinType.LEFT);
                                             fetches.put(navPath, fetch);
                                         }
                                         path = (Path<?>) fetch;
@@ -259,8 +241,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                                     navPath += "." + property;
                                     if (requiresFetch(path, property)) {
                                         Fetch<?, ?> fetch = fetches.get(navPath);
-                                        if(fetch == null) {
-                                            fetch = ((Fetch<?, ?>) path).fetch(property);
+                                        if (fetch == null) {
+                                            fetch = ((Fetch<?, ?>) path).fetch(property, JoinType.LEFT);
                                             fetches.put(navPath, fetch);
                                         }
                                         path = (Path<?>) fetch;
@@ -273,7 +255,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filter : submissionListColumn.getFilters()) {
-                            _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
+                            _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
                         }
 
                         for (String filter : allColumnSearchFilters) {
@@ -281,16 +263,21 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                                 if (fieldValueFetchPath == null) {
                                     fieldValueFetchPath = (Path<?>) root.fetch("fieldValues");
                                 }
-                                _filterPredicates.add(cb.like(fieldValueFetchPath.get("value").as(String.class), "%" + filter + "%"));
+                                _filterPredicates.add(cb.like(cb.lower(fieldValueFetchPath.get("value").as(String.class)), "%" + filter.toLowerCase() + "%"));
                             } else {
-                                _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
+                                _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
                             }
                         }
 
                         switch (submissionListColumn.getSort()) {
-                            case ASC: _orders.add(cb.asc(path)); break;
-                            case DESC: _orders.add(cb.desc(path)); break;
-                            default: break;
+                        case ASC:
+                            _orders.add(cb.asc(path));
+                            break;
+                        case DESC:
+                            _orders.add(cb.desc(path));
+                            break;
+                        default:
+                            break;
                         }
                     }
                 }
@@ -306,8 +293,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 query.select(root).distinct(true).where(predicate).orderBy(_orders);
 
                 TypedQuery<Submission> typedQuery = em.createQuery(query);
-                
-                
+
                 System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
 
                 long total = typedQuery.getResultList().size();
@@ -315,8 +301,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 typedQuery.setMaxResults(pageable.getPageSize());
 
                 pageResults = new PageImpl<Submission>(typedQuery.getResultList(), pageable, total);
-                  
-//                pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColumns, allColumnSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
+
+                // pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColumns, allColumnSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
             } else {
                 pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
             }
@@ -326,7 +312,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         return pageResults;
     }
-    
+
     private Boolean requiresFetch(Path<?> path, String property) {
         Field field = recursivelyFindField(path.getJavaType(), property);
         Boolean reqFetch = true;
