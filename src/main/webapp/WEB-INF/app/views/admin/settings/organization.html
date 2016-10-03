@@ -44,6 +44,7 @@
 											ng-class="{'active': category.id == panel.filterOn, 'multiple': panel.getUniqueCategories().length}">{{category.name}}</span>
 									<span ng-if="!$last"> / </span>
 								</span>
+								<span class="glyphicon glyphicon-refresh toggle-href pull-right" ng-if="panel.filterOn" ng-click="panel.clearFilter()"></span>
 								<span	class="glyphicon glyphicon-arrow-right pull-right"
 										ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive">
 								</span>
@@ -51,7 +52,7 @@
 							<div class="panel-body">
 								<ul class="list-group">
 									<li class="list-group-item"
-										ng-repeat="organization in organizations | filter:{category:panel.filterOn} | orderBy:'name'"
+										ng-repeat="organization in organizations | filter:{category: {id:panel.filterOn}} | orderBy:'name'"
 										ng-if="filterPanelByParent(panel, organization)"
 										ng-click="shiftPanels(panel, organization);"
 										ng-class="{'selected': panel.selectedOrganization.id == organization.id}"
