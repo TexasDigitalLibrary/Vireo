@@ -15,35 +15,38 @@ public class UserRepoImpl implements UserRepoCustom {
 
     @Autowired
     private UserRepo userRepo;
-    
+
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterCriteriaRepo;
+    private NamedSearchFilterRepo namedSearchFilterRepo;
 
     @Override
     public User create(String email, String firstName, String lastName, AppRole role) {
-        
+
         User newUser = new User(email, firstName, lastName, role);
-        
+
         newUser = userRepo.save(newUser);
-        
-        NamedSearchFilter activeFilter = namedSearchFilterCriteriaRepo.create(newUser);
-        
+
+        NamedSearchFilter activeFilter = namedSearchFilterRepo.create(newUser);
+
         newUser.putSetting("id", newUser.getId().toString());
-        newUser.putSetting("displayName", newUser.getFirstName() +" "+ newUser.getLastName());
+        newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());
         newUser.putSetting("preferedEmail", newUser.getEmail());
         newUser.setActiveFilter(activeFilter);
-        
+
         return userRepo.save(newUser);
     }
-    
+
     @Override
     public User create(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> submissionViewColumns) {
-        
         User newUser = create(email, firstName, lastName, role);
-        
         newUser.setSubmissionViewColumns(submissionViewColumns);
-        
         return userRepo.save(newUser);
+    }
+
+    @Override
+    public void delete(User user) {
+        namedSearchFilterRepo.delete(user.getActiveFilter());
+        userRepo.delete(user.getId());
     }
 
 }

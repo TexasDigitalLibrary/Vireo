@@ -50,10 +50,10 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        
+
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
-        
+
         attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
 
@@ -64,16 +64,16 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         Credentials credentials = new Credentials();
-                
+
         credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
         submission.setState(submissionState);
-        
+
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-        
+
         submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
@@ -95,9 +95,9 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionRepo.create(credentials, organization.getId());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(credentials,  organization.getId());
-        } 
-        catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+            submissionRepo.create(credentials, organization.getId());
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
     }
 
@@ -114,12 +114,11 @@ public class SubmissionTest extends AbstractEntityTest {
     @Transactional
     public void testCascade() {
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
-        
+
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
         SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, severableWorkflowStep);
-        
+
         organization = organizationRepo.findOne(organization.getId());
-        
 
         FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE, new Boolean(false));
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
@@ -127,22 +126,22 @@ public class SubmissionTest extends AbstractEntityTest {
         Long severableFieldValueId = severableFieldValue.getId();
 
         Credentials credentials = new Credentials();
-                
+
         credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
-        
+
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
-        
+
         int numSteps = submission.getSubmissionWorkflowSteps().size();
-        //TODO:  assert that the brand new submission has only the ones it gets from its org
-        assertEquals("The submission didn't get its org's workflow!" , organization.getAggregateWorkflowSteps().size(), submission.getSubmissionWorkflowSteps().size());
-        
+        // TODO: assert that the brand new submission has only the ones it gets from its org
+        assertEquals("The submission didn't get its org's workflow!", organization.getAggregateWorkflowSteps().size(), submission.getSubmissionWorkflowSteps().size());
+
         submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         numSteps++;
         submission.addFieldValue(fieldValue);
-        
+
         severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, severableWorkflowStep);
         submission.addSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         numSteps++;
@@ -151,7 +150,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addEmbargoType(embargoType);
         submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
-        
+
         severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOne(severableSubmissionWorkflowStep.getId());
 
         // test remove pointer workflow step and make sure the workflow step is
@@ -161,20 +160,19 @@ public class SubmissionTest extends AbstractEntityTest {
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", numSteps, submission.getSubmissionWorkflowSteps().size());
         assertEquals("The workflow step was deleted!", 2, submissionWorkflowStepRepo.count());
-        
+
         long fieldValueCount = fieldValueRepo.count();
         submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.save(submission);
-        //should delete the orphan field value, so decrement our expected count.
+        // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
-        //need this to refresh the repo in the transaction.  Otherwise, we can still get the orphan.
+        // need this to refresh the repo in the transaction. Otherwise, we can still get the orphan.
         fieldValueRepo.flush();
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
-        assertEquals("The field value was orphaned! ", null , orphan);
+        assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
-        assertEquals("The field value was orphaned! ", null , orphan);
+        assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was orphaned!", fieldValueCount, fieldValueRepo.count());
-
 
         // From here on we test the actual cascade:
 
@@ -203,42 +201,38 @@ public class SubmissionTest extends AbstractEntityTest {
         // see that the field predicates were not deleted.
         assertEquals("The field predicates were orphaned!", 2, fieldPredicateRepo.count());
     }
-    
+
     @Test
-    public void testUniqueConstraint()
-    {
+    public void testUniqueConstraint() {
         Credentials credentials = new Credentials();
-        
+
         credentials.setEmail(submitter.getEmail());
         Submission submission = submissionRepo.create(credentials, organization.getId());
         submission.setState(submissionState);
-        
+
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-        
+
         submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
-        
+
         assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
-    
-        try
-        {
+
+        try {
             submissionRepo.create(credentials, organization.getId());
             assertTrue(false);
-        }
-        catch(Exception e)
-        {
-            //good
+        } catch (Exception e) {
+            // good
         }
     }
 
     @After
-    public void cleanUp() {        
+    public void cleanUp() {
         submissionRepo.deleteAll();
-        submissionStateRepo.deleteAll();        
+        submissionStateRepo.deleteAll();
         workflowStepRepo.findAll().forEach(workflowStep -> {
             workflowStepRepo.delete(workflowStep);
         });
@@ -246,16 +240,18 @@ public class SubmissionTest extends AbstractEntityTest {
         actionLogRepo.deleteAll();
         fieldValueRepo.deleteAll();
         fieldPredicateRepo.deleteAll();
-        //organizationRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
         assertEquals("The organization repo wouldn't clear!", 0, organizationRepo.count());
         organizationCategoryRepo.deleteAll();
         embargoRepo.deleteAll();
-        userRepo.deleteAll();        
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
+        userRepo.deleteAll();
         attachmentRepo.deleteAll();
         attachmentTypeRepo.deleteAll();
     }
-    
+
 }

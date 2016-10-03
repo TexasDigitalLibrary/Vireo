@@ -66,6 +66,9 @@ public class CustomActionValueTest extends AbstractEntityTest {
         submissionRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
         userRepo.deleteAll();
         submissionStateRepo.deleteAll();
         customActionDefinitionRepo.deleteAll();

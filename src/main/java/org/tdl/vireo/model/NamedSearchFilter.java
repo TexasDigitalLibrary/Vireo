@@ -29,8 +29,8 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilter extends BaseEntity {
-    
-    @ManyToOne(optional = false)
+
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
@@ -40,21 +40,21 @@ public class NamedSearchFilter extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean publicFlag;
-    
+
     @Column(nullable = false)
     private Boolean columnsFlag;
 
     @Column(nullable = false)
     private Boolean umiRelease;
-    
+
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> savedColumns;
-    
+
     @Fetch(FetchMode.SELECT)
-    @OneToMany(cascade = {REFRESH, MERGE}, fetch = EAGER, orphanRemoval=true)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
-    
+
     public NamedSearchFilter() {
         setPublicFlag(false);
         setColumnsFlag(false);
@@ -63,7 +63,6 @@ public class NamedSearchFilter extends BaseEntity {
         setSavedColumns(new ArrayList<SubmissionListColumn>());
         setModelValidator(new NamedSearchFilterValidator());
     }
-    
 
     /**
      * @return the user
@@ -73,7 +72,8 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @param user the user to set
+     * @param user
+     *            the user to set
      */
     public void setUser(User user) {
         this.user = user;
@@ -87,7 +87,8 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -101,21 +102,22 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @param publicFlag the publicFlag to set
+     * @param publicFlag
+     *            the publicFlag to set
      */
     public void setPublicFlag(Boolean publicFlag) {
         this.publicFlag = publicFlag;
     }
 
     public Boolean getColumnsFlag() {
-		return columnsFlag;
-	}
+        return columnsFlag;
+    }
 
-	public void setColumnsFlag(Boolean columnsFlag) {
-		this.columnsFlag = columnsFlag;
-	}
+    public void setColumnsFlag(Boolean columnsFlag) {
+        this.columnsFlag = columnsFlag;
+    }
 
-	/**
+    /**
      * @return the umiRelease
      */
     public Boolean getUmiRelease() {
@@ -123,27 +125,26 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     public List<SubmissionListColumn> getSavedColumns() {
-		return savedColumns;
-	}
+        return savedColumns;
+    }
 
+    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
+        this.savedColumns = savedColumns;
+    }
 
-	public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
-		this.savedColumns = savedColumns;
-	}
-	
     public void addSavedColumn(SubmissionListColumn submissionListColumn) {
-        if(!savedColumns.contains(submissionListColumn)) {
-        	savedColumns.add(submissionListColumn);
+        if (!savedColumns.contains(submissionListColumn)) {
+            savedColumns.add(submissionListColumn);
         }
     }
-    
+
     public void removeSavedColumn(SubmissionListColumn submissionListColumn) {
         savedColumns.remove(submissionListColumn);
     }
 
-
-	/**
-     * @param umiRelease the umiRelease to set
+    /**
+     * @param umiRelease
+     *            the umiRelease to set
      */
     public void setUmiRelease(Boolean umiRelease) {
         this.umiRelease = umiRelease;
@@ -157,29 +158,30 @@ public class NamedSearchFilter extends BaseEntity {
     }
 
     /**
-     * @param filterCriteria the filterCriteria to set
+     * @param filterCriteria
+     *            the filterCriteria to set
      */
     public void setFilterCriteria(List<FilterCriterion> filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
-    
+
     public void addFilterCriterion(FilterCriterion filterCriterion) {
-        if(!filterCriteria.contains(filterCriterion)) {
+        if (!filterCriteria.contains(filterCriterion)) {
             filterCriteria.add(filterCriterion);
         }
     }
-    
+
     public void removeFilterCriterion(FilterCriterion filterCriterion) {
         filterCriteria.remove(filterCriterion);
     }
 
-	public FilterCriterion getFilterCriterion(Long criteriaId) {
-		for (FilterCriterion filterCriterion:filterCriteria) {
-			if (filterCriterion.getId() == criteriaId) {
-				return filterCriterion;
-			}
-		}
-		return null;
-	}
-    
+    public FilterCriterion getFilterCriterion(Long criteriaId) {
+        for (FilterCriterion filterCriterion : filterCriteria) {
+            if (filterCriterion.getId() == criteriaId) {
+                return filterCriterion;
+            }
+        }
+        return null;
+    }
+
 }
