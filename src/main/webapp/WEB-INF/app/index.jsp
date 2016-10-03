@@ -73,6 +73,7 @@
 							<ul class="dropdown-menu" role="menu">
 								<li role="presentation" class="dropdown-header">Profile</li>
 								<li><a role="menuitem" href="myprofile">Profile</a></li>
+								<li><a role="menuitem" href="submission/history">Submission History</a></li>
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="divider"></li>
 								<li ng-if="isAdmin() || isManager()" role="presentation" class="dropdown-header">Manager Actions</li>
 								<li ng-if="isAdmin() || isManager()">
