@@ -248,16 +248,18 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                     newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
                 } else {
-                    SubmissionState tempSubmissionState = emailWorkflowRule.getSubmissionState();
-                    newSubmissionState.isArchived(tempSubmissionState.isArchived() != null ? tempSubmissionState.isArchived() : newSubmissionState.isArchived());
-                    newSubmissionState.isPublishable(tempSubmissionState.isPublishable() != null ? tempSubmissionState.isPublishable() : newSubmissionState.isPublishable());
-                    newSubmissionState.isDeletable(tempSubmissionState.isDeletable() != null ? tempSubmissionState.isDeletable() : newSubmissionState.isDeletable());
-                    newSubmissionState.isEditableByReviewer(tempSubmissionState.isEditableByReviewer() != null ? tempSubmissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
-                    newSubmissionState.isEditableByStudent(tempSubmissionState.isEditableByStudent() != null ? tempSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
-                    newSubmissionState.isActive(tempSubmissionState.isActive() != null ? tempSubmissionState.isActive() : newSubmissionState.isActive());
-                    newSubmissionState.setTransitionSubmissionStates(tempSubmissionState.getTransitionSubmissionStates() != null ? tempSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
-
-                    newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
+                    // do not overwrite UI managed defaults
+                    
+//                    SubmissionState tempSubmissionState = emailWorkflowRule.getSubmissionState();
+//                    newSubmissionState.isArchived(tempSubmissionState.isArchived() != null ? tempSubmissionState.isArchived() : newSubmissionState.isArchived());
+//                    newSubmissionState.isPublishable(tempSubmissionState.isPublishable() != null ? tempSubmissionState.isPublishable() : newSubmissionState.isPublishable());
+//                    newSubmissionState.isDeletable(tempSubmissionState.isDeletable() != null ? tempSubmissionState.isDeletable() : newSubmissionState.isDeletable());
+//                    newSubmissionState.isEditableByReviewer(tempSubmissionState.isEditableByReviewer() != null ? tempSubmissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
+//                    newSubmissionState.isEditableByStudent(tempSubmissionState.isEditableByStudent() != null ? tempSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
+//                    newSubmissionState.isActive(tempSubmissionState.isActive() != null ? tempSubmissionState.isActive() : newSubmissionState.isActive());
+//                    newSubmissionState.setTransitionSubmissionStates(tempSubmissionState.getTransitionSubmissionStates() != null ? tempSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
+//
+//                    newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
                 }
 
                 // check to see if the EmailTemplate exists
@@ -267,9 +269,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (newEmailTemplate == null) {
                     newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
                 } else {
-                    newEmailTemplate.setSubject(emailWorkflowRule.getEmailTemplate().getSubject() != null ? emailWorkflowRule.getEmailTemplate().getSubject() : newEmailTemplate.getSubject());
-                    newEmailTemplate.setMessage(emailWorkflowRule.getEmailTemplate().getMessage() != null ? emailWorkflowRule.getEmailTemplate().getMessage() : newEmailTemplate.getMessage());
-                    newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
+                    // do not overwrite UI managed defaults
+                    
+//                    newEmailTemplate.setSubject(emailWorkflowRule.getEmailTemplate().getSubject() != null ? emailWorkflowRule.getEmailTemplate().getSubject() : newEmailTemplate.getSubject());
+//                    newEmailTemplate.setMessage(emailWorkflowRule.getEmailTemplate().getMessage() != null ? emailWorkflowRule.getEmailTemplate().getMessage() : newEmailTemplate.getMessage());
+//                    newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
                 }
 
                 // check to see if the EmailWorkflowRule exists
@@ -324,9 +328,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                      fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
                 }
                 else {
-                    fieldPredicate.setValue(fieldProfile.getFieldPredicate().getValue());
-                    fieldPredicate.setDocumentTypePredicate(fieldProfile.getFieldPredicate().getDocumentTypePredicate());
-                    fieldPredicate = fieldPredicateRepo.save(fieldPredicate);
+                    // do not overwrite UI managed defaults
+//                    fieldPredicate.setValue(fieldProfile.getFieldPredicate().getValue());
+//                    fieldPredicate.setDocumentTypePredicate(fieldProfile.getFieldPredicate().getDocumentTypePredicate());
+//                    fieldPredicate = fieldPredicateRepo.save(fieldPredicate);
                 }
                 
                 
@@ -336,8 +341,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (inputType == null) {
                     inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
                 } else {
-                    inputType.setName(fieldProfile.getInputType().getName());
-                    inputType = inputTypeRepo.save(inputType);
+                    // do not overwrite UI managed defaults
+//                    inputType.setName(fieldProfile.getInputType().getName());
+//                    inputType = inputTypeRepo.save(inputType);
                 }
                           
                 
@@ -410,16 +416,18 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 	
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), controlledVocabularies, fieldGlosses);
                 } else {
-                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
-                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
-                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
-                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
-                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
-                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
-                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
-                    newFieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
-                    newFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
-                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
+                    // do not overwrite UI managed defaults
+                    
+//                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
+//                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
+//                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
+//                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
+//                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
+//                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
+//                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
+//                    newFieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
+//                    newFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
+//                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
                 }
 
                 
@@ -445,8 +453,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     newNote = noteRepo.create(newWorkflowStep, note.getName(), note.getText());
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
                 } else {
-                    newNote.setText(note.getText());
-                    newNote = noteRepo.save(newNote);
+                    // do not overwrite UI managed defaults
+                    
+//                    newNote.setText(note.getText());
+//                    newNote = noteRepo.save(newNote);
                 }
 
                 notes.add(newNote);

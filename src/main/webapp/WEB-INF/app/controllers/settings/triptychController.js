@@ -20,7 +20,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             var isFirstPanel = panelIndex === 0;
             var isLastPanel = panelIndex == 2;
 
-            if(organization.id !== 1) $scope.setSelectedOrganization(organization);
+            $scope.setSelectedOrganization(organization);
 
             panel.selectedOrganization = organization;
 
@@ -66,6 +66,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         $scope.resetPanels = function() {
             $scope.triptych.resetPanels();
             $scope.newOrganization.parent = $scope.organizations[0];
+            $scope.setSelectedOrganization($scope.newOrganization.parent);
         };
 
         if($scope.organizations.length==1) $scope.add = true;
