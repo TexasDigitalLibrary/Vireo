@@ -15,8 +15,8 @@
 		 	<thead class="header">
 		 		<tr>
 			      	<th ng-repeat="column in userColumns">
-			          	<span>{{column.title}} 
-			          		<span class="pull-right select-toggle" ng-click="sortBy(column)">
+			          	<span class="btn btn-block" ng-click="sortBy(column)">{{column.title}} 
+			          		<span ng-if="column.sortOrder > 0" class="pull-right select-toggle">
 					          	<span ng-if="column.sort == 'ASC'" class="glyphicon glyphicon-chevron-up"></span>
 					          	<span ng-if="column.sort == 'DESC'" class="glyphicon glyphicon-chevron-down"></span>
 					          	<span ng-if="column.sort == 'NONE'" class="glyphicon glyphicon-minus"></span>
