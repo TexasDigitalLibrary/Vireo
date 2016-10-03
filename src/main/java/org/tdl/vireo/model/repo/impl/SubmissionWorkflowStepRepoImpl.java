@@ -24,6 +24,11 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
     @Autowired
     SubmissionNoteRepo submissionNoteStepRepo;
     
+    // TODO: either create submission workflow for each submission or track when a workflow changes to force create new submission workflow
+    
+    // if user creates a submission and the organization changes its workflow,
+    // the next person to create a submission will not have the updated workflow!
+    
     @Override
     public SubmissionWorkflowStep findOrCreate(Organization originatingOrganization, WorkflowStep originatingWorkflowStep) {
        
