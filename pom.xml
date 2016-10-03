@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>edu.tamu.weaverframework</groupId>
 		<artifactId>weaver-webservice-parent</artifactId>
-		<version>1.1.0-VALIDATION-SNAPSHOT</version>
+		<version>1.1.x-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>edu.tamu.weaverframework</groupId>
 			<artifactId>weaver-webservice-core</artifactId>
-			<version>1.1.0-VALIDATION-SNAPSHOT</version>
+			<version>1.1.x-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Spring standalone JDK tools for JSP runtime compile (to avoid Embedded 
@@ -123,11 +123,6 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.scala-lang</groupId>
-			<artifactId>scala-library</artifactId>
-			<version>2.11.0</version>
 		</dependency>
 	</dependencies>
 
