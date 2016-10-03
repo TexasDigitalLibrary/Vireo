@@ -138,6 +138,10 @@ main footer {
   min-height: 600px
 }
 
+.modal-header-primary {
+  background-color: #43606e;
+}
+
 .modal-add-btn {
   margin-bottom: 25px;
 }
@@ -1618,4 +1622,9 @@ footer a, footer li, footer p {
 .results-per-page-select {
   width: 50% !important;
   margin-left: 5px;
+}
+
+.advanced-options ul li:hover {
+  cursor:pointer;
+  text-decoration:underline;
 }

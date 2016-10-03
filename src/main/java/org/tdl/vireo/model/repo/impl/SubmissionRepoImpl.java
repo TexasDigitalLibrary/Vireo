@@ -98,6 +98,148 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         return submissionRepo.save(submission);
     }
+    
+    public List<Submission> dynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums) {
+
+        User user = userRepo.findByEmail(credentials.getEmail());
+        
+        Set<String> allColumnSearchFilters = new HashSet<String>();
+
+        NamedSearchFilterCriteria activeFilter = user.getActiveFilter();
+        
+        List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
+        
+        // set sort and sort order on all submission list columns that are set on users submission list columns
+        submissionListColums.forEach(submissionListColumn -> {
+            for (SubmissionListColumn slc : allSubmissionListColumns) {
+                if (submissionListColumn.equals(slc)) {
+                    slc.setVisible(true);
+                    slc.setSort(submissionListColumn.getSort());
+                    slc.setSortOrder(submissionListColumn.getSortOrder());
+                    break;
+                }
+            }
+        });
+
+        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
+        if (activeFilter != null) {
+            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+                if (filterCriterion.getAllColumnSearch()) {
+                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+                } else {
+                    for (SubmissionListColumn slc : allSubmissionListColumns) {
+                        if (filterCriterion.getSubmissionListColumn().equals(slc)) {
+                            slc.addAllFilters(filterCriterion.getFilters());
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+        
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
+
+        Root<Submission> root = query.from(Submission.class);
+
+        List<Predicate> _groupPredicates = new ArrayList<Predicate>();
+
+        List<Predicate> _filterPredicates = new ArrayList<Predicate>();
+
+        Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?, ?>>();
+
+        Path<?> fieldValueFetchPath = null;
+
+        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
+            Path<?> path = null;
+            if (submissionListColumn.getValuePath().size() > 0) {
+                if (submissionListColumn.getPredicate() != null) {
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
+
+                        Join<?, ?> join = (Join<?, ?>) root.fetch("fieldValues", JoinType.LEFT);
+
+                        path = join.get("value");
+
+                        Subquery<Submission> subquery = query.subquery(Submission.class);
+                        Root<Submission> subQueryRoot = subquery.from(Submission.class);
+
+                        subquery.select(subQueryRoot.get("id")).distinct(true);
+                        subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
+
+                        _groupPredicates.add(cb.or(cb.equal(join.get("fieldPredicate").get("value"), submissionListColumn.getPredicate()), root.get("id").in(subquery).not()));
+
+                    }
+                } else {
+
+                    String navPath = null;
+
+                    for (String property : submissionListColumn.getValuePath()) {
+                        if (path == null) {
+                            navPath = property;
+                            if (requiresFetch(root, property)) {
+                                Fetch<?, ?> fetch = fetches.get(navPath);
+                                if (fetch == null) {
+                                    fetch = root.fetch(property, JoinType.LEFT);
+                                    fetches.put(navPath, fetch);
+                                }
+                                path = (Path<?>) fetch;
+                            } else {
+                                path = root.get(property);
+                            }
+                        } else {
+                            navPath += "." + property;
+                            if (requiresFetch(path, property)) {
+                                Fetch<?, ?> fetch = fetches.get(navPath);
+                                if (fetch == null) {
+                                    fetch = ((Fetch<?, ?>) path).fetch(property, JoinType.LEFT);
+                                    fetches.put(navPath, fetch);
+                                }
+                                path = (Path<?>) fetch;
+                            } else {
+                                path = path.get(property);
+                            }
+                        }
+                    }
+
+                }
+
+                for (String filter : submissionListColumn.getFilters()) {
+                    _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
+                }
+
+                for (String filter : allColumnSearchFilters) {
+                    if (submissionListColumn.getPredicate() != null) {
+                        if (fieldValueFetchPath == null) {
+                            fieldValueFetchPath = (Path<?>) root.fetch("fieldValues");
+                        }
+                        _filterPredicates.add(cb.like(cb.lower(fieldValueFetchPath.get("value").as(String.class)), "%" + filter.toLowerCase() + "%"));
+                    } else {
+                        _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
+                    }
+                }
+
+            }
+        }
+
+        Predicate predicate = null;
+
+        if (_filterPredicates.size() == 0) {
+            predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
+        } else {
+            predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
+        }
+
+        query.select(root).distinct(true).where(predicate);
+
+        TypedQuery<Submission> typedQuery = em.createQuery(query);
+
+        System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
+
+        return typedQuery.getResultList();
+        
+    }
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {

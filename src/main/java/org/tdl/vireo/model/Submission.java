@@ -101,7 +101,8 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the assignee
+     * 
+     * @return
      */
     public User getAssignee() {
         return assignee;
@@ -114,7 +115,7 @@ public class Submission extends BaseEntity {
     public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
-
+    
     /**
      * @return the state
      */

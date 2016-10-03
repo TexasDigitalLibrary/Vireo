@@ -1,6 +1,5 @@
 <div class="row admin-page">
-	<div class="col-sm-2"></div>
-	<div class="col-sm-10" ng-controller="SubmissionListController">
+	<div class="col-sm-10 col-sm-push-2" ng-controller="SubmissionListController">
 
 		<modal 
 			modal-id="customizeSubmissionListModal" 
@@ -66,5 +65,10 @@
 
         </form>
 
+	</div>
+	<div class="col-sm-2 col-sm-pull-10" ng-controller="SidebarController">
+		<sidebox heading="{{box.title}}" ng-repeat="box in sidebarBoxes">
+			<div ng-include="box.viewUrl"></div>
+		</sidebox>
 	</div>
 </div>
