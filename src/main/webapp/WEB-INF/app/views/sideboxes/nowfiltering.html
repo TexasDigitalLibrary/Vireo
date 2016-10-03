@@ -1,0 +1,7 @@
+
+<div class="now-filtering-by" ng-repeat="filterCriterion in box.activeFilters.filterCriteria">
+	<sideboxsub>{{filterCriterion.name}}</sideboxsub>
+	<ul>
+		<li ng-repeat="filter in filterCriterion.filters"><span class="glyphicon glyphicon-trash"></span> <a href="#" ng-click="box.removeFilterValue(filterCriterion.name, filter)">{{filter}}</a></li>
+	</ul>
+</div>

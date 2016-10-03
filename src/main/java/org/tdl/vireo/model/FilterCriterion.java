@@ -16,6 +16,8 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class FilterCriterion extends BaseEntity {
+	
+	private String name;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private SubmissionListColumn submissionListColumn;
@@ -36,7 +38,7 @@ public class FilterCriterion extends BaseEntity {
         setAllColumnSearch(false);
         setSubmissionListColumn(submissionListColumn);
     }
-
+    
     /**
      * @return the submissionListColumn
      */
@@ -85,5 +87,13 @@ public class FilterCriterion extends BaseEntity {
     public void setAllColumnSearch(Boolean allColumnSearch) {
     	this.allColumnSearch = allColumnSearch;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
     
 }
