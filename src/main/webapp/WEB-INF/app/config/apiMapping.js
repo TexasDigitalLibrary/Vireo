@@ -527,6 +527,16 @@ var apiMapping = {
 		saveFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
+		},
+		batchUpdateSubmissionState: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'batch-update-state'
+		},
+		batchAssignTo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'batch-assign-to'
 		}
 	},
 	StudentSubmission: {
@@ -565,6 +575,17 @@ var apiMapping = {
 			'controller': 'submission-list'
 		}
 	},
+	SubmissionState: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'all-submission-state'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission-state'
+		}
+	},
 	ManagerSubmissionListColumn: {
 		all: {
 			'endpoint': '/private/queue',
@@ -589,6 +610,22 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
 			'method': 'reset-user-columns'
+		}
+	},
+	ManagerFilterColumn: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'filter-columns-by-user'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'filter-columns'
+		},
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'update-user-filter-columns'
 		}
 	},
 	User: {
@@ -694,4 +731,51 @@ var apiMapping = {
 			'controller': 'workflow-step'
 		}
 	},
+	NamedSearchFilter: {
+		instantiate: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'active-filters'
+		},
+		setFilter: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'set-active-filter'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'active-filters'
+		},
+		removeFilter: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'remove-filter-criterion'
+		},
+		clearFilters: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'clear-filter-criteria'
+		}
+	},
+	SavedFilter: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'all-saved-filter-criteria'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'saved-filters'
+		},
+		create: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'save-filter-criteria'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list',
+			'method': 'remove-saved-filter'
+		},
+	}
 }

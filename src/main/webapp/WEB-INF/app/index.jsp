@@ -305,14 +305,18 @@
 	    <script src="repo/fieldPredicateRepo.js"></script>
 	    <script src="repo/fieldGlossRepo.js"></script>	    
 	    <script src="repo/studentSubmissionRepo.js"></script>
+	    <script src="repo/savedFilterRepo.js"></script>
 	    <script src="repo/submissionRepo.js"></script>
+	    <script src="repo/submissionStateRepo.js"></script>
 	    <script src="repo/noteRepo.js"></script>
 	    <script src="repo/fieldProfileRepo.js"></script>
 	    <script src="repo/submissionListColumnRepo.js"></script>
 	    <script src="repo/managerSubmissionListColumnRepo.js"></script>
+	    <script src="repo/managerFilterColumnRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
+	    <script src="model/namedSearchFilter.js"></script>
 		<script src="model/language.js"></script>
 		<script src="model/documentType.js"></script>
 		<script src="model/customActionDefinition.js"></script>
@@ -329,7 +333,9 @@
 	    <script src="model/inputType.js"></script>
 	    <script src="model/fieldPredicate.js"></script>
 	    <script src="model/fieldGloss.js"></script>	    
+	    <script src="model/savedFilter.js"></script>
 	    <script src="model/submission.js"></script>
+	    <script src="model/submissionState.js"></script>
 	    <script src="model/fieldProfile.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>

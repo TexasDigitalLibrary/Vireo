@@ -2,6 +2,7 @@ package org.tdl.vireo.model.repo.specification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.tdl.vireo.model.FieldValue;
@@ -19,40 +21,54 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 public class SubmissionSpecification<E> implements Specification<E> {
-    
-    List<SubmissionListColumn> submissionListColums;
 
-    public SubmissionSpecification(List<SubmissionListColumn> submissionListColums) {
-        this.submissionListColums = submissionListColums;
+    private Set<String> allColumnSearchFilters;
+
+    private List<SubmissionListColumn> allSubmissionListColumns;
+
+    public SubmissionSpecification(List<SubmissionListColumn> allSubmissionListColumns, Set<String> allColumnSearchFilters) {
+        this.allSubmissionListColumns = allSubmissionListColumns;
+        this.allColumnSearchFilters = allColumnSearchFilters;
     }
-    
+
     @Override
     public Predicate toPredicate(Root<E> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
+        Predicate predicate = null;
+
         List<Order> _orders = new ArrayList<Order>();
-        
-        List<Predicate> _groupPredicates = new ArrayList<Predicate>();
-        
-        List<Predicate> _filterPredicates = new ArrayList<Predicate>();
 
         List<Expression<?>> _groupings = new ArrayList<Expression<?>>();
 
+        List<Predicate> _groupPredicates = new ArrayList<Predicate>();
+
+        List<Predicate> _filterPredicates = new ArrayList<Predicate>();
+
+        SetJoin<Submission, FieldValue> fieldValueJoinSet = null;
+
         _groupings.add(root.get("id"));
 
-        int i = 0;
-
-        for (SubmissionListColumn submissionListColumn : submissionListColums) {
+        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
             Path<?> path = null;
             if (submissionListColumn.getValuePath().size() > 0) {
                 if (submissionListColumn.getPredicate() != null) {
-                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
                         SetJoin<Submission, FieldValue> join = root.joinSet("fieldValues", JoinType.LEFT);
-                        join.alias("fv" + i);
                         path = join.get("value");
+
+                        Subquery<Submission> subquery = query.subquery(Submission.class);
+                        Root<Submission> subQueryRoot = subquery.from(Submission.class);
+
+                        subquery.select(subQueryRoot.get("id")).distinct(true);
+                        subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
+
                         Path<?> predicatePath = join.get("fieldPredicate").get("value");
+
                         _groupings.add(predicatePath);
-                        _groupPredicates.add(cb.equal(predicatePath, submissionListColumn.getPredicate()));
-                        i++;
+
+                        _groupPredicates.add(cb.or(cb.equal(predicatePath, submissionListColumn.getPredicate()), root.get("id").in(subquery).not()));
+
+                        _groupings.add(path);
                     }
                 } else {
                     for (String property : submissionListColumn.getValuePath()) {
@@ -63,30 +79,44 @@ public class SubmissionSpecification<E> implements Specification<E> {
                         }
                     }
                 }
-                
+
                 for (String filter : submissionListColumn.getFilters()) {
-                    _filterPredicates.add(cb.like(path.as(String.class), "%" + filter + "%"));
+                    _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
+                }
+
+                for (String filter : allColumnSearchFilters) {
+                    if (submissionListColumn.getPredicate() != null) {
+                        if (fieldValueJoinSet == null) {
+                            fieldValueJoinSet = root.joinSet("fieldValues");
+                        }
+                        _filterPredicates.add(cb.like(cb.lower(fieldValueJoinSet.get("value").as(String.class)), "%" + filter.toLowerCase() + "%"));
+                    } else {
+                        _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
+                    }
                 }
 
                 switch (submissionListColumn.getSort()) {
-                    case ASC: _orders.add(cb.asc(path)); break;
-                    case DESC: _orders.add(cb.desc(path)); break;
-                    default:  break;
+                case ASC:
+                    _orders.add(cb.asc(path));
+                    break;
+                case DESC:
+                    _orders.add(cb.desc(path));
+                    break;
+                default:
+                    break;
                 }
             }
         }
 
+        if (_filterPredicates.size() == 0) {
+            predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])));
+        } else {
+            predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
+        }
+
         query.groupBy(_groupings).orderBy(_orders);
-        
-        Predicate returnPredicate = null;
-        
-        if(_filterPredicates.size() == 0) {
-            returnPredicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
-        }
-        else {
-            returnPredicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
-        }
-        
-        return returnPredicate;
+
+        return predicate;
     }
+
 }

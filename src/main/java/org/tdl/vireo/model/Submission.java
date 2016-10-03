@@ -33,9 +33,9 @@ public class Submission extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User submitter;
-    
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private Set<User> assignees;
+
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    private User assignee;
 
     @ManyToOne(cascade = { REFRESH })
     private SubmissionState state;
@@ -71,7 +71,7 @@ public class Submission extends BaseEntity {
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setAttachments(new HashSet<Attachment>());
-        
+
     }
 
     /**
@@ -100,6 +100,22 @@ public class Submission extends BaseEntity {
         this.submitter = submitter;
     }
 
+    /**
+     * 
+     * @return
+     */
+    public User getAssignee() {
+        return assignee;
+    }
+
+    /**
+     * @param assignee
+     *            the assignee to set
+     */
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+    
     /**
      * @return the state
      */
@@ -144,7 +160,7 @@ public class Submission extends BaseEntity {
     public void setFieldValues(Set<FieldValue> fieldvalues) {
         this.fieldValues = fieldvalues;
     }
-    
+
     /**
      * 
      * @param fieldValue
@@ -152,22 +168,22 @@ public class Submission extends BaseEntity {
     public void addFieldValue(FieldValue fieldValue) {
         getFieldValues().add(fieldValue);
     }
-    
+
     /**
      * 
      * @param fieldValue
      */
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
-      
+
         FieldValue foundFieldValue = null;
-        
-        for(FieldValue fieldValue : getFieldValues()) {           
-            if(fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
                 foundFieldValue = fieldValue;
                 break;
             }
         }
-        
+
         return foundFieldValue;
     }
 
@@ -278,7 +294,7 @@ public class Submission extends BaseEntity {
     public void addEmbargoType(Embargo embargoType) {
         getEmbargoTypes().add(embargoType);
     }
-    
+
     /**
      * 
      * @param embargoType

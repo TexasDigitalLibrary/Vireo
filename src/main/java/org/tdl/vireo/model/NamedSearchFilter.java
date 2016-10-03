@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -8,10 +9,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -21,35 +28,40 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
-public class NamedSearchFilterCriteria extends BaseEntity {
-    
-    @ManyToOne(optional = false)
+public class NamedSearchFilter extends BaseEntity {
+
+    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name;
 
     @Column(nullable = false)
     private Boolean publicFlag;
 
     @Column(nullable = false)
+    private Boolean columnsFlag;
+
+    @Column(nullable = false)
     private Boolean umiRelease;
-    
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OrderColumn
+    private List<SubmissionListColumn> savedColumns;
+
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
-    
-    public NamedSearchFilterCriteria() {
+
+    public NamedSearchFilter() {
         setPublicFlag(false);
+        setColumnsFlag(false);
         setUmiRelease(false);
         setFilterCriteria(new ArrayList<FilterCriterion>());
-    }
-    
-    public NamedSearchFilterCriteria(User user, String name) {
-        this();
-        setUser(user);
-        setName(name);
+        setSavedColumns(new ArrayList<SubmissionListColumn>());
+        setModelValidator(new NamedSearchFilterValidator());
     }
 
     /**
@@ -60,7 +72,8 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     }
 
     /**
-     * @param user the user to set
+     * @param user
+     *            the user to set
      */
     public void setUser(User user) {
         this.user = user;
@@ -74,7 +87,8 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -88,10 +102,19 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     }
 
     /**
-     * @param publicFlag the publicFlag to set
+     * @param publicFlag
+     *            the publicFlag to set
      */
     public void setPublicFlag(Boolean publicFlag) {
         this.publicFlag = publicFlag;
+    }
+
+    public Boolean getColumnsFlag() {
+        return columnsFlag;
+    }
+
+    public void setColumnsFlag(Boolean columnsFlag) {
+        this.columnsFlag = columnsFlag;
     }
 
     /**
@@ -101,8 +124,27 @@ public class NamedSearchFilterCriteria extends BaseEntity {
         return umiRelease;
     }
 
+    public List<SubmissionListColumn> getSavedColumns() {
+        return savedColumns;
+    }
+
+    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
+        this.savedColumns = savedColumns;
+    }
+
+    public void addSavedColumn(SubmissionListColumn submissionListColumn) {
+        if (!savedColumns.contains(submissionListColumn)) {
+            savedColumns.add(submissionListColumn);
+        }
+    }
+
+    public void removeSavedColumn(SubmissionListColumn submissionListColumn) {
+        savedColumns.remove(submissionListColumn);
+    }
+
     /**
-     * @param umiRelease the umiRelease to set
+     * @param umiRelease
+     *            the umiRelease to set
      */
     public void setUmiRelease(Boolean umiRelease) {
         this.umiRelease = umiRelease;
@@ -116,20 +158,30 @@ public class NamedSearchFilterCriteria extends BaseEntity {
     }
 
     /**
-     * @param filterCriteria the filterCriteria to set
+     * @param filterCriteria
+     *            the filterCriteria to set
      */
     public void setFilterCriteria(List<FilterCriterion> filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
-    
+
     public void addFilterCriterion(FilterCriterion filterCriterion) {
-        if(!filterCriteria.contains(filterCriterion)) {
+        if (!filterCriteria.contains(filterCriterion)) {
             filterCriteria.add(filterCriterion);
         }
     }
-    
+
     public void removeFilterCriterion(FilterCriterion filterCriterion) {
         filterCriteria.remove(filterCriterion);
     }
-    
+
+    public FilterCriterion getFilterCriterion(Long criteriaId) {
+        for (FilterCriterion filterCriterion : filterCriteria) {
+            if (filterCriterion.getId() == criteriaId) {
+                return filterCriterion;
+            }
+        }
+        return null;
+    }
+
 }

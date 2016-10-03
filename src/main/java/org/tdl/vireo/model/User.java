@@ -25,6 +25,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
@@ -49,34 +51,34 @@ public class User extends BaseEntity implements CoreUser {
     private String netid;
 
     @Column(nullable = false, unique = true)
-    //@Email
+    // @Email
     private String email;
 
     // encoded password
     @Column
     @JsonIgnore
     private String password;
-    
+
     @Column(nullable = false)
-    //@NotBlank
+    // @NotBlank
     private String firstName;
 
     @Column(nullable = false)
-    //@NotBlank
+    // @NotBlank
     private String lastName;
 
     @Column
     private String middleName;
 
-    @ElementCollection(fetch=EAGER)
-    @MapKeyColumn(name="setting")
-    @Column(name="value")
+    @ElementCollection(fetch = EAGER)
+    @MapKeyColumn(name = "setting")
+    @Column(name = "value")
     Map<String, String> settings;
 
     @Column
     private Integer birthYear;
 
-    @ElementCollection(fetch=EAGER)
+    @ElementCollection(fetch = EAGER)
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
@@ -90,24 +92,29 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
-    //@NotNull
+    // @NotNull
     private AppRole role;
-    
+
     @Column
     private String orcid;
-    
+
     @Column(nullable = false)
     private Integer pageSize;
-    
+
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> displayedSubmissionColumns;
-    
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
-    private NamedSearchFilterCriteria activeFilter;
-    
+
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<NamedSearchFilterCriteria> savedFilters;
+    @OrderColumn
+    private List<SubmissionListColumn> filterColumns;
+
+    @ManyToOne(fetch = EAGER, optional = true)
+    private NamedSearchFilter activeFilter;
+
+    @Fetch(FetchMode.SELECT)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    private List<NamedSearchFilter> savedFilters;
 
     /**
      * 
@@ -118,7 +125,8 @@ public class User extends BaseEntity implements CoreUser {
         setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
-        setSavedFilters(new ArrayList<NamedSearchFilterCriteria>());
+        setFilterColumns(new ArrayList<SubmissionListColumn>());
+        setSavedFilters(new ArrayList<NamedSearchFilter>());
         setPageSize(10);
     }
 
@@ -130,13 +138,13 @@ public class User extends BaseEntity implements CoreUser {
      * @param role
      */
     public User(String email, String firstName, String lastName, AppRole role) {
-        this();       
+        this();
         setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role);
     }
-    
+
     /**
      * 
      * @param email
@@ -196,22 +204,21 @@ public class User extends BaseEntity implements CoreUser {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * @return the institutionalIdentifier
      */
-    //public String getInstitutionalIdentifier() {
-    //    return institutionalIdentifier;
-    //}
+    // public String getInstitutionalIdentifier() {
+    // return institutionalIdentifier;
+    // }
 
     /**
      * @param institutionalIdentifier
      *            the institutionalIdentifier to set
      */
-    //public void setInstitutionalIdentifier(String institutionalIdentifier) {
-    //    this.institutionalIdentifier = institutionalIdentifier;
-    //}
-
+    // public void setInstitutionalIdentifier(String institutionalIdentifier) {
+    // this.institutionalIdentifier = institutionalIdentifier;
+    // }
 
     /**
      * @return the firstName
@@ -260,34 +267,34 @@ public class User extends BaseEntity implements CoreUser {
 
     /**
      * @param Key
-     *           return the setting by key 
+     *            return the setting by key
      */
     public String getSetting(String key) {
         return settings.get(key);
     }
-    
+
     /**
      * @param Key
-     *           return the setting by key 
+     *            return the setting by key
      */
     public void putSetting(String key, String value) {
         settings.put(key, value);
     }
-    
+
     /**
-     *   returns the settings map 
+     * returns the settings map
      */
-    public Map<String,String> getSettings() {
+    public Map<String, String> getSettings() {
         return settings;
     }
-    
+
     /**
-     *   sets the settings map 
+     * sets the settings map
      */
     public void setSettings(Map<String, String> settings) {
         this.settings = settings;
     }
-    
+
     /**
      * @return the birthYear
      */
@@ -409,7 +416,7 @@ public class User extends BaseEntity implements CoreUser {
     public void setOrcid(String orcid) {
         this.orcid = orcid;
     }
-    
+
     /**
      * 
      */
@@ -417,7 +424,7 @@ public class User extends BaseEntity implements CoreUser {
     public void setUin(Long uin) {
         this.uin = uin;
     }
-    
+
     /**
      * 
      */
@@ -431,13 +438,13 @@ public class User extends BaseEntity implements CoreUser {
     public void setRole(IRole role) {
         this.role = (AppRole) role;
     }
-        
+
     @Override
     @JsonSerialize(as = AppRole.class)
     public IRole getRole() {
         return role;
     }
-    
+
     /**
      * @return the pageSize
      */
@@ -446,7 +453,8 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @param pageSize the pageSize to set
+     * @param pageSize
+     *            the pageSize to set
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -460,18 +468,19 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @param submissionViewColumn the submissionViewColumn to set
+     * @param submissionViewColumn
+     *            the submissionViewColumn to set
      */
     public void setSubmissionViewColumns(List<SubmissionListColumn> displayedSubmissionColumn) {
         this.displayedSubmissionColumns = displayedSubmissionColumn;
     }
-    
+
     public void addSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
-        if(!this.displayedSubmissionColumns.contains(displayedSubmissionColumn)) {
+        if (!this.displayedSubmissionColumns.contains(displayedSubmissionColumn)) {
             this.displayedSubmissionColumns.add(displayedSubmissionColumn);
         }
     }
-    
+
     public void removeSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
         this.displayedSubmissionColumns.remove(displayedSubmissionColumn);
     }
@@ -479,39 +488,57 @@ public class User extends BaseEntity implements CoreUser {
     /**
      * @return the activeFilter
      */
-    public NamedSearchFilterCriteria getActiveFilter() {
+    public NamedSearchFilter getActiveFilter() {
         return activeFilter;
     }
 
     /**
-     * @param activeFilter the activeFilter to set
+     * @param activeFilter
+     *            the activeFilter to set
      */
-    public void setActiveFilter(NamedSearchFilterCriteria activeFilter) {
+    public void setActiveFilter(NamedSearchFilter activeFilter) {
         this.activeFilter = activeFilter;
     }
 
     /**
      * @return the savedFilters
      */
-    public List<NamedSearchFilterCriteria> getSavedFilters() {
+    public List<NamedSearchFilter> getSavedFilters() {
         return savedFilters;
     }
 
     /**
-     * @param savedFilters the savedFilters to set
+     * @param savedFilters
+     *            the savedFilters to set
      */
-    public void setSavedFilters(List<NamedSearchFilterCriteria> savedFilters) {
+    public void setSavedFilters(List<NamedSearchFilter> savedFilters) {
         this.savedFilters = savedFilters;
     }
-    
-    public void addSavedFilter(NamedSearchFilterCriteria savedFilter) {
-        if(!this.savedFilters.contains(savedFilter)) {
+
+    public void addSavedFilter(NamedSearchFilter savedFilter) {
+        if (!this.savedFilters.contains(savedFilter)) {
             this.savedFilters.add(savedFilter);
         }
     }
-    
-    public void removeSavedFilter(NamedSearchFilterCriteria savedFilter) {
+
+    public void removeSavedFilter(NamedSearchFilter savedFilter) {
         this.savedFilters.remove(savedFilter);
     }
-    
+
+    public void loadActiveFilter(NamedSearchFilter filter) {
+
+        this.activeFilter.setSavedColumns(filter.getSavedColumns());
+        this.activeFilter.setFilterCriteria(filter.getFilterCriteria());
+        this.activeFilter.setPublicFlag(filter.getPublicFlag());
+        this.activeFilter.setColumnsFlag(filter.getColumnsFlag());
+
+    }
+
+    public List<SubmissionListColumn> getFilterColumns() {
+        return filterColumns;
+    }
+
+    public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
+        this.filterColumns = filterColumns;
+    }
 }

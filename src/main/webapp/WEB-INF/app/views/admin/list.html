@@ -1,6 +1,5 @@
 <div class="row admin-page">
-	<div class="col-sm-2"></div>
-	<div class="col-sm-10" ng-controller="SubmissionListController">
+	<div class="col-sm-10 col-sm-push-2" ng-controller="SubmissionListController">
 
 		<modal 
 			modal-id="customizeSubmissionListModal" 
@@ -16,8 +15,8 @@
 		 	<thead class="header">
 		 		<tr>
 			      	<th ng-repeat="column in userColumns">
-			          	<span>{{column.title}} 
-			          		<span class="pull-right select-toggle" ng-click="sortBy(column)">
+			          	<span class="btn btn-block" ng-click="sortBy(column)">{{column.title}} 
+			          		<span ng-if="column.sortOrder > 0" class="pull-right select-toggle">
 					          	<span ng-if="column.sort == 'ASC'" class="glyphicon glyphicon-chevron-up"></span>
 					          	<span ng-if="column.sort == 'DESC'" class="glyphicon glyphicon-chevron-down"></span>
 					          	<span ng-if="column.sort == 'NONE'" class="glyphicon glyphicon-minus"></span>
@@ -66,5 +65,10 @@
 
         </form>
 
+	</div>
+	<div class="col-sm-2 col-sm-pull-10" ng-controller="SidebarController">
+		<sidebox heading="{{box.title}}" ng-repeat="box in sidebarBoxes">
+			<div ng-include="box.viewUrl"></div>
+		</sidebox>
 	</div>
 </div>
