@@ -87,4 +87,9 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     });
 
+    $scope.organizationHierarchicalOptions = [
+        {"true": "On"}, 
+        {"false": "Off"}
+    ];
+
 });
