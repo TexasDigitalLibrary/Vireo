@@ -1,4 +1,4 @@
-vireo.controller("OrganizationSideBarController", function($controller, $scope, $q, OrganizationCategoryRepo, OrganizationRepo) {
+vireo.controller("OrganizationSideBarController", function ($controller, $scope, $q, OrganizationCategoryRepo, OrganizationRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 

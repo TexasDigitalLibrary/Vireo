@@ -161,7 +161,7 @@
 										<button
 											type="button"
 											class="btn btn-danger"
-											ng-click="deleteOrganization(managedOrganization)">Delete Organization</button>
+											ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
 										<button
 											type="button"
 											class="btn btn-warning"
@@ -173,6 +173,12 @@
 									</div>
 
 								</form>
+
+								<modal modal-id="organizationConfirmDeleteModal"
+									modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
+									modal-header-class="modal-header-danger"
+									modal-backdrop="static">
+								</modal>
 
 							</div>
 						</div>

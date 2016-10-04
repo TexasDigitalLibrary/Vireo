@@ -1,4 +1,3 @@
-
 vireo.controller('AbstractController', function ($scope, $window, ModalService, StorageService, RestApi) {
 
 	angular.extend($scope, ModalService);

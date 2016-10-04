@@ -1,0 +1,20 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Delete Organization</h3>
+</div>
+
+<form ng-submit="deleteOrganization(managedOrganization)" novalidate>
+
+	<validationmessage results="managedOrganization.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<h4>Really delete organization "{{managedOrganization.name}}"?</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-warning" ng-click="closeModal()">Cancel</button>
+		<button id="workflow-step-confirm" type="submit" class="btn btn-primary">Confirm</button>
+	</div>
+</form>

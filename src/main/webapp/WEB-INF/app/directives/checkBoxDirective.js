@@ -1,4 +1,4 @@
-vireo.directive("checkbox", function($controller) {
+vireo.directive("checkbox", function ($controller) {
 	return {
 		templateUrl: 'views/directives/checkBox.html',
 		restrict: 'E',
