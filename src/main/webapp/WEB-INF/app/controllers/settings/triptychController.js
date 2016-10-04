@@ -1,8 +1,38 @@
-vireo.controller("TriptychController", function ($controller, $scope, $q, $timeout, OrganizationRepo) {
+vireo.controller("TriptychController", function ($rootScope, $controller, $scope, $q, $timeout, OrganizationRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-    OrganizationRepo.listen(function() {
-        $scope.resetPanels();
+    $rootScope.$on("deletedOrg", function(e,organization) {
+        OrganizationRepo.lazyFetch(organization.parentOrganizations[0]).then(function(parentOrganization){
+            console.log(parentOrganization);
+
+            var lasttime = false;
+            for(var i =  $scope.triptych.openPanels.length-1; i>=0; i--) {
+                var panel = $scope.triptych.openPanels[i];
+                
+                if(lasttime){
+                    $scope.shiftPanels(panel, parentOrganization);
+                    if(panel.parentOrganization.childrenOrganizations.length === 0) {
+                       
+                        $scope.resetPanels();  
+                    } 
+                    break;
+                }
+
+                if(panel.parentOrganization.id == parentOrganization.id) {
+                    lasttime = true;
+
+                    if(i==0) {
+                        $scope.triptych.openPanels.pop();
+                        $scope.resetPanels();
+                    }    
+
+                } else {
+                    $scope.triptych.openPanels.pop();
+                }
+            }
+
+            //;
+        });
     });
 
 	$scope.ready = $q.all([OrganizationRepo.ready()]);

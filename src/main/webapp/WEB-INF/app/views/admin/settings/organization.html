@@ -31,7 +31,7 @@
 					<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper"
 						 ng-class="{'closing': panel.closing, 'opening': panel.opening, 'shown': panel.visible}"
 						 ng-repeat="panel in triptych.openPanels"
-						 ng-if="panel.parentOrganization.childrenOrganizations.length>0">
+						 ng-if="panel.parentOrganization.childrenOrganizations.length>0 && !refresh">
 
 						<div class="panel panel-default triptych-panel"
 							 ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}">

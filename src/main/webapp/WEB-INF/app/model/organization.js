@@ -1,4 +1,4 @@
-vireo.model("Organization", function ($q, RestApi) {
+vireo.model("Organization", function ($rootScope, $q, RestApi) {
 
 	return function Organization() {
 
@@ -34,6 +34,8 @@ vireo.model("Organization", function ($q, RestApi) {
 				if(res.meta.type == "INVALID") {
 					organization.setValidationResults(res.payload.ValidationResults);
 					console.log(organization);
+				} else {
+					$rootScope.$broadcast("deletedOrg", organization);
 				}
 			});
 			return promise;
