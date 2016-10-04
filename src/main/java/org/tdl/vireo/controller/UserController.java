@@ -6,12 +6,13 @@ import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -74,6 +75,7 @@ public class UserController {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
+    @Transactional
     @ApiMapping("/update")
     @Auth(role = "MANAGER")    
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -83,6 +85,7 @@ public class UserController {
         User persistedUser = userRepo.findOne(user.getId());
         if(persistedUser != null) {
             user.setPassword(persistedUser.getPassword());
+            user.setActiveFilter(persistedUser.getActiveFilter());
         }
         
         logger.info("Updating role for " + user.getEmail());
@@ -93,15 +96,13 @@ public class UserController {
         return new ApiResponse(SUCCESS, user);
     }
 
-    @Transactional
     @ApiMapping("/settings")
     @Auth(role = "STUDENT")
     public ApiResponse getSettings(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
         return new ApiResponse(SUCCESS, user.getSettings());
     }
-    
-    @Transactional
+
     @ApiMapping("/settings/update")
     @Auth(role = "STUDENT")    
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
