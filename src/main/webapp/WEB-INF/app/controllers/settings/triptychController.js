@@ -1,6 +1,10 @@
 vireo.controller("TriptychController", function ($controller, $scope, $q, $timeout, OrganizationRepo) {
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
+    OrganizationRepo.listen(function() {
+        $scope.resetPanels();
+    });
+
 	$scope.ready = $q.all([OrganizationRepo.ready()]);
 
 	$scope.ready.then(function() {

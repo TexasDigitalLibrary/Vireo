@@ -22,6 +22,10 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 		$scope.newOrganization.parent = $scope.selectedOrganization;
 	};
 
+	$scope.resetSelectedOrganization = function() {
+		OrganizationRepo.resetSelectedOrganization();
+	};
+
 	$scope.getSelectedOrganization = function() {
 		return $scope.selectedOrganization;
 	};

@@ -38,6 +38,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 		$scope.resetWorkflowSteps();
 
+		$scope.showOrganizationManagement = function() {
+			return $scope.getSelectedOrganization().id !== undefined;
+		}
+
 		$scope.updateOrganization = function(organization) {
 			organization.save().then(function() {
 				// update the parent scoped selected organization 
@@ -64,12 +68,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 				if(data.meta.type != 'INVALID') {
 					$scope.closeModal();
 					$timeout(function() {
-						$route.reload();
+						$scope.resetSelectedOrganization();
 						AlertService.add(data.meta, 'organization/delete');
-					}, 250);
-					
+					}, 300);
 				}
-				
 			});
 		};
 

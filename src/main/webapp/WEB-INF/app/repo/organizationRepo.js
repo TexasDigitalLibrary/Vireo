@@ -74,7 +74,15 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		return selectedOrganization;
 	};
 
-	this.setSelectedOrganization = function(organization){
+	this.resetSelectedOrganization = function() {
+		var srcKeys = Object.keys(selectedOrganization);
+		angular.forEach(srcKeys, function(key){
+			delete selectedOrganization[key];
+		});
+		return selectedOrganization;
+	};
+
+	this.setSelectedOrganization = function(organization) {
 		this.lazyFetch(organization.id).then(function(fetchedOrg) {
 			extendWithOverwrite(selectedOrganization, fetchedOrg);
 		});
