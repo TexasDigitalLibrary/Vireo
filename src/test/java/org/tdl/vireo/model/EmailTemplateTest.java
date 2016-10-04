@@ -10,13 +10,13 @@ public class EmailTemplateTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
-        assertEquals("There is no template existing in the emailTemplateRepo", 0, emailTemplateRepo.count());
+        assertEquals("There emailTemplateRepo is not empty!", 0, emailTemplateRepo.count());
     }
 
     @Override
     public void testCreate() {
         EmailTemplate emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
-        assertEquals("The repository did not save the emailTemplate", 1, emailTemplateRepo.count());
+        assertEquals("The repository did not save the emailTemplate!", 1, emailTemplateRepo.count());
         assertEquals("Saved submission did not contain the correct Name!", TEST_EMAIL_TEMPLATE_NAME, emailTemplate.getName());
         assertEquals("Saved submission did not contain the correct Message!", TEST_EMAIL_TEMPLATE_MESSAGE, emailTemplate.getMessage());
         assertEquals("Saved submission did not contain the correct Subject!", TEST_EMAIL_TEMPLATE_SUBJECT, emailTemplate.getSubject());
