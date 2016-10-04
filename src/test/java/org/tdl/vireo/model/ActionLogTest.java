@@ -26,7 +26,7 @@ public class ActionLogTest extends AbstractEntityTest {
         credentials.setEmail(testUser.getEmail());
         OrganizationCategory category = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-        testSubmission = submissionRepo.create(credentials, organization.getId());
+        testSubmission = submissionRepo.create(testUser, organization, submissionState);
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
 

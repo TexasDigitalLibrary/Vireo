@@ -25,7 +25,6 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private LanguageRepo languageRepo;
 
-    // need this to clear the user created by the StopConnect() call in setup
     @Autowired
     private UserRepo userRepo;
 
