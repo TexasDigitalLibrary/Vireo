@@ -14,6 +14,7 @@ public class FilterCriterionRepoImpl implements FilterCriterionRepoCustom {
 	@Override
 	public FilterCriterion create(SubmissionListColumn submissionListColumn) {
 		FilterCriterion fc = new FilterCriterion();
+		fc.setName(submissionListColumn.getTitle());
 		fc.setSubmissionListColumn(submissionListColumn);
         return filterCriterionRepo.save(fc);
 	}

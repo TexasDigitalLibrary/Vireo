@@ -109,7 +109,7 @@ public class User extends BaseEntity implements CoreUser {
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilter activeFilter;
 
     @Fetch(FetchMode.SELECT)

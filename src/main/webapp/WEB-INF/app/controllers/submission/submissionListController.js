@@ -174,6 +174,20 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterChange;
 	};
 
+	var addFilter = function(column) {
+		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")]).then(function() {
+			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+			query();
+		});
+	};
+
+	$scope.furtherFilterBy = {
+		"title": "Further Filter By:",
+		"viewUrl": "views/sideboxes/furtherFilterBy.html",
+		"getFilterColumns": $scope.getFilterColumns,
+		"addFilter": addFilter 
+	};
+
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
@@ -239,6 +253,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 					"removeFilter": $scope.removeFilter,
 					"getUserById": $scope.getUserById
 			    },
+			    $scope.furtherFilterBy,
 			    $scope.advancedfeaturesBox
 			]);
 

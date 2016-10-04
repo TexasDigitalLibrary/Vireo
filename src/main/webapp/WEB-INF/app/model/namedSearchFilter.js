@@ -14,6 +14,21 @@ vireo.model("NamedSearchFilter", function (WsApi) {
 			return promise;
 		};
 
+		namedSearchFilter.addFilter = function(criterionName, filterValue) {
+			
+			angular.extend(apiMapping.NamedSearchFilter.addFilter, {
+				"data": {
+					"criterionName":criterionName,
+					"filterValue":filterValue
+				}
+			});
+
+			var promise = WsApi.fetch(namedSearchFilter.getMapping().addFilter);
+
+			return promise;
+
+		};
+
 		namedSearchFilter.removeFilter = function(criterionName, filterValue) {
 
 			console.log(criterionName);

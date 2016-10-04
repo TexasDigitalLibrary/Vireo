@@ -163,25 +163,25 @@ public class SubmissionListController {
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
 
-    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-    		
-    		NamedSearchFilter activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterionOne.setName("First Name");
-        	filterCriterionOne.addFilter("Jeremy");
-        	filterCriterionOne.addFilter("Jack");
-        	
-        	activeFilter.addFilterCriterion(filterCriterionOne);
-        	
-        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
-        	filterCriterionTwo.setName("Last Name");
-        	filterCriterionTwo.addFilter("Huff");
-        	filterCriterionTwo.addFilter("Daniels");
- 
-        	activeFilter.addFilterCriterion(filterCriterionTwo);
-        	
-        	userRepo.save(user);
-    	}
+//    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
+//    		
+//    		NamedSearchFilter activeFilter = user.getActiveFilter();
+//        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
+//        	filterCriterionOne.setName("First Name");
+//        	filterCriterionOne.addFilter("Jeremy");
+//        	filterCriterionOne.addFilter("Jack");
+//        	
+//        	activeFilter.addFilterCriterion(filterCriterionOne);
+//        	
+//        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
+//        	filterCriterionTwo.setName("Last Name");
+//        	filterCriterionTwo.addFilter("Huff");
+//        	filterCriterionTwo.addFilter("Daniels");
+// 
+//        	activeFilter.addFilterCriterion(filterCriterionTwo);
+//        	
+//        	userRepo.save(user);
+//    	}
 	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
@@ -191,25 +191,25 @@ public class SubmissionListController {
     public ApiResponse getSavedFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
   
-    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-    		
-    		NamedSearchFilter activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-        	filterCriterionOne.setName("First Name");
-        	filterCriterionOne.addFilter("Jeremy");
-        	filterCriterionOne.addFilter("Jack");
-        	
-        	activeFilter.addFilterCriterion(filterCriterionOne);
-        	
-        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
-        	filterCriterionTwo.setName("Last Name");
-        	filterCriterionTwo.addFilter("Huff");
-        	filterCriterionTwo.addFilter("Daniels");
- 
-        	activeFilter.addFilterCriterion(filterCriterionTwo);
-        	
-        	userRepo.save(user);
-    	}
+//    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
+//    		
+//    		NamedSearchFilter activeFilter = user.getActiveFilter();
+//        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
+//        	filterCriterionOne.setName("First Name");
+//        	filterCriterionOne.addFilter("Jeremy");
+//        	filterCriterionOne.addFilter("Jack");
+//        	
+//        	activeFilter.addFilterCriterion(filterCriterionOne);
+//        	
+//        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
+//        	filterCriterionTwo.setName("Last Name");
+//        	filterCriterionTwo.addFilter("Huff");
+//        	filterCriterionTwo.addFilter("Daniels");
+// 
+//        	activeFilter.addFilterCriterion(filterCriterionTwo);
+//        	
+//        	userRepo.save(user);
+//    	}
     	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
@@ -224,10 +224,46 @@ public class SubmissionListController {
     	
         return getSavedFilters(credentials);
     }
+    
+    @ApiMapping("/add-filter-criterion")
+    @Auth(role = "MANAGER")
+    public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
+    	
+    	String criterionName = data.get("criterionName").asText();
+    	String filterValue = data.get("filterValue").asText();
+    	
+    	System.out.println(criterionName);
+    	System.out.println(filterValue);
+    	
+    	User user = userRepo.findByEmail(credentials.getEmail());
+    	
+    	NamedSearchFilter activeFilter = user.getActiveFilter();
+    	
+    	FilterCriterion criterionToEdit = null;
+    	
+    	for(FilterCriterion criterion : activeFilter.getFilterCriteria()) {
+    		if(criterion.getName().equals(criterionName)) {
+    			criterionToEdit = criterion;
+	    		break;
+    		}
+    	}
+    	
+    	if(criterionToEdit==null) criterionToEdit = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
+    	
+    	criterionToEdit.addFilter(filterValue);
+    	    
+    	user.getActiveFilter().addFilterCriterion(criterionToEdit);
+    	
+    	user = userRepo.save(user);
+        
+    	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+
+        return new ApiResponse(SUCCESS);
+    }
 
     @ApiMapping("/remove-filter-criterion")
     @Auth(role = "MANAGER")
-    public ApiResponse clearFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
+    public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
     	
     	String criterionName = data.get("criterionName").asText();
     	String filterValue = data.get("filterValue").asText();
