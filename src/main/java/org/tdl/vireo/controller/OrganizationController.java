@@ -60,11 +60,8 @@ public class OrganizationController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.findOne(parentOrgID);
-
         organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
-
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
-
         return new ApiResponse(SUCCESS);
     }
 
@@ -72,11 +69,8 @@ public class OrganizationController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-
         organization = organizationRepo.save(organization);
-
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
-
         return new ApiResponse(SUCCESS, organization);
     }
 
@@ -85,6 +79,7 @@ public class OrganizationController {
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }) })
     public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
         organizationRepo.delete(organization);
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
 
