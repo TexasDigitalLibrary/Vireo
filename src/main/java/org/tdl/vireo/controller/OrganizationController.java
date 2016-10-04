@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
@@ -81,7 +82,7 @@ public class OrganizationController {
 
     @ApiMapping(value = "/delete", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }) })
     public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
         organizationRepo.delete(organization);
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");

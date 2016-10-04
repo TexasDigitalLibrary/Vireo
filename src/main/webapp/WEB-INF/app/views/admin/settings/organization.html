@@ -130,7 +130,7 @@
 
 						<div class="panel-body">
 
-							<validationmessage results="managedOrganization.ValidationResults"></validationmessage>
+							<validationmessage results="managedOrganization.getValidationResults()"></validationmessage>
 
 							<div class="col-md-6">
 
@@ -143,7 +143,7 @@
 										placeholder="Name of the organization"
 										form="forms.update"
 										validations="managedOrganization.getValidations()"
-										results="managedOrganization.ValidationResults">
+										results="managedOrganization.getValidationResults()">
 									</validatedinput>
 
 									<validatedselect
@@ -154,7 +154,7 @@
 										property="category"
 										form="forms.update"
 										validations="managedOrganization.getValidations()"
-										results="managedOrganization.ValidationResults">
+										results="managedOrganization.getValidationResults()">
 									</validatedselect>
 
 									<div class="pull-right">

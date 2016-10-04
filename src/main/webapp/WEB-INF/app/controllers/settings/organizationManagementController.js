@@ -1,4 +1,4 @@
-vireo.controller("OrganizationManagementController", function ($controller, $scope, $q, AlertService, Organization, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
+vireo.controller("OrganizationManagementController", function ($controller, $q, $route, $scope, $timeout, AlertService, Organization, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -61,11 +61,22 @@ vireo.controller("OrganizationManagementController", function ($controller, $sco
 
 		$scope.deleteOrganization = function(organization) {
 			organization.delete().then(function(data) {
-				console.log(data);
-				$scope.closeModal();
-				AlertService.add(data.meta, 'organization/delete');
+				if(data.meta.type != 'INVALID') {
+					$scope.closeModal();
+					$timeout(function() {
+						$route.reload();
+						AlertService.add(data.meta, 'organization/delete');
+					}, 250);
+					
+				}
+				
 			});
 		};
+
+		$scope.cancelDeleteOrganization = function() {
+			$scope.closeModal();
+			$scope.managedOrganization.clearValidationResults();
+		}
 
 		$scope.addWorkflowStep = function() {
 			OrganizationRepo.addWorkflowStep($scope.modalData);
