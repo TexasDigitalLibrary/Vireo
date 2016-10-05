@@ -187,7 +187,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.furtherFilterBy = {
 		"title": "Further Filter By:",
-		"viewUrl": "views/sideboxes/furtherFilterBy.html",
+		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
 		"getFilterColumns": $scope.getFilterColumns,
 		"addFilter": addFilter,
 		"submissionStates": submissionStates, 

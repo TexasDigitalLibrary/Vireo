@@ -1637,7 +1637,7 @@ footer a, footer li, footer p {
 
 // Now Filtering By Side Module
 .now-filtering-by .glyphicon {
-  font-size: 0.75em;
+  color: #CD7674;
 }
 
 .now-filtering-by a {
@@ -1673,7 +1673,7 @@ footer a, footer li, footer p {
   margin-left: -25px;
 }
 
-.further-filter-by .status-filter:hover {
+.further-filter-by .filter:hover {
   text-decoration: underline;
   cursor: pointer;
 }
