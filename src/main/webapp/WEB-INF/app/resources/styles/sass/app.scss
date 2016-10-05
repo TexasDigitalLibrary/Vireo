@@ -1652,3 +1652,33 @@ footer a, footer li, footer p {
 .filter-options ul.saved-filters ul.list li.columns:hover {
   text-decoration: underline;
 }
+
+.further-filter-by .status-category {
+  background: #CCCCCC;
+  display: inline-block
+}
+
+.further-filter-by .status-category:hover {
+  cursor: pointer;
+}
+
+.further-filter-by .status-list {
+  max-height: 0px;
+  overflow: hidden;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.further-filter-by .status-list li { 
+  margin-left: -25px;
+}
+
+.further-filter-by .status-filter:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.further-filter-by .status-list.expanded {
+  max-height: 1000px;
+  -webkit-transition: max-height 0.5s ease-in;
+  transition: max-height 0.5s ease-in;}

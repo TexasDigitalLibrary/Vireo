@@ -47,7 +47,7 @@ public class SubmissionState extends BaseEntity {
     @JsonProperty("isEditableByStudent")
     private Boolean isEditableByStudent;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonProperty("isActive")
     private Boolean isActive;
 

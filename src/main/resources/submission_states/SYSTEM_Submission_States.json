@@ -5,7 +5,7 @@
 	"isDeletable": false,
 	"isEditableByReviewer": false,
 	"isEditableByStudent": false,
-	"isActive": false,
+	"isActive": null,
 	"transitionSubmissionStates": [
 		{
 			"name": "Submitted",

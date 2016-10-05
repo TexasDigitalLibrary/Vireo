@@ -18,7 +18,10 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	SubmissionStateRepo.ready().then(function() {
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
+		console.log(submissionStates);
 	});
+
+
 
 	var submissionStates = SubmissionStateRepo.getAll();
 
