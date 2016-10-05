@@ -17,7 +17,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	$scope.change = false;
 
 	SubmissionStateRepo.ready().then(function() {
-		$scope.advancedfeaturesBox.newStatus = submissionStates[0];	
+		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
 	});
 
 	var submissionStates = SubmissionStateRepo.getAll();
@@ -175,6 +175,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 	};
 
 	var addFilter = function(column) {
+		console.log($scope.furtherFilterBy[column.title.split(" ").join("")]);
 		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")]).then(function() {
 			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
 			query();
@@ -185,7 +186,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		"title": "Further Filter By:",
 		"viewUrl": "views/sideboxes/furtherFilterBy.html",
 		"getFilterColumns": $scope.getFilterColumns,
-		"addFilter": addFilter 
+		"addFilter": addFilter,
+		"submissionStates": submissionStates, 
 	};
 
 	var query = function() {
