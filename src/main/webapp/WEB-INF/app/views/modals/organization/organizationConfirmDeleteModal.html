@@ -5,12 +5,12 @@
     <h3 class="modal-title">Delete Organization</h3>
 </div>
 
-<form ng-submit="deleteOrganization(managedOrganization)" novalidate>
+<form ng-submit="deleteOrganization(getSelectedOrganization())" novalidate>
 
-	<validationmessage results="managedOrganization.getValidationResults()"></validationmessage>
+	<validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		<h4>Really delete organization "{{ managedOrganization.name }}"?</h4>
+		<h4>Really delete organization "{{ getSelectedOrganization().name }}"?</h4>
 	</div>
 
 	<div class="modal-footer">

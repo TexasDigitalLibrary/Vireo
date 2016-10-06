@@ -14,8 +14,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 	$scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
 
-	$scope.managedOrganization = null;
-
 	$scope.forms = {};
 
 	$scope.ready.then(function() {
@@ -49,20 +47,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 			});
 		};
 
-		$scope.getManagedOrganization = function() {
-			var currentOrganization = $scope.getSelectedOrganization();
-			if (currentOrganization !== undefined && currentOrganization) {
-				if (!$scope.managedOrganization || $scope.managedOrganization.id != currentOrganization.id) {
-					$scope.managedOrganization = new Organization(currentOrganization);
-				}
-			}
-			return $scope.managedOrganization;
-		};
-
-		$scope.resetManagedOrganization = function() {
-			$scope.managedOrganization = $scope.getSelectedOrganization();
-		};
-
 		$scope.deleteOrganization = function(organization) {
 			organization.delete().then(function(data) {
 				if(data.meta.type != 'INVALID') {
@@ -77,7 +61,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 		$scope.cancelDeleteOrganization = function() {
 			$scope.closeModal();
-			$scope.managedOrganization.clearValidationResults();
+			$scope.getSelectedOrganization().clearValidationResults();
 		}
 
 		$scope.addWorkflowStep = function() {
@@ -102,6 +86,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 		$scope.openConfirmDeleteModal = function(step) {
 	        $scope.openModal('#workflow-step-delete-confirm-' + step.id);
+	    };
+
+	    $scope.resetManageOrganization = function() {
+	    	$scope.getSelectedOrganization().clearValidationResults();
 	    };
 
 	});
