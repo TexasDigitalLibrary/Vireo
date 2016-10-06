@@ -161,7 +161,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
                     else {
                         if(panel.visible) {
                             panel.active = false;
-                            panel.previouslyActive = false;
+                            panel.previouslyActive = true;
                             delete panel.selected;
                         }
                         panel.visible = false;
