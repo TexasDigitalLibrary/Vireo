@@ -89,20 +89,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		return selectedOrganization;
 	};
 
-	// TODO: replace with abstract findById
-	this.findOrganizationById = function(id) {
-
-		var matchedOrganization = null;
-
-		angular.forEach(this.data.list, function(orgToCompare) {
-			if(orgToCompare.id === id) {
-				matchedOrganization = orgToCompare;
-			}
-		});
-
-		return matchedOrganization;
-	};
-
 	this.lazyFetch = function(orgId) {
 
 		var fetchedOrgDefer = new $q.defer();

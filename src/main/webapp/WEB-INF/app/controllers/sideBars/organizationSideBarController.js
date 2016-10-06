@@ -23,6 +23,7 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
 
 		$scope.reset = function() {
 			$scope.organizationRepo.clearValidationResults();
+    		
     		for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();
