@@ -122,20 +122,24 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
         if(panel.visible && !visible) {
             closingPromise = close(panel);
         }
-        if(panel.parent != undefined) {
-            if(panel.parent.parent != undefined) {
-                if(panel.parent.parent.parent != undefined) {
-                    if(panel.parent.parent.parent.visible && visible) {
-                        closingPromise = close(panel.parent.parent.parent);
-                    }
-                    if(!panel.parent.parent.parent.visible && !visible) {
-                        open(panel.parent.parent.parent, closingPromise);
-                    }
-                }
-                if(!panel.parent.parent.visible) {
-                    open(panel.parent.parent, closingPromise);
+        if(panel.parent != undefined && panel.parent.parent != undefined && panel.parent.parent.parent != undefined) {
+            if(panel.parent.parent.parent.visible) {
+                if(visible) {
+                    closingPromise = close(panel.parent.parent.parent);
                 }
             }
+            else {
+                if(!visible) {
+                    open(panel.parent.parent.parent, closingPromise);
+                }
+            }
+        }
+        if(panel.parent != undefined && panel.parent.parent != undefined) {
+            if(!panel.parent.parent.visible) {
+                open(panel.parent.parent, closingPromise);
+            }
+        }
+        if(panel.parent != undefined) {
             if(!panel.parent.visible) {
                 open(panel.parent, closingPromise);
             }
@@ -157,7 +161,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
                     else {
                         if(panel.visible) {
                             panel.active = false;
-                            panel.previouslyActive = true;
+                            panel.previouslyActive = false;
                             delete panel.selected;
                         }
                         panel.visible = false;
@@ -192,12 +196,15 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             if(panel.visible) {
                 return breadcrumbs;
             }
-            breadcrumbs.push(panel);
+            if(panel.previouslyActive && panel.selected !== undefined) {
+                breadcrumbs.push(panel);
+            }
         }
     };
     
     $scope.refreshPanels = function() {
         var selectedOrganization = $scope.getSelectedOrganization();
+        var newVisiblePanel;
         for(var i in $scope.navigation.panels) {
             var panel = $scope.navigation.panels[i];
             var updatedOrganization = OrganizationRepo.findById(panel.organization.id);
@@ -205,7 +212,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
             if(updatedOrganization !== undefined) {
                 setOrganzization(panel, updatedOrganization);
                 if(previousPanelChildrenCount === 0) {
-                    setVisibility(panel);
+                    newVisiblePanel = panel;
                 }
                 else {
                     if(panel.organization.childrenOrganizations.length === 0) {
@@ -221,11 +228,12 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
                     else {
                         selectedOrganization = $scope.organizations[0];
                     }
-                    console.log(selectedOrganization.name)
                 }
-
                 clear(panel);
             }
+        }
+        if(newVisiblePanel) {
+            setVisibility(newVisiblePanel);
         }
         $scope.selectOrganization(selectedOrganization);
     };
