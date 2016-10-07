@@ -1,4 +1,4 @@
-vireo.controller("CustomActionSettingsController", function($controller, $scope, $q, $timeout, CustomActionDefinitionRepo, DragAndDropListenerFactory) {
+vireo.controller("CustomActionSettingsController", function ($controller, $scope, $q, $timeout, CustomActionDefinitionRepo, DragAndDropListenerFactory) {
 	
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 

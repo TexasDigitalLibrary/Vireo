@@ -126,6 +126,7 @@
 
 		<alerts types="WARNING, ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
+		<alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
 				
 		<div class="container-fluid main">			
 			<div ng-view class="view"></div>					
@@ -283,6 +284,7 @@
 	    <script src="directives/fieldProfileDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
+	    <script src="directives/triptychDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
@@ -353,7 +355,6 @@
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
-        <script src="controllers/settings/triptychController.js"></script>
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  

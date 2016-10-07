@@ -34,17 +34,6 @@ public abstract class AbstractWorkflowStep <WS extends AbstractWorkflowStep<WS, 
     private List<N> aggregateNotes;
 
     /**
-     * @return the originatingOrganization
-     */
-    public abstract Organization getOriginatingOrganization();
-
-    /**
-     * @param originatingOrganization the originatingOrganization to set
-     */
-    public abstract void setOriginatingOrganization(Organization originatingOrganization);
-
-    
-    /**
      * @return the name
      */
     public String getName() {

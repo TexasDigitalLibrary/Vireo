@@ -33,7 +33,7 @@ vireo.model("Organization", function ($q, RestApi) {
 			var promise = RestApi.post(apiMapping.Organization.remove);
 			promise.then(function(res) {
 				if(res.meta.type == "INVALID") {
-					angular.extend(organization, res.payload);
+					organization.setValidationResults(res.payload.ValidationResults);
 					console.log(organization);
 				}
 			});

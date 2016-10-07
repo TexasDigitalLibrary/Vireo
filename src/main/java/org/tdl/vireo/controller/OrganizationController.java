@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
@@ -59,11 +60,8 @@ public class OrganizationController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.findOne(parentOrgID);
-
         organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
-
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
-
         return new ApiResponse(SUCCESS);
     }
 
@@ -71,20 +69,18 @@ public class OrganizationController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-
         organization = organizationRepo.save(organization);
-
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
-
         return new ApiResponse(SUCCESS, organization);
     }
 
     @ApiMapping(value = "/delete", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }) })
     public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
         organizationRepo.delete(organization);
-        return new ApiResponse(SUCCESS);
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
 
     @Transactional
