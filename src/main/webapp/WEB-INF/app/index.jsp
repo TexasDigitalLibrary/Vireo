@@ -284,6 +284,7 @@
 	    <script src="directives/fieldProfileDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
+	    <script src="directives/triptychDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
@@ -354,7 +355,6 @@
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
-        <script src="controllers/settings/triptychController.js"></script>
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
 	    <script src="controllers/sidebarController.js"></script>  
