@@ -13,7 +13,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -30,7 +30,7 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     private UserRepo userRepo;
 
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
     public void setup() {

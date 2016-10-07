@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilter, SavedFilterRepo, UserRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -104,7 +104,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 
 	$scope.filterChange = false;
 
-	$scope.activeFilters = new NamedSearchFilter();
+	$scope.activeFilters = new NamedSearchFilterGroup();
 
 	$scope.savedFilters = SavedFilterRepo.getAll();
 

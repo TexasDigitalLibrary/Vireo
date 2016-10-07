@@ -18,7 +18,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +31,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     private UserRepo userRepo;
 
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
     public void setup() {

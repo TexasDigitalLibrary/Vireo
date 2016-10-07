@@ -110,11 +110,11 @@ public class User extends BaseEntity implements CoreUser {
     private List<SubmissionListColumn> filterColumns;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
-    private NamedSearchFilter activeFilter;
+    private NamedSearchFilterGroup activeFilter;
 
     @Fetch(FetchMode.SELECT)
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private List<NamedSearchFilter> savedFilters;
+    private List<NamedSearchFilterGroup> savedFilters;
 
     /**
      * 
@@ -126,7 +126,7 @@ public class User extends BaseEntity implements CoreUser {
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
         setFilterColumns(new ArrayList<SubmissionListColumn>());
-        setSavedFilters(new ArrayList<NamedSearchFilter>());
+        setSavedFilters(new ArrayList<NamedSearchFilterGroup>());
         setPageSize(10);
     }
 
@@ -488,7 +488,7 @@ public class User extends BaseEntity implements CoreUser {
     /**
      * @return the activeFilter
      */
-    public NamedSearchFilter getActiveFilter() {
+    public NamedSearchFilterGroup getActiveFilter() {
         return activeFilter;
     }
 
@@ -496,14 +496,14 @@ public class User extends BaseEntity implements CoreUser {
      * @param activeFilter
      *            the activeFilter to set
      */
-    public void setActiveFilter(NamedSearchFilter activeFilter) {
+    public void setActiveFilter(NamedSearchFilterGroup activeFilter) {
         this.activeFilter = activeFilter;
     }
 
     /**
      * @return the savedFilters
      */
-    public List<NamedSearchFilter> getSavedFilters() {
+    public List<NamedSearchFilterGroup> getSavedFilters() {
         return savedFilters;
     }
 
@@ -511,24 +511,24 @@ public class User extends BaseEntity implements CoreUser {
      * @param savedFilters
      *            the savedFilters to set
      */
-    public void setSavedFilters(List<NamedSearchFilter> savedFilters) {
+    public void setSavedFilters(List<NamedSearchFilterGroup> savedFilters) {
         this.savedFilters = savedFilters;
     }
 
-    public void addSavedFilter(NamedSearchFilter savedFilter) {
+    public void addSavedFilter(NamedSearchFilterGroup savedFilter) {
         if (!this.savedFilters.contains(savedFilter)) {
             this.savedFilters.add(savedFilter);
         }
     }
 
-    public void removeSavedFilter(NamedSearchFilter savedFilter) {
+    public void removeSavedFilter(NamedSearchFilterGroup savedFilter) {
         this.savedFilters.remove(savedFilter);
     }
 
-    public void loadActiveFilter(NamedSearchFilter filter) {
+    public void loadActiveFilter(NamedSearchFilterGroup filter) {
 
         this.activeFilter.setSavedColumns(filter.getSavedColumns());
-        this.activeFilter.setFilterCriteria(filter.getFilterCriteria());
+        this.activeFilter.setNamedSearchFilters(filter.getNamedSearchFilters());
         this.activeFilter.setPublicFlag(filter.getPublicFlag());
         this.activeFilter.setColumnsFlag(filter.getColumnsFlag());
 

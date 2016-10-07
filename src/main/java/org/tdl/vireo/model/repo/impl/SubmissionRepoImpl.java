@@ -36,7 +36,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -105,7 +105,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
-        NamedSearchFilter activeFilter = user.getActiveFilter();
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
         
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
         
@@ -123,13 +123,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
-            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
-                if (filterCriterion.getAllColumnSearch()) {
-                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+            activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
+                if (namedSearchFilter.getAllColumnSearch()) {
+                    allColumnSearchFilters.addAll(namedSearchFilter.getFilterValues());
                 } else {
                     for (SubmissionListColumn slc : allSubmissionListColumns) {
-                        if (filterCriterion.getSubmissionListColumn().equals(slc)) {
-                            slc.addAllFilters(filterCriterion.getFilters());
+                        if (namedSearchFilter.getSubmissionListColumn().equals(slc)) {
+                            slc.addAllFilters(namedSearchFilter.getFilterValues());
                             break;
                         }
                     }
@@ -248,7 +248,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
-        NamedSearchFilter activeFilter = user.getActiveFilter();
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
 
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
 
@@ -266,13 +266,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
-            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+            activeFilter.getNamedSearchFilters().forEach(filterCriterion -> {
                 if (filterCriterion.getAllColumnSearch()) {
-                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+                    allColumnSearchFilters.addAll(filterCriterion.getFilterValues());
                 } else {
                     for (SubmissionListColumn slc : allSubmissionListColumns) {
                         if (filterCriterion.getSubmissionListColumn().equals(slc)) {
-                            slc.addAllFilters(filterCriterion.getFilters());
+                            slc.addAllFilters(filterCriterion.getFilterValues());
                             break;
                         }
                     }

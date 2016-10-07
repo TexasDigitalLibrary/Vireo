@@ -4,184 +4,120 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilter extends BaseEntity {
+	
+	private String name;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private User user;
-
-    @Column(nullable = true)
-    private String name;
-
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    private SubmissionListColumn submissionListColumn;
+    
+    @ElementCollection(fetch = EAGER)
+    private Set<FilterCriterion> filterCriteria;
+    
     @Column(nullable = false)
-    private Boolean publicFlag;
-
-    @Column(nullable = false)
-    private Boolean columnsFlag;
-
-    @Column(nullable = false)
-    private Boolean umiRelease;
-
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @OrderColumn
-    private List<SubmissionListColumn> savedColumns;
-
-    @Fetch(FetchMode.SELECT)
-    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
-    private List<FilterCriterion> filterCriteria;
-
+    private Boolean allColumnSearch;
+    
     public NamedSearchFilter() {
-        setPublicFlag(false);
-        setColumnsFlag(false);
-        setUmiRelease(false);
-        setFilterCriteria(new ArrayList<FilterCriterion>());
-        setSavedColumns(new ArrayList<SubmissionListColumn>());
-        setModelValidator(new NamedSearchFilterValidator());
+        setFilters(new HashSet<FilterCriterion>());
+        setAllColumnSearch(true);
+    }
+    
+    public NamedSearchFilter(SubmissionListColumn submissionListColumn) {
+        this();
+        setAllColumnSearch(false);
+        setSubmissionListColumn(submissionListColumn);
+    }
+    
+    /**
+     * @return the submissionListColumn
+     */
+    public SubmissionListColumn getSubmissionListColumn() {
+        return submissionListColumn;
     }
 
     /**
-     * @return the user
+     * @param submissionListColumn the submissionListColumn to set
      */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * @param user
-     *            the user to set
-     */
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the publicFlag
-     */
-    public Boolean getPublicFlag() {
-        return publicFlag;
-    }
-
-    /**
-     * @param publicFlag
-     *            the publicFlag to set
-     */
-    public void setPublicFlag(Boolean publicFlag) {
-        this.publicFlag = publicFlag;
-    }
-
-    public Boolean getColumnsFlag() {
-        return columnsFlag;
-    }
-
-    public void setColumnsFlag(Boolean columnsFlag) {
-        this.columnsFlag = columnsFlag;
-    }
-
-    /**
-     * @return the umiRelease
-     */
-    public Boolean getUmiRelease() {
-        return umiRelease;
-    }
-
-    public List<SubmissionListColumn> getSavedColumns() {
-        return savedColumns;
-    }
-
-    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
-        this.savedColumns = savedColumns;
-    }
-
-    public void addSavedColumn(SubmissionListColumn submissionListColumn) {
-        if (!savedColumns.contains(submissionListColumn)) {
-            savedColumns.add(submissionListColumn);
+    public void setSubmissionListColumn(SubmissionListColumn submissionListColumn) {
+        this.submissionListColumn = submissionListColumn;
+        if(this.submissionListColumn != null) {
+            setAllColumnSearch(false);
+        }
+        else {
+            setAllColumnSearch(true);
         }
     }
-
-    public void removeSavedColumn(SubmissionListColumn submissionListColumn) {
-        savedColumns.remove(submissionListColumn);
-    }
-
     /**
-     * @param umiRelease
-     *            the umiRelease to set
+     * @return the filters
      */
-    public void setUmiRelease(Boolean umiRelease) {
-        this.umiRelease = umiRelease;
-    }
-
-    /**
-     * @return the filterCriteria
-     */
-    public List<FilterCriterion> getFilterCriteria() {
+    public Set<FilterCriterion> getFilters() {
         return filterCriteria;
     }
 
     /**
-     * @param filterCriteria
-     *            the filterCriteria to set
+     * @param filterStrings the filterStrings to set
      */
-    public void setFilterCriteria(List<FilterCriterion> filterCriteria) {
+    public void setFilters(Set<FilterCriterion> filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
-
-    public void addFilterCriterion(FilterCriterion filterCriterion) {
-        if (!filterCriteria.contains(filterCriterion)) {
-            filterCriteria.add(filterCriterion);
-        }
+    
+    public void addFilter(FilterCriterion filterCriterion) {
+    	filterCriteria.add(filterCriterion);
+    }
+    
+    public void addFilter(String filterValue, String filterGloss) {				
+		addFilter(filterGloss == null ? new FilterCriterion(filterValue) : new FilterCriterion(filterValue, filterGloss)); 
+	}
+    
+    public void removeFilter(FilterCriterion filter) {
+    	filterCriteria.remove(filter);
+    }
+    
+    public Boolean getAllColumnSearch() {
+    	return allColumnSearch;
+    }
+    
+    public void setAllColumnSearch(Boolean allColumnSearch) {
+    	this.allColumnSearch = allColumnSearch;
     }
 
-    public void removeFilterCriterion(FilterCriterion filterCriterion) {
-        filterCriteria.remove(filterCriterion);
-    }
+	public String getName() {
+		return name;
+	}
 
-    public FilterCriterion getFilterCriterion(Long criteriaId) {
-        for (FilterCriterion filterCriterion : filterCriteria) {
-            if (filterCriterion.getId() == criteriaId) {
-                return filterCriterion;
-            }
-        }
-        return null;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public Set<String> getFilterValues() {
+		
+		Set<String> filterValues = new HashSet<String>();
+		filterCriteria.forEach(filterCriterion -> {
+			filterValues.add(filterCriterion.getValue());
+		});
+		
+		return filterValues;
+	}
+	
+	public Set<String> getFilterGlosses() {
+		
+		Set<String> filterGlosses = new HashSet<String>();
+		filterCriteria.forEach(filterCriterion -> {
+			filterGlosses.add(filterCriterion.getGloss());
+		});
+		
+		return filterGlosses;
+	}
+    
 }
