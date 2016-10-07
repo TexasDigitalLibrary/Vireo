@@ -115,9 +115,6 @@ vireo.directive("triptych", function () {
 				panel.visible = false;
 				panel.showing = false;
 				delete panel.selected;
-				if(panel.parent !== undefined) {
-					delete panel.parent.selected;
-				}
 			};
 			
 			$scope.selectOrganization = function(organization) {
@@ -143,7 +140,7 @@ vireo.directive("triptych", function () {
 					}
 					var panel = getPanel(organization);
 					if(parent !== undefined) {
-						if(parent.previouslyActive) {
+						if(parent.previouslyActive !== undefined) {
 							$scope.navigation.backward = true;
 						}
 						parent.active = true;
