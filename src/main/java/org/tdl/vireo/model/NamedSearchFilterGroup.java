@@ -28,7 +28,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
-public class NamedSearchFilter extends BaseEntity {
+public class NamedSearchFilterGroup extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
@@ -55,7 +55,7 @@ public class NamedSearchFilter extends BaseEntity {
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
     private List<FilterCriterion> filterCriteria;
 
-    public NamedSearchFilter() {
+    public NamedSearchFilterGroup() {
         setPublicFlag(false);
         setColumnsFlag(false);
         setUmiRelease(false);

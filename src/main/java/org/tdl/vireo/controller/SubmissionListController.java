@@ -13,11 +13,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FilterCriterion;
-import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FilterCriterionRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
@@ -54,7 +54,7 @@ public class SubmissionListController {
     private FilterCriterionRepo filterCriterionRepo;
     
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
     
     @PersistenceContext
     EntityManager em;
@@ -125,7 +125,7 @@ public class SubmissionListController {
     
     @ApiMapping("/set-active-filter")
     @Auth(role = "MANAGER")
-    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter filter) {
+    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
@@ -143,8 +143,8 @@ public class SubmissionListController {
     		filterCriterionRepo.delete(id);
     	});
     	
-    	NamedSearchFilter activeFilter = user.getActiveFilter();
-    	activeFilter = namedSearchFilterRepo.clone(activeFilter,filter);
+    	NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+    	activeFilter = namedSearchFilterGroupRepo.clone(activeFilter,namedSearchFilterGroup);
     	
     	if(activeFilter.getColumnsFlag()) {
     		user.getSubmissionViewColumns().clear();
@@ -162,26 +162,6 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-
-//    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-//    		
-//    		NamedSearchFilter activeFilter = user.getActiveFilter();
-//        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-//        	filterCriterionOne.setName("First Name");
-//        	filterCriterionOne.addFilter("Jeremy");
-//        	filterCriterionOne.addFilter("Jack");
-//        	
-//        	activeFilter.addFilterCriterion(filterCriterionOne);
-//        	
-//        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
-//        	filterCriterionTwo.setName("Last Name");
-//        	filterCriterionTwo.addFilter("Huff");
-//        	filterCriterionTwo.addFilter("Daniels");
-// 
-//        	activeFilter.addFilterCriterion(filterCriterionTwo);
-//        	
-//        	userRepo.save(user);
-//    	}
 	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
@@ -190,37 +170,17 @@ public class SubmissionListController {
     @Auth(role = "MANAGER")
     public ApiResponse getSavedFilters(@ApiCredentials Credentials credentials) {
     	User user = userRepo.findByEmail(credentials.getEmail());
-  
-//    	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
-//    		
-//    		NamedSearchFilter activeFilter = user.getActiveFilter();
-//        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
-//        	filterCriterionOne.setName("First Name");
-//        	filterCriterionOne.addFilter("Jeremy");
-//        	filterCriterionOne.addFilter("Jack");
-//        	
-//        	activeFilter.addFilterCriterion(filterCriterionOne);
-//        	
-//        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
-//        	filterCriterionTwo.setName("Last Name");
-//        	filterCriterionTwo.addFilter("Huff");
-//        	filterCriterionTwo.addFilter("Daniels");
-// 
-//        	activeFilter.addFilterCriterion(filterCriterionTwo);
-//        	
-//        	userRepo.save(user);
-//    	}
     	
         return new ApiResponse(SUCCESS,user.getActiveFilter());
     }
     
     @ApiMapping("/remove-saved-filter")
     @Auth(role = "MANAGER")
-    public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) { 	
+    public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilterGroup savedFilter) { 	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	user.getSavedFilters().remove(savedFilter);
     	userRepo.save(user);
-    	namedSearchFilterRepo.delete(savedFilter.getId());
+    	namedSearchFilterGroupRepo.delete(savedFilter.getId());
     	
         return getSavedFilters(credentials);
     }
@@ -237,7 +197,7 @@ public class SubmissionListController {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	NamedSearchFilter activeFilter = user.getActiveFilter();
+    	NamedSearchFilterGroup activeFilter = user.getActiveFilter();
     	
     	FilterCriterion criterionToEdit = null;
     	
@@ -270,7 +230,7 @@ public class SubmissionListController {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	NamedSearchFilter activeFilter = user.getActiveFilter();
+    	NamedSearchFilterGroup activeFilter = user.getActiveFilter();
     	
     	for(FilterCriterion criterion : activeFilter.getFilterCriteria()) {
     		if(criterion.getName().equals(criterionName)) {
@@ -319,10 +279,10 @@ public class SubmissionListController {
     	    	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	List<NamedSearchFilter> userSavedFilters = user.getSavedFilters();
-    	List<NamedSearchFilter> publicSavedFilters = namedSearchFilterRepo.findByPublicFlagTrue();
+    	List<NamedSearchFilterGroup> userSavedFilters = user.getSavedFilters();
+    	List<NamedSearchFilterGroup> publicSavedFilters = namedSearchFilterGroupRepo.findByPublicFlagTrue();
     	
-    	List<NamedSearchFilter> allSavedFilters = new ArrayList<NamedSearchFilter>();
+    	List<NamedSearchFilterGroup> allSavedFilters = new ArrayList<NamedSearchFilterGroup>();
     	allSavedFilters.addAll(userSavedFilters);
     	allSavedFilters.addAll(publicSavedFilters);
     	
@@ -332,24 +292,24 @@ public class SubmissionListController {
     
     @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
-    public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilter namedSearchFilter) {
+    public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	NamedSearchFilter existingFilter = namedSearchFilterRepo.findByNameAndPublicFlagTrue(namedSearchFilter.getName());
+    	NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
     	
     	if(existingFilter != null) {
-    		existingFilter = namedSearchFilterRepo.clone(existingFilter,namedSearchFilter);
+    		existingFilter = namedSearchFilterGroupRepo.clone(existingFilter,namedSearchFilterGroup);
         	user = userRepo.findByEmail(credentials.getEmail());
     		
 		} else {
 			
 			boolean foundFilter = false;
 			
-			for(NamedSearchFilter filter : user.getSavedFilters()) {
-				if(filter.getName().equals(namedSearchFilter.getName())) {
+			for(NamedSearchFilterGroup filter : user.getSavedFilters()) {
+				if(filter.getName().equals(namedSearchFilterGroup.getName())) {
 					filter.getFilterCriteria().clear();
-					filter = namedSearchFilterRepo.clone(filter,namedSearchFilter);
+					filter = namedSearchFilterGroupRepo.clone(filter,namedSearchFilterGroup);
 					foundFilter = true;
 					break;
 				
@@ -357,7 +317,7 @@ public class SubmissionListController {
 			}
 			
 			if(!foundFilter) {
-				user.getSavedFilters().add(namedSearchFilterRepo.createFromFilter(namedSearchFilter));
+				user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
 			}
 			
 		}

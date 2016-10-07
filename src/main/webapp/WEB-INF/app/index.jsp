@@ -316,7 +316,7 @@
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
-	    <script src="model/namedSearchFilter.js"></script>
+	    <script src="model/namedSearchFilterGroup.js"></script>
 		<script src="model/language.js"></script>
 		<script src="model/documentType.js"></script>
 		<script src="model/customActionDefinition.js"></script>
