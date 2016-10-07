@@ -153,6 +153,7 @@ vireo.controller("TriptychController", function ($controller, $scope, $q, $timeo
     $scope.refreshPanels = function() {
         var selectedOrganization = $scope.getSelectedOrganization();
         var newVisiblePanel;
+        console.log($scope.navigation.panels)
         for(var i in $scope.navigation.panels) {
             var panel = $scope.navigation.panels[i];
             var updatedOrganization = OrganizationRepo.findById(panel.organization.id);

@@ -62,8 +62,11 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 
 	this.resetNewOrganization = function() {
 		for(var key in this.newOrganization) {
-			delete this.newOrganization[key];
+			if(key != 'category') {
+				delete this.newOrganization[key];
+			}
 		}
+		return this.newOrganization;
 	};
 
 	this.getNewOrganization = function() {

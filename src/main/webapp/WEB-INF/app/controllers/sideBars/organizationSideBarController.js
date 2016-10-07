@@ -30,11 +30,11 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
     			}
     		}
     		
-    		OrganizationRepo.resetNewOrganization();
+    		$scope.newOrganization = OrganizationRepo.resetNewOrganization();
 
-			$scope.newOrganization = OrganizationRepo.getNewOrganization();
-
-			$scope.newOrganization.category = $scope.organizationCategories[0];
+    		if($scope.newOrganization.category === undefined) {
+    			$scope.newOrganization.category = $scope.organizationCategories[0];
+    		}
 
 			$scope.newOrganization.parent = $scope.organizations[0];
 		};
@@ -42,7 +42,6 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
 		$scope.reset();
 
 		$scope.createNewOrganization = function(hierarchical) {
-			console.log(hierarchical)
 			var parentOrganization = hierarchical == 'true' ? OrganizationRepo.newOrganization.parent : $scope.organizations[0];
 			OrganizationRepo.create({
 				"name": OrganizationRepo.newOrganization.name, 
