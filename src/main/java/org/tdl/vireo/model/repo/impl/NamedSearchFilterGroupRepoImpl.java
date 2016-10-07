@@ -3,7 +3,7 @@ package org.tdl.vireo.model.repo.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.FilterCriterionRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterGroupRepoCustom;
@@ -14,7 +14,7 @@ public class NamedSearchFilterGroupRepoImpl implements NamedSearchFilterGroupRep
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
     
     @Autowired
-    private FilterCriterionRepo filterCriterionRepo;
+    private NamedSearchFilterRepo filterCriterionRepo;
     
     @Autowired
     private UserRepo userRepo;
@@ -39,7 +39,7 @@ public class NamedSearchFilterGroupRepoImpl implements NamedSearchFilterGroupRep
     	newNamedSearchFilter.setPublicFlag(namedSearchFilterGroup.getPublicFlag());
     	newNamedSearchFilter.setUmiRelease(namedSearchFilterGroup.getUmiRelease());
     	newNamedSearchFilter.setColumnsFlag(namedSearchFilterGroup.getColumnsFlag());
-    	namedSearchFilterGroup.getFilterCriteria().forEach(filterCriterion -> {
+    	namedSearchFilterGroup.getNamedSearchFilters().forEach(filterCriterion -> {
     		newNamedSearchFilter.addFilterCriterion(filterCriterionRepo.cloneFilterCriterion(filterCriterion));
     	});
     	
@@ -65,7 +65,7 @@ public class NamedSearchFilterGroupRepoImpl implements NamedSearchFilterGroupRep
         user.setActiveFilter(null);
         userRepo.save(user);
         namedSearchFilterGroup.setUser(null);
-        namedSearchFilterGroup.setFilterCriteria(null);
+        namedSearchFilterGroup.setNamedSearchFilters(null);
         namedSearchFilterGroup.setSavedColumns(null);
         namedSearchFilterRepo.delete(namedSearchFilterGroup.getId());
     }

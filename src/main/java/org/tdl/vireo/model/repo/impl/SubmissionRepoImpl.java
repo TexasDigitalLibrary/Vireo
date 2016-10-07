@@ -123,13 +123,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
-            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
-                if (filterCriterion.getAllColumnSearch()) {
-                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+            activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
+                if (namedSearchFilter.getAllColumnSearch()) {
+                    allColumnSearchFilters.addAll(namedSearchFilter.getFilterValues());
                 } else {
                     for (SubmissionListColumn slc : allSubmissionListColumns) {
-                        if (filterCriterion.getSubmissionListColumn().equals(slc)) {
-                            slc.addAllFilters(filterCriterion.getFilters());
+                        if (namedSearchFilter.getSubmissionListColumn().equals(slc)) {
+                            slc.addAllFilters(namedSearchFilter.getFilterValues());
                             break;
                         }
                     }
@@ -266,13 +266,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
-            activeFilter.getFilterCriteria().forEach(filterCriterion -> {
+            activeFilter.getNamedSearchFilters().forEach(filterCriterion -> {
                 if (filterCriterion.getAllColumnSearch()) {
-                    allColumnSearchFilters.addAll(filterCriterion.getFilters());
+                    allColumnSearchFilters.addAll(filterCriterion.getFilterValues());
                 } else {
                     for (SubmissionListColumn slc : allSubmissionListColumns) {
                         if (filterCriterion.getSubmissionListColumn().equals(slc)) {
-                            slc.addAllFilters(filterCriterion.getFilters());
+                            slc.addAllFilters(filterCriterion.getFilterValues());
                             break;
                         }
                     }

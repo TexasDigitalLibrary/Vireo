@@ -53,13 +53,13 @@ public class NamedSearchFilterGroup extends BaseEntity {
 
     @Fetch(FetchMode.SELECT)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
-    private List<FilterCriterion> filterCriteria;
+    private List<NamedSearchFilter> namedSearchFilters;
 
     public NamedSearchFilterGroup() {
         setPublicFlag(false);
         setColumnsFlag(false);
         setUmiRelease(false);
-        setFilterCriteria(new ArrayList<FilterCriterion>());
+        setNamedSearchFilters(new ArrayList<NamedSearchFilter>());
         setSavedColumns(new ArrayList<SubmissionListColumn>());
         setModelValidator(new NamedSearchFilterValidator());
     }
@@ -153,32 +153,32 @@ public class NamedSearchFilterGroup extends BaseEntity {
     /**
      * @return the filterCriteria
      */
-    public List<FilterCriterion> getFilterCriteria() {
-        return filterCriteria;
+    public List<NamedSearchFilter> getNamedSearchFilters() {
+        return namedSearchFilters;
     }
 
     /**
-     * @param filterCriteria
+     * @param namedSearchFilters
      *            the filterCriteria to set
      */
-    public void setFilterCriteria(List<FilterCriterion> filterCriteria) {
-        this.filterCriteria = filterCriteria;
+    public void setNamedSearchFilters(List<NamedSearchFilter> namedSearchFilters) {
+        this.namedSearchFilters = namedSearchFilters;
     }
 
-    public void addFilterCriterion(FilterCriterion filterCriterion) {
-        if (!filterCriteria.contains(filterCriterion)) {
-            filterCriteria.add(filterCriterion);
+    public void addFilterCriterion(NamedSearchFilter namedSearchFilter) {
+        if (!namedSearchFilters.contains(namedSearchFilter)) {
+            namedSearchFilters.add(namedSearchFilter);
         }
     }
 
-    public void removeFilterCriterion(FilterCriterion filterCriterion) {
-        filterCriteria.remove(filterCriterion);
+    public void removeNamedSearchFilter(NamedSearchFilter namedSearchFilter) {
+        namedSearchFilters.remove(namedSearchFilter);
     }
 
-    public FilterCriterion getFilterCriterion(Long criteriaId) {
-        for (FilterCriterion filterCriterion : filterCriteria) {
-            if (filterCriterion.getId() == criteriaId) {
-                return filterCriterion;
+    public NamedSearchFilter getNamedSearchFilter(Long namedSearchFilterId) {
+        for (NamedSearchFilter namedSearchFilter : namedSearchFilters) {
+            if (namedSearchFilter.getId() == namedSearchFilterId) {
+                return namedSearchFilter;
             }
         }
         return null;

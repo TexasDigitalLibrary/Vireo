@@ -13,10 +13,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FilterCriterion;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.FilterCriterionRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -51,7 +52,7 @@ public class SubmissionListController {
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @Autowired
-    private FilterCriterionRepo filterCriterionRepo;
+    private NamedSearchFilterRepo filterCriterionRepo;
     
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
@@ -131,11 +132,11 @@ public class SubmissionListController {
     	
     	List<Long> ids = new ArrayList<Long>();
     	
-    	user.getActiveFilter().getFilterCriteria().forEach(filterCriterion -> {
-    		ids.add(filterCriterion.getId());
+    	user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
+    		ids.add(namedSearchFilter.getId());
     	});
     	
-    	user.getActiveFilter().getFilterCriteria().clear();
+    	user.getActiveFilter().getNamedSearchFilters().clear();
     	
     	user = userRepo.save(user);
     	
@@ -192,6 +193,10 @@ public class SubmissionListController {
     	String criterionName = data.get("criterionName").asText();
     	String filterValue = data.get("filterValue").asText();
     	
+    	JsonNode filterGlossNode = data.get("filterGloss");
+    	String filterGloss = null;
+    	if(filterGlossNode !=null) filterGloss = filterGlossNode.asText();
+    	
     	System.out.println(criterionName);
     	System.out.println(filterValue);
     	
@@ -199,20 +204,20 @@ public class SubmissionListController {
     	
     	NamedSearchFilterGroup activeFilter = user.getActiveFilter();
     	
-    	FilterCriterion criterionToEdit = null;
+    	NamedSearchFilter namedSearchFilter = null;
     	
-    	for(FilterCriterion criterion : activeFilter.getFilterCriteria()) {
+    	for(NamedSearchFilter criterion : activeFilter.getNamedSearchFilters()) {
     		if(criterion.getName().equals(criterionName)) {
-    			criterionToEdit = criterion;
+    			namedSearchFilter = criterion;
 	    		break;
     		}
     	}
     	
-    	if(criterionToEdit==null) criterionToEdit = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
+    	if(namedSearchFilter==null) namedSearchFilter = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
     	
-    	criterionToEdit.addFilter(filterValue);
+    	namedSearchFilter.addFilter(filterValue, filterGloss);
     	    
-    	user.getActiveFilter().addFilterCriterion(criterionToEdit);
+    	user.getActiveFilter().addFilterCriterion(namedSearchFilter);
     	
     	user = userRepo.save(user);
         
@@ -221,24 +226,21 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/remove-filter-criterion")
+    @ApiMapping("/remove-filter-criterion/{namedSearchFilterName}")
     @Auth(role = "MANAGER")
-    public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
-    	
-    	String criterionName = data.get("criterionName").asText();
-    	String filterValue = data.get("filterValue").asText();
-    	
+    public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
+    	    	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
     	NamedSearchFilterGroup activeFilter = user.getActiveFilter();
     	
-    	for(FilterCriterion criterion : activeFilter.getFilterCriteria()) {
-    		if(criterion.getName().equals(criterionName)) {
-	    		for(String filter : criterion.getFilters()) {
-	    			if(filter.equals(filterValue)) {
-	    				criterion.removeFilter(filterValue);
-	    				if (criterion.getFilters().size() == 0) {
-	    					activeFilter.removeFilterCriterion(criterion);    					
+    	for(NamedSearchFilter namedSearchFilter : activeFilter.getNamedSearchFilters()) {
+    		if(namedSearchFilter.getName().equals(namedSearchFilterName)) {
+	    		for(FilterCriterion fc : namedSearchFilter.getFilters()) {
+	    			if(fc.getValue().equals(filterCriterion.getValue()) && fc.getGloss().equals(filterCriterion.getGloss())) {
+	    				namedSearchFilter.removeFilter(fc);
+	    				if (namedSearchFilter.getFilters().size() == 0) {
+	    					activeFilter.removeNamedSearchFilter(namedSearchFilter);    					
 	    		    	}
 	    				break;
 	    			}
@@ -260,12 +262,12 @@ public class SubmissionListController {
     	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
-    	user.getActiveFilter().getFilterCriteria().clear();
+    	user.getActiveFilter().getNamedSearchFilters().clear();
     	
     	userRepo.save(user);
     	
-      	user.getActiveFilter().getFilterCriteria().forEach(filterCriterion -> {
-    		filterCriterionRepo.delete(filterCriterion);
+      	user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
+    		filterCriterionRepo.delete(namedSearchFilter);
     	});
             	
     	simpMessagingTemplate.convertAndSend("/channel/active-filters/"+user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
@@ -308,7 +310,7 @@ public class SubmissionListController {
 			
 			for(NamedSearchFilterGroup filter : user.getSavedFilters()) {
 				if(filter.getName().equals(namedSearchFilterGroup.getName())) {
-					filter.getFilterCriteria().clear();
+					filter.getNamedSearchFilters().clear();
 					filter = namedSearchFilterGroupRepo.clone(filter,namedSearchFilterGroup);
 					foundFilter = true;
 					break;

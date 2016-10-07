@@ -528,7 +528,7 @@ public class User extends BaseEntity implements CoreUser {
     public void loadActiveFilter(NamedSearchFilterGroup filter) {
 
         this.activeFilter.setSavedColumns(filter.getSavedColumns());
-        this.activeFilter.setFilterCriteria(filter.getFilterCriteria());
+        this.activeFilter.setNamedSearchFilters(filter.getNamedSearchFilters());
         this.activeFilter.setPublicFlag(filter.getPublicFlag());
         this.activeFilter.setColumnsFlag(filter.getColumnsFlag());
 
