@@ -1,4 +1,4 @@
-vireo.controller("LookAndFeelController", function($scope, $controller, $q, WsApi, RestApi) {
+vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsApi, RestApi) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 

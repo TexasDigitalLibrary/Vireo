@@ -1025,6 +1025,10 @@ footer a, footer li, footer p {
   transition: max-width 0.35s ease-in-out, opacity 0.35s ease-in-out;
 }
 
+.triptych .panel-wrapper.back {
+  max-width: 0%;
+}
+
 .triptych .panel-wrapper.closing {
   max-width: 0%;
 } 
@@ -1033,8 +1037,14 @@ footer a, footer li, footer p {
   max-width: 100%;
 }
 
-.triptych .panel-wrapper.shown {
+.triptych .panel-wrapper.showing {
   max-height: 500px;
+  opacity: 1;
+}
+
+.triptych .panel-wrapper.back.showing {
+  max-height: 500px;
+  max-width: 100%;
   opacity: 1;
 }
 

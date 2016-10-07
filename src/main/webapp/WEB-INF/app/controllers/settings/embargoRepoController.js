@@ -1,4 +1,4 @@
-vireo.controller("EmbargoRepoController", function($controller, $scope, $q, EmbargoRepo, DragAndDropListenerFactory, $filter) {
+vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, EmbargoRepo, DragAndDropListenerFactory, $filter) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.embargoRepo = EmbargoRepo;

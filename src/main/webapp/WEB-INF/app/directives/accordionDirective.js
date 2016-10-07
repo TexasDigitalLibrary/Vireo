@@ -1,4 +1,4 @@
-vireo.directive("accordion", function(AccordionService) {
+vireo.directive("accordion", function (AccordionService) {
 	return {
 		template: '<div class="accordion" ng-transclude></div>',
 		restrict: 'E',

@@ -1,4 +1,4 @@
-vireo.controller("HeaderController", function(AbstractRepo, AbstractAppRepo, $scope, $controller, $location, ConfigurationRepo) {
+vireo.controller("HeaderController", function (AbstractRepo, AbstractAppRepo, $scope, $controller, $location, ConfigurationRepo) {
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 		

@@ -112,9 +112,6 @@ public class User extends BaseEntity implements CoreUser {
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private List<NamedSearchFilter> savedFilters;
 
-    /**
-     * 
-     */
     public User() {
         setModelValidator(new UserValidator());
         setSettings(new TreeMap<String, String>());
