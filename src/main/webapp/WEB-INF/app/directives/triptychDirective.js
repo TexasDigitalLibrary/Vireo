@@ -140,7 +140,7 @@ vireo.directive("triptych", function () {
 					}
 					var panel = getPanel(organization);
 					if(parent !== undefined) {
-						if(parent.previouslyActive !== undefined) {
+						if(parent.previouslyActive) {
 							$scope.navigation.backward = true;
 						}
 						parent.active = true;
