@@ -73,10 +73,10 @@ vireo.directive("triptych", function () {
 
 			var open = function(panel, promise) {
 				var action = function(panel) {
+					panel.visible = true;
 					$timeout(function() {
 						panel.opening = true;
-						panel.showing = true;
-						panel.visible = true;
+						panel.showing = true;						
 						$timeout(function() {
 							panel.opening = false;
 							$scope.navigation.backward = false;
