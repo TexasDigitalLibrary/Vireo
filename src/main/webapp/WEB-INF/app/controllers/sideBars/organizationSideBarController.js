@@ -36,7 +36,9 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
     			$scope.newOrganization.category = $scope.organizationCategories[0];
     		}
 
-			$scope.newOrganization.parent = $scope.organizations[0];
+    		if($scope.newOrganization.parent === undefined) {
+				$scope.newOrganization.parent = $scope.organizations[0];
+			}
 		};
 
 		$scope.reset();

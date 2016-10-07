@@ -73,10 +73,10 @@ vireo.directive("triptych", function () {
 
 			var open = function(panel, promise) {
 				var action = function(panel) {
-					panel.visible = true;
 					$timeout(function() {
 						panel.opening = true;
 						panel.showing = true;
+						panel.visible = true;
 						$timeout(function() {
 							panel.opening = false;
 							$scope.navigation.backward = false;
@@ -121,8 +121,8 @@ vireo.directive("triptych", function () {
 			};
 			
 			$scope.selectOrganization = function(organization) {
-				// var selectedOrganization = $scope.getSelectedOrganization();
-				// if(organization.id != selectedOrganization.id || selectedOrganization.id == $scope.organizations[0].id) {
+				var selectedOrganization = $scope.getSelectedOrganization();
+				if(organization.id != selectedOrganization.id || selectedOrganization.id == $scope.organizations[0].id) {
 					var parent;
 					for(var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
 						var panel = $scope.navigation.panels[i];
@@ -152,12 +152,12 @@ vireo.directive("triptych", function () {
 						panel.parent = parent;
 					}
 					setVisibility(panel);
-				// }
+				}
 				$scope.setSelectedOrganization(organization);
 			};
 			
 			$scope.refreshPanels = function() {
-				var selectedOrganization = $scope.getSelectedOrganization();
+				var selectedOrganization;
 				var newVisiblePanel;
 				for(var i in $scope.navigation.panels) {
 					var panel = $scope.navigation.panels[i];
@@ -165,34 +165,31 @@ vireo.directive("triptych", function () {
 					var previousPanelChildrenCount = panel.organization.childrenOrganizations.length;
 					if(updatedOrganization !== undefined) {
 						setOrganzization(panel, updatedOrganization);
-						if(previousPanelChildrenCount === 0) {
-							if(panel.organization.childrenOrganizations.length > 0) {
-								newVisiblePanel = panel;
-							}
+						if(panel.organization.childrenOrganizations.length === 0) {
+							clear(panel);
 						}
 						else {
-							if(panel.organization.childrenOrganizations.length === 0) {
-								clear(panel);
+							if(previousPanelChildrenCount === 0) {
+								newVisiblePanel = panel;
 							}
 						}
 					}
 					else {
-						if(selectedOrganization.id == panel.organization.id) {
-							if(panel.parent !== undefined) {
-								selectedOrganization = panel.parent.organization;
-							}
-							else {
-								selectedOrganization = $scope.organizations[0];
-							}
+						if(panel.parent !== undefined) {
+							selectedOrganization = panel.parent.organization;
 						}
-						clear(panel);
+						else {
+							selectedOrganization = $scope.organizations[0];
+						}
+						remove(panel);
 					}
 				}
-				if(newVisiblePanel !== undefined) {
+				if(newVisiblePanel != undefined) {
 					setVisibility(newVisiblePanel);
 				}
-				$scope.selectOrganization(selectedOrganization);
-				console.log($scope.navigation.panels)
+				if(selectedOrganization != undefined) {
+					$scope.selectOrganization(selectedOrganization);
+				}
 			};
 
 			var setVisibility = function(panel) {
