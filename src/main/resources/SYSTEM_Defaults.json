@@ -6,7 +6,8 @@
 			{"grantor":"Texas A&M University"},
 			{"email_from":"noreply@tdl.org"},
 			{"email_reply_to":"dev@tdl.org"},
-			{"attachments.path": "attachments/"}
+			{"attachments.path": "attachments/"},
+			{"hierarchical": "false"}
 	],
 	"orcid":[
 			{"orcid_validation":true},

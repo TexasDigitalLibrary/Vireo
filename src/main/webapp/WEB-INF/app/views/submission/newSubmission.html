@@ -24,17 +24,15 @@
 				</div>
 			</div>
 			<div class="row triptych-panels">
-				
 				<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper" ng-repeat="panel in navigation.panels | filter:{visible:true}" ng-class="{'opening': panel.opening, 'closing': panel.closing, 'showing': panel.showing, 'back': navigation.backward}">
-
 					<div class="panel panel-default triptych-panel" ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}" ng-if="organizations.length > 1">
 						<div class="panel-heading" ng-click="navigation.expanded = true">
 							<span ng-repeat="category in panel.categories" ng-click="panel.filter = category">
 								<span class="category-heading" ng-class="{'active': category == panel.filter, 'multiple': panel.categories.length}">{{category}}</span>
 								<span ng-if="!$last"> / </span>
 							</span>
-							<span class="glyphicon glyphicon-arrow-right pull-right" ng-if="panel.selected.childrenOrganizations.length > 0 || panel.previouslyActive">
-							</span>
+							<span class="glyphicon glyphicon-refresh toggle-href pull-right" ng-if="panel.filterOn" ng-click="panel.clearFilter()"></span>
+							<span class="glyphicon glyphicon-arrow-right pull-right" ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive"></span>
 						</div>
 						<div class="panel-body">
 							<ul class="list-group">

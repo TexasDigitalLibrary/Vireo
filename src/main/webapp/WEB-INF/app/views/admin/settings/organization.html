@@ -37,8 +37,8 @@
 									<span class="category-heading" ng-class="{'active': category == panel.filter, 'multiple': panel.categories.length}">{{category}}</span>
 									<span ng-if="!$last"> / </span>
 								</span>
-								<span class="glyphicon glyphicon-arrow-right pull-right" ng-if="panel.selected.childrenOrganizations.length > 0 || panel.previouslyActive">
-								</span>
+								<span class="glyphicon glyphicon-refresh toggle-href pull-right" ng-if="panel.filterOn" ng-click="panel.clearFilter()"></span>
+								<span class="glyphicon glyphicon-arrow-right pull-right" ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive"></span>
 							</div>
 							<div class="panel-body">
 								<ul class="list-group">

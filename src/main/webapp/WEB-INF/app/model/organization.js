@@ -23,6 +23,7 @@ vireo.model("Organization", function ($q, RestApi) {
 					});
 				}
 			});
+			return promise;
 		};
 
 		//Override

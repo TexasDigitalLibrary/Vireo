@@ -6,13 +6,12 @@ import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import java.util.Map;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -36,7 +35,7 @@ public class UserController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     // TODO: make global static method, redundant method in interceptors and here
     public Credentials getAnonymousCredentials() {
         Credentials anonymousCredentials = new Credentials();
@@ -55,44 +54,40 @@ public class UserController {
     @Auth(role = "NONE")
     public ApiResponse credentials(@ApiCredentials Credentials shib) {
         User user = userRepo.findByEmail(shib.getEmail());
-
         if (user == null) {
             logger.debug("User not registered! Responding with anonymous credentials!");
             return new ApiResponse(SUCCESS, getAnonymousCredentials());
         }
-
         shib.setRole(user.getRole().toString());
-        
         shib.setModelValidator(user.getModelValidator());
-
         return new ApiResponse(SUCCESS, shib);
     }
 
     @Transactional
     @ApiMapping("/all")
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @Transactional
     @ApiMapping("/update")
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateRole(@ApiValidatedModel User user) {
-        
-        // get the persisted user for its encoded password        
+
+        // get the persisted user for its encoded password
         User persistedUser = userRepo.findOne(user.getId());
-        if(persistedUser != null) {
+        if (persistedUser != null) {
             user.setPassword(persistedUser.getPassword());
+            // TODO: figure out why this has to happen!!
             user.setActiveFilter(persistedUser.getActiveFilter());
         }
-        
+
         logger.info("Updating role for " + user.getEmail());
         user = userRepo.save(user);
-        
+
         simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
-        
+
         return new ApiResponse(SUCCESS, user);
     }
 
@@ -104,15 +99,11 @@ public class UserController {
     }
 
     @ApiMapping("/settings/update")
-    @Auth(role = "STUDENT")    
+    @Auth(role = "STUDENT")
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
-        
         User user = userRepo.findByEmail(shib.getEmail());
-        
         user.setSettings(userSettings);
-        
         simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
-        
         return new ApiResponse(SUCCESS);
     }
 
