@@ -52,7 +52,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 				if(data.meta.type != 'INVALID') {
 					$scope.closeModal();
 					$timeout(function() {
-						$scope.resetSelectedOrganization();
 						AlertService.add(data.meta, 'organization/delete');
 					}, 300);
 				}
