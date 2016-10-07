@@ -197,9 +197,6 @@ public class SubmissionListController {
     	String filterGloss = null;
     	if(filterGlossNode !=null) filterGloss = filterGlossNode.asText();
     	
-    	System.out.println(criterionName);
-    	System.out.println(filterValue);
-    	
     	User user = userRepo.findByEmail(credentials.getEmail());
     	
     	NamedSearchFilterGroup activeFilter = user.getActiveFilter();

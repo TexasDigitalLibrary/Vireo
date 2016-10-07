@@ -14,12 +14,13 @@ vireo.model("NamedSearchFilterGroup", function (WsApi) {
 			return promise;
 		};
 
-		namedSearchFilterGroup.addFilter = function(criterionName, filterValue) {
+		namedSearchFilterGroup.addFilter = function(criterionName, filterValue, filterGloss) {
 			
 			angular.extend(apiMapping.NamedSearchFilterGroup.addFilter, {
 				"data": {
 					"criterionName":criterionName,
-					"filterValue":filterValue
+					"filterValue":filterValue,
+					"filterGloss":filterGloss
 				}
 			});
 

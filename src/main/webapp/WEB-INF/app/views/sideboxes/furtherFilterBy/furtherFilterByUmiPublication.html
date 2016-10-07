@@ -1,6 +1,6 @@
 <form name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
 	<ul>
-		<li class="filter" ng-click="box[column.title.split(' ').join('')]=true;box.addFilter(column);">Yes</li>
-		<li class="filter" ng-click="box[column.title.split(' ').join('')]=false;box.addFilter(column);">No</li>
+		<li class="filter" ng-click="box[column.title.split(' ').join('')]=true;box.addFilter(column, 'yes');">Yes</li>
+		<li class="filter" ng-click="box[column.title.split(' ').join('')]=false;box.addFilter(column, 'no');">No</li>
 	</ul>
 </form>

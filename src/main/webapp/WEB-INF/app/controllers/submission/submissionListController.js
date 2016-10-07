@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo) {
+vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -21,8 +21,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		console.log(submissionStates);
 	});
 
-
-
+	var customActionDefinitions =CustomActionDefinitionRepo.getAll();
 	var submissionStates = SubmissionStateRepo.getAll();
 
 	var findFirstAssignable = function() {
@@ -177,9 +176,9 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterChange;
 	};
 
-	var addFilter = function(column) {
+	var addFilter = function(column, gloss) {
 		console.log($scope.furtherFilterBy[column.title.split(" ").join("")]);
-		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")]).then(function() {
+		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss).then(function() {
 			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
 			query();
 		});
@@ -190,7 +189,8 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
 		"getFilterColumns": $scope.getFilterColumns,
 		"addFilter": addFilter,
-		"submissionStates": submissionStates, 
+		"submissionStates": submissionStates,
+		"customActionDefinitions": customActionDefinitions 
 	};
 
 	var query = function() {

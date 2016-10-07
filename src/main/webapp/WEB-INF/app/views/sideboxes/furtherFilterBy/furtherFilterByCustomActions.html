@@ -1,5 +1,5 @@
 <form name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
 	<ul>
-		<li>test</li>
+		<li ng-repeat="customActionDefinitions in box.customActionDefinitions" ng-click="box[column.title.split(' ').join('')]=true;box.addFilter(column, customActionDefinitions.label);">{{customActionDefinitions.label}}</li>
 	</ul>
 </form>
