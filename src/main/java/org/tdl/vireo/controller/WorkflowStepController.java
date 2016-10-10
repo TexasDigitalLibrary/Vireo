@@ -79,7 +79,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         
-        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), true, true, fieldProfile.getControlledVocabularies(), fieldProfile.getFieldGlosses());
+        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), true, fieldProfile.getControlledVocabularies(), fieldProfile.getFieldGlosses());
                 
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
         

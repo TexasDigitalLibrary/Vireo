@@ -65,7 +65,7 @@ vireo.directive("field",  function() {
 				return $scope.submission.findFieldValuesByPredicate($scope.profile.fieldPredicate).indexOf(value) === 0;
 			};
 
-			$scope.getPatern = function() {
+			$scope.getPattern = function() {
 				
 				var patern = "*";
 				var cv = $scope.profile.controlledVocabularies[0];

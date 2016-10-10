@@ -1,4 +1,4 @@
-vireo.model("FieldPredicate", function () {
+vireo.model("FieldPredicate", function FieldPredicate() {
 
 	return function FieldPredicate() {
 		

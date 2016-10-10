@@ -1,4 +1,4 @@
-vireo.model("SavedFilter", function() {
+vireo.model("SavedFilter", function SavedFilter() {
 
 	return function SavedFilter() {
 		var savedFilter = this;

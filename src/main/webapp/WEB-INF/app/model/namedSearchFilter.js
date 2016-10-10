@@ -1,4 +1,4 @@
-vireo.model("NamedSearchFilter", function (WsApi) {
+vireo.model("NamedSearchFilter", function NamedSearchFilter(WsApi) {
 
 	return function NamedSearchFilter() {
 		var namedSearchFilter = this;

@@ -112,18 +112,20 @@
 			</validatedinput>
 		</div>
 
-		<div id="fp-repeatable-checkbox" class="input-group">
-			<div class="checkbox">
-				<label>
-					<input 
-						type="checkbox" 
-						value="false" 
-						ng-model="modalData.repeatable"/>Repeatable</label>
-			</div>
-		</div>
+		<toggleButton 
+			label="Repeatable:"
+			scope-value="modalData.repeatable"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+		</toggleButton>
 
 		<toggleButton 
-			label="Field is Overridable:"
+			label="Enabled:"
+			scope-value="modalData.enabled"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+		</toggleButton>
+
+		<toggleButton 
+			label="Overridable:"
 			scope-value="modalData.overrideable"
 			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
 		</toggleButton>

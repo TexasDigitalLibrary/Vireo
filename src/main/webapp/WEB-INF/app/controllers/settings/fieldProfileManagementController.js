@@ -12,7 +12,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.fieldGlossRepo = FieldGlossRepo;
 
-
 	$scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
@@ -107,6 +106,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			$scope.inputFile = false;
 
 			$scope.modalData = {
+				enabled: true,
 				overrideable: true,
 				inputType: {
 					"id": 1,

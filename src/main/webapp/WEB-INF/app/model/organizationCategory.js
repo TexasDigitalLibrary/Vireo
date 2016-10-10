@@ -1,4 +1,4 @@
-vireo.model("OrganizationCategory", function () {
+vireo.model("OrganizationCategory", function OrganizationCategory() {
 
 	return function OrganizationCategory() {
 		
