@@ -21,7 +21,7 @@ import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
 public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
     
-    private static final List<String> PREDICATE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "predicate", "value" }));
+    private static final List<String> PREDICATE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "fieldPredicate", "value" }));
     
     private static final List<String> VALUE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "value" }));
     
