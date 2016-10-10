@@ -23,7 +23,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -251,24 +250,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    	
     	String sqlSelect = "SELECT DISTINCT s.id,";
+    	
     	String sqlCountSelect = "SELECT COUNT(*) FROM submission s ";
+    	
     	String sqlJoins = "";
     	String sqlWheres = "";
     	String sqlOrderBys = "";
-    	
-    	//get the order-by columns by which to sort the query results
-//    	Sort sort = pageable.getSort();
-//    	Iterator<org.springframework.data.domain.Sort.Order> orders1 = sort.iterator();
-//    	String orderByString = "ORDER BY ";
-//    	while(orders1.hasNext())
-//    	{
-//    		String orderByColumnNameString = orders1.next().getProperty();
-//    		orderByString += orderByColumnNameString;
-//    		if(orders1.hasNext()) orderByString += ", ";
-//    	}
-    	
-    	
     	
     	
     	//determine the requesting user
@@ -319,166 +308,140 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
         });
         
-        
-
-        Boolean filterExists = false;
-        Boolean predicateExists = false;
-
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
-
-        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
-
-            if (submissionListColumn.getFilters().size() > 0) {
-            	System.out.println("The filter for submissionListColumn " + submissionListColumn.getTitle() + " exists.");
-                filterExists = true;
-            }
-
-            if (submissionListColumn.getSort() != org.tdl.vireo.enums.Sort.NONE && submissionListColumn.getPredicate() != null) {
-            	System.out.println("The predicate for submissionListColumn " + submissionListColumn.getTitle() + " exists.");
-                predicateExists = true;
-            }
-
-            if (submissionListColumn.getValuePath().size() > 0) {
-                String fullPath = String.join(".", submissionListColumn.getValuePath());
-                switch (submissionListColumn.getSort()) {
-                case ASC:
-                	System.out.println("Adding an ascending order for fullPath " + fullPath);
-                    orders.add(new Sort.Order(Sort.Direction.ASC, fullPath));
-                    break;
-                case DESC:
-                	System.out.println("Adding a descending order for fullPath " + fullPath);
-                    orders.add(new Sort.Order(Sort.Direction.DESC, fullPath));
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-
-        if (!filterExists && !allColumnSearchFilters.isEmpty()) {
-            filterExists = true;
-        }
 
         Page<Submission> pageResults = null;
-        List<Submission> pageSubmissions = new ArrayList<Submission>();
 
-        if (filterExists || orders.size() > 0) {
-        	System.out.println("A filter exists, or there is an order.");
-            if (filterExists || predicateExists) {
-            	System.out.println("A filter exists, or a predicate exists.");
+        
+        int n = 0;
 
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-
-                CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
-
-                Root<Submission> root = query.from(Submission.class);
-
-                List<Order> _orders = new ArrayList<Order>();
-
-                List<Predicate> _groupPredicates = new ArrayList<Predicate>();
-
-                List<Predicate> _filterPredicates = new ArrayList<Predicate>();
-
-                Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?, ?>>();
-
-                Path<?> fieldValueFetchPath = null;
-                
-                int n = 0;
-
-                for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
-                    Path<?> path = null;
-                    
-                    
-                    
-                    System.out.println("submissionListColumn has valuePath of " + String.join(".", submissionListColumn.getValuePath()));
-                    
-                    
-                    //generate the join columns for each of the possible field values
-                    if(String.join(".", submissionListColumn.getValuePath()).equals("fieldValues.value") && submissionListColumn.getPredicate() != null)
-                    {
-                    	n++;
-                    	
-                    	System.out.println("Predicate value is " + submissionListColumn.getPredicate());
-                    	
-                    	Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
-                    	
-                    	System.out.println("Predicate has id " + predicateId);
-                    			
-                    	sqlJoins += "\nLEFT JOIN" + 
-                    				"\n	(SELECT sfv"+n+".submission_id, fv"+n+".*" +
-                    				"\n	 FROM submission_field_values sfv"+n +
-                    				"\n	 LEFT JOIN field_value fv"+n+" ON fv"+n+".id=sfv"+n+".field_values_id " +
-                    				"\n	 WHERE fv"+n+".field_predicate_id="+predicateId+") pfv"+n +
-                    				"\n	ON pfv"+n+".submission_id=s.id";
-                    	
-                    	//generate the where clauses for each filter on the field values
-                    	if(submissionListColumn.getSortOrder() > 0)
-                    	{
-		                	switch (submissionListColumn.getSort()) {
-		                    case ASC:
-		                    	System.out.println("Ordering ascending on predicate "+ submissionListColumn.getPredicate());
-		                    	sqlSelect += " pfv"+n+".value,";
-		                    	sqlOrderBys += " pfv"+n+".value ASC,";
-		                        break;
-		                    case DESC:
-		                    	System.out.println("Ordering descending on predicate "+ submissionListColumn.getPredicate());
-		                    	sqlSelect += " pfv"+n+".value,";
-		                    	sqlOrderBys += " pfv"+n+".value DESC,";
-		                        break;
-		                    default:
-		                        break;
-		                    }
-                    	}
-                    	
-                    	//TODO:
-                    	sqlWheres += "";
-                    	
-                    }
-                    else {
-                    	System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
-                    }
-                }
-                
-                //finish out the select clause
-                sqlSelect = sqlSelect.substring(0, sqlSelect.length()-1) + " FROM submission s";
-                
-                //if ordering, finish the clause and strip the tailing comma
-                if( !sqlOrderBys.isEmpty()) {
-                	sqlOrderBys = "\nORDER BY" + sqlOrderBys.substring(0, sqlOrderBys.length()-1);
-                }
-                	
-               
-                Predicate predicate = null;
-
-                if (_filterPredicates.size() == 0) {
-                    predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
-                } else {
-                    predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
-                }
-
-                query.select(root).distinct(true).where(predicate).orderBy(_orders);
-
-                TypedQuery<Submission> typedQuery = em.createQuery(query);
-
-                System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
-
-                long total = typedQuery.getResultList().size();
-                typedQuery.setFirstResult(pageable.getOffset());
-                typedQuery.setMaxResults(pageable.getPageSize());
-
-                pageResults = new PageImpl<Submission>(typedQuery.getResultList(), pageable, total);
-
-                // pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColumns, allColumnSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
-            } else {
-            	System.out.println("Neither a filter nor predicate exists.");
-                pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
-            }
-        } else {
-        	System.out.println("Neither a filter nor order exists.");
-            pageResults = submissionRepo.findAll(pageable);
+        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
+            
+            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
+            	
+            	System.out.println("Predicate path: "+ submissionListColumn.getPredicatePath());
+            	System.out.println("Value path: "+ submissionListColumn.getValuePath());
+            	System.out.println("Predicate value: "+ submissionListColumn.getPredicate());
+            	
+            
+	            //generate the join columns for each of the possible field values
+	            if(String.join(".", submissionListColumn.getValuePath()).equals("fieldValues.value") && submissionListColumn.getPredicate() != null)
+	            {
+	            	n++;
+	            	
+	            	System.out.println("Predicate value is " + submissionListColumn.getPredicate());
+	            	
+	            	Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
+	            	
+	            	System.out.println("Predicate has id " + predicateId);
+	            			
+	            	sqlJoins += "\nLEFT JOIN" + 
+	            				"\n	(SELECT sfv"+n+".submission_id, fv"+n+".*" +
+	            				"\n	 FROM submission_field_values sfv"+n +
+	            				"\n	 LEFT JOIN field_value fv"+n+" ON fv"+n+".id=sfv"+n+".field_values_id " +
+	            				"\n	 WHERE fv"+n+".field_predicate_id="+predicateId+") pfv"+n +
+	            				"\n	ON pfv"+n+".submission_id=s.id";
+	            	
+	            	//generate the where clauses for each filter on the field values
+	            	if(submissionListColumn.getSortOrder() > 0)
+	            	{
+	                	switch (submissionListColumn.getSort()) {
+	                    case ASC:
+	                    	System.out.println("Ordering ascending on predicate "+ submissionListColumn.getPredicate());
+	                    	sqlSelect += " pfv"+n+".value,";
+	                    	sqlOrderBys += " pfv"+n+".value ASC,";
+	                        break;
+	                    case DESC:
+	                    	System.out.println("Ordering descending on predicate "+ submissionListColumn.getPredicate());
+	                    	sqlSelect += " pfv"+n+".value,";
+	                    	sqlOrderBys += " pfv"+n+".value DESC,";
+	                        break;
+	                    default:
+	                        break;
+	                    }
+	            	}
+	            	
+	            	for(String filterString : submissionListColumn.getFilters()) {
+	            		sqlWheres += " pfv"+n+".value='"+filterString+"' OR";
+	            	}
+	            	
+	            }
+	            else if(String.join(".", submissionListColumn.getValuePath()).equals("organization.name"))
+	            {			
+	            	sqlJoins += "\nLEFT JOIN organization o ON o.id=s.organization_id";
+	            	
+	            	//generate the where clauses for each filter on the field values
+	            	if(submissionListColumn.getSortOrder() > 0)
+	            	{
+	                	switch (submissionListColumn.getSort()) {
+	                    case ASC:
+	                    	System.out.println("Ordering ascending on organization name");
+	                    	sqlSelect += " o.name,";
+	                    	sqlOrderBys += " o.name ASC,";
+	                        break;
+	                    case DESC:
+	                    	System.out.println("Ordering descending on organization name");
+	                    	sqlSelect += " o.name,";
+	                    	sqlOrderBys += " o.name DESC,";
+	                        break;
+	                    default:
+	                        break;
+	                    }
+	            	}
+	            	
+	            	//TODO:
+	            	sqlWheres += "";
+	            	
+	            	
+	            	
+	            	
+	            }
+	            else if(String.join(".", submissionListColumn.getValuePath()).equals("id"))
+	            {	
+	            	//generate the where clauses for each filter on the field values
+	            	if(submissionListColumn.getSortOrder() > 0)
+	            	{
+	                	switch (submissionListColumn.getSort()) {
+	                    case ASC:
+	                    	System.out.println("Ordering ascending on submission id");
+	                    	sqlSelect += " s.id,";
+	                    	sqlOrderBys += " s.id ASC,";
+	                        break;
+	                    case DESC:
+	                    	System.out.println("Ordering descending on submission id");
+	                    	sqlSelect += " s.id,";
+	                    	sqlOrderBys += " s.id DESC,";
+	                        break;
+	                    default:
+	                        break;
+	                    }
+	            	}
+	            	
+	            	//TODO:
+	            	sqlWheres += "";
+	            	
+	            	
+	            	
+	            	
+	            }
+	            else {
+	            	System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
+	            }
+	            
+	        }
         }
         
+        //finish out the select clause
+        sqlSelect = sqlSelect.substring(0, sqlSelect.length()-1) + " FROM submission s";
         
+        //if ordering, finish the clause and strip the tailing comma
+        if(!sqlOrderBys.isEmpty()) {
+        	sqlOrderBys = "\nORDER BY" + sqlOrderBys.substring(0, sqlOrderBys.length()-1);
+        }
+        
+        //if where, finish the clause and strip the tailing OR
+        if(!sqlWheres.isEmpty()) {
+        	sqlWheres = "\nWHERE" + sqlWheres.substring(0, sqlWheres.length()-3);
+        }
         
         
         String sqlCountQuery = sqlCountSelect + sqlJoins + sqlWheres;
@@ -505,13 +468,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     	
     	List<Map<String, Object>> rows = this.jdbcTemplate.queryForList(sqlQuery);
     	
-    	for (Map row : rows) {
+    	for (Map<String, Object> row : rows) {
     		ids.add((Long) row.get("ID"));
     		System.out.println("Adding submission " + row.get("ID"));
 
     	}
-    	
-    	
     	
     	
     	List<Submission> actualResults = new ArrayList<Submission>();
@@ -524,13 +485,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     			}
 	    	}
     	}
-    	
-    	
-    	
-    	
-    	
-    	//TODO:  custom Page implementation that does the object mapping
-    	
+    	    	
     	pageResults = new PageImpl<Submission>(actualResults, new PageRequest((int) Math.floor(offset/limit), limit), total);
     	
     	
