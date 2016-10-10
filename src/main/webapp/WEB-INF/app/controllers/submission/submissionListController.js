@@ -190,8 +190,13 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		"getFilterColumns": $scope.getFilterColumns,
 		"addFilter": addFilter,
 		"submissionStates": submissionStates,
-		"customActionDefinitions": customActionDefinitions 
+		"customActionDefinitions": customActionDefinitions,
+		"allUsers": allUsers,
+		"assignable": assignable,
+		"defaultLimit": 1
 	};
+
+	console.log("activeFilters", $scope.activeFilters);
 
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
