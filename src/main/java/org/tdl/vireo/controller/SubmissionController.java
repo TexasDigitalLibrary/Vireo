@@ -75,7 +75,8 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
-        Submission submission = submissionRepo.create(credentials, dataNode.get("organizationId").asLong());
+        User user = userRepo.findByEmail(credentials.getEmail());   
+        Submission submission = submissionRepo.create(user, dataNode.get("organizationId").asLong());
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }
@@ -102,7 +103,8 @@ public class SubmissionController {
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
-        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
+        User user = userRepo.findByEmail(credentials.getEmail());       
+        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
     @ApiMapping("/all-submission-state")
@@ -118,7 +120,7 @@ public class SubmissionController {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setState(submissionState);
             submissionRepo.save(sub);
         });
@@ -134,7 +136,7 @@ public class SubmissionController {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
             submissionRepo.save(sub);
         });

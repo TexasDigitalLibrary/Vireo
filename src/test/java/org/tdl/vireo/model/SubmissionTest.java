@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.tamu.framework.model.Credentials;
-
 public class SubmissionTest extends AbstractEntityTest {
 
     @Before
@@ -63,10 +61,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        Credentials credentials = new Credentials();
-
-        credentials.setEmail(submitter.getEmail());
-        Submission submission = submissionRepo.create(credentials, organization.getId());
+        Submission submission = submissionRepo.create(submitter, organization.getId());
         submission.setState(submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
@@ -90,12 +85,10 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        Credentials credentials = new Credentials();
-        credentials.setEmail(submitter.getEmail());
-        submissionRepo.create(credentials, organization.getId());
+        submissionRepo.create(submitter, organization.getId());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(credentials, organization.getId());
+            submissionRepo.create(submitter, organization.getId());
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
@@ -103,9 +96,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        Credentials credentials = new Credentials();
-        credentials.setEmail(submitter.getEmail());
-        Submission submission = submissionRepo.create(credentials, organization.getId());
+        Submission submission = submissionRepo.create(submitter, organization.getId());
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
     }
@@ -125,10 +116,7 @@ public class SubmissionTest extends AbstractEntityTest {
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
-        Credentials credentials = new Credentials();
-
-        credentials.setEmail(submitter.getEmail());
-        Submission submission = submissionRepo.create(credentials, organization.getId());
+        Submission submission = submissionRepo.create(submitter, organization.getId());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
@@ -204,10 +192,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Test
     public void testUniqueConstraint() {
-        Credentials credentials = new Credentials();
-
-        credentials.setEmail(submitter.getEmail());
-        Submission submission = submissionRepo.create(credentials, organization.getId());
+        Submission submission = submissionRepo.create(submitter, organization.getId());
         submission.setState(submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
@@ -222,7 +207,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
 
         try {
-            submissionRepo.create(credentials, organization.getId());
+            submissionRepo.create(submitter, organization.getId());
             assertTrue(false);
         } catch (Exception e) {
             // good
