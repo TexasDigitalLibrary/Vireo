@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +30,9 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
-import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
-import edu.tamu.framework.model.Credentials;
-
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -73,6 +65,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         Organization organization = organizationRepo.findOne(organizationId);
         Submission submission = new Submission(submitter, organization);
         submission.setState(startingState);
+        
         // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
         for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
             SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
