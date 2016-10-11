@@ -4,18 +4,17 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
-
-import edu.tamu.framework.model.Credentials;
+import org.tdl.vireo.model.User;
 
 public interface SubmissionRepoCustom {
     
-    public Submission create(Credentials submitterCredentials, Long organizationId);
+    public Submission create(User submitter, Long organizationId);
     
-    public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable);
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilter activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable);
     
-    public List<Submission> dynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums);
+    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilter activeFilter, List<SubmissionListColumn> submissionListColums);
 
 }

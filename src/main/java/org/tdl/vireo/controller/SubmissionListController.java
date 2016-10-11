@@ -166,14 +166,14 @@ public class SubmissionListController {
     	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
     		
     		NamedSearchFilter activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
+        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findByTitle("First Name"));
         	filterCriterionOne.setName("First Name");
         	filterCriterionOne.addFilter("Jeremy");
         	filterCriterionOne.addFilter("Jack");
         	
         	activeFilter.addFilterCriterion(filterCriterionOne);
         	
-        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
+        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findByTitle("Last Name"));
         	filterCriterionTwo.setName("Last Name");
         	filterCriterionTwo.addFilter("Huff");
         	filterCriterionTwo.addFilter("Daniels");
@@ -194,14 +194,14 @@ public class SubmissionListController {
     	if(user.getActiveFilter().getFilterCriteria().size() < 1) {
     		
     		NamedSearchFilter activeFilter = user.getActiveFilter();
-        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findOne(1L));
+        	FilterCriterion filterCriterionOne = filterCriterionRepo.create(submissionListColumnRepo.findByTitle("First Name"));
         	filterCriterionOne.setName("First Name");
         	filterCriterionOne.addFilter("Jeremy");
         	filterCriterionOne.addFilter("Jack");
         	
         	activeFilter.addFilterCriterion(filterCriterionOne);
         	
-        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findOne(2L));
+        	FilterCriterion filterCriterionTwo = filterCriterionRepo.create(submissionListColumnRepo.findByTitle("Last Name"));
         	filterCriterionTwo.setName("Last Name");
         	filterCriterionTwo.addFilter("Huff");
         	filterCriterionTwo.addFilter("Daniels");
