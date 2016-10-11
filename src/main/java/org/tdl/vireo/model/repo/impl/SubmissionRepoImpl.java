@@ -166,8 +166,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
+            	
+            	
+            	String pathString = String.join(".", submissionListColumn.getValuePath());
 
-                if (String.join(".", submissionListColumn.getValuePath()).equals("fieldValues.value") && submissionListColumn.getPredicate() != null) {
+                if (pathString.equals("fieldValues.value") && submissionListColumn.getPredicate() != null) {
 
                     Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
@@ -187,7 +190,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     n++;
 
-                } else if (String.join(".", submissionListColumn.getValuePath()).equals("organization.name")) {
+                } else if (pathString.equals("organization.name")) {
 
                     sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
 
@@ -195,16 +198,32 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
                     }
 
-                    // TODO: where clause
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
 
-                } else if (String.join(".", submissionListColumn.getValuePath()).equals("id")) {
+                } else if (pathString.equals("id")) {
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
                     }
 
-                    // TODO: where clause
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
+                    }
 
+                } else if (pathString.equals("state.name")) {
+                    
+                	 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.state_id");
+
+                     if (submissionListColumn.getSortOrder() > 0) {
+                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
+                     }
+                	
+                	for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
+                	
                 } else {
                     System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
                 }
