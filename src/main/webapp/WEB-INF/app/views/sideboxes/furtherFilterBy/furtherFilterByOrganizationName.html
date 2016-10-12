@@ -1,0 +1,7 @@
+<form ng-init="box.organizationNameLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
+	<ul>
+		<li class="filter" ng-repeat="organization in box.organizations | limitTo:box.organizationNameLimit" ng-click="box[column.title.split(' ').join('')]=organization.name;box.addFilter(column, organization.name);">{{organization.name}}</li>
+		<li class="more-less" ng-click="box.organizationNameLimit=box.organizations.length" ng-if="box.organizationNameLimit<=box.defaultLimit && box.organizations.length>box.defaultLimit">more...</li>
+		<li class="more-less" ng-click="box.organizationNameLimit=box.defaultLimit" ng-if="box.organizationNameLimit>box.defaultLimit">less...</li>
+	</ul>
+</form>

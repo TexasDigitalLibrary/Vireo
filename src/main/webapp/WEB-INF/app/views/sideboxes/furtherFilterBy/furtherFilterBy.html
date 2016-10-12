@@ -2,12 +2,20 @@
 	<sideboxsub>{{column.title}}</sideboxsub>
 	<div ng-switch on="column.title">
 		
-	<div ng-switch-when="Assigned to">
+		<div ng-switch-when="Assigned to">
 	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByAssignedTo.html'"></div>
 	    </div>
 
 		<div ng-switch-when="Custom actions">
 	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByCustomActions.html'"></div>
+	    </div>
+
+	    <div ng-switch-when="Organization name">
+	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganizationName.html'"></div>
+	    </div>
+
+	    <div ng-switch-when="Organization category">
+	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganizationCategory.html'"></div>
 	    </div>
 
 		<div ng-switch-when="Status">

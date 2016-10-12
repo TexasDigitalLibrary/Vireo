@@ -223,7 +223,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 	
             		case "organization.name":
             			
-            			sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+	        				sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
 
                         if (submissionListColumn.getSortOrder() > 0) {
                             setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
@@ -237,6 +238,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     
             		case "organization.category.name":
             			
+            			
+            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+            				sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
             			sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
 
                         if (submissionListColumn.getSortOrder() > 0) {
