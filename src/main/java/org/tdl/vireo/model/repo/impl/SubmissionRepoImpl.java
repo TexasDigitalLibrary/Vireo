@@ -169,76 +169,102 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             	
             	
             	String pathString = String.join(".", submissionListColumn.getValuePath());
+            	
+            	System.out.println("\n\n\n"+pathString+"\n\n\n");
+            	
+            	switch(pathString) {
+            		case "fieldValues.value":
+            			
+            			Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
-                if (pathString.equals("fieldValues.value") && submissionListColumn.getPredicate() != null) {
+                        sqlJoinsBuilder.append("\nLEFT JOIN")
+                                       .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                                       .append("\n   FROM submission_field_values sfv").append(n)
+                                       .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                                       .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
 
-                    Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
+                        }
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                   .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
-                                   .append("\n   FROM submission_field_values sfv").append(n)
-                                   .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
-                                   .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
 
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
-                    }
+                        n++;
+            		
+            			break;
+            		
+            		case "id":
+            			
+            			if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
+                        }
 
-                    for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
+                        }
+            			
+            			break;
+            		
+            		case "state.name":
+            			
+            			 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.state_id");
 
-                    n++;
+                         if (submissionListColumn.getSortOrder() > 0) {
+                             setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
+                         }
+                    	
+                    	for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+            			break;
+                	
+            		case "organization.name":
+            			
+            			sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
 
-                } else if (pathString.equals("id")) {
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
+                        }
 
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
-                    }
-
-                    for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
-                    }
-
-                } else if (pathString.equals("state.name")) {
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
                     
-                	 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.state_id");
+            		case "organization.category.name":
+            			
+            			sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
 
-                     if (submissionListColumn.getSortOrder() > 0) {
-                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
-                     }
-                	
-                	for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-                	
-                } else if (pathString.equals("organization.name")) {
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
+                        }
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+                    	
+            		case "assignee.email":
+            			
+            			sqlJoinsBuilder.append("\nLEFT JOIN users a ON a.id=s.assignee_id");
 
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
-                    }
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
+                        }
 
-                    for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
-                } else if (pathString.equals("organization.category.name")) {
-
-                    sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
-
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
-                    }
-
-                    for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
-                } else {
-                    System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
-                }
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+            		
+            		default: System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
+            	}
 
             }
         }
