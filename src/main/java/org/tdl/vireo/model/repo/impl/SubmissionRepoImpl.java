@@ -190,18 +190,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     n++;
 
-                } else if (pathString.equals("organization.name")) {
-
-                    sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
-
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
-                    }
-
-                    for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
                 } else if (pathString.equals("id")) {
 
                     if (submissionListColumn.getSortOrder() > 0) {
@@ -224,6 +212,30 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
                 	
+                } else if (pathString.equals("organization.name")) {
+
+                    sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
+
+                } else if (pathString.equals("organization.category.name")) {
+
+                    sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
+
                 } else {
                     System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
                 }
