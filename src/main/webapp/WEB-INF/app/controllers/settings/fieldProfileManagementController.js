@@ -138,7 +138,14 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				'language': 'English'
 			};
 			FieldGlossRepo.create($scope.modalData.fieldGlosses[0]).then(function(response) {
-				angular.extend($scope.modalData.fieldGlosses[0], angular.fromJson(response.body).payload.FieldGloss);
+				var body = angular.fromJson(response.body);
+				if(body.meta.type == 'SUCCESS') {
+					angular.extend($scope.modalData.fieldGlosses[0], body.payload.FieldGloss);
+					if(!$scope.advanced) {
+						$scope.modalData.fieldPredicate = body.payload.FieldGloss.value.toLowerCase();
+						$scope.createFieldPredicate();
+					}
+				}
 			});
 		};
 
@@ -147,8 +154,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				value: $scope.modalData.fieldPredicate,
 				documentTypePredicate: false
 			}).then(function(response) {
-				if(angular.fromJson(response.body).meta.type == "SUCCESS") {
-					$scope.modalData.fieldPredicate = angular.fromJson(response.body).payload.FieldPredicate;
+				var body = angular.fromJson(response.body);
+				if(body.meta.type == "SUCCESS") {
+					$scope.modalData.fieldPredicate = body.payload.FieldPredicate;
 				}
 			});
 		};
