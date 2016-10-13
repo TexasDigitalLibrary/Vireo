@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -25,6 +25,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 	var organizations = OrganizationRepo.getAll();
 	var organizationCategories = OrganizationCategoryRepo.getAll();
 	var submissionStates = SubmissionStateRepo.getAll();
+	var documentTypes = DocumentTypeRepo.getAll();
 
 	var findFirstAssignable = function() {
 		var firstAssignable;
@@ -210,6 +211,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		"customActionDefinitions": customActionDefinitions,
 		"organizations": organizations,
 		"organizationCategories": organizationCategories,
+        "documentTypes": documentTypes,
 		"allUsers": allUsers,
 		"assignable": assignable,
 		"defaultLimit": 2

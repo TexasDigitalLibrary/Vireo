@@ -191,7 +191,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         for (String filterString : submissionListColumn.getFilters()) {
                         	                        	
                         	if(submissionListColumn.getInputType().getName().equals("INPUT_DATETIME")) {
-                        		// Columns values are of type datetime
+                        		// Column's values are of type datetime
                         		if(filterString.contains("|")) {
                         			// Date Range 
                         			String[] dates = filterString.split(Pattern.quote("|"));                        			
@@ -203,7 +203,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         		}
                         		
                         	} else {
-                        		// Columns values can be handled by this default
+                        		// Column's values can be handled by this default
                         		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         	}
                         

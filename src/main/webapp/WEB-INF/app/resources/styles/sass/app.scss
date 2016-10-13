@@ -1662,7 +1662,8 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
-.further-filter-by .status-list {
+.further-filter-by .status-list,
+.further-filter-by .document-type-list {
   max-height: 0px;
   overflow: hidden;
   -webkit-transition: max-height 0.5s ease-out;
@@ -1678,13 +1679,15 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
+.further-filter-by .document-type-list.expanded,
 .further-filter-by .status-list.expanded {
   max-height: 1000px;
   -webkit-transition: max-height 0.5s ease-in;
   transition: max-height 0.5s ease-in;
 }
 
-.further-filter-by .more-less {
+.further-filter-by .more-less,
+.further-filter-by .document-level {
   margin-top: 15px;
   margin-bottom: 10px;
   background: #CCCCCC;
@@ -1707,4 +1710,12 @@ footer a, footer li, footer p {
 
 .further-filter-by .add-date-filter-btn {
   margin: 5px 0px 20px;
+}
+
+.further-filter-by .document-type-filter-list {
+  max-height: 0
+}
+
+.further-filter-by .document-type-filter {
+  margin-left: -20px;
 }
