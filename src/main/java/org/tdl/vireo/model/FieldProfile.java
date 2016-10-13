@@ -36,7 +36,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean overrideable;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Boolean enabled;
 
     public FieldProfile() {
