@@ -710,7 +710,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     public void generateSystemDefaults() {
         try {
-            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/SYSTEM_Defaults.json"));
+            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
