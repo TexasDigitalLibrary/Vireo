@@ -21,7 +21,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		console.log(submissionStates);
 	});
 
-	var customActionDefinitions =CustomActionDefinitionRepo.getAll();
+	var customActionDefinitions = CustomActionDefinitionRepo.getAll();
 	var organizations = OrganizationRepo.getAll();
 	var organizationCategories = OrganizationCategoryRepo.getAll();
 	var submissionStates = SubmissionStateRepo.getAll();
