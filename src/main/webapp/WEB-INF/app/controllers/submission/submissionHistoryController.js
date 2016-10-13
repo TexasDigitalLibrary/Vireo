@@ -14,7 +14,7 @@ vireo.controller('SubmissionHistoryController', function ($controller, $scope, N
 
 		$scope.tableParams.reload();
 
-	})
+	});
 
 	StudentSubmissionRepo.listen(function() {
 	  	$scope.tableParams.reload();

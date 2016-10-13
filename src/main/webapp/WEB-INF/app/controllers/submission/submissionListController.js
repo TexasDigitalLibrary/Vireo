@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function ($controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -178,8 +178,22 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		return $scope.filterChange;
 	};
 
+	var addDateFilter = function(column) {
+
+		var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
+		var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, "MM/dd/yyyy");
+
+		dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|"+$scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
+		dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to "+$filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
+
+		$scope.activeFilters.addFilter(column.title, dateValue, dateGloss).then(function() {
+			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+			query();
+		});
+
+	};
+
 	var addFilter = function(column, gloss) {
-		console.log($scope.furtherFilterBy[column.title.split(" ").join("")]);
 		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss).then(function() {
 			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
 			query();
@@ -191,6 +205,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
 		"getFilterColumns": $scope.getFilterColumns,
 		"addFilter": addFilter,
+		"addDateFilter": addDateFilter,
 		"submissionStates": submissionStates,
 		"customActionDefinitions": customActionDefinitions,
 		"organizations": organizations,
@@ -199,8 +214,6 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		"assignable": assignable,
 		"defaultLimit": 2
 	};
-
-	console.log("activeFilters", $scope.activeFilters);
 
 	var query = function() {
 		SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
@@ -223,7 +236,7 @@ vireo.controller("SubmissionListController", function ($controller, $filter, $q,
 		SubmissionListColumnRepo.reset();
 		ManagerSubmissionListColumnRepo.reset();
 
-		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), ManagerFilterColumnRepo.ready()]).then(function(data) {
+		$q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), ManagerFilterColumnRepo.ready()]).then(function() {
 
 			ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(data) {
 				

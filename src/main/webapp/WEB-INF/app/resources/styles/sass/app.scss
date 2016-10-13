@@ -1694,3 +1694,17 @@ footer a, footer li, footer p {
 .further-filter-by .more-less:hover {
   cursor:pointer;
 }
+
+.further-filter-by div[uib-datepicker-popup-wrap] {
+  position: fixed;
+  z-index: 9999999;
+}
+
+.further-filter-by .date-range-divider {
+  text-align: center;
+  margin: 5px 0px;
+}
+
+.further-filter-by .add-date-filter-btn {
+  margin: 5px 0px 20px;
+}

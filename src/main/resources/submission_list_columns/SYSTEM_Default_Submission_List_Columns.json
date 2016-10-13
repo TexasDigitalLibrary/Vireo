@@ -45,15 +45,6 @@
 		}
 	},
 	{
-		"title": "Submission title",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
 		"title": "Submission date",
 		"sort": "NONE",
 		"valuePath": [],

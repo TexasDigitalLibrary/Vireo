@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -188,7 +189,24 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	                        	
+                        	if(submissionListColumn.getInputType().getName().equals("INPUT_DATETIME")) {
+                        		// Columns values are of type datetime
+                        		if(filterString.contains("|")) {
+                        			// Date Range 
+                        			String[] dates = filterString.split(Pattern.quote("|"));                        			
+                        			sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '").append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
+                        			
+                        		} else {
+                        			// Date Match                        			
+                        			sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
+                        		}
+                        		
+                        	} else {
+                        		// Columns values can be handled by this default
+                        		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	}
+                        
                         }
 
                         n++;

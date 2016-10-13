@@ -1,5 +1,6 @@
 <div class="further-filter-by" ng-repeat="column in box.getFilterColumns().userFilterColumns">
 	<sideboxsub>{{column.title}}</sideboxsub>
+
 	<div ng-switch on="column.title">
 		
 		<div ng-switch-when="Assigned to">
@@ -27,8 +28,13 @@
 	    </div>
 
 		<div ng-switch-default>
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
+	    	
+			<div ng-if="column.inputType.name=='INPUT_DATETIME'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
+
+		    <div ng-if="column.inputType.name!='INPUT_DATETIME'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
+
 	    </div>
 
 	</div>
+
 </div>
