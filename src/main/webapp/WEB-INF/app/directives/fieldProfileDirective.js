@@ -93,6 +93,7 @@ vireo.directive("field",  function() {
 				return preview;
 			};
 
+			console.log($scope.profile.inputType.name)
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};

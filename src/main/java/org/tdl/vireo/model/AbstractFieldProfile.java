@@ -39,9 +39,6 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @Column(nullable = false)
     private Boolean optional;
 
-    @Column(nullable = false)
-    private Boolean enabled;
-
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
 
@@ -115,21 +112,6 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      */
     public void setOptional(Boolean optional) {
         this.optional = optional;
-    }
-
-    /**
-     * @return the enabled
-     */
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    /**
-     * @param enabled
-     *            the enabled to set
-     */
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     /**

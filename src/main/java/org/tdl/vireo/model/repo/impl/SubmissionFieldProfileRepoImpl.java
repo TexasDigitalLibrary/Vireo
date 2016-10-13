@@ -32,7 +32,6 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
             submissionfieldProfile.setInputType(fieldProfile.getInputType());
             submissionfieldProfile.setOptional(fieldProfile.getOptional());
-            submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
             submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
             submissionfieldProfile.setUsage(submissionfieldProfile.getUsage());
 
