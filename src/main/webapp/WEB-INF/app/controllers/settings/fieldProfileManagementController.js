@@ -112,6 +112,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 					"id": 1,
 					"name": "INPUT_TEXT"
 				},
+				optional: true,
 				repeatable: false,
 				fieldGlosses: [],
 				controlledVocabularies: []
