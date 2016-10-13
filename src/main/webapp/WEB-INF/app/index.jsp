@@ -174,6 +174,7 @@
 	<script src="bower_components/angular-loader/angular-loader.js"></script>
 	<script src="bower_components/angular-mocks/angular-mocks.js"></script>
 	<script src="bower_components/angular-messages/angular-messages.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
 
 	<script src="bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>

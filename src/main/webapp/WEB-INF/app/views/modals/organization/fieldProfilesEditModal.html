@@ -20,122 +20,135 @@
 
 	<div class="modal-body">
 
-		<div class="form-group">
+		<div class="form-group row">
 			<label for="field-profiles-gloss">Label</label>
 			<input 
 				id="field-profiles-gloss" 
 				ng-model="modalData.fieldGlosses[0]" 
 				autocomplete="off"
 				uib-typeahead="gloss as gloss.value for gloss in fieldGlosses | filter:$viewValue" 
-				type="text" 
+				type="text"
 				class="form-control" 
 				placeholder="Display label for the new field" 
 				required/>
 			<button 
 				type="button" 
-				class="btn btn-default fp-gloss-predicate-button" 
+				class="btn btn-default fp-button pull-right" 
 				ng-click="createFieldGloss(modalData.fieldGlosses[0])" 
 				ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
 		</div>
-
-		<div ng-if="!inputFile" class="field-profile-modal-group">
-			<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
-
-			<validatedinput
-				model="modalData"
-				property="fieldPredicate"
-				label="Metadata Key"
-				placeholder="Metadata Key of the field"
-				autocomplete="off"
-				typeahead="filteredPredicates"
-				typeaheadproperty="value"
-				form="forms.update"
-				validations="fieldPredicateRepo.getValidations()"
-				results="fieldPredicateRepo.getValidationResults()">
-			</validatedinput>
-
-			<button 
-				type="button" 
-				class="btn btn-default fp-gloss-predicate-button" 
-				ng-if="!modalData.fieldPredicate.id" 
-				ng-click="createFieldPredicate()">Create New Metadata Key</button>
-		</div>
-
-		<div ng-if="inputFile" class="field-profile-modal-group">
-			<validatedselect
-				options="documentTypes"
-				optionproperty="name"
-				model="documentData"
-				property="documentType"
-				label="Document Type"
-				form="forms.update"
-				change="documentTypeChanged()"
-				validations="fieldPredicateRepo.getValidations()"
-				results="fieldPredicateRepo.ValidationResults">
-			</validatedselect>
-		</div>
-
-		<div class="field-profile-modal-group">
-			<validatedselect
-				options="inputTypes"
-				optionproperty="name"
-				model="modalData"
-				property="inputType"
-				label="Input Type"
-				form="forms.update"
-				change="inputTypeChanged()"
-				validations="fieldProfileRepo.getValidations()"
-				results="workflowStepRepo.ValidationResults">
-			</validatedselect>
-		</div>
-
-		<div class="form-group">
-			<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
-			<select 
-				id="field-profiles-controlled-vocabulary" 
-				ng-model="modalData.controlledVocabularies[0]" 
-				ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" 
-				type="text" 
-				class="form-control">
-				<option value="">(None)</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<validatedinput
-				model="modalData"
-				property="help"
-				label="Help"
-				placeholder="Help of the new field"
-				form="forms.update"
-				validations="modalData.getValidations()"
-				results="modalData.ValidationResults">
-			</validatedinput>
-		</div>
 		
 		<toggleButton 
-			label="Required"
+			label="Required:"
 			scope-value="modalData.optional"
 			toggle-options='[{"false": "Yes"},{"true": "No"}]'>
 		</toggleButton>
-
+		
 		<toggleButton 
-			label="Repeatable:"
-			scope-value="modalData.repeatable"
-			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-		</toggleButton>
-
-		<toggleButton 
-			label="Enabled:"
+			label="Disabled"
 			scope-value="modalData.enabled"
-			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+			toggle-options='[{"false": "Yes"},{"true": "No"}]'>
 		</toggleButton>
-
-		<toggleButton 
-			label="Overridable:"
-			scope-value="modalData.overrideable"
-			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-		</toggleButton>
+		
+		
+		<div class="form-expand"><a href ng-click="controlledVocabulary = !controlledVocabulary">Controlled Vocabulary</a></div>
+		
+		<div uib-collapse="!controlledVocabulary">
+		
+			<div class="form-group">
+				<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
+				<select 
+					id="field-profiles-controlled-vocabulary" 
+					ng-model="modalData.controlledVocabularies[0]" 
+					ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" 
+					type="text" 
+					class="form-control">
+					<option value="">(None)</option>
+				</select>
+			</div>
+			
+		</div>
+		
+		
+		<div class="form-expand"><a href ng-click="advanced = !advanced">Advanced</a></div>
+		
+		<div uib-collapse="!advanced">
+		
+			<div ng-if="!inputFile" class="form-group row">
+				<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+				<validatedinput
+					model="modalData"
+					property="fieldPredicate"
+					label="Metadata Key"
+					placeholder="Metadata Key of the field"
+					autocomplete="off"
+					typeahead="filteredPredicates"
+					typeaheadproperty="value"
+					form="forms.create"
+					validations="fieldPredicateRepo.getValidations()"
+					results="fieldPredicateRepo.getValidationResults()">
+				</validatedinput>
+				<button 
+					type="button" 
+					class="btn btn-default pull-right" 
+					ng-if="!modalData.fieldPredicate.id" 
+					ng-click="createFieldPredicate()">Create New Metadata Key</button>
+			</div>
+	
+			<div class="form-group">
+				<validatedselect
+					options="inputTypes"
+					optionproperty="name"
+					model="modalData"
+					property="inputType"
+					label="Input Type"
+					form="forms.create"
+					change="inputTypeChanged()"
+					validations="fieldProfileRepo.getValidations()"
+					results="workflowStepRepo.ValidationResults">
+				</validatedselect>
+			</div>
+			
+			<div ng-if="inputFile" class="form-group">
+				<validatedselect
+					options="documentTypes"
+					optionproperty="name"
+					model="documentData"
+					property="documentType"
+					label="Document Type"
+					form="forms.create"
+					change="documentTypeChanged()"
+					validations="fieldPredicateRepo.getValidations()"
+					results="fieldPredicateRepo.ValidationResults">
+				</validatedselect>
+			</div>
+	
+			<div class="form-group">
+				<validatedinput
+					model="modalData"
+					property="help"
+					label="Help"
+					placeholder="Help of the new field"
+					form="forms.create"
+					validations="fieldProfileRepo.getValidations()"
+					results="workflowStepRepo.ValidationResults">
+				</validatedinput>
+			</div>
+			
+			<toggleButton 
+				label="Repeatable:"
+				scope-value="modalData.repeatable"
+				toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+			</toggleButton>
+	
+			<toggleButton 
+				label="Overridable:"
+				scope-value="modalData.overrideable"
+				toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+			</toggleButton>
+		</div>
+		
+		
 
 	</div>
 	

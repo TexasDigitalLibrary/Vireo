@@ -29,6 +29,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.uploadAction = "confirm";
 
+	
+	$scope.advanced = false;
+	
+	$scope.controlledVocabulary = false;
+	
 
 	$scope.filteredPredicates = {};
 
