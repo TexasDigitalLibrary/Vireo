@@ -32,15 +32,10 @@ vireo.model("NamedSearchFilterGroup", function (WsApi) {
 
 		namedSearchFilterGroup.removeFilter = function(namedSearchFilterName, filterCriterion) {
 
-			console.log(namedSearchFilterName);
-			console.log(filterCriterion);
-
 			angular.extend(apiMapping.NamedSearchFilterGroup.removeFilter, {
 				'method': 'remove-filter-criterion/'+namedSearchFilterName,
 				"data": filterCriterion
 			});
-
-			console.log(apiMapping.NamedSearchFilterGroup.removeFilter);
 
 			var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().removeFilter);
 
