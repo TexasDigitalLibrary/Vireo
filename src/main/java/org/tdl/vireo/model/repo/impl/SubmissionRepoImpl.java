@@ -1,41 +1,22 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.framework.util.EntityUtility.recursivelyFindField;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
-import javax.persistence.Column;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Fetch;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import javax.sql.DataSource;
 
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -44,20 +25,15 @@ import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
-import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
-import edu.tamu.framework.model.Credentials;
-
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -66,10 +42,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     private SubmissionStateRepo submissionStateRepo;
 
     @Autowired
-    private OrganizationRepo organizationRepo;
+    FieldPredicateRepo fieldPredicateRepo;
 
     @Autowired
-    private UserRepo userRepo;
+    private OrganizationRepo organizationRepo;
 
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
@@ -77,39 +53,71 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
 
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public SubmissionRepoImpl(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     @Override
-    public Submission create(Credentials submitterCredentials, Long organizationId) {
-
-        User submitter = userRepo.findByEmail(submitterCredentials.getEmail());
-
+    public Submission create(User submitter, Long organizationId) {
         SubmissionState startingState = submissionStateRepo.findByName("In Progress");
-
         Organization organization = organizationRepo.findOne(organizationId);
-
         Submission submission = new Submission(submitter, organization);
-
         submission.setState(startingState);
-
+        
         // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
         for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
             SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
             submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         }
-
         return submissionRepo.save(submission);
     }
-    
-    public List<Submission> dynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums) {
 
-        User user = userRepo.findByEmail(credentials.getEmail());
+    @Override
+    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
+        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
+        List<Long> ids = new ArrayList<Long>();
+        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
+            ids.add((Long) row.get("ID"));
+        });
+        return submissionRepo.findAll(ids);
+    }
+
+    @Override
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
+        List<Long> ids = new ArrayList<Long>();
+        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
+            ids.add((Long) row.get("ID"));
+        });
+        List<Submission> actualResults = new ArrayList<Submission>();
         
+        // order them
+        for (Long id : ids) {
+            for (Submission ps : submissionRepo.findAll(ids)) {
+                if (ps.getId().equals(id)) {
+                    actualResults.add(ps);
+                }
+            }
+        }
+
+        Long total = this.jdbcTemplate.queryForObject(queryStrings[1], Long.class);
+        int offset = pageable.getPageSize() * pageable.getPageNumber();
+        int limit = pageable.getPageSize();
+        return new PageImpl<Submission>(actualResults, new PageRequest((int) Math.floor(offset / limit), limit), total);
+    }
+
+    private String[] craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+
+        // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
 
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        
+        // get all the possible columns, some of which we will make visible
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
-        
-        // set sort and sort order on all submission list columns that are set on users submission list columns
+
+        // set sort and sort order on all submission list columns that are set on the requesting user's submission list columns
         submissionListColums.forEach(submissionListColumn -> {
             for (SubmissionListColumn slc : allSubmissionListColumns) {
                 if (submissionListColumn.equals(slc)) {
@@ -136,149 +144,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             });
         }
-        
-        
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-
-        CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
-
-        Root<Submission> root = query.from(Submission.class);
-
-        List<Predicate> _groupPredicates = new ArrayList<Predicate>();
-
-        List<Predicate> _filterPredicates = new ArrayList<Predicate>();
-
-        Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?, ?>>();
-
-        Path<?> fieldValueFetchPath = null;
-
-        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
-            Path<?> path = null;
-            if (submissionListColumn.getValuePath().size() > 0) {
-                if (submissionListColumn.getPredicate() != null) {
-                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
-
-                        Join<?, ?> join = (Join<?, ?>) root.fetch("fieldValues", JoinType.LEFT);
-
-                        path = join.get("value");
-
-                        Subquery<Submission> subquery = query.subquery(Submission.class);
-                        Root<Submission> subQueryRoot = subquery.from(Submission.class);
-
-                        subquery.select(subQueryRoot.get("id")).distinct(true);
-                        subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
-
-                        _groupPredicates.add(cb.or(cb.equal(join.get("fieldPredicate").get("value"), submissionListColumn.getPredicate()), root.get("id").in(subquery).not()));
-
-                    }
-                } else {
-
-                    String navPath = null;
-
-                    for (String property : submissionListColumn.getValuePath()) {
-                        if (path == null) {
-                            navPath = property;
-                            if (requiresFetch(root, property)) {
-                                Fetch<?, ?> fetch = fetches.get(navPath);
-                                if (fetch == null) {
-                                    fetch = root.fetch(property, JoinType.LEFT);
-                                    fetches.put(navPath, fetch);
-                                }
-                                path = (Path<?>) fetch;
-                            } else {
-                                path = root.get(property);
-                            }
-                        } else {
-                            navPath += "." + property;
-                            if (requiresFetch(path, property)) {
-                                Fetch<?, ?> fetch = fetches.get(navPath);
-                                if (fetch == null) {
-                                    fetch = ((Fetch<?, ?>) path).fetch(property, JoinType.LEFT);
-                                    fetches.put(navPath, fetch);
-                                }
-                                path = (Path<?>) fetch;
-                            } else {
-                                path = path.get(property);
-                            }
-                        }
-                    }
-
-                }
-
-                for (String filter : submissionListColumn.getFilters()) {
-                    _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
-                }
-
-                for (String filter : allColumnSearchFilters) {
-                    if (submissionListColumn.getPredicate() != null) {
-                        if (fieldValueFetchPath == null) {
-                            fieldValueFetchPath = (Path<?>) root.fetch("fieldValues");
-                        }
-                        _filterPredicates.add(cb.like(cb.lower(fieldValueFetchPath.get("value").as(String.class)), "%" + filter.toLowerCase() + "%"));
-                    } else {
-                        _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
-                    }
-                }
-
-            }
-        }
-
-        Predicate predicate = null;
-
-        if (_filterPredicates.size() == 0) {
-            predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
-        } else {
-            predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
-        }
-
-        query.select(root).distinct(true).where(predicate);
-
-        TypedQuery<Submission> typedQuery = em.createQuery(query);
-
-        System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
-
-        return typedQuery.getResultList();
-        
-    }
-
-    @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(Credentials credentials, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
-
-        User user = userRepo.findByEmail(credentials.getEmail());
-
-        Set<String> allColumnSearchFilters = new HashSet<String>();
-
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-
-        List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
-
-        // set sort and sort order on all submission list columns that are set on users submission list columns
-        submissionListColums.forEach(submissionListColumn -> {
-            for (SubmissionListColumn slc : allSubmissionListColumns) {
-                if (submissionListColumn.equals(slc)) {
-                    slc.setVisible(true);
-                    slc.setSort(submissionListColumn.getSort());
-                    slc.setSortOrder(submissionListColumn.getSortOrder());
-                    break;
-                }
-            }
-        });
-
-        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
-        if (activeFilter != null) {
-            activeFilter.getNamedSearchFilters().forEach(filterCriterion -> {
-                if (filterCriterion.getAllColumnSearch()) {
-                    allColumnSearchFilters.addAll(filterCriterion.getFilterValues());
-                } else {
-                    for (SubmissionListColumn slc : allSubmissionListColumns) {
-                        if (filterCriterion.getSubmissionListColumn().equals(slc)) {
-                            slc.addAllFilters(filterCriterion.getFilterValues());
-                            break;
-                        }
-                    }
-                }
-            });
-        }
 
         // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
@@ -288,182 +153,217 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
         });
 
-        Boolean filterExists = false;
-        Boolean predicateExists = false;
+        
+        StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT s.id,");
+        
+        StringBuilder sqlCountSelectBuilder = new StringBuilder("SELECT COUNT(*) FROM submission s ");
+        
+        StringBuilder sqlJoinsBuilder = new StringBuilder();
+        StringBuilder sqlWheresBuilder = new StringBuilder();
+        StringBuilder sqlOrderBysBuilder = new StringBuilder();
 
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        int n = 0;
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
-            if (submissionListColumn.getFilters().size() > 0) {
-                filterExists = true;
-            }
+            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
+            	
+            	
+            	String pathString = String.join(".", submissionListColumn.getValuePath());
+            	
+            	System.out.println("\n\n\n"+pathString+"\n\n\n");
+            	
+            	switch(pathString) {
+            		case "fieldValues.value":
+            			
+            			Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
-            if (submissionListColumn.getSort() != org.tdl.vireo.enums.Sort.NONE && submissionListColumn.getPredicate() != null) {
-                predicateExists = true;
-            }
+                        sqlJoinsBuilder.append("\nLEFT JOIN")
+                                       .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                                       .append("\n   FROM submission_field_values sfv").append(n)
+                                       .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                                       .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
 
-            if (submissionListColumn.getValuePath().size() > 0) {
-                String fullPath = String.join(".", submissionListColumn.getValuePath());
-                switch (submissionListColumn.getSort()) {
-                case ASC:
-                    orders.add(new Sort.Order(Sort.Direction.ASC, fullPath));
-                    break;
-                case DESC:
-                    orders.add(new Sort.Order(Sort.Direction.DESC, fullPath));
-                    break;
-                default:
-                    break;
-                }
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                        	                        	
+                        	if(submissionListColumn.getInputType().getName().equals("INPUT_DATETIME")) {
+                        		// Column's values are of type datetime
+                        		if(filterString.contains("|")) {
+                        			// Date Range 
+                        			String[] dates = filterString.split(Pattern.quote("|"));                        			
+                        			sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '").append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
+                        			
+                        		} else {
+                        			// Date Match                        			
+                        			sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
+                        		}
+                        		
+                        	} else {
+                        		// Column's values can be handled by this default
+                        		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	}
+                        
+                        }
+
+                        n++;
+            		
+            			break;
+            		
+            		case "id":
+            			
+            			if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
+                        }
+            			
+            			break;
+            		
+            		case "state.name":
+            			
+            			 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.state_id");
+
+                         if (submissionListColumn.getSortOrder() > 0) {
+                             setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
+                         }
+                    	
+                    	for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+            			break;
+                	
+            		case "organization.name":
+            			
+            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+	        				sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+                    
+            		case "organization.category.name":
+            			
+            			
+            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+            				sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+            			sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
+
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+                    	
+            		case "assignee.email":
+            			
+            			sqlJoinsBuilder.append("\nLEFT JOIN users a ON a.id=s.assignee_id");
+
+                        if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+                   
+            		case "embargoTypes.name":
+            			
+            			sqlJoinsBuilder
+            				.append("\nLEFT JOIN")
+            				.append("\n   (SELECT *")
+            				.append("\n   FROM embargo e")
+            				.append("\n   LEFT JOIN submission_embargo_types semt")
+            				.append("\n   ON semt.embargo_types_id=e.id) embs")
+            				.append("\n   ON embs.submission_id=s.id");
+                        
+            			if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
+            		
+            		default: System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
+            	}
+
             }
         }
 
-        if (!filterExists && !allColumnSearchFilters.isEmpty()) {
-            filterExists = true;
+        
+        // complete select clause
+        sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 1);
+        sqlSelectBuilder.append(" FROM submission s");
+        
+        // if ordering, complete order by clause and strip the tailing comma
+        if (sqlOrderBysBuilder.length() > 0) {
+            sqlOrderBysBuilder.insert(0, "\nORDER BY");
+            sqlOrderBysBuilder.setLength(sqlOrderBysBuilder.length() - 1);
         }
 
-        Page<Submission> pageResults = null;
+        // if where, complete where clause and strip the tailing OR
+        if (sqlWheresBuilder.length() > 0) {
+            sqlWheresBuilder.insert(0, "\nWHERE");
+            sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+        }
 
-        if (filterExists || orders.size() > 0) {
-            if (filterExists || predicateExists) {
+        String sqlQuery;
 
-                CriteriaBuilder cb = em.getCriteriaBuilder();
+        if (pageable != null) {
 
-                CriteriaQuery<Submission> query = cb.createQuery(Submission.class);
+            // determine the offset and limit of the query
+            int offset = pageable.getPageSize() * pageable.getPageNumber();
+            int limit = pageable.getPageSize();
 
-                Root<Submission> root = query.from(Submission.class);
+            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString() + sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
 
-                List<Order> _orders = new ArrayList<Order>();
-
-                List<Predicate> _groupPredicates = new ArrayList<Predicate>();
-
-                List<Predicate> _filterPredicates = new ArrayList<Predicate>();
-
-                Map<String, Fetch<?, ?>> fetches = new HashMap<String, Fetch<?, ?>>();
-
-                Path<?> fieldValueFetchPath = null;
-
-                for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
-                    Path<?> path = null;
-                    if (submissionListColumn.getValuePath().size() > 0) {
-                        if (submissionListColumn.getPredicate() != null) {
-                            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
-
-                                Join<?, ?> join = (Join<?, ?>) root.fetch("fieldValues", JoinType.LEFT);
-
-                                path = join.get("value");
-
-                                Subquery<Submission> subquery = query.subquery(Submission.class);
-                                Root<Submission> subQueryRoot = subquery.from(Submission.class);
-
-                                subquery.select(subQueryRoot.get("id")).distinct(true);
-                                subquery.where(cb.equal(subQueryRoot.joinSet("fieldValues", JoinType.LEFT).get("fieldPredicate").get("value"), submissionListColumn.getPredicate()));
-
-                                _groupPredicates.add(cb.or(cb.equal(join.get("fieldPredicate").get("value"), submissionListColumn.getPredicate()), root.get("id").in(subquery).not()));
-
-                            }
-                        } else {
-
-                            String navPath = null;
-
-                            for (String property : submissionListColumn.getValuePath()) {
-                                if (path == null) {
-                                    navPath = property;
-                                    if (requiresFetch(root, property)) {
-                                        Fetch<?, ?> fetch = fetches.get(navPath);
-                                        if (fetch == null) {
-                                            fetch = root.fetch(property, JoinType.LEFT);
-                                            fetches.put(navPath, fetch);
-                                        }
-                                        path = (Path<?>) fetch;
-                                    } else {
-                                        path = root.get(property);
-                                    }
-                                } else {
-                                    navPath += "." + property;
-                                    if (requiresFetch(path, property)) {
-                                        Fetch<?, ?> fetch = fetches.get(navPath);
-                                        if (fetch == null) {
-                                            fetch = ((Fetch<?, ?>) path).fetch(property, JoinType.LEFT);
-                                            fetches.put(navPath, fetch);
-                                        }
-                                        path = (Path<?>) fetch;
-                                    } else {
-                                        path = path.get(property);
-                                    }
-                                }
-                            }
-
-                        }
-
-                        for (String filter : submissionListColumn.getFilters()) {
-                            _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
-                        }
-
-                        for (String filter : allColumnSearchFilters) {
-                            if (submissionListColumn.getPredicate() != null) {
-                                if (fieldValueFetchPath == null) {
-                                    fieldValueFetchPath = (Path<?>) root.fetch("fieldValues");
-                                }
-                                _filterPredicates.add(cb.like(cb.lower(fieldValueFetchPath.get("value").as(String.class)), "%" + filter.toLowerCase() + "%"));
-                            } else {
-                                _filterPredicates.add(cb.like(cb.lower(path.as(String.class)), "%" + filter.toLowerCase() + "%"));
-                            }
-                        }
-
-                        switch (submissionListColumn.getSort()) {
-                        case ASC:
-                            _orders.add(cb.asc(path));
-                            break;
-                        case DESC:
-                            _orders.add(cb.desc(path));
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-
-                Predicate predicate = null;
-
-                if (_filterPredicates.size() == 0) {
-                    predicate = cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()]));
-                } else {
-                    predicate = cb.and(cb.and(_groupPredicates.toArray(new Predicate[_groupPredicates.size()])), cb.or(_filterPredicates.toArray(new Predicate[_filterPredicates.size()])));
-                }
-
-                query.select(root).distinct(true).where(predicate).orderBy(_orders);
-
-                TypedQuery<Submission> typedQuery = em.createQuery(query);
-
-                System.out.println("\n" + typedQuery.unwrap(Query.class).getQueryString() + "\n");
-
-                long total = typedQuery.getResultList().size();
-                typedQuery.setFirstResult(pageable.getOffset());
-                typedQuery.setMaxResults(pageable.getPageSize());
-
-                pageResults = new PageImpl<Submission>(typedQuery.getResultList(), pageable, total);
-
-                // pageResults = submissionRepo.findAll(new SubmissionSpecification<Submission>(allSubmissionListColumns, allColumnSearchFilters), new PageRequest(pageable.getPageNumber(), pageable.getPageSize()));
-            } else {
-                pageResults = submissionRepo.findAll(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), new Sort(orders)));
-            }
         } else {
-            pageResults = submissionRepo.findAll(pageable);
+            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
         }
 
-        return pageResults;
+        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
+        
+        
+        System.out.println("QUERY:\n" + sqlQuery);
+
+        System.out.println("COUNT QUERY:\n" + sqlCountQuery);
+
+        return new String[] { sqlQuery, sqlCountQuery };
     }
 
-    private Boolean requiresFetch(Path<?> path, String property) {
-        Field field = recursivelyFindField(path.getJavaType(), property);
-        Boolean reqFetch = true;
-        for (Annotation annotation : field.getAnnotations()) {
-            if (annotation instanceof Column || annotation instanceof Id) {
-                reqFetch = false;
-            }
+    public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
+        sqlSelectBuilder.append(value).append(",");        
+        switch (sort) {
+        case ASC:
+            sqlOrderBysBuilder.append(value).append(" ASC,");
+            break;
+        case DESC:
+            sqlOrderBysBuilder.append(value).append(" DESC,");
+            break;
+        default:
+            break;
         }
-        return reqFetch;
     }
-
+    
 }

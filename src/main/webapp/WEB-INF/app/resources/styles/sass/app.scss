@@ -427,7 +427,7 @@ sidebox .heading-text {
 }
 
 .sidebox-body.expanded {
-  max-height: 500px;
+  max-height: 5000px;
   transition: max-height 0.35s ease-out;
 }
 
@@ -1662,7 +1662,10 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
-.further-filter-by .status-list {
+.further-filter-by .inactive-filters-sub-list,
+.further-filter-by .status-list,
+.further-filter-by .document-type-list,
+.further-filter-by .organization-by-category-sub-list {
   max-height: 0px;
   overflow: hidden;
   -webkit-transition: max-height 0.5s ease-out;
@@ -1678,19 +1681,53 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
-.further-filter-by .status-list.expanded {
+.further-filter-by .inactive-filters-sub-list.expanded,
+.further-filter-by .document-type-list.expanded,
+.further-filter-by .status-list.expanded,
+.further-filter-by .organization-by-category-sub-list.expanded {
   max-height: 1000px;
   -webkit-transition: max-height 0.5s ease-in;
   transition: max-height 0.5s ease-in;
 }
 
-.further-filter-by .more-less {
+.further-filter-by .more-less,
+.further-filter-by .document-level,
+.further-filter-by .organization-category {
   margin-top: 15px;
   margin-bottom: 10px;
   background: #CCCCCC;
   display: inline-block
 }
 
-.further-filter-by .more-less:hover {
+.further-filter-by .more-less:hover,
+.further-filter-by .organization-category {
   cursor:pointer;
+}
+
+.further-filter-by div[uib-datepicker-popup-wrap] {
+  position: fixed;
+  z-index: 9999999;
+}
+
+.further-filter-by .date-range-divider {
+  text-align: center;
+  margin: 5px 0px;
+}
+
+.further-filter-by .add-date-filter-btn, {
+  margin: 5px 0px 20px;
+}
+
+.further-filter-by .document-type-filter-list {
+  max-height: 0
+}
+
+.further-filter-by .embargo-filter,
+.further-filter-by .document-type-filter,
+.further-filter-by .organization-filter {
+  margin-left: -20px;
+}
+
+.further-filter-by .organization-by-category-top-list {
+  margin: 0px;
 }

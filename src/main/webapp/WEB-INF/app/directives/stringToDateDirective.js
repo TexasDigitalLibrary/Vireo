@@ -6,5 +6,5 @@ vireo.directive('stringtodate', function() {
                 return Date.parse(fromModel); //converted
             });
         }
-    }
+    };
 });

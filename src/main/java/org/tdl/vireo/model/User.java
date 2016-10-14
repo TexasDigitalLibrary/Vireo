@@ -51,7 +51,6 @@ public class User extends BaseEntity implements CoreUser {
     private String netid;
 
     @Column(nullable = false, unique = true)
-    // @Email
     private String email;
 
     // encoded password
@@ -60,11 +59,9 @@ public class User extends BaseEntity implements CoreUser {
     private String password;
 
     @Column(nullable = false)
-    // @NotBlank
     private String firstName;
 
     @Column(nullable = false)
-    // @NotBlank
     private String lastName;
 
     @Column
@@ -92,7 +89,6 @@ public class User extends BaseEntity implements CoreUser {
     private Set<Organization> organizations;
 
     @Column(nullable = false)
-    // @NotNull
     private AppRole role;
 
     @Column
