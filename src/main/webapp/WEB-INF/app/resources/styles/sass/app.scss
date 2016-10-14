@@ -428,6 +428,7 @@ sidebox .heading-text {
 
 .sidebox-body.expanded {
   max-height: 5000px;
+  overflow-y:visible;
   transition: max-height 0.35s ease-out;
 }
 
@@ -1734,10 +1735,7 @@ footer a, footer li, footer p {
   cursor:pointer;
 }
 
-.further-filter-by div[uib-datepicker-popup-wrap] {
-  position: fixed;
-  bottom: 0px;
-  left: 0;
+.further-filter-by div[uib-datepicker-popup-wrap] { 
   z-index: 9999999;
 }
 
