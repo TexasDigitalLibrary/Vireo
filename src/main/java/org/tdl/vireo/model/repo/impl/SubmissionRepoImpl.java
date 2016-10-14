@@ -54,11 +54,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Override
     public Submission create(User submitter, Organization organization, SubmissionState startingState) {
-
         Submission submission = new Submission(submitter, organization, startingState);
-
         submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
-
         return submissionRepo.save(submission);
     }
 
@@ -153,23 +150,21 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
-            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || submissionListColumn.getVisible()) {
-            	
+            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
             	
             	String pathString = String.join(".", submissionListColumn.getValuePath());
-            	
-            	System.out.println("\n\n\n"+pathString+"\n\n\n");
             	
             	switch(pathString) {
             		case "fieldValues.value":
             			
             			Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
-                        sqlJoinsBuilder.append("\nLEFT JOIN")
-                                       .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
-                                       .append("\n   FROM submission_field_values sfv").append(n)
-                                       .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
-                                       .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
+                        sqlJoinsBuilder
+                        	.append("\nLEFT JOIN")
+                        	.append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                        	.append("\n   FROM submission_field_values sfv").append(n)
+                        	.append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                        	.append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
 
                         if (submissionListColumn.getSortOrder() > 0) {
                             setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
@@ -194,6 +189,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         	}
                         
+                        }
+                        
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                        	sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
 
                         n++;
@@ -223,6 +223,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     	for (String filterString : submissionListColumn.getFilters()) {
                             sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
+                    	
+                        // all column search filter
+                    	for (String filterString : allColumnSearchFilters) {
+                    		sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
             			
             			break;
                 	
@@ -238,14 +243,20 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         for (String filterString : submissionListColumn.getFilters()) {
                             sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
+
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                        	sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
             			
                     	break;
                     
             		case "organization.category.name":
             			
             			
-            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+            			if(sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1) {
             				sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+            			}
             			sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
 
                         if (submissionListColumn.getSortOrder() > 0) {
@@ -254,6 +265,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                         for (String filterString : submissionListColumn.getFilters()) {
                             sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+                        
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                        	sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
             			
                     	break;
@@ -268,6 +284,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                         for (String filterString : submissionListColumn.getFilters()) {
                             sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+                        
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                        	sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
             			
                     	break;
@@ -288,6 +309,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                         for (String filterString : submissionListColumn.getFilters()) {
                             sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+                        
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                        	sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
             			
                     	break;

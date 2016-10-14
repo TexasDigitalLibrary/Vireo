@@ -35,6 +35,8 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/submission-list")
 public class SubmissionListController {
+	
+	private final static String SEARCH_BOX_TITLE = "Search Box";
 
 	@Autowired
 	private SubmissionListColumnRepo submissionListColumnRepo;
@@ -110,12 +112,10 @@ public class SubmissionListController {
 	@Transactional
 	@ApiMapping("/update-user-filter-columns")
 	@Auth(role = "STUDENT")
-	public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials,
-			@ApiModel List<SubmissionListColumn> filterColumns) {
+	public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> filterColumns) {
 		User user = userRepo.findByEmail(credentials.getEmail());
 		user.setFilterColumns(filterColumns);
 		user = userRepo.save(user);
-
 		return new ApiResponse(SUCCESS, user.getFilterColumns());
 	}
 
@@ -149,8 +149,7 @@ public class SubmissionListController {
 
 		user = userRepo.save(user);
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(),
-				new ApiResponse(SUCCESS, user.getActiveFilter()));
+		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
 		return new ApiResponse(SUCCESS);
 
@@ -159,32 +158,24 @@ public class SubmissionListController {
 	@ApiMapping("/active-filters")
 	@Auth(role = "MANAGER")
 	public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
-
 		User user = userRepo.findByEmail(credentials.getEmail());
-
 		return new ApiResponse(SUCCESS, user.getActiveFilter());
-
 	}
 
 	@ApiMapping("/saved-filters")
 	@Auth(role = "MANAGER")
 	public ApiResponse getSavedFilters(@ApiCredentials Credentials credentials) {
-
 		User user = userRepo.findByEmail(credentials.getEmail());
-
 		return new ApiResponse(SUCCESS, user.getActiveFilter());
-
 	}
 
 	@ApiMapping("/remove-saved-filter")
 	@Auth(role = "MANAGER")
-	public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials,
-			@ApiModel NamedSearchFilter savedFilter) {
+	public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) {
 		User user = userRepo.findByEmail(credentials.getEmail());
 		user.getSavedFilters().remove(savedFilter);
 		userRepo.save(user);
 		namedSearchFilterGroupRepo.delete(savedFilter.getId());
-
 		return getSavedFilters(credentials);
 	}
 
@@ -196,9 +187,12 @@ public class SubmissionListController {
 		String filterValue = data.get("filterValue").asText();
 
 		JsonNode filterGlossNode = data.get("filterGloss");
+		
 		String filterGloss = null;
-		if (filterGlossNode != null)
+		
+		if (filterGlossNode != null) {
 			filterGloss = filterGlossNode.asText();
+		}
 
 		User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -213,25 +207,26 @@ public class SubmissionListController {
 			}
 		}
 
-		if (namedSearchFilter == null)
+		if (namedSearchFilter == null) {
 			namedSearchFilter = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
+		}
 
 		namedSearchFilter.addFilter(filterValue, filterGloss);
+		
+		namedSearchFilter.setAllColumnSearch(criterionName.equals(SEARCH_BOX_TITLE) ? true : false);
 
 		user.getActiveFilter().addFilterCriterion(namedSearchFilter);
 
 		user = userRepo.save(user);
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(),
-				new ApiResponse(SUCCESS, user.getActiveFilter()));
+		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
 		return new ApiResponse(SUCCESS);
 	}
 
 	@ApiMapping("/remove-filter-criterion/{namedSearchFilterName}")
 	@Auth(role = "MANAGER")
-	public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials,
-			@ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
+	public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
 
 		User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -275,8 +270,7 @@ public class SubmissionListController {
 			filterCriterionRepo.delete(namedSearchFilter);
 		});
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(),
-				new ApiResponse(SUCCESS, user.getActiveFilter()));
+		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
 		return new ApiResponse(SUCCESS);
 	}
@@ -303,8 +297,7 @@ public class SubmissionListController {
 
 		User user = userRepo.findByEmail(credentials.getEmail());
 
-		NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo
-				.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
+		NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
 
 		if (existingFilter != null) {
 			existingFilter = namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);

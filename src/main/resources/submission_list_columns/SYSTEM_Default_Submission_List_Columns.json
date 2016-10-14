@@ -1,4 +1,4 @@
-[
+[	
     {
 		"title": "ID",
 		"sort": "ASC",
@@ -190,6 +190,15 @@
 	},
 	{
 		"title": "Event time",
+		"sort": "NONE",
+		"valuePath": [],
+		"status": null,
+		"inputType": {
+			"name": "INPUT_TEXT"
+		}
+	},
+	{
+		"title": "Search Box",
 		"sort": "NONE",
 		"valuePath": [],
 		"status": null,

@@ -18,7 +18,6 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 
 	SubmissionStateRepo.ready().then(function() {
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
-		console.log(submissionStates);
 	});
 	
 	var documentTypes = DocumentTypeRepo.getAll();
@@ -27,9 +26,6 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 	var organizations = OrganizationRepo.getAll();
 	var organizationCategories = OrganizationCategoryRepo.getAll();
 	var submissionStates = SubmissionStateRepo.getAll();
-
-	console.log(embargos);
-	
 
 	var findFirstAssignable = function() {
 		var firstAssignable;
@@ -250,10 +246,17 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 				$scope.pageSize = angular.fromJson(data.body).payload.Integer;
 
 				$scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
-
-				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.userColumns, 'title');
+				
+				$scope.excludedColumns = [];
+				
+				angular.copy($scope.userColumns, $scope.excludedColumns);
+				
+				$scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
+				
+				$scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.excludedColumns, 'title');
 
 				$scope.filterColumns.userFilterColumns = ManagerFilterColumnRepo.getAll();
+				
 				$scope.filterColumns.inactiveFilterColumns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title');
 
 				query();
