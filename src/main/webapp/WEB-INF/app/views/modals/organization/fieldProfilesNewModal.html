@@ -59,7 +59,7 @@
 		
 		<div class="form-expand"><a href ng-click="controlledVocabulary = !controlledVocabulary">Controlled Vocabulary</a></div>
 		
-		<div uib-collapse="!controlledVocabulary">
+		<div class="field-profile-section" ng-class="{'field-profile-open': controlledVocabulary, 'field-profile-closed': !controlledVocabulary}">
 		
 			<div class="form-group">
 				<label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
@@ -78,7 +78,7 @@
 		
 		<div class="form-expand"><a href ng-click="advanced = !advanced">Advanced</a></div>
 		
-		<div uib-collapse="!advanced">
+		<div class="field-profile-section" ng-class="{'field-profile-open': advanced, 'field-profile-closed': !advanced}">
 		
 			<div ng-if="!inputFile" class="form-group row">
 				<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>

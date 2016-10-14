@@ -41,7 +41,7 @@
 								ng-repeat="organization in panel.organization.childrenOrganizations | filter:{category: {name: panel.filter}} | orderBy:['category.name','name']"
 								ng-click="selectOrganization(organization)" 
 								ng-class="{'selected': panel.selected.organization.id == organization.id}">
-								<ul class="inline-list pull-right">
+								<ul class="inline-list pull-right" ng-if="attr.managed">
 									<li ng-click="activateManagementPane('edit')">
 										<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
 									</li>

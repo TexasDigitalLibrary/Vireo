@@ -1402,6 +1402,24 @@ footer a, footer li, footer p {
   -webkit-text-fill-color: #337ab7;
 }
 
+.field-profile-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  overflow: hidden;
+}
+
+.field-profile-closed {
+  opacity: 0;
+  max-height: 0px;
+}
+
+.field-profile-open {
+  opacity: 1;
+  max-height: 400px;
+}
+
 .fp-button {
   margin-top: 15px;
 }
