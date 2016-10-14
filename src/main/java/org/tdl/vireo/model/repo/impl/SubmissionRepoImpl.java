@@ -284,6 +284,26 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
             			
                     	break;
+                   
+            		case "embargoTypes.name":
+            			
+            			sqlJoinsBuilder
+            				.append("\nLEFT JOIN")
+            				.append("\n   (SELECT *")
+            				.append("\n   FROM embargo e")
+            				.append("\n   LEFT JOIN submission_embargo_types semt")
+            				.append("\n   ON semt.embargo_types_id=e.id) embs")
+            				.append("\n   ON embs.submission_id=s.id");
+                        
+            			if (submissionListColumn.getSortOrder() > 0) {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
+                        }
+
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        }
+            			
+                    	break;
             		
             		default: System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
             	}

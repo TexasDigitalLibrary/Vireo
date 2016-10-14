@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -20,12 +20,16 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
 		console.log(submissionStates);
 	});
-
+	
+	var documentTypes = DocumentTypeRepo.getAll();
+	var embargos = EmbargoRepo.getAll();
 	var customActionDefinitions = CustomActionDefinitionRepo.getAll();
 	var organizations = OrganizationRepo.getAll();
 	var organizationCategories = OrganizationCategoryRepo.getAll();
 	var submissionStates = SubmissionStateRepo.getAll();
-	var documentTypes = DocumentTypeRepo.getAll();
+
+	console.log(embargos);
+	
 
 	var findFirstAssignable = function() {
 		var firstAssignable;
@@ -212,9 +216,10 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		"organizations": organizations,
 		"organizationCategories": organizationCategories,
         "documentTypes": documentTypes,
+        "embargos": embargos,
 		"allUsers": allUsers,
 		"assignable": assignable,
-		"defaultLimit": 2
+		"defaultLimit": 3
 	};
 
 	var query = function() {
@@ -347,16 +352,33 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 	};
 
 	var getValueFromArray = function(array, path, col) {
+
 		for(var j in array) {
-			if(array[j].fieldPredicate.value == col.predicate) {
-				return array[j].value;
+
+			var v = "";
+
+			var member = array[j];
+
+			if(member.fieldPredicate && array[j].fieldPredicate.value == col.predicate) {
+				v = member.value;
+			} else {
+
+				v = member;
+
+				for(var p=1;p<path.length;p++) {
+					v = v[path[p]];
+				} 
 			}
+
+			return v;
+
 		}
+
 	};
 
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
-
+		
 		for(var i in col.valuePath) {
 
 			if(value === undefined) {
@@ -364,7 +386,16 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 			}
 			else {
 				if(value instanceof Array) {
-					return getValueFromArray(value, col.predicatePath, col);
+
+					var returnValue = "";
+
+					if(col.predicatePath.length) {
+						returnValue = getValueFromArray(value, col.predicatePath, col);
+					} else {
+						returnValue = getValueFromArray(value, col.valuePath, col);
+					}
+
+					return returnValue;
 				}
 				else {
 					if(value !== null) {

@@ -1662,6 +1662,7 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
+.further-filter-by .inactive-filters-sub-list,
 .further-filter-by .status-list,
 .further-filter-by .document-type-list,
 .further-filter-by .organization-by-category-sub-list {
@@ -1680,6 +1681,7 @@ footer a, footer li, footer p {
   cursor: pointer;
 }
 
+.further-filter-by .inactive-filters-sub-list.expanded,
 .further-filter-by .document-type-list.expanded,
 .further-filter-by .status-list.expanded,
 .further-filter-by .organization-by-category-sub-list.expanded {
@@ -1720,6 +1722,7 @@ footer a, footer li, footer p {
   max-height: 0
 }
 
+.further-filter-by .embargo-filter,
 .further-filter-by .document-type-filter,
 .further-filter-by .organization-filter {
   margin-left: -20px;

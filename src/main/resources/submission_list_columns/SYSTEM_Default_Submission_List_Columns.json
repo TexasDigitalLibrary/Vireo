@@ -65,7 +65,7 @@
 	{
 		"title": "Embargo type",
 		"sort": "NONE",
-		"valuePath": [],
+		"valuePath": ["embargoTypes", "name"],
 		"status": null,
 		"inputType": {
 			"name": "INPUT_TEXT"
