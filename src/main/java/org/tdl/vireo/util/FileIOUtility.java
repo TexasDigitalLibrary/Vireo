@@ -19,7 +19,12 @@ import org.tdl.vireo.Application;
 public class FileIOUtility {
     
     public void write(byte[] bytes, String relativePath) throws IOException {
-        Files.write(Paths.get(getPath(relativePath)), bytes);
+    	Path path = Paths.get(getPath(relativePath));
+        Path parentDir = path.getParent();
+        if (!Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+        }
+        Files.write(path, bytes);
     }
 
     public void write(InputStream is, String path) throws IOException {

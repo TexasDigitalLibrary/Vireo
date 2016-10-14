@@ -2,6 +2,8 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -19,11 +23,13 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.util.FileIOUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
+import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
@@ -54,6 +60,9 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Autowired
+    private FileIOUtility fileIOUtility;
 
     @Transactional
     @ApiMapping("/all")
@@ -148,6 +157,19 @@ public class SubmissionController {
         ;
 
         return new ApiResponse(SUCCESS);
+    }
+    
+    @ApiMapping(value = "/upload", method = RequestMethod.POST)
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiInputStream InputStream inputStream) throws IOException {
+    	    	
+    	System.out.println(inputStream);
+    	System.out.println(credentials.getEmail().hashCode());
+    	
+    	String path = "private/"+credentials.getEmail().hashCode();
+    	
+    	fileIOUtility.write(inputStream, path);
+    	
+    	return new ApiResponse(SUCCESS, credentials.getEmail().hashCode());
     }
 
 }

@@ -8,7 +8,7 @@
 				file-model="values[$index].value"
 				text="Drop a file here to begin upload",
 				patterns="{{getPattern()}}"
-				drop-method="begineUpload(file)">
+				drop-method="queueUpload(file)">
 			</dropzone>
 	</div>
 </div>
@@ -16,10 +16,19 @@
 		<div class="file-preview">
 			<img ng-if="file && getPreview($index)" ngf-src="getPreview($index)">
 			<span ng-if="file && !getPreview($index)" class="glyphicon glyphicon-file"></span>
+			<div>
+				<span ng-if="file.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>
+				<span ng-if="file.uploaded" class="file-upload-icon glyphicon glyphicon-trash"></span>
+			</div>
 		</div>
 		<div class="file-info" ng-if="file">
 			<p class="file-name">{{file.name}}</p>
 			<p class="file-type">{{file.type}}</p>
 			<p class="file-size">{{file.size + " mb"}}</p>
 		</div>
+		<div class="file-info" ng-if="file && !uploading && !file.uploaded">
+			<button class="btn btn-success" ng-click="beginUpload(value)">Upload</button>
+			<button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
+		</div>
+		<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="80" max="100">Uploading...</uib-progressbar>
 </div>
