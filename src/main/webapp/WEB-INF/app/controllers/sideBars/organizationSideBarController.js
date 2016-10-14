@@ -1,4 +1,4 @@
-vireo.controller("OrganizationSideBarController", function($controller, $scope, $q, OrganizationCategoryRepo, OrganizationRepo) {
+vireo.controller("OrganizationSideBarController", function ($controller, $scope, $q, OrganizationCategoryRepo, OrganizationRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -23,28 +23,32 @@ vireo.controller("OrganizationSideBarController", function($controller, $scope, 
 
 		$scope.reset = function() {
 			$scope.organizationRepo.clearValidationResults();
+    		
     		for(var key in $scope.forms) {
     			if(!$scope.forms[key].$pristine) {
     				$scope.forms[key].$setPristine();
     			}
     		}
     		
-    		OrganizationRepo.resetNewOrganization();
+    		$scope.newOrganization = OrganizationRepo.resetNewOrganization();
 
-			$scope.newOrganization = OrganizationRepo.getNewOrganization();
+    		if($scope.newOrganization.category === undefined) {
+    			$scope.newOrganization.category = $scope.organizationCategories[0];
+    		}
 
-			$scope.newOrganization.category = $scope.organizationCategories[0];
-
-			$scope.newOrganization.parent = $scope.organizations[0];
+    		if($scope.newOrganization.parent === undefined) {
+				$scope.newOrganization.parent = $scope.organizations[0];
+			}
 		};
 
 		$scope.reset();
 
-		$scope.createNewOrganization = function() {
+		$scope.createNewOrganization = function(hierarchical) {
+			var parentOrganization = hierarchical == 'true' ? OrganizationRepo.newOrganization.parent : $scope.organizations[0];
 			OrganizationRepo.create({
 				"name": OrganizationRepo.newOrganization.name, 
 				"category": OrganizationRepo.newOrganization.category
-			},  OrganizationRepo.newOrganization.parent).then(function() {
+			}, parentOrganization).then(function() {
 				$scope.reset();
 			});
 		};

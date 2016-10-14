@@ -1,4 +1,4 @@
-vireo.model("FieldProfile", function () {
+vireo.model("FieldProfile", function FieldProfile() {
 
 	return function FieldProfile() {
 		

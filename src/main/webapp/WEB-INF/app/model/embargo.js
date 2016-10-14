@@ -1,4 +1,4 @@
-vireo.model("Embargo", function() {
+vireo.model("Embargo", function Embargo() {
 
 	return function Embargo() {
 

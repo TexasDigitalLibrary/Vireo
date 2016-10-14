@@ -62,8 +62,11 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 
 	this.resetNewOrganization = function() {
 		for(var key in this.newOrganization) {
-			delete this.newOrganization[key];
+			if(key != 'category' && key != 'parent') {
+				delete this.newOrganization[key];
+			}
 		}
+		return this.newOrganization;
 	};
 
 	this.getNewOrganization = function() {
@@ -74,25 +77,11 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		return selectedOrganization;
 	};
 
-	this.setSelectedOrganization = function(organization){
+	this.setSelectedOrganization = function(organization) {
 		this.lazyFetch(organization.id).then(function(fetchedOrg) {
 			extendWithOverwrite(selectedOrganization, fetchedOrg);
 		});
 		return selectedOrganization;
-	};
-
-	// TODO: replace with abstract findById
-	this.findOrganizationById = function(id) {
-
-		var matchedOrganization = null;
-
-		angular.forEach(this.data.list, function(orgToCompare) {
-			if(orgToCompare.id === id) {
-				matchedOrganization = orgToCompare;
-			}
-		});
-
-		return matchedOrganization;
 	};
 
 	this.lazyFetch = function(orgId) {

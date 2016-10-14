@@ -19,7 +19,9 @@ public class CustomActionValueTest extends AbstractEntityTest {
         assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
 
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
-        testSubmission = submissionRepo.create(testUser, organization.getId());
+
+        testSubmission = submissionRepo.create(testUser, organization, submissionState);
+
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
 
         testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);

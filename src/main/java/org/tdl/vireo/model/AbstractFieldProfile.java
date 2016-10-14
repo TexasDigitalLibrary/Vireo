@@ -23,25 +23,25 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
-@DiscriminatorColumn(name="FP_TYPE")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }) )
+@DiscriminatorColumn(name = "FP_TYPE")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
-    
+
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(nullable = false)
     private Boolean repeatable;
-    
+
     @Column(nullable = false)
     private Boolean optional;
-    
+
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
-    
+
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
@@ -52,7 +52,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
-    
+
     /**
      * @return the fieldPredicate
      */
@@ -61,7 +61,8 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * @param fieldPredicate the fieldPredicate to set
+     * @param fieldPredicate
+     *            the fieldPredicate to set
      */
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;
@@ -97,8 +98,6 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         this.repeatable = repeatable;
     }
 
-   
-    
     /**
      * 
      * @return
@@ -114,7 +113,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
-    
+
     /**
      * 
      * @return
@@ -167,7 +166,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         }
         return null;
     }
-    
+
     /**
      * 
      * @param String
@@ -191,7 +190,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void setFieldGlosses(List<FieldGloss> fieldGlosses) {
         this.fieldGlosses = fieldGlosses;
     }
-    
+
     // TODO : Restrict multiple field gloss with the same language
 
     /**
@@ -229,7 +228,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         }
         return null;
     }
-    
+
     /**
      * 
      * @param id
@@ -250,13 +249,13 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void setControlledVocabularies(List<ControlledVocabulary> controlledVocabularies) {
         this.controlledVocabularies = controlledVocabularies;
     }
-    
+
     public void clearControlledVocabulary() {
         this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
     }
 
-    // TODO : Restrict multiple controlled vocabulary with the same language 
-    
+    // TODO : Restrict multiple controlled vocabulary with the same language
+
     /**
      * 
      * @param controlledVocabularies
@@ -264,7 +263,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().add(controlledVocabulary);
     }
-    
+
     /**
      * 
      * @param controlledVocabularies
@@ -280,7 +279,5 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().remove(controlledVocabulary);
     }
-    
-
 
 }

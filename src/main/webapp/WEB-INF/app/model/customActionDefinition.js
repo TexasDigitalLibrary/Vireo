@@ -1,4 +1,4 @@
-vireo.model("CustomActionDefinition", function () {
+vireo.model("CustomActionDefinition", function CustomActionDefinition() {
 
 	return function CustomActionDefinition() {
 		

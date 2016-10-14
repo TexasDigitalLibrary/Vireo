@@ -22,14 +22,10 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
-import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
@@ -39,13 +35,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     private SubmissionRepo submissionRepo;
 
     @Autowired
-    private SubmissionStateRepo submissionStateRepo;
+    private FieldPredicateRepo fieldPredicateRepo;
 
-    @Autowired
-    FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
-    private OrganizationRepo organizationRepo;
 
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
@@ -60,18 +51,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    
     @Override
-    public Submission create(User submitter, Long organizationId) {
-        SubmissionState startingState = submissionStateRepo.findByName("In Progress");
-        Organization organization = organizationRepo.findOne(organizationId);
-        Submission submission = new Submission(submitter, organization);
-        submission.setState(startingState);
-        
-        // Clone (as SubmissionWorkflowSteps) all the aggregate workflow steps of the requesting org
-        for (WorkflowStep aws : organization.getAggregateWorkflowSteps()) {
-            SubmissionWorkflowStep submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, aws);
-            submission.addSubmissionWorkflowStep(submissionWorkflowStep);
-        }
+    public Submission create(User submitter, Organization organization, SubmissionState startingState) {
+
+        Submission submission = new Submission(submitter, organization, startingState);
+
+        submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
+
         return submissionRepo.save(submission);
     }
 

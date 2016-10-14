@@ -783,6 +783,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
+        
+        organization = organizationRepo.findOne(organization.getId());
       
     	Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
     	parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -858,6 +860,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     //TODO:  this test is not done, development of the full feature deferred for now
     @Test
     public void testMakeFieldProfileNonOverrideable() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+        
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
         

@@ -1,4 +1,4 @@
-vireo.model("SubmissionState", function() {
+vireo.model("SubmissionState", function SubmissionState() {
 
 	return function SubmissionState() {
 		

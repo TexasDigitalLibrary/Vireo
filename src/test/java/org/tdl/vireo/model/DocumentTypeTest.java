@@ -65,7 +65,8 @@ public class DocumentTypeTest extends AbstractEntityTest{
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
-		Submission submission = submissionRepo.create(submitter, organization.getId());
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionState);
 		
 		// Create a document type with implicitly created field predicate.
 		DocumentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME, DegreeLevel.MASTERS);

@@ -65,21 +65,21 @@ vireo.directive("field",  function() {
 				return $scope.submission.findFieldValuesByPredicate($scope.profile.fieldPredicate).indexOf(value) === 0;
 			};
 
-			$scope.getPatern = function() {
+			$scope.getPattern = function() {
 				
-				var patern = "*";
+				var pattern = "*";
 				var cv = $scope.profile.controlledVocabularies[0];
 	
 				if(typeof cv !== "undefined") {
-					patern = "";
+					pattern = "";
 					for(var i in cv.dictionary) {
 						var word = cv.dictionary[i];
-						patern+=word.name;
-						if(i+1!==cv.dictionary.length) patern+=",";
+						pattern+=word.name;
+						if(i+1!==cv.dictionary.length) pattern+=",";
 					}
 				}
 
-				return patern;
+				return pattern;
 			};
 
 			$scope.begineUpload = function(file) {

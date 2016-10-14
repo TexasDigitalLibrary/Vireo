@@ -86,6 +86,15 @@ public class Submission extends BaseEntity {
     }
 
     /**
+     * @param submitter
+     * @param state
+     */
+    public Submission(User submitter, Organization organization, SubmissionState state) {
+        this(submitter, organization);
+        setState(state);
+    }
+
+    /**
      * 
      * @return the submitter
      */
@@ -116,7 +125,7 @@ public class Submission extends BaseEntity {
     public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
-    
+
     /**
      * @return the state
      */

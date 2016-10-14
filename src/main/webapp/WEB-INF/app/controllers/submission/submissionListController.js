@@ -351,34 +351,35 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		});
 	};
 
-	var getValueFromArray = function(array, path, col) {
-
+	var getValueFromArray = function(array, col) {
+		var value = "";
 		for(var j in array) {
 
-			var v = "";
+			var member =  array[j];
 
-			var member = array[j];
-
-			if(member.fieldPredicate && array[j].fieldPredicate.value == col.predicate) {
-				v = member.value;
-			} else {
-
-				v = member;
+			if(member.fieldPredicate !== undefined) {
+				if(member.fieldPredicate.value == col.predicate) {
+					value = member.value;
+				}
+			}
+			else {
+				var path = col.valuePath;
+				
+				var curr = member;
 
 				for(var p=1;p<path.length;p++) {
-					v = v[path[p]];
+					curr = curr[path[p]];
 				} 
-			}
 
-			return v;
-
+				value += value.length > 0 ? ", " + curr : curr;
+			}	
 		}
-
+		return value;
 	};
 
 	$scope.getSubmissionProperty = function(row, col) {
 		var value;
-		
+
 		for(var i in col.valuePath) {
 
 			if(value === undefined) {
@@ -386,16 +387,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 			}
 			else {
 				if(value instanceof Array) {
-
-					var returnValue = "";
-
-					if(col.predicatePath.length) {
-						returnValue = getValueFromArray(value, col.predicatePath, col);
-					} else {
-						returnValue = getValueFromArray(value, col.valuePath, col);
-					}
-
-					return returnValue;
+					return getValueFromArray(value, col);
 				}
 				else {
 					if(value !== null) {

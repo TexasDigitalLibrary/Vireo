@@ -316,7 +316,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "SELECT"
+						"name": "INPUT_SELECT"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -478,7 +478,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "TEXTAREA"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -695,7 +695,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "SELECT"
+						"name": "INPUT_SELECT"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -731,7 +731,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "TEXTAREA"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -758,7 +758,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "TEXTAREA"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -785,7 +785,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "TEXTAREA"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -920,7 +920,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "SELECT"
+						"name": "INPUT_SELECT"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -947,7 +947,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "SELECT"
+						"name": "INPUT_SELECT"
 					},
 					"repeatable": false,
 					"overrideable": true,

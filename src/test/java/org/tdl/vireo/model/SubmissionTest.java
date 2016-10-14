@@ -47,7 +47,7 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
-        submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
+        submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
 
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
@@ -61,8 +61,8 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        Submission submission = submissionRepo.create(submitter, organization.getId());
-        submission.setState(submissionState);
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -85,18 +85,21 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        submissionRepo.create(submitter, organization.getId());
+
+        submissionRepo.create(submitter, organization, submissionState);
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(submitter, organization.getId());
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
+            submissionRepo.create(submitter, organization, submissionState);
+        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
     }
 
     @Override
     public void testDelete() {
-        Submission submission = submissionRepo.create(submitter, organization.getId());
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
     }
@@ -107,7 +110,7 @@ public class SubmissionTest extends AbstractEntityTest {
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
-        SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, severableWorkflowStep);
+        SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(severableWorkflowStep);
 
         organization = organizationRepo.findOne(organization.getId());
 
@@ -116,7 +119,8 @@ public class SubmissionTest extends AbstractEntityTest {
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
-        Submission submission = submissionRepo.create(submitter, organization.getId());
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
@@ -125,12 +129,10 @@ public class SubmissionTest extends AbstractEntityTest {
         // TODO: assert that the brand new submission has only the ones it gets from its org
         assertEquals("The submission didn't get its org's workflow!", organization.getAggregateWorkflowSteps().size(), submission.getSubmissionWorkflowSteps().size());
 
-        submissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         numSteps++;
         submission.addFieldValue(fieldValue);
 
-        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOrCreate(organization, severableWorkflowStep);
         submission.addSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         numSteps++;
         submission.addFieldValue(severableFieldValue);
@@ -147,7 +149,9 @@ public class SubmissionTest extends AbstractEntityTest {
         numSteps--;
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", numSteps, submission.getSubmissionWorkflowSteps().size());
-        assertEquals("The workflow step was deleted!", 2, submissionWorkflowStepRepo.count());
+        
+        // 2 submission workflow steps added during the create method!
+        assertEquals("The workflow step was deleted!", 4, submissionWorkflowStepRepo.count());
 
         long fieldValueCount = fieldValueRepo.count();
         submission.removeFieldValue(severableFieldValue);
@@ -159,7 +163,6 @@ public class SubmissionTest extends AbstractEntityTest {
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
         assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
-        assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was orphaned!", fieldValueCount, fieldValueRepo.count());
 
         // From here on we test the actual cascade:
@@ -192,8 +195,8 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Test
     public void testUniqueConstraint() {
-        Submission submission = submissionRepo.create(submitter, organization.getId());
-        submission.setState(submissionState);
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -207,7 +210,8 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
 
         try {
-            submissionRepo.create(submitter, organization.getId());
+
+            submissionRepo.create(submitter, organization, submissionState);
             assertTrue(false);
         } catch (Exception e) {
             // good

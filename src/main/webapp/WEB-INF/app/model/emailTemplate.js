@@ -1,4 +1,4 @@
-vireo.model("EmailTemplate", function () {
+vireo.model("EmailTemplate", function EmailTemplate() {
 
 	return function EmailTemplate() {
 		
