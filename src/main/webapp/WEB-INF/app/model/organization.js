@@ -1,4 +1,4 @@
-vireo.model("Organization", function ($q, RestApi) {
+vireo.model("Organization", function Organization($q, RestApi) {
 
 	return function Organization() {
 

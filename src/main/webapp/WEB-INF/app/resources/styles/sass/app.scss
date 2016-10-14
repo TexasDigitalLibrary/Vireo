@@ -1402,13 +1402,33 @@ footer a, footer li, footer p {
   -webkit-text-fill-color: #337ab7;
 }
 
-.field-profile-modal-group {
-	margin-top: 55px;
+.field-profile-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  overflow: hidden;
 }
 
-.fp-gloss-predicate-button {
-	float:right;
-	margin-top: 10px;
+.field-profile-closed {
+  opacity: 0;
+  max-height: 0px;
+}
+
+.field-profile-open {
+  opacity: 1;
+  max-height: 400px;
+}
+
+.fp-button {
+  margin-top: 15px;
+}
+
+.form-expand {
+  margin: 18px 0 0 0;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 22px;
 }
 
 .field-profile .input-group {

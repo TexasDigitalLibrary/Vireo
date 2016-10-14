@@ -1,4 +1,4 @@
-vireo.model("DepositLocation", function () {
+vireo.model("DepositLocation", function DepositLocation() {
 
 	return function DepositLocation() {
 		

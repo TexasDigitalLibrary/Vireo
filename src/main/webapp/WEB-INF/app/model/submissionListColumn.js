@@ -1,4 +1,4 @@
-var submissionListColumnModel = function () {
+var submissionListColumnModel = function SubmissionListColumn() {
 
 	return function SubmissionListColumn() {
 		

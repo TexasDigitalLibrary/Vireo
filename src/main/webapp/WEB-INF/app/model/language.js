@@ -1,4 +1,4 @@
-vireo.model("Language", function () {
+vireo.model("Language", function Language() {
 
 	return function Language() {
 		

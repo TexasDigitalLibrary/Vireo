@@ -1,4 +1,4 @@
-vireo.model("Note", function () {
+vireo.model("Note", function Note() {
 
 	return function Note() {
 		

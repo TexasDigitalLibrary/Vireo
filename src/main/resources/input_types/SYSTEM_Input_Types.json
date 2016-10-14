@@ -27,9 +27,9 @@
 		"name": "INPUT_URL" 
 	},
 	{
-		"name": "TEXTAREA" 
+		"name": "INPUT_TEXTAREA" 
 	},
 	{
-		"name": "SELECT" 
+		"name": "INPUT_SELECT"
 	}
 ]

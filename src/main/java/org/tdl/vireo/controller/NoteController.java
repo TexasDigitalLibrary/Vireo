@@ -11,7 +11,7 @@ import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
 @RestController
-@ApiMapping("/field-profile")
+@ApiMapping("/note")
 public class NoteController {
 
     @Autowired

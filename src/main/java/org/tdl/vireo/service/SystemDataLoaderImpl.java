@@ -245,21 +245,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 // create new SubmissionState if not already exists
                 if (newSubmissionState == null) {
                     newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(), emailWorkflowRule.getSubmissionState().isArchived(), emailWorkflowRule.getSubmissionState().isPublishable(), emailWorkflowRule.getSubmissionState().isDeletable(), emailWorkflowRule.getSubmissionState().isEditableByReviewer(), emailWorkflowRule.getSubmissionState().isEditableByStudent(), emailWorkflowRule.getSubmissionState().isActive());
-
                     newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
-                } else {
-                    // do not overwrite UI managed defaults
-                    
-//                    SubmissionState tempSubmissionState = emailWorkflowRule.getSubmissionState();
-//                    newSubmissionState.isArchived(tempSubmissionState.isArchived() != null ? tempSubmissionState.isArchived() : newSubmissionState.isArchived());
-//                    newSubmissionState.isPublishable(tempSubmissionState.isPublishable() != null ? tempSubmissionState.isPublishable() : newSubmissionState.isPublishable());
-//                    newSubmissionState.isDeletable(tempSubmissionState.isDeletable() != null ? tempSubmissionState.isDeletable() : newSubmissionState.isDeletable());
-//                    newSubmissionState.isEditableByReviewer(tempSubmissionState.isEditableByReviewer() != null ? tempSubmissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
-//                    newSubmissionState.isEditableByStudent(tempSubmissionState.isEditableByStudent() != null ? tempSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
-//                    newSubmissionState.isActive(tempSubmissionState.isActive() != null ? tempSubmissionState.isActive() : newSubmissionState.isActive());
-//                    newSubmissionState.setTransitionSubmissionStates(tempSubmissionState.getTransitionSubmissionStates() != null ? tempSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
-//
-//                    newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
                 }
 
                 // check to see if the EmailTemplate exists
@@ -268,12 +254,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 // create new EmailTemplate if not already exists
                 if (newEmailTemplate == null) {
                     newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
-                } else {
-                    // do not overwrite UI managed defaults
-                    
-//                    newEmailTemplate.setSubject(emailWorkflowRule.getEmailTemplate().getSubject() != null ? emailWorkflowRule.getEmailTemplate().getSubject() : newEmailTemplate.getSubject());
-//                    newEmailTemplate.setMessage(emailWorkflowRule.getEmailTemplate().getMessage() != null ? emailWorkflowRule.getEmailTemplate().getMessage() : newEmailTemplate.getMessage());
-//                    newEmailTemplate = emailTemplateRepo.save(newEmailTemplate);
                 }
 
                 // check to see if the EmailWorkflowRule exists
@@ -327,25 +307,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (fieldPredicate == null) {
                      fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
                 }
-                else {
-                    // do not overwrite UI managed defaults
-//                    fieldPredicate.setValue(fieldProfile.getFieldPredicate().getValue());
-//                    fieldPredicate.setDocumentTypePredicate(fieldProfile.getFieldPredicate().getDocumentTypePredicate());
-//                    fieldPredicate = fieldPredicateRepo.save(fieldPredicate);
-                }
-                
                 
                 // check to see if the InputType exists
                 InputType inputType = inputTypeRepo.findByName(fieldProfile.getInputType().getName());
                 
                 if (inputType == null) {
                     inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
-                } else {
-                    // do not overwrite UI managed defaults
-//                    inputType.setName(fieldProfile.getInputType().getName());
-//                    inputType = inputTypeRepo.save(inputType);
-                }
-                          
+                }    
                 
                 
                 // temporary list of ControlledVocabulary
@@ -415,22 +383,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
                 	
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), controlledVocabularies, fieldGlosses);
-                } else {
-                    // do not overwrite UI managed defaults
-                    
-//                    newFieldProfile.setInputType(inputType != null ? inputType : newFieldProfile.getInputType());
-//                    newFieldProfile.setUsage(fieldProfile.getUsage() != null ? fieldProfile.getUsage() : newFieldProfile.getUsage());
-//                    newFieldProfile.setHelp(fieldProfile.getHelp() != null ? fieldProfile.getHelp() : newFieldProfile.getHelp());
-//                    newFieldProfile.setRepeatable(fieldProfile.getRepeatable() != null ? fieldProfile.getRepeatable() : newFieldProfile.getRepeatable());
-//                    newFieldProfile.setOverrideable(fieldProfile.getOverrideable() != null ? fieldProfile.getOverrideable() : newFieldProfile.getOverrideable());
-//                    newFieldProfile.setEnabled(fieldProfile.getEnabled() != null ? fieldProfile.getEnabled() : newFieldProfile.getEnabled());
-//                    newFieldProfile.setOptional(fieldProfile.getOptional() != null ? fieldProfile.getOptional() : newFieldProfile.getOptional());
-//                    newFieldProfile.setControlledVocabularies(fieldProfile.getControlledVocabularies());
-//                    newFieldProfile.setFieldGlosses(fieldProfile.getFieldGlosses());
-//                    newFieldProfile = fieldProfileRepo.save(newFieldProfile);
                 }
-
-                
 
                
                 
@@ -452,11 +405,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (newNote == null) {
                     newNote = noteRepo.create(newWorkflowStep, note.getName(), note.getText());
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
-                } else {
-                    // do not overwrite UI managed defaults
-                    
-//                    newNote.setText(note.getText());
-//                    newNote = noteRepo.save(newNote);
                 }
 
                 notes.add(newNote);
@@ -489,16 +437,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 newSubmissionState = submissionStateRepo.create(systemSubmissionState.getName(), systemSubmissionState.isArchived(), systemSubmissionState.isPublishable(), systemSubmissionState.isDeletable(), systemSubmissionState.isEditableByReviewer(), systemSubmissionState.isEditableByStudent(), systemSubmissionState.isActive());
 
                 newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(systemSubmissionState));
-            } else {
-                newSubmissionState.isArchived(newSubmissionState.isArchived() != null ? newSubmissionState.isArchived() : newSubmissionState.isArchived());
-                newSubmissionState.isPublishable(newSubmissionState.isPublishable() != null ? newSubmissionState.isPublishable() : newSubmissionState.isPublishable());
-                newSubmissionState.isDeletable(newSubmissionState.isDeletable() != null ? newSubmissionState.isDeletable() : newSubmissionState.isDeletable());
-                newSubmissionState.isEditableByReviewer(newSubmissionState.isEditableByReviewer() != null ? newSubmissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
-                newSubmissionState.isEditableByStudent(newSubmissionState.isEditableByStudent() != null ? newSubmissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
-                newSubmissionState.isActive(newSubmissionState.isActive() != null ? newSubmissionState.isActive() : newSubmissionState.isActive());
-                newSubmissionState.setTransitionSubmissionStates(newSubmissionState.getTransitionSubmissionStates() != null ? newSubmissionState.getTransitionSubmissionStates() : newSubmissionState.getTransitionSubmissionStates());
-
-                newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newSubmissionState));
             }
 
         } catch (IOException e) {
@@ -517,15 +455,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         // create new SubmissionState if not already exists
         if (newSubmissionState == null) {
             newSubmissionState = submissionStateRepo.create(submissionState.getName(), submissionState.isArchived(), submissionState.isPublishable(), submissionState.isDeletable(), submissionState.isEditableByReviewer(), submissionState.isEditableByStudent(), submissionState.isActive());
-        } else {
-            newSubmissionState.isArchived(submissionState.isArchived() != null ? submissionState.isArchived() : newSubmissionState.isArchived());
-            newSubmissionState.isPublishable(submissionState.isPublishable() != null ? submissionState.isPublishable() : newSubmissionState.isPublishable());
-            newSubmissionState.isDeletable(submissionState.isDeletable() != null ? submissionState.isDeletable() : newSubmissionState.isDeletable());
-            newSubmissionState.isEditableByReviewer(submissionState.isEditableByReviewer() != null ? submissionState.isEditableByReviewer() : newSubmissionState.isEditableByReviewer());
-            newSubmissionState.isEditableByStudent(submissionState.isEditableByStudent() != null ? submissionState.isEditableByStudent() : newSubmissionState.isEditableByStudent());
-            newSubmissionState.isActive(submissionState.isActive() != null ? submissionState.isActive() : newSubmissionState.isActive());
-
-            newSubmissionState = submissionStateRepo.save(newSubmissionState);
         }
 
         // temporary list of SubmissionState
@@ -540,16 +469,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             if (newTransitionState == null) {
                 newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(), transitionState.isPublishable(), transitionState.isDeletable(), transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(), transitionState.isActive());
                 newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(transitionState));
-            } else {
-                newTransitionState.isArchived(transitionState.isArchived() != null ? transitionState.isArchived() : newTransitionState.isArchived());
-                newTransitionState.isPublishable(transitionState.isPublishable() != null ? transitionState.isPublishable() : newTransitionState.isPublishable());
-                newTransitionState.isDeletable(transitionState.isDeletable() != null ? transitionState.isDeletable() : newTransitionState.isDeletable());
-                newTransitionState.isEditableByReviewer(transitionState.isEditableByReviewer() != null ? transitionState.isEditableByReviewer() : newTransitionState.isEditableByReviewer());
-                newTransitionState.isEditableByStudent(transitionState.isEditableByStudent() != null ? transitionState.isEditableByStudent() : newTransitionState.isEditableByStudent());
-                newTransitionState.isActive(transitionState.isActive() != null ? transitionState.isActive() : newTransitionState.isActive());
-                newTransitionState.setTransitionSubmissionStates(transitionState.getTransitionSubmissionStates() != null ? transitionState.getTransitionSubmissionStates() : newTransitionState.getTransitionSubmissionStates());
-
-                newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(newTransitionState));
             }
 
             transitionStates.add(newTransitionState);
@@ -791,7 +710,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     public void generateSystemDefaults() {
         try {
-            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/SYSTEM_Defaults.json"));
+            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
