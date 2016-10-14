@@ -307,13 +307,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (fieldPredicate == null) {
                      fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
                 }
+
                 
                 // check to see if the InputType exists
                 InputType inputType = inputTypeRepo.findByName(fieldProfile.getInputType().getName());
                 
                 if (inputType == null) {
                     inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
-                }    
+                }
+                          
                 
                 
                 // temporary list of ControlledVocabulary

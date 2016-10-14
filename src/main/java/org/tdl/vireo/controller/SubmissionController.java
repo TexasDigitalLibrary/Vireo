@@ -108,7 +108,8 @@ public class SubmissionController {
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
-        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(credentials, submissionListColumns, new PageRequest(page, size)));
+        User user = userRepo.findByEmail(credentials.getEmail());       
+        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
     @ApiMapping("/all-submission-state")
@@ -124,7 +125,7 @@ public class SubmissionController {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setState(submissionState);
             submissionRepo.save(sub);
         });
@@ -140,7 +141,7 @@ public class SubmissionController {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        submissionRepo.dynamicSubmissionQuery(credentials, user.getSubmissionViewColumns()).forEach(sub -> {
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
             submissionRepo.save(sub);
         });

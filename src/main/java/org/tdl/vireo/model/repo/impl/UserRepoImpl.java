@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.AppRole;
-import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 
@@ -17,7 +17,7 @@ public class UserRepoImpl implements UserRepoCustom {
     private UserRepo userRepo;
 
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
     public User create(String email, String firstName, String lastName, AppRole role) {
@@ -26,7 +26,7 @@ public class UserRepoImpl implements UserRepoCustom {
 
         newUser = userRepo.save(newUser);
 
-        NamedSearchFilter activeFilter = namedSearchFilterRepo.create(newUser);
+        NamedSearchFilterGroup activeFilter = namedSearchFilterRepo.create(newUser);
 
         newUser.putSetting("id", newUser.getId().toString());
         newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());

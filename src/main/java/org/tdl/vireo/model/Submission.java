@@ -50,7 +50,8 @@ public class Submission extends BaseEntity {
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
-
+    
+    //This should most likely be handled by a field profile
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar dateOfGraduation;

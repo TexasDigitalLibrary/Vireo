@@ -427,7 +427,7 @@ sidebox .heading-text {
 }
 
 .sidebox-body.expanded {
-  max-height: 500px;
+  max-height: 5000px;
   transition: max-height 0.35s ease-out;
 }
 
@@ -1667,7 +1667,7 @@ footer a, footer li, footer p {
 
 // Now Filtering By Side Module
 .now-filtering-by .glyphicon {
-  font-size: 0.75em;
+  color: #CD7674;
 }
 
 .now-filtering-by a {
@@ -1681,4 +1681,85 @@ footer a, footer li, footer p {
 
 .filter-options ul.saved-filters ul.list li.columns:hover {
   text-decoration: underline;
+}
+
+.further-filter-by .status-category {
+  background: #CCCCCC;
+  display: inline-block
+}
+
+.further-filter-by .status-category:hover {
+  cursor: pointer;
+}
+
+.further-filter-by .inactive-filters-sub-list,
+.further-filter-by .status-list,
+.further-filter-by .document-type-list,
+.further-filter-by .organization-by-category-sub-list {
+  max-height: 0px;
+  overflow: hidden;
+  -webkit-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
+}
+
+.further-filter-by .status-list li { 
+  margin-left: -25px;
+}
+
+.further-filter-by .filter:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.further-filter-by .inactive-filters-sub-list.expanded,
+.further-filter-by .document-type-list.expanded,
+.further-filter-by .status-list.expanded,
+.further-filter-by .organization-by-category-sub-list.expanded {
+  max-height: 1000px;
+  -webkit-transition: max-height 0.5s ease-in;
+  transition: max-height 0.5s ease-in;
+}
+
+.further-filter-by .more-less,
+.further-filter-by .document-level,
+.further-filter-by .organization-category {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  background: #CCCCCC;
+  display: inline-block
+}
+
+.further-filter-by .more-less:hover,
+.further-filter-by .organization-category {
+  cursor:pointer;
+}
+
+.further-filter-by div[uib-datepicker-popup-wrap] {
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  z-index: 9999999;
+}
+
+.further-filter-by .date-range-divider {
+  text-align: center;
+  margin: 5px 0px;
+}
+
+.further-filter-by .add-date-filter-btn, {
+  margin: 5px 0px 20px;
+}
+
+.further-filter-by .document-type-filter-list {
+  max-height: 0
+}
+
+.further-filter-by .embargo-filter,
+.further-filter-by .document-type-filter,
+.further-filter-by .organization-filter {
+  margin-left: -20px;
+}
+
+.further-filter-by .organization-by-category-top-list {
+  margin: 0px;
 }

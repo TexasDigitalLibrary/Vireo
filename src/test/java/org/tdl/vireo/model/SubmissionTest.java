@@ -61,6 +61,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
+
         Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
@@ -84,17 +85,21 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
+
         submissionRepo.create(submitter, organization, submissionState);
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
             submissionRepo.create(submitter, organization, submissionState);
         } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
     }
 
     @Override
     public void testDelete() {
+
         Submission submission = submissionRepo.create(submitter, organization, submissionState);
+
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
     }
@@ -113,6 +118,7 @@ public class SubmissionTest extends AbstractEntityTest {
         FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
+
 
         Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
@@ -189,6 +195,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Test
     public void testUniqueConstraint() {
+
         Submission submission = submissionRepo.create(submitter, organization, submissionState);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
@@ -203,6 +210,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
 
         try {
+
             submissionRepo.create(submitter, organization, submissionState);
             assertTrue(false);
         } catch (Exception e) {

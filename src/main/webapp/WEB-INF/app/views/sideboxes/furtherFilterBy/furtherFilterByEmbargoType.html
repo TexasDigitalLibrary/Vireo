@@ -1,0 +1,17 @@
+<form ng-init="box.embargosLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
+	<ul>
+		<li class="filter" ng-repeat="et in box.embargos | filter:{isActive: true} | limitTo:box.embargosLimit" ng-click="box[column.title.split(' ').join('')]=et.name;box.addFilter(column);"><span ng-if="et.isSystemRequired" class="glyphicon glyphicon-globe"></span><span ng-if="!et.isSystemRequired" class="glyphicon glyphicon-user"></span> {{et.name}}</li>
+		<li class="more-less" ng-click="box.embargosLimit=box.embargos.length" ng-if="box.embargosLimit<=box.defaultLimit && box.embargos.length>box.defaultLimit">more...</li>
+		<li class="more-less" ng-click="box.embargosLimit=box.defaultLimit" ng-if="box.embargosLimit>box.defaultLimit">less...</li>
+	</ul>
+
+	<ul>
+		<li class="more-less" ng-click="box.inactiveFilterExpand=box.inactiveFilterExpand?!box.inactiveFilterExpand:true"><span ng-if="!box.inactiveFilterExpand">+</span><span ng-if="box.inactiveFilterExpand">-</span> Inactive</li>
+		<li ng-class="{'expanded': box.inactiveFilterExpand}" class="inactive-filters-sub-list">
+			<ul>
+				<li class="embargo-filter filter" ng-repeat="et in box.embargos | filter:{isActive: false}" ng-click="box[column.title.split(' ').join('')]=et.name;box.addFilter(column);"><span ng-if="et.isSystemRequired" class="glyphicon glyphicon-globe"></span><span ng-if="!et.isSystemRequired" class="glyphicon glyphicon-user"></span> {{et.name}}</li>
+			</ul>
+		</li>
+	</ul>
+
+</form>

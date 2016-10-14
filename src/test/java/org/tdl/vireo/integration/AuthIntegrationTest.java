@@ -17,7 +17,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,7 +36,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     private AuthUtility authUtility;
 
     @Autowired
-    private NamedSearchFilterRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
     public void setup() {

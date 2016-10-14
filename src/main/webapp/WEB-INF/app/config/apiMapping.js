@@ -731,7 +731,7 @@ var apiMapping = {
 			'controller': 'workflow-step'
 		}
 	},
-	NamedSearchFilter: {
+	NamedSearchFilterGroup: {
 		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
@@ -746,10 +746,14 @@ var apiMapping = {
 			'endpoint': '/channel',
 			'controller': 'active-filters'
 		},
-		removeFilter: {
+		addFilter: {
 			'endpoint': '/private/queue',
 			'controller': 'submission-list',
-			'method': 'remove-filter-criterion'
+			'method': 'add-filter-criterion'
+		},
+		removeFilter: {
+			'endpoint': '/private/queue',
+			'controller': 'submission-list'
 		},
 		clearFilters: {
 			'endpoint': '/private/queue',
