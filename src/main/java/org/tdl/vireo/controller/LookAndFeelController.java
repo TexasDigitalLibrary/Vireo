@@ -46,6 +46,8 @@ public class LookAndFeelController {
         
         String logoName = lfModel.getSetting();
         String logoFileName = logoName + "." + lfModel.getFileType();
+       
+        // TODO: folder should be a configuration
         String path = "public/" + configurationRepo.getByName(ConfigurationName.THEME_PATH).getValue() + logoFileName;
 
         logger.info("Changing logo " + logoName);

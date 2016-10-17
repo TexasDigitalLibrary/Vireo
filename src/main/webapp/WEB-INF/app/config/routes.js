@@ -1,4 +1,6 @@
-vireo.config(function($routeProvider, $locationProvider) {
+vireo.config(function($compileProvider, $locationProvider, $routeProvider) {
+	
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
 	
 	$locationProvider.html5Mode(true);
 	

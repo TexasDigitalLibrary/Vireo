@@ -74,6 +74,19 @@ var submissionModel = function ($q, WsApi) {
 
 			return promise;
 		};
+		
+		submission.fileInfo = function(uri) {
+
+			angular.extend(this.getMapping().fileInfo, {
+				data: {
+					'uri': uri
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().fileInfo);
+
+			return promise;
+		};
 
 		return submission;
 	}

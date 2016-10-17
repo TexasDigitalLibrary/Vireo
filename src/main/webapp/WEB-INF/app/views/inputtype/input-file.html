@@ -12,9 +12,10 @@
 			</dropzone>
 	</div>
 </div>
-<div class="col-md-7 col-sm-12 file-preview-container">
+<div class="col-md-7 col-sm-12 file-preview-container" ng-init="getFile($index)">
 		<div class="file-preview">
-			<img ng-if="file && getPreview($index)" ngf-src="getPreview($index)">
+			<img ng-if="file && image" ng-src="{{image.src}}">
+			<img ng-if="file && !image && getPreview($index)" ngf-src="getPreview($index)">			
 			<span ng-if="file && !getPreview($index)" class="glyphicon glyphicon-file"></span>
 			<div>
 				<span ng-if="file.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>

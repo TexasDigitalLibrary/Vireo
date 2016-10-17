@@ -13,6 +13,8 @@ vireo.directive("field",  function(RestApi) {
 			$scope.submission = $scope.$parent.submission;
 
 			$scope.values = [];
+			
+			$scope.image = undefined;
 
 			$scope.getValues = function() {
 				angular.extend($scope.values, $scope.submission.findFieldValuesByFieldPredicate($scope.profile.fieldPredicate));
@@ -101,21 +103,26 @@ vireo.directive("field",  function(RestApi) {
 					'endpoint': '', 
 					'controller': 'submission',  
 					'method': 'upload',
-					'data': $scope.file,
+					'data': {
+						'fileName': $scope.file.name,
+					},
 					'file': $scope.file
 				});
 
 				uploadPromise.then(
 					function(data) {
 
-						var fileHash = data.payload.Integer;
-						console.log(fieldValue);
-						fieldValue.value = fileHash;
-						console.log(fieldValue);
+						var uri = data.meta.message;
+						
+						fieldValue.value = uri;
 						
 						$scope.save(fieldValue).then(function() {
 							$scope.uploading = false;
 							$scope.file.uploaded = true;
+							
+							
+							
+							
 						});
 
 						
@@ -127,10 +134,75 @@ vireo.directive("field",  function(RestApi) {
 
 
 			};
+			
+			$scope.getFile = function(index) {
+				
+				if($scope.file === undefined && $scope.values[index].value.length > 0) {
 
+					$scope.submission.fileInfo($scope.values[index].value).then(function(data) {						
+						
+						var file = angular.fromJson(data.body).payload.ObjectNode;
+						
+						var bytes = toUTF8Array(file.bytes);
+						
+						$scope.file = new File(bytes, file.name, {type: file.mime})
+					    
+					    var fr = new FileReader;
+
+						fr.onload = function() {
+							
+						    $scope.image = new Image;
+
+						    $scope.image.onload = function() {
+						        alert($scope.image.width);
+						    };
+
+						    $scope.image.src = fr.result;
+						    
+						    $scope.file.uploaded = true;
+						};
+
+						fr.readAsDataURL($scope.file); 
+						
+					});
+				}
+			};
+			
+			var toUTF8Array = function(str) {
+			    var utf8 = [];
+			    for (var i=0; i < str.length; i++) {
+			        var charcode = str.charCodeAt(i);
+			        if (charcode < 0x80) utf8.push(charcode);
+			        else if (charcode < 0x800) {
+			            utf8.push(0xc0 | (charcode >> 6), 
+			                      0x80 | (charcode & 0x3f));
+			        }
+			        else if (charcode < 0xd800 || charcode >= 0xe000) {
+			            utf8.push(0xe0 | (charcode >> 12), 
+			                      0x80 | ((charcode>>6) & 0x3f), 
+			                      0x80 | (charcode & 0x3f));
+			        }
+			        // surrogate pair
+			        else {
+			            i++;
+			            // UTF-16 encodes 0x10000-0x10FFFF by
+			            // subtracting 0x10000 and splitting the
+			            // 20 bits of 0x0-0xFFFFF into two halves
+			            charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+			                      | (str.charCodeAt(i) & 0x3ff))
+			            utf8.push(0xf0 | (charcode >>18), 
+			                      0x80 | ((charcode>>12) & 0x3f), 
+			                      0x80 | ((charcode>>6) & 0x3f), 
+			                      0x80 | (charcode & 0x3f));
+			        }
+			    }
+			    return utf8;
+			};
+
+			
 			$scope.getPreview = function(index) {
 				var preview = null;
-				if($scope.file.type.includes("image/")) preview = $scope.values[index].value;
+				if($scope.file.type.includes("image/")) preview = $scope.file;
 				if($scope.file.type.includes("pdf")) preview = "resources/images/pdf-logo.gif";
 				return preview;
 			};

@@ -537,6 +537,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'batch-assign-to'
+		},
+		fileInfo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file'
 		}
 	},
 	StudentSubmission: {

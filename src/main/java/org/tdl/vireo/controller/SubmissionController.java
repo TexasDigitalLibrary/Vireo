@@ -5,6 +5,7 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -131,15 +131,11 @@ public class SubmissionController {
     @ApiMapping("/batch-update-state")
     @Auth(role = "MANAGER")
     public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
-
         User user = userRepo.findByEmail(credentials.getEmail());
-
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setState(submissionState);
             submissionRepo.save(sub);
         });
-        ;
-
         return new ApiResponse(SUCCESS);
     }
 
@@ -147,29 +143,32 @@ public class SubmissionController {
     @ApiMapping("/batch-assign-to")
     @Auth(role = "MANAGER")
     public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
-
         User user = userRepo.findByEmail(credentials.getEmail());
-
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
             submissionRepo.save(sub);
         });
-        ;
-
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping(value = "/upload", method = RequestMethod.POST)
-    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiInputStream InputStream inputStream) throws IOException {
-    	    	
-    	System.out.println(inputStream);
-    	System.out.println(credentials.getEmail().hashCode());
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders, @ApiInputStream InputStream inputStream) throws IOException {
     	
-    	String path = "private/"+credentials.getEmail().hashCode();
+    	int hash = credentials.getEmail().hashCode();
+
+    	String fileName = requestHeaders.get("fileName");
+
+    	//TODO: folder should be a configuration
+    	String uri = "private/" + hash + "/" + fileName;
     	
-    	fileIOUtility.write(inputStream, path);
+    	fileIOUtility.write(inputStream, uri);
     	
-    	return new ApiResponse(SUCCESS, credentials.getEmail().hashCode());
+    	return new ApiResponse(SUCCESS, uri);
+    }
+    
+    @ApiMapping(value = "/file", method = RequestMethod.POST)
+    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> dataNode) throws IOException {
+    	return new ApiResponse(SUCCESS, fileIOUtility.getFile(dataNode.get("uri")));
     }
 
 }
