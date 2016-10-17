@@ -6,7 +6,7 @@
 				<div class="col-xs-12">
 					<ul class="breadcrumb">
 						<li ng-click="selectOrganization(organizations[0])">
-							<a href="#">Vireo Institution</a>
+							<a href="#">{{organizations[0].name}}</a>
 							<span ng-if="getBreadcrumbs().length == 0" class="glyphicon glyphicon-arrow-down"></span>
 						</li>
 						<li ng-repeat="panel in getBreadcrumbs()" ng-click="selectOrganization(panel.selected.organization)">
