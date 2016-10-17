@@ -27,8 +27,11 @@
 		 	</thead>
 		 	<tbody>
 				<tr ng-repeat="row in $data">
-					<td ng-if="col.inputType.name != 'INPUT_DATETIME'" ng-repeat="col in $columns">{{getSubmissionProperty(row, col)}}</td>
-					<td ng-if="col.inputType.name == 'INPUT_DATETIME'" ng-repeat="col in $columns">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</td>
+					<td  ng-repeat="col in $columns">
+						<span ng-if="col.inputType.name != 'INPUT_DATETIME'">{{getSubmissionProperty(row, col)}}</span>
+						<span ng-if="col.inputType.name == 'INPUT_DATETIME'">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</span>
+					</td>
+					<!-- <td ng-if="col.inputType.name == 'INPUT_DATETIME'" ng-repeat="col in $columns">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</td> -->
 				</tr>
 			</tbody>
 			<tfoot class="header">
