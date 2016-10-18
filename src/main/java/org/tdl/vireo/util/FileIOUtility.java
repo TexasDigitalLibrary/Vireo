@@ -2,8 +2,6 @@ package org.tdl.vireo.util;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -66,9 +64,8 @@ public class FileIOUtility {
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
 		fileInfo.put("name", path.getFileName().toString());
 		fileInfo.put("ext", FilenameUtils.getExtension(path.toString()));
-		fileInfo.put("mime", Files.probeContentType(path));
+		fileInfo.put("type", Files.probeContentType(path));
 		fileInfo.put("size", attr.size());
-		fileInfo.put("bytes",  IOUtils.toByteArray(new FileInputStream(new File(getPath(relativePath)))));
 		return objectMapper.valueToTree(fileInfo);
 	}
 

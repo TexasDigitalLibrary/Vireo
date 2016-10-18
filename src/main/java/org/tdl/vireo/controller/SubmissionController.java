@@ -152,21 +152,18 @@ public class SubmissionController {
     }
 
     @ApiMapping(value = "/upload", method = RequestMethod.POST)
-    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders, @ApiInputStream InputStream inputStream) throws IOException {
-    	
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders, @ApiInputStream InputStream inputStream) throws IOException {    	
     	int hash = credentials.getEmail().hashCode();
-
     	String fileName = requestHeaders.get("fileName");
 
     	//TODO: folder should be a configuration
     	String uri = "private/" + hash + "/" + fileName;
     	
-    	fileIOUtility.write(inputStream, uri);
-    	
+    	fileIOUtility.write(inputStream, uri);    	
     	return new ApiResponse(SUCCESS, uri);
     }
     
-    @ApiMapping(value = "/file", method = RequestMethod.POST)
+    @ApiMapping(value = "/file-info", method = RequestMethod.POST)
     public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> dataNode) throws IOException {
     	return new ApiResponse(SUCCESS, fileIOUtility.getFile(dataNode.get("uri")));
     }

@@ -119,10 +119,6 @@ vireo.directive("field",  function(RestApi) {
 						$scope.save(fieldValue).then(function() {
 							$scope.uploading = false;
 							$scope.file.uploaded = true;
-							
-							
-							
-							
 						});
 
 						
@@ -135,50 +131,35 @@ vireo.directive("field",  function(RestApi) {
 
 			};
 			
-			$scope.getFile = function(index) {
-				
+			$scope.getFileInfo = function(index) {
 				if($scope.file === undefined && $scope.values[index].value.length > 0) {
-
-					$scope.submission.fileInfo($scope.values[index].value).then(function(data) {						
-						
-						var file = angular.fromJson(data.body).payload.ObjectNode;
-						
-						var byteCharacters = atob(file.bytes);
-						
-						var byteNumbers = new Array(byteCharacters.length);
-						for (var i = 0; i < byteCharacters.length; i++) {
-						    byteNumbers[i] = byteCharacters.charCodeAt(i);
-						}
-						
-						var byteArray = new Uint8Array(byteNumbers);
-						
-						$scope.file = new File(byteArray, file.name, {type: file.mime});
-					    
-					    var fr = new FileReader;
-
-						fr.onload = function() {
-							
-						    $scope.image = new Image;
-
-						    $scope.image.onload = function() {
-						        alert($scope.image.width);
-						    };
-
-						    $scope.image.src = fr.result;
-						    
-						    $scope.file.uploaded = true;
-						};
-
-						fr.readAsDataURL($scope.file); 
-						
+					$scope.submission.fileInfo($scope.values[index].value).then(function(data) {
+						$scope.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
 					});
 				}
 			};
 
 			$scope.getPreview = function(index) {
 				var preview = null;
-				if($scope.file.type.includes("image/")) preview = $scope.file;
-				if($scope.file.type.includes("pdf")) preview = "resources/images/pdf-logo.gif";
+				if($scope.file !== undefined) {
+					if($scope.file.type.includes("image/")) {
+						preview = $scope.file;
+					}
+					else if($scope.file.type.includes("pdf")) { 
+						preview = "resources/images/pdf-logo.gif";
+					}
+				}
+				if($scope.fileInfo !== undefined) {
+					if($scope.fileInfo.type.includes("image/png")) { 
+						preview = "resources/images/png-logo.jpg";
+					}
+					else if($scope.fileInfo.type.includes("image/jpeg")) { 
+						preview = "resources/images/jpg-logo.png";
+					}
+					else if($scope.fileInfo.type.includes("pdf")) { 
+						preview = "resources/images/pdf-logo.gif";
+					}
+				}
 				return preview;
 			};
 

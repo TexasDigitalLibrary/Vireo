@@ -541,7 +541,7 @@ var apiMapping = {
 		fileInfo: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
-			'method': 'file'
+			'method': 'file-info'
 		}
 	},
 	StudentSubmission: {
