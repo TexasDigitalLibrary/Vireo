@@ -165,7 +165,7 @@ public class SubmissionController {
     
     @ApiMapping(value = "/file-info", method = RequestMethod.POST)
     public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> dataNode) throws IOException {
-    	return new ApiResponse(SUCCESS, fileIOUtility.getFile(dataNode.get("uri")));
+    	return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(dataNode.get("uri")));
     }
 
 }

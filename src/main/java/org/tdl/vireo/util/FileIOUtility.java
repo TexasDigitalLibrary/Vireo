@@ -58,7 +58,7 @@ public class FileIOUtility {
 		ImageIO.write(image, fileExtension, Files.newOutputStream(path));
 	}
 
-	public JsonNode getFile(String relativePath) throws IOException {
+	public JsonNode getFileInfo(String relativePath) throws IOException {
 		Path path = Paths.get(getPath(relativePath));
 		BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
