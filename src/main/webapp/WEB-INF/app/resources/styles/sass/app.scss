@@ -1,7 +1,7 @@
 @import "sass/main";
 
 body {
-  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
   color: #70706f;
 }
 
@@ -298,7 +298,7 @@ main footer {
   background: none;
   color: #fff;
   font-size: 1em;
-  font-family: "Open Sans","Helvetica Neue",Helvetica,Helvetica,Arial,sans-serif;
+  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,Sans-Serif;
   margin-left: -5px;
 }
 
@@ -391,13 +391,13 @@ sidebox {
   border-radius:5px;
   border: 1px solid #CFCFCF;
   margin: 0 0 20px 0;
-  font-family: "Lucida Grande", "Bitstream Vera Sans";
+  font-family: "Lucida Grande", "Bitstream Vera Sans", Sans-Serif;
   font-size: 13px;
 }
 
 sidebox .sidebox-heading {
   color: #cccccc;
-  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
   width: 100%;
   cursor:pointer;
   padding: 6px 5px 0 5px;;
