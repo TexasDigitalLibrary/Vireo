@@ -1,4 +1,4 @@
-vireo.config(function($routeProvider, $locationProvider) {
+vireo.config(function($locationProvider, $routeProvider) {
 	
 	$locationProvider.html5Mode(true);
 	

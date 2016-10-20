@@ -1,4 +1,4 @@
-vireo.directive("field",  function() {
+vireo.directive("field",  function(RestApi) {
 	return {
 		templateUrl: 'views/directives/fieldProfile.html',
 		restrict: 'E',
@@ -13,6 +13,8 @@ vireo.directive("field",  function() {
 			$scope.submission = $scope.$parent.submission;
 
 			$scope.values = [];
+			
+			$scope.image = undefined;
 
 			$scope.getValues = function() {
 				angular.extend($scope.values, $scope.submission.findFieldValuesByFieldPredicate($scope.profile.fieldPredicate));
@@ -30,12 +32,16 @@ vireo.directive("field",  function() {
 
 				if ($scope.fieldProfileForm.$dirty) {
 					$scope.saving = value.id;
-					$scope.submission.saveFieldValue(value).then(function() {
+					var savePromsie = $scope.submission.saveFieldValue(value);
+
+					savePromsie.then(function() {
 						$scope.saving = 0;
 						if($scope.fieldProfileForm !== undefined) {
 							$scope.fieldProfileForm.$setPristine();
 						}
 					});
+
+					return savePromsie;
 				}
 
 			};
@@ -82,14 +88,78 @@ vireo.directive("field",  function() {
 				return pattern;
 			};
 
-			$scope.begineUpload = function(file) {
+			$scope.queueUpload = function(file) {
 				$scope.file = file;
+			};
+
+			$scope.cancelUpload = function() {
+				delete $scope.file;
+			};
+
+			$scope.beginUpload = function(fieldValue) {
+				$scope.uploading = true;
+
+				var uploadPromise = RestApi.post({
+					'endpoint': '', 
+					'controller': 'submission',  
+					'method': 'upload',
+					'data': {
+						'fileName': $scope.file.name,
+					},
+					'file': $scope.file
+				});
+
+				uploadPromise.then(
+					function(data) {
+
+						var uri = data.meta.message;
+						
+						fieldValue.value = uri;
+						
+						$scope.save(fieldValue).then(function() {
+							$scope.uploading = false;
+							$scope.file.uploaded = true;
+						});
+
+						
+					}, 
+					function(data) {
+						console.log("Error", data);
+					}
+				);
+
+
+			};
+			
+			$scope.getFileInfo = function(index) {
+				if($scope.file === undefined && $scope.values[index].value.length > 0) {
+					$scope.submission.fileInfo($scope.values[index].value).then(function(data) {
+						$scope.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+					});
+				}
 			};
 
 			$scope.getPreview = function(index) {
 				var preview = null;
-				if($scope.file.type.includes("image/")) preview = $scope.values[index].value;
-				if($scope.file.type.includes("pdf")) preview = "resources/images/pdf-logo.gif";
+				if($scope.file !== undefined) {
+					if($scope.file.type.includes("image/")) {
+						preview = $scope.file;
+					}
+					else if($scope.file.type.includes("pdf")) { 
+						preview = "resources/images/pdf-logo.gif";
+					}
+				}
+				if($scope.fileInfo !== undefined) {
+					if($scope.fileInfo.type.includes("image/png")) { 
+						preview = "resources/images/png-logo.jpg";
+					}
+					else if($scope.fileInfo.type.includes("image/jpeg")) { 
+						preview = "resources/images/jpg-logo.png";
+					}
+					else if($scope.fileInfo.type.includes("pdf")) { 
+						preview = "resources/images/pdf-logo.gif";
+					}
+				}
 				return preview;
 			};
 

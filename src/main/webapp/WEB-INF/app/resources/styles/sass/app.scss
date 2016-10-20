@@ -1499,6 +1499,31 @@ footer a, footer li, footer p {
 
 }
 
+.field-profile .glyphicon.file-upload-icon {
+  text-align: center;
+  font-size: 1em;
+}
+
+.field-profile .glyphicon.file-upload-icon.glyphicon-ok {
+  color: green;
+  margin-left: 15px;
+}
+
+.field-profile .glyphicon.file-upload-icon.glyphicon-trash {
+  margin-right: 15px;
+}
+
+.field-profile .glyphicon.file-upload-icon.glyphicon-trash:hover {
+  cursor:pointer;
+}
+
+.field-profile .file-upload-progress {
+  width: 80%;
+  height: 20px;
+  margin: auto;
+  margin-top: 5px;
+}
+
 /********************
 * ETD Table Styling *
 ********************/
