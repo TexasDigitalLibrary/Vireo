@@ -362,7 +362,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 
 			if(member.fieldPredicate !== undefined) {
 				if(member.fieldPredicate.value == col.predicate) {
-					value = member.value;
+					value += value.length > 0 ? ", " + member.value : member.value;
 				}
 			}
 			else {

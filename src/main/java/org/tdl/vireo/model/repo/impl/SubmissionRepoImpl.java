@@ -140,7 +140,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         
         StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT s.id,");
         
-        StringBuilder sqlCountSelectBuilder = new StringBuilder("SELECT COUNT(*) FROM submission s ");
+        StringBuilder sqlCountSelectBuilder = new StringBuilder("SELECT COUNT(DISTINCT s.id) FROM submission s ");
         
         StringBuilder sqlJoinsBuilder = new StringBuilder();
         StringBuilder sqlWheresBuilder = new StringBuilder();
@@ -340,9 +340,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             sqlWheresBuilder.insert(0, "\nWHERE");
             sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
         }
-
+        
         String sqlQuery;
-
+        
         if (pageable != null) {
 
             // determine the offset and limit of the query
