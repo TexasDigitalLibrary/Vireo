@@ -11,12 +11,12 @@
 			<p><strong>You currently have a submission in
 			progress!</strong></p>
 
-			<p>If you have a document which “Needs Corrections”, please click the Edit button next to it. If you have a document “In Progress,” please Continue or Delete the submission instead of starting a new one.</p>
+			<p>If you have a document which "Needs Corrections", please click the Edit button next to it. If you have a document "In Progress", please Continue or Delete the submission instead of starting a new one.</p>
 		</div>
     </div>
 </div>
 
 <div class="modal-footer">
-    <a href="/submission/new" type="button" class="btn btn-primary">Start</a>
+    <button type="button" class="btn btn-primary" ng-click="startNewSubmission('/submission/new')">Start</a>
     <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
 </div>
