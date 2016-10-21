@@ -198,13 +198,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         		break;
                         	}
-                        	                        	
-                        	if(submissionListColumn.getInputType().getName().equals("INPUT_DATETIME")) {
-                        		
-                        		
-                        	} else {
-                        		
-                        	}
                         
                         }
                         
