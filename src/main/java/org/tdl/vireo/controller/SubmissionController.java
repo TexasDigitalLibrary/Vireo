@@ -98,7 +98,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value")
     @Auth(role = "STUDENT")
-    public ApiResponse updateSubmission(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
+    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -111,6 +111,16 @@ public class SubmissionController {
         }
 
         return new ApiResponse(SUCCESS, fieldValue);
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/remove-field-value")
+    @Auth(role = "STUDENT")
+    public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
+        Submission submission = submissionRepo.findOne(submissionId);        
+        submission.removeFieldValue(fieldValue);        
+        submissionRepo.save(submission);
+        return new ApiResponse(SUCCESS);
     }
 
     @Transactional

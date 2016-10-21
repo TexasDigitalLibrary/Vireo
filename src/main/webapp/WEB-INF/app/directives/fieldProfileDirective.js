@@ -8,83 +8,82 @@ vireo.directive("field",  function(RestApi) {
 		},
 		link: function($scope) {
 
-			$scope.saving = 0;
-
 			$scope.submission = $scope.$parent.submission;
-
-			$scope.values = [];
 			
 			$scope.image = undefined;
-
-			$scope.getValues = function() {
-				angular.extend($scope.values, $scope.submission.findFieldValuesByFieldPredicate($scope.profile.fieldPredicate));
-				if ($scope.values.length === 0) {
-					$scope.values.push({
-						id: null,
-						value: "",
-						fieldPredicate: $scope.profile.fieldPredicate
-					});
+			
+			var refreshValues = function() {
+				$scope.values = $scope.submission.getFieldValuesByFieldPredicate($scope.profile.fieldPredicate);
+			};
+			
+			refreshValues();
+			
+			$scope.showInfo = function(value) {
+				var show = true;
+				if($scope.updating !== undefined && $scope.updating === value.id && value.value.length > 0) {
+					show = false;
 				}
-				return $scope.values;
+				return show;
 			};
 
 			$scope.save = function(value) {
-
 				if ($scope.fieldProfileForm.$dirty) {
-					$scope.saving = value.id;
+					$scope.updating = value.id;
 					var savePromsie = $scope.submission.saveFieldValue(value);
 
 					savePromsie.then(function() {
-						$scope.saving = 0;
+						delete $scope.updating;
 						if($scope.fieldProfileForm !== undefined) {
 							$scope.fieldProfileForm.$setPristine();
 						}
+						refreshValues();
 					});
 
 					return savePromsie;
 				}
-
 			};
 
 			$scope.addFieldValue = function() {
 				$scope.submission.addFieldValue($scope.profile.fieldPredicate);
+				refreshValues();
 			};
+			
+			var remove = function(value) {
+				$scope.values.splice($scope.values.indexOf(value), 1);
+				$scope.submission.fieldValues.splice($scope.submission.fieldValues.indexOf(value), 1);
+			}
 
 			$scope.removeFieldValue = function(value) {
-				var indexOfValue = $scope.submission.fieldValues.indexOf(value);
-				$scope.submission.fieldValues.splice(indexOfValue, 1);
+				if(value.id === null) {
+					remove(value);
+				}
+				else {
+					$scope.updating = value.id;
+					$scope.submission.removeFieldValue(value).then(function() {
+						delete $scope.updating;
+						remove(value);	
+					});
+				}
 			};
 
-			$scope.filterValuesByFieldPredicate = function(value) {
-				return $scope.profile.fieldPredicate.id === value.fieldPredicate.id;
+			$scope.showAdd = function(isFirst) {
+				return $scope.profile.repeatable && isFirst;
 			};
-
-			$scope.showRemove = function(value) {
-				return $scope.profile.repeatable && !$scope.first(value);
-			};
-
-			$scope.showAdd = function(value) {
-				return $scope.profile.repeatable && $scope.first(value);
-			};
-
-			$scope.first = function(value) {
-				return $scope.submission.findFieldValuesByPredicate($scope.profile.fieldPredicate).indexOf(value) === 0;
+			
+			$scope.showRemove = function(isFirst) {
+				return $scope.profile.repeatable && !isFirst;
 			};
 
 			$scope.getPattern = function() {
-				
 				var pattern = "*";
 				var cv = $scope.profile.controlledVocabularies[0];
-	
 				if(typeof cv !== "undefined") {
 					pattern = "";
 					for(var i in cv.dictionary) {
 						var word = cv.dictionary[i];
-						pattern+=word.name;
-						if(i+1!==cv.dictionary.length) pattern+=",";
+						pattern += pattern.length > 0 ? ", " + word.name : word.name;
 					}
 				}
-
 				return pattern;
 			};
 
@@ -127,7 +126,6 @@ vireo.directive("field",  function(RestApi) {
 						console.log("Error", data);
 					}
 				);
-
 
 			};
 			

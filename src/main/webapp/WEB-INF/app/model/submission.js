@@ -5,24 +5,30 @@ var submissionModel = function ($q, WsApi) {
 		var submission = this;
 
 		// additional model methods and variables
+		var getStubFieldValue = function(fieldPredicate) {
+			return {
+				id: null,
+				value: "",
+				fieldPredicate: fieldPredicate
+			}
+		};
 
+		submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
 
-		submission.findFieldValuesByFieldPredicate = function(fieldPredicate) {
-
-			var foundFieldValues = [];
+			var fieldValues = [];
 
 			for(var i in submission.fieldValues) {
-
 				var fieldValue = submission.fieldValues[i];
-
 				if(fieldValue.fieldPredicate.value == fieldPredicate.value) {
-					foundFieldValues.push(fieldValue);
+					fieldValues.push(fieldValue);
 				}
-
+			}
+			
+			if (fieldValues.length === 0) {
+				fieldValues.push(getStubFieldValue(fieldPredicate));
 			}
 
-			return foundFieldValues;
-
+			return fieldValues;
 		};
 
 		submission.findFieldValueById = function(id) {
@@ -30,31 +36,18 @@ var submissionModel = function ($q, WsApi) {
 			var foundFieldValue = null;
 
 			for(var i in submission.fieldValues) {
-
 				var fieldValue = submission.fieldValues[i];
-
 				if(fieldValue.id == id) {
 					foundFieldValue = fieldValue;
 					break;
 				}
-
 			}
 
 			return foundFieldValue;
-
 		};
 
 		submission.addFieldValue = function(fieldPredicate) {
-			var fieldValue = {
-				id: null,
-				value: "",
-				fieldPredicate: fieldPredicate
-			};
-
-			submission.fieldValues.push(fieldValue);
-
-			return fieldValue;
-
+			submission.fieldValues.push(getStubFieldValue(fieldPredicate));
 		};
 
 		submission.saveFieldValue = function(fieldValue) {
@@ -71,6 +64,18 @@ var submissionModel = function ($q, WsApi) {
 				var index = submission.fieldValues.indexOf(fieldValue);
 				submission.fieldValues[index] = updatedFieldValue;
 			});
+
+			return promise;
+		};
+		
+		submission.removeFieldValue = function(fieldValue) {
+
+			angular.extend(this.getMapping().removeFieldValue, {
+				method: submission.id+"/remove-field-value",
+				data: fieldValue
+			});
+
+			var promise = WsApi.fetch(this.getMapping().removeFieldValue);
 
 			return promise;
 		};
