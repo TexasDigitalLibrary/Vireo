@@ -185,6 +185,7 @@ public class SubmissionListController {
 
 		String criterionName = data.get("criterionName").asText();
 		String filterValue = data.get("filterValue").asText();
+		Boolean exactMatch = data.get("exactMatch").asBoolean();
 
 		JsonNode filterGlossNode = data.get("filterGloss");
 		
@@ -212,6 +213,8 @@ public class SubmissionListController {
 		}
 
 		namedSearchFilter.addFilter(filterValue, filterGloss);
+		
+		namedSearchFilter.setExactMatch(exactMatch);
 		
 		namedSearchFilter.setAllColumnSearch(criterionName.equals(SEARCH_BOX_TITLE) ? true : false);
 

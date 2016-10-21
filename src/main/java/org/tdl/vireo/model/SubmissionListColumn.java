@@ -53,6 +53,9 @@ public class SubmissionListColumn extends BaseEntity {
 
     @Transient
     private Boolean visible;
+    
+    @Transient
+    private Boolean exactMatch;
 
     @Transient
     private Sort sort;
@@ -62,6 +65,7 @@ public class SubmissionListColumn extends BaseEntity {
 
     public SubmissionListColumn() {
         setModelValidator(new SubmissionListColumnValidator());
+        this.exactMatch = false;
         this.visible = false;
         this.sortOrder = 0;
         this.sort = Sort.NONE;
@@ -166,16 +170,28 @@ public class SubmissionListColumn extends BaseEntity {
         this.filters = filters;
     }
 
+    /**
+     * 
+     * @param filter
+     */
     public void addFilter(String filter) {
         if (!filters.contains(filter)) {
             filters.add(filter);
         }
     }
 
+    /**
+     * 
+     * @param filters
+     */
     public void addAllFilters(Set<String> filters) {
         this.filters.addAll(filters);
     }
 
+    /**
+     * 
+     * @param filter
+     */
     public void removeFilter(String filter) {
         filters.remove(filter);
     }
@@ -225,15 +241,39 @@ public class SubmissionListColumn extends BaseEntity {
         this.sort = sort;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getVisible() {
         return visible;
     }
 
+    /**
+     * 
+     * @param visible
+     */
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    public Boolean getExactMatch() {
+		return exactMatch;
+	}
 
     /**
+     * 
+     * @param exactMatch
+     */
+	public void setExactMatch(Boolean exactMatch) {
+		this.exactMatch = exactMatch;
+	}
+
+	/**
      * @return the status
      */
     public String getStatus() {

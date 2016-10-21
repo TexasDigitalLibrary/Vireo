@@ -28,9 +28,13 @@ public class NamedSearchFilter extends BaseEntity {
     @Column(nullable = false)
     private Boolean allColumnSearch;
     
+    @Column(nullable = false)
+    private Boolean exactMatch;
+    
     public NamedSearchFilter() {
         setFilters(new HashSet<FilterCriterion>());
         setAllColumnSearch(true);
+        setExactMatch(false);
     }
     
     public NamedSearchFilter(SubmissionListColumn submissionListColumn) {
@@ -91,6 +95,14 @@ public class NamedSearchFilter extends BaseEntity {
     public void setAllColumnSearch(Boolean allColumnSearch) {
     	this.allColumnSearch = allColumnSearch;
     }
+    
+	public Boolean getExactMatch() {
+		return exactMatch;
+	}
+
+	public void setExactMatch(Boolean exactMatch) {
+		this.exactMatch = exactMatch;
+	}
 
 	public String getName() {
 		return name;
