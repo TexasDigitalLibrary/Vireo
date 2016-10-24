@@ -33,12 +33,13 @@ public class FileIOUtility {
 		Files.write(processRelativePath(relativePath), data);
 	}
 
-	public void write(InputStream is, String relativePath) throws IOException {
+	public String write(InputStream is, String relativePath) throws IOException {
 		Path path = processRelativePath(relativePath);
 		String[] rawFileData = IOUtils.toString(is, "UTF-8").split(";");
 		String[] encodedData = rawFileData[1].split(","); 
 		byte[] fileData = Base64.getDecoder().decode(encodedData[1]);
 		Files.write(path, fileData);
+		return relativePath;
 	}
 
 	public void writeImage(InputStream inputStream, String relativePath) throws IOException {

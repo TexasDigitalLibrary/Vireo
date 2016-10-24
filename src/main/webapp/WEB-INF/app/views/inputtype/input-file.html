@@ -14,7 +14,7 @@
 </div>
 <div class="col-md-7 col-sm-12 file-preview-container" ng-init="getFileInfo($index)">
 	<modal 
-		modal-id="confirmDeleteFileModal" 
+		modal-id="{{'confirmDeleteFileModal' + getUriHash(values[$index].value) }}"
    		modal-view="views/modals/submissions/confirmDeleteFile.html" 
 		modal-header-class="modal-header-danger">
 	</modal>
@@ -23,17 +23,17 @@
 		<span ng-if="fileInfo && !getPreview($index)" class="glyphicon glyphicon-file" ng-click="getFile($index)" class="select-toggle"></span>
 		<div ng-if="fileInfo">
 			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>
-			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-trash" ng-click="openModal('#confirmDeleteFileModal')"></span>
+			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-trash text-danger" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(values[$index].value))"></span>
 		</div>
 	</div>
 	<div class="file-info" ng-if="fileInfo">
 		<p class="file-name">{{fileInfo.name}}</p>
 		<p class="file-type">{{fileInfo.type}}</p>
-		<p class="file-size">{{fileInfo.size + " mb"}}</p>
+		<p class="file-size">{{fileInfo.size + " bytes"}}</p>
 	</div>
 	<div class="file-info" ng-if="file && !uploading && !fileInfo.uploaded">
 		<button class="btn btn-success" ng-click="beginUpload(value)">Upload</button>
 		<button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
 	</div>
-	<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="progress" max="100">Uploading...</uib-progressbar>	
+	<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="progress" max="100">{{progress + '%'}}</uib-progressbar>	
 </div>

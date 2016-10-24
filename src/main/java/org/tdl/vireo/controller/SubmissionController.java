@@ -170,8 +170,8 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @RequestParam("file") MultipartFile file) throws IOException {    	
     	int hash = credentials.getEmail().hashCode();
-        String fileName = file.getOriginalFilename();        
-        String uri = "private/" + hash + "/" + fileName;
+        String fileName = file.getOriginalFilename();
+        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);        
     	return new ApiResponse(SUCCESS, uri);
     }

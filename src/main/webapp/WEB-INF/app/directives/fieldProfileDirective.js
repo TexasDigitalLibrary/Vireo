@@ -125,6 +125,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 					$scope.save(fieldValue).then(function() {
 						$scope.uploading = false;
 						$scope.fileInfo.uploaded = true;
+						retrieveFileInfo(uri);
 					});
 		            
 		        }, function (response) {
@@ -136,10 +137,14 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			
 			$scope.getFileInfo = function(index) {
 				if($scope.file === undefined && $scope.values[index].value.length > 0) {
-					$scope.submission.fileInfo($scope.values[index].value).then(function(data) {
-						$scope.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-					});
+					retrieveFileInfo($scope.values[index].value);
 				}
+			};
+			
+			var retrieveFileInfo = function(uri) {
+				$scope.submission.fileInfo(uri).then(function(data) {
+					$scope.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+				});
 			};
 			
 			$scope.getFile = function(index) {
@@ -153,31 +158,41 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 				}
 			};
 			
+			$scope.getUriHash = function(uri) {
+				var hash = 0;
+				if (uri.length == 0) return hash;
+				for (i = 0; i < uri.length; i++) {
+					char = uri.charCodeAt(i);
+					hash = ((hash<<5)-hash)+char;
+					hash = hash & hash; // Convert to 32bit integer
+				}
+				return hash;
+			};
+			
 			$scope.removeFile = function(fieldValue) {
 				$scope.deleting = true;
 				$scope.submission.removeFile(fieldValue.value).then(function(res) {
-					fieldValue.value = "";
+					var cloneFieldValue = angular.copy(fieldValue);
+					cloneFieldValue.value = "";
 					$scope.fieldProfileForm.$dirty = true;
-					$scope.save(fieldValue).then(function() {
+					$scope.save(cloneFieldValue).then(function() {
 						$scope.deleting = false;
 						delete $scope.file;
 						delete $scope.fileInfo;
 						$scope.closeModal();
+						fieldValue.value = "";
 					});
 				});
 			};
 
 			$scope.getPreview = function(index) {
-				var preview = null;
-				if($scope.file !== undefined) {
+				var preview;
+				if($scope.file !== undefined && $scope.file.type !== undefined) {
 					if($scope.file.type.includes("image/")) {
 						preview = $scope.file;
 					}
-					else if($scope.file.type.includes("pdf")) { 
-						preview = "resources/images/pdf-logo.gif";
-					}
-				}
-				if($scope.fileInfo !== undefined) {
+				}				
+				if(preview === undefined && $scope.fileInfo !== undefined && $scope.fileInfo.type !== undefined) {
 					if($scope.fileInfo.type.includes("image/png")) { 
 						preview = "resources/images/png-logo.jpg";
 					}
