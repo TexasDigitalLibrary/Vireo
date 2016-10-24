@@ -52,7 +52,7 @@ public class LookAndFeelController {
 
         logger.info("Changing logo " + logoName);
         
-        fileIOUtility.writeImage(inputStream, path);
+        fileIOUtility.write(inputStream, path);
         
         Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
         

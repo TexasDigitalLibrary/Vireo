@@ -1,4 +1,4 @@
-vireo.directive("field",  function(RestApi) {
+vireo.directive("field",  function($controller, $q, FileApi) {
 	return {
 		templateUrl: 'views/directives/fieldProfile.html',
 		restrict: 'E',
@@ -7,8 +7,12 @@ vireo.directive("field",  function(RestApi) {
 			profile: "="
 		},
 		link: function($scope) {
-
+			
+			angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+			
 			$scope.submission = $scope.$parent.submission;
+			
+			$scope.progress = 0;
 			
 			$scope.image = undefined;
 			
@@ -92,44 +96,42 @@ vireo.directive("field",  function(RestApi) {
 
 			$scope.queueUpload = function(file) {
 				$scope.file = file;
+				$scope.fileInfo = {
+					name: file.name,
+					type: file.type,
+					size: file.size
+				}
 			};
 
 			$scope.cancelUpload = function() {
 				delete $scope.file;
+				delete $scope.fileInfo;
 			};
 
 			$scope.beginUpload = function(fieldValue) {
+				
 				$scope.uploading = true;
-
-				var uploadPromise = RestApi.post({
+								
+				FileApi.upload({
 					'endpoint': '', 
 					'controller': 'submission',  
 					'method': 'upload',
-					'data': {
-						'fileName': $scope.file.name,
-					},
 					'file': $scope.file
-				});
+				}).then(function (response) {
+		            var uri = response.data.meta.message;
 
-				uploadPromise.then(
-					function(data) {
-
-						var uri = data.meta.message;
-						
-						fieldValue.value = uri;
-						
-						$scope.save(fieldValue).then(function() {
-							$scope.uploading = false;
-							$scope.file.uploaded = true;
-						});
-
-						
-					}, 
-					function(data) {
-						console.log("Error", data);
-					}
-				);
-
+		            fieldValue.value = uri;
+					
+					$scope.save(fieldValue).then(function() {
+						$scope.uploading = false;
+						$scope.fileInfo.uploaded = true;
+					});
+		            
+		        }, function (response) {
+		            console.log('Error status: ' + response.status);
+		        }, function (progress) {
+		            $scope.progress = progress;
+		        });				
 			};
 			
 			$scope.getFileInfo = function(index) {
@@ -138,6 +140,31 @@ vireo.directive("field",  function(RestApi) {
 						$scope.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
 					});
 				}
+			};
+			
+			$scope.getFile = function(index) {
+				if($scope.file === undefined && $scope.values[index].value.length > 0) {
+					$scope.submission.file($scope.values[index].value).then(function(data) {						
+						saveAs(new Blob([data], { type: $scope.fileInfo.type }), $scope.fileInfo.name);
+					});
+				}
+				else {
+					saveAs($scope.file);
+				}
+			};
+			
+			$scope.removeFile = function(fieldValue) {
+				$scope.deleting = true;
+				$scope.submission.removeFile(fieldValue.value).then(function(res) {
+					fieldValue.value = "";
+					$scope.fieldProfileForm.$dirty = true;
+					$scope.save(fieldValue).then(function() {
+						$scope.deleting = false;
+						delete $scope.file;
+						delete $scope.fileInfo;
+						$scope.closeModal();
+					});
+				});
 			};
 
 			$scope.getPreview = function(index) {

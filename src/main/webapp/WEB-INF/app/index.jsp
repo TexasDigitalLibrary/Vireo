@@ -163,6 +163,7 @@
 	<!-- Bower component -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/FileSaver/FileSaver.min.js"></script>
 	
 	<script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
 	<script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
@@ -233,6 +234,7 @@
 	    <script src="bower_components/core/app/services/wsservice.js"></script>
 	    <script src="bower_components/core/app/services/wsapi.js"></script>
 	    <script src="bower_components/core/app/services/restapi.js"></script>
+	    <script src="bower_components/core/app/services/fileapi.js"></script>
 	  	<script src="bower_components/core/app/services/authserviceapi.js"></script>
 	  	<script src="bower_components/core/app/services/modalservice.js"></script>
 	  	<script src="bower_components/core/app/services/storageservice.js"></script>
@@ -246,7 +248,7 @@
 
 	  	<!-- Models -->
 	    <script src="bower_components/core/app/model/abstractModel.js"></script>
-	    <script src="bower_components/core/app/model/assumedControlModel.js"></script>
+	    <script src="bower_components/core/app/model/assumedControl.js"></script>
 		<script src="bower_components/core/app/model/user.js"></script>
 
 	    <!-- Controllers -->

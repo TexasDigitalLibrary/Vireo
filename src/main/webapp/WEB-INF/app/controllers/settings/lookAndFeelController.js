@@ -31,6 +31,7 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 
 		delete $scope.uplaodLogo.file;
 
+		console.log($scope.modalData.newLogo.file)
 		//TODO: This may be better if removed to a service
 		var uploadPromise = RestApi.post({
 			'endpoint': '', 

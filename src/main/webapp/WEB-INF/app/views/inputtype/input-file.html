@@ -1,39 +1,39 @@
 <div class="col-md-5 col-sm-12">
 	<div class="input-group file-input-group">
-			<span class="pull-right file-info-tip">
-				<span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-			    <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
-		    </span>
-			<dropzone 
-				file-model="values[$index].value"
-				text="Drop a file here to begin upload",
-				patterns="{{getPattern()}}"
-				drop-method="queueUpload(file)">
-			</dropzone>
+		<span class="pull-right file-info-tip">
+			<span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+		    <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
+	    </span>
+		<dropzone 
+			file-model="values[$index].value"
+			text="Drop a file here to begin upload",
+			patterns="{{getPattern()}}"
+			drop-method="queueUpload(file)">
+		</dropzone>
 	</div>
 </div>
 <div class="col-md-7 col-sm-12 file-preview-container" ng-init="getFileInfo($index)">
-		<div class="file-preview">
-			<img ng-if="(fileInfo || file) && getPreview($index)" ngf-src="getPreview($index)">			
-			<span ng-if="(fileInfo || file) && !getPreview($index)" class="glyphicon glyphicon-file"></span>
-			<div ng-if="!fileInfo">
-				<span ng-if="file.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>
-				<span ng-if="file.uploaded" class="file-upload-icon glyphicon glyphicon-trash"></span>
-			</div>
+	<modal 
+		modal-id="confirmDeleteFileModal" 
+   		modal-view="views/modals/submissions/confirmDeleteFile.html" 
+		modal-header-class="modal-header-danger">
+	</modal>
+	<div class="file-preview">
+		<img ng-if="fileInfo && getPreview($index)" ngf-src="getPreview($index)" ng-click="getFile($index)" class="select-toggle">			
+		<span ng-if="fileInfo && !getPreview($index)" class="glyphicon glyphicon-file" ng-click="getFile($index)" class="select-toggle"></span>
+		<div ng-if="fileInfo">
+			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>
+			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-trash" ng-click="openModal('#confirmDeleteFileModal')"></span>
 		</div>
-		<div class="file-info" ng-if="file">
-			<p class="file-name">{{file.name}}</p>
-			<p class="file-type">{{file.type}}</p>
-			<p class="file-size">{{file.size + " mb"}}</p>
-		</div>
-		<div class="file-info" ng-if="fileInfo">
-			<p class="file-name">{{fileInfo.name}}</p>
-			<p class="file-type">{{fileInfo.type}}</p>
-			<p class="file-size">{{fileInfo.size + " mb"}}</p>
-		</div>
-		<div class="file-info" ng-if="file && !uploading && !file.uploaded">
-			<button class="btn btn-success" ng-click="beginUpload(value)">Upload</button>
-			<button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
-		</div>
-		<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="80" max="100">Uploading...</uib-progressbar>
+	</div>
+	<div class="file-info" ng-if="fileInfo">
+		<p class="file-name">{{fileInfo.name}}</p>
+		<p class="file-type">{{fileInfo.type}}</p>
+		<p class="file-size">{{fileInfo.size + " mb"}}</p>
+	</div>
+	<div class="file-info" ng-if="file && !uploading && !fileInfo.uploaded">
+		<button class="btn btn-success" ng-click="beginUpload(value)">Upload</button>
+		<button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
+	</div>
+	<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="progress" max="100">Uploading...</uib-progressbar>	
 </div>

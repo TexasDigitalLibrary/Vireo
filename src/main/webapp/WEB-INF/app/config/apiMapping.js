@@ -546,6 +546,16 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'file-info'
+		},
+		file: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file'
+		},
+		removeFile: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'remove-file'
 		}
 	},
 	StudentSubmission: {

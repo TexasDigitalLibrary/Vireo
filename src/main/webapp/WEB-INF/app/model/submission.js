@@ -1,4 +1,4 @@
-var submissionModel = function ($q, WsApi) {
+var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 	return function Submission() {
 		
@@ -95,6 +95,32 @@ var submissionModel = function ($q, WsApi) {
 			});
 
 			var promise = WsApi.fetch(this.getMapping().fileInfo);
+
+			return promise;
+		};
+		
+		submission.file = function(uri) {
+
+			angular.extend(this.getMapping().file, {
+				data: {
+					'uri': uri
+				}
+			});
+
+			var promise = FileApi.download(this.getMapping().file);
+
+			return promise;
+		};
+		
+		submission.removeFile = function(uri) {
+
+			angular.extend(this.getMapping().removeFile, {
+				data: {
+					'uri': uri
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().removeFile);
 
 			return promise;
 		};

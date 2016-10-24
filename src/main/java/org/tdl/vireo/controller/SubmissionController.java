@@ -1,11 +1,15 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +17,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -29,7 +35,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
-import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
@@ -162,20 +167,45 @@ public class SubmissionController {
     }
 
     @ApiMapping(value = "/upload", method = RequestMethod.POST)
-    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders, @ApiInputStream InputStream inputStream) throws IOException {    	
+    @Auth(role = "STUDENT")
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @RequestParam("file") MultipartFile file) throws IOException {    	
     	int hash = credentials.getEmail().hashCode();
-    	String fileName = requestHeaders.get("fileName");
-
-    	//TODO: folder should be a configuration
-    	String uri = "private/" + hash + "/" + fileName;
-    	
-    	fileIOUtility.write(inputStream, uri);    	
+        String fileName = file.getOriginalFilename();        
+        String uri = "private/" + hash + "/" + fileName;
+        fileIOUtility.write(file.getBytes(), uri);        
     	return new ApiResponse(SUCCESS, uri);
     }
     
-    @ApiMapping(value = "/file-info", method = RequestMethod.POST)
-    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> dataNode) throws IOException {
-    	return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(dataNode.get("uri")));
+    @ApiMapping(value = "/file")
+    @Auth(role = "STUDENT")
+    public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
+    	response.setContentType(requestHeaders.get("fileType")); 
+    	response.addHeader("Content-Disposition", "attachment; filename="+requestHeaders.get("fileName"));
+    	Path path = fileIOUtility.getFilePath(requestHeaders.get("uri"));
+    	Files.copy(path, response.getOutputStream());
+    	response.getOutputStream().flush();
+    }
+    
+    @ApiMapping(value = "/remove-file")
+    @Auth(role = "STUDENT")
+    public ApiResponse submissionFile(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
+    	ApiResponse apiResponse = null;    	
+    	int hash = credentials.getEmail().hashCode();
+        String uri = requestHeaders.get("uri");        
+        if(uri.contains(String.valueOf(hash))) {
+        	fileIOUtility.deleteFile(uri);
+        	apiResponse = new ApiResponse(SUCCESS);
+        }
+        else {
+        	apiResponse = new ApiResponse(ERROR, "This is not your file to delete!"); 
+        }        
+        return apiResponse;
+    }
+    
+    @ApiMapping(value = "/file-info")
+    @Auth(role = "STUDENT")
+    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
+    	return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestHeaders.get("uri")));
     }
 
 }
