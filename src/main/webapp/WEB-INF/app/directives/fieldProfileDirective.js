@@ -164,7 +164,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 				for (i = 0; i < uri.length; i++) {
 					char = uri.charCodeAt(i);
 					hash = ((hash<<5)-hash)+char;
-					hash = hash & hash; // Convert to 32bit integer
+					hash = hash & hash;
 				}
 				return hash;
 			};
@@ -186,12 +186,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			};
 
 			$scope.getPreview = function(index) {
-				var preview;
-				if($scope.file !== undefined && $scope.file.type !== undefined) {
-					if($scope.file.type.includes("image/")) {
-						preview = $scope.file;
-					}
-				}				
+				var preview;				
 				if(preview === undefined && $scope.fileInfo !== undefined && $scope.fileInfo.type !== undefined) {
 					if($scope.fileInfo.type.includes("image/png")) { 
 						preview = "resources/images/png-logo.jpg";

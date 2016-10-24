@@ -19,8 +19,8 @@
 		modal-header-class="modal-header-danger">
 	</modal>
 	<div class="file-preview">
-		<img ng-if="fileInfo && getPreview($index)" ngf-src="getPreview($index)" ng-click="getFile($index)" class="select-toggle">			
-		<span ng-if="fileInfo && !getPreview($index)" class="glyphicon glyphicon-file" ng-click="getFile($index)" class="select-toggle"></span>
+		<img ng-if="fileInfo && getPreview($index)" class="select-toggle" ngf-src="getPreview($index)" ng-click="getFile($index)">			
+		<span ng-if="fileInfo && !getPreview($index)" class="glyphicon glyphicon-file select-toggle" ng-click="getFile($index)"></span>
 		<div ng-if="fileInfo">
 			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-ok"></span>
 			<span ng-if="fileInfo.uploaded" class="file-upload-icon glyphicon glyphicon-trash text-danger" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(values[$index].value))"></span>
