@@ -15,8 +15,11 @@ vireo.directive("field",  function(RestApi) {
 			var refreshValues = function() {
 				$scope.values = $scope.submission.getFieldValuesByFieldPredicate($scope.profile.fieldPredicate);
 			};
+
+			$scope.submission.ready().then(function() {
+				refreshValues();
+			});
 			
-			refreshValues();
 			
 			$scope.showInfo = function(value) {
 				var show = true;

@@ -5,7 +5,7 @@ var submissionModel = function ($q, WsApi) {
 		var submission = this;
 
 		// additional model methods and variables
-		var getStubFieldValue = function(fieldPredicate) {
+		var createEmptyFieldValue = function(fieldPredicate) {
 			return {
 				id: null,
 				value: "",
@@ -25,7 +25,9 @@ var submissionModel = function ($q, WsApi) {
 			}
 			
 			if (fieldValues.length === 0) {
-				fieldValues.push(getStubFieldValue(fieldPredicate));
+				var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
+				submission.fieldValues.push(emptyFieldValue);
+				fieldValues.push(emptyFieldValue);
 			}
 
 			return fieldValues;
@@ -47,7 +49,7 @@ var submissionModel = function ($q, WsApi) {
 		};
 
 		submission.addFieldValue = function(fieldPredicate) {
-			submission.fieldValues.push(getStubFieldValue(fieldPredicate));
+			submission.fieldValues.push(createEmptyFieldValue(fieldPredicate));
 		};
 
 		submission.saveFieldValue = function(fieldValue) {
@@ -59,10 +61,14 @@ var submissionModel = function ($q, WsApi) {
 
 			var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
-			promise.then(function(rawApiResponse) {
-				var updatedFieldValue = JSON.parse(rawApiResponse.body).payload.FieldValue;
-				var index = submission.fieldValues.indexOf(fieldValue);
-				submission.fieldValues[index] = updatedFieldValue;
+			promise.then(function(response) {
+				var updatedFieldValue = angular.fromJson(response.body).payload.FieldValue;
+				for(var i in submission.fieldValues) {
+					var currentFieldValue = submission.fieldValues[i];
+					if((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
+						angular.extend(currentFieldValue, updatedFieldValue);
+					}
+				}
 			});
 
 			return promise;
