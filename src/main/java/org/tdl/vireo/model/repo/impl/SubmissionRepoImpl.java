@@ -307,7 +307,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             			
             			sqlJoinsBuilder
             				.append("\nLEFT JOIN")
-            				.append("\n   (SELECT *")
+            				.append("\n   (SELECT e.id, e.name, semt.submission_id")
             				.append("\n   FROM embargo e")
             				.append("\n   LEFT JOIN submission_embargo_types semt")
             				.append("\n   ON semt.embargo_types_id=e.id) embs")
@@ -318,7 +318,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	String value = filterString.toLowerCase();
+                        	if(value.equals("none")) {
+                        		sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(value).append("%' OR").append(" embs.id IS NULL OR");
+                        	}
+                        	else {
+                        		sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(value).append("%' OR");
+                        	}
                         }
                         
                         // all column search filter
