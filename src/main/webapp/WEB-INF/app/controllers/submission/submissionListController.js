@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, $timeout, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -350,7 +350,9 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 	$scope.saveUserFilters = function() {
 		ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns).then(function() {
 			$scope.closeModal();
-			update();			
+			$timeout(function() {
+				update();
+			}, 250);
 		});
 	};
 

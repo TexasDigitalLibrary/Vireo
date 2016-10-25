@@ -1,4 +1,4 @@
-vireo.controller('SubmissionHistoryController', function ($controller, $scope, NgTableParams, StudentSubmissionRepo) {
+vireo.controller('SubmissionHistoryController', function ($controller, $location, $scope, $timeout, NgTableParams, StudentSubmissionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -19,5 +19,12 @@ vireo.controller('SubmissionHistoryController', function ($controller, $scope, N
 	StudentSubmissionRepo.listen(function() {
 	  	$scope.tableParams.reload();
 	});
+
+	$scope.startNewSubmission = function(path) {
+		$scope.closeModal();
+		$timeout(function() {
+			$location.path(path);
+		}, 250);
+	};
 
 });
