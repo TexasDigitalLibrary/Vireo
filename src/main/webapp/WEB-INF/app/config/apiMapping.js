@@ -528,6 +528,10 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
+		removeFieldValue: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
 		batchUpdateSubmissionState: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
