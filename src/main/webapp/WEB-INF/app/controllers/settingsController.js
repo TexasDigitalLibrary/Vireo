@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -69,6 +69,82 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 				return userSettingsValidations;
 			};
 		});
+		
+		var StudentSubmissionRepo = $injector.get('StudentSubmissionRepo');
+
+		
+		var submissions = StudentSubmissionRepo.getAll();
+  	  	
+		ConfigurationRepo.ready().then(function() {
+
+			$scope.submissionsOpen = function(){
+		  		return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
+		  	};
+		  	
+		  	$scope.multipleSubmissions = function(){
+		  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
+		  	};
+		  	
+		  	$scope.hasSubmissions = function() {
+		  		return submissions.length > 0;
+		  	};
+		  	
+		  	$scope.submissionInProgress = function() {
+		  		var isInProgress = false;
+		  		for(var i in submissions) {
+		  			var submission = submissions[i];
+		  			if(submission.state.name === "In Progress") {
+		  				isInProgress = true;
+		  				break;
+		  			}
+		  		}
+
+		  		return isInProgress;
+		  	};
+		  	
+		  	$scope.submissionNeedsCorrections = function() {
+		  		var isInProgress = false;
+		  		for(var i in submissions) {
+		  			var submission = submissions[i];
+		  			if(submission.state.name === "Needs Corrections") {
+		  				isInProgress = true;
+		  				break;
+		  			}
+		  		}
+
+		  		return isInProgress;
+		  	};
+			
+			//TODO: check these update config settings methods for redundancy and clean up.
+			$scope.delayedUpdateConfiguration = function(type, name) {
+
+				if($scope.pendingUpdate) {
+					$timeout.cancel($scope.updateTimeout);
+				}
+
+				$scope.pendingUpdate = true;
+
+				$scope.updateTimeout = $timeout(function() {
+					$scope.updateConfiguration(type, name);
+					$scope.pendingUpdate = false;
+				}, 500);
+
+			};
+
+			$scope.updateConfigurationPlainText = function(type, name) {
+				$scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
+				return $scope.settings.configurable[type][name].save();
+			};
+
+			$scope.updateConfiguration = function(type, name) {
+				return $scope.settings.configurable[type][name].save();
+			};
+
+			$scope.resetConfiguration = function(type, name) {
+				return $scope.settings.configurable[type][name].reset();
+			};
+
+		});
 	}
 
 	var filterHtml = function(html) {
@@ -87,78 +163,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
   		}
   	};
 
-  	var submissions = StudentSubmissionRepo.getAll();
-  	  	
-	ConfigurationRepo.ready().then(function() {
-
-		$scope.submissionsOpen = function(){
-	  		return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
-	  	};
-	  	
-	  	$scope.multipleSubmissions = function(){
-	  		return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
-	  	};
-	  	
-	  	$scope.hasSubmissions = function() {
-	  		return submissions.length > 0;
-	  	};
-	  	
-	  	$scope.submissionInProgress = function() {
-	  		var isInProgress = false;
-	  		for(var i in submissions) {
-	  			var submission = submissions[i];
-	  			if(submission.state.name === "In Progress") {
-	  				isInProgress = true;
-	  				break;
-	  			}
-	  		}
-
-	  		return isInProgress;
-	  	};
-	  	
-	  	$scope.submissionNeedsCorrections = function() {
-	  		var isInProgress = false;
-	  		for(var i in submissions) {
-	  			var submission = submissions[i];
-	  			if(submission.state.name === "Needs Corrections") {
-	  				isInProgress = true;
-	  				break;
-	  			}
-	  		}
-
-	  		return isInProgress;
-	  	};
-		
-		//TODO: check these update config settings methods for redundancy and clean up.
-		$scope.delayedUpdateConfiguration = function(type, name) {
-
-			if($scope.pendingUpdate) {
-				$timeout.cancel($scope.updateTimeout);
-			}
-
-			$scope.pendingUpdate = true;
-
-			$scope.updateTimeout = $timeout(function() {
-				$scope.updateConfiguration(type, name);
-				$scope.pendingUpdate = false;
-			}, 500);
-
-		};
-
-		$scope.updateConfigurationPlainText = function(type, name) {
-			$scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
-			return $scope.settings.configurable[type][name].save();
-		};
-
-		$scope.updateConfiguration = function(type, name) {
-			return $scope.settings.configurable[type][name].save();
-		};
-
-		$scope.resetConfiguration = function(type, name) {
-			return $scope.settings.configurable[type][name].reset();
-		};
-
-	});	
+  	
 
 	$scope.editMode = function(prop) {
 		$scope["edit"+prop] = true;
