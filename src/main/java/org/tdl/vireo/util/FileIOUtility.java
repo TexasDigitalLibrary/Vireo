@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +61,6 @@ public class FileIOUtility {
 		BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
 		fileInfo.put("name", path.getFileName().toString());
-		fileInfo.put("ext", FilenameUtils.getExtension(path.toString()));
 		fileInfo.put("type", Files.probeContentType(path));
 		fileInfo.put("size", attr.size());
 		fileInfo.put("uploaded", true);

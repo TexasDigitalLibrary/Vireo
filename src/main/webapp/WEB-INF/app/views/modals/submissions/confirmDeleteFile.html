@@ -9,14 +9,14 @@
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the File:</b></h4>
-		<h4>Name: {{fileInfo.name}}</h4>
-		<h4>Type: {{fileInfo.type}}</h4>
-		<h4>Size: {{fileInfo.size + " bytes"}}</h4>
+		<h4>Name: {{getFileInfo(fieldValue).name}}</h4>
+		<h4>Type: {{getFileInfo(fieldValue).type}}</h4>
+		<h4>Size: {{getFileInfo(fieldValue).size + " bytes"}}</h4>
 	</div>
 
 	<div class="modal-footer">
 		<button ng-disabled="deleting" type="button" class="btn btn-warning" ng-click="closeModal()">Cancel</button>
-		<button ng-disabled="deleting" type="button" class="btn btn-primary" ng-click="removeFile(value)">
+		<button ng-disabled="deleting" type="button" class="btn btn-primary" ng-click="removeFile(fieldValue)">
 			<span ng-if="!deleting">Confirm</span>
 			<span ng-if="deleting">Deleting...</span>
 		</button>
