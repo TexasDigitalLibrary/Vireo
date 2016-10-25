@@ -7,6 +7,7 @@ vireo.directive("dropzone", function($timeout) {
 			'text': '@',
 			'patterns': '@',
 			'maxFiles': '@',
+			'allowMultiple': '@',
 			'dropMethod': '&',
 			'fileModel': '='
 		},

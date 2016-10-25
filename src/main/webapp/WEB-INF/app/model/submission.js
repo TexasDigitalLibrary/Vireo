@@ -49,7 +49,9 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 		};
 
 		submission.addFieldValue = function(fieldPredicate) {
-			submission.fieldValues.push(createEmptyFieldValue(fieldPredicate));
+			var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
+			submission.fieldValues.push(emptyFieldValue);
+			return emptyFieldValue;
 		};
 
 		submission.saveFieldValue = function(fieldValue) {

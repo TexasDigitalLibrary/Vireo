@@ -10,17 +10,19 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 
 	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
 
-	$scope.previewLogo = function(file) {
-		previewLogo(file).then(function(result) {
-			
-			var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
-			
-			$scope.modalData.newLogo.fileType = fileType;
-			$scope.modalData.newLogo.file = result;
-
-			angular.element('#newLogoConfirmUploadModal').modal('show');
-
-		});
+	$scope.previewLogo = function(files) {
+		if(files.length > 0) {
+			previewLogo(files[0]).then(function(result) {
+				
+				var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
+				
+				$scope.modalData.newLogo.fileType = fileType;
+				$scope.modalData.newLogo.file = result;
+	
+				angular.element('#newLogoConfirmUploadModal').modal('show');
+	
+			});
+		}
 	};
 
 	$scope.modalData.confirmLogoUpload = function() {

@@ -9,9 +9,9 @@
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the File:</b></h4>
-		<h4>Name: {{getFileInfo(fieldValue).name}}</h4>
-		<h4>Type: {{getFileInfo(fieldValue).type}}</h4>
-		<h4>Size: {{getFileInfo(fieldValue).size + " bytes"}}</h4>
+		<h4>Name: {{fieldValue.file.name}}</h4>
+		<h4>Type: {{fieldValue.file.type}}</h4>
+		<h4>Size: {{fieldValue.file.size + " bytes"}}</h4>
 	</div>
 
 	<div class="modal-footer">

@@ -1510,8 +1510,12 @@ footer a, footer li, footer p {
 }
 
 .field-profile .glyphicon.file-upload-icon.glyphicon-trash {
-  color: red;
   margin-right: 15px;
+}
+
+.field-profile .glyphicon.file-upload-icon.glyphicon-remove {
+  width: 100%;
+  margin: auto;
 }
 
 .field-profile .glyphicon.file-upload-icon.glyphicon-trash:hover {

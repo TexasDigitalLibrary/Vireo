@@ -168,7 +168,7 @@ public class SubmissionController {
 
     @ApiMapping(value = "/upload", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @RequestParam("file") MultipartFile file) throws IOException {    	
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @RequestParam("file") MultipartFile file) throws IOException {
     	int hash = credentials.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
         String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
