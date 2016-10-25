@@ -152,9 +152,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
             	
-            	String pathString = String.join(".", submissionListColumn.getValuePath());
-            	
-            	switch(pathString) {
+            	switch(String.join(".", submissionListColumn.getValuePath())) {
             		case "fieldValues.value":
             			
             			Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
@@ -171,8 +169,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                        	                        	
-                        	if(submissionListColumn.getInputType().getName().equals("INPUT_DATETIME")) {
+                        	
+                        	switch(submissionListColumn.getInputType().getName()) {
+                        	case "INPUT_DATETIME":
                         		// Column's values are of type datetime
                         		if(filterString.contains("|")) {
                         			// Date Range 
@@ -183,10 +182,21 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         			// Date Match                        			
                         			sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
                         		}
-                        		
-                        	} else {
+                        		break;
+                        	case "INPUT_CHECKBOX":
+                        		// Column's values are a boolean
+                        		Boolean value = Boolean.valueOf(filterString);
+                        		if(value) {
+                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = ").append(value).append(" OR");
+                        		}
+                        		else {
+                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = ").append(value).append(" OR").append(" pfv").append(n).append(".value IS NULL ").append(" OR");
+                        		}
+                        		break;
+                        	default: 
                         		// Column's values can be handled by this default
                         		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        		break;
                         	}
                         
                         }
