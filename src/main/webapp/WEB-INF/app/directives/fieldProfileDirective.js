@@ -62,7 +62,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 					remove(fieldValue);
 				}
 				else {
-					$scope.updating = value.id;
+					$scope.updating = fieldValue.id;
 					$scope.submission.removeFieldValue(fieldValue).then(function() {
 						delete $scope.updating;
 						remove(fieldValue);	
