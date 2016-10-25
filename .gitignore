@@ -1,5 +1,6 @@
 bin/
 public/
+private/
 target/
 attachments/
 node_modules/
@@ -14,4 +15,3 @@ src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .settings
 .tern-project
 *.log*
-
