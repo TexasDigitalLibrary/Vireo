@@ -121,6 +121,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 } else {
                     for (SubmissionListColumn slc : allSubmissionListColumns) {
                         if (namedSearchFilter.getSubmissionListColumn().equals(slc)) {
+                        	slc.setExactMatch(namedSearchFilter.getExactMatch());
                             slc.addAllFilters(namedSearchFilter.getFilterValues());
                             break;
                         }
@@ -195,7 +196,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         		break;
                         	default: 
                         		// Column's values can be handled by this default
-                        		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        		if(submissionListColumn.getExactMatch()) {
+                        			// perform exact match
+                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
+                        		}
+                        		else {
+                        			// perform like when input from text field
+                        			sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        		}
                         		break;
                         	}
                         
@@ -203,7 +211,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         
                         // all column search filter
                         for (String filterString : allColumnSearchFilters) {
-                        	sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
 
                         n++;
@@ -231,7 +239,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                          }
                     	
                     	for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		if(submissionListColumn.getExactMatch()) {
+                    			sqlWheresBuilder.append(" ss").append(".name = '").append(filterString).append("' OR");
+                    		}
+                    		else {
+                    			// TODO: determine if status will ever be search using a like
+                    			sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		}
+                            
                         }
                     	
                         // all column search filter
@@ -251,7 +266,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	if(submissionListColumn.getExactMatch()) {
+                        		sqlWheresBuilder.append(" o").append(".name = '").append(filterString).append("' OR");
+                    		}
+                    		else {
+                    			// TODO: determine if organization name will ever be search using a like
+                    			sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		}
                         }
 
                         // all column search filter
@@ -274,7 +295,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	if(submissionListColumn.getExactMatch()) {
+                        		sqlWheresBuilder.append(" oc").append(".name = '").append(filterString).append("' OR");
+                    		}
+                    		else {
+                    			// TODO: determine if organization category name will ever be search using a like
+                    			sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		}
                         }
                         
                         // all column search filter
@@ -293,7 +320,12 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        	if(submissionListColumn.getExactMatch()) {
+                        		sqlWheresBuilder.append(" a").append(".email = '").append(filterString).append("' OR");
+                    		}
+                    		else {
+                    			sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    		}
                         }
                         
                         // all column search filter
@@ -318,12 +350,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         }
 
                         for (String filterString : submissionListColumn.getFilters()) {
-                        	String value = filterString.toLowerCase();
-                        	if(value.equals("none")) {
-                        		sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(value).append("%' OR").append(" embs.id IS NULL OR");
+                        	if(filterString.equals("None")) {
+                        		sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR").append(" embs.id IS NULL OR");
                         	}
                         	else {
-                        		sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(value).append("%' OR");
+                        		sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR");
                         	}
                         }
                         

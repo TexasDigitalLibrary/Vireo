@@ -195,10 +195,15 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 	};
 
 	var addFilter = function(column, gloss) {
-		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss).then(function() {
+		$scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss, column.exactMatch).then(function() {
 			$scope.furtherFilterBy[column.title.split(" ").join("")] = "";
 			query();
 		});
+	};
+	
+	var addExactMatchFilter = function(column, gloss) {
+		column.exactMatch = true;
+		addFilter(column, gloss);
 	};
 
 	$scope.furtherFilterBy = {
@@ -206,6 +211,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
 		"getFilterColumns": $scope.getFilterColumns,
 		"addFilter": addFilter,
+		"addExactMatchFilter": addExactMatchFilter,
 		"addDateFilter": addDateFilter,
 		"submissionStates": submissionStates,
 		"customActionDefinitions": customActionDefinitions,

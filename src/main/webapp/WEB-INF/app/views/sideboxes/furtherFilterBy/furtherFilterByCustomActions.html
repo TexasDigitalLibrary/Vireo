@@ -1,6 +1,6 @@
 <form ng-init="box.customActionsLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
 	<ul>
-		<li class="filter" ng-repeat="customActionDefinitions in box.customActionDefinitions | limitTo:box.customActionsLimit" ng-click="box[column.title.split(' ').join('')]=true;box.addFilter(column, customActionDefinitions.label);">{{customActionDefinitions.label}}</li>
+		<li class="filter" ng-repeat="customActionDefinitions in box.customActionDefinitions | limitTo:box.customActionsLimit" ng-click="box[column.title.split(' ').join('')]=true;box.addExactMatchFilter(column, customActionDefinitions.label);">{{customActionDefinitions.label}}</li>
 		<li class="more-less" ng-click="box.customActionsLimit=box.customActionDefinitions.length" ng-if="box.customActionsLimit<=box.defaultLimit && box.customActionDefinitions.length>box.defaultLimit">more...</li>
 		<li class="more-less" ng-click="box.customActionsLimit=box.defaultLimit" ng-if="box.customActionsLimit>box.defaultLimit">less...</li>
 	</ul>
