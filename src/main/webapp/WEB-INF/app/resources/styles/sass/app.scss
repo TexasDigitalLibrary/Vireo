@@ -1513,6 +1513,11 @@ footer a, footer li, footer p {
   margin-right: 15px;
 }
 
+.field-profile .glyphicon.file-upload-icon.glyphicon-remove {
+  width: 100%;
+  margin: auto;
+}
+
 .field-profile .glyphicon.file-upload-icon.glyphicon-trash:hover {
   cursor:pointer;
 }
@@ -1522,6 +1527,10 @@ footer a, footer li, footer p {
   height: 20px;
   margin: auto;
   margin-top: 5px;
+}
+
+.field-profile .table {
+  margin-top: -40px;
 }
 
 /********************

@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,19 +27,18 @@ public class FileIOUtility {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	public void write(byte[] bytes, String relativePath) throws IOException {
-		Path path = Paths.get(getPath(relativePath));
-		Path parentDir = path.getParent();
-		if (!Files.exists(parentDir)) {
-			Files.createDirectories(parentDir);
-		}
-		Files.write(path, bytes);
+	
+	public void write(byte[] data, String relativePath) throws IOException {
+		Files.write(processRelativePath(relativePath), data);
 	}
 
-	public void write(InputStream is, String path) throws IOException {
-		byte[] bytes = IOUtils.toByteArray(is);
-		write(bytes, path);
+	public String write(InputStream is, String relativePath) throws IOException {
+		Path path = processRelativePath(relativePath);
+		String[] rawFileData = IOUtils.toString(is, "UTF-8").split(";");
+		String[] encodedData = rawFileData[1].split(","); 
+		byte[] fileData = Base64.getDecoder().decode(encodedData[1]);
+		Files.write(path, fileData);
+		return relativePath;
 	}
 
 	public void writeImage(InputStream inputStream, String relativePath) throws IOException {
@@ -50,12 +48,12 @@ public class FileIOUtility {
 		String[] mimeData = imageData[0].split(":");
 		String fileExtension = mimeData[1].split("/")[1];
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(encodedData[1])));
-		Path path = Paths.get(getPath(relativePath));
-		Path parentDir = path.getParent();
-		if (!Files.exists(parentDir)) {
-			Files.createDirectories(parentDir);
-		}
+		Path path = processRelativePath(relativePath);
 		ImageIO.write(image, fileExtension, Files.newOutputStream(path));
+	}
+	
+	public void deleteFile(String relativePath) throws IOException {
+		Files.delete(Paths.get(getPath(relativePath)));
 	}
 
 	public JsonNode getFileInfo(String relativePath) throws IOException {
@@ -63,16 +61,29 @@ public class FileIOUtility {
 		BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
 		fileInfo.put("name", path.getFileName().toString());
-		fileInfo.put("ext", FilenameUtils.getExtension(path.toString()));
 		fileInfo.put("type", Files.probeContentType(path));
 		fileInfo.put("size", attr.size());
+		fileInfo.put("uploaded", true);
 		return objectMapper.valueToTree(fileInfo);
+	}
+
+	public Path getFilePath(String relativePath) {
+		return Paths.get(getPath(relativePath));
 	}
 
 	private String getPath(String relativePath) {
 		String path = Application.BASE_PATH + relativePath;
 		if (path.contains(":") && path.charAt(0) == '/') {
 			path = path.substring(1, path.length());
+		}
+		return path;
+	}
+	
+	private Path processRelativePath(String relativePath) throws IOException {
+		Path path = Paths.get(getPath(relativePath));
+		Path parentDir = path.getParent();
+		if (!Files.exists(parentDir)) {
+			Files.createDirectories(parentDir);
 		}
 		return path;
 	}
