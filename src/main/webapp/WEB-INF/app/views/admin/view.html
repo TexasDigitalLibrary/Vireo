@@ -34,13 +34,13 @@
           					<label>Email:</label>
           					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['email']}">{{data['email'] || 'none'}}</span>
        					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('birth_year')">
           					<label>Year of Birth:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['birth_year']}">{{data['birth_year'] || 'none'}}</span>
        					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('orcid')">
           					<label>ORCID:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['orcid']}">{{data['orcid'] || 'none'}}</span>
        					</li>
           				<li>
           					<label>Institutional ID:</label>
@@ -53,25 +53,25 @@
           	<div class="col-sm-6">
           		<div>
           			<ul class="info-list">
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('permanent_phone')">
           					<label>Permanent Phone:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['permanent_phone']}"><a href="tel://{{data['permanent_phone']}}">{{data['permanent_phone'] || 'none'}}</a></span>
           				</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('permanent_email')">
           					<label>Permanent Email:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['permanent_email']}">{{data['permanent_email'] || 'none'}}</span>
           				</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('permanent_address')">
           					<label>Permanent Address:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['permanent_address']}">{{data['permanent_address'] || 'none'}}</span>
           				</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('current_phone')">
           					<label>Current Phone:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['current_phone']}"><a href="tel://{{data['current_phone']}}">{{data['current_phone'] || 'none'}}</a></span>
           				</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('current_address')">
           					<label>Current Address:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['current_address']}">{{data['current_address'] || 'none'}}</span>
           				</li>
           			</ul>
           		</div>          	
@@ -92,17 +92,17 @@
           					<label>Embargos:</label>
           					<span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
       					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('umi_publication')">
           					<label>UMI Release:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['umi_publication']}">{{data['umi_publication'] || 'none'}}</span>
        					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('document_type')">
           					<label>Document Type:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['document_type']}">{{data['document_type'] || 'none'}}</span>
        					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('previously_published_material')">
           					<label>Published Material:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['previously_published_material']}">{{data['previously_published_material'] || 'none'}}</span>
        					</li>
           				<li class="toggle-href" ng-click="edit('abstract')">
           					<label>Abstract:</label>
@@ -123,9 +123,9 @@
           					<label>Subjects:</label>
           					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['subjects']}">{{data['subjects'] || 'none'}}</span>
           				</li>
-          				<li class="toggle-href" ng-click="edit('')">
-          					<label>Languages:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				<li class="toggle-href" ng-click="edit('language')">
+          					<label>Language:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['language']}">{{data['language'] || 'none'}}</span>
           				</li>
           			</ul>
           		</div>          	
@@ -158,29 +158,29 @@
           					<label>Degree Level:</label>
           					<span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
        					</li>
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('major')">
           					<label>Major:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['major']}">{{data['major'] || 'none'}}</span>
        					</li>
        					<li class="toggle-href" ng-click="edit('')">
           					<label>Graduation Semester:</label>
           					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
        					</li>
-       					<li class="toggle-href" ng-click="edit('')">
+       					<li class="toggle-href" ng-click="edit('degree_date')">
           					<label>Program Completion Date:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['degree_date']}">{{data['degree_date'] || 'none'}}</span>
        					</li>
-       					<li class="toggle-href" ng-click="edit('')">
+       					<li class="toggle-href" ng-click="edit('defense_date')">
           					<label>Defense Date:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['defense_date']}">{{data['defense_date'] || 'none'}}</span>
        					</li>
-       					<li class="toggle-href" ng-click="edit('')">
+       					<li class="toggle-href" ng-click="edit('chairs_contact_email')">
           					<label>Advisor Email:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['chairs_contact_email']}">{{data['chairs_contact_email'] || 'none'}}</span>
        					</li>
        					<li>
           					<label>Faculty Review URL:</label>
-          					<span><a href="{{data[''] || 'none'}}">{{data[''] || 'none'}}</a></span>
+          					<span ng-class="{'info-empty': !data['']}"><a href="{{data[''] || 'none'}}">{{data[''] || 'none'}}</a></span>
        					</li>
           			</ul>
           		</div>
@@ -189,15 +189,17 @@
           	<div class="col-sm-6">
           		<div>
           			<ul class="info-list">
-          				<li class="toggle-href" ng-click="edit('')">
+          				<li class="toggle-href" ng-click="edit('your_committee')">
           					<label>Committee Members:</label>
-          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['your_committee']}">{{data['your_committee'] || 'none'}}</span>
           				</li>
           			</ul>
           		</div>          	
           	</div>
           	
 		</div>
+		
+		
   </div>
-	
+	{{submission}}
 </div>

@@ -147,7 +147,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "orcid_id",
+						"value": "orcid",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -164,7 +164,7 @@
 					"help": "Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
 					"fieldGlosses": [
 						{
-							"value": "ORCID id",
+							"value": "ORCID",
 							"language": {
 								"name": "English"
 							}
