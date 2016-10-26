@@ -1,7 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
@@ -37,13 +36,13 @@ public class DocumentTypeRepoImpl implements DocumentTypeRepoCustom {
     }
 
     @Override
-    public DocumentType create(String name, DegreeLevel degreeLevel) {
-        return create(name, degreeLevel, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), new Boolean(true))));
+    public DocumentType create(String name) {
+        return create(name, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), new Boolean(true))));
     }
     
     @Override
-    public DocumentType create(String name, DegreeLevel degreeLevel, FieldPredicate fieldPredicate) {
-        DocumentType documentType = new DocumentType(name, degreeLevel, fieldPredicate);
+    public DocumentType create(String name, FieldPredicate fieldPredicate) {
+        DocumentType documentType = new DocumentType(name, fieldPredicate);
         documentType.setPosition(documentTypeRepo.count() + 1);
         return documentTypeRepo.save(documentType);
     }

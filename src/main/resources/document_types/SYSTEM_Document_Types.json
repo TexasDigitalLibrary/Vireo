@@ -1,71 +1,6 @@
 [
 	{
-		"name": "Dissertation",
-		"degreeLevel": 3,
-		"fieldPredicate": {
-			"value": "_doctype_dissertation",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Project Report",
-		"degreeLevel": 2,
-		"fieldPredicate": {
-			"value": "_doctype_project_report",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Thesis",
-		"degreeLevel": 2,
-		"fieldPredicate": {
-			"value": "_doctype_thesis",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Capstone Project",
-		"degreeLevel": 2,
-		"fieldPredicate": {
-			"value": "_doctype_capstone_project",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Honors Thesis",
-		"degreeLevel": 1,
-		"fieldPredicate": {
-			"value": "_doctype_honors_thesis",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Treatise",
-		"degreeLevel": 3,
-		"fieldPredicate": {
-			"value": "_doctype_treatise",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Performance Piece",
-		"degreeLevel": 2,
-		"fieldPredicate": {
-			"value": "_doctype_performance_piece",
-			"documentTypePredicate": true
-		}
-	},
-	{
-		"name": "Project Capstone",
-		"degreeLevel": 2,
-		"fieldPredicate": {
-			"value": "_doctype_project_capstone",
-			"documentTypePredicate": true
-		}
-	},
-	{
 		"name": "Administrative Files",
-		"degreeLevel": 0,
 		"fieldPredicate": {
 			"value": "_doctype_administrative_files",
 			"documentTypePredicate": true
@@ -73,7 +8,6 @@
 	},
 	{
 		"name": "Source Files",
-		"degreeLevel": 0,
 		"fieldPredicate": {
 			"value": "_doctype_source_files",
 			"documentTypePredicate": true
@@ -81,7 +15,6 @@
 	},
 	{
 		"name": "Supplemental Files",
-		"degreeLevel": 0,
 		"fieldPredicate": {
 			"value": "_doctype_supplemental_files",
 			"documentTypePredicate": true
@@ -89,7 +22,6 @@
 	},
 	{
 		"name": "Manuscript in PDF",
-		"degreeLevel": 0,
 		"fieldPredicate": {
 			"value": "_doctype_manuscript_in_pdf",
 			"documentTypePredicate": true

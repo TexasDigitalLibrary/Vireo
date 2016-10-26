@@ -21,7 +21,7 @@ public interface DocumentTypeRepo extends JpaRepository<DocumentType, Long>, Doc
     
     public DocumentType findByName(String name);
     
-    public DocumentType findByNameAndDegreeLevelAndFieldPredicate(String name, DegreeLevel degreeLevel, FieldPredicate fieldPredicate);
+    public DocumentType findByNameAndFieldPredicate(String name, FieldPredicate fieldPredicate);
     
     public List<DocumentType> findAllByOrderByPositionAsc();
         

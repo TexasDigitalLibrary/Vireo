@@ -769,14 +769,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
                 }
                 
-                DocumentType dbDocumentType = documentTypeRepo.findByNameAndDegreeLevelAndFieldPredicate(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
                 
                 if (dbDocumentType == null) {
-                    dbDocumentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                    dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
                 }
                 else {
                     dbDocumentType.setName(documentType.getName());
-                    dbDocumentType.setDegreeLevel(documentType.getDegreeLevel());
                     dbDocumentType.setFieldPredicate(dbFieldPredicate);
                     documentTypeRepo.save(dbDocumentType);
                 }

@@ -47,8 +47,8 @@ public class DocumentTypeController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
-        logger.info("Creating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
-        documentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel());
+        logger.info("Creating document type with name " + documentType.getName() );
+        documentType = documentTypeRepo.create(documentType.getName());
         simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
     }
@@ -57,7 +57,7 @@ public class DocumentTypeController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
-        logger.info("Updating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
+        logger.info("Updating document type with name " + documentType.getName());
         documentType = documentTypeRepo.save(documentType);
         simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
