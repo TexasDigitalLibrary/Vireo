@@ -397,7 +397,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
