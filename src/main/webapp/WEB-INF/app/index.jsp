@@ -290,6 +290,7 @@
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
+	    <script src="services/itemViewService.js"></script>
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
@@ -377,6 +378,8 @@
 	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
+	    <script src="controllers/submission/itemViewController.js"></script>
+	    
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

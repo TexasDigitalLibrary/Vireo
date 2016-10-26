@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, $timeout, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -478,6 +478,13 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		},
 		additionalPlaceholderClass: 'column-placeholder'
 	};
+	
+	
+	
+	$scope.viewSubmission = function(submission) {
+		ItemViewService.setSelectedSubmission(submission);
+	};
+	
 
 });
 
