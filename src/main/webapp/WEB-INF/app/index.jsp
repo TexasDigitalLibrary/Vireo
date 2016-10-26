@@ -124,7 +124,7 @@
 			</div>
 		</header>
 
-		<alerts types="ERROR"></alerts>
+		<alerts types="WARNING, ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 		<alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
 				
