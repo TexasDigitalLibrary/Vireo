@@ -134,6 +134,7 @@ var apiMapping = {
 		}
 	},
 	Configuration: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/configurable',
@@ -501,6 +502,7 @@ var apiMapping = {
 		}
 	},
 	Submission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -559,6 +561,7 @@ var apiMapping = {
 		}
 	},
 	StudentSubmission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -669,6 +672,7 @@ var apiMapping = {
 		}
 	},
 	UserSettings: {
+		lazy: true,
 		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'user',

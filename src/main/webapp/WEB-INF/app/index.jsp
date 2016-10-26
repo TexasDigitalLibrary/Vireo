@@ -111,7 +111,7 @@
 			      			<a href="admin/list">List</a>
 			      		</li>
 						<li ng-class="{'active': activeTab('view')}">
-			      			<a href="admin/view">View</a>
+			      			<a href ng-click="viewSelect()">View</a>
 			      		</li>
 			      		<li ng-class="{'active': activeTab('log')}">
 			      			<a href="admin/log">Log</a>
@@ -124,7 +124,7 @@
 			</div>
 		</header>
 
-		<alerts types="WARNING, ERROR"></alerts>
+		<alerts types="ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 		<alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
 				
@@ -290,7 +290,6 @@
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
-	    <script src="services/itemViewService.js"></script>
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>

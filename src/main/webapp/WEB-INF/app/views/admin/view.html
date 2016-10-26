@@ -1,5 +1,8 @@
 <div ng-controller="ItemViewController">
-	<h1>{{getSubmissionTitle()}}</h1>
+	<h1>
+		<span ng-if="!submission">Loading Submission...</span>
+		<span ng-if="submission">{{getSubmissionTitle()}}</span>
+	</h1>
 	<hr>
 	{{submission}}
 </div>

@@ -1,4 +1,4 @@
-vireo.controller("HeaderController", function (AbstractRepo, AbstractAppRepo, $scope, $controller, $location, ConfigurationRepo) {
+vireo.controller("HeaderController", function ($scope, $controller, $location, $timeout, AbstractRepo, AbstractAppRepo, AlertService, ConfigurationRepo) {
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 		
@@ -30,9 +30,16 @@ vireo.controller("HeaderController", function (AbstractRepo, AbstractAppRepo, $s
 		$scope.activeAdminSection = function() {
 			return $location.url().indexOf("/admin") != -1;
 		};
+		
+		$scope.viewSelect = function() {
+			if(!$scope.activeTab('view')) {
+				$location.path('/admin/list');
+				$timeout(function() {
+					AlertService.add({type: 'WARNING', message: 'Select a submission to view'}, 'submission/select');
+				});
+			}
+		};
 
 	});
-
-	
 
 });

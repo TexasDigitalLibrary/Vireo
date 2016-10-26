@@ -11,9 +11,12 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
 	this.getAllMapByType = function() {
 
 		var configurationRepo = this;
+		
+		
+		var allConfigurations = configurationRepo.getAll();
 
 		var mapByType = function(configurations) {
-			angular.forEach(configurationRepo.getAll(), function(config) {
+			angular.forEach(allConfigurations, function(config) {
 				if(configurations[config.type] === undefined) {
 					configurations[config.type] = {};
 				}

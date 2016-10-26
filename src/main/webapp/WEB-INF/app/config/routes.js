@@ -35,7 +35,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 			templateUrl: 'views/admin/admin.html',
 			access: ["ADMINISTRATOR"]
 		}).
-		when('/admin/view', {
+		when('/admin/view/:id', {
 			templateUrl: 'views/admin/admin.html',
 			access: ["ADMINISTRATOR"]
 		}).
