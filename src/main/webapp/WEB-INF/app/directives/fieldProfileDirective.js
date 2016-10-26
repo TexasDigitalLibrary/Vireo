@@ -260,10 +260,10 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			$scope.removeFile = function(fieldValue) {
 				$scope.deleting = true;
 				$scope.submission.removeFile(fieldValue.value).then(function(res) {
+					$scope.closeModal();
 					if($scope.values.length > 1) {
 						$scope.submission.removeFieldValue(fieldValue).then(function() {
 							$scope.deleting = false;
-							$scope.closeModal();
 							remove(fieldValue);
 						});
 					}
@@ -273,7 +273,6 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 						$scope.fieldProfileForm.$dirty = true;
 						$scope.save(cloneFieldValue).then(function() {
 							$scope.deleting = false;
-							$scope.closeModal();
 							fieldValue.value = "";
 						});
 					}
