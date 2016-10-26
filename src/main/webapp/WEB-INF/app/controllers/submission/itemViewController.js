@@ -1,22 +1,25 @@
-vireo.controller("ItemViewController", function ($controller, $location, $routeParams, $scope, SubmissionRepo) {
+vireo.controller("ItemViewController", function ($controller, $routeParams, $scope, ItemViewService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-	
-	SubmissionRepo.findSubmissionById($routeParams.id).then(function(response) {
+
+	$scope.data = {};
+
+	ItemViewService.selectSubmissionById($routeParams.id).then(function(submission) {
 		
-		$scope.submission = angular.fromJson(response.body).payload.Submission;
+		$scope.submission = submission;
 		
-		$scope.getSubmissionTitle = function() {
-			if($scope.submission !== undefined) {
-				for(var i in $scope.submission.fieldValues) {
-					if($scope.submission.fieldValues[i].fieldPredicate.value == 'title') {
-						return $scope.submission.fieldValues[i].value;
-					}
-				}
-			}
-			return "No title";
+		for(var i in $scope.submission.fieldValues) {
+			$scope.data[$scope.submission.fieldValues[i].fieldPredicate.value] = $scope.submission.fieldValues[i].value;
+		}
+		
+		$scope.getViewTitle = function() {
+			return $scope.data['last_name'] + ', ' + $scope.data['first_name'] + ' (' + $scope.data['department'] + ' - ' + $scope.data['degree'] + ')';
+		};
+		
+		$scope.edit = function(key) {
+			console.log('edit', key);
 		};
 		
 	});
-
+	
 });

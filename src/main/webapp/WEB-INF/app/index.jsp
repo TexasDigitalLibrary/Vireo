@@ -290,6 +290,7 @@
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
+	    <script src="services/itemViewService.js"></script>
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>

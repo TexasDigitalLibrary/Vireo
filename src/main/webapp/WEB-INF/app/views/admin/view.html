@@ -1,8 +1,203 @@
-<div ng-controller="ItemViewController">
+<div class="item-view" ng-controller="ItemViewController">
 	<h1>
 		<span ng-if="!submission">Loading Submission...</span>
-		<span ng-if="submission">{{getSubmissionTitle()}}</span>
+		<span ng-if="submission">{{getViewTitle()}}</span>
 	</h1>
 	<hr>
-	{{submission}}
+	
+	<ul  class="nav nav-tabs">
+		<li class="active"><a  href="#personal" data-toggle="tab">Personal Info</a></li>
+		<li><a href="#document" data-toggle="tab">Document Info</a></li>
+		<li><a href="#degree" data-toggle="tab">Degree Info</a></li>
+	</ul>
+
+	<div class="tab-content clearfix">
+ 		<div class="tab-pane active" id="personal">
+          	
+          	<div class="col-sm-6">
+          	
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('first_name')">
+          					<label>First Name:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['first_name']}">{{data['first_name'] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('middle_name')">
+          					<label>Middle Name:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['middle_name']}">{{data['middle_name'] || 'none'}}</span>
+      					</li>
+          				<li class="toggle-href" ng-click="edit('last_name')">
+          					<label>Last Name:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['last_name']}">{{data['last_name'] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('email')">
+          					<label>Email:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['email']}">{{data['email'] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Year of Birth:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>ORCID:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li>
+          					<label>Institutional ID:</label>
+          					<span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          			</ul>
+          		</div>
+          	
+          	</div>
+          	<div class="col-sm-6">
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Permanent Phone:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Permanent Email:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Permanent Address:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Current Phone:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Current Address:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          			</ul>
+          		</div>          	
+          	</div>
+          	
+		</div>
+		<div class="tab-pane" id="document">
+          	
+          	<div class="col-sm-6">
+          	
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('title')">
+          					<label>Title:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['title']}">{{data['title'] || 'none'}}</span>
+          				</li>
+          				<li>
+          					<label>Embargos:</label>
+          					<span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+      					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>UMI Release:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Document Type:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Published Material:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('abstract')">
+          					<label>Abstract:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['abstract']}">{{data['abstract'] || 'none'}}</span>
+       					</li>
+          			</ul>
+          		</div>
+          	
+          	</div>
+          	<div class="col-sm-6">
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('keywords')">
+          					<label>Keywords:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['keywords']}">{{data['keywords'] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('subjects')">
+          					<label>Subjects:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['subjects']}">{{data['subjects'] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Languages:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          			</ul>
+          		</div>          	
+          	</div>
+          	
+		</div>
+		<div class="tab-pane" id="degree">
+          	
+          	<div class="col-sm-6">
+          	
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('college')">
+          					<label>College:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['college']}">{{data['college'] || 'none'}}</span>
+          				</li>
+          				<li class="toggle-href" ng-click="edit('program')">
+          					<label>Program:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['program']}">{{data['program'] || 'none'}}</span>
+      					</li>
+          				<li class="toggle-href" ng-click="edit('department')">
+          					<label>Department:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['department']}">{{data['department'] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('degree')">
+          					<label>Degree:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['degree']}">{{data['degree'] || 'none'}}</span>
+       					</li>
+          				<li>
+          					<label>Degree Level:</label>
+          					<span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Major:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+       					<li class="toggle-href" ng-click="edit('')">
+          					<label>Graduation Semester:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+       					<li class="toggle-href" ng-click="edit('')">
+          					<label>Program Completion Date:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+       					<li class="toggle-href" ng-click="edit('')">
+          					<label>Defense Date:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+       					<li class="toggle-href" ng-click="edit('')">
+          					<label>Advisor Email:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+       					</li>
+       					<li>
+          					<label>Faculty Review URL:</label>
+          					<span><a href="{{data[''] || 'none'}}">{{data[''] || 'none'}}</a></span>
+       					</li>
+          			</ul>
+          		</div>
+          	
+          	</div>
+          	<div class="col-sm-6">
+          		<div>
+          			<ul class="info-list">
+          				<li class="toggle-href" ng-click="edit('')">
+          					<label>Committee Members:</label>
+          					<span class="glyphicon glyphicon-pencil"></span><span ng-class="{'info-empty': !data['']}">{{data[''] || 'none'}}</span>
+          				</li>
+          			</ul>
+          		</div>          	
+          	</div>
+          	
+		</div>
+  </div>
+	
 </div>
