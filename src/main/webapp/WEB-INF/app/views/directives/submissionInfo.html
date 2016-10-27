@@ -1,0 +1,18 @@
+<div>
+	<div ng-if="immutable">
+		<label>{{label}}:</label>
+		<span ng-class="{'info-empty': !data}">{{data.value || 'none'}}</span>
+	</div>
+	<div ng-if="!immutable">
+		<div class="toggle-href" ng-if="!data.editing" ng-click="data.editing = true">
+			<label>{{label}}:</label>
+			<span class="glyphicon glyphicon-pencil"></span>
+			<span ng-if="phone" ng-class="{'info-empty': !data}">{{data.value || 'none'}}</span>
+			<span ng-if="!phone" ng-class="{'info-empty': !data}"><a href="tel://{{data.value || 'none'}}">{{data.value || 'none'}}</a></span>
+		</div>
+		<div class="form-inline" ng-if="data.editing">
+			<label>{{label}}:</label>
+			<div ng-include="edit" class="input-group"></div>
+		</div>
+	<div>
+</div>

@@ -17,7 +17,9 @@ vireo.service("ItemViewService", function($q, SubmissionRepo) {
 			}
 			else {
 				SubmissionRepo.findSubmissionById(id).then(function(response) {
-					resolve(angular.fromJson(response.body).payload.Submission);
+					var submission = angular.fromJson(response.body).payload.Submission;
+					ItemViewService.setSelectedSubmission(submission);
+					resolve(ItemViewService.getSelectedSubmission());
 				});
 			}
 		});

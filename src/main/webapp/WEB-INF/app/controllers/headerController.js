@@ -24,7 +24,7 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 		};
 
 		$scope.activeTab = function(tab) {
-			return $location.url().indexOf("/admin/"+tab) != -1;
+			return $location.url().indexOf(tab) != -1;
 		};
 
 		$scope.activeAdminSection = function() {

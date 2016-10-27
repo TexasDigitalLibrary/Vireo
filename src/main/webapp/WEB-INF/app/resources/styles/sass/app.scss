@@ -1805,25 +1805,18 @@ footer a, footer li, footer p {
 }
 
 
-.item-view .nav-tabs {
-  margin-bottom: 0;
-}
-
-.item-view .tab-content {
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
-}
-
 .item-view ul.info-list {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-.item-view ul.info-list span.glyphicon.glyphicon-pencil {
-  margin-right: 4px;
+.item-view ul.info-list span.glyphicon {
+  margin-right: 5px;
+}
+
+.item-view ul.info-list .input-group .glyphicon {
+  top: 0;
 }
 
 .item-view ul.info-list label {
@@ -1836,3 +1829,23 @@ footer a, footer li, footer p {
   color: #cccccc;
 }
 
+.item-view ul.info-list .form-inline {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.item-view ul.info-list .form-inline input.form-control {
+  height: 28px;
+}
+
+.item-view ul.info-list .form-inline input.info-checkbox {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.item-view ul.info-list .form-inline textarea.form-control {
+  height: 46px;
+  margin-bottom: 4px;
+}

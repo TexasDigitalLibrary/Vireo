@@ -5,15 +5,18 @@ vireo.directive("tabs", function() {
 		replace: false,
 		transclude: true,
 		scope: {
-			target: "@target"
+			target: "@target",
+			param: "="
 		},
 		controller: function($scope, $location, $routeParams, TabService) {
-			this.activeTab = function(tab) {				
-				return $routeParams.tab == tab;
+			
+			this.activeTab = function(tab) {
+				return tab.includes($routeParams.tab);
 			}
 
 			this.setActive = function(tab, html) {
-				$location.url("/admin/settings/"+tab);
+				var path = tab + ($scope.param !== undefined ? '/' + $scope.param : '');				
+				$location.url(path);
 				TabService.setTab($scope.target, html);
 			}
 
@@ -34,7 +37,7 @@ vireo.directive("tab", function(TabService) {
 		require: '^tabs',
 		scope: true,
 		link: function ($scope, element, attr, parent) {
-	
+			
 			angular.extend($scope, parent);
 			angular.extend($scope, attr);
 
