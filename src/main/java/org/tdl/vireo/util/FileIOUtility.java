@@ -60,7 +60,8 @@ public class FileIOUtility {
 		Path path = Paths.get(getPath(relativePath));
 		BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
-		fileInfo.put("name", path.getFileName().toString());
+		String fileName = path.getFileName().toString();
+		fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
 		fileInfo.put("type", Files.probeContentType(path));
 		fileInfo.put("time", attr.creationTime().toMillis());
 		fileInfo.put("size", attr.size());

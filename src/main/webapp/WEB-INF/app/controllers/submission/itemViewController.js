@@ -56,6 +56,7 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		
 		$scope.documentFieldValues = [];
 		
+		var primaryDocumentFieldValue;
 		
 		var getFileInfo = function(fieldValue) {
 			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
@@ -67,6 +68,9 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		for(var i in $scope.submission.fieldValues) {
 			var fieldValue = $scope.submission.fieldValues[i];
 			if(fieldValue.fieldPredicate.documentTypePredicate) {
+				if(fieldValue.fieldPredicate.value == '_doctype_manuscript_in_pdf') {
+					primaryDocumentFieldValue = fieldValue;
+				}
 				getFileInfo(fieldValue);
 			}
 		}
@@ -76,13 +80,10 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		        "title": "Active Document",
 		        "viewUrl": "views/sideboxes/activeDocument.html",
 		        "getPrimaryDocumentFileName": function() {
-		        	return "Title";
+		        	return primaryDocumentFieldValue.fileInfo !== undefined ? primaryDocumentFieldValue.fileInfo.name : '';
 		        },
 		        "downloadPrimaryDocument": function() {
-		        	console.log('download primary document')
-		        },
-		        "viewAllFiles": function() {
-		        	console.log('view all files')
+		        	$scope.getFile(primaryDocumentFieldValue);
 		        },
 		        "uploadNewFile": function() {
 		        	console.log('upload new files')

@@ -188,8 +188,7 @@ public class SubmissionController {
     @ApiMapping(value = "/file")
     @Auth(role = "STUDENT")
     public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
-    	response.setContentType(requestHeaders.get("fileType")); 
-    	response.addHeader("Content-Disposition", "attachment; filename="+requestHeaders.get("fileName"));
+    	response.addHeader("Content-Disposition", "attachment");
     	Path path = fileIOUtility.getFilePath(requestHeaders.get("uri"));
     	Files.copy(path, response.getOutputStream());
     	response.getOutputStream().flush();
