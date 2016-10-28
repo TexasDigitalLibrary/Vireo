@@ -6,18 +6,18 @@ vireo.directive("tabs", function() {
 		transclude: true,
 		scope: false,
 		controller: function($scope, $location, $routeParams) {
-			this.activeTab = function(tab) {
+			this.activeTab = function(path) {
 				var active = false;
 				if($routeParams.id !== undefined) {
-					active = tab.includes($routeParams.tab + '/' + $routeParams.id);
+					active = path.includes('/' + $routeParams.tab + '/' + $routeParams.id);
 				}
 				else {
-					active = tab.includes($routeParams.tab);
+					active = path.includes('/' + $routeParams.tab);
 				}
 				return active;
 			};
-			this.setActive = function(tab, html) {
-				$location.url(tab);
+			this.setActive = function(path, html) {
+				$location.url(path);
 			};
 		}
 	};

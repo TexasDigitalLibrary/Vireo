@@ -18,10 +18,9 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 	$scope.setSelectedOrganization = function(organization) {
 		if(OrganizationRepo.getSelectedOrganization().id !== organization.id) {
 			AccordionService.closeAll();
-		}	
+		}
 		OrganizationRepo.setSelectedOrganization(organization);
 		$scope.newOrganization.parent = OrganizationRepo.getSelectedOrganization();
-		
 	};
 
 	$scope.getSelectedOrganization = function() {

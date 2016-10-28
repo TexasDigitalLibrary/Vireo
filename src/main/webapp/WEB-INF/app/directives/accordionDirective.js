@@ -1,26 +1,4 @@
-var getPanes = function() {
-	var panes = angular.fromJson(localStorage.getItem('panes'));
-	if(panes === null) {
-		panes = [];
-	}
-	return panes;
-};
-
-var addPane = function(pane) {
-	var panes = getPanes();
-	if(panes.indexOf(pane) === -1) {
-		panes.push(pane);
-	}
-	localStorage.setItem('panes', angular.toJson(panes));
-};
-
-var removePane = function(pane) {
-	var panes = getPanes();
-	panes.splice(panes.indexOf(pane), 1);
-	localStorage.setItem('panes', angular.toJson(panes));
-};
-
-vireo.directive("accordion", function ($timeout, AccordionService) {
+vireo.directive("accordion", function () {
 	return {
 		template: '<div class="accordion" ng-transclude></div>',
 		restrict: 'E',
@@ -30,12 +8,7 @@ vireo.directive("accordion", function ($timeout, AccordionService) {
 			'singleExpand': '='
 		},
 		controller: function($scope)  {
-			$timeout(function() {
-				var panes = getPanes();
-				for(var i in panes) {
-					AccordionService.open(panes[i]);
-				}
-			}, 500);
+
 		},
 		link: function($scope, element, attr) {
 			
@@ -43,7 +16,7 @@ vireo.directive("accordion", function ($timeout, AccordionService) {
 	};
 });
 
-vireo.directive("pane", function($timeout, AccordionService) {
+vireo.directive("pane", function($location, $timeout, $routeParams, AccordionService) {
 	var count = 0;
 	return {
         templateUrl:function(element, attr) {
@@ -59,22 +32,40 @@ vireo.directive("pane", function($timeout, AccordionService) {
 			count++;
 
 			angular.extend($scope, parent);
+			
+			var getPanes = function() {
+				var panes = [];
+				if($routeParams.pane !== undefined) {
+					if(typeof $routeParams.pane == 'string') {
+						panes.push($routeParams.pane);
+					}
+					else {
+						panes = $routeParams.pane;
+					}
+				}
+				return panes;
+			};
 
 			$scope.query = typeof attr.query != "undefined" ? attr.query : "pane" + count;
 			
 			$scope.expanded = false;
-
 
 			$scope.toggleExpanded = function() {
 				$scope.expanded ? $scope.close() : $scope.open();
 			};
 
 			$scope.open = function() {
-				if($scope.$parent.$parent.singleExpand) {
-					AccordionService.closeAll();
-					localStorage.setItem('panes', angular.toJson([]));
+				var panes = [];
+				if(!$scope.$parent.$parent.singleExpand) {
+					panes = getPanes();
 				}
-				addPane($scope.query);
+				else {
+					AccordionService.closeAll();
+				}
+				if(panes.indexOf($scope.query) < 0) {
+					panes.push($scope.query);
+				}
+				$location.search('pane', panes);
 				if($scope.html === undefined) {
 					$scope.loading = true;
 					$scope.html = attr.html;
@@ -83,7 +74,11 @@ vireo.directive("pane", function($timeout, AccordionService) {
 			}
 
 			$scope.close = function() {
-				removePane($scope.query);
+				var panes = getPanes();
+				if(panes.indexOf($scope.query) >= 0) {
+					panes.splice(panes.indexOf($scope.query), 1);
+				}
+				$location.search('pane', panes);
 				$scope.expanded = false;
 			}
 
@@ -93,7 +88,12 @@ vireo.directive("pane", function($timeout, AccordionService) {
 				}, 500);
 			}
 			
-			AccordionService.add($scope.query, $scope.open, $scope.close);
+			AccordionService.add($scope.query, {
+				'open': $scope.open,
+				'close': $scope.close
+			});
+			
+			getPanes().indexOf($scope.query) >= 0 ? $scope.open() : $scope.close();
 	    }
 	};
 });
@@ -104,39 +104,35 @@ vireo.service("AccordionService", function() {
 
 	var panes = {};
 
-	AccordionService.add = function(pane, open, close) {
-		panes[pane] = {
-			'open': open,
-			'close': close
-		}
+	AccordionService.add = function(id, pane) {
+		panes[id] = pane;
 	};
 
-	AccordionService.remove = function(pane) {
-		panes.splice(panes.indexOf(pane), 1);
+	AccordionService.remove = function(id) {
+		panes[id] !== undefined ? deletepanes[id] : console.log('No pane with id:', id);
 	};
 	
-	AccordionService.open = function(pane) {
-		for(var i in panes) {
-			if(pane == i)  {
-				panes[i].open();
-			}
-		}
+	AccordionService.open = function(id) {
+		panes[id] !== undefined ? panes[id].open() : console.log('No pane with id:', id);
 	};
 	
-	AccordionService.close = function(pane) {
-		for(var i in panes) {
-			if(pane == i)  {
-				panes[i].close();
-			}
-		}
+	AccordionService.close = function(id) {
+		panes[id] !== undefined ? panes[id].close() : console.log('No pane with id:', id);
 	};
-
-	AccordionService.closeAll = function(pane) {
+	
+	AccordionService.closeAll = function() {
 		for(var i in panes) {
 			panes[i].close();
+		}
+	};
+	
+	AccordionService.openAll = function() {
+		for(var i in panes) {
+			panes[i].open();
 		}
 	};
 
 	return AccordionService;
 
 });
+
