@@ -130,7 +130,7 @@ public class SubmissionController {
     
     @Transactional
     @ApiMapping("/{submissionId}/update-reviewer-notes")
-    @Auth(role = "STUDENT")
+    @Auth(role = "MANAGER")
     public ApiResponse updateReviewerNotes(@ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
     	Submission submission = submissionRepo.findOne(submissionId);
     	submission.setReviewerNotes(requestData.get("reviewerNotes"));
