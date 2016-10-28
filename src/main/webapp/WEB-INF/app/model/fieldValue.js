@@ -11,7 +11,13 @@ vireo.model("FieldValue", function FieldValue(WsApi) {
 				'method': submissionId + '/update-field-value',
 				'data': fieldValue
 			});
-			return WsApi.fetch(fieldValue.getMapping().update);
+			var promise = WsApi.fetch(fieldValue.getMapping().update);
+			
+			promise.then(function(response) {
+				fieldValue.update(angular.fromJson(response.body).payload.FieldValue);
+			});
+			
+			return promise;
 		};
 
 		return fieldValue;

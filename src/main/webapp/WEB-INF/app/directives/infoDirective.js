@@ -36,6 +36,24 @@ vireo.directive("info",  function(FieldValue) {
 				}
 			};
 			
+			$scope.editFieldValue = function(fieldValue) {
+				fieldValue.editing = true;
+			};
+			
+			$scope.save = function(fieldValue) {
+				fieldValue.editing = false;
+				fieldValue.updating = true;
+				fieldValue.save($scope.submission.id).then(function(response) {
+					delete fieldValue.updating;
+				});
+			};
+			
+			$scope.cancel = function(fieldValue) {
+				fieldValue.refresh();
+				fieldValue.editing = false;
+				delete fieldValue.updating;
+			};
+			
 			if($scope.fieldValues.length === 0) {
 				$scope.addFieldValue();
 			}
@@ -53,7 +71,7 @@ vireo.directive("info",  function(FieldValue) {
 			};
 			
 			$scope.standardInput = function() {
-				return  $scope.fieldProfile.inputType.name != 'INPUT_DATETIME' && $scope.fieldProfile.inputType.name != 'INPUT_TEL' && $scope.fieldProfile.inputType.name != 'INPUT_URL';
+				return !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
 			};
 			
 		}

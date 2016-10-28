@@ -4,12 +4,12 @@
 			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
 		</div>
 		<div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name != 'INPUT_FILE'">
-			<div class="field-value-input row" ng-repeat="value in values track by $index">
+			<div class="field-value-input row" ng-repeat="fieldValue in fieldValues track by $index">
 				<div class="col-xs-11">
 					<div ng-include="includeTemplateUrl"></div>
 				</div>
 				<div class="col-xs-1" >
-					<button ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove" ng-click="removeFieldValue(value)">-</button>
+					<button ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove" ng-click="removeFieldValue(fieldValue)">-</button>
 					<button ng-if="showAdd($first)" class="btn btn-primary field-value-add-remove" ng-click="addFieldValue()">+</button>
 				</div>
 			</div>

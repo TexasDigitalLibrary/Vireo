@@ -1,5 +1,5 @@
 <div class="input-group">
 	<input type="checkbox" ng-model="field.value" class="info-checkbox" ng-true-value="'true'" ng-false-value="'false'">
-	<span class="glyphicon glyphicon-ok toggle-href" ng-click="field.save(submission.id); field.editing = false;"></span>
-	<span class="glyphicon glyphicon-remove toggle-href" ng-click="field.refresh(); field.editing = false;"></span>
+	<span class="glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
+	<span class="glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>
 </div>

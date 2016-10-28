@@ -13,6 +13,6 @@
 		ng-required="!fieldProfile.optional" 
 		close-text="Close"
 		stringtodate/>
-	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="field.save(submission.id); field.editing = false;"></span>
-	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="field.refresh(); field.editing = false;"></span>		
+	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
+	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>		
 </div>

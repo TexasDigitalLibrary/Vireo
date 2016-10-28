@@ -1,4 +1,4 @@
-<div ng-if="!profile.repeatable"  ng-init="fieldValue = values[0]">
+<div ng-if="!profile.repeatable"  ng-init="fieldValue = fieldValues[0]">
 	<div class="col-md-5 col-sm-12">
 		<div class="input-group file-input-group">
 			<span class="pull-right file-info-tip">
@@ -76,7 +76,7 @@
      			</tr>
   			</thead>
 	   		<tbody>
-     			<tr ng-repeat="fieldValue in values" ng-init="fetchFileInfo(fieldValue)">
+     			<tr ng-repeat="fieldValue in fieldValues" ng-init="fetchFileInfo(fieldValue)">
 	       			<td ng-if="!fieldValue.uploading" class="file-info"><p class="file-name select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.file.name}}</p></td>
 	       			<td ng-if="!fieldValue.uploading">{{fieldValue.file.type}}</td>
 	       			<td ng-if="!fieldValue.uploading">{{fieldValue.file.size}}</td>

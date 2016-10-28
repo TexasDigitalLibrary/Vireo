@@ -6,9 +6,9 @@
 		<input
 			type="radio" 
 			ng-model="field.value"
-			ng-click="field.save(submission.id); field.editing = false;" 
+			ng-click="save(field)" 
 			name="fieldProfile.fieldPredicate.value"
-			ng-disabled="" 
+			ng-disabled="field.updating" 
 			value="{{word.defenition ? word.defenition : word.name}}"/>
 	</div>
 </div>

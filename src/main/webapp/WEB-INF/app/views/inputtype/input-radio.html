@@ -1,20 +1,20 @@
-<div class="input-radio-container" ng-repeat="word in profile.controlledVocabularies[0].dictionary" ng-click="values[$parent.$index].value = word.defenition ? word.defenition : word.name">
+<div class="input-radio-container" ng-repeat="word in profile.controlledVocabularies[0].dictionary" ng-click="fieldValue.value = word.defenition ? word.defenition : word.name">
 
 	<div class="col-xs-8">
 		<span class="radio-label">{{word.name}}:</span>
 	</div>
 	<div class="col-xs-2">
 		<input  type="radio" 
-				ng-model="values[$parent.$index].value"
-				ng-click="save(value)" 
+				ng-model="fieldValue.value"
+				ng-click="save(fieldValue)" 
 				name="profile.fieldPredicate.value"
-				ng-disabled="saving===value.id" 
+				ng-disabled="fieldValue.updating" 
 				value="{{word.defenition ? word.defenition : word.name}}" 
 		/>
 	</div>
 	<div class="col-xs-2">
-        <span ng-if="showInfo(value) && $index===0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="!showInfo(value) && $index===0" class="glyphicon glyphicon-refresh spinning"> </span>
+        <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating && $index === 0" class="glyphicon glyphicon-refresh spinning"> </span>
 	</div>
 	
 </div>

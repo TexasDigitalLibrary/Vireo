@@ -10,6 +10,6 @@
 		</li>
 	</ul>
 	<span class="form-control select-value" ng-bind="field.value || 'Choose {{fieldProfile.fieldGlosses[0].value}}'"></span>
-	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="field.save(submission.id); field.editing = false;"></span>
-	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="field.refresh(); field.editing = false;"></span>
+	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
+	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>
 </div>
