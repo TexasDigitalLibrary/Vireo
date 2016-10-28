@@ -25,7 +25,7 @@ vireo.directive("tabs", function() {
 
 vireo.directive("tab", function($compile) {
 	 return {
-		template: '<span ng-class="{\'active\': activeTab(path)}" ng-click="setActive(path, html)" class="tab">{{label}}</span>',
+		template: '<span ng-class="{\'active\': activeTab(path)}" ng-click="setActive(path)" class="tab">{{label}}</span>',
 		restrict: 'E',
 		replace: false,
 		transclude: false,
