@@ -36,6 +36,9 @@ vireo.directive("info",  function(FieldValue) {
 						$scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
 					});
 				}
+				else {
+					$scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
+				}
 			};
 			
 			$scope.editFieldValue = function(fieldValue) {
