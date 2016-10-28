@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function ($controller, $routeParams, $scope, ItemViewService) {
+vireo.controller("ItemViewController", function ($controller, $routeParams, $scope, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -44,6 +44,33 @@ vireo.controller("ItemViewController", function ($controller, $routeParams, $sco
 			$scope.editingReviewerNotes = false;
 			$scope.submission.refresh();
 		};
+		
+		SidebarService.addBoxes([
+		    {
+		        "title": "Active Document",
+		        "viewUrl": "views/sideboxes/activeDocument.html",
+		        "getPrimaryDocumentFileName": function() {
+		        	return "Title";
+		        },
+		        "downloadPrimaryDocument": function() {
+		        	console.log('download primary document')
+		        },
+		        "viewAllFiles": function() {
+		        	console.log('view all files')
+		        },
+		        "uploadNewFile": function() {
+		        	console.log('upload new files')
+		        }
+		    },
+		    {
+		        "title": "Submission Status",
+		        "viewUrl": "views/sideboxes/submissionStatus.html"
+		    },
+		    {
+		        "title": "Custom Actions",
+		        "viewUrl": "views/sideboxes/customActions.html"
+		    }
+		]);
 
 		
 	});
