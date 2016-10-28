@@ -32,15 +32,16 @@ vireo.config(function($locationProvider, $routeProvider) {
 			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/list', {
-			templateUrl: 'views/admin/list.html',
+			templateUrl: 'views/admin/admin.html',
 			access: ["ADMINISTRATOR"]
 		}).
-		when('/admin/view', {
-			templateUrl: 'views/admin/view.html',
-			access: ["ADMINISTRATOR"]
+		when('/admin/view/:tab/:id', {
+			templateUrl: 'views/admin/admin.html',
+			access: ["ADMINISTRATOR"],
+			reloadOnSearch: false
 		}).
 		when('/admin/log', {
-			templateUrl: 'views/admin/log.html',
+			templateUrl: 'views/admin/admin.html',
 			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/settings', {
@@ -48,7 +49,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 			access: ["ADMINISTRATOR"]
 		}).
 		when('/admin/settings/:tab', {
-			templateUrl: 'views/admin/settings/settings.html',
+			templateUrl: 'views/admin/admin.html',
 			access: ["ADMINISTRATOR"],
 			controller: 'SettingsController',
 			reloadOnSearch: false

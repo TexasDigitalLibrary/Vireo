@@ -1,39 +1,23 @@
-vireo.controller('AdminController', function ($controller, $scope, $window, $route, AssumedControl, AuthServiceApi, StorageService, User, UserRepo, WsApi) {
+vireo.controller('AdminController', function ($controller, $location, $scope) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	var services = [
-		User,
-		UserRepo
-	];
-
-	$scope.user = User.getAll();
-
-	$scope.$watch('user.role', function() {
-		if($scope.user.role) {
-			StorageService.set('role', $scope.user.role);
-			if ($scope.user.role == 'ADMINISTRATOR') {
-				$scope.admin = true;
-			}
-			else {
-				$scope.admin = false;
-			}
-		}
-	});
-		
-	$scope.isMocking = function() {
-		if(appConfig.mockRole) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	var view = $location.path();
+	
+	$scope.isList = function() {
+		return view.includes("/admin/list");
 	};
-
-	$scope.logout = function(url) {
-		StorageService.delete('token');
-		StorageService.delete('role');
-		window.open(url, "_self");
+	
+	$scope.isView = function() {
+		return view.includes("/admin/view");
+	};
+	
+	$scope.isLog = function() {
+		return view.includes("/admin/log");
+	};
+	
+	$scope.isSettings = function() {
+		return view.includes("/admin/settings");
 	};
 	
 });

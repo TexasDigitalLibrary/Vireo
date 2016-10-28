@@ -134,6 +134,7 @@ var apiMapping = {
 		}
 	},
 	Configuration: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/configurable',
@@ -288,6 +289,10 @@ var apiMapping = {
 			'controller': 'settings/field-predicates',
 			'method': 'all'
 		},
+		one: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'settings/field-predicates'
@@ -296,6 +301,12 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/field-predicates',
 			'method': 'create'
+		}
+	},
+	FieldValue: {
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
 		}
 	},
 	GraduationMonth: {
@@ -501,6 +512,7 @@ var apiMapping = {
 		}
 	},
 	Submission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -525,6 +537,10 @@ var apiMapping = {
 			'method': 'query'
 		},
 		saveFieldValue: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
+		saveReviewerNotes: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
@@ -559,6 +575,7 @@ var apiMapping = {
 		}
 	},
 	StudentSubmission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -669,6 +686,7 @@ var apiMapping = {
 		}
 	},
 	UserSettings: {
+		lazy: true,
 		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'user',

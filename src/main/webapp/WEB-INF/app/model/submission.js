@@ -88,6 +88,20 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 		
+		submission.saveReviewerNotes = function(reviewerNotes) {
+
+			angular.extend(this.getMapping().saveReviewerNotes, {
+				method: submission.id+"/update-reviewer-notes",
+				data: {
+					'reviewerNotes': reviewerNotes
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().saveReviewerNotes);
+
+			return promise;
+		};
+		
 		submission.fileInfo = function(uri) {
 
 			angular.extend(this.getMapping().fileInfo, {

@@ -127,6 +127,15 @@ public class SubmissionController {
         submissionRepo.save(submission);
         return new ApiResponse(SUCCESS);
     }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/update-reviewer-notes")
+    @Auth(role = "MANAGER")
+    public ApiResponse updateReviewerNotes(@ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
+    	Submission submission = submissionRepo.findOne(submissionId);
+    	submission.setReviewerNotes(requestData.get("reviewerNotes"));
+        return new ApiResponse(SUCCESS);
+    }
 
     @Transactional
     @ApiMapping("/query/{page}/{size}")
