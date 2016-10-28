@@ -11,7 +11,8 @@
 			<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
 			<span ng-if="!field.value" class="info-empty">none</span>
 		</span>
-		<span ng-if="inputDateTime()" ng-class="{'info-empty': !field.value}">{{field.value | date:'MM/dd/yyyy' || 'none'}}</span>
+		<span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
+		<span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
 	</div>
 	
 	<div ng-if="!immutable" ng-repeat="field in fieldValues">
@@ -32,7 +33,8 @@
 					<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
 					<span ng-if="!field.value" class="info-empty">none</span>
 				</span>
-				<span ng-if="inputDateTime()" ng-class="{'info-empty': !field.value}">{{field.value | date:'MM/dd/yyyy' || 'none'}}</span>
+				<span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
+				<span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
 			</div>
 			<div class="col-sm-2">
 				<span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
