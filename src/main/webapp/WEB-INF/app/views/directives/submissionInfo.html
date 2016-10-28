@@ -36,9 +36,11 @@
 			</div>
 			
 			<div class="col-sm-8 info-data">
+				<!-- conditionally show the edit clicker or the progress spinner -->
 				<span ng-if="!field.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="editFieldValue(field)"></span>
 				<span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"> </span>
 				
+				<!-- conditionally show the proper form of the field value -->
 				<span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
 				<span ng-if="inputTel()">
 					<a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
