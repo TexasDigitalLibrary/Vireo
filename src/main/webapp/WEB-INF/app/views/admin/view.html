@@ -46,7 +46,7 @@
 				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">
 					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
 					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
-					<td>{{documentFieldValue.fieldPredicate.value}}</td>
+					<td>{{getFileType(documentFieldValue)}}</td>
 					<td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
 					<td><span class="glyphicon glyphicon-pencil toggle-href" ng-click="editFile()"></span></td>
 				</tr>
