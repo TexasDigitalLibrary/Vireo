@@ -540,6 +540,10 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
+		saveReviewerNotes: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
 		removeFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'

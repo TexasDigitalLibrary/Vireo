@@ -26,7 +26,7 @@
   padding-right: 7px;
 }
 
-.item-view ul.info-list .info-empty {
+.item-view .info-empty {
   color: #cccccc;
 }
 
@@ -49,4 +49,19 @@
 .item-view ul.info-list .form-inline textarea.form-control {
   height: 46px;
   margin-bottom: 4px;
+}
+
+.item-view .reviewer-notes {
+  padding: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
+  max-height: 250px;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+}
+
+.item-view .reviewer-notes textarea {
+  width: 99%;
+  min-height: 180px;
+  max-height: 250px;
 }

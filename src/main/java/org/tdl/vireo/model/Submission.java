@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -64,6 +65,9 @@ public class Submission extends BaseEntity {
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<Attachment> attachments;
+    
+    @Lob
+    private String reviewerNotes;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -344,4 +348,20 @@ public class Submission extends BaseEntity {
         getAttachments().remove(attachment);
     }
 
+    /**
+     * 
+     * @return
+     */
+	public String getReviewerNotes() {
+		return reviewerNotes;
+	}
+
+	/**
+	 * 
+	 * @param reviewerNotes
+	 */
+	public void setReviewerNotes(String reviewerNotes) {
+		this.reviewerNotes = reviewerNotes;
+	}
+    
 }

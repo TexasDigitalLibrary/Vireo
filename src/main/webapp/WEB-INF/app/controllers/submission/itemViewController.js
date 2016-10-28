@@ -27,6 +27,25 @@ vireo.controller("ItemViewController", function ($controller, $routeParams, $sco
 			return path + "/" + $scope.submission.id;
 		};
 		
+		
+		$scope.editReviewerNotes = function() {
+			$scope.editingReviewerNotes = true;
+		};
+		
+		$scope.saveReviewerNotes = function() {
+			$scope.savingReviewerNotes = true;
+			$scope.editingReviewerNotes = false;
+			$scope.submission.saveReviewerNotes($scope.submission.reviewerNotes).then(function(response) {
+				$scope.savingReviewerNotes = false;
+			});
+		};
+		
+		$scope.cancelReviewerNotes = function() {
+			$scope.editingReviewerNotes = false;
+			$scope.submission.refresh();
+		};
+
+		
 	});
 
 });
