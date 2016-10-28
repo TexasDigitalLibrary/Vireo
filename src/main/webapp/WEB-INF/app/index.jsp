@@ -107,16 +107,16 @@
 				<div class="row">
 					<a class="pull-left" href="home"><img style="max-height: 57px;" ng-src="{{logoImage()}}"></img></a>
 					<ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
-			      		<li ng-class="{'active': activeTab('admin/list')}">
+			      		<li ng-class="{'active': activeTab('/admin/list')}">
 			      			<a href="admin/list">List</a>
 			      		</li>
-						<li ng-class="{'active': activeTab('admin/view')}">
+						<li ng-class="{'active': activeTab('/admin/view')}">
 			      			<a href ng-click="viewSelect()">View</a>
 			      		</li>
-			      		<li ng-class="{'active': activeTab('admin/log')}">
+			      		<li ng-class="{'active': activeTab('/admin/log')}">
 			      			<a href="admin/log">Log</a>
 			      		</li>
-			      		<li ng-class="{'active': activeTab('admin/settings')}" class="settings-tab">
+			      		<li ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
 			      			<a href="admin/settings">Settings</a>
 			      		</li>						
 					</ul>

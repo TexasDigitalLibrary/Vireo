@@ -23,16 +23,16 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 			return $scope.logoPath;
 		};
 
-		$scope.activeTab = function(tab) {
-			return $location.url().indexOf(tab) != -1;
+		$scope.activeTab = function(path) {
+			return $location.url().includes(path);
 		};
 
 		$scope.activeAdminSection = function() {
-			return $location.url().indexOf("/admin") != -1;
+			return $location.url().includes("/admin");
 		};
 		
 		$scope.viewSelect = function() {
-			if(!$scope.activeTab('view')) {
+			if(!$scope.activeTab('/admin/view')) {
 				$location.path('/admin/list');
 				$timeout(function() {
 					AlertService.add({type: 'WARNING', message: 'Select a submission to view'}, 'submission/select');
