@@ -1,0 +1,15 @@
+<div class="input-group" uib-dropdown>
+	<span class="input-group-addon select-toggle" uib-dropdown-toggle>
+		<span class="caret"></span>
+	</span>
+	 <ul class="dropdown-menu" uib-dropdown-menu>
+		<li class="select-option" 
+			ng-click="field.value = word.name;" 
+			ng-repeat="word in fieldProfile.controlledVocabularies[0].dictionary">
+			{{word.name}}
+		</li>
+	</ul>
+	<span class="form-control select-value" ng-bind="field.value || 'Choose {{fieldProfile.fieldGlosses[0].value}}'"></span>
+	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="field.save(submission.id); field.editing = false;"></span>
+	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="field.refresh(); field.editing = false;"></span>
+</div>

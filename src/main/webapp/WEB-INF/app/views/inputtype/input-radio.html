@@ -13,8 +13,8 @@
 		/>
 	</div>
 	<div class="col-xs-2">
-        <span ng-if="(saving===0||saving!==value.id)&&$index===0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="saving===value.id&&$index===0" class="glyphicon glyphicon-refresh spinning"> </span>
+        <span ng-if="showInfo(value) && $index===0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!showInfo(value) && $index===0" class="glyphicon glyphicon-refresh spinning"> </span>
 	</div>
 	
 </div>

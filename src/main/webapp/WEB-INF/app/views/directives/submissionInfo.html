@@ -1,18 +1,49 @@
-<div>
-	<div ng-if="immutable">
-		<label>{{label}}:</label>
-		<span ng-class="{'info-empty': !data}">{{data.value || 'none'}}</span>
+<div ng-init="init()">
+
+	<div ng-if="immutable" ng-repeat="field in fieldValues">
+		<label><span ng-if="$index < 1">{{label}}:</span></label>
+		<span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
+		<span ng-if="inputTel()">
+			<a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+			<span ng-if="!field.value" class="info-empty">none</span>
+		</span>
+		<span ng-if="inputUrl()">
+			<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
+			<span ng-if="!field.value" class="info-empty">none</span>
+		</span>
+		<span ng-if="inputDateTime()" ng-class="{'info-empty': !field.value}">{{field.value | date:'MM/dd/yyyy' || 'none'}}</span>
 	</div>
-	<div ng-if="!immutable">
-		<div class="toggle-href" ng-if="!data.editing" ng-click="data.editing = true">
-			<label>{{label}}:</label>
-			<span class="glyphicon glyphicon-pencil"></span>
-			<span ng-if="phone" ng-class="{'info-empty': !data}">{{data.value || 'none'}}</span>
-			<span ng-if="!phone" ng-class="{'info-empty': !data}"><a href="tel://{{data.value || 'none'}}">{{data.value || 'none'}}</a></span>
+	
+	<div ng-if="!immutable" ng-repeat="field in fieldValues">
+		
+		<div ng-if="!field.editing">
+			<div class="col-sm-10">
+				<label><span ng-if="$index < 1">{{label}}:</span></label>
+				<span class="glyphicon glyphicon-pencil toggle-href" ng-click="field.editing = true"></span>
+				<span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
+				<span ng-if="inputTel()">
+					<a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+					<span ng-if="!field.value" class="info-empty">none</span>
+				</span>
+				<span ng-if="inputUrl()">
+					<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
+					<span ng-if="!field.value" class="info-empty">none</span>
+				</span>
+				<span ng-if="inputDateTime()" ng-class="{'info-empty': !field.value}">{{field.value | date:'MM/dd/yyyy' || 'none'}}</span>
+			</div>
+			<div class="col-sm-2">
+				<span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
+				<span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
+			</div>
 		</div>
-		<div class="form-inline" ng-if="data.editing">
-			<label>{{label}}:</label>
-			<div ng-include="edit" class="input-group"></div>
-		</div>
+
+		<form ng-submit="field.save(submission.id); field.editing = false;">
+			<div class="form-inline" ng-if="field.editing">
+				<label><span ng-if="$index < 1">{{label}}:</span></label>
+				<ng-include src="edit"></ng-include>
+			</div>
+		</form>
+
 	<div>
+
 </div>

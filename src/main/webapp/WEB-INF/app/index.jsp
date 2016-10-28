@@ -344,6 +344,7 @@
 	    <script src="model/submission.js"></script>
 	    <script src="model/submissionState.js"></script>
 	    <script src="model/fieldProfile.js"></script>
+	    <script src="model/fieldValue.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
 		

@@ -2,16 +2,12 @@
 
 	<h1>
 		<span ng-if="!submission">Loading Submission...</span>
-		<span ng-if="submission">{{getViewTitle()}}</span>
+		<span ng-if="submission">{{title}}</span>
 	</h1>
 	<hr>
 
-	<tabs target="submissionView" param="submission.id">
-		<tab path="admin/view/personal" html="views/admin/info/personal.html">Personal Info</tab>
-		<tab path="admin/view/document" html="views/admin/info/document.html">Document Info</tab>
-		<tab path="admin/view/degree" html="views/admin/info/degree.html">Degree Info</tab>
+ 	<tabs>
+		<tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
 	</tabs>
-
-	<tabview class="item-view" for="submissionView"></tabview>
-
+	
 </div>

@@ -49,8 +49,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 		}).
 		when('/admin/settings/:tab', {
 			templateUrl: 'views/admin/admin.html',
-			access: ["ADMINISTRATOR"],
-			controller: 'SettingsController'
+			access: ["ADMINISTRATOR"]
 		}).
 		when('/home', {
 			templateUrl: 'views/home.html'

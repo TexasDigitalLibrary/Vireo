@@ -1,0 +1,52 @@
+.item-view ul.info-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item-view ul.info-list span.glyphicon {
+  margin-right: 5px;
+}
+
+.item-view ul.info-list span.glyphicon.glyphicon-plus {
+  margin-left: 25px;
+}
+.item-view ul.info-list span.glyphicon.glyphicon-minus {
+  margin-left: 25px;
+}
+
+.item-view ul.info-list .input-group .glyphicon {
+  top: 0;
+  margin-right: 0px;
+}
+
+.item-view ul.info-list label {
+  width: 150px;
+  text-align: right;
+  padding-right: 7px;
+}
+
+.item-view ul.info-list .info-empty {
+  color: #cccccc;
+}
+
+.item-view ul.info-list .form-inline {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.item-view ul.info-list .form-inline input.form-control {
+  height: 30px;
+}
+
+.item-view ul.info-list .form-inline input.info-checkbox {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.item-view ul.info-list .form-inline textarea.form-control {
+  height: 46px;
+  margin-bottom: 4px;
+}

@@ -1,9 +1,9 @@
-vireo.service("ItemViewService", function($q, SubmissionRepo) {
+vireo.service("ItemViewService", function($q, Submission, SubmissionRepo) {
 
 	var ItemViewService = this;
 	
 	ItemViewService.setSelectedSubmission = function(submission) {
-		ItemViewService.submission = submission;
+		ItemViewService.submission = new Submission(submission);
 	};
 	
 	ItemViewService.getSelectedSubmission = function() {

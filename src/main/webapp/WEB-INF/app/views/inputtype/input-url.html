@@ -1,6 +1,6 @@
 <div class="input-group">
 	<input  
-		type="url" 
+		type="text" 
 		class="form-control" 
 		name="{{profile.fieldPredicate.value}}" 
 		ng-required="!profile.optional" 
@@ -10,8 +10,8 @@
 		placeholder="Input {{profile.fieldGlosses[0].value}}" 
 	/>
 	<span class="input-group-addon">
-        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
+        <span ng-if="showInfo(value)" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!showInfo(value)" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>
 			

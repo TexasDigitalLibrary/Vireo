@@ -1,6 +1,7 @@
 vireo.controller('AdminController', function ($controller, $location, $scope) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+	angular.extend(this, $controller('SettingsController', {$scope: $scope}));
 
 	var view = $location.path();
 	

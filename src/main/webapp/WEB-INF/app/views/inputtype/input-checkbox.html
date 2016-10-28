@@ -5,6 +5,5 @@
 		ng-disabled="saving===value.id"
 		ng-click="save(value)"
 >
-<span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-<span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
-
+<span ng-if="showInfo(value)" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+<span ng-if="!showInfo(value)" class="glyphicon glyphicon-refresh spinning"> </span>

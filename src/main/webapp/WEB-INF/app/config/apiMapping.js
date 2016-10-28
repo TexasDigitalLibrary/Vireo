@@ -289,6 +289,10 @@ var apiMapping = {
 			'controller': 'settings/field-predicates',
 			'method': 'all'
 		},
+		one: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'settings/field-predicates'
@@ -297,6 +301,12 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/field-predicates',
 			'method': 'create'
+		}
+	},
+	FieldValue: {
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
 		}
 	},
 	GraduationMonth: {

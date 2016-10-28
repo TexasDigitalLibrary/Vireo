@@ -1,4 +1,4 @@
-vireo.controller('OrganizationSettingsController', function ($controller, $scope, $q, OrganizationRepo, SidebarService) {
+vireo.controller('OrganizationSettingsController', function ($controller, $scope, $q, AccordionService, OrganizationRepo, SidebarService) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -10,20 +10,22 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 	});
 
 	$scope.organizations = OrganizationRepo.getAll();
-	
-	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
 	$scope.activeManagementPane = 'edit';
 	
 	$scope.newOrganization = OrganizationRepo.getNewOrganization();
 
 	$scope.setSelectedOrganization = function(organization) {
+		if(OrganizationRepo.getSelectedOrganization().id !== organization.id) {
+			AccordionService.closeAll();
+		}	
 		OrganizationRepo.setSelectedOrganization(organization);
-		$scope.newOrganization.parent = $scope.selectedOrganization;
+		$scope.newOrganization.parent = OrganizationRepo.getSelectedOrganization();
+		
 	};
 
 	$scope.getSelectedOrganization = function() {
-		return $scope.selectedOrganization;
+		return OrganizationRepo.getSelectedOrganization();
 	};
 
 	$scope.activateManagementPane = function(pane) {

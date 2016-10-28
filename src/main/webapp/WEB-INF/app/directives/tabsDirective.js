@@ -4,81 +4,42 @@ vireo.directive("tabs", function() {
 		restrict: 'E',
 		replace: false,
 		transclude: true,
-		scope: {
-			target: "@target",
-			param: "="
-		},
-		controller: function($scope, $location, $routeParams, TabService) {
-			
+		scope: false,
+		controller: function($scope, $location, $routeParams) {
 			this.activeTab = function(tab) {
-				return tab.includes($routeParams.tab);
-			}
-
+				var active = false;
+				if($routeParams.id !== undefined) {
+					active = tab.includes($routeParams.tab + '/' + $routeParams.id);
+				}
+				else {
+					active = tab.includes($routeParams.tab);
+				}
+				return active;
+			};
 			this.setActive = function(tab, html) {
-				var path = tab + ($scope.param !== undefined ? '/' + $scope.param : '');				
-				$location.url(path);
-				TabService.setTab($scope.target, html);
-			}
-
-			this.target = $scope.target;
-		},
-		link: function ($scope, element, attr) {	    	
-			$scope.target = attr.target;
-	    }
+				$location.url(tab);
+			};
+		}
 	};
 });
 
-vireo.directive("tab", function(TabService) {
+vireo.directive("tab", function($compile) {
 	 return {
-		template: '<span ng-class="{\'active\': activeTab(tab)}" ng-click="setActive(tab, html)" class="tab"><span ng-transclude></span></span>',
+		template: '<span ng-class="{\'active\': activeTab(path)}" ng-click="setActive(path, html)" class="tab">{{label}}</span>',
 		restrict: 'E',
 		replace: false,
-		transclude: true,
+		transclude: false,
 		require: '^tabs',
 		scope: true,
 		link: function ($scope, element, attr, parent) {
-			
 			angular.extend($scope, parent);
 			angular.extend($scope, attr);
-
-			$scope.tab = $scope.path;
-
-			if($scope.activeTab($scope.tab)) {
-				TabService.setTab($scope.target, $scope.html);
-			}
-
+			
+			var span = angular.element('<span ng-if="activeTab(path)">');			
+			span.html("<ng-include src='view'></ng-include>");			
+			var view = $compile(span)($scope);
+			
+			element.parent().parent().parent().after(view);			
 	    }
 	};
 });
-
-vireo.directive("tabview", function(TabService) {
-
-	 return {
-		template: '<span ng-include="path"></span>',
-		restrict: 'E',
-		replace: false,
-		scope: false,
-		link: function ($scope, element, attr) { 	
-			$scope.path = TabService.getTab(attr.for);
-	    }
-	};
-
-});
-
-vireo.service("TabService", function($q) {
-
-	var TabService = this;
-	var tabs = {};
-
-	TabService.getTab = function(target){
-		return tabs[target];
-	};
-
-	TabService.setTab = function(target, html){
-		tabs[target] = html;
-	};	
-
-	return TabService;
-	
-});
-

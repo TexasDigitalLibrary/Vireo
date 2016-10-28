@@ -5,7 +5,7 @@
 	},
 	"originalWorkflowSteps": [
 		{
-			"name": "Verify Personal Information",
+			"name": "Personal Information",
 			"overrideable": true,
 			"originatingOrganization": {
 				"name": "Institution",
@@ -370,7 +370,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEL"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -451,7 +451,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEL"
 					},
 					"repeatable": false,
 					"overrideable": true,

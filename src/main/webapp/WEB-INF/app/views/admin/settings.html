@@ -1,9 +1,6 @@
-<div>	
-	<tabs target="settingsView">
-		<tab path="admin/settings/application" html="views/admin/settings/application.html">Application</tab>
-		<tab path="admin/settings/organization" html="views/admin/settings/organization.html">Organization/Workflow</tab>
+<div ng-controller="SettingsController">	
+	<tabs>
+		<tab class="settings-view" path="admin/settings/application" view="views/admin/settings/application.html" label="Application"></tab>
+		<tab class="settings-view" path="admin/settings/organization" view="views/admin/settings/organization.html" label="Organization/Workflow"></tab>
 	</tabs>
-
-	<tabview class="settings-view" for="settingsView">
-	</tabview>
 </div>

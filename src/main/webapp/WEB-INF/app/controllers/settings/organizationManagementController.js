@@ -42,7 +42,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 		$scope.updateOrganization = function(organization) {
 			organization.save().then(function() {
-				// update the parent scoped selected organization 
+				// update the parent scoped selected organization
 				$scope.setSelectedOrganization(organization);
 			});
 		};

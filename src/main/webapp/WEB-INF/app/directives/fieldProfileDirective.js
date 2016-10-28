@@ -26,7 +26,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 
 			$scope.showInfo = function(fieldValue) {
 				var show = true;
-				if($scope.updating !== undefined && $scope.updating === fieldValue.id && fieldValue.value.length > 0) {
+				if($scope.updating !== undefined && $scope.updating === fieldValue.id && fieldValue.value !== undefined && fieldValue.value.length > 0) {
 					show = false;
 				}
 				return show;
@@ -51,7 +51,6 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 				var fieldValue = $scope.submission.addFieldValue($scope.profile.fieldPredicate);
 				refreshValues();
 				return fieldValue;
-				
 			};
 			
 			var remove = function(fieldValue) {

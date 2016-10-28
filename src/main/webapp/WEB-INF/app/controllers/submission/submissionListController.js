@@ -482,7 +482,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 	
 	$scope.viewSubmission = function(submission) {
 		ItemViewService.setSelectedSubmission(submission);
-		$location.path("/admin/view/personal/" + submission.id);
+		$location.path("/admin/view/" + submission.submissionWorkflowSteps[0].id + "/" + submission.id);
 	};
 	
 
