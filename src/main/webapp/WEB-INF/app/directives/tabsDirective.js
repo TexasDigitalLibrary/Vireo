@@ -16,7 +16,7 @@ vireo.directive("tabs", function() {
 				}
 				return active;
 			};
-			this.setActive = function(path, html) {
+			this.setActive = function(path) {
 				$location.url(path);
 			};
 		}
