@@ -30,9 +30,11 @@ vireo.directive("info",  function(FieldValue) {
 			};
 			
 			$scope.removeFieldValue = function(fieldValue) {
-				$scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
+				fieldValue.updating = true;
 				if(fieldValue.value !== undefined) {
-					$scope.submission.removeFieldValue(fieldValue);
+					$scope.submission.removeFieldValue(fieldValue).then(function(response) {
+						$scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
+					});
 				}
 			};
 			
