@@ -31,6 +31,31 @@
 	
 	<div class="row">
 		<h1>ALL FILES</h1>
+		<table class="table table-bordered table-striped table-hover">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>File</th>
+					<th>Type</th>
+					<th>Time</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+					<td><a href ng-click="downloadFile()">file.pdf</a></td>
+					<td>PRIMARY</td>
+					<td>4/4/4</td>
+					<td><span class="glyphicon glyphicon-pencil toggle-href" ng-click="editFile()"></span></td>
+				</tr>
+			</tbody>
+			<tfoot class="header">
+				<tr>
+					<th colspan="5"><button class="btn btn-default pull-right">Add File</button></th>
+				</tr>
+			</tfoot>
+		</table>		
 	</div>
 
 </div>

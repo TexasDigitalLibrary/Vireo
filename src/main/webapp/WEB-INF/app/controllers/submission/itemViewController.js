@@ -30,6 +30,8 @@ vireo.controller("ItemViewController", function ($controller, $routeParams, $sco
 		
 		$scope.editReviewerNotes = function() {
 			$scope.editingReviewerNotes = true;
+			$scope.reviewerNotes = angular.copy($scope.submission.reviewerNotes);
+			console.log($scope.reviewerNotes);
 		};
 		
 		$scope.saveReviewerNotes = function() {
@@ -42,7 +44,7 @@ vireo.controller("ItemViewController", function ($controller, $routeParams, $sco
 		
 		$scope.cancelReviewerNotes = function() {
 			$scope.editingReviewerNotes = false;
-			$scope.submission.refresh();
+			$scope.submission.reviewerNotes = angular.copy($scope.reviewerNotes);
 		};
 		
 		SidebarService.addBoxes([

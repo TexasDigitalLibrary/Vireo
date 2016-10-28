@@ -832,7 +832,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "your_committee",
+						"value": "committee_member",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -841,15 +841,15 @@
 					"inputType": {
 						"name": "INPUT_TEXT"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Committee members.",
+					"help": "Committee member.",
 					"fieldGlosses": [
 						{
-							"value": "Your Committee",
+							"value": "Committee Member",
 							"language": {
 								"name": "English"
 							}
