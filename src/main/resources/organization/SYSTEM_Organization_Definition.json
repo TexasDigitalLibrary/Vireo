@@ -1038,7 +1038,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1065,7 +1065,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1092,7 +1092,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,

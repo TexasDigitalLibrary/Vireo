@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function ($controller, $routeParams, $scope, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -46,6 +46,30 @@ vireo.controller("ItemViewController", function ($controller, $routeParams, $sco
 			$scope.editingReviewerNotes = false;
 			$scope.submission.reviewerNotes = angular.copy($scope.reviewerNotes);
 		};
+		
+		$scope.getFile = function(fieldValue) {
+			$scope.submission.file(fieldValue.value).then(function(data) {
+				saveAs(new Blob([data], { type:fieldValue.fileInfo.type }), fieldValue.fileInfo.name);
+			});
+		};
+		
+		
+		$scope.documentFieldValues = [];
+		
+		
+		var getFileInfo = function(fieldValue) {
+			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
+				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+				$scope.documentFieldValues.push(fieldValue);
+			});
+		}
+		
+		for(var i in $scope.submission.fieldValues) {
+			var fieldValue = $scope.submission.fieldValues[i];
+			if(fieldValue.fieldPredicate.documentTypePredicate) {
+				getFileInfo(fieldValue);
+			}
+		}
 		
 		SidebarService.addBoxes([
 		    {

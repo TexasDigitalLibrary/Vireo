@@ -62,6 +62,7 @@ public class FileIOUtility {
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
 		fileInfo.put("name", path.getFileName().toString());
 		fileInfo.put("type", Files.probeContentType(path));
+		fileInfo.put("time", attr.creationTime().toMillis());
 		fileInfo.put("size", attr.size());
 		fileInfo.put("uploaded", true);
 		return objectMapper.valueToTree(fileInfo);
