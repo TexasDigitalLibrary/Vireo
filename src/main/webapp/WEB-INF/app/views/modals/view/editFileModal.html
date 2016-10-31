@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="cancel(documentFieldValue)" aria-label="Close">
+    <button type="button" class="close" ng-click="cancel(documentFieldValue);" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Editing {{documentFieldValue.fileInfo.name}}</h3>
@@ -40,7 +40,7 @@
         	ng-if="!confirm && !isPrimaryDocument(documentFieldValue.fieldPredicate)"
 			type="button" class="btn btn-primary pull-right"
 			ng-click="saveFieldValue(documentFieldValue)">Submit</button>
-        <button ng-if="!confirm" type="button" class="btn btn-warning" ng-click="cancel(documentFieldValue)">Cancel</button>
+        <button ng-if="!confirm" type="button" class="btn btn-warning" ng-click="cancel(documentFieldValue);">Cancel</button>
         <button ng-if="confirm" type="button" class="btn btn-warning" ng-click="toggleConfirm()">Cancel</button>
     </div>
 

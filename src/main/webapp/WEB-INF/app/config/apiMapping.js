@@ -568,6 +568,11 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'file'
 		},
+		renameFile: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'rename-file'
+		},
 		removeFile: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',

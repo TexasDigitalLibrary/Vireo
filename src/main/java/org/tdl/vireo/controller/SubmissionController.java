@@ -189,7 +189,7 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
     	response.addHeader("Content-Disposition", "attachment");
-    	Path path = fileIOUtility.getFilePath(requestHeaders.get("uri"));
+    	Path path = fileIOUtility.getAbsolutePath(requestHeaders.get("uri"));
     	Files.copy(path, response.getOutputStream());
     	response.getOutputStream().flush();
     }
@@ -201,7 +201,7 @@ public class SubmissionController {
     	int hash = credentials.getEmail().hashCode();
         String uri = requestHeaders.get("uri");        
         if(uri.contains(String.valueOf(hash))) {
-        	fileIOUtility.deleteFile(uri);
+        	fileIOUtility.delete(uri);
         	apiResponse = new ApiResponse(SUCCESS);
         }
         else {
@@ -214,6 +214,17 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
     	return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestHeaders.get("uri")));
+    }
+    
+    @ApiMapping(value = "/rename-file")
+    @Auth(role = "MANAGER")
+    public ApiResponse renameFile(@ApiData Map<String, String> requestData) throws IOException {
+    	String newName = requestData.get("newName");
+    	String oldUri = requestData.get("uri");
+    	String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
+    	fileIOUtility.copy(oldUri, newUri);
+    	fileIOUtility.delete(oldUri);
+    	return new ApiResponse(SUCCESS, newUri);
     }
 
 }

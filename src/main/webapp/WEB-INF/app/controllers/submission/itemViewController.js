@@ -35,7 +35,6 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		$scope.editReviewerNotes = function() {
 			$scope.editingReviewerNotes = true;
 			$scope.reviewerNotes = angular.copy($scope.submission.reviewerNotes);
-			console.log($scope.reviewerNotes);
 		};
 		
 		$scope.saveReviewerNotes = function() {
@@ -79,7 +78,14 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		};
 		
 		$scope.saveFieldValue = function(fieldValue) {
-			console.log('save', fieldValue);
+			fieldValue.updating = true;
+			$scope.closeModal();
+			$scope.submission.renameFile(fieldValue.value, fieldValue.fileInfo.name).then(function(response) {
+				fieldValue.value = angular.fromJson(response.body).meta.message;
+				fieldValue.save($scope.submission.id).then(function() {
+					fieldValue.updating = false;
+				})
+			});
 		};
 		
 		$scope.toggleConfirm = function() {
@@ -89,10 +95,18 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		$scope.cancel = function(fieldValue) {
 			$scope.closeModal();
 			fieldValue.refresh();
+			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
+				for(var i in $scope.documentFieldValues) {
+					if($scope.documentFieldValues[i].id == fieldValue.id) {
+						$scope.documentFieldValues[i].fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+						break;
+					}
+				}
+			});
 		};
 
-		$scope.documentFieldValues = [];
 		
+		$scope.documentFieldValues = [];
 		
 		var primaryDocumentFieldValue;
 		

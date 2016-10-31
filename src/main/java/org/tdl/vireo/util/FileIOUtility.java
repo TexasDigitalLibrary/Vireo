@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Base64;
 import java.util.HashMap;
@@ -31,7 +32,33 @@ public class FileIOUtility {
 	public void write(byte[] data, String relativePath) throws IOException {
 		Files.write(processRelativePath(relativePath), data);
 	}
-
+	
+	public void copy(String oldRelativePath, String newRelativePath) throws IOException {
+		Files.copy(getAbsolutePath(oldRelativePath), getAbsolutePath(newRelativePath), StandardCopyOption.REPLACE_EXISTING);
+	}
+	
+	public String find(String relativeFolderPath, String name) {
+		
+		String targetPath = null;
+		
+		Path folder = getAbsolutePath(relativeFolderPath);
+		
+		for(String path : folder.toFile().list()) {
+			System.out.println(path);
+			
+			if(path.contains(name)) {
+				targetPath = path;
+				break;
+			}
+		}
+		
+		return targetPath;
+	}
+	
+	public void delete(String relativePath) throws IOException {
+		Files.delete(Paths.get(getPath(relativePath)));
+	}
+	
 	public String write(InputStream is, String relativePath) throws IOException {
 		Path path = processRelativePath(relativePath);
 		String[] rawFileData = IOUtils.toString(is, "UTF-8").split(";");
@@ -51,10 +78,6 @@ public class FileIOUtility {
 		Path path = processRelativePath(relativePath);
 		ImageIO.write(image, fileExtension, Files.newOutputStream(path));
 	}
-	
-	public void deleteFile(String relativePath) throws IOException {
-		Files.delete(Paths.get(getPath(relativePath)));
-	}
 
 	public JsonNode getFileInfo(String relativePath) throws IOException {
 		Path path = Paths.get(getPath(relativePath));
@@ -69,7 +92,7 @@ public class FileIOUtility {
 		return objectMapper.valueToTree(fileInfo);
 	}
 
-	public Path getFilePath(String relativePath) {
+	public Path getAbsolutePath(String relativePath) {
 		return Paths.get(getPath(relativePath));
 	}
 
