@@ -75,7 +75,7 @@
 		"name": "Source Files",
 		"degreeLevel": 0,
 		"fieldPredicate": {
-			"value": "_doctype_source_files",
+			"value": "_doctype_source",
 			"documentTypePredicate": true
 		}
 	},
@@ -83,7 +83,7 @@
 		"name": "Supplemental Files",
 		"degreeLevel": 0,
 		"fieldPredicate": {
-			"value": "_doctype_supplemental_files",
+			"value": "_doctype_supplemental",
 			"documentTypePredicate": true
 		}
 	},
@@ -91,7 +91,7 @@
 		"name": "Manuscript in PDF",
 		"degreeLevel": 0,
 		"fieldPredicate": {
-			"value": "_doctype_manuscript_in_pdf",
+			"value": "_doctype_primary",
 			"documentTypePredicate": true
 		}
 	}

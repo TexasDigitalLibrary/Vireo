@@ -43,12 +43,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">
+				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">	
 					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
 					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
-					<td>{{getFileType(documentFieldValue)}}</td>
+					<td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
 					<td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
-					<td><span class="glyphicon glyphicon-pencil toggle-href" ng-click="editFile()"></span></td>
+					<td>
+						<modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
+						<span class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+					</td>
 				</tr>
 			</tbody>
 			<tfoot class="header">

@@ -1,10 +1,14 @@
-vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, FieldPredicateRepo, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+	
+	$scope.fieldPredicates = FieldPredicateRepo.getAll();
+	
+	var ready = $q.all([ItemViewService.selectSubmissionById($routeParams.id), FieldPredicateRepo.ready()])
 
-	ItemViewService.selectSubmissionById($routeParams.id).then(function(submission) {
+	ready.then(function(results) {
 
-		$scope.submission = submission;
+		$scope.submission = results[0];
 
 		var firstName = $scope.submission.submitter.firstName;
 		var lastName = $scope.submission.submitter.lastName;
@@ -53,11 +57,23 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 			});
 		};
 		
-		$scope.getFileType = function(fieldValue) {
-			var type = fieldValue.fieldPredicate.value;
+		$scope.getFileType = function(fieldPredicate) {
+			var type = fieldPredicate.value;
 			return type.substring(9).toUpperCase();
-		}
+		};
 		
+		$scope.isPrimaryDocument = function(fieldPredicate) {
+			return $scope.getFileType(fieldPredicate) == 'PRIMARY';
+		};
+		
+		$scope.deleteFieldValue = function(fieldValue) {
+			console.log('delete', fieldValue);
+		};
+		
+		$scope.saveFieldValue = function(fieldValue) {
+			console.log('save', fieldValue);
+		};
+
 		$scope.documentFieldValues = [];
 		
 		var primaryDocumentFieldValue;
