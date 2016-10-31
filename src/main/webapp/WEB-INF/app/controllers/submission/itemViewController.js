@@ -108,13 +108,36 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		};
 		
 		
+		$scope.addFileData = {};
 		
 		$scope.queueUpload = function(files) {
-			$scope.files = files;
+			$scope.addFileData.files = files;
 		};
 		
 		$scope.removeFiles = function() {
-			delete $scope.files;
+			delete $scope.addFileData.files;
+		};
+		
+		$scope.submitAddFile = function() {
+			
+		};
+		
+		$scope.cancelAddFile = function() {
+			$scope.addFileData = {};
+			$scope.closeModal();
+		};
+		
+		$scope.disableSubmitAddFile = function() {
+			var disable = true;
+			
+			if($scope.addFileData.addFileSelection == 'replace') {
+				disable = $scope.addFileData.files === undefined;
+			}
+			else {
+				disable = $scope.addFileData.files === undefined || $scope.addFileData.fieldPredicate === undefined;
+			}
+			
+			return disable;
 		};
 
 		
