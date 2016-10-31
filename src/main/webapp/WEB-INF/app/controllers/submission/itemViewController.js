@@ -158,14 +158,6 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			
 			$scope.addFileData.uploading = true;
 			
-			if($scope.addFileData.addFileSelection == 'replace') {
-				$scope.submission.removeFile($scope.primaryDocumentFieldValue.value);
-			}
-			
-			if($scope.addFileData.needsCorrection) {
-				$scope.submission.needsCorrection();
-			}
-
 			FileApi.upload({
 				'endpoint': '', 
 				'controller': 'submission',
@@ -176,6 +168,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({
 					fieldPredicate: $scope.addFileData.fieldPredicate
 				});
+
+				if($scope.addFileData.addFileSelection == 'replace') {
+					$scope.submission.removeFile($scope.primaryDocumentFieldValue.value);
+				}
  
 	            fieldValue.value = response.data.meta.message;
 	            
@@ -199,6 +195,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	            $scope.addFileData.progress = progress;
 	        });
 			
+			if($scope.addFileData.needsCorrection) {
+				$scope.submission.needsCorrection();
+			}
+
 		};
 		
 		$scope.resetAddFile = function() {
