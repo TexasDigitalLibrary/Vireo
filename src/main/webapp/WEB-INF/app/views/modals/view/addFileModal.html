@@ -87,7 +87,7 @@
 	    			<input class="form-control" type="email" placeholder="i.e. Student, College or myEmail@myProvider.com" ng-model="addFileData.emailTo" name="emailTo">
 	  			</div>
 	  			
-	  			<div class="form-group email-section" ng-class="{'section-open': addCCRecipeints, 'section-closed': !addCCRecipeints}">
+	  			<div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.addCCRecipeints}">
 	    			<label for="emailCC">CC:</label>
 	    			<input class="form-control" type="email" placeholder="i.e. Advisor, College or myEmail@myProvider.com" ng-model="addFileData.emailCC" name="emailCC">
 	  			</div>
