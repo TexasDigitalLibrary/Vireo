@@ -88,8 +88,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			});
 		};
 		
+		$scope.confirm = false;
+		
 		$scope.toggleConfirm = function() {
-			$scope.confirm = true;
+			$scope.confirm = !$scope.confirm;
 		};
 		
 		$scope.cancel = function(fieldValue) {
