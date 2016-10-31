@@ -1,5 +1,7 @@
 <div class="item-view" ng-controller="ItemViewController">
 
+	<modal modal-id="addFileModal" modal-view="views/modals/view/addFileModal.html" modal-header-class="modal-header-primary"></modal>
+
 	<div class="row">
 		<h1>
 			<span ng-if="!submission">Loading Submission...</span>
@@ -30,7 +32,37 @@
 	</div>
 	
 	<div class="row">
+		<a name="all-files"></a> 
 		<h1>ALL FILES</h1>
+		<table class="table table-bordered table-striped table-hover etd-table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>File</th>
+					<th>Type</th>
+					<th>Time</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">	
+					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
+					<td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
+					<td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
+					<td class="all-files-action">
+						<modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
+						<span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+						<span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot class="header">
+				<tr>
+					<th colspan="5"><button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button></th>
+				</tr>
+			</tfoot>
+		</table>		
 	</div>
 
 </div>

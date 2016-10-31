@@ -230,9 +230,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             			
             			break;
             		
-            		case "state.name":
+            		case "submissionState.name":
             			
-            			 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.state_id");
+            			 sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.submission_state_id");
 
                          if (submissionListColumn.getSortOrder() > 0) {
                              setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");

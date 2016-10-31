@@ -140,6 +140,31 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 			return promise;
 		};
+		
+		submission.renameFile = function(uri, newName) {
+
+			angular.extend(this.getMapping().renameFile, {
+				data: {
+					'uri': uri,
+					'newName': newName
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().renameFile);
+
+			return promise;
+		};
+		
+		submission.needsCorrection = function() {
+
+			angular.extend(this.getMapping().needsCorrection, {
+				method: submission.id+"/needs-correction"
+			});
+
+			var promise = WsApi.fetch(this.getMapping().needsCorrection);
+
+			return promise;
+		};
 
 		return submission;
 	}

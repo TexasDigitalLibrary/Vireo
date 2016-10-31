@@ -832,7 +832,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "your_committee",
+						"value": "committee_member",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -841,15 +841,15 @@
 					"inputType": {
 						"name": "INPUT_TEXT"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Committee members.",
+					"help": "Committee member.",
 					"fieldGlosses": [
 						{
-							"value": "Your Committee",
+							"value": "Committee Member",
 							"language": {
 								"name": "English"
 							}
@@ -1002,7 +1002,7 @@
 			"originalFieldProfiles": [
 				{
 					"fieldPredicate": {
-						"value": "_doctype_manuscript_in_pdf",
+						"value": "_doctype_primary",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1029,7 +1029,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_supplemental_files",
+						"value": "_doctype_supplemental",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1038,7 +1038,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1056,7 +1056,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_source_files",
+						"value": "_doctype_source",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1065,7 +1065,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1083,7 +1083,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_administrative_files",
+						"value": "_doctype_administrative",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1092,7 +1092,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,

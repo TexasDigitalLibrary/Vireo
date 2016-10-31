@@ -90,7 +90,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		  		var isInProgress = false;
 		  		for(var i in submissions) {
 		  			var submission = submissions[i];
-		  			if(submission.state.name === "In Progress") {
+		  			if(submission.submissionState.name === "In Progress") {
 		  				isInProgress = true;
 		  				break;
 		  			}
@@ -103,7 +103,7 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 		  		var isInProgress = false;
 		  		for(var i in submissions) {
 		  			var submission = submissions[i];
-		  			if(submission.state.name === "Needs Corrections") {
+		  			if(submission.submissionState.name === "Needs Corrections") {
 		  				isInProgress = true;
 		  				break;
 		  			}

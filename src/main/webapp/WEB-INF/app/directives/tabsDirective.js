@@ -1,6 +1,6 @@
 vireo.directive("tabs", function() {
 	return {
-		template: '<div class="tabs"><span ng-transclude></span><hr></div>',
+		template: '<div id="tabs-directive" class="tabs"><span ng-transclude></span><hr></div>',
 		restrict: 'E',
 		replace: false,
 		transclude: true,
@@ -36,10 +36,9 @@ vireo.directive("tab", function($compile) {
 			angular.extend($scope, attr);
 			
 			var span = angular.element('<span ng-if="activeTab(path)">');			
-			span.html("<ng-include src='view'></ng-include>");			
-			var view = $compile(span)($scope);
+			span.html("<ng-include src='view'></ng-include>");
 			
-			element.parent().parent().parent().after(view);			
+			angular.element('#tabs-directive').after($compile(span)($scope));
 	    }
 	};
 });
