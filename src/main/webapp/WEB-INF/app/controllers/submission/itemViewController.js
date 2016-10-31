@@ -109,6 +109,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			$scope.submission.removeFile(fieldValue.value).then(function(res) {
 				$scope.closeModal();
 				$scope.submission.removeFieldValue(fieldValue).then(function() {
+					$scope.confirm = false;
 					delete fieldValue.updating;
 					if($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
 						delete $scope.primaryDocumentFieldValue;
