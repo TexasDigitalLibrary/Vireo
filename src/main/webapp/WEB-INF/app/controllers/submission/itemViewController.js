@@ -19,21 +19,21 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		
 		$scope.documentFieldValues = [];
 		
-		var primaryDocumentFieldValue;
+		$scope.primaryDocumentFieldValue;
 		
 		var getFileInfo = function(fieldValue) {
 			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
 				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
 				$scope.documentFieldValues.push(fieldValue);
+				if($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
+					$scope.primaryDocumentFieldValue = fieldValue;
+				}
 			});
 		};
 		
 		for(var i in $scope.submission.fieldValues) {
 			var fieldValue = $scope.submission.fieldValues[i];
 			if(fieldValue.fieldPredicate.documentTypePredicate) {
-				if(fieldValue.fieldPredicate.value == '_doctype_primary') {
-					primaryDocumentFieldValue = new FieldValue(fieldValue);
-				}
 				getFileInfo(new FieldValue(fieldValue));
 			}
 		}
@@ -100,12 +100,19 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			return $scope.getFileType(fieldPredicate) == 'PRIMARY';
 		};
 		
+		$scope.hasPrimaryDocument = function() {
+        	return $scope.primaryDocumentFieldValue !== undefined;
+        }
+
 		$scope.deleteFieldValue = function(fieldValue) {
 			fieldValue.updating = true;
 			$scope.submission.removeFile(fieldValue.value).then(function(res) {
 				$scope.closeModal();
 				$scope.submission.removeFieldValue(fieldValue).then(function() {
 					delete fieldValue.updating;
+					if($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
+						delete $scope.primaryDocumentFieldValue;
+					}
 					$scope.documentFieldValues.splice($scope.documentFieldValues.indexOf(fieldValue), 1);
 				});
 			});
@@ -151,7 +158,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			$scope.addFileData.uploading = true;
 			
 			if($scope.addFileData.addFileSelection == 'replace') {
-				$scope.submission.removeFile(primaryDocumentFieldValue.value);
+				$scope.submission.removeFile($scope.primaryDocumentFieldValue.value);
 			}
 			
 			if($scope.addFileData.needsCorrection) {
@@ -165,7 +172,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				'file': $scope.addFileData.files[0]
 			}).then(function (response) {
 				
-				var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? primaryDocumentFieldValue : new FieldValue({
+				var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({
 					fieldPredicate: $scope.addFileData.fieldPredicate
 				});
  
@@ -174,8 +181,12 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	            fieldValue.save($scope.submission.id).then(function() {
 	            	updateFileInfo(fieldValue);
 
-	            	if($scope.addFileData.addFileSelection == 'add') {
+	            	if($scope.documentFieldValues.indexOf(fieldValue) === -1) {
 	            		$scope.documentFieldValues.push(fieldValue);
+	            	}
+
+	            	if($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
+	            		$scope.primaryDocumentFieldValue = fieldValue;
 	            	}
 	            	
 	            	$scope.resetAddFile();
@@ -211,10 +222,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		        "title": "Active Document",
 		        "viewUrl": "views/sideboxes/activeDocument.html",
 		        "getPrimaryDocumentFileName": function() {
-		        	return primaryDocumentFieldValue !== undefined ? primaryDocumentFieldValue.fileInfo !== undefined ? primaryDocumentFieldValue.fileInfo.name : '' : '';
+		        	return $scope.primaryDocumentFieldValue !== undefined ? $scope.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.primaryDocumentFieldValue.fileInfo.name : '' : '';
 		        },
 		        "downloadPrimaryDocument": function() {
-		        	$scope.getFile(primaryDocumentFieldValue);
+		        	$scope.getFile($scope.primaryDocumentFieldValue);
 		        },
 		        "uploadNewFile": function() {
 		        	$scope.openModal('#addFileModal');
@@ -222,6 +233,9 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		        "gotoAllFiles": function() {
 		        	$location.hash('all-files');
 		        	$anchorScroll();
+		        },
+		        "hasPrimaryDocument": function() {
+		        	return $scope.hasPrimaryDocument();
 		        }
 		    },
 		    {

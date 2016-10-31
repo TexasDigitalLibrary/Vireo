@@ -9,30 +9,32 @@
 
     <div class="modal-body">
 
-    	<input type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection"> Replace the primary document<br>
-
-    	<div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'replace', 'section-closed': addFileData.addFileSelection != 'replace'}">
-    		
-    		<dropzone
-    			ng-if="!addFileData.files"
-				file-model="files"
-				text="Drop a file or click arrow",
-				patterns="pdf"
-				drop-method="queueUpload(files)">
-			</dropzone>
-			
-			<div ng-if="addFileData.files">
-				<button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
-    			<label>Name:</label>
-    			<span>{{addFileData.files[0].name}}</span><br/>
-    			<label>Type:</label>
-    			<span>{{addFileData.files[0].type}}</span><br/>
-    			<label>Size:</label>
-    			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
-	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
-			</div>
-			
-    	</div>
+		<span ng-if="hasPrimaryDocument()">
+	    	<input type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection"> Replace the primary document<br>
+	
+	    	<div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'replace', 'section-closed': addFileData.addFileSelection != 'replace'}">
+	    		
+	    		<dropzone
+	    			ng-if="!addFileData.files"
+					file-model="files"
+					text="Drop a file or click arrow",
+					patterns="pdf"
+					drop-method="queueUpload(files)">
+				</dropzone>
+				
+				<div ng-if="addFileData.files">
+					<button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
+	    			<label>Name:</label>
+	    			<span>{{addFileData.files[0].name}}</span><br/>
+	    			<label>Type:</label>
+	    			<span>{{addFileData.files[0].type}}</span><br/>
+	    			<label>Size:</label>
+	    			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
+		  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
+				</div>
+				
+	    	</div>
+    	</span>
 
 
   		<input type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection"> Add additional document<br>
