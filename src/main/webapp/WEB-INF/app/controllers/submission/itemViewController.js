@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, FieldPredicateRepo, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -67,21 +67,39 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		};
 		
 		$scope.deleteFieldValue = function(fieldValue) {
-			console.log('delete', fieldValue);
+			fieldValue.updating = true;
+			$scope.submission.removeFile(fieldValue.value).then(function(res) {
+				$scope.closeModal();
+				$scope.submission.removeFieldValue(fieldValue).then(function() {
+					delete fieldValue.updating;
+					$scope.documentFieldValues.splice($scope.documentFieldValues.indexOf(fieldValue), 1);
+				});
+			});
+			
 		};
 		
 		$scope.saveFieldValue = function(fieldValue) {
 			console.log('save', fieldValue);
 		};
+		
+		$scope.toggleConfirm = function() {
+			$scope.confirm = true;
+		};
+		
+		$scope.cancel = function(fieldValue) {
+			$scope.closeModal();
+			fieldValue.refresh();
+		};
 
 		$scope.documentFieldValues = [];
+		
 		
 		var primaryDocumentFieldValue;
 		
 		var getFileInfo = function(fieldValue) {
 			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
 				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-				$scope.documentFieldValues.push(fieldValue);
+				$scope.documentFieldValues.push(new FieldValue(fieldValue));
 			});
 		}
 		

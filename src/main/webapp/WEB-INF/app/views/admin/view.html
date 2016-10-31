@@ -48,9 +48,10 @@
 					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
 					<td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
 					<td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
-					<td>
+					<td class="all-files-action">
 						<modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
-						<span class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+						<span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+						<span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
 					</td>
 				</tr>
 			</tbody>

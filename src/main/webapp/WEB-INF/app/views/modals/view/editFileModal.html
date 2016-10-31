@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+    <button type="button" class="close" ng-click="cancel(documentFieldValue)" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Editing {{documentFieldValue.fileInfo.name}}</h3>
@@ -9,32 +9,39 @@
 <form novalidate>
 
     <div class="modal-body">
-		<span ng-if="isPrimaryDocument(documentFieldValue.fieldPredicate)">
-			<b>Primary documents can only be deleted.</b>
-		</span>
-		<span ng-if="!isPrimaryDocument(documentFieldValue.fieldPredicate)">
-			<div class="form-group">
-    			<label for="fileName">New File Name:</label>
-    			<input type="text" class="form-control" id="fileName" ng-model="documentFieldValue.fileInfo.name">
-  			</div>
-  			<div class="form-group">
-    			<label for="fileName">New Attachment Type:</label>
-    			<select 
-    				class="form-control"
-    				ng-model="documentFieldValue.fieldPredicate"
-    				ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value">
-				</select>
-  			</div>
+    	<span ng-if="confirm">
+    		<b>Are you sure you want to delete: {{documentFieldValue.fileInfo.name}}</b>
+    	</span>
+    	<span ng-if="!confirm">
+			<span ng-if="isPrimaryDocument(documentFieldValue.fieldPredicate)">
+				<b>Primary documents can only be deleted.</b>
+			</span>
+			<span ng-if="!isPrimaryDocument(documentFieldValue.fieldPredicate)">
+				<div class="form-group">
+	    			<label for="fileName">New File Name:</label>
+	    			<input type="text" class="form-control" id="fileName" ng-model="documentFieldValue.fileInfo.name">
+	  			</div>
+	  			<div class="form-group">
+	    			<label for="fileName">New Attachment Type:</label>
+	    			<select 
+	    				class="form-control"
+	    				ng-model="documentFieldValue.fieldPredicate"
+	    				ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value">
+					</select>
+	  			</div>
+			</span>
 		</span>
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-left" ng-click="deleteFieldValue(documentFieldValue)">Delete</button>
-        <button 
-        	ng-if="!isPrimaryDocument(documentFieldValue.fieldPredicate)"
+        <button ng-if="!confirm" type="button" class="btn btn-danger pull-left" ng-click="toggleConfirm()">Delete</button>
+        <button ng-if="confirm" type="button" class="btn btn-danger" ng-click="deleteFieldValue(documentFieldValue)">Confirm</button>
+        <button
+        	ng-if="!confirm && !isPrimaryDocument(documentFieldValue.fieldPredicate)"
 			type="button" class="btn btn-primary pull-right"
 			ng-click="saveFieldValue(documentFieldValue)">Submit</button>
-        <button type="button" class="btn btn-warning pull-right" ng-click="closeModal()">Cancel</button>
+        <button ng-if="!confirm" type="button" class="btn btn-warning" ng-click="cancel(documentFieldValue)">Cancel</button>
+        <button ng-if="confirm" type="button" class="btn btn-warning" ng-click="toggleConfirm()">Cancel</button>
     </div>
 
 </form>
