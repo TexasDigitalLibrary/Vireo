@@ -104,6 +104,12 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				}
 			});
 		};
+		
+		
+		
+		$scope.queueUpload = function(files) {
+			console.log(files);
+		};
 
 		
 		$scope.documentFieldValues = [];

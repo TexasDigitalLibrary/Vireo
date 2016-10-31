@@ -8,6 +8,79 @@
 <form novalidate>
 
     <div class="modal-body">
+
+    	<input type="radio" name="addFile" value="replace" ng-model="addFileSelection"> Replace the primary document<br>
+
+    	<div class="add-file-section" ng-class="{'section-open': addFileSelection == 'replace', 'section-closed': addFileSelection != 'replace'}">
+    		
+    		<dropzone
+				file-model="files"
+				text="Drop a file or click arrow",
+				patterns="pdf"
+				drop-method="queueUpload(files)">
+			</dropzone>
+			
+    	</div>
+
+
+  		<input type="radio" name="addFile" value="add" ng-model="addFileSelection"> Add additional documents<br>
+
+  		<div class="add-file-section" ng-class="{'section-open': addFileSelection == 'add', 'section-closed': addFileSelection != 'add'}">
+  			
+			<div class="form-group">
+    			<label for="fileName">New Attachment Type:</label>
+    			<select 
+    				class="form-control"
+    				ng-model="fieldPredicate"
+    				ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value">
+    				<option value="">Select File Type...</option>
+				</select>
+  			</div>
+    		<dropzone
+				file-model="files"
+				text="Drop a file or click arrow",
+				patterns="pdf"
+				drop-method="queueUpload(files)">
+			</dropzone>
+			<div class="checkbox">
+				<label><input type="checkbox" value="false" ng-model="addEmailRecipeints">Add Email Recipients</label>
+			</div>
+			<div class="checkbox">
+				<label><input type="checkbox" value="false" ng-model="addCCRecipeints" ng-disabled="!addEmailRecipeints">Add CC Recipients</label>
+			</div>
+			
+			<div class="email-section" ng-class="{'section-open': addEmailRecipeints, 'section-closed': !addEmailRecipeints}">
+				
+				<div class="form-group">
+	    			<label for="emailTo">To:</label>
+	    			<input class="form-control" type="email" placeholder="i.e. Student, College or myEmail@myProvider.com" ng-model="emailTo" name="emailTo">
+	  			</div>
+	  			
+	  			<div class="form-group email-section" ng-class="{'section-open': addCCRecipeints, 'section-closed': !addCCRecipeints}">
+	    			<label for="emailCC">CC:</label>
+	    			<input class="form-control" type="email" placeholder="i.e. Advisor, College or myEmail@myProvider.com" ng-model="emailCC" name="emailCC">
+	  			</div>
+	  			
+	  			<div class="form-group">
+	    			<label for="emailSubject">Subject:</label>
+	    			<input class="form-control" type="text" ng-model="emailSubject" name="emailSubject">
+	  			</div>
+	  			<div class="form-group">
+	    			<textarea class="form-control" placeholder="compose comment here..." ng-model="emailBody" name="emailBody" rows="3"></textarea>
+	  			</div>
+	  			<div class="form-group">
+	    			<select class="form-control" ng-model="fieldPredicate">
+	    				<option value="">Choose an email template...</option>
+					</select>
+	  			</div>
+			</div>
+			
+    	</div>
+    	
+    	<div class="checkbox">
+			<label><input type="checkbox" value="false" ng-model="needsCorrection">Flag submission as Needs Corrections</label>
+		</div>
+    	
     </div>
 
     <div class="modal-footer">

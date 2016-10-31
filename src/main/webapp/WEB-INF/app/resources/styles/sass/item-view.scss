@@ -103,3 +103,30 @@
 .all-files-action {
   text-align: center;
 }
+
+.add-file-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  overflow: hidden;
+  margin: auto;
+  width: 80%;
+}
+
+.email-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+}
+
+.section-closed {
+  opacity: 0;
+  max-height: 0px;
+}
+
+.section-open {
+  opacity: 1;
+  max-height: 1000px;
+}
