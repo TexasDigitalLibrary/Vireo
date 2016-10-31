@@ -36,15 +36,18 @@
     				<option value="">Select File Type...</option>
 				</select>
   			</div>
+
     		<dropzone
 				file-model="files"
 				text="Drop a file or click arrow",
 				patterns="pdf"
 				drop-method="queueUpload(files)">
 			</dropzone>
+
 			<div class="checkbox">
 				<label><input type="checkbox" value="false" ng-model="addEmailRecipeints">Add Email Recipients</label>
 			</div>
+
 			<div class="checkbox">
 				<label><input type="checkbox" value="false" ng-model="addCCRecipeints" ng-disabled="!addEmailRecipeints">Add CC Recipients</label>
 			</div>
@@ -65,14 +68,17 @@
 	    			<label for="emailSubject">Subject:</label>
 	    			<input class="form-control" type="text" ng-model="emailSubject" name="emailSubject">
 	  			</div>
+
 	  			<div class="form-group">
 	    			<textarea class="form-control" placeholder="compose comment here..." ng-model="emailBody" name="emailBody" rows="3"></textarea>
 	  			</div>
+
 	  			<div class="form-group">
 	    			<select class="form-control" ng-model="fieldPredicate">
 	    				<option value="">Choose an email template...</option>
 					</select>
 	  			</div>
+
 			</div>
 			
     	</div>
@@ -84,8 +90,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="">Submit</button>
         <button type="button" class="btn btn-warning" ng-click="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="">Submit</button>
     </div>
 
 </form>
