@@ -154,6 +154,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				$scope.submission.removeFile(primaryDocumentFieldValue.value);
 			}
 			
+			if($scope.addFileData.needsCorrection) {
+				$scope.submission.needsCorrection();
+			}
+
 			FileApi.upload({
 				'endpoint': '', 
 				'controller': 'submission',
@@ -182,7 +186,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	        }, function (progress) {
 	            $scope.addFileData.progress = progress;
 	        });
-
+			
 		};
 		
 		$scope.resetAddFile = function() {
@@ -200,8 +204,6 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			}
 			return disable;
 		};
-
-		
 		
 		
 		SidebarService.addBoxes([

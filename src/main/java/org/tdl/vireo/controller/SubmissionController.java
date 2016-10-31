@@ -47,7 +47,9 @@ import edu.tamu.framework.model.Credentials;
 public class SubmissionController {
     
     private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
-
+    
+    private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
+    
     @Autowired
     private UserRepo userRepo;
 
@@ -134,6 +136,18 @@ public class SubmissionController {
     public ApiResponse updateReviewerNotes(@ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
     	Submission submission = submissionRepo.findOne(submissionId);
     	submission.setReviewerNotes(requestData.get("reviewerNotes"));
+    	submissionRepo.save(submission);
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/needs-correction")
+    @Auth(role = "MANAGER")
+    public ApiResponse setSubmissionNeedsCorrection(@ApiVariable Long submissionId) {
+        Submission submission = submissionRepo.findOne(submissionId);
+        SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
+        submission.setSubmissionState(needsCorrectionState);
+        submissionRepo.save(submission);
         return new ApiResponse(SUCCESS);
     }
 
@@ -157,7 +171,7 @@ public class SubmissionController {
     public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-            sub.setState(submissionState);
+            sub.setSubmissionState(submissionState);
             submissionRepo.save(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -226,5 +240,7 @@ public class SubmissionController {
     	fileIOUtility.delete(oldUri);
     	return new ApiResponse(SUCCESS, newUri);
     }
+
+    
 
 }
