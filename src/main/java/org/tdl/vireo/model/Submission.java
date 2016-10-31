@@ -91,11 +91,11 @@ public class Submission extends BaseEntity {
 
     /**
      * @param submitter
-     * @param state
+     * @param submissionState
      */
-    public Submission(User submitter, Organization organization, SubmissionState state) {
+    public Submission(User submitter, Organization organization, SubmissionState submissionState) {
         this(submitter, organization);
-        setSubmissionState(state);
+        setSubmissionState(submissionState);
     }
 
     /**
@@ -131,15 +131,15 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the state
+     * @return the submissionState
      */
     public SubmissionState getSubmissionState() {
         return submissionState;
     }
 
     /**
-     * @param state
-     *            the state to set
+     * @param submissionState
+     *            the submissionState to set
      */
     public void setSubmissionState(SubmissionState submissionState) {
         this.submissionState = submissionState;
