@@ -67,7 +67,7 @@
 		"name": "Administrative Files",
 		"degreeLevel": 0,
 		"fieldPredicate": {
-			"value": "_doctype_administrative_files",
+			"value": "_doctype_administrative",
 			"documentTypePredicate": true
 		}
 	},

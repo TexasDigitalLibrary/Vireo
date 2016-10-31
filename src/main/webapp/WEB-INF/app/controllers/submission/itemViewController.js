@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -15,6 +15,41 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		var organization = $scope.submission.organization.name;
 			
 		$scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
+		
+		
+		$scope.documentFieldValues = [];
+		
+		var primaryDocumentFieldValue;
+		
+		var getFileInfo = function(fieldValue) {
+			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
+				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+				$scope.documentFieldValues.push(fieldValue);
+			});
+		};
+		
+		for(var i in $scope.submission.fieldValues) {
+			var fieldValue = $scope.submission.fieldValues[i];
+			if(fieldValue.fieldPredicate.documentTypePredicate) {
+				if(fieldValue.fieldPredicate.value == '_doctype_primary') {
+					primaryDocumentFieldValue = new FieldValue(fieldValue);
+				}
+				getFileInfo(new FieldValue(fieldValue));
+			}
+		}
+
+
+		var updateFileInfo = function(fieldValue) {
+			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
+				for(var i in $scope.documentFieldValues) {
+					if($scope.documentFieldValues[i].id == fieldValue.id) {
+						$scope.documentFieldValues[i].fileInfo = angular.fromJson(data.body).payload.ObjectNode;
+						break;
+					}
+				}
+			});
+		};
+		
 		
 		$scope.showTab = function(workflowStep) {
 			var show = false;
@@ -97,14 +132,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		$scope.cancel = function(fieldValue) {
 			$scope.closeModal();
 			fieldValue.refresh();
-			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
-				for(var i in $scope.documentFieldValues) {
-					if($scope.documentFieldValues[i].id == fieldValue.id) {
-						$scope.documentFieldValues[i].fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-						break;
-					}
-				}
-			});
+			updateFileInfo(fieldValue);
 		};
 		
 		
@@ -120,47 +148,61 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		
 		$scope.submitAddFile = function() {
 			
+			$scope.addFileData.uploading = true;
+			
+			if($scope.addFileData.addFileSelection == 'replace') {
+				$scope.submission.removeFile(primaryDocumentFieldValue.value);
+			}
+			
+			FileApi.upload({
+				'endpoint': '', 
+				'controller': 'submission',
+				'method': 'upload',
+				'file': $scope.addFileData.files[0]
+			}).then(function (response) {
+				
+				var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? primaryDocumentFieldValue : new FieldValue({
+					fieldPredicate: $scope.addFileData.fieldPredicate
+				});
+ 
+	            fieldValue.value = response.data.meta.message;
+	            
+	            fieldValue.save($scope.submission.id).then(function() {
+	            	updateFileInfo(fieldValue);
+
+	            	if($scope.addFileData.addFileSelection == 'add') {
+	            		$scope.documentFieldValues.push(fieldValue);
+	            	}
+	            	
+	            	$scope.resetAddFile();
+				});
+	            
+	        }, function (response) {
+	            console.log('Error status: ' + response.status);
+	        }, function (progress) {
+	            $scope.addFileData.progress = progress;
+	        });
+
 		};
 		
-		$scope.cancelAddFile = function() {
+		$scope.resetAddFile = function() {
 			$scope.addFileData = {};
 			$scope.closeModal();
 		};
 		
 		$scope.disableSubmitAddFile = function() {
 			var disable = true;
-			
 			if($scope.addFileData.addFileSelection == 'replace') {
-				disable = $scope.addFileData.files === undefined;
+				disable = $scope.addFileData.files === undefined || $scope.addFileData.uploading;
 			}
 			else {
-				disable = $scope.addFileData.files === undefined || $scope.addFileData.fieldPredicate === undefined;
+				disable = $scope.addFileData.files === undefined || $scope.addFileData.fieldPredicate === undefined || $scope.addFileData.uploading;
 			}
-			
 			return disable;
 		};
 
 		
-		$scope.documentFieldValues = [];
 		
-		var primaryDocumentFieldValue;
-		
-		var getFileInfo = function(fieldValue) {
-			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
-				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-				$scope.documentFieldValues.push(new FieldValue(fieldValue));
-			});
-		}
-		
-		for(var i in $scope.submission.fieldValues) {
-			var fieldValue = $scope.submission.fieldValues[i];
-			if(fieldValue.fieldPredicate.documentTypePredicate) {
-				if(fieldValue.fieldPredicate.value == '_doctype_primary') {
-					primaryDocumentFieldValue = fieldValue;
-				}
-				getFileInfo(fieldValue);
-			}
-		}
 		
 		SidebarService.addBoxes([
 		    {

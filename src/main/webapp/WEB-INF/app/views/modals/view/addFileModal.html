@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="cancelAddFile()" aria-label="Close">
+    <button type="button" class="close" ng-click="resetAddFile()" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Add File</h3>
@@ -29,7 +29,7 @@
     			<span>{{addFileData.files[0].type}}</span><br/>
     			<label>Size:</label>
     			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
-	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="progress" max="100">{{progress + '%'}}</uib-progressbar>
+	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
 			</div>
 			
     	</div>
@@ -66,7 +66,7 @@
     			<span>{{addFileData.files[0].type}}</span><br/>
     			<label>Size:</label>
     			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
-	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="progress" max="100">{{progress + '%'}}</uib-progressbar>
+	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
 			</div>
 
 
@@ -116,7 +116,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-warning" ng-click="cancelAddFile()">Cancel</button>
+        <button type="button" class="btn btn-warning" ng-click="resetAddFile()">Cancel</button>
         <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile()">Submit</button>
     </div>
 
