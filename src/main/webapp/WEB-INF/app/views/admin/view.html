@@ -1,5 +1,7 @@
 <div class="item-view" ng-controller="ItemViewController">
 
+	<modal modal-id="addFileModal" modal-view="views/modals/view/addFileModal.html" modal-header-class="modal-header-primary"></modal>
+
 	<div class="row">
 		<h1>
 			<span ng-if="!submission">Loading Submission...</span>
@@ -57,7 +59,7 @@
 			</tbody>
 			<tfoot class="header">
 				<tr>
-					<th colspan="5"><button class="btn btn-default pull-right">Add File</button></th>
+					<th colspan="5"><button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button></th>
 				</tr>
 			</tfoot>
 		</table>		

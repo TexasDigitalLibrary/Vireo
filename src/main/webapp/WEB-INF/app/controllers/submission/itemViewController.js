@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function ($controller, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, ItemViewService, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -138,7 +138,11 @@ vireo.controller("ItemViewController", function ($controller, $q, $routeParams, 
 		        	$scope.getFile(primaryDocumentFieldValue);
 		        },
 		        "uploadNewFile": function() {
-		        	console.log('upload new files')
+		        	$scope.openModal('#addFileModal');
+		        },
+		        "gotoAllFiles": function() {
+		        	$location.hash('all-files');
+		        	$anchorScroll();
 		        }
 		    },
 		    {
