@@ -1729,7 +1729,7 @@ footer a, footer li, footer p {
 
 .further-filter-by .inactive-filters-sub-list,
 .further-filter-by .status-list,
-.further-filter-by .document-type-list,
+.further-filter-by .attachment-type-list,
 .further-filter-by .organization-by-category-sub-list {
   max-height: 0px;
   overflow: hidden;
@@ -1747,7 +1747,7 @@ footer a, footer li, footer p {
 }
 
 .further-filter-by .inactive-filters-sub-list.expanded,
-.further-filter-by .document-type-list.expanded,
+.further-filter-by .attachment-type-list.expanded,
 .further-filter-by .status-list.expanded,
 .further-filter-by .organization-by-category-sub-list.expanded {
   max-height: 1000px;
@@ -1782,12 +1782,11 @@ footer a, footer li, footer p {
   margin: 5px 0px 20px;
 }
 
-.further-filter-by .document-type-filter-list {
+.further-filter-by .attachment-type-filter-list {
   max-height: 0
 }
 
 .further-filter-by .embargo-filter,
-.further-filter-by .document-type-filter,
 .further-filter-by .organization-filter {
   margin-left: -20px;
 }

@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, $timeout, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, $timeout, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, AttachmentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -20,7 +20,8 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
 	});
 	
-	var documentTypes = DocumentTypeRepo.getAll();
+	//TODO:  refactor to var attachmentTypes = AttachmentTypeRepo.getAll();
+	var attachmentTypes = AttachmentTypeRepo.getAll();
 	var embargos = EmbargoRepo.getAll();
 	var customActionDefinitions = CustomActionDefinitionRepo.getAll();
 	var organizations = OrganizationRepo.getAll();
@@ -206,6 +207,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		addFilter(column, gloss);
 	};
 
+	//TODO:  refactor attachmentTypes to attachmentTypes
 	$scope.furtherFilterBy = {
 		"title": "Further Filter By:",
 		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
@@ -217,7 +219,7 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		"customActionDefinitions": customActionDefinitions,
 		"organizations": organizations,
 		"organizationCategories": organizationCategories,
-        "documentTypes": documentTypes,
+        "attachmentTypes": attachmentTypes,
         "embargos": embargos,
 		"allUsers": allUsers,
 		"assignable": assignable,

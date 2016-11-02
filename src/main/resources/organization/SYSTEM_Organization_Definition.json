@@ -688,7 +688,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "document_type",
+						"value": "submission_type",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -702,10 +702,10 @@
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Choose the type of document you are submitting.",
+					"help": "Choose the type of your submission.",
 					"fieldGlosses": [
 						{
-							"value": "Document Type",
+							"value": "Submission Type",
 							"language": {
 								"name": "English"
 							}
@@ -713,9 +713,8 @@
 					],
 					"controlledVocabularies": [
 						{
-							"name": "DocumentType.name",
-							"entityName": "DocumentType",
-							"isEntityProperty": true,
+							"name": "SubmissionType",
+							"isEntityProperty": false,
 							"language": {
 								"name": "English"
 							}

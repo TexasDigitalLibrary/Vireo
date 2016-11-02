@@ -35,7 +35,7 @@ public class ActionLog extends BaseEntity {
     private Calendar actionDate;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
-    private Attachment attachment;
+    private DeprecatedAttachment attachment;
 
     @Column(nullable = false, columnDefinition = "text")
     private String entry;
@@ -47,7 +47,7 @@ public class ActionLog extends BaseEntity {
         setModelValidator(new ActionLogValidator());
     }
 
-    public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, Attachment attachment, String entry, boolean privateFlag) {
+    public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, DeprecatedAttachment attachment, String entry, boolean privateFlag) {
         this();
         this.submission = submission;
         this.submissionState = submissionState;
@@ -121,7 +121,7 @@ public class ActionLog extends BaseEntity {
     /**
      * @return the attachment
      */
-    public Attachment getAttachment() {
+    public DeprecatedAttachment getAttachment() {
         return attachment;
     }
 
@@ -129,7 +129,7 @@ public class ActionLog extends BaseEntity {
      * @param attachment
      *            the attachment to set
      */
-    public void setAttachment(Attachment attachment) {
+    public void setAttachment(DeprecatedAttachment attachment) {
         this.attachment = attachment;
     }
 

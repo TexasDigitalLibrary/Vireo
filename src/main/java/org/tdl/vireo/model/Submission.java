@@ -63,7 +63,7 @@ public class Submission extends BaseEntity {
     private Set<Embargo> embargoTypes;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<Attachment> attachments;
+    private Set<DeprecatedAttachment> attachments;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -71,7 +71,7 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
-        setAttachments(new HashSet<Attachment>());
+        setAttachments(new HashSet<DeprecatedAttachment>());
 
     }
 
@@ -316,7 +316,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the attachments
      */
-    public Set<Attachment> getAttachments() {
+    public Set<DeprecatedAttachment> getAttachments() {
         return attachments;
     }
 
@@ -324,7 +324,7 @@ public class Submission extends BaseEntity {
      * @param attachments
      *            the attachments to set
      */
-    public void setAttachments(Set<Attachment> attachments) {
+    public void setAttachments(Set<DeprecatedAttachment> attachments) {
         this.attachments = attachments;
     }
 
@@ -332,7 +332,7 @@ public class Submission extends BaseEntity {
      * 
      * @param attachment
      */
-    public void addAttachment(Attachment attachment) {
+    public void addAttachment(DeprecatedAttachment attachment) {
         getAttachments().add(attachment);
     }
 
@@ -340,7 +340,7 @@ public class Submission extends BaseEntity {
      * 
      * @param actionLog
      */
-    public void removeAttachment(Attachment attachment) {
+    public void removeAttachment(DeprecatedAttachment attachment) {
         getAttachments().remove(attachment);
     }
 
