@@ -8,6 +8,7 @@ import org.tdl.vireo.model.validation.AttachmentTypeValidator;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
+@Deprecated
 public class DeprecatedAttachmentType extends BaseEntity {
 
     @Column(nullable = false, unique = true)

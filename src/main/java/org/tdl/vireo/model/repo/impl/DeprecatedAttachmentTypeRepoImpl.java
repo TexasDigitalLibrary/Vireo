@@ -5,6 +5,7 @@ import org.tdl.vireo.model.DeprecatedAttachmentType;
 import org.tdl.vireo.model.repo.DeprecatedAttachmentTypeRepo;
 import org.tdl.vireo.model.repo.custom.DeprecatedAttachmentTypeRepoCustom;
 
+@Deprecated
 public class DeprecatedAttachmentTypeRepoImpl implements DeprecatedAttachmentTypeRepoCustom {
 
     @Autowired

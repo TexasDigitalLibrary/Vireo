@@ -26,6 +26,7 @@ import edu.tamu.framework.model.BaseEntity;
  * 
  */
 @Entity
+@Deprecated
 public class DeprecatedAttachment extends BaseEntity {
     
     @Transient
