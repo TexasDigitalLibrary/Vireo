@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
+vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, AttachmentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
