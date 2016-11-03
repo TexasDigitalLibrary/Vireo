@@ -846,10 +846,11 @@
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Committee members.",
+
+					"help": "Enter the names and email addresses of your non-chairing committee members",
 					"fieldGlosses": [
 						{
-							"value": "Your Committee",
+							"value": "Committee Members",
 							"language": {
 								"name": "English"
 							}
@@ -859,24 +860,24 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "chairs_contact_email",
+						"value": "comittee_chair",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_EMAIL"
+						"name": "INPUT_TEXT"
 					},
 					"repeatable": false,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Enter an email address for your committee chair.",
+					"help": "Enter the name and email address for your committee chair.",
 					"fieldGlosses": [
 						{
-							"value": "Chair's Contact Email",
+							"value": "Committee Chair",
 							"language": {
 								"name": "English"
 							}
