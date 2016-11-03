@@ -1,14 +1,14 @@
 <div class="input-group">
-	<input  type="tel" 
-			class="form-control" 
-			name="profile.fieldPredicate.value" 
-			ng-required="!profile.optional" 
-			ng-blur="save(value)"
-			ng-disabled="saving===value.id"
-			ng-model="values[$index].value" 
-	/>
+	<input
+		type="tel" 
+		class="form-control" 
+		name="profile.fieldPredicate.value" 
+		ng-required="!profile.optional" 
+		ng-blur="save(fieldValue)"
+		ng-disabled="fieldValue.updating"
+		ng-model="fieldValue.value"/>
 	<span class="input-group-addon">
-        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
+        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>

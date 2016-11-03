@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,7 +39,7 @@ public class Submission extends BaseEntity {
     private User assignee;
 
     @ManyToOne(cascade = { REFRESH })
-    private SubmissionState state;
+    private SubmissionState submissionState;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private Organization organization;
@@ -63,7 +64,11 @@ public class Submission extends BaseEntity {
     private Set<Embargo> embargoTypes;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+
     private Set<DeprecatedAttachment> attachments;
+    
+    @Lob
+    private String reviewerNotes;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -77,7 +82,7 @@ public class Submission extends BaseEntity {
 
     /**
      * @param submitter
-     * @param state
+     * @param submissionState
      */
     public Submission(User submitter, Organization organization) {
         this();
@@ -87,11 +92,11 @@ public class Submission extends BaseEntity {
 
     /**
      * @param submitter
-     * @param state
+     * @param submissionState
      */
-    public Submission(User submitter, Organization organization, SubmissionState state) {
+    public Submission(User submitter, Organization organization, SubmissionState submissionState) {
         this(submitter, organization);
-        setState(state);
+        setSubmissionState(submissionState);
     }
 
     /**
@@ -127,18 +132,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the state
+     * @return the submissionState
      */
-    public SubmissionState getState() {
-        return state;
+    public SubmissionState getSubmissionState() {
+        return submissionState;
     }
 
     /**
-     * @param state
-     *            the state to set
+     * @param submissionState
+     *            the submissionState to set
      */
-    public void setState(SubmissionState state) {
-        this.state = state;
+    public void setSubmissionState(SubmissionState submissionState) {
+        this.submissionState = submissionState;
     }
 
     /**
@@ -344,4 +349,20 @@ public class Submission extends BaseEntity {
         getAttachments().remove(attachment);
     }
 
+    /**
+     * 
+     * @return
+     */
+	public String getReviewerNotes() {
+		return reviewerNotes;
+	}
+
+	/**
+	 * 
+	 * @param reviewerNotes
+	 */
+	public void setReviewerNotes(String reviewerNotes) {
+		this.reviewerNotes = reviewerNotes;
+	}
+    
 }

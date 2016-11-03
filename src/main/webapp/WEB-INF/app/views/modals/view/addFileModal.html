@@ -1,0 +1,125 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="resetAddFile()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Add File</h3>
+</div>
+
+<form novalidate>
+
+    <div class="modal-body">
+
+		<span ng-if="hasPrimaryDocument()">
+	    	<input type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection"> Replace the primary document<br>
+	
+	    	<div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'replace', 'section-closed': addFileData.addFileSelection != 'replace'}">
+	    		
+	    		<dropzone
+	    			ng-if="!addFileData.files"
+					file-model="files"
+					text="Drop a file or click arrow",
+					patterns="pdf"
+					drop-method="queueUpload(files)">
+				</dropzone>
+				
+				<div ng-if="addFileData.files">
+					<button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
+	    			<label>Name:</label>
+	    			<span>{{addFileData.files[0].name}}</span><br/>
+	    			<label>Type:</label>
+	    			<span>{{addFileData.files[0].type}}</span><br/>
+	    			<label>Size:</label>
+	    			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
+		  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
+				</div>
+				
+	    	</div>
+    	</span>
+
+
+  		<input type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection"> Add additional document<br>
+
+  		<div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'add', 'section-closed': addFileData.addFileSelection != 'add'}">
+  			
+			<div class="form-group">
+    			<label for="fileName">New Attachment Type:</label>
+    			<select 
+    				class="form-control"
+    				ng-model="addFileData.fieldPredicate"
+    				ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value">
+    				<option value="">Select File Type...</option>
+				</select>
+  			</div>
+
+    		<dropzone
+    			ng-if="!addFileData.files"
+				file-model="files"
+				text="Drop a file or click arrow",
+				patterns="*"
+				drop-method="queueUpload(files)">
+			</dropzone>
+
+			
+			<div ng-if="addFileData.files">
+				<button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
+    			<label>Name:</label>
+    			<span>{{addFileData.files[0].name}}</span><br/>
+    			<label>Type:</label>
+    			<span>{{addFileData.files[0].type}}</span><br/>
+    			<label>Size:</label>
+    			<span>{{addFileData.files[0].size + " bytes"}}</span><br/>
+	  			<uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
+			</div>
+
+
+			<div class="checkbox">
+				<label><input type="checkbox" value="false" ng-model="addFileData.addEmailRecipeints">Add Email Recipients</label>
+			</div>
+
+			<div class="checkbox">
+				<label><input type="checkbox" value="false" ng-model="addFileData.addCCRecipeints" ng-disabled="!addFileData.addEmailRecipeints">Add CC Recipients</label>
+			</div>
+			
+			<div class="email-section" ng-class="{'section-open': addFileData.addEmailRecipeints, 'section-closed': !addFileData.addEmailRecipeints}">
+				
+				<div class="form-group">
+	    			<label for="emailTo">To:</label>
+	    			<input class="form-control" type="email" placeholder="i.e. Student, College or myEmail@myProvider.com" ng-model="addFileData.emailTo" name="emailTo">
+	  			</div>
+	  			
+	  			<div class="form-group email-section" ng-class="{'section-open': addCCRecipeints, 'section-closed': !addCCRecipeints}">
+	    			<label for="emailCC">CC:</label>
+	    			<input class="form-control" type="email" placeholder="i.e. Advisor, College or myEmail@myProvider.com" ng-model="addFileData.emailCC" name="emailCC">
+	  			</div>
+	  			
+	  			<div class="form-group">
+	    			<label for="emailSubject">Subject:</label>
+	    			<input class="form-control" type="text" ng-model="addFileData.emailSubject" name="emailSubject">
+	  			</div>
+
+	  			<div class="form-group">
+	    			<textarea class="form-control" placeholder="compose comment here..." ng-model="addFileData.emailBody" name="emailBody" rows="3"></textarea>
+	  			</div>
+
+	  			<div class="form-group">
+	    			<select class="form-control" ng-model="addFileData.fieldPredicate">
+	    				<option value="">Choose an email template...</option>
+					</select>
+	  			</div>
+
+			</div>
+			
+    	</div>
+    	
+    	<div class="checkbox">
+			<label><input type="checkbox" value="false" ng-model="addFileData.needsCorrection">Flag submission as Needs Corrections</label>
+		</div>
+    	
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="resetAddFile()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile()">Submit</button>
+    </div>
+
+</form>

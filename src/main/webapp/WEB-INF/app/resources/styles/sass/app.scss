@@ -813,6 +813,14 @@ footer a, footer li, footer p {
   text-transform: uppercase;
 }
 
+.admin-page .admin-controls {
+
+}
+
+.admin-page .admin-content {
+
+}
+
 .my-profile h1 {
   font-size: 2.2em;
   font-weight: normal;
@@ -1539,13 +1547,13 @@ footer a, footer li, footer p {
 
 
 #etd-table, .etd-table {
-	.header {
-		background: #ffffff;
-		background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
-		background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
-		background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
-	}
+  .header {
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
+    background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
+    background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
+  }
 
   th {
     text-transform: capitalize;
@@ -1794,3 +1802,5 @@ footer a, footer li, footer p {
 .further-filter-by .organization-by-category-top-list {
   margin: 0px;
 }
+
+@import "item-view";

@@ -2,8 +2,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
-
 	$scope.workflowStepRepo = WorkflowStepRepo;	
 
 	$scope.fieldProfileRepo = FieldProfileRepo;
@@ -201,8 +199,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		$scope.isEditable = function(fieldProfile) {
 			var editable = fieldProfile.overrideable;
 			if(!editable) {
-				editable = fieldProfile.originatingWorkflowStep == $scope.step.id &&
-						   $scope.selectedOrganization.originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
+				editable = fieldProfile.originatingWorkflowStep == $scope.step.id && OrganizationRepo.getSelectedOrganization().originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
 			}
 			return editable;
 		};

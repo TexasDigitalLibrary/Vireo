@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (uibDateParser, $controller, $filter, $q, $scope, $timeout, NgTableParams, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, AttachmentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi,SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -20,7 +20,6 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
 	});
 	
-	//TODO:  refactor to var attachmentTypes = AttachmentTypeRepo.getAll();
 	var attachmentTypes = AttachmentTypeRepo.getAll();
 	var embargos = EmbargoRepo.getAll();
 	var customActionDefinitions = CustomActionDefinitionRepo.getAll();
@@ -207,7 +206,6 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		addFilter(column, gloss);
 	};
 
-	//TODO:  refactor attachmentTypes to attachmentTypes
 	$scope.furtherFilterBy = {
 		"title": "Further Filter By:",
 		"viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
@@ -480,6 +478,13 @@ vireo.controller("SubmissionListController", function (uibDateParser, $controlle
 		},
 		additionalPlaceholderClass: 'column-placeholder'
 	};
+
+	
+	$scope.viewSubmission = function(submission) {
+		ItemViewService.setSelectedSubmission(submission);
+		$location.path("/admin/view/" + submission.submissionWorkflowSteps[0].id + "/" + submission.id);
+	};
+	
 
 });
 

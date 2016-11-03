@@ -45,7 +45,11 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 			var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
 
 			if (broadcastedOrg.id == selectedOrganization.id) {
-				organizationRepo.setSelectedOrganization(broadcastedOrg);
+				
+				
+				organizationRepo.lazyFetch(broadcastedOrg.id).then(function(fullBroadcastedOrg) {
+					organizationRepo.setSelectedOrganization(fullBroadcastedOrg);
+				})
 
 				angular.forEach(selectiveListenCallbacks, function(cb) {
 					cb(broadcastedOrg);

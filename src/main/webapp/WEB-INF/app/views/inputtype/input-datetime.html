@@ -1,20 +1,20 @@
 <div class="input-group">
 	<span class="input-group-addon" ng-click="date=true">
-    	<span class="glyphicon glyphicon-calendar"></span>
+    	<span class="glyphicon glyphicon-calendar toggle-href"></span>
   	</span>
-  	<input  type="text" 
-      			class="form-control" 
-      			uib-datepicker-popup="MM/dd/yyyy" 
-      			ng-model="values[$index].value"
-      			ng-change="save(value)"
-      			is-open="date"
-            ng-disabled="saving===value.id" 
-            ng-required="!profile.optional" 
-      			close-text="Close"
-            stringtodate 
-  	/>
+  	<input
+		type="text" 
+		class="form-control" 
+		uib-datepicker-popup="MM/dd/yyyy" 
+		ng-model="fieldValue.value"
+		ng-change="save(fieldValue)"
+		is-open="date"
+		ng-disabled="fieldValue.updating" 
+		ng-required="!profile.optional" 
+		close-text="Close"
+		stringtodate/>
   	<span class="input-group-addon">
-        <span ng-if="saving===0||saving!==value.id" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="saving===value.id" class="glyphicon glyphicon-refresh spinning"> </span>
+        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>

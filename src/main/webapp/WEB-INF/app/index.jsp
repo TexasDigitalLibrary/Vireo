@@ -107,16 +107,16 @@
 				<div class="row">
 					<a class="pull-left" href="home"><img style="max-height: 57px;" ng-src="{{logoImage()}}"></img></a>
 					<ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
-			      		<li ng-class="{'active': activeTab('list')}">
+			      		<li ng-class="{'active': activeTab('/admin/list')}">
 			      			<a href="admin/list">List</a>
 			      		</li>
-						<li ng-class="{'active': activeTab('view')}">
-			      			<a href="admin/view">View</a>
+						<li ng-class="{'active': activeTab('/admin/view')}">
+			      			<a href ng-click="viewSelect()">View</a>
 			      		</li>
-			      		<li ng-class="{'active': activeTab('log')}">
+			      		<li ng-class="{'active': activeTab('/admin/log')}">
 			      			<a href="admin/log">Log</a>
 			      		</li>
-			      		<li ng-class="{'active': activeTab('settings')}" class="settings-tab">
+			      		<li ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
 			      			<a href="admin/settings">Settings</a>
 			      		</li>						
 					</ul>
@@ -287,9 +287,11 @@
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
 	    <script src="directives/triptychDirective.js"></script>
+	    <script src="directives/infoDirective.js"></script>
 
 	    <!-- Services -->
 	    <script src="services/sidebarService.js"></script>
+	    <script src="services/itemViewService.js"></script>
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
@@ -342,6 +344,7 @@
 	    <script src="model/submission.js"></script>
 	    <script src="model/submissionState.js"></script>
 	    <script src="model/fieldProfile.js"></script>
+	    <script src="model/fieldValue.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
 		
@@ -377,6 +380,8 @@
 	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
+	    <script src="controllers/submission/itemViewController.js"></script>
+	    
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
