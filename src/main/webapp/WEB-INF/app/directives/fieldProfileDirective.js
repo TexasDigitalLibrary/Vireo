@@ -1,4 +1,4 @@
-vireo.directive("field",  function($controller, $q, FileApi) {
+vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 	return {
 		templateUrl: 'views/directives/fieldProfile.html',
 		restrict: 'E',
@@ -27,15 +27,18 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			$scope.save = function(fieldValue) {
 				if ($scope.fieldProfileForm.$dirty) {
 					fieldValue.updating = true;
-					var savePromsie = $scope.submission.saveFieldValue(fieldValue);
-					savePromsie.then(function() {
-						delete fieldValue.updating;
-						if($scope.fieldProfileForm !== undefined) {
-							$scope.fieldProfileForm.$setPristine();
-						}
-						refreshValues();
-					});
-					return savePromsie;
+					// give typeahead time to set the value
+					$timeout(function() {
+						var savePromsie = $scope.submission.saveFieldValue(fieldValue);
+						savePromsie.then(function() {
+							delete fieldValue.updating;
+							if($scope.fieldProfileForm !== undefined) {
+								$scope.fieldProfileForm.$setPristine();
+							}
+							refreshValues();
+						});
+						return savePromsie;
+					}, 500);
 				}
 			};
 
