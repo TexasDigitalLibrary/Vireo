@@ -26,11 +26,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.sortAction = "confirm";
 
 	$scope.uploadAction = "confirm";
-
-	
-	$scope.advanced = false;
-	
-	$scope.controlledVocabulary = false;
 	
 
 	$scope.filteredPredicates = {};
@@ -122,10 +117,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 			angular.extend($scope.documentData.attachmentType, $scope.attachmentTypes[0]);
 			
-			$scope.advanced = false;
-			
-			$scope.controlledVocabulary = false;
-
 			$scope.closeModal();
 		};
 
