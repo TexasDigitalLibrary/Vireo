@@ -110,7 +110,7 @@ public class ControlledVocabularyController {
     }
 
     /**
-     * Endpoint to update controlled vacabulary.
+     * Endpoint to update controlled vocabulary.
      * 
      * @param data
      *            Json input data with request
