@@ -33,7 +33,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
     
-    @ManyToMany(cascade = { ALL }, fetch = EAGER)    
+    @ManyToMany(cascade = { ALL }, fetch = EAGER)
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
     
     @Column(nullable = false)
