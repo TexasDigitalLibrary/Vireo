@@ -74,7 +74,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submission = submissionRepo.save(submission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
-        assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getState());
+        assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getSubmissionState());
         assertEquals("Saved submission did not contain the correct submitter!", submitter, submission.getSubmitter());
         assertEquals("Saved submission did not contain the correct organization!", submission.getOrganization(), organization);
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));

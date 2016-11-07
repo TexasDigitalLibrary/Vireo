@@ -88,6 +88,20 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 		
+		submission.saveReviewerNotes = function(reviewerNotes) {
+
+			angular.extend(this.getMapping().saveReviewerNotes, {
+				method: submission.id+"/update-reviewer-notes",
+				data: {
+					'reviewerNotes': reviewerNotes
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().saveReviewerNotes);
+
+			return promise;
+		};
+		
 		submission.fileInfo = function(uri) {
 
 			angular.extend(this.getMapping().fileInfo, {
@@ -123,6 +137,31 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			});
 
 			var promise = WsApi.fetch(this.getMapping().removeFile);
+
+			return promise;
+		};
+		
+		submission.renameFile = function(uri, newName) {
+
+			angular.extend(this.getMapping().renameFile, {
+				data: {
+					'uri': uri,
+					'newName': newName
+				}
+			});
+
+			var promise = WsApi.fetch(this.getMapping().renameFile);
+
+			return promise;
+		};
+		
+		submission.needsCorrection = function() {
+
+			angular.extend(this.getMapping().needsCorrection, {
+				method: submission.id+"/needs-correction"
+			});
+
+			var promise = WsApi.fetch(this.getMapping().needsCorrection);
 
 			return promise;
 		};

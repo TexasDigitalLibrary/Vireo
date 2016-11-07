@@ -12,6 +12,7 @@ import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
+import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
@@ -35,6 +36,17 @@ public class FieldPredicateController {
     @Auth(role = "MANAGER")
     public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
+    }
+    
+    /**
+     * Endpoint to request all field predicates.
+     * 
+     * @return ApiResponse with all input types.
+     */
+    @ApiMapping("/{value}")
+    @Auth(role = "MANAGER")
+    public ApiResponse getFieldPredicateByValue(@ApiVariable String value) {
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.findByValue(value));
     }
     
     /**

@@ -5,7 +5,7 @@
 	},
 	"originalWorkflowSteps": [
 		{
-			"name": "Verify Personal Information",
+			"name": "Personal Information",
 			"overrideable": true,
 			"originatingOrganization": {
 				"name": "Institution",
@@ -147,7 +147,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "orcid_id",
+						"value": "orcid",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -164,7 +164,7 @@
 					"help": "Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
 					"fieldGlosses": [
 						{
-							"value": "ORCID id",
+							"value": "ORCID",
 							"language": {
 								"name": "English"
 							}
@@ -370,7 +370,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEL"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -397,7 +397,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEXTAREA"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -451,7 +451,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_TEL"
 					},
 					"repeatable": false,
 					"overrideable": true,
@@ -758,9 +758,9 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXTAREA"
+						"name": "INPUT_TEXT"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
@@ -785,9 +785,9 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXTAREA"
+						"name": "INPUT_TEXT"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
@@ -832,7 +832,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "your_committee",
+						"value": "committee_member",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -841,12 +841,11 @@
 					"inputType": {
 						"name": "INPUT_TEXT"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-
 					"help": "Enter the names and email addresses of your non-chairing committee members",
 					"fieldGlosses": [
 						{
@@ -1003,7 +1002,7 @@
 			"originalFieldProfiles": [
 				{
 					"fieldPredicate": {
-						"value": "_doctype_manuscript_in_pdf",
+						"value": "_doctype_primary",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1030,7 +1029,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_supplemental_files",
+						"value": "_doctype_supplemental",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1039,7 +1038,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1057,7 +1056,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_source_files",
+						"value": "_doctype_source",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1066,7 +1065,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,
@@ -1084,7 +1083,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "_doctype_administrative_files",
+						"value": "_doctype_administrative",
 						"documentTypePredicate": true
 					},
 					"originatingWorkflowStep": {
@@ -1093,7 +1092,7 @@
 					"inputType": {
 						"name": "INPUT_FILE"
 					},
-					"repeatable": false,
+					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": true,

@@ -117,9 +117,8 @@
 									modal-header-class="modal-header-primary"
 									modal-backdrop="static">
 							</modal>
-							<accordion single-expand="false" >
-								<pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">
-								{{$index+1}}. {{step.name}}</pane>
+							<accordion single-expand="false">
+								<pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{$index+1}}. {{step.name}}</pane>
 							</accordion>
 						</div>
 					</div>
@@ -128,3 +127,4 @@
 		</div>
 	</div>
 </div>
+

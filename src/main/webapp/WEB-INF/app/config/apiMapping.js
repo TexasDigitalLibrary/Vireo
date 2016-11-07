@@ -134,6 +134,7 @@ var apiMapping = {
 		}
 	},
 	Configuration: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'settings/configurable',
@@ -288,6 +289,10 @@ var apiMapping = {
 			'controller': 'settings/field-predicates',
 			'method': 'all'
 		},
+		one: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/field-predicates'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'settings/field-predicates'
@@ -296,6 +301,12 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'settings/field-predicates',
 			'method': 'create'
+		}
+	},
+	FieldValue: {
+		update: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
 		}
 	},
 	GraduationMonth: {
@@ -501,6 +512,7 @@ var apiMapping = {
 		}
 	},
 	Submission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -528,6 +540,10 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
+		saveReviewerNotes: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'
+		},
 		removeFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
@@ -552,13 +568,24 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'file'
 		},
+		renameFile: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'rename-file'
+		},
 		removeFile: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'remove-file'
+		},
+		needsCorrection: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'needs-correction'
 		}
 	},
 	StudentSubmission: {
+		lazy: true,
 		all: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
@@ -669,6 +696,7 @@ var apiMapping = {
 		}
 	},
 	UserSettings: {
+		lazy: true,
 		instantiate: {
 			'endpoint': '/private/queue',
 			'controller': 'user',

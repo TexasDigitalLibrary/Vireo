@@ -1,9 +1,9 @@
-vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.settings = {};
-			
+
 	$scope.settings.configurable = ConfigurationRepo.getAllMapByType();
 
 	if(!$scope.isAnonymous()) {
@@ -70,11 +70,8 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 			};
 		});
 		
-		var StudentSubmissionRepo = $injector.get('StudentSubmissionRepo');
-
-		
 		var submissions = StudentSubmissionRepo.getAll();
-  	  	
+		
 		ConfigurationRepo.ready().then(function() {
 
 			$scope.submissionsOpen = function(){
@@ -93,7 +90,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 		  		var isInProgress = false;
 		  		for(var i in submissions) {
 		  			var submission = submissions[i];
-		  			if(submission.state.name === "In Progress") {
+		  			if(submission.submissionState.name === "In Progress") {
 		  				isInProgress = true;
 		  				break;
 		  			}
@@ -106,7 +103,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 		  		var isInProgress = false;
 		  		for(var i in submissions) {
 		  			var submission = submissions[i];
-		  			if(submission.state.name === "Needs Corrections") {
+		  			if(submission.submissionState.name === "Needs Corrections") {
 		  				isInProgress = true;
 		  				break;
 		  			}
@@ -145,6 +142,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 			};
 
 		});
+
 	}
 
 	var filterHtml = function(html) {
@@ -162,8 +160,6 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
   			default: return true;
   		}
   	};
-
-  	
 
 	$scope.editMode = function(prop) {
 		$scope["edit"+prop] = true;
