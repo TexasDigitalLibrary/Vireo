@@ -347,6 +347,8 @@
 	    <script src="model/fieldValue.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
+	    <script src="model/customActionValue.js"></script>
+	    <script src="repo/customActionValueRepo.js"></script>
 		
 
 	    <!-- Factories -->
@@ -381,6 +383,7 @@
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>
+	    <script src="controllers/sideBars/customActionSideBarController.js"></script>
 	    
 	<!-- endbuild -->
 
