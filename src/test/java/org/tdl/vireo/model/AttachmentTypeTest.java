@@ -15,7 +15,7 @@ public class AttachmentTypeTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        AttachmentType testAttachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        DeprecatedAttachmentType testAttachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         assertEquals("Embargo Repo did not save the embargo!", 1, attachmentTypeRepo.count());
         assertEquals("Embargo Repo did not save the correct embargo name!", TEST_ATTACHMENT_TYPE_NAME, testAttachmentType.getName());
      }
@@ -33,7 +33,7 @@ public class AttachmentTypeTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        AttachmentType testAttachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        DeprecatedAttachmentType testAttachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         attachmentTypeRepo.delete(testAttachmentType);
         assertEquals("AttachmentType did not delete!", 0, attachmentTypeRepo.count());
     }

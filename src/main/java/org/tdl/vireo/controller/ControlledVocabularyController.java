@@ -85,7 +85,8 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @ApiMapping("/{name}")
-    @Auth(role = "MANAGER")    
+    //TODO:  commented this out 
+    //@Auth(role = "MANAGER")    
     public ApiResponse getControlledVocabularyByName(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
     }

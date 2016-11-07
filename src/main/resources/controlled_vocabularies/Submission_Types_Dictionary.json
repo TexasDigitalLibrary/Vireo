@@ -1,0 +1,33 @@
+[ {
+	"name" : "Performance Piece",
+	"definition" : "a live artistic performance",
+	"identifier" : "test Performance Piece id"
+	}, {
+	"name" : "Thesis",
+	"definition" : "",
+	"identifier" : ""
+	}, {
+	"name" : "Dissertation",
+	"definition" : "test dissertation definition",
+	"identifier" : "test dissertation identifier"
+	}, {
+	"name" : "Honors Thesis",
+	"definition" : "",
+	"identifier" : ""
+	}, {
+	"name" : "Project Report",
+	"definition" : "test Project Report definition",
+	"identifier" : "test Project Report id"
+	}, {
+	"name" : "Capstone Project",
+	"definition" : "",
+	"identifier" : ""
+	}, {
+	"name" : "Project Capstone",
+	"definition" : "",
+	"identifier" : ""
+	}, {
+	"name" : "Treatise",
+	"definition" : "",
+	"identifier" : ""		
+} ],

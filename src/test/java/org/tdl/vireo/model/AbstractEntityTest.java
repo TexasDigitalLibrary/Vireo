@@ -16,15 +16,15 @@ import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
-import org.tdl.vireo.model.repo.AttachmentRepo;
-import org.tdl.vireo.model.repo.AttachmentTypeRepo;
+import org.tdl.vireo.model.repo.DeprecatedAttachmentRepo;
+import org.tdl.vireo.model.repo.DeprecatedAttachmentTypeRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
+import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -320,10 +320,10 @@ public abstract class AbstractEntityTest {
     protected UserRepo userRepo;
 
     @Autowired
-    protected AttachmentRepo attachmentRepo;
+    protected DeprecatedAttachmentRepo attachmentRepo;
     
     @Autowired
-    protected AttachmentTypeRepo attachmentTypeRepo;
+    protected DeprecatedAttachmentTypeRepo attachmentTypeRepo;
 
     @Autowired
     protected AddressRepo addressRepo;
@@ -338,7 +338,7 @@ public abstract class AbstractEntityTest {
     protected DepositLocationRepo depositLocationRepo;
     
     @Autowired
-    protected DocumentTypeRepo documentTypesRepo;
+    protected AttachmentTypeRepo documentTypesRepo;
 
     @Autowired
     protected EmailTemplateRepo emailTemplateRepo;
@@ -406,9 +406,9 @@ public abstract class AbstractEntityTest {
 
     protected Address testAddress;
 
-    protected Attachment attachment;
+    protected DeprecatedAttachment attachment;
     
-    protected AttachmentType attachmentType;
+    protected DeprecatedAttachmentType attachmentType;
 
     protected CustomActionDefinition testCustomActionDefinition;
     protected CustomActionDefinition customActionDefinition;

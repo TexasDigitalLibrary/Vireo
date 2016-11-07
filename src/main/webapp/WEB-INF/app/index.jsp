@@ -296,7 +296,7 @@
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
-	    <script src="repo/documentTypeRepo.js"></script>
+	    <script src="repo/attachmentTypeRepo.js"></script>
 	    <script src="repo/customActionDefinitionRepo.js"></script>
 	    <script src="repo/depositLocationRepo.js"></script>
 	    <script src="repo/emailTemplateRepo.js"></script>
@@ -325,7 +325,7 @@
 		<script src="model/abstractAppModel.js"></script>
 	    <script src="model/namedSearchFilterGroup.js"></script>
 		<script src="model/language.js"></script>
-		<script src="model/documentType.js"></script>
+		<script src="model/attachmentType.js"></script>
 		<script src="model/customActionDefinition.js"></script>
 		<script src="model/depositLocation.js"></script>
 		<script src="model/emailTemplate.js"></script>
@@ -371,7 +371,7 @@
 	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languagesController.js"></script>
-	    <script src="controllers/settings/documentTypesController.js"></script>
+	    <script src="controllers/settings/attachmentTypesController.js"></script>
 	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
 	    <script src="controllers/settings/organizationCategoriesController.js"></script>
 	    <script src="controllers/settings/fieldProfileManagementController.js"></script>

@@ -71,4 +71,10 @@ public class SystemDataLoaderMock implements SystemDataLoader {
         
     }
 
+	@Override
+	public void loadDefaultControlledVocabularies() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

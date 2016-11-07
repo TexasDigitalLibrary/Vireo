@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
+vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, AttachmentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
@@ -20,7 +20,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 		$scope.advancedfeaturesBox.newStatus = submissionStates[0];
 	});
 	
-	var documentTypes = DocumentTypeRepo.getAll();
+	var attachmentTypes = AttachmentTypeRepo.getAll();
 	var embargos = EmbargoRepo.getAll();
 	var customActionDefinitions = CustomActionDefinitionRepo.getAll();
 	var organizations = OrganizationRepo.getAll();
@@ -217,7 +217,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 		"customActionDefinitions": customActionDefinitions,
 		"organizations": organizations,
 		"organizationCategories": organizationCategories,
-        "documentTypes": documentTypes,
+        "attachmentTypes": attachmentTypes,
         "embargos": embargos,
 		"allUsers": allUsers,
 		"assignable": assignable,

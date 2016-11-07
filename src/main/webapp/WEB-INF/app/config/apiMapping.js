@@ -1,37 +1,37 @@
 // CONVENTION: must match model name, case sensitive
 var apiMapping = {
-	DocumentType: {
+	AttachmentType: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'all'
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		},
 		create: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'create'
 		},
 		update: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'update'
 		},
 		remove: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		}
 	},
 	ControlledVocabulary: {

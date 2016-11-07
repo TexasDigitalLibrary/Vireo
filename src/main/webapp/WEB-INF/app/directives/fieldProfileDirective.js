@@ -210,7 +210,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			
 			$scope.getPreview = function(fieldValue) {
 				var preview;
-				if(fieldValue.file !== undefined) {
+				if(fieldValue.file !== undefined && fieldValue.file.type !== null) {
 					if(fieldValue.file.type.includes("image/png")) { 
 						preview = "resources/images/png-logo.jpg";
 					}

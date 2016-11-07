@@ -1,29 +1,29 @@
-<div id="document-types" class="row" ng-controller="DocumentTypesController">
+<div id="attachment-types" class="row" ng-controller="AttachmentTypesController">
 
-	<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
+	<validationmessage results="attachmentTypeRepo.getValidationResults()"></validationmessage>
 	
 	<div class="col-sm-6">
 
 		<div class="col-md-10 col-md-offset-1">
 
-			<button class="btn btn-default modal-add-btn" ng-click="openModal('#documentTypesNewModal')">
-				Add Document Type
+			<button class="btn btn-default modal-add-btn" ng-click="openModal('#attachmentTypesNewModal')">
+				Add Attachment Type
 			</button>
 
 			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new document type."></div>
 
-			<p ng-if="graduationMonths.length == 0">Add new Document Type</p>
+			<p ng-if="graduationMonths.length == 0">Add new Attachment Type</p>
 
 			<draganddroplist dragging="dragging"
-							 scope-value="documentTypes"
-							 properties='["name", "degreeLevel"]'
-							 item-view='views/directives/dragAndDropDocumentType.html'
+							 scope-value="attachmentTypes"
+							 properties='["name"]'
+							 item-view='views/directives/dragAndDropAttachmentType.html'
 							 listeners='dragControlListeners'
 							 edit='launchEditModal(index)'
 							 sort-column='name',
 							 sort-action='sortAction'
-	                         sort-method='sortDocumentTypes(column)'
-	                         sort-label='Document Types'>
+	                         sort-method='sortAttachmentTypes(column)'
+	                         sort-label='Attachment Types'>
 	        </draganddroplist>
 	    </div>
 	</div>
@@ -37,22 +37,22 @@
 		<div>
 	</div>
 
-	<modal modal-id="documentTypesNewModal" 
-		   modal-view="views/modals/settings/documentTypesNewModal.html" 
+	<modal modal-id="attachmentTypesNewModal" 
+		   modal-view="views/modals/settings/attachmentTypesNewModal.html" 
 		   modal-header-class="modal-header-primary"		   
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="documentTypesEditModal" 
-		   modal-view="views/modals/settings/documentTypesEditModal.html" 
+	<modal modal-id="attachmentTypesEditModal" 
+		   modal-view="views/modals/settings/attachmentTypesEditModal.html" 
 		   modal-header-class="modal-header-primary"		   
 		   modal-keyboard="false"
 		   modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="documentTypesConfirmRemoveModal" 
-		   modal-view="views/modals/settings/documentTypesConfirmRemoveModal.html" 
+	<modal modal-id="attachmentTypesConfirmRemoveModal" 
+		   modal-view="views/modals/settings/attachmentTypesConfirmRemoveModal.html" 
 		   modal-header-class="modal-header-primary"		   
 		   modal-keyboard="false"
 		   modal-backdrop="static">

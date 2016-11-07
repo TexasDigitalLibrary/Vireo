@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
+import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -26,13 +26,13 @@ import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
-@ApiMapping("/settings/document-type")
-public class DocumentTypeController {
+@ApiMapping("/settings/attachment-type")
+public class AttachmentTypeController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private DocumentTypeRepo documentTypeRepo;
+    private AttachmentTypeRepo documentTypeRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -46,50 +46,50 @@ public class DocumentTypeController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
-        logger.info("Creating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
-        documentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel());
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
+    public ApiResponse createDocumentType(@ApiValidatedModel AttachmentType documentType) {
+        logger.info("Creating document type with name " + documentType.getName() );
+        documentType = documentTypeRepo.create(documentType.getName());
+        simpMessagingTemplate.convertAndSend("/channel/settings/attachment-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
     }
 
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
-        logger.info("Updating document type with name " + documentType.getName() + " and degree level " + documentType.getDegreeLevel());
+    public ApiResponse updateDocumentType(@ApiValidatedModel AttachmentType documentType) {
+        logger.info("Updating document type with name " + documentType.getName());
         documentType = documentTypeRepo.save(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/attachment-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, documentType);
     }
 
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldValue.class }, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
+    public ApiResponse removeDocumentType(@ApiValidatedModel AttachmentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
         documentTypeRepo.remove(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/attachment-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DocumentType.class, params = { "0", "1" }) })
+    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = AttachmentType.class, params = { "0", "1" }) })
     public ApiResponse reorderDocumentTypes(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering document types");
         documentTypeRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/attachment-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = DocumentType.class, params = { "0" }) })
+    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = AttachmentType.class, params = { "0" }) })
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         logger.info("Sorting document types by " + column);
         documentTypeRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/attachment-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 

@@ -117,13 +117,13 @@
 			
 			<div ng-if="inputFile" class="form-group">
 				<validatedselect
-					options="documentTypes"
+					options="attachmentTypes"
 					optionproperty="name"
 					model="documentData"
-					property="documentType"
-					label="Document Type"
+					property="attachmentType"
+					label="Attachment Type"
 					form="forms.create"
-					change="documentTypeChanged()"
+					change="attachmentTypeChanged()"
 					validations="fieldPredicateRepo.getValidations()"
 					results="fieldPredicateRepo.ValidationResults">
 				</validatedselect>
