@@ -1,4 +1,4 @@
-vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi) {
+vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestApi, WsApi) {
 
 	var workflowStepRepo = this;
 
@@ -10,10 +10,10 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi)
 			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-field-profile',
 			'data': fieldProfile
 		});
-		var promise = WsApi.fetch(this.mapping.addFieldProfile);
+		var promise = RestApi.post(this.mapping.addFieldProfile);
 		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+			if(res.meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, res.payload);
 				console.log(workflowStepRepo);
 			}
 		});
@@ -26,10 +26,10 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, WsApi)
 			'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-field-profile',
 			'data': fieldProfile
 		});
-		var promise = WsApi.fetch(this.mapping.updateFieldProfile);
+		var promise = RestApi.post(this.mapping.updateFieldProfile);
 		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
+			if(res.meta.type == "INVALID") {
+				angular.extend(workflowStepRepo, res.payload);
 				console.log(workflowStepRepo);
 			}
 		});
