@@ -76,7 +76,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			}
 			else {
 				$scope.inputFile = false;
-				delete $scope.modalData.fieldPredicate;
 			}
 		};
 
@@ -122,6 +121,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 			};
 
 			angular.extend($scope.documentData.attachmentType, $scope.attachmentTypes[0]);
+			
+			$scope.advanced = false;
+			
+			$scope.controlledVocabulary = false;
 
 			$scope.closeModal();
 		};
