@@ -27,25 +27,25 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 			$scope.save = function(fieldValue) {
 				if ($scope.fieldProfileForm.$dirty) {
 					fieldValue.updating = true;
-					// give typeahead time to set the value
-					$timeout(function() {
-						var savePromsie = $scope.submission.saveFieldValue(fieldValue);
-						savePromsie.then(function() {
-							delete fieldValue.updating;
-							if($scope.fieldProfileForm !== undefined) {
-								$scope.fieldProfileForm.$setPristine();
-							}
-							refreshValues();
-						});
-						return savePromsie;
-					}, 500);
+					return $q(function(resolve) {
+						// give typeahead time to set the value
+						$timeout(function() {
+							$scope.submission.saveFieldValue(fieldValue).then(function() {
+								delete fieldValue.updating;
+								if($scope.fieldProfileForm !== undefined) {
+									$scope.fieldProfileForm.$setPristine();
+								}
+								refreshValues();
+								resolve();
+							});
+						}, 500);
+					});
 				}
 			};
 
 			$scope.addFieldValue = function() {
-				var fieldValue = $scope.submission.addFieldValue($scope.profile.fieldPredicate);
 				refreshValues();
-				return fieldValue;
+				return $scope.submission.addFieldValue($scope.profile.fieldPredicate);
 			};
 			
 			var remove = function(fieldValue) {
