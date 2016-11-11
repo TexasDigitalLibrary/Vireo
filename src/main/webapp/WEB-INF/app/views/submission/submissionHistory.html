@@ -16,7 +16,9 @@
 		<td title="'Status'">{{row.submissionState.name}}</td>
 		<td title="'Date Submitted'">TODO</td>
 		<td title="'Assigned To'">TODO</td>
-		<td title="'Actions'">actions...</td>
+		<td title="'Actions'">
+			<button class="btn btn-warning" ng-click="deleteSubmission(row)">Delete</button>
+		</td>
 	  </tr>
 	</table>
 

@@ -27,4 +27,8 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
 		}, 250);
 	};
 
+	$scope.deleteSubmission = function(submission) {
+		submission.delete();
+	};
+
 });
