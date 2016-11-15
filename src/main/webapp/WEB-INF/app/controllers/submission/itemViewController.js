@@ -9,7 +9,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	ready.then(function() {
 
 		$scope.submission = ItemViewService.selectSubmission($routeParams.id);
-		console.log($scope.submission);				
+
 		var firstName = $scope.submission.submitter.firstName;
 		var lastName = $scope.submission.submitter.lastName;
 		var organization = $scope.submission.organization.name;
