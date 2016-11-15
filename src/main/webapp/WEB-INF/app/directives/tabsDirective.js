@@ -35,12 +35,14 @@ vireo.directive("tab", function($compile) {
 			angular.extend($scope, parent);
 			angular.extend($scope, attr);
 			
-			var span = angular.element('<span id="tabs-view" ng-if="activeTab(path)">');			
+			var span = angular.element('<span id="'+($scope.path.replace(/\//g, "-"))+'"  ng-if="activeTab(path)">');			
 			span.html("<ng-include src='view'></ng-include>");
 
-			if(angular.element('#tabs-view').length <1) {
-				angular.element('#tabs-directive').after($compile(span)($scope));	
+			if(angular.element("#"+$scope.path.replace(/\//g, "-")).length!==0) {
+				angular.element("#"+$scope.path.replace(/\//g, "-")).remove();
 			} 
+			angular.element('#tabs-directive').after($compile(span)($scope));		
+			
 			
 	    }
 	};
