@@ -180,6 +180,20 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 
+		submission.changeStatus = function(status) {
+
+			console.log(status);
+
+			angular.extend(this.getMapping().changeStatus, {
+				method: submission.id+"/change-status",
+				data: status
+			});
+
+			var promise = WsApi.fetch(this.getMapping().changeStatus);
+
+			return promise;
+		};
+
 		return submission;
 	}
 

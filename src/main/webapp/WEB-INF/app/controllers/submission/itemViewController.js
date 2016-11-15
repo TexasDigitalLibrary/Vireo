@@ -1,21 +1,20 @@
-vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
-	
-	var ready = $q.all([ItemViewService.selectSubmissionById($routeParams.id), FieldPredicateRepo.ready()])
 
-	ready.then(function(results) {
+	var ready = $q.all([FieldPredicateRepo.ready(), SubmissionRepo.findSubmissionById($routeParams.id)]);
 
-		$scope.submission = results[0];
+	ready.then(function() {
 
+		$scope.submission = ItemViewService.selectSubmission($routeParams.id);
+		console.log($scope.submission);				
 		var firstName = $scope.submission.submitter.firstName;
 		var lastName = $scope.submission.submitter.lastName;
 		var organization = $scope.submission.organization.name;
 			
 		$scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
-		
 		
 		$scope.documentFieldValues = [];
 		
@@ -217,7 +216,6 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			return disable;
 		};
 		
-		
 		SidebarService.addBoxes([
 		    {
 		        "title": "Active Document",
@@ -241,7 +239,9 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		    },
 		    {
 		        "title": "Submission Status",
-		        "viewUrl": "views/sideboxes/submissionStatus.html"
+		        "viewUrl": "views/sideboxes/submissionStatus.html",
+		        "submission": $scope.submission,
+		        "SubmissionStateRepo": SubmissionStateRepo
 		    },
 		    {
 		        "title": "Custom Actions",
@@ -249,7 +249,6 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		    }
 		]);
 
-		
 	});
 
 });
