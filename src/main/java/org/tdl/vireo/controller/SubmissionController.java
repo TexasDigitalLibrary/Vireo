@@ -148,7 +148,7 @@ public class SubmissionController {
         
         submission = submissionRepo.save(submission);
         
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
+        simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
         
         return new ApiResponse(SUCCESS);
     }

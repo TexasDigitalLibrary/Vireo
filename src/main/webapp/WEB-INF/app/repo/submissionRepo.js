@@ -1,4 +1,4 @@
-vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi) {
+vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
 
 	var submissionRepo = this;
 
@@ -71,11 +71,6 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi) {
 		return promise;
 
 	};
-
-	submissionRepo.listen(function(res) {
-		var submission = angular.fromJson(res.body).payload.Submission;
-		console.log(submissionRepo.getContents());
-	});
 	
 	return submissionRepo;
 

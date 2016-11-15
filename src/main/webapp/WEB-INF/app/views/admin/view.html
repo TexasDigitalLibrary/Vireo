@@ -7,10 +7,11 @@
 			<span ng-if="!submission">Loading Submission...</span>
 			<span ng-if="submission">{{title}}</span>
 		</h1>
-		<hr>	
+		<hr>
 	 	<tabs>
 			<tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
 		</tabs>
+
 	</div>
 	
 	<div class="row">	
