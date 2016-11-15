@@ -21,7 +21,6 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			promise.then(function(res) {
 				if(res.meta.type == "INVALID") {
 					submission.setValidationResults(res.payload.ValidationResults);
-					console.log(submission);
 				}
 			});
 			return promise;
