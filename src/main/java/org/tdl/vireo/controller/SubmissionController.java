@@ -140,6 +140,20 @@ public class SubmissionController {
     }
     
     @Transactional
+    @ApiMapping("/{submissionId}/change-status")
+    @Auth(role = "STUDENT")
+    public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {
+    	Submission submission = submissionRepo.findOne(submissionId);
+        submission.setSubmissionState(submissionState);
+        
+        submission = submissionRepo.save(submission);
+        
+        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
+        
+        return new ApiResponse(SUCCESS);
+    }
+    
+    @Transactional
     @ApiMapping("/{submissionId}/remove-field-value")
     @Auth(role = "STUDENT")
     public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
@@ -167,6 +181,7 @@ public class SubmissionController {
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
         return new ApiResponse(SUCCESS);
     }
 
@@ -176,13 +191,7 @@ public class SubmissionController {
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());       
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
-    }
-
-    @ApiMapping("/all-submission-state")
-    @Auth(role = "MANAGER")
-    public ApiResponse getAllSubmissionStates() {
-        return new ApiResponse(SUCCESS, submissionStateRepo.findAll());
-    }
+    }    
 
     @Transactional
     @ApiMapping("/batch-update-state")

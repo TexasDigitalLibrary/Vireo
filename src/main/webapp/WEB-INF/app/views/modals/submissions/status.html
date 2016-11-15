@@ -1,0 +1,25 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Change Submission Status</h3>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			
+            <h1>Current Transitions</h1>
+            <ul class="list-inline">
+                <li ng-init="state=box.SubmissionStateRepo.findById(stateId)" ng-repeat="stateId in box.submission.submissionState.transitionSubmissionStates" ng-click="box.submission.changeStatus(state)"><button class="btn btn-default">{{state.name}}</button></li>
+            </ul>
+
+			<a href>Advanced Options</a>
+
+		</div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+</div>
