@@ -10,7 +10,20 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 				id: null,
 				value: "",
 				fieldPredicate: fieldPredicate
-			}
+			};
+		};
+
+		//Override
+		submission.delete = function() {
+			var submission = this;
+			angular.extend(apiMapping.Submission.remove, {'method': "delete/"+submission.id});
+			var promise = WsApi.fetch(apiMapping.Submission.remove);
+			promise.then(function(res) {
+				if(res.meta && res.meta.type == "INVALID") {
+					submission.setValidationResults(res.payload.ValidationResults);
+				}
+			});
+			return promise;
 		};
 
 		submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {

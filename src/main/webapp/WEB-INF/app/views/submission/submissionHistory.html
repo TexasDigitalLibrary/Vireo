@@ -16,7 +16,9 @@
 		<td title="'Status'">{{row.submissionState.name}}</td>
 		<td title="'Date Submitted'">TODO</td>
 		<td title="'Assigned To'">TODO</td>
-		<td title="'Actions'">actions...</td>
+		<td title="'Actions'">
+			<button class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
+		</td>
 	  </tr>
 	</table>
 
@@ -29,6 +31,14 @@
 			modal-header-class="modal-header-danger"
 			static="true">
 		</modal>
+
+		<modal 
+			modal-id="confirmDeleteSubmission" 
+			modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
+			modal-header-class="modal-header-danger"
+			static="true">
+		</modal>
+
 	</div>
 
 </div>

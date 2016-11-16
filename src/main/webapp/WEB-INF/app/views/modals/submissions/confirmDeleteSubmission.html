@@ -8,15 +8,12 @@
 <form novalidate>
 
 	<div class="modal-body">
-		<h4><b>Click confirm to remove the File:</b></h4>
-		<h4>Name: {{fieldValue.file.name}}</h4>
-		<h4>Type: {{fieldValue.file.type}}</h4>
-		<h4>Size: {{fieldValue.file.size + " bytes"}}</h4>
+		Click to confirm the deleation of this submission.
 	</div>
 
 	<div class="modal-footer">
 		<button ng-disabled="deleting" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
-		<button ng-disabled="deleting" type="button" class="btn btn-danger" ng-click="deleteSubmission(submissionToDelete)">
+		<button ng-disabled="deleting" type="button" class="btn btn-danger" ng-click="deleteSubmission();deleting=true;">
 			<span ng-if="!deleting">Confirm</span>
 			<span ng-if="deleting">Deleting <span class="glyphicon glyphicon-refresh spinning"></span></span>
 		</button>
