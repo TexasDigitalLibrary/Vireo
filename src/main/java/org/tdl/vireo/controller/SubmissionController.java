@@ -115,7 +115,6 @@ public class SubmissionController {
     		response = new ApiResponse(ERROR, "Insufficient permisions to delte this submission.");
     	} else {
     		submissionRepo.delete(id);
-            simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
     	}
     	
         return response;

@@ -2,16 +2,19 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
-	$scope.submissions = StudentSubmissionRepo.getAll();
+	$scope.submissionToDelete={};
+
+	var buildTable = function() {
+		return new NgTableParams({}, {
+			counts: [],
+			filterDelay: 0, 
+			dataset: StudentSubmissionRepo.getAll()
+	  	});
+	};
 
 	StudentSubmissionRepo.ready().then(function() {
 
-		$scope.tableParams = new NgTableParams({}, {
-			counts: [],
-			filterDelay: 0, 
-			dataset: $scope.submissions
-	  	}); 
-
+		$scope.tableParams = buildTable(); 
 		$scope.tableParams.reload();
 
 	});
@@ -27,8 +30,20 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
 		}, 250);
 	};
 
-	$scope.deleteSubmission = function(submission) {
-		submission.delete();
+	$scope.confirmDelete = function(submission) {
+		$scope.openModal('#confirmDeleteSubmission');
+		$scope.submissionToDelete=submission;
+	};
+
+	$scope.deleteSubmission = function() {
+
+		$scope.submissionToDelete.delete().then(function() {
+			$scope.closeModal();
+			$scope.deleting=false;
+			StudentSubmissionRepo.remove($scope.submissionToDelete);
+			$scope.submissionToDelete={};
+			$scope.tableParams.reload();
+		});
 	};
 
 });
