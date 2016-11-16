@@ -3,7 +3,7 @@
 		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionState.name}}</button></li>
 		
 		<li>Assignee:</li>
-		<li>{{box.submission.asignee || "none"}} <span class="glyphicon glyphicon-pencil"></span></li>
+		<li> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.asignee || "none"}}</li>
 
 		<li>Last Action:</li>
 		<li></li>
@@ -16,7 +16,7 @@
 		<li></li>
 
 		<li>Submission Date:</li>
-		<li>{{box.submission.date || "none"}} <span class="glyphicon glyphicon-pencil"></span></li>
+		<li><span class="glyphicon glyphicon-pencil"></span> {{box.submission.date || "none"}}</li>
 
 	</ul>
 </div>

@@ -19,7 +19,7 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			angular.extend(apiMapping.Submission.remove, {'method': "delete/"+submission.id});
 			var promise = WsApi.fetch(apiMapping.Submission.remove);
 			promise.then(function(res) {
-				if(res.meta.type == "INVALID") {
+				if(res.meta && res.meta.type == "INVALID") {
 					submission.setValidationResults(res.payload.ValidationResults);
 				}
 			});
@@ -190,10 +190,6 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 			return promise;
 		};
-
-		submission.listen(function() {
-			console.log(submission);
-		});
 
 		return submission;
 	}

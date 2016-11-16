@@ -13,6 +13,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		var firstName = $scope.submission.submitter.firstName;
 		var lastName = $scope.submission.submitter.lastName;
 		var organization = $scope.submission.organization.name;
+		var submissionStates = SubmissionStateRepo.getAll();
 			
 		$scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
 		
@@ -46,6 +47,23 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 						break;
 					}
 				}
+			});
+		};
+
+		var resetUpdateStatus = function() {
+			$scope.closeModal();
+		};
+
+		var changeStatus = function(newStatus) {
+			$scope.submission.changeStatus(newStatus).then(function() {
+				resetUpdateStatus();
+			});
+		};
+
+		var deleteSubmission = function() {
+			$scope.submission.delete().then(function() {
+				console.log(SubmissionRepo.count());
+				$location.path("/admin/list");
 			});
 		};
 		
@@ -241,7 +259,11 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		        "title": "Submission Status",
 		        "viewUrl": "views/sideboxes/submissionStatus.html",
 		        "submission": $scope.submission,
-		        "SubmissionStateRepo": SubmissionStateRepo
+		        "SubmissionStateRepo": SubmissionStateRepo,
+		        "submissionStates": submissionStates,
+		        "changeStatus": changeStatus,
+		        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
+		        "deleteSubmission": deleteSubmission
 		    },
 		    {
 		        "title": "Custom Actions",

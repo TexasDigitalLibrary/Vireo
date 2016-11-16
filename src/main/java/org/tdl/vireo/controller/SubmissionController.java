@@ -144,13 +144,17 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {
     	Submission submission = submissionRepo.findOne(submissionId);
-        submission.setSubmissionState(submissionState);
+    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(submission!=null) {
+    		submission.setSubmissionState(submissionState);
+            submission = submissionRepo.save(submission);
+            simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
+    	} else {
+    		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+    	}
         
-        submission = submissionRepo.save(submission);
-        
-        simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
-        
-        return new ApiResponse(SUCCESS);
+        return response;
     }
     
     @Transactional
