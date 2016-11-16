@@ -193,8 +193,6 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 		submission.assign = function(assignee) {
 
-			console.log(assignee);
-
 			angular.extend(this.getMapping().assignTo, {
 				method: submission.id+"/assign-to",
 				data: assignee
