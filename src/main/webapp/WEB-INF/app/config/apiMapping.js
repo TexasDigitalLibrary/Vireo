@@ -133,6 +133,17 @@ var apiMapping = {
 			'controller': 'settings/custom-action'
 		}
 	},
+	CustomActionValue: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-action',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/custom-action'
+		}
+	},
 	Configuration: {
 		lazy: true,
 		all: {

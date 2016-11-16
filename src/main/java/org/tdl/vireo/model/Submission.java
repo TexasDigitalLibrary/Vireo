@@ -32,6 +32,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
+
     @ManyToOne(optional = false)
     private User submitter;
 
@@ -66,6 +67,9 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<Attachment> attachments;
     
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private List<CustomActionValue> customActionValues;
+    
     @Lob
     private String reviewerNotes;
 
@@ -76,7 +80,7 @@ public class Submission extends BaseEntity {
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setAttachments(new HashSet<Attachment>());
-
+        setCustomActionValues(new ArrayList<CustomActionValue>());
     }
 
     /**
@@ -362,6 +366,24 @@ public class Submission extends BaseEntity {
 	 */
 	public void setReviewerNotes(String reviewerNotes) {
 		this.reviewerNotes = reviewerNotes;
+	}
+
+	/**
+	 * @return the customActionValues
+	 */
+	public List<CustomActionValue> getCustomActionValues() {
+		return customActionValues;
+	}
+
+	/**
+	 * @param customActionValues the customActionValues to set
+	 */
+	public void setCustomActionValues(List<CustomActionValue> customActionValues) {
+		this.customActionValues = customActionValues;
+	}
+	
+	public void addCustomActionValue(CustomActionValue customActionValue){
+		this.customActionValues.add(customActionValue);
 	}
     
 }

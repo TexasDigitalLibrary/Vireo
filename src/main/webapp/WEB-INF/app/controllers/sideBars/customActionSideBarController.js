@@ -1,24 +1,26 @@
-vireo.controller("CustomActionSideBarController", function ($controller, $scope, $q) {
+vireo.controller("CustomActionSideBarController", function ($controller, $scope, $q, CustomActionValueRepo, CustomActionDefinitionRepo) {
 // vireo.controller("CustomActionSideBarController", function ($controller, $scope, $q, CustomActionValueCategoryRepo, CustomActionValueRepo) {
 	
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	// $scope.customActionValues = CustomActionValueRepo.getAll();
+  console.info($scope);
 
-	// $scope.customActionValueRepo = CustomActionValueRepo;
+	$scope.customActionValues = CustomActionValueRepo.getAll();
+	$scope.customActionDefinitions = CustomActionDefinitionRepo.getAll();
 
-	// var customActionValueCategories = CustomActionValueCategoryRepo.getAll();
+	$scope.ready = $q.all([
+	  CustomActionValueRepo.ready(),
+	  CustomActionValueRepo.ready()
+	]);
 
-	console.info('TESTTESTTEST');
-
-	// $scope.ready = $q.all([
-	// 	CustomActionValueRepo.ready(),
-	// 	CustomActionValueCategoryRepo.ready()
-	// ]);
+	$scope.ready.then(function() {
+	  console.info('ready!');
+	  console.info('values: ', $scope.customActionValues);
+	  console.info('defs: ', $scope.customActionDefinitions);
+	});
 
 	// $scope.forms = {};
 	
-	// $scope.ready.then(function() {
 
 		// $scope.customActionValueCategories = customActionValueCategories.filter(function (category) {
 		//     return category.name != 'System';

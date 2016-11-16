@@ -20,9 +20,6 @@ import edu.tamu.framework.model.BaseEntity;
 public class CustomActionValue extends BaseEntity {
     
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    private Submission submission;
-
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private CustomActionDefinition definition;
 
     @Column(nullable = false)
@@ -32,26 +29,10 @@ public class CustomActionValue extends BaseEntity {
         setModelValidator(new CustomActionValueValidator());
     }
 
-    public CustomActionValue(Submission submission, CustomActionDefinition definition, Boolean value) {
+    public CustomActionValue(CustomActionDefinition definition, Boolean value) {
         this();
-        setSubmission(submission);
         setDefinition(definition);
         setValue(value);
-    }
-
-    /**
-     * @return the submission
-     */
-    public Submission getSubmission() {
-        return submission;
-    }
-
-    /**
-     * @param submission
-     *            the submission to set
-     */
-    public void setSubmission(Submission submission) {
-        this.submission = submission;
     }
 
     /**

@@ -68,8 +68,10 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-
-        submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
+        
+        CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
+        CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
+        
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
 
@@ -81,6 +83,8 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
         assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
         assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
+        assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
+            
     }
 
     @Override

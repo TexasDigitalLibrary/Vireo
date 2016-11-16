@@ -320,6 +320,7 @@
 	    <script src="repo/submissionListColumnRepo.js"></script>
 	    <script src="repo/managerSubmissionListColumnRepo.js"></script>
 	    <script src="repo/managerFilterColumnRepo.js"></script>
+	    <script src="repo/customActionValueRepo.js"></script>
 
 	    <!-- Models --> 
 		<script src="model/abstractAppModel.js"></script>
@@ -348,7 +349,6 @@
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
 	    <script src="model/customActionValue.js"></script>
-	    <script src="repo/customActionValueRepo.js"></script>
 		
 
 	    <!-- Factories -->
