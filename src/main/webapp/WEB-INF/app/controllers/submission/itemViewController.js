@@ -1,10 +1,12 @@
-vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo) {
+vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-	var ready = $q.all([FieldPredicateRepo.ready(), SubmissionRepo.findSubmissionById($routeParams.id)]);
+	$scope.allUsers = UserRepo.getAll();
+
+	var ready = $q.all([FieldPredicateRepo.ready(), SubmissionRepo.findSubmissionById($routeParams.id), UserRepo.ready()]);
 
 	ready.then(function() {
 
@@ -20,7 +22,20 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		$scope.documentFieldValues = [];
 		
 		$scope.primaryDocumentFieldValue;
-		
+
+		var findFirstAssignable = function() {
+			var firstAssignable;
+			for(var i in $scope.allUsers) {
+				if($scope.allUsers[i].role === "ADMINISTRATOR" || $scope.allUsers[i].role === "MANAGER") {
+					firstAssignable = $scope.allUsers[i];
+					break;	
+				}	
+			}
+			return firstAssignable;
+		};
+
+		$scope.assignee = findFirstAssignable();
+
 		var getFileInfo = function(fieldValue) {
 			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
 				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
@@ -67,6 +82,11 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			});
 		};
 		
+		var changeAssignee = function(assignee) {
+			$scope.submission.assign(assignee).then(function() {
+				$scope.closeModal();
+			});
+		};
 		
 		$scope.showTab = function(workflowStep) {
 			var show = false;
@@ -263,7 +283,11 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		        "submissionStates": submissionStates,
 		        "changeStatus": changeStatus,
 		        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
-		        "deleteSubmission": deleteSubmission
+		        "deleteSubmission": deleteSubmission,
+		        "changeAssignee": changeAssignee,
+		        "allUsers": $scope.allUsers,
+		        "user": new User(),
+		        "assignee": $scope.assignee
 		    },
 		    {
 		        "title": "Custom Actions",

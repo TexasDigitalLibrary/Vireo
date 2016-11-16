@@ -158,6 +158,29 @@ public class SubmissionController {
     }
     
     @Transactional
+    @ApiMapping("/{submissionId}/assign-to")
+    @Auth(role = "STUDENT")
+    public ApiResponse assign(@ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
+    	Submission submission = submissionRepo.findOne(submissionId);
+    	
+    	if(assignee != null) {
+    		assignee = userRepo.findByEmail(assignee.getEmail());
+    	}
+    		
+    	    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(submission!=null) {
+    		submission.setAssignee(assignee);
+            submission = submissionRepo.save(submission);
+            simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
+    	} else {
+    		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+    	}
+        
+        return response;
+    }
+    
+    @Transactional
     @ApiMapping("/{submissionId}/remove-field-value")
     @Auth(role = "STUDENT")
     public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {

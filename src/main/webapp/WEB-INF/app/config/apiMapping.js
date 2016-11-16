@@ -518,6 +518,11 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'all'
 		},
+		assignTo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'assign'
+		},
 		changeStatus: {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
