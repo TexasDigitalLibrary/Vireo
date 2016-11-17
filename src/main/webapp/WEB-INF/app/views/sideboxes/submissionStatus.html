@@ -9,7 +9,16 @@
 		<li>none</li>
 
 		<li>Submission Date:</li>
-		<li>{{box.submission.submissionDate | date: 'M/d/yyyy'}}</li>
+		<li class="sidebar-btn"
+			ng-click="date=true"
+			ng-change="box.setSubmitDate(newSubmitDate)" 
+			uib-datepicker-popup="MM/dd/yyyy"
+			ng-model="newSubmitDate"
+			is-open="date"
+			close-text="Close"
+			stringtodate>
+			<span ng-if="!box.savingDate" class="glyphicon glyphicon-pencil"></span> <span ng-if="box.savingDate" class="glyphicon glyphicon-refresh spinning"></span> {{box.submission.submissionDate || "not submitted" | date: 'M/d/yyyy'}}
+		</li>
 
 	</ul>
 </div>

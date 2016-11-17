@@ -296,6 +296,12 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				$scope.submissionStatusBox.newStatus = submissionStates[0];
 				$scope.submissionStatusBox.assignee = firstAssignable();
 				$scope.closeModal();
+			},
+			"setSubmitDate": function(newDate) {
+				$scope.submissionStatusBox.savingDate = true;
+				$scope.submission.setSubmissionDate(newDate).then(function() {
+					$scope.submissionStatusBox.savingDate = false;
+				});
 			}
 	    };
 

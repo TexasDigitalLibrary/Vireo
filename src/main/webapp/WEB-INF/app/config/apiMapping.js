@@ -528,6 +528,11 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'change-status'
 		},
+		submitDate: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'submit-date'
+		},
 		one: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
