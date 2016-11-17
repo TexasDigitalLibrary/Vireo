@@ -1,7 +1,7 @@
-<div class="custom-actions" ng-controller="CustomActionSideBarController">
-  <div ng-repeat="cav in customActionValues">
+<div class="custom-actions">
+  <div ng-repeat="cav in box.submission.customActionValues">
 	<label>
-	  <input type="checkbox" value="">{{cav.label}}
+	  <input type="checkbox" value="">{{cav.definition.label}}
 	</label>
   </div>
 </div>
