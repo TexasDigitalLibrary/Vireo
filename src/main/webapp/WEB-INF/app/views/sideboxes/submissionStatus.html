@@ -6,7 +6,10 @@
 		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
 
 		<li>Last Action:</li>
-		<li></li>
+		<li>none</li>
+
+		<li>Submission Date:</li>
+		<li>{{box.submission.submissionDate | date: 'M/d/yyyy'}}</li>
 
 	</ul>
 </div>
