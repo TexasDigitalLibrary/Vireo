@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -118,6 +119,13 @@ public class SubmissionController {
         }
 
         return new ApiResponse(SUCCESS, fieldValue);
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/update-custom-action-value")
+    @Auth(role = "MANAGER")
+    public ApiResponse updateCustomActionValue(@ApiVariable("submissionId") Long submissionId, @ApiModel CustomActionValue customActionValue) {
+        return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId).editCustomActionValue(customActionValue));
     }
     
     @Transactional
@@ -240,7 +248,5 @@ public class SubmissionController {
     	fileIOUtility.delete(oldUri);
     	return new ApiResponse(SUCCESS, newUri);
     }
-
-    
 
 }

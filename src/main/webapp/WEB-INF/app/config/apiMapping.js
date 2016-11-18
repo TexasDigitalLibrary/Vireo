@@ -593,6 +593,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'needs-correction'
+		},
+		updateCustomActionValue: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'update-custom-action-value'
 		}
 	},
 	StudentSubmission: {

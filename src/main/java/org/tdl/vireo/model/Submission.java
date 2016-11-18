@@ -385,5 +385,22 @@ public class Submission extends BaseEntity {
 	public void addCustomActionValue(CustomActionValue customActionValue){
 		this.customActionValues.add(customActionValue);
 	}
+	
+	/**
+	 * 
+	 * @param customActionValue
+	 * @return
+	 */
+	public CustomActionValue editCustomActionValue(CustomActionValue customActionValue) {
+		for (CustomActionValue cav : this.customActionValues) {
+			if (cav.getId().equals(customActionValue.getId())) {
+				cav.setDefinition(customActionValue.getDefinition());
+				cav.setValue(customActionValue.getValue());
+				return cav;
+			}
+		}
+		this.customActionValues.add(customActionValue);
+		return customActionValue;
+	}
     
 }

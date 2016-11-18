@@ -246,7 +246,10 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		    {
 		        "title": "Custom Actions",
 		        "viewUrl": "views/sideboxes/customActions.html",
-				"submission": $scope.submission
+				"submission": $scope.submission,
+				"updateCustomActionValue": function(cav) {
+					$scope.submission.updateCustomActionValue(cav);
+				}
 		    }
 		]);
 

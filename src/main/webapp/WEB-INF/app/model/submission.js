@@ -166,6 +166,15 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 
+		submission.updateCustomActionValue = function(customActionValue) {
+		  console.info('attempting update with ', customActionValue, 'subid', submission.id);
+			angular.extend(submission.getMapping().updateCustomActionValue, {
+				method: submission.id+"/update-custom-action-value",
+				data: customActionValue
+			});
+			return WsApi.fetch(submission.getMapping().updateCustomActionValue);
+		};
+
 		return submission;
 	}
 
