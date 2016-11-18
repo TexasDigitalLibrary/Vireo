@@ -6,6 +6,9 @@
 		"name": "INPUT_EMAIL" 
 	},
 	{
+		"name": "INPUT_CONTACT" 
+	},
+	{
 		"name": "INPUT_PASSWORD" 
 	},
 	{
