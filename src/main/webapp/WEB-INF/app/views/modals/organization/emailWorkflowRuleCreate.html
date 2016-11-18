@@ -1,0 +1,48 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Email Workflow Rule</h3>
+</div>
+
+<form ng-submit="addEmailWorkflowRule()" name="forms.add" novalidate>
+
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Email Template</label>
+					 <select 
+	                	class="form-control" 
+	                	name="newTemplate"
+	                	ng-model="newTemplate" 
+	                	ng-options="t.name for t in emailTemplates">
+	                </select>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Recipient</label>
+					<select 
+	                	class="form-control" 
+	                	name="newRecipient"
+	                	ng-model="newTemplate" 
+	                	ng-options="t.name for t in recipients">
+	                </select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-default" 
+			ng-click="resetEmailWorkflowRule()">Cancel</button>
+		<button 
+			id="email-workflow-rule-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.add.$invalid">Add</button>
+	</div>
+</form>

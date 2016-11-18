@@ -64,7 +64,7 @@ public class Organization extends BaseEntity {
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
-    private Set<String> emails;
+    private List<String> emails;
 
     @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
@@ -75,7 +75,7 @@ public class Organization extends BaseEntity {
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
         setParentOrganizations(new TreeSet<Organization>());
         setChildrenOrganizations(new TreeSet<Organization>());
-        setEmails(new TreeSet<String>());
+        setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
     }
 
@@ -348,7 +348,7 @@ public class Organization extends BaseEntity {
     /**
      * @return the emails
      */
-    public Set<String> getEmails() {
+    public List<String> getEmails() {
         return emails;
     }
 
@@ -356,7 +356,7 @@ public class Organization extends BaseEntity {
      * @param emails
      *            the emails to set
      */
-    public void setEmails(Set<String> emails) {
+    public void setEmails(List<String> emails) {
         this.emails = emails;
     }
 

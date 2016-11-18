@@ -357,6 +357,7 @@
 	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
+	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>

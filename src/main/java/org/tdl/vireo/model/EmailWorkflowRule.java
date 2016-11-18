@@ -7,11 +7,10 @@ import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
-import org.tdl.vireo.enums.RecipientType;
 import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,11 +28,8 @@ public class EmailWorkflowRule extends BaseEntity {
 	@JsonProperty("isDisabled")
 	private Boolean isDisabled;
 	
-	//TODO - Several combinations here actually, of whether the organization, 
-	//       student, assignee, and/or advisor should or should not be recipients.
-    @Column(nullable = true)
-    @Enumerated
-    private RecipientType recipientType;
+	@OneToOne(targetEntity=AbstractEmailRecipient.class)
+    private EmailRecipient emailRecipient;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
 	private SubmissionState submissionState;
@@ -48,15 +44,15 @@ public class EmailWorkflowRule extends BaseEntity {
 		isDisabled(true);
 	}
 	
-	public EmailWorkflowRule(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate) {
+	public EmailWorkflowRule(SubmissionState submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
 		this();
 		setSubmissionState(submissionState);
-		setRecipientType(recipientType);
+		setEmailRecipient(emailRecipient);
 		setEmailTemplate(emailTemplate);
 	}
 	
-	public EmailWorkflowRule(SubmissionState submissionState, RecipientType recipientType, EmailTemplate emailTemplate, Boolean isSystem) {
-        this(submissionState, recipientType, emailTemplate);
+	public EmailWorkflowRule(SubmissionState submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
+        this(submissionState, emailRecipient, emailTemplate);
         isSystem(isSystem);
     }
 
@@ -103,17 +99,17 @@ public class EmailWorkflowRule extends BaseEntity {
 	}
 
 	/**
-	 * @return the recipientType
+	 * @return the emailRecipient
 	 */
-	public RecipientType getRecipientType() {
-		return recipientType;
+	public EmailRecipient getEmailRecipient() {
+		return emailRecipient;
 	}
 
 	/**
-	 * @param recipientType the recipientType to set
+	 * @param emailRecipient the emailRecipient to set
 	 */
-	public void setRecipientType(RecipientType recipientType) {
-		this.recipientType = recipientType;
+	public void setEmailRecipient(EmailRecipient emailRecipient) {
+		this.emailRecipient = emailRecipient;
 	}
 
 	/**
@@ -130,51 +126,5 @@ public class EmailWorkflowRule extends BaseEntity {
 		this.emailTemplate = emailTemplate;
 	}
 
-	/**
-	 * Create a new WorkflowEmailRule model.
-	 *
-	 * @param AssociatedState
-	 *            Workflow Email Rules's Associated State.
-	 * @param condition
-	 *            Workflow Email Rule's condition
-	 * @param recipients
-	 *            Workflow Email Rule's email addresses
-	 * @param emailTemplate
-	 *            Workflow Email Rule's email template
-	 */
-	/*
-	protected JpaEmailWorkflowRuleImpl(State associatedState) {
-
-		assertManager();
-
-		if (associatedState == null) {
-			throw new IllegalArgumentException("associatedState is required");
-		}
-
-		this.associatedState = associatedState.getBeanName();
-	}
-
-	//TODO - gets list of emails
-	@Override
-	public List<String> getRecipients(Submission submission) {
-		return EmailByRecipientType.getRecipients(submission, recipientType, this);
-	}
-
-	@Override
-	public State getAssociatedState() {
-		StateManager stateManager = Spring.getBeanOfType(StateManager.class);
-		return stateManager.getState(this.associatedState);
-	}
-
-	@Override
-	public void setAssociatedState(State state) {
-
-		if (state == null)
-			throw new IllegalArgumentException("State is required");
-		assertManager();
-
-		this.associatedState = state.getBeanName();
-	}
-	*/
 	
 }
