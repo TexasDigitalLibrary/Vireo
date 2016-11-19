@@ -1,56 +1,51 @@
-vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStateRepo, EmailTemplateRepo) {
+vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStateRepo, EmailTemplateRepo, OrganizationRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.submissionStates = SubmissionStateRepo.getAll();
 	$scope.emailTemplates = EmailTemplateRepo.getAll();
+	$scope.organizations = OrganizationRepo.getAll();
 
-	EmailTemplateRepo.ready().then(function() {
-		$scope.newTemplate = $scope.emailTemplates[0];
-	});
 
-	$scope.openAddEmailWorkflowRuleModal = function(id) {
-		$scope.recipientTypes = [		
-			{type:"Submitter", data: "Submitter"},
-			{type:"Assignee", data: "Assignee"},
-			{type:"Organization", data: "Organization"}
-		];
+	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
 
-		console.log($scope.getSelectedOrganization());
+		$scope.openAddEmailWorkflowRuleModal = function(id) {
+			$scope.recipientTypes = [		
+				{type:"Submitter", data: "Submitter"},
+				{type:"Assignee", data: "Assignee"},
+				{type:"Organization", data: "Organization"}
+			];
 
-		angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
-			angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
-				if(aggregateFieldProfile.inputType.name === "INPUT_CONTACT") {
-					$scope.recipientTypes.push({
-						type: aggregateFieldProfile.fieldGlosses[0].value,
-						data: aggregateFieldProfile.fieldPredicate.id
-					});
-				}
+			angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
+				angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
+					if(aggregateFieldProfile.inputType.name === "INPUT_CONTACT") {
+						$scope.recipientTypes.push({
+							type: aggregateFieldProfile.fieldGlosses[0].value,
+							data: aggregateFieldProfile.fieldPredicate.id
+						});
+					}
+				});
 			});
-		});
 
-		$scope.newRecipientType = $scope.recipientTypes[0].data;
+			$scope.newRecipientType = $scope.recipientTypes[0].data;
 
-		$scope.openModal(id);
+			console.log($scope.organizations);
 
-	};
+			$scope.openModal(id);
 
-	$scope.resetEmailWorkflowRule = function() {
-		$scope.newRecipient = $scope.recipients[0];
-		$scope.closeModal();
-	};
+		};
 
-	$scope.setNewRecipient = function(newRecipientType) {
-		$scope.newRecipientType = newRecipientType;
-		console.log($scope.newRecipientType);
-	};
+		$scope.resetEmailWorkflowRule = function() {
+			$scope.newRecipientType = $scope.recipientTypes[0].data;
+			$scope.closeModal();
+		};
 
-	$scope.recipients = [];
+		$scope.setNewRecipient = function(newRecipientType) {
+			$scope.newRecipientType = newRecipientType;
+			console.log($scope.newRecipientType);
+		};
 
-
-	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready()]).then(function() {
-		
-		$scope.resetEmailWorkflowRule();
+		$scope.newTemplate = $scope.emailTemplates[0];
 
 	});
 

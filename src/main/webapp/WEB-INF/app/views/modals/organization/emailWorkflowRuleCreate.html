@@ -7,7 +7,7 @@
 
 <form ng-submit="addEmailWorkflowRule()" name="forms.add" novalidate>
 
-	<div class="modal-body">
+	<div class="addRecipientModal modal-body">
 		<div class="row">
 			<div class="col-xs-6">
 				<div class="form-group">
@@ -35,7 +35,13 @@
 		</div>
 		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipientType=='Organization', 'field-profile-closed': newRecipientType!='Organization'}">
 			<div class="col-xs-12">
-				<input class="form-control" placeholder="Select Organization" />
+				<input 	class="form-control" 
+						placeholder="Select Organization" 
+						ng-model="test"
+						typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
+						uib-typeahead="o.id as o.name for o in organizations"
+				/>
+				<div class="typeahead-dropdown-container"></div>
 			</div>
 		</div>
 	</div>
