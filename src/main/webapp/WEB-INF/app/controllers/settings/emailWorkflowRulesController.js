@@ -11,9 +11,9 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 
 	$scope.openAddEmailWorkflowRuleModal = function(id) {
 		$scope.recipientTypes = [		
-			"Submitter",
-			"Assignee",
-			"Organization"
+			{type:"Submitter", data: "Submitter"},
+			{type:"Assignee", data: "Assignee"},
+			{type:"Organization", data: "Organization"}
 		];
 
 		console.log($scope.getSelectedOrganization());
@@ -21,25 +21,28 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
 			angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
 				if(aggregateFieldProfile.inputType.name === "INPUT_CONTACT") {
-					console.log(aggregateFieldProfile);
-					$scope.recipientTypes.push(aggregateFieldProfile.fieldGlosses[0].value);
+					$scope.recipientTypes.push({
+						type: aggregateFieldProfile.fieldGlosses[0].value,
+						data: aggregateFieldProfile.fieldPredicate.id
+					});
 				}
 			});
 		});
 
-		$scope.newRecipientType = $scope.recipientTypes[0];
+		$scope.newRecipientType = $scope.recipientTypes[0].data;
 
 		$scope.openModal(id);
 
-	}
-
-	$scope.addEmailWorkflowRule = function() {
-		console.log("Add rule");
 	};
 
 	$scope.resetEmailWorkflowRule = function() {
 		$scope.newRecipient = $scope.recipients[0];
 		$scope.closeModal();
+	};
+
+	$scope.setNewRecipient = function(newRecipientType) {
+		$scope.newRecipientType = newRecipientType;
+		console.log($scope.newRecipientType);
 	};
 
 	$scope.recipients = [];

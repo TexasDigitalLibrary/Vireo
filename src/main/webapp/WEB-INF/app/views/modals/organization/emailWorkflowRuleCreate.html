@@ -26,10 +26,16 @@
 					<select 
 	                	class="form-control" 
 	                	name="newRecipient"
-	                	ng-model="newRecipientType" 
-	                	ng-options="r for r in recipientTypes">
+	                	ng-model="newRecipientType"
+	                	ng-change="setNewRecipient(newRecipientType)" 
+	                	ng-options="r.data as r.type for r in recipientTypes">
 	                </select>
 				</div>
+			</div>
+		</div>
+		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipientType=='Organization', 'field-profile-closed': newRecipientType!='Organization'}">
+			<div class="col-xs-12">
+				<input class="form-control" placeholder="Select Organization" />
 			</div>
 		</div>
 	</div>
@@ -44,5 +50,5 @@
 			type="submit" 
 			class="btn btn-primary" 
 			ng-disabled="forms.add.$invalid">Add</button>
-	</div>
+	</div>	
 </form>
