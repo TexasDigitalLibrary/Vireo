@@ -5,7 +5,7 @@
 	<h3 class="modal-title">Add Email Workflow Rule</h3>
 </div>
 
-<form ng-submit="addEmailWorkflowRule()" name="forms.add" novalidate>
+<form ng-submit="addEmailWorkflowRule(newTemplate,newRecipient)" name="forms.add" novalidate>
 
 	<div class="addRecipientModal modal-body">
 		<div class="row">
@@ -26,20 +26,20 @@
 					<select 
 	                	class="form-control" 
 	                	name="newRecipient"
-	                	ng-model="newRecipientType"
-	                	ng-change="setNewRecipient(newRecipientType)" 
-	                	ng-options="r.data as r.type for r in recipientTypes">
+	                	ng-model="newRecipient"
+	                	ng-change="setNewRecipient(newRecipient)" 
+	                	ng-options="r as r.type for r in recipients">
 	                </select>
 				</div>
 			</div>
 		</div>
-		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipientType=='Organization', 'field-profile-closed': newRecipientType!='Organization'}">
+		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipient.type=='Organization', 'field-profile-closed': newRecipient.type!='Organization'}">
 			<div class="col-xs-12">
 				<input 	class="form-control" 
 						placeholder="Select Organization" 
-						ng-model="test"
+						ng-model="newRecipient.data"
 						typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
-						uib-typeahead="o.id as o.name for o in organizations"
+						uib-typeahead="o as o.name for o in organizations | filter:{name:$viewValue} | limitTo:8"
 				/>
 				<div class="typeahead-dropdown-container"></div>
 			</div>
@@ -50,11 +50,15 @@
 		<button 
 			type="button" 
 			class="btn btn-default" 
-			ng-click="resetEmailWorkflowRule()">Cancel</button>
+			ng-click="resetEmailWorkflowRule()">
+			Cancel
+		</button>
 		<button 
 			id="email-workflow-rule-save" 
 			type="submit" 
 			class="btn btn-primary" 
-			ng-disabled="forms.add.$invalid">Add</button>
+			ng-disabled="forms.add.$invalid || (newRecipient.type=='Organization' && !newRecipient.data.id)">
+			Add
+		</button>
 	</div>	
 </form>

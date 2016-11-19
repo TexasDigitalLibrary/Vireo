@@ -10,16 +10,16 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
 
 		$scope.openAddEmailWorkflowRuleModal = function(id) {
-			$scope.recipientTypes = [		
+			$scope.recipients = [		
 				{type:"Submitter", data: "Submitter"},
 				{type:"Assignee", data: "Assignee"},
-				{type:"Organization", data: "Organization"}
+				{type:"Organization", data: null}
 			];
 
 			angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
 				angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
 					if(aggregateFieldProfile.inputType.name === "INPUT_CONTACT") {
-						$scope.recipientTypes.push({
+						$scope.recipients.push({
 							type: aggregateFieldProfile.fieldGlosses[0].value,
 							data: aggregateFieldProfile.fieldPredicate.id
 						});
@@ -27,25 +27,33 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 				});
 			});
 
-			$scope.newRecipientType = $scope.recipientTypes[0].data;
-
-			console.log($scope.organizations);
+			$scope.newTemplate = $scope.emailTemplates[0];
+			$scope.newRecipient = $scope.recipients[0];
 
 			$scope.openModal(id);
 
 		};
 
 		$scope.resetEmailWorkflowRule = function() {
-			$scope.newRecipientType = $scope.recipientTypes[0].data;
+			$scope.newTemplate = $scope.emailTemplates[0];
+			$scope.newRecipient = $scope.recipients[0].data;
 			$scope.closeModal();
 		};
 
-		$scope.setNewRecipient = function(newRecipientType) {
-			$scope.newRecipientType = newRecipientType;
-			console.log($scope.newRecipientType);
+		$scope.setNewRecipient = function(newRecipient) {			
+			console.log($scope.newRecipient);
 		};
 
-		$scope.newTemplate = $scope.emailTemplates[0];
+		$scope.addEmailWorkflowRule = function(newTemplate, newRecipient) {
+
+			var organizationId = $scope.getSelectedOrganization().id;
+			var templateId = newTemplate.id;
+			var recipient = angular.copy(newRecipient);
+
+			if(recipient.type=="Organization") recipient.data = recipient.data.id;
+
+			console.log($scope.getSelectedOrganization(), newTemplate, recipient);
+		};
 
 	});
 
