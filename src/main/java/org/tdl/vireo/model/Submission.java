@@ -152,9 +152,10 @@ public class Submission extends BaseEntity {
     	}
     	
         this.submissionState = submissionState;
+        
     }
 
-    /**
+	/**
      * @return the organization
      */
     public Organization getOrganization() {
