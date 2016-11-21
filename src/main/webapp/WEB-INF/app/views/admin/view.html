@@ -4,16 +4,17 @@
 
 	<div class="row">
 		<h1>
-			<span ng-if="!submission">Loading Submission...</span>
+			<span ng-if="!submission"><span class="glyphicon glyphicon-refresh spinning"></span> Loading Submission...</span>
 			<span ng-if="submission">{{title}}</span>
 		</h1>
-		<hr>	
-	 	<tabs>
+		<hr>
+	 	<tabs ng-show="loaded">
 			<tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
 		</tabs>
+
 	</div>
 	
-	<div class="row">	
+	<div class="row" ng-show="loaded">	
 		<h1>REVIEWER NOTES</h1>
 		<div class="form-inline reviewer-notes">
 			<span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
@@ -27,11 +28,11 @@
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row" ng-show="loaded">
 		<h1>ACTION LOG</h1>
 	</div>
 	
-	<div class="row">
+	<div class="row" ng-show="loaded">
 		<a name="all-files"></a> 
 		<h1>ALL FILES</h1>
 		<table class="table table-bordered table-striped table-hover etd-table">

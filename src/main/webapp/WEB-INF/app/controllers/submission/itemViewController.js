@@ -1,26 +1,38 @@
-vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService) {
+vireo.controller("ItemViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 	
 	$scope.fieldPredicates = FieldPredicateRepo.getAll();
-	
-	var ready = $q.all([ItemViewService.selectSubmissionById($routeParams.id), FieldPredicateRepo.ready()])
 
-	ready.then(function(results) {
+	$scope.allUsers = UserRepo.getAll();
 
-		$scope.submission = results[0];
+	var ready = $q.all([FieldPredicateRepo.ready(), SubmissionRepo.findSubmissionById($routeParams.id), UserRepo.ready(), SubmissionStateRepo.ready()]);
+
+	ready.then(function() {
+
+		$scope.loaded = true;
+
+		$scope.submission = ItemViewService.selectSubmission($routeParams.id);
+
+		SubmissionStateRepo.ready().then(function() {
+			$scope.submissionStatusBox.newStatus = submissionStates[0];
+		});
+
+		UserRepo.ready().then(function() {
+			$scope.submissionStatusBox.assignee = firstAssignable();
+		});
 
 		var firstName = $scope.submission.submitter.firstName;
 		var lastName = $scope.submission.submitter.lastName;
 		var organization = $scope.submission.organization.name;
+		var submissionStates = SubmissionStateRepo.getAll();
 			
 		$scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
-		
 		
 		$scope.documentFieldValues = [];
 		
 		$scope.primaryDocumentFieldValue;
-		
+
 		var getFileInfo = function(fieldValue) {
 			$scope.submission.fileInfo(fieldValue.value).then(function(data) {
 				fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
@@ -49,8 +61,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 				}
 			});
 		};
-		
-		
+
 		$scope.showTab = function(workflowStep) {
 			var show = false;
 			for(var i in workflowStep.aggregateFieldProfiles) {
@@ -216,40 +227,95 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			}
 			return disable;
 		};
-		
+
+		var firstAssignable =  function() {
+			var firstAssignable;
+			for(var i in $scope.allUsers) {
+				if($scope.allUsers[i].role === "ADMINISTRATOR" || $scope.allUsers[i].role === "MANAGER") {
+					firstAssignable = $scope.allUsers[i];
+					break;	
+				}	
+			}
+			return firstAssignable;
+		};
+
+		$scope.activeDocumentBox = {
+	        "title": "Active Document",
+	        "viewUrl": "views/sideboxes/activeDocument.html",
+	        "getPrimaryDocumentFileName": function() {
+	        	return $scope.primaryDocumentFieldValue !== undefined ? $scope.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.primaryDocumentFieldValue.fileInfo.name : '' : '';
+	        },
+	        "downloadPrimaryDocument": function() {
+	        	$scope.getFile($scope.primaryDocumentFieldValue);
+	        },
+	        "uploadNewFile": function() {
+	        	$scope.openModal('#addFileModal');
+	        },
+	        "gotoAllFiles": function() {
+	        	$location.hash('all-files');
+	        	$anchorScroll();
+	        },
+	        "hasPrimaryDocument": function() {
+	        	return $scope.hasPrimaryDocument();
+	        }
+	    };
+
+		$scope.submissionStatusBox = {
+	        "title": "Submission Status",
+	        "viewUrl": "views/sideboxes/submissionStatus.html",
+	        "submission": $scope.submission,
+	        "SubmissionStateRepo": SubmissionStateRepo,
+	        "submissionStates": submissionStates,
+	        "allUsers": $scope.allUsers,
+	        "user": new User(),
+	        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
+	        "changeStatus": function(newStatus) {
+				$scope.submission.changeStatus(newStatus).then(function() {
+					$scope.submissionStatusBox.resetStatus();
+				});
+			},
+	        "deleteSubmission": function() {
+				$scope.submission.delete().then(function() {
+					$scope.submissionStatusBox.deleteWorking=false;
+					$location.path("/admin/list");
+				});
+			},
+	        "changeAssignee": function(assignee) {
+				$scope.submission.assign(assignee).then(function() {
+					$scope.submissionStatusBox.resetStatus();
+				});
+			},
+			"assignee": firstAssignable(),
+			"resetStatus": function() {
+				$scope.submissionStatusBox.advanced=false;
+				$scope.submissionStatusBox.cancelWorking=false;
+				$scope.submissionStatusBox.saveWorking=false;
+				$scope.submissionStatusBox.assignWorking=false;
+				$scope.submissionStatusBox.assignSaveWorking=false;
+				$scope.submissionStatusBox.unassignWorking=false;
+				$scope.submissionStatusBox.newStatus = submissionStates[0];
+				$scope.submissionStatusBox.assignee = firstAssignable();
+				$scope.closeModal();
+			},
+			"setSubmitDate": function(newDate) {
+				$scope.submissionStatusBox.savingDate = true;
+				$scope.submission.setSubmissionDate(newDate).then(function() {
+					$scope.submissionStatusBox.savingDate = false;
+				});
+			}
+	    };
+
+	    $scope.customActionsBox = {
+	        "title": "Custom Actions",
+	        "viewUrl": "views/sideboxes/customActions.html"
+	    };
 		
 		SidebarService.addBoxes([
-		    {
-		        "title": "Active Document",
-		        "viewUrl": "views/sideboxes/activeDocument.html",
-		        "getPrimaryDocumentFileName": function() {
-		        	return $scope.primaryDocumentFieldValue !== undefined ? $scope.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.primaryDocumentFieldValue.fileInfo.name : '' : '';
-		        },
-		        "downloadPrimaryDocument": function() {
-		        	$scope.getFile($scope.primaryDocumentFieldValue);
-		        },
-		        "uploadNewFile": function() {
-		        	$scope.openModal('#addFileModal');
-		        },
-		        "gotoAllFiles": function() {
-		        	$location.hash('all-files');
-		        	$anchorScroll();
-		        },
-		        "hasPrimaryDocument": function() {
-		        	return $scope.hasPrimaryDocument();
-		        }
-		    },
-		    {
-		        "title": "Submission Status",
-		        "viewUrl": "views/sideboxes/submissionStatus.html"
-		    },
-		    {
-		        "title": "Custom Actions",
-		        "viewUrl": "views/sideboxes/customActions.html"
-		    }
+		    $scope.activeDocumentBox,
+		    $scope.submissionStatusBox,
+		    $scope.customActionsBox
 		]);
 
-		
 	});
 
 });

@@ -538,9 +538,29 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'all'
 		},
+		assignTo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'assign'
+		},
+		changeStatus: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'change-status'
+		},
+		submitDate: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'submit-date'
+		},
 		one: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'delete'
 		},
 		listen: {
 			'endpoint': '/channel',
@@ -644,8 +664,8 @@ var apiMapping = {
 	SubmissionState: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'submission',
-			'method': 'all-submission-state'
+			'controller': 'submission-state',
+			'method': 'all'
 		},
 		listen: {
 			'endpoint': '/channel',
