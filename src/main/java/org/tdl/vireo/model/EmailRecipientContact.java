@@ -25,7 +25,7 @@ public class EmailRecipientContact extends AbstractEmailRecipient implements Ema
 		List<String> emails = new ArrayList<String>();
 		
 		for(FieldValue fv : submission.getFieldValueByPredicate(getFieldPredicate())) {
-			emails.add(fv.getValue());
+			emails.add(fv.getIdentifier());
 		};
 		
 		return emails;

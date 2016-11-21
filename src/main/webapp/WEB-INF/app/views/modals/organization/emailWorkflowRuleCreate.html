@@ -27,8 +27,7 @@
 	                	class="form-control" 
 	                	name="newRecipient"
 	                	ng-model="newRecipient"
-	                	ng-change="setNewRecipient(newRecipient)" 
-	                	ng-options="r as r.label for r in recipients">
+	                	ng-options="r as r.name for r in recipients">
 	                </select>
 				</div>
 			</div>

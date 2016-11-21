@@ -17,17 +17,18 @@
 		</thead>
 		<tbody>
 			<tr ng-if="rule.submissionState.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules" class="email-workflow-rule-row"">
-				<td ng-click="editEmailWorkflowRule(rule)">
+				<td ng-click="openEditEmailWorkflowRule(rule)">
 					<span class="glyphicon glyphicon-pencil"></span>
 				</td>
-				<td ng-click="editEmailWorkflowRule(rule)">
-					{{state.name}}<!--{{rule.emailTemplate.name}}-->
+				<td ng-click="openEditEmailWorkflowRule(rule)">
+					{{rule.emailTemplate.name}}
 				</td>
-				<td ng-click="editEmailWorkflowRule(rule)">
+				<td ng-click="openEditEmailWorkflowRule(rule)">
 					{{rule.emailRecipient.name}}
 				</td>
-				<td ng-click="confirmEmailWorkflowRuleDelete(rule)">
-					<span class="glyphicon glyphicon-trash"></span>
+				<td ng-click="confirmEmailWorkflowRuleDelete(rule);">
+					<span ng-if="rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-refresh spinning"></span>
+					<span ng-if="!rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-trash"></span>
 				</td>
 				<td ng-click="changeEmailWorkflowRuleActivationWorking=true;changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
 					<span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>

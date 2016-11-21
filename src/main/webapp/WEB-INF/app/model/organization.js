@@ -69,6 +69,21 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 
 		};
 
+		this.editEmailWorkflowRule = function(rule) {
+			var organization = this;
+			angular.extend(apiMapping.Organization.editEmailWorkflowRule, {
+				'method': organization.id+"/edit-email-workflow-rule/"+rule.id,
+				'data': {
+					templateId: rule.emailTemplate.id,
+					recipient: rule.emailRecipient
+				}
+			});
+
+			var promise = WsApi.fetch(apiMapping.Organization.editEmailWorkflowRule);
+			
+			return promise;	
+		};
+
 		this.changeEmailWorkflowRuleActivation = function(rule) {
 			var organization = this;
 			angular.extend(apiMapping.Organization.changeEmailWorkflowRuleActivation, {

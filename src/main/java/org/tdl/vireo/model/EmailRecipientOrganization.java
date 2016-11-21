@@ -20,7 +20,6 @@ public class EmailRecipientOrganization extends AbstractEmailRecipient implement
 	public EmailRecipientOrganization() {}
 	
 	public EmailRecipientOrganization(Organization organization) {
-		System.out.println(organization);
 		setName(organization.getName());
 		this.organization = organization;
 	}

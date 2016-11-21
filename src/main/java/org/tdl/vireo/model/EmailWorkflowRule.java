@@ -28,7 +28,7 @@ public class EmailWorkflowRule extends BaseEntity {
 	@JsonProperty("isDisabled")
 	private Boolean isDisabled;
 	
-	@OneToOne(targetEntity=AbstractEmailRecipient.class)
+	@OneToOne(targetEntity=AbstractEmailRecipient.class, orphanRemoval=true)
     private EmailRecipient emailRecipient;
 
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)

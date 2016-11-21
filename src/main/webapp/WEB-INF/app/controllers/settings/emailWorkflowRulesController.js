@@ -9,37 +9,42 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 	$scope.organizations = OrganizationRepo.getAll();
 	$scope.stateRules = {};
 
+
+	$scope.buildRecipients = function() {
+		$scope.recipients = [		
+			{
+				name: "Submitter",
+				type: EmailRecipientType.SUBMITTER, 
+				data: "Submitter"
+			},
+			{
+				name: "Assignee",
+				type: EmailRecipientType.ASSIGNEE, 
+				data: "Assignee"
+			},
+			{
+				name: "Oranization",
+				type: EmailRecipientType.ORGANIZATION, 
+				data: null
+			}
+		];
+
+		angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
+			angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
+				if(aggregateFieldProfile.inputType.name === InputType.INPUT_CONTACT) {
+					$scope.recipients.push({
+						name: aggregateFieldProfile.fieldGlosses[0].value,
+						type: EmailRecipientType.CONTACT,
+						data: aggregateFieldProfile.fieldPredicate.id
+					});
+				}
+			});
+		});
+	}
+
 	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
 		$scope.openAddEmailWorkflowRuleModal = function(id) {
-			$scope.recipients = [		
-				{
-					label: "Submitter",
-					type: EmailRecipientType.SUBMITTER, 
-					data: "Submitter"
-				},
-				{
-					label: "Assignee",
-					type: EmailRecipientType.ASSIGNEE, 
-					data: "Assignee"
-				},
-				{
-					label: "Oranization",
-					type: EmailRecipientType.ORGANIZATION, 
-					data: null
-				}
-			];
-
-			angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
-				angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
-					if(aggregateFieldProfile.inputType.name === InputType.INPUT_CONTACT) {
-						$scope.recipients.push({
-							label: aggregateFieldProfile.fieldGlosses[0].value,
-							type: EmailRecipientType.CONTACT,
-							data: aggregateFieldProfile.fieldPredicate.id
-						});
-					}
-				});
-			});
+			$scope.buildRecipients();
 
 			$scope.newTemplate = $scope.emailTemplates[0];
 			$scope.newRecipient = $scope.recipients[0];
@@ -52,10 +57,6 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 			$scope.newTemplate = $scope.emailTemplates[0];
 			$scope.newRecipient = $scope.recipients[0].data;
 			$scope.closeModal();
-		};
-
-		$scope.setNewRecipient = function(newRecipient) {			
-			console.log($scope.newRecipient);
 		};
 
 		$scope.addEmailWorkflowRule = function(newTemplate, newRecipient, submissionState) {
@@ -72,9 +73,39 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 
 		};
 
-		$scope.editEmailWorkflowRule = function(rule) {
-			$scope.emailWorkflowRuleToEdit = rule;
+		$scope.openEditEmailWorkflowRule = function(rule) {
+			$scope.buildRecipients();
+			$scope.emailWorkflowRuleToEdit = angular.copy(rule);
+			for(var i in $scope.recipients) {
+				var recipient = $scope.recipients[i];
+				if(recipient.name == $scope.emailWorkflowRuleToEdit.emailRecipient.name) {
+					$scope.emailWorkflowRuleToEdit.emailRecipient = recipient;
+					break;
+				}
+			}
+
+			for(var j in $scope.emailTemplates) {
+				var template = $scope.emailTemplates[j];
+				if(template.id == $scope.emailWorkflowRuleToEdit.emailTemplate.id) {
+					$scope.emailWorkflowRuleToEdit.emailTemplate = template;
+					break;
+				}
+			}
+
 			$scope.openModal("#editEmailWorkflowRule");
+		};
+
+		$scope.editEmailWorkflowRule = function() {
+
+			if($scope.emailWorkflowRuleToEdit.emailRecipient.type==EmailRecipientType.ORGANIZATION) $scope.emailWorkflowRuleToEdit.emailRecipient.data = $scope.emailWorkflowRuleToEdit.emailRecipient.data.id;
+
+			$scope.getSelectedOrganization().editEmailWorkflowRule($scope.emailWorkflowRuleToEdit).then(function() {
+				$scope.resetEditEmailWorkflowRule();
+			});
+		};
+
+		$scope.resetEditEmailWorkflowRule = function() {
+			$scope.closeModal();
 		};
 
 		$scope.confirmEmailWorkflowRuleDelete = function(rule) {
@@ -83,8 +114,9 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		};
 
 		$scope.deleteEmailWorkflowRule = function() {
+			$scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = true;
 			$scope.getSelectedOrganization().removeEmailWorkflowRule($scope.emailWorkflowRuleToDelete).then(function() {
-				console.log("Deleted");
+				$scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = false;
 			});
 		};
 
@@ -95,6 +127,7 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		};
 
 		$scope.cancelDeleteEmailWorkflowRule = function() {
+			$scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = false;
 			$scope.closeModal();
 		};
 

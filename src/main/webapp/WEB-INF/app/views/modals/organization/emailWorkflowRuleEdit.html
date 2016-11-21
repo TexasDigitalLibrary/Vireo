@@ -1,11 +1,11 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
+	<button type="button" class="close" ng-click="resetEditEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Edit Email Workflow Rule</h3>
 </div>
 
-<form ng-submit="editEmailWorkflowRule(newTemplate,newRecipient,state)" name="forms.add" novalidate>
+<form ng-submit="editEmailWorkflowRule(rule)" name="forms.add" novalidate>
 
 	<div class="addRecipientModal modal-body">
 		<div class="row">
@@ -14,9 +14,10 @@
 					<label>Email Template</label>
 					 <select 
 	                	class="form-control" 
-	                	name="newTemplate"
-	                	ng-model="newTemplate" 
+	                	name="editTemplate"
+	                	ng-model="emailWorkflowRuleToEdit.emailTemplate" 
 	                	ng-options="t.name for t in emailTemplates">
+	                	<option>Select new template</option>
 	                </select>
 				</div>
 			</div>
@@ -25,19 +26,18 @@
 					<label>Recipient</label>
 					<select 
 	                	class="form-control" 
-	                	name="newRecipient"
-	                	ng-model="newRecipient"
-	                	ng-change="setNewRecipient(newRecipient)" 
-	                	ng-options="r as r.label for r in recipients">
+	                	name="editRecipient"
+	                	ng-model="emailWorkflowRuleToEdit.emailRecipient"
+	                	ng-options="r as r.name for r in recipients">
 	                </select>
 				</div>
 			</div>
 		</div>
-		<div class="row email-workflow-rule-section" ng-class="{'email-workflow-rule-open': newRecipient.type==emailRecipientType.ORGANIZATION, 'email-workflow-rule-closed': newRecipient.type!=emailRecipientType.ORGANIZATION}">
+		<div class="row email-workflow-rule-section" ng-class="{'email-workflow-rule-open': emailWorkflowRuleToEdit.emailRecipient.type==emailRecipientType.ORGANIZATION, 'email-workflow-rule-closed': emailWorkflowRuleToEdit.emailRecipient.type!=emailRecipientType.ORGANIZATION}">
 			<div class="col-xs-12">
 				<input 	class="form-control" 
 						placeholder="Select Organization" 
-						ng-model="newRecipient.data"
+						ng-model="emailWorkflowRuleToEdit.emailRecipient.data"
 						typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
 						uib-typeahead="o as o.name for o in organizations | filter:{name:$viewValue} | limitTo:8"
 				/>
@@ -57,8 +57,8 @@
 			id="email-workflow-rule-save" 
 			type="submit" 
 			class="btn btn-primary" 
-			ng-disabled="forms.add.$invalid || (newRecipient.type=='Organization' && !newRecipient.data.id)">
-			Add
+			ng-disabled="forms.add.$invalid || (editRecipient.type=='Organization' && !editRecipient.data.id)">
+			Confirm
 		</button>
 	</div>	
 </form>
