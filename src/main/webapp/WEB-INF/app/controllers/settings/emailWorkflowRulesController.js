@@ -88,6 +88,12 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 			});
 		};
 
+		$scope.changeEmailWorkflowRuleActivation = function(rule, changeEmailWorkflowRuleActivation) {
+			$scope.getSelectedOrganization().changeEmailWorkflowRuleActivation(rule).then(function() {
+				changeEmailWorkflowRuleActivation = false;
+			});
+		};
+
 		$scope.cancelDeleteEmailWorkflowRule = function() {
 			$scope.closeModal();
 		};

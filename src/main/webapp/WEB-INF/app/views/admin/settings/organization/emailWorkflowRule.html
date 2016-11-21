@@ -29,9 +29,10 @@
 				<td ng-click="confirmEmailWorkflowRuleDelete(rule)">
 					<span class="glyphicon glyphicon-trash"></span>
 				</td>
-				<td>
-					<span ng-if="rule.isDisabled" class="glyphicon glyphicon-pause"></span>
-					<span ng-if="!rule.isDisabled" class="glyphicon glyphicon-play"></span>
+				<td ng-click="changeEmailWorkflowRuleActivationWorking=true;changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
+					<span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>
+					<span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
+					<span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play"></span>
 				</td>
 			</tr>
 		</tbody>

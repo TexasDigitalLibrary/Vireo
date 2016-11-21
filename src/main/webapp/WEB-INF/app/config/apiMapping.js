@@ -445,6 +445,11 @@ var apiMapping = {
 			'controller': 'organization',
 			'method': 'remove-email-workflow-rule'
 		},
+		changeEmailWorkflowRuleActivation: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'change-email-workflow-rule-activation'	
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'organizations'

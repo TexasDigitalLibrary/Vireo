@@ -171,6 +171,21 @@ public class OrganizationController {
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         return new ApiResponse(SUCCESS);
     }
+    
+    @Transactional
+    @ApiMapping("/{requestingOrgID}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
+    @Auth(role = "MANAGER")
+    public ApiResponse changeEmailWorkflowRuleActivation(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId) {
+    	
+    	EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+    	
+    	rule.isDisabled(!rule.isDisabled());
+    	
+    	emailWorkflowRuleRepo.save(rule);
+    	
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
+        return new ApiResponse(SUCCESS);
+    }
 
     @Transactional
     @ApiMapping("/{requestingOrgID}/workflow")
