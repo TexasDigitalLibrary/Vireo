@@ -75,7 +75,22 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		$scope.editEmailWorkflowRule = function(rule) {
 			$scope.emailWorkflowRuleToEdit = rule;
 			$scope.openModal("#editEmailWorkflowRule");
-		} 
+		};
+
+		$scope.confirmEmailWorkflowRuleDelete = function(rule) {
+			$scope.emailWorkflowRuleToDelete = rule;
+			$scope.openModal("#confirmEmailWorkflowRuleDelete");
+		};
+
+		$scope.deleteEmailWorkflowRule = function() {
+			$scope.getSelectedOrganization().removeEmailWorkflowRule($scope.emailWorkflowRuleToDelete).then(function() {
+				console.log("Deleted");
+			});
+		};
+
+		$scope.cancelDeleteEmailWorkflowRule = function() {
+			$scope.closeModal();
+		};
 
 	});
 

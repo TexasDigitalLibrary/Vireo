@@ -440,6 +440,11 @@ var apiMapping = {
 			'controller': 'organization',
 			'method': 'delete'
 		},
+		removeEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'remove-email-workflow-rule'
+		},
 		listen: {
 			'endpoint': '/channel',
 			'controller': 'organizations'

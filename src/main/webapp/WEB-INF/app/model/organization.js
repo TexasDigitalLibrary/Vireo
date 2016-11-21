@@ -57,6 +57,19 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 
 		};
 
+		this.removeEmailWorkflowRule = function(rule) {
+
+			console.log(rule);
+
+			var organization = this;
+			angular.extend(apiMapping.Organization.removeEmailWorkflowRule, {
+				'method': organization.id+"/remove-email-workflow-rule/"+rule.id,
+			});
+			var promise = WsApi.fetch(apiMapping.Organization.removeEmailWorkflowRule);
+			
+			return promise;			
+		};
+
 		return this;
 
 	};
