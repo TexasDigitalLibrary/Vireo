@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
 import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
@@ -28,7 +28,6 @@ import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
