@@ -10,7 +10,6 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 	$scope.stateRules = {};
 
 	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
-		console.log($scope.selectedOrganization.emailWorkflowRules);
 		$scope.openAddEmailWorkflowRuleModal = function(id) {
 			$scope.recipients = [		
 				{
@@ -60,8 +59,6 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		};
 
 		$scope.addEmailWorkflowRule = function(newTemplate, newRecipient, submissionState) {
-
-			console.log(submissionState);
 
 			var templateId = newTemplate.id;
 			var recipient = angular.copy(newRecipient);
