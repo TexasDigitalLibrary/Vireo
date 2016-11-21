@@ -16,7 +16,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-if="rule.submissionState.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules" class="email-workflow-rule-row">
+			<tr ng-if="rule.submissionState.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules" class="email-workflow-rule-row" ng-click="editEmailWorkflowRule(rule)">
 				<td>
 					<span class="glyphicon glyphicon-pencil"></span>
 				</td>

@@ -72,6 +72,11 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 
 		};
 
+		$scope.editEmailWorkflowRule = function(rule) {
+			$scope.emailWorkflowRuleToEdit = rule;
+			$scope.openModal("#editEmailWorkflowRule");
+		} 
+
 	});
 
 });

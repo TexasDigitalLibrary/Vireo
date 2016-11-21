@@ -9,5 +9,11 @@
 			<pane ng-repeat="state in submissionStates" query="email-workflowstep-rules-{{state.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{state.name}}</pane>
 		</accordion>
 
+		<modal 
+			modal-id="editEmailWorkflowRule" 
+			modal-view="views/modals/organization/emailWorkflowRuleEdit.html" 
+			modal-header-class="modal-header-primary">
+		</modal>
+
 	</div>
 </div>
