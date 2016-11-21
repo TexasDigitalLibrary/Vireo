@@ -838,7 +838,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_CONTACT"
 					},
 					"repeatable": true,
 					"overrideable": true,
@@ -865,7 +865,7 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_CONTACT"
 					},
 					"repeatable": false,
 					"overrideable": true,

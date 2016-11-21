@@ -1,0 +1,18 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="cancelDeleteEmailWorkflowRule(getEmailWorkflowRuleToDelete())" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Delete Email Workflow Rule</h3>
+</div>
+
+<form ng-submit="deleteEmailWorkflowRule()" novalidate>
+
+	<div class="modal-body">
+		<h4>Really delete email workflow rule?</h4>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="cancelDeleteEmailWorkflowRule()">Cancel</button>
+		<button id="organization-confirm" type="submit" class="btn btn-danger">Confirm</button>
+	</div>
+</form>

@@ -426,6 +426,16 @@ var apiMapping = {
 			'controller': 'organization',
 			'method': 'all'
 		},
+		addEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'metod': 'add-email-workflow-rule'
+		},
+		editEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'metod': 'edit-email-workflow-rule'	
+		},
 		get: {
 			'endpoint': '/private/queue',
 			'controller': 'organization'
@@ -434,6 +444,16 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'organization',
 			'method': 'delete'
+		},
+		removeEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'remove-email-workflow-rule'
+		},
+		changeEmailWorkflowRuleActivation: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'change-email-workflow-rule-activation'	
 		},
 		listen: {
 			'endpoint': '/channel',

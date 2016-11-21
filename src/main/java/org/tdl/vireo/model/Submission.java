@@ -209,6 +209,20 @@ public class Submission extends BaseEntity {
 
         return foundFieldValue;
     }
+    
+	public List<FieldValue> getFieldValueByPredicate(FieldPredicate fieldPredicate) {
+		
+		List<FieldValue> foundFieldValues = new ArrayList<FieldValue>();
+
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                foundFieldValues.add(fieldValue);
+            }
+        }
+
+        return foundFieldValues;
+		
+	}
 
     /**
      * 
@@ -372,5 +386,6 @@ public class Submission extends BaseEntity {
 	public void setReviewerNotes(String reviewerNotes) {
 		this.reviewerNotes = reviewerNotes;
 	}
+
     
 }

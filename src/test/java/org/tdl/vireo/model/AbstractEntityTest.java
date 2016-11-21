@@ -14,6 +14,7 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.enums.EmbargoGuarantor;
+import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
 import org.tdl.vireo.model.repo.DeprecatedAttachmentRepo;
@@ -339,6 +340,9 @@ public abstract class AbstractEntityTest {
     
     @Autowired
     protected AttachmentTypeRepo documentTypesRepo;
+    
+    @Autowired
+    protected AbstractEmailRecipientRepo emailRecipientRepo;
 
     @Autowired
     protected EmailTemplateRepo emailTemplateRepo;
@@ -416,6 +420,7 @@ public abstract class AbstractEntityTest {
 
     protected EmailTemplate emailTemplate;
     protected EmailWorkflowRule emailWorkflowRule;
+    protected EmailRecipient emailRecipient;
     protected Embargo embargoType;
     protected FieldValue fieldValue;
     protected Organization organization;
