@@ -6,7 +6,12 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -139,6 +144,70 @@ public class SubmissionController {
     }
     
     @Transactional
+    @ApiMapping("/{submissionId}/change-status")
+    @Auth(role = "STUDENT")
+    public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {
+    	Submission submission = submissionRepo.findOne(submissionId);
+    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(submission!=null) {
+    		submission.setSubmissionState(submissionState);
+            submission = submissionRepo.save(submission);
+            simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
+    	} else {
+    		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+    	}
+        
+        return response;
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/submit-date")
+    @Auth(role = "STUDENT")
+    public ApiResponse submitDate(@ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
+    	    	
+    	Submission submission = submissionRepo.findOne(submissionId);
+    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(submission!=null) {
+    		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+    		Calendar cal  = Calendar.getInstance();
+    		cal.setTime(df.parse(newDate));
+    		
+    		submission.setSubmissionDate(cal);
+            submission = submissionRepo.save(submission);
+            simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
+    	} else {
+    		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+    	}
+        
+        return response;
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/assign-to")
+    @Auth(role = "STUDENT")
+    public ApiResponse assign(@ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
+    	Submission submission = submissionRepo.findOne(submissionId);
+    	
+    	if(assignee != null) {
+    		assignee = userRepo.findByEmail(assignee.getEmail());
+    	}
+    		
+    	    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(submission!=null) {
+    		submission.setAssignee(assignee);
+            submission = submissionRepo.save(submission);
+            simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
+    	} else {
+    		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+    	}
+        
+        return response;
+    }
+    
+    @Transactional
     @ApiMapping("/{submissionId}/remove-field-value")
     @Auth(role = "STUDENT")
     public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
@@ -166,6 +235,7 @@ public class SubmissionController {
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
         return new ApiResponse(SUCCESS);
     }
 
@@ -175,13 +245,7 @@ public class SubmissionController {
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());       
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
-    }
-
-    @ApiMapping("/all-submission-state")
-    @Auth(role = "MANAGER")
-    public ApiResponse getAllSubmissionStates() {
-        return new ApiResponse(SUCCESS, submissionStateRepo.findAll());
-    }
+    }    
 
     @Transactional
     @ApiMapping("/batch-update-state")

@@ -52,10 +52,9 @@ public class Submission extends BaseEntity {
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
     
-    //This should most likely be handled by a field profile
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar dateOfGraduation;
+    private Calendar submissionDate;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
@@ -143,6 +142,15 @@ public class Submission extends BaseEntity {
      *            the submissionState to set
      */
     public void setSubmissionState(SubmissionState submissionState) {
+    	
+    	if(submissionState.getName().equals("Submitted")) {
+    		Calendar today = Calendar.getInstance();
+    		today.clear(Calendar.HOUR); 
+    		today.clear(Calendar.MINUTE); 
+    		today.clear(Calendar.SECOND);
+    		setSubmissionDate(today);
+    	}
+    	
         this.submissionState = submissionState;
     }
 
@@ -242,18 +250,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the dateOfGraduation
+     * @return the submissionDate
      */
-    public Calendar getDateOfGraduation() {
-        return dateOfGraduation;
+    public Calendar getSubmissionDate() {
+        return submissionDate;
     }
 
     /**
-     * @param dateOfGraduation
-     *            the dateOfGraduation to set
+     * @param submissionDate
+     *            the submissionDate to set
      */
-    public void setDateOfGraduation(Calendar dateOfGraduation) {
-        this.dateOfGraduation = dateOfGraduation;
+    public void setSubmissionDate(Calendar submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     /**

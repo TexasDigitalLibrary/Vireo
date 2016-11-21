@@ -179,6 +179,42 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 
+		submission.changeStatus = function(status) {
+
+			angular.extend(this.getMapping().changeStatus, {
+				method: submission.id+"/change-status",
+				data: status
+			});
+
+			var promise = WsApi.fetch(this.getMapping().changeStatus);
+
+			return promise;
+		};
+
+		submission.setSubmissionDate = function(newDate) {
+
+			angular.extend(this.getMapping().submitDate, {
+				method: submission.id+"/submit-date",
+				data: newDate
+			});
+
+			var promise = WsApi.fetch(this.getMapping().submitDate);
+
+			return promise;
+		};
+
+		submission.assign = function(assignee) {
+
+			angular.extend(this.getMapping().assignTo, {
+				method: submission.id+"/assign-to",
+				data: assignee
+			});
+
+			var promise = WsApi.fetch(this.getMapping().assignTo);
+
+			return promise;
+		};
+
 		return submission;
 	}
 
