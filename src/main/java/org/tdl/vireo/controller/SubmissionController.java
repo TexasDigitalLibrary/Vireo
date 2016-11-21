@@ -6,6 +6,8 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +16,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +31,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
@@ -36,6 +44,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -47,6 +56,7 @@ import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.framework.util.EmailSender;
 
 @Controller
 @ApiMapping("/submission")
@@ -73,6 +83,11 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Autowired
+    private EmailSender emailSender;
+    
+    private TemplateUtility templateUtility;
     
     @Autowired
     private FileIOUtility fileIOUtility;
@@ -157,11 +172,14 @@ public class SubmissionController {
     	} else {
     		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
     	}
+    	
+    	processEmailWorkflowRules(submission);
         
         return response;
     }
-    
-    @Transactional
+  
+
+	@Transactional
     @ApiMapping("/{submissionId}/submit-date")
     @Auth(role = "STUDENT")
     public ApiResponse submitDate(@ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
@@ -255,6 +273,7 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setSubmissionState(submissionState);
             submissionRepo.save(sub);
+            processEmailWorkflowRules(sub);
         });
         return new ApiResponse(SUCCESS);
     }
@@ -322,6 +341,32 @@ public class SubmissionController {
     	fileIOUtility.delete(oldUri);
     	return new ApiResponse(SUCCESS, newUri);
     }
+    
+    private void processEmailWorkflowRules(Submission submission) {
+    	
+    	List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();
+    	
+    	rules.forEach(rule -> {
+    		
+    		if(rule.getSubmissionState().equals(submission.getSubmissionState())) {
+    			
+    			//TODO We need to actually replace template variables
+    	    	//templateUtility.templateParameters(rule.getEmailTemplate().getMessage(), new String[][] {{}});
+    	    	String content = rule.getEmailTemplate().getMessage();
+    	    	    	    	
+    	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {
+    	    		try {
+						emailSender.sendEmail(email, rule.getEmailTemplate().getSubject(), content);
+					} catch (MessagingException e) {
+						e.printStackTrace();
+					}
+    	    	});
+    			
+    		}
+    	});
+    	
+		
+	}
 
     
 
