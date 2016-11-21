@@ -1,10 +1,11 @@
   	
-<button class="btn btn-default" ng-click="openAddEmailWorkflowRuleModal('#createEmailWorkflowRule'+state.name)">Add Rule</button>
+<button class="btn btn-default" ng-click="openAddEmailWorkflowRuleModal('#createEmailWorkflowRule'+state.name.split(' ').join(''))">Add Rule</button>
 
 <div class="table-responsive">
   	<table class="table table-hover table-striped">
 		<thead>
 			<tr>
+				<th></th>
 				<th>Email template</th>
 				<th>Recipient</th>
 				<th></th>
@@ -15,7 +16,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-if="rule.submissionState.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules">
+			<tr ng-if="rule.submissionState.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules" class="email-workflow-rule-row">
+				<td>
+					<span class="glyphicon glyphicon-pencil"></span>
+				</td>
 				<td>
 					{{state.name}}<!--{{rule.emailTemplate.name}}-->
 				</td>
@@ -24,7 +28,6 @@
 				</td>
 				<td>
 					<span class="glyphicon glyphicon-trash"></span>
-					<span class="glyphicon glyphicon-pencil"></span>
 				</td>
 				<td>
 					<span ng-if="rule.isDisabled" class="glyphicon glyphicon-pause"></span>
@@ -36,7 +39,7 @@
 </div>
 
 <modal 
-	modal-id="createEmailWorkflowRule{{state.name}}" 
+	modal-id="createEmailWorkflowRule{{state.name.split(' ').join('')}}" 
 	modal-view="views/modals/organization/emailWorkflowRuleCreate.html" 
 	modal-header-class="modal-header-primary">
 </modal>

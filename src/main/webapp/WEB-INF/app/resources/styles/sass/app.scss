@@ -1416,7 +1416,8 @@ footer a, footer li, footer p {
   -webkit-text-fill-color: #337ab7;
 }
 
-.field-profile-section {
+.field-profile-section,
+.email-workflow-rule-section {
   -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
   -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
   -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
@@ -1424,12 +1425,14 @@ footer a, footer li, footer p {
   overflow: hidden;
 }
 
-.field-profile-closed {
+.field-profile-closed,
+.email-workflow-rule-closed {
   opacity: 0;
   max-height: 0px;
 }
 
-.field-profile-open {
+.field-profile-open,
+.email-workflow-rule-open {
   opacity: 1;
   max-height: 400px;
 }
@@ -1803,5 +1806,19 @@ footer a, footer li, footer p {
 .further-filter-by .organization-by-category-top-list {
   margin: 0px;
 }
+
+.email-workflow-rule-row:hover {
+  cursor:pointer;
+}
+
+.email-workflow-rule-row span.glyphicon-pencil {
+  visibility:hidden;
+}
+
+.email-workflow-rule-row:hover span.glyphicon-pencil {
+  visibility:visible;
+}
+
+//<span class="glyphicon glyphicon-pencil"></span>
 
 @import "item-view";
