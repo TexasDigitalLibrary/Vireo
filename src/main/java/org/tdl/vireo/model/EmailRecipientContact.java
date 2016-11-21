@@ -14,7 +14,8 @@ public class EmailRecipientContact extends AbstractEmailRecipient implements Ema
 
 	public EmailRecipientContact() {}
 	
-	public EmailRecipientContact(FieldPredicate fieldPredicate) {
+	public EmailRecipientContact(String label, FieldPredicate fieldPredicate) {
+		setName(label);
 		this.fieldPredicate = fieldPredicate;
 	}
 

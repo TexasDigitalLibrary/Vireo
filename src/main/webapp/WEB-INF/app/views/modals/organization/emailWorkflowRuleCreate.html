@@ -2,10 +2,10 @@
 	<button type="button" class="close" ng-click="resetEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Add Email Workflow Rule</h3>
+	<h3 class="modal-title">Add Email Workflow Rule to {{state.name}}</h3>
 </div>
 
-<form ng-submit="addEmailWorkflowRule(newTemplate,newRecipient)" name="forms.add" novalidate>
+<form ng-submit="addEmailWorkflowRule(newTemplate,newRecipient,state)" name="forms.add" novalidate>
 
 	<div class="addRecipientModal modal-body">
 		<div class="row">
@@ -28,12 +28,12 @@
 	                	name="newRecipient"
 	                	ng-model="newRecipient"
 	                	ng-change="setNewRecipient(newRecipient)" 
-	                	ng-options="r as r.type for r in recipients">
+	                	ng-options="r as r.label for r in recipients">
 	                </select>
 				</div>
 			</div>
 		</div>
-		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipient.type=='Organization', 'field-profile-closed': newRecipient.type!='Organization'}">
+		<div class="row field-profile-section" ng-class="{'field-profile-open': newRecipient.type==emailRecipientType.ORGANIZATION, 'field-profile-closed': newRecipient.type!=emailRecipientType.ORGANIZATION}">
 			<div class="col-xs-12">
 				<input 	class="form-control" 
 						placeholder="Select Organization" 

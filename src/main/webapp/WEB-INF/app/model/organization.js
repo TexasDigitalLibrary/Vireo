@@ -1,4 +1,4 @@
-vireo.model("Organization", function Organization($q, RestApi) {
+vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 
 	return function Organization() {
 
@@ -38,6 +38,25 @@ vireo.model("Organization", function Organization($q, RestApi) {
 				}
 			});
 			return promise;
+		};
+
+		this.addEmailWorkflowRule = function(templateId, recipient, submissionStateId) {
+			console.log("TemplateID",templateId);
+			console.log("Recipient",recipient);
+			console.log("Submission State",submissionStateId);
+			var organization = this;
+			angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
+				'method': organization.id+"/add-email-workflow-rule",
+				'data': {
+					templateId: templateId,
+					recipient: recipient,
+					submissionStateId: submissionStateId
+				}
+			});
+			var promise = WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
+			
+			return promise;
+
 		};
 
 		return this;

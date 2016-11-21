@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 
 @Entity
 public class EmailRecipientSubmitter extends AbstractEmailRecipient implements EmailRecipient {
-
-	public EmailRecipientSubmitter() {}
+	
+	public EmailRecipientSubmitter() {
+		setName("Submitter");
+	}
 
 	@Override
 	public List<String> getEmails(Submission submission) {

@@ -347,7 +347,10 @@
 	    <script src="model/fieldValue.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
-		
+
+	    <!-- Constants -->
+		<script src="constants/emailRecipientType.js"></script>
+		<script src="constants/inputType.js"></script>		
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>

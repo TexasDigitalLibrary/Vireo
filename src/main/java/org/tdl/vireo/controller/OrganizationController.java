@@ -1,6 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
 import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
@@ -12,14 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.EmailRecipient;
+import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
+import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
+import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
@@ -33,6 +47,21 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationRepo organizationRepo;
+    
+    @Autowired
+    private AbstractEmailRecipientRepo abstractEmailRecipientRepo;
+    
+    @Autowired
+    private FieldPredicateRepo fieldPredicateRepo;
+    
+    @Autowired
+    private EmailTemplateRepo emailTemplateRepo;
+  
+    @Autowired
+    private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+    
+    @Autowired
+    private SubmissionStateRepo submissionStateRepo;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -81,6 +110,52 @@ public class OrganizationController {
         organizationRepo.delete(organization);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
+    }
+    
+    @Transactional
+    @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
+    @Auth(role = "MANAGER")
+    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
+        Organization org = organizationRepo.findOne(requestingOrgID);
+        SubmissionState submissionState = submissionStateRepo.findOne(dataNode.get("submissionStateId").asLong());
+        JsonNode recipientNode = dataNode.get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
+        
+        EmailRecipient emailRecipient;
+                
+        switch(recipientNode.get("type").asText()) {
+        
+        	case "SUBMITTER": {
+        		emailRecipient = abstractEmailRecipientRepo.createSubmitterRecipient();
+        		break;
+        	}
+        	case "ASSIGNEE": {
+        		emailRecipient = abstractEmailRecipientRepo.createAssigneeRecipient();
+        		break;
+        	}
+        	case "ORGANIZATION": {
+        		Organization recipientOrganization = organizationRepo.findOne(recipientNode.get("data").asLong());
+        		emailRecipient = abstractEmailRecipientRepo.createOrganizationRecipient(recipientOrganization);
+        		break;
+        	}
+        	case "CONTACT": {
+        		FieldPredicate recipientPredicate = fieldPredicateRepo.findOne(recipientNode.get("data").asLong());
+        		emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("label").asText(), recipientPredicate);
+        		break;
+        	}
+        	default: {
+        		 return new ApiResponse(ERROR, "Could not create recipient.");
+        	}
+        
+        }
+        
+        EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
+        
+        org.addEmailWorkflowRule(newEmailWorkflowRule);
+        
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
+        
+        return new ApiResponse(SUCCESS);
     }
 
     @Transactional
