@@ -28,7 +28,7 @@ public class OrganizationTest extends AbstractEntityTest {
         
         assertEquals("The emailTemplate does not exist!", 1, emailTemplateRepo.count());
         
-        //emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, RecipientType.DEPARTMENT, emailTemplate);
+        emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
         
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
     }
