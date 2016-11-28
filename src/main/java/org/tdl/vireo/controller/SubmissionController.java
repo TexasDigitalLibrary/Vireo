@@ -343,12 +343,12 @@ public class SubmissionController {
     	
     	rules.forEach(rule -> {
     		    		
-    		if(rule.getSubmissionState().equals(submission.getSubmissionState())) {
+    		if(rule.getSubmissionState().equals(submission.getSubmissionState()) && !rule.isDisabled()) {
     			    			
     			//TODO: Not all variables are currently being replaced.
     			String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
     			String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
-    	    	    	    	
+    	    	
     	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {		
     	    		try {
 						emailSender.sendEmail(email, subject, content);
