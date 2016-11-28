@@ -11,7 +11,7 @@ public class DocumentTypeTest extends AbstractEntityTest{
 
 	@Override
 	public void testCreate() {
-		AttachmentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME);		
+		AttachmentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The document type name was wrong!", docType.getName(), TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The associated field predicate was wrong!", docType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
 	}
