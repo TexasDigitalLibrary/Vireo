@@ -101,6 +101,7 @@ public class DocumentTypeTest extends AbstractEntityTest{
         submissionRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         organizationRepo.deleteAll();
+        submissionStateRepo.deleteAll();
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
         });
