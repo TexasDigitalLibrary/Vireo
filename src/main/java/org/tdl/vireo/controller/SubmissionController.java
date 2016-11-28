@@ -338,19 +338,13 @@ public class SubmissionController {
     }
     
     private void processEmailWorkflowRules(Submission submission) {
-    	
-    	System.out.println("Trying email");
-    	
+    	    	
     	List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();
     	
     	rules.forEach(rule -> {
-    		
-    		System.out.println("got rules");
-    		
+    		    		
     		if(rule.getSubmissionState().equals(submission.getSubmissionState())) {
-    			
-    			System.out.println("rule matches");
-    			
+    			    			
     			//TODO: Not all variables are currently being replaced.
     			String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
     			String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
