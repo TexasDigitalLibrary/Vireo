@@ -11,7 +11,7 @@ public class DocumentTypeTest extends AbstractEntityTest{
 
 	@Override
 	public void testCreate() {
-		AttachmentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME);
+		AttachmentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME);		
         assertEquals("The document type name was wrong!", docType.getName(), TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The associated field predicate was wrong!", docType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
 	}
@@ -53,8 +53,24 @@ public class DocumentTypeTest extends AbstractEntityTest{
 	
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() {
-		// Create a submission.
-		submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
+		
+		// Create a submitter.
+		submitter = userRepo.create(
+				TEST_SUBMISSION_SUBMITTER_EMAIL, 
+				TEST_SUBMISSION_SUBMITTER_FIRSTNAME, 
+				TEST_SUBMISSION_SUBMITTER_LASTNAME, 
+				TEST_SUBMISSION_SUBMITTER_ROLE);
+		
+		// Create a submission state
+		submissionState = submissionStateRepo.create(
+				TEST_SUBMISSION_STATE_NAME, 
+				TEST_SUBMISSION_STATE_ARCHIVED, 
+				TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
+				TEST_SUBMISSION_STATE_DELETABLE, 
+				TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
+				TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
+				TEST_SUBMISSION_STATE_ACTIVE);
+		
         assertEquals("The user does not exist!", 1, userRepo.count());
 
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
@@ -63,7 +79,8 @@ public class DocumentTypeTest extends AbstractEntityTest{
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
-
+       
+        //Create a Submission
         Submission submission = submissionRepo.create(submitter, organization, submissionState);
 		
 		// Create a document type with implicitly created field predicate.
