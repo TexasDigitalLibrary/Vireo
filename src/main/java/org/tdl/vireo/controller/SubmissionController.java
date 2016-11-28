@@ -15,8 +15,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.MessagingException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +59,6 @@ public class SubmissionController {
     private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
     
     private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
-    
-    @PersistenceContext
-    EntityManager em;
     
     @Autowired
     private UserRepo userRepo;
@@ -167,14 +162,12 @@ public class SubmissionController {
     	ApiResponse response = new ApiResponse(SUCCESS);
     	if(submission!=null) {
     		submission.setSubmissionState(submissionState);
-            submission = submissionRepo.save(submission);
+            submission = submissionRepo.saveAndFlush(submission);
             simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
     	} else {
     		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
     	}
-    	
-    	em.flush();
-    	
+    	    	
     	processEmailWorkflowRules(submission);
         
         return response;
@@ -274,10 +267,7 @@ public class SubmissionController {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setSubmissionState(submissionState);
-            submissionRepo.save(sub);
-            
-            em.flush();
-            
+            submissionRepo.saveAndFlush(sub);            
             processEmailWorkflowRules(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -361,19 +351,16 @@ public class SubmissionController {
     			
     			System.out.println("rule matches");
     			
-    			//TODO We need to actually replace template variables
-    	    	//String content = templateUtility.templateParameters(rule.getEmailTemplate().getMessage(), new String[][] {{}});
-    			
-    			templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
-    			
-    			String content = rule.getEmailTemplate().getMessage();
+    			//TODO: Not all variables are currently being replaced.
+    			String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
+    			String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
     	    	    	    	
-    	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-//    	    		try {
-//						emailSender.sendEmail(email, rule.getEmailTemplate().getSubject(), content);
-//					} catch (MessagingException e) {
-//						e.printStackTrace();
-//					}
+    	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {		
+    	    		try {
+						emailSender.sendEmail(email, subject, content);
+					} catch (MessagingException e) {
+						e.printStackTrace();
+					}
     	    	});
     			
     		}
