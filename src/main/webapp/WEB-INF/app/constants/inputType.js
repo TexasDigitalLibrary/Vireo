@@ -1,4 +1,4 @@
-vireo.constant("InputType", {
+vireo.constant("InputTypes", {
 	INPUT_CHECKBOX: "INPUT_CHECKBOX",
 	INPUT_CONTACT: "INPUT_CONTACT",
 	INPUT_DATETIME: "INPUT_DATETIME",

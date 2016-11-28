@@ -1,4 +1,4 @@
-vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStateRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputType) {
+vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStateRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputTypes) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -31,7 +31,7 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 
 		angular.forEach($scope.getSelectedOrganization().aggregateWorkflowSteps, function(aggregateWorkflowStep) {
 			angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function(aggregateFieldProfile) {
-				if(aggregateFieldProfile.inputType.name === InputType.INPUT_CONTACT) {
+				if(aggregateFieldProfile.inputType.name === InputTypes.INPUT_CONTACT) {
 					$scope.recipients.push({
 						name: aggregateFieldProfile.fieldGlosses[0].value,
 						type: EmailRecipientType.CONTACT,
