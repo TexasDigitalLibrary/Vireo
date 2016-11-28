@@ -151,6 +151,12 @@ public class Submission extends BaseEntity {
     		setSubmissionDate(today);
     	}
     	
+    	if(this.submissionState != null) {
+    		System.out.println("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
+    	} else {
+    		System.out.println("Changing status to " + submissionState.getName());
+    	}	
+    	
         this.submissionState = submissionState;
         
     }

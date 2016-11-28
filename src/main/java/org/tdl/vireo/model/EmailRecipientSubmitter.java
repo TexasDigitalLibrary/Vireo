@@ -17,7 +17,7 @@ public class EmailRecipientSubmitter extends AbstractEmailRecipient implements E
 		
 		List<String> emails = new ArrayList<String>();
 		
-		emails.add(submission.getSubmitter().getEmail());
+		emails.add(submission.getSubmitter().getSetting("preferedEmail"));
 		
 		return emails;
 		

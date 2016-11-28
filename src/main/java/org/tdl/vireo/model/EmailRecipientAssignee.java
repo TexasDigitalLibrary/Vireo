@@ -17,7 +17,7 @@ public class EmailRecipientAssignee extends AbstractEmailRecipient implements Em
 		
 		List<String> emails = new ArrayList<String>();
 		
-		emails.add(submission.getAssignee().getEmail());
+		emails.add(submission.getAssignee().getSetting("preferedEmail"));
 		
 		return emails;
 		

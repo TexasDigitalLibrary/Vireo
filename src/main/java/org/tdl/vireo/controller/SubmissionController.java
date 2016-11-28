@@ -1,13 +1,11 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,9 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
@@ -87,6 +81,7 @@ public class SubmissionController {
     @Autowired
     private EmailSender emailSender;
     
+    @Autowired
     private TemplateUtility templateUtility;
     
     @Autowired
@@ -167,12 +162,12 @@ public class SubmissionController {
     	ApiResponse response = new ApiResponse(SUCCESS);
     	if(submission!=null) {
     		submission.setSubmissionState(submissionState);
-            submission = submissionRepo.save(submission);
+            submission = submissionRepo.saveAndFlush(submission);
             simpMessagingTemplate.convertAndSend("/channel/submission/"+submissionId, new ApiResponse(SUCCESS, submission));
     	} else {
     		response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
     	}
-    	
+    	    	
     	processEmailWorkflowRules(submission);
         
         return response;
@@ -272,7 +267,7 @@ public class SubmissionController {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setSubmissionState(submissionState);
-            submissionRepo.save(sub);
+            submissionRepo.saveAndFlush(sub);            
             processEmailWorkflowRules(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -343,20 +338,20 @@ public class SubmissionController {
     }
     
     private void processEmailWorkflowRules(Submission submission) {
-    	
+    	    	
     	List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();
     	
     	rules.forEach(rule -> {
-    		
+    		    		
     		if(rule.getSubmissionState().equals(submission.getSubmissionState())) {
-    			
-    			//TODO We need to actually replace template variables
-    	    	//templateUtility.templateParameters(rule.getEmailTemplate().getMessage(), new String[][] {{}});
-    	    	String content = rule.getEmailTemplate().getMessage();
+    			    			
+    			//TODO: Not all variables are currently being replaced.
+    			String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
+    			String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
     	    	    	    	
-    	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {
+    	    	rule.getEmailRecipient().getEmails(submission).forEach(email -> {		
     	    		try {
-						emailSender.sendEmail(email, rule.getEmailTemplate().getSubject(), content);
+						emailSender.sendEmail(email, subject, content);
 					} catch (MessagingException e) {
 						e.printStackTrace();
 					}
