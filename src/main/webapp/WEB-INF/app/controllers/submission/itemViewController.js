@@ -266,6 +266,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	        "submission": $scope.submission,
 	        "SubmissionStateRepo": SubmissionStateRepo,
 	        "submissionStates": submissionStates,
+	        "advanced": true,
 	        "allUsers": $scope.allUsers,
 	        "user": new User(),
 	        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
