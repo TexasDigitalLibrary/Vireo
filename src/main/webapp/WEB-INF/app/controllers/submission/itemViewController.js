@@ -288,7 +288,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			},
 			"assignee": firstAssignable(),
 			"resetStatus": function() {
-				$scope.submissionStatusBox.advanced=false;
+				$scope.submissionStatusBox.advanced=true;
 				$scope.submissionStatusBox.cancelWorking=false;
 				$scope.submissionStatusBox.saveWorking=false;
 				$scope.submissionStatusBox.assignWorking=false;
