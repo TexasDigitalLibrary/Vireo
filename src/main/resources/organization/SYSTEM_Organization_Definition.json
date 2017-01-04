@@ -688,7 +688,7 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "document_type",
+						"value": "submission_type",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
@@ -702,10 +702,10 @@
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Choose the type of document you are submitting.",
+					"help": "Choose the type of your submission.",
 					"fieldGlosses": [
 						{
-							"value": "Document Type",
+							"value": "Submission Type",
 							"language": {
 								"name": "English"
 							}
@@ -713,9 +713,8 @@
 					],
 					"controlledVocabularies": [
 						{
-							"name": "DocumentType.name",
-							"entityName": "DocumentType",
-							"isEntityProperty": true,
+							"name": "SubmissionType",
+							"isEntityProperty": false,
 							"language": {
 								"name": "English"
 							}
@@ -839,17 +838,17 @@
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_CONTACT"
 					},
 					"repeatable": true,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Committee member.",
+					"help": "Enter the names and email addresses of your non-chairing committee members",
 					"fieldGlosses": [
 						{
-							"value": "Committee Member",
+							"value": "Committee Members",
 							"language": {
 								"name": "English"
 							}
@@ -859,24 +858,24 @@
 				},
 				{
 					"fieldPredicate": {
-						"value": "chairs_contact_email",
+						"value": "comittee_chair",
 						"documentTypePredicate": false
 					},
 					"originatingWorkflowStep": {
 						"name": "Document Information"
 					},
 					"inputType": {
-						"name": "INPUT_EMAIL"
+						"name": "INPUT_CONTACT"
 					},
 					"repeatable": false,
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
 					"usage": "",
-					"help": "Enter an email address for your committee chair.",
+					"help": "Enter the name and email address for your committee chair.",
 					"fieldGlosses": [
 						{
-							"value": "Chair's Contact Email",
+							"value": "Committee Chair",
 							"language": {
 								"name": "English"
 							}

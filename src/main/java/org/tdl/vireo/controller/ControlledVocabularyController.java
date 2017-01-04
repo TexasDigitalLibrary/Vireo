@@ -9,8 +9,11 @@ import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -19,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +90,8 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @ApiMapping("/{name}")
-    @Auth(role = "MANAGER")    
+    //TODO:  commented this out 
+    //@Auth(role = "MANAGER")    
     public ApiResponse getControlledVocabularyByName(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
     }
@@ -109,7 +115,7 @@ public class ControlledVocabularyController {
     }
 
     /**
-     * Endpoint to update controlled vacabulary.
+     * Endpoint to update controlled vocabulary.
      * 
      * @param data
      *            Json input data with request
@@ -257,8 +263,7 @@ public class ControlledVocabularyController {
     public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream InputStream inputStream) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
-        String[] rows = inputStreamToRows(inputStream);
-        Map<String, Object> wordsMap = cacheImport(controlledVocabulary, rows);
+        Map<String, Object> wordsMap = cacheImport(controlledVocabulary, inputStreamToString(inputStream));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, wordsMap);
     }
@@ -297,28 +302,30 @@ public class ControlledVocabularyController {
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
        
-    private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String[] rows){
-        
-        List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
-        List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
-        List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
+    private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
+    	
+    	Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
 
-        List<VocabularyWord> words = controlledVocabulary.getDictionary();
+    	List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
+    	List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
+    	List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
 
-        for (String row : rows) {
-
-            String[] cols = new String[] { "", "", "" };
-
-            String[] temp = row.split(",");
-            for (int i = 0; i < temp.length; i++) {
-                cols[i] = temp[i] != null ? temp[i] : "";
-            }
-
-            VocabularyWord currentVocabularyWord = new VocabularyWord(cols[0], cols[1], cols[2]);
+    	List<VocabularyWord> words = controlledVocabulary.getDictionary();
+    	
+    	Boolean headerPass = true;
+    	
+    	for (CSVRecord record : records) {
+    		
+    		if(headerPass) {
+    			headerPass = false;
+    			continue;
+    		}
+    		
+            VocabularyWord currentVocabularyWord = new VocabularyWord(record.get("name"), record.get("definition"), record.get("identifier"));
 
             boolean isRepeat = false;
             for (VocabularyWord newWord : newWords) {
-                if (newWord.getName().equals(cols[0])) {
+                if (newWord.getName().equals(record.get("name"))) {
                     repeatedWords.add(currentVocabularyWord);
                     isRepeat = true;
                     break;
@@ -327,7 +334,7 @@ public class ControlledVocabularyController {
 
             if (!isRepeat) {
                 for (VocabularyWord[] updatingWord : updatingWords) {
-                    if (updatingWord[0].getName().equals(cols[0])) {
+                    if (updatingWord[0].getName().equals(record.get("name"))) {
                         repeatedWords.add(currentVocabularyWord);
                         isRepeat = true;
                         break;
@@ -338,18 +345,18 @@ public class ControlledVocabularyController {
             if (!isRepeat) {
                 boolean isNew = true;
                 for (VocabularyWord word : words) {
-                    if (cols[0].equals(word.getName())) {
+                    if (record.get("name").equals(word.getName())) {
 
                         String definition = word.getDefinition();
                         String identifier = word.getIdentifier();
 
                         boolean change = false;
 
-                        if (definition != null && !cols[1].equals(definition)) {
+                        if (definition != null && !record.get("definition").equals(definition)) {
                             change = true;
                         }
 
-                        if (identifier != null && !cols[2].equals(identifier)) {
+                        if (identifier != null && !record.get("identifier").equals(identifier)) {
                             change = true;
                         }
 
@@ -382,20 +389,17 @@ public class ControlledVocabularyController {
     }
     
     /**
-     * Converts input stream to array of strings which represent the rows
+     * Converts input stream to a string which represents the csv
      * 
      * @param ServletInputStream
      *            csv bitstream
      * @return string array of the csv rows
      * @throws IOException
      */
-    private String[] inputStreamToRows(java.io.InputStream bufferedIn) throws IOException {
-        String csvString = null;
-        String[] imageData = IOUtils.toString(bufferedIn, "UTF-8").split(";");
+    private String inputStreamToString(java.io.InputStream bufferedIn) throws IOException {
+        String[] imageData = IOUtils.toString(bufferedIn, StandardCharsets.UTF_8.displayName()).split(";");
         String[] encodedData = imageData[1].split(",");
-        csvString = new String(Base64.getDecoder().decode(encodedData[1]));
-        String[] rows = csvString.split("\\R");
-        return Arrays.copyOfRange(rows, 1, rows.length);
+        return new String(Base64.getDecoder().decode(encodedData[1]));
     }
-    
+
 }

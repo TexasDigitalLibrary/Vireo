@@ -10,7 +10,20 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 				id: null,
 				value: "",
 				fieldPredicate: fieldPredicate
-			}
+			};
+		};
+
+		//Override
+		submission.delete = function() {
+			var submission = this;
+			angular.extend(apiMapping.Submission.remove, {'method': "delete/"+submission.id});
+			var promise = WsApi.fetch(apiMapping.Submission.remove);
+			promise.then(function(res) {
+				if(res.meta && res.meta.type == "INVALID") {
+					submission.setValidationResults(res.payload.ValidationResults);
+				}
+			});
+			return promise;
 		};
 
 		submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
@@ -167,12 +180,47 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 		};
 
 		submission.updateCustomActionValue = function(customActionValue) {
-		  console.info('attempting update with ', customActionValue, 'subid', submission.id);
 			angular.extend(submission.getMapping().updateCustomActionValue, {
 				method: submission.id+"/update-custom-action-value",
 				data: customActionValue
 			});
 			return WsApi.fetch(submission.getMapping().updateCustomActionValue);
+		};
+
+		submission.changeStatus = function(status) {
+
+			angular.extend(this.getMapping().changeStatus, {
+				method: submission.id+"/change-status",
+				data: status
+			});
+
+			var promise = WsApi.fetch(this.getMapping().changeStatus);
+
+			return promise;
+		};
+
+		submission.setSubmissionDate = function(newDate) {
+
+			angular.extend(this.getMapping().submitDate, {
+				method: submission.id+"/submit-date",
+				data: newDate
+			});
+
+			var promise = WsApi.fetch(this.getMapping().submitDate);
+
+			return promise;
+		};
+
+		submission.assign = function(assignee) {
+
+			angular.extend(this.getMapping().assignTo, {
+				method: submission.id+"/assign-to",
+				data: assignee
+			});
+
+			var promise = WsApi.fetch(this.getMapping().assignTo);
+
+			return promise;
 		};
 
 		return submission;

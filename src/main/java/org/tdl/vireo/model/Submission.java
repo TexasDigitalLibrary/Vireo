@@ -53,10 +53,9 @@ public class Submission extends BaseEntity {
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
     
-    //This should most likely be handled by a field profile
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar dateOfGraduation;
+    private Calendar submissionDate;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
@@ -65,7 +64,8 @@ public class Submission extends BaseEntity {
     private Set<Embargo> embargoTypes;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<Attachment> attachments;
+
+    private Set<DeprecatedAttachment> attachments;
     
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<CustomActionValue> customActionValues;
@@ -79,8 +79,8 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
-        setAttachments(new HashSet<Attachment>());
         setCustomActionValues(new ArrayList<CustomActionValue>());
+        setAttachments(new HashSet<DeprecatedAttachment>());
     }
 
     /**
@@ -146,10 +146,26 @@ public class Submission extends BaseEntity {
      *            the submissionState to set
      */
     public void setSubmissionState(SubmissionState submissionState) {
+    	
+    	if(submissionState.getName().equals("Submitted")) {
+    		Calendar today = Calendar.getInstance();
+    		today.clear(Calendar.HOUR); 
+    		today.clear(Calendar.MINUTE); 
+    		today.clear(Calendar.SECOND);
+    		setSubmissionDate(today);
+    	}
+    	
+    	if(this.submissionState != null) {
+    		System.out.println("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
+    	} else {
+    		System.out.println("Changing status to " + submissionState.getName());
+    	}	
+    	
         this.submissionState = submissionState;
+        
     }
 
-    /**
+	/**
      * @return the organization
      */
     public Organization getOrganization() {
@@ -204,6 +220,20 @@ public class Submission extends BaseEntity {
 
         return foundFieldValue;
     }
+    
+	public List<FieldValue> getFieldValueByPredicate(FieldPredicate fieldPredicate) {
+		
+		List<FieldValue> foundFieldValues = new ArrayList<FieldValue>();
+
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                foundFieldValues.add(fieldValue);
+            }
+        }
+
+        return foundFieldValues;
+		
+	}
 
     /**
      * 
@@ -245,18 +275,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the dateOfGraduation
+     * @return the submissionDate
      */
-    public Calendar getDateOfGraduation() {
-        return dateOfGraduation;
+    public Calendar getSubmissionDate() {
+        return submissionDate;
     }
 
     /**
-     * @param dateOfGraduation
-     *            the dateOfGraduation to set
+     * @param submissionDate
+     *            the submissionDate to set
      */
-    public void setDateOfGraduation(Calendar dateOfGraduation) {
-        this.dateOfGraduation = dateOfGraduation;
+    public void setSubmissionDate(Calendar submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     /**
@@ -324,7 +354,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the attachments
      */
-    public Set<Attachment> getAttachments() {
+    public Set<DeprecatedAttachment> getAttachments() {
         return attachments;
     }
 
@@ -332,7 +362,7 @@ public class Submission extends BaseEntity {
      * @param attachments
      *            the attachments to set
      */
-    public void setAttachments(Set<Attachment> attachments) {
+    public void setAttachments(Set<DeprecatedAttachment> attachments) {
         this.attachments = attachments;
     }
 
@@ -340,7 +370,7 @@ public class Submission extends BaseEntity {
      * 
      * @param attachment
      */
-    public void addAttachment(Attachment attachment) {
+    public void addAttachment(DeprecatedAttachment attachment) {
         getAttachments().add(attachment);
     }
 
@@ -348,7 +378,7 @@ public class Submission extends BaseEntity {
      * 
      * @param actionLog
      */
-    public void removeAttachment(Attachment attachment) {
+    public void removeAttachment(DeprecatedAttachment attachment) {
         getAttachments().remove(attachment);
     }
 
@@ -402,5 +432,4 @@ public class Submission extends BaseEntity {
 		this.customActionValues.add(customActionValue);
 		return customActionValue;
 	}
-    
 }

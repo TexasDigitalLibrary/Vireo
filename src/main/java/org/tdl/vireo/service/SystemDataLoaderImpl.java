@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.DocumentType;
+import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
@@ -42,10 +42,11 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
+import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -59,6 +60,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -105,7 +107,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private LanguageRepo languageRepo;
     
-    private DocumentTypeRepo documentTypeRepo;
+    private AttachmentTypeRepo attachmentTypeRepo;
 
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
@@ -116,12 +118,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
 
     private EntityControlledVocabularyService entityControlledVocabularyService;
+    
+    private VocabularyWordRepo vocabularyWordRepo;
 
     private ProquestLanguageCodesService proquestLanguageCodesService;
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, AttachmentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo) {
 
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
@@ -138,13 +142,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.fieldGlossRepo = fieldGlossRepo;
         this.controlledVocabularyRepo = controlledVocabularyRepo;
         this.languageRepo = languageRepo;
-        this.documentTypeRepo = documentTypeRepo;
+        this.attachmentTypeRepo = documentTypeRepo;
         this.emailWorkflowRuleRepo = emailWorkflowRuleRepo;
         this.submissionStateRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
         this.proquestLanguageCodesService = proquestLanguageCodesService;
         this.submissionListColumnRepo = submissionListColumnRepo;
         this.defaultSubmissionListColumnService = defaultSubmissionListColumnService;
+        this.vocabularyWordRepo = vocabularyWordRepo;
         
         logger.info("Generating all system input types");
         loadSystemInputTypes();
@@ -178,9 +183,36 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         
         logger.info("Initializing default entity controlled vocabulary");
         this.entityControlledVocabularyService.init();
+        
+        logger.info("Loading pre-defined controlled vocabularies");
+        loadDefaultControlledVocabularies();
     }
     
     @Override
+    public void loadDefaultControlledVocabularies() {
+    	ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
+    	
+    	List<VocabularyWord> vocabularyWords = null;
+		try {
+			vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {});
+		} catch (IOException e) {
+			System.out.println("\n\nERROR generating default controlled vocabularies\n\n");
+			e.printStackTrace();
+			logger.debug("Unable to load default controlled vocabularies.");
+		}
+		
+        for(VocabularyWord vw : vocabularyWords) {
+        	System.out.println("\nVOCABULARY WORD FOUND: " + vw.getName());
+        	vw.setControlledVocabulary(submissionTypesCV);
+        	vw = vocabularyWordRepo.save(vw);
+        	submissionTypesCV.addValue(vw);
+        }
+        
+        submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
+				
+	}
+
+	@Override
     public void generateAllOrganizationCategories() {                
         try {
 
@@ -257,10 +289,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
 
                 // check to see if the EmailWorkflowRule exists
-                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndRecipientTypeAndEmailTemplate(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate);
+                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndEmailRecipientAndEmailTemplate(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
                 if (newEmailWorkflowRule == null) {
-                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate, emailWorkflowRule.isSystem());
+                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
                 }
 
                 emailWorkflowRules.add(newEmailWorkflowRule);
@@ -753,11 +785,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
+            List<AttachmentType> attachmentTypes = objectMapper.readValue(getFileFromResource("classpath:/attachment_types/SYSTEM_Attachment_Types.json"), new TypeReference<List<AttachmentType>>() {});
 
-            for (DocumentType documentType : documentTypes) {
+            for (AttachmentType attachmentType : attachmentTypes) {
                 
-                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
+                FieldPredicate fieldPredicate = attachmentType.getFieldPredicate();
                 
                 FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
                 if(dbFieldPredicate == null) {
@@ -769,16 +801,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
                 }
                 
-                DocumentType dbDocumentType = documentTypeRepo.findByNameAndDegreeLevelAndFieldPredicate(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                AttachmentType dbAttachmentType = attachmentTypeRepo.findByNameAndFieldPredicate(attachmentType.getName(), dbFieldPredicate);
                 
-                if (dbDocumentType == null) {
-                    dbDocumentType = documentTypeRepo.create(documentType.getName(), documentType.getDegreeLevel(), dbFieldPredicate);
+                if (dbAttachmentType == null) {
+                    dbAttachmentType = attachmentTypeRepo.create(attachmentType.getName(), dbFieldPredicate);
                 }
                 else {
-                    dbDocumentType.setName(documentType.getName());
-                    dbDocumentType.setDegreeLevel(documentType.getDegreeLevel());
-                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
-                    documentTypeRepo.save(dbDocumentType);
+                    dbAttachmentType.setName(attachmentType.getName());
+                    dbAttachmentType.setFieldPredicate(dbFieldPredicate);
+                    attachmentTypeRepo.save(dbAttachmentType);
                 }
             }
         } catch (RuntimeException | IOException e) {

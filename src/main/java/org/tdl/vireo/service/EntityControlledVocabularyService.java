@@ -36,11 +36,9 @@ import org.tdl.vireo.model.repo.LanguageRepo;
 @Service
 public class EntityControlledVocabularyService {
     
-    // default whitelist, Embargo guarantor and Attatchment type
+    // default whitelist consists only of Embargo guarantor
     private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] {
-            new EntityCVWhitelist("Embargo", Arrays.asList(new String[] {"guarantor"})), 
-            new EntityCVWhitelist("Attachment", Arrays.asList(new String[] {"type"})),
-            new EntityCVWhitelist("DocumentType", Arrays.asList(new String[] {"name"}))
+            new EntityCVWhitelist("Embargo", Arrays.asList(new String[] {"guarantor"})),
     };
     
     @PersistenceContext

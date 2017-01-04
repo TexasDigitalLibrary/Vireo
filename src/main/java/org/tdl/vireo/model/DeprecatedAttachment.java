@@ -26,7 +26,8 @@ import edu.tamu.framework.model.BaseEntity;
  * 
  */
 @Entity
-public class Attachment extends BaseEntity {
+@Deprecated
+public class DeprecatedAttachment extends BaseEntity {
     
     @Transient
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,7 +39,7 @@ public class Attachment extends BaseEntity {
 	// may be over encapsulation however. 
 	// join column instead of column of strings.
 	@ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-	private AttachmentType type;
+	private DeprecatedAttachmentType type;
 	
 	@Column(nullable = false)
 	private Calendar date;
@@ -50,12 +51,12 @@ public class Attachment extends BaseEntity {
 	@OneToMany(cascade=ALL, fetch = EAGER, orphanRemoval = true)
 	private Set<ActionLog> actionLogs;
 	
-	public Attachment() {
+	public DeprecatedAttachment() {
 	    setModelValidator(new AttachmentValidator());
 	    setDate(Calendar.getInstance());
 	}
 	
-	public Attachment(String name, UUID uuid, AttachmentType attachmentType) {
+	public DeprecatedAttachment(String name, UUID uuid, DeprecatedAttachmentType attachmentType) {
 	 	this();
 		setName(name);
 		setType(attachmentType);
@@ -81,7 +82,7 @@ public class Attachment extends BaseEntity {
 	 * 
 	 * @return
 	 */
-	public AttachmentType getType() {
+	public DeprecatedAttachmentType getType() {
         return type;
     }
 
@@ -89,7 +90,7 @@ public class Attachment extends BaseEntity {
 	 * 
 	 * @param type
 	 */
-    public void setType(AttachmentType type) {
+    public void setType(DeprecatedAttachmentType type) {
         this.type = type;
     }
 

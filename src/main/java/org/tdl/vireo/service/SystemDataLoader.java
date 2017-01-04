@@ -26,5 +26,7 @@ public interface SystemDataLoader {
     public void generateAllSystemEmbargos();
     
     public void generateSystemDefaults();
+    
+    public void loadDefaultControlledVocabularies();
         
 }

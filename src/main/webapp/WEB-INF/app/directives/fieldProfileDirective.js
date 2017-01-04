@@ -1,4 +1,4 @@
-vireo.directive("field",  function($controller, $q, FileApi) {
+vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 	return {
 		templateUrl: 'views/directives/fieldProfile.html',
 		restrict: 'E',
@@ -27,22 +27,25 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			$scope.save = function(fieldValue) {
 				if ($scope.fieldProfileForm.$dirty) {
 					fieldValue.updating = true;
-					var savePromsie = $scope.submission.saveFieldValue(fieldValue);
-					savePromsie.then(function() {
-						delete fieldValue.updating;
-						if($scope.fieldProfileForm !== undefined) {
-							$scope.fieldProfileForm.$setPristine();
-						}
-						refreshValues();
+					return $q(function(resolve) {
+						// give typeahead time to set the value
+						$timeout(function() {
+							$scope.submission.saveFieldValue(fieldValue).then(function() {
+								delete fieldValue.updating;
+								if($scope.fieldProfileForm !== undefined) {
+									$scope.fieldProfileForm.$setPristine();
+								}
+								refreshValues();
+								resolve();
+							});
+						}, 500);
 					});
-					return savePromsie;
 				}
 			};
 
 			$scope.addFieldValue = function() {
-				var fieldValue = $scope.submission.addFieldValue($scope.profile.fieldPredicate);
 				refreshValues();
-				return fieldValue;
+				return $scope.submission.addFieldValue($scope.profile.fieldPredicate);
 			};
 			
 			var remove = function(fieldValue) {
@@ -210,7 +213,7 @@ vireo.directive("field",  function($controller, $q, FileApi) {
 			
 			$scope.getPreview = function(fieldValue) {
 				var preview;
-				if(fieldValue.file !== undefined) {
+				if(fieldValue.file !== undefined && fieldValue.file.type !== null) {
 					if(fieldValue.file.type.includes("image/png")) { 
 						preview = "resources/images/png-logo.jpg";
 					}

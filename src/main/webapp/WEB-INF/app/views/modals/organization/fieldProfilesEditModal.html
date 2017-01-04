@@ -2,7 +2,7 @@
 	<button 
 		type="button" 
 		class="close" 
-		ng-click="resetFieldProfiles()" 
+		ng-click="advanced = false; controlledVocabulary = false; resetFieldProfiles();" 
 		data-dismiss="modal" 
 		aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
@@ -10,7 +10,7 @@
 	<h3 class="modal-title">Update Field</h3>
 </div>
 
-<form ng-submit="updateFieldProfile()" name="forms.update" novalidate>
+<form ng-submit="advanced = false; controlledVocabulary = false; updateFieldProfile();" name="forms.update" novalidate>
 
 	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
@@ -117,13 +117,13 @@
 			
 			<div ng-if="inputFile" class="form-group">
 				<validatedselect
-					options="documentTypes"
+					options="attachmentTypes"
 					optionproperty="name"
 					model="documentData"
-					property="documentType"
-					label="Document Type"
+					property="attachmentType"
+					label="Attachment Type"
 					form="forms.create"
-					change="documentTypeChanged()"
+					change="attachmentTypeChanged()"
 					validations="fieldPredicateRepo.getValidations()"
 					results="fieldPredicateRepo.ValidationResults">
 				</validatedselect>
@@ -154,7 +154,7 @@
 		<button 
 			type="button" 
 			class="btn btn-warning" 
-			ng-click="resetFieldProfiles()" >Cancel</button>
+			ng-click="advanced = false; controlledVocabulary = false; resetFieldProfiles();" >Cancel</button>
 		<button 
 			id="field-profiles-save" 
 			type="submit" 

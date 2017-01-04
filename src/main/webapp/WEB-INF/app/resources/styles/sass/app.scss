@@ -17,6 +17,11 @@ main footer {
   margin-bottom: 65px;
 }
 
+.typeahead-dropdown-container {
+    position: fixed;
+    bottom: 42%;
+}
+
 .breadcrumb .divider {
     padding: 0 5px;
     color: #333333;
@@ -1414,7 +1419,8 @@ footer a, footer li, footer p {
   -webkit-text-fill-color: #337ab7;
 }
 
-.field-profile-section {
+.field-profile-section,
+.email-workflow-rule-section {
   -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
   -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
   -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
@@ -1422,12 +1428,14 @@ footer a, footer li, footer p {
   overflow: hidden;
 }
 
-.field-profile-closed {
+.field-profile-closed,
+.email-workflow-rule-closed {
   opacity: 0;
   max-height: 0px;
 }
 
-.field-profile-open {
+.field-profile-open,
+.email-workflow-rule-open {
   opacity: 1;
   max-height: 400px;
 }
@@ -1441,10 +1449,6 @@ footer a, footer li, footer p {
   font-size: 13px;
   font-weight: normal;
   line-height: 22px;
-}
-
-.field-profile .input-group {
-  max-width: 40%;
 }
 
 .field-profile .input-group.file-input-group {
@@ -1740,7 +1744,7 @@ footer a, footer li, footer p {
 
 .further-filter-by .inactive-filters-sub-list,
 .further-filter-by .status-list,
-.further-filter-by .document-type-list,
+.further-filter-by .attachment-type-list,
 .further-filter-by .organization-by-category-sub-list {
   max-height: 0px;
   overflow: hidden;
@@ -1758,7 +1762,7 @@ footer a, footer li, footer p {
 }
 
 .further-filter-by .inactive-filters-sub-list.expanded,
-.further-filter-by .document-type-list.expanded,
+.further-filter-by .attachment-type-list.expanded,
 .further-filter-by .status-list.expanded,
 .further-filter-by .organization-by-category-sub-list.expanded {
   max-height: 1000px;
@@ -1793,12 +1797,11 @@ footer a, footer li, footer p {
   margin: 5px 0px 20px;
 }
 
-.further-filter-by .document-type-filter-list {
+.further-filter-by .attachment-type-filter-list {
   max-height: 0
 }
 
 .further-filter-by .embargo-filter,
-.further-filter-by .document-type-filter,
 .further-filter-by .organization-filter {
   margin-left: -20px;
 }
@@ -1806,5 +1809,19 @@ footer a, footer li, footer p {
 .further-filter-by .organization-by-category-top-list {
   margin: 0px;
 }
+
+.email-workflow-rule-row:hover {
+  cursor:pointer;
+}
+
+.email-workflow-rule-row span.glyphicon-pencil {
+  visibility:hidden;
+}
+
+.email-workflow-rule-row:hover span.glyphicon-pencil {
+  visibility:visible;
+}
+
+//<span class="glyphicon glyphicon-pencil"></span>
 
 @import "item-view";

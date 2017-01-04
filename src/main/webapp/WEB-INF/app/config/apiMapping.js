@@ -1,37 +1,37 @@
 // CONVENTION: must match model name, case sensitive
 var apiMapping = {
-	DocumentType: {
+	AttachmentType: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'all'
 		},
 		listen: {
 			'endpoint': '/channel',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		},
 		create: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'create'
 		},
 		update: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'update'
 		},
 		remove: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type',
+			'controller': 'settings/attachment-type',
 			'method': 'remove'
 		},
 		reorder: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		},
 		sort: {
 			'endpoint': '/private/queue',
-			'controller': 'settings/document-type'
+			'controller': 'settings/attachment-type'
 		}
 	},
 	ControlledVocabulary: {
@@ -437,6 +437,16 @@ var apiMapping = {
 			'controller': 'organization',
 			'method': 'all'
 		},
+		addEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'metod': 'add-email-workflow-rule'
+		},
+		editEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'metod': 'edit-email-workflow-rule'	
+		},
 		get: {
 			'endpoint': '/private/queue',
 			'controller': 'organization'
@@ -445,6 +455,16 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'organization',
 			'method': 'delete'
+		},
+		removeEmailWorkflowRule: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'remove-email-workflow-rule'
+		},
+		changeEmailWorkflowRuleActivation: {
+			'endpoint': '/private/queue',
+			'controller': 'organization',
+			'method': 'change-email-workflow-rule-activation'	
 		},
 		listen: {
 			'endpoint': '/channel',
@@ -529,9 +549,29 @@ var apiMapping = {
 			'controller': 'submission',
 			'method': 'all'
 		},
+		assignTo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'assign'
+		},
+		changeStatus: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'change-status'
+		},
+		submitDate: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'submit-date'
+		},
 		one: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
+		},
+		remove: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'delete'
 		},
 		listen: {
 			'endpoint': '/channel',
@@ -640,8 +680,8 @@ var apiMapping = {
 	SubmissionState: {
 		all: {
 			'endpoint': '/private/queue',
-			'controller': 'submission',
-			'method': 'all-submission-state'
+			'controller': 'submission-state',
+			'method': 'all'
 		},
 		listen: {
 			'endpoint': '/channel',

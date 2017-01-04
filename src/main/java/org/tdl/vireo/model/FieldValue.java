@@ -17,6 +17,9 @@ public class FieldValue extends BaseEntity {
 
     @Column(columnDefinition = "text", nullable = true)
     private String value;
+    
+    @Column(nullable = true)
+    private String identifier;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private FieldPredicate fieldPredicate;
@@ -49,7 +52,15 @@ public class FieldValue extends BaseEntity {
         this.value = value;
     }
 
-    /**
+    public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	/**
      * @return the predicate
      */
     public FieldPredicate getFieldPredicate() {

@@ -15,10 +15,10 @@
 	</div>
 
 	<div class="modal-footer">
-		<button ng-disabled="deleting" type="button" class="btn btn-warning" ng-click="closeModal()">Cancel</button>
-		<button ng-disabled="deleting" type="button" class="btn btn-primary" ng-click="removeFile(fieldValue)">
+		<button ng-disabled="deleting" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+		<button ng-disabled="deleting" type="button" class="btn btn-danger" ng-click="deleteSubmission(submissionToDelete)">
 			<span ng-if="!deleting">Confirm</span>
-			<span ng-if="deleting">Deleting...</span>
+			<span ng-if="deleting">Deleting <span class="glyphicon glyphicon-refresh spinning"></span></span>
 		</button>
 	</div>
 </form>

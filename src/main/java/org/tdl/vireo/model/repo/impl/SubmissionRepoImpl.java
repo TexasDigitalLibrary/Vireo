@@ -200,12 +200,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         		break;
                         	case "INPUT_CHECKBOX":
                         		// Column's values are a boolean
-                        		Boolean value = Boolean.valueOf(filterString);
-                        		if(value) {
-                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = ").append(value).append(" OR");
+                        		if(Boolean.valueOf(filterString)) {
+                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
                         		}
                         		else {
-                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = ").append(value).append(" OR").append(" pfv").append(n).append(".value IS NULL ").append(" OR");
+                        			sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR").append(" pfv").append(n).append(".value IS NULL ").append(" OR");
                         		}
                         		break;
                         	default: 
