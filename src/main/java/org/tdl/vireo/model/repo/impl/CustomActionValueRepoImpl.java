@@ -20,7 +20,7 @@ public class CustomActionValueRepoImpl implements CustomActionValueRepoCustom {
     public CustomActionValue create(Submission submission, CustomActionDefinition definition, Boolean value) {
     	CustomActionValue cav = new CustomActionValue(definition, value);
     	submission.addCustomActionValue(cav);
-    	submissionRepo.save(submission);
+    	cav = customActionValueRepo.saveAndFlush(cav);
     	return cav;
     }
 
