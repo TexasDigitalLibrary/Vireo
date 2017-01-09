@@ -229,6 +229,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 
 			angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
 
+			SubmissionRepo.addAll($scope.page.content);
+
 			$scope.tableParams = new NgTableParams({
 				count: $scope.page.totalElements
 			},
@@ -481,7 +483,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 
 	
 	$scope.viewSubmission = function(submission) {
-		ItemViewService.setSelectedSubmission(submission);
+		ItemViewService.selectSubmission(submission.id);
 		$location.path("/admin/view/" + submission.submissionWorkflowSteps[0].id + "/" + submission.id);
 	};
 	

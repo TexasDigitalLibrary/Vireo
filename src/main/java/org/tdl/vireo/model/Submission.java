@@ -52,10 +52,9 @@ public class Submission extends BaseEntity {
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
     
-    //This should most likely be handled by a field profile
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar dateOfGraduation;
+    private Calendar submissionDate;
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<ActionLog> actionLog;
@@ -143,10 +142,26 @@ public class Submission extends BaseEntity {
      *            the submissionState to set
      */
     public void setSubmissionState(SubmissionState submissionState) {
+    	
+    	if(submissionState.getName().equals("Submitted")) {
+    		Calendar today = Calendar.getInstance();
+    		today.clear(Calendar.HOUR); 
+    		today.clear(Calendar.MINUTE); 
+    		today.clear(Calendar.SECOND);
+    		setSubmissionDate(today);
+    	}
+    	
+    	if(this.submissionState != null) {
+    		System.out.println("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
+    	} else {
+    		System.out.println("Changing status to " + submissionState.getName());
+    	}	
+    	
         this.submissionState = submissionState;
+        
     }
 
-    /**
+	/**
      * @return the organization
      */
     public Organization getOrganization() {
@@ -201,6 +216,20 @@ public class Submission extends BaseEntity {
 
         return foundFieldValue;
     }
+    
+	public List<FieldValue> getFieldValueByPredicate(FieldPredicate fieldPredicate) {
+		
+		List<FieldValue> foundFieldValues = new ArrayList<FieldValue>();
+
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                foundFieldValues.add(fieldValue);
+            }
+        }
+
+        return foundFieldValues;
+		
+	}
 
     /**
      * 
@@ -242,18 +271,18 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the dateOfGraduation
+     * @return the submissionDate
      */
-    public Calendar getDateOfGraduation() {
-        return dateOfGraduation;
+    public Calendar getSubmissionDate() {
+        return submissionDate;
     }
 
     /**
-     * @param dateOfGraduation
-     *            the dateOfGraduation to set
+     * @param submissionDate
+     *            the submissionDate to set
      */
-    public void setDateOfGraduation(Calendar dateOfGraduation) {
-        this.dateOfGraduation = dateOfGraduation;
+    public void setSubmissionDate(Calendar submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     /**
@@ -364,5 +393,6 @@ public class Submission extends BaseEntity {
 	public void setReviewerNotes(String reviewerNotes) {
 		this.reviewerNotes = reviewerNotes;
 	}
+
     
 }

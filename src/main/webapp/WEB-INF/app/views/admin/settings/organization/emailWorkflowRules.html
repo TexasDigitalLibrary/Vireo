@@ -1,0 +1,25 @@
+<div class="panel panel-default" ng-controller="EmailWorkflowRulesController">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+		Manage {{getSelectedOrganization().name}} Email Workflow Rules</h3>
+	</div>
+	<div class="panel-body">
+
+		<accordion single-expand="false">
+			<pane ng-repeat="state in submissionStates" query="email-workflowstep-rules-{{state.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{state.name}}</pane>
+		</accordion>
+
+		<modal 
+			modal-id="editEmailWorkflowRule" 
+			modal-view="views/modals/organization/emailWorkflowRuleEdit.html" 
+			modal-header-class="modal-header-primary">
+		</modal>
+
+		<modal 
+			modal-id="confirmEmailWorkflowRuleDelete" 
+			modal-view="views/modals/organization/emailWorkflowRuleDelete.html" 
+			modal-header-class="modal-header-danger">
+		</modal>
+
+	</div>
+</div>

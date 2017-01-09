@@ -347,7 +347,10 @@
 	    <script src="model/fieldValue.js"></script>
 	    <script src="model/note.js"></script>
 	    <script src="model/submissionListColumn.js"></script>
-		
+
+	    <!-- Constants -->
+		<script src="constants/emailRecipientType.js"></script>
+		<script src="constants/inputType.js"></script>		
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
@@ -357,6 +360,7 @@
 	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
+	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>

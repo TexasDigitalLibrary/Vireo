@@ -3,7 +3,12 @@ vireo.service("ItemViewService", function($q, Submission, SubmissionRepo) {
 	var ItemViewService = this;
 	
 	ItemViewService.setSelectedSubmission = function(submission) {
-		ItemViewService.submission = new Submission(submission);
+		ItemViewService.submission = submission;
+	};
+
+	ItemViewService.selectSubmission = function(id) {
+		ItemViewService.setSelectedSubmission(SubmissionRepo.findById(id));
+		return ItemViewService.submission;
 	};
 	
 	ItemViewService.getSelectedSubmission = function() {

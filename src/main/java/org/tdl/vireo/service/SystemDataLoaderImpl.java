@@ -289,10 +289,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
 
                 // check to see if the EmailWorkflowRule exists
-                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndRecipientTypeAndEmailTemplate(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate);
+                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndEmailRecipientAndEmailTemplate(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
                 if (newEmailWorkflowRule == null) {
-                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState, emailWorkflowRule.getRecipientType(), newEmailTemplate, emailWorkflowRule.isSystem());
+                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
                 }
 
                 emailWorkflowRules.add(newEmailWorkflowRule);

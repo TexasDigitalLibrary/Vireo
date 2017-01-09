@@ -114,6 +114,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 				if(aggregateWorkflowSteps !== undefined) {
 					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
 				}
+
 				fetchedOrgDefer.resolve(fetchedOrg);
 			});
 
