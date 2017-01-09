@@ -57,6 +57,10 @@ public class SubmissionTest extends AbstractEntityTest {
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
+
+        testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
+		assertEquals("The customActionDefinition repository is not 1!", 1, customActionDefinitionRepo.count());
+
     }
 
     @Override
@@ -140,6 +144,9 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         numSteps++;
         submission.addFieldValue(severableFieldValue);
+
+        submissionRepo.saveAndFlush(submission);
+
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
         submission.addActionLog(severableActionLog);
@@ -159,11 +166,9 @@ public class SubmissionTest extends AbstractEntityTest {
 
         long fieldValueCount = fieldValueRepo.count();
         submission.removeFieldValue(severableFieldValue);
-        submission = submissionRepo.save(submission);
+        submission = submissionRepo.saveAndFlush(submission);
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
-        // need this to refresh the repo in the transaction. Otherwise, we can still get the orphan.
-        fieldValueRepo.flush();
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
         assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
@@ -226,6 +231,8 @@ public class SubmissionTest extends AbstractEntityTest {
     public void cleanUp() {
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
+        customActionValueRepo.deleteAll();
+        customActionDefinitionRepo.deleteAll();
         workflowStepRepo.findAll().forEach(workflowStep -> {
             workflowStepRepo.delete(workflowStep);
         });

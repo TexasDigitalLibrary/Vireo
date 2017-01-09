@@ -64,8 +64,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     
     @Override
     public Submission create(User submitter, Organization organization, SubmissionState startingState) {
-        Submission submission = new Submission(submitter, organization, startingState);
-
+        Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
+        
 		for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
 			customActionValueRepo.create(submission, cad, false);
 		}
