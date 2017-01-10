@@ -40,7 +40,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean enabled;
     
-    @OneToOne
+    @OneToOne(cascade = MERGE, fetch = EAGER)
     private Configuration mappedShibAttribute;
 
     public FieldProfile() {
