@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.CascadeType.ALL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean enabled;
     
-    @OneToOne(cascade = MERGE, fetch = EAGER)
+    @OneToOne(cascade = ALL, fetch = EAGER)
     private Configuration mappedShibAttribute;
 
     public FieldProfile() {
