@@ -18,6 +18,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
 	});
 
+    // TODO - typo; "AcitveStep" should be "ActiveStep" -- needs refactoring in other places
 	$scope.setAcitveStep = function(step) {
 		if(step) {
 			var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
