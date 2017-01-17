@@ -18,8 +18,13 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
 	});
 
-	$scope.setAcitveStep = function(step) {
-		if(step) {
+	$scope.setActiveStep = function(step) {
+		if(step == "review") {
+			var stepIndex = $scope.submission.submissionWorkflowSteps.length + 1;
+			$scope.nextStep = $scope.submission.submissionWorkflowSteps[stepIndex+1];
+			$scope.activeStep = "review";
+		}
+		else if(step) {
 			var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
 			$scope.nextStep = $scope.submission.submissionWorkflowSteps[stepIndex+1];
 			$scope.activeStep = step;
