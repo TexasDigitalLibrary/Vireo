@@ -91,7 +91,8 @@ public class WorkflowStepController {
     @Auth(role="MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) }) //, path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // needs a condition field profile input type is not INPUT_FILE
     public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        
+        System.out.println("updating the fp " + fieldProfile.getId());
+        System.out.println("mapped shib <"+fieldProfile.getMappedShibAttribute()+">");
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
                 
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgId)));
