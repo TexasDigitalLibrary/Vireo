@@ -4,7 +4,7 @@
 			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
 				<a ng-click="setActiveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right"></span></a>
 			</li>
-			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep === 'review'}" ng-if="studentSubmissionRepoReady">
+			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
 				<a ng-click="setActiveStep('review')">Review</a>
 			</li>
 		</ul>
