@@ -284,6 +284,7 @@
 	    <script src="directives/selectedDirective.js"></script>
 	    <script src="directives/dropZoneDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
+	    <script src="directives/fieldProfileReviewDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
 	    <script src="directives/triptychDirective.js"></script>
