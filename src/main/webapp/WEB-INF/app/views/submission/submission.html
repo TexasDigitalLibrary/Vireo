@@ -46,7 +46,7 @@
 		<ul class="inline-list">
 			<li><button class="btn btn-default" ng-click="setActiveStep(nextStep)" ng-if="!onLastStep()">Continue to {{nextStep.name}}</button></li>
 			<li><button class="btn btn-default" ng-click="setActiveStep('review')" ng-if="onLastStep() && activeStep.name != 'review' && studentSubmissionRepoReady">Continue to Review</button></li>
-			<li><button class="btn btn-danger" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady">Submit</button></li>
+			<li><button class="btn btn-danger" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()">Submit</button></li>
 		</ul>		
 	</div>
 </div>

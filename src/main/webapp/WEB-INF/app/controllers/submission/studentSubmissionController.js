@@ -1,6 +1,10 @@
-vireo.controller("StudentSubmissionController", function ($controller, $scope, $routeParams, StudentSubmissionRepo, Submission) {
+vireo.controller("StudentSubmissionController", function ($controller, $scope, $routeParams, StudentSubmissionRepo, Submission, SubmissionStateRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+
+	SubmissionStateRepo.ready().then(function(){
+		$scope.submittedSubmissionState = SubmissionStateRepo.findByName('Submitted');
+	});
 
 	$scope.onLastStep = function() {
 		return true;
@@ -31,6 +35,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 			$scope.nextStep = $scope.submission.submissionWorkflowSteps[stepIndex+1];
 			$scope.activeStep = step;
 		}
+	};
+
+	$scope.submit = function() {
+	  $scope.submission.submissionState = $scope.submittedSubmissionState;
 	};
 
 });
