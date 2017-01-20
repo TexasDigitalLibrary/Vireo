@@ -38,7 +38,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	};
 
 	$scope.submit = function() {
-	  $scope.submission.submissionState = $scope.submittedSubmissionState;
+	  $scope.submission.changeStatus($scope.submittedSubmissionState);
 	};
 
 });
