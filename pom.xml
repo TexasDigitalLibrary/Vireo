@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>edu.tamu.weaverframework</groupId>
 		<artifactId>weaver-webservice-parent</artifactId>
-		<version>1.1.x-SNAPSHOT</version>
+		<version>1.1.0-RC5-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -65,31 +65,32 @@
 	</repositories>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>edu.tamu.weaverframework</groupId>
 			<artifactId>weaver-webservice-core</artifactId>
-			<version>1.1.x-SNAPSHOT</version>
+			<version>1.1.0-RC5-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Spring Boot Starter Web <dependency> <groupId>org.springframework.boot</groupId> 
-			<artifactId>spring-boot-starter-web</artifactId> </dependency> -->
-		<!-- Spring Boot Starter Data - brought in through the tamu core framework 
-			<dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-jpa</artifactId> 
-			</dependency> JPA -->
-		<!-- Spring Boot Data REST <dependency> <groupId>org.springframework.boot</groupId> 
-			<artifactId>spring-boot-starter-data-rest</artifactId> </dependency> -->
-		<!-- H2 in-memory SQL DB - brought in through the tamu core framework <dependency> 
-			<groupId>com.h2database</groupId> <artifactId>h2</artifactId> </dependency> -->
-		<!-- PostgreSQL SQL DB - brought in through the tamu core framework <dependency> 
-			<groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId> <version>${postgresql.version}</version> 
-			</dependency> -->
+		<!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		<!-- PostgreSQL SQL DB - brought in through the tamu core framework -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+
 		<!-- MySQL SQL DB -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 
+		<!-- Spring Boot Loader Tools (for FileUtils.sha1Hash()) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-loader-tools</artifactId>
@@ -107,19 +108,22 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
-			<version>1.0.0</version> </dependency> -->
+		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>properties-maven-plugin</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.8</version>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.apache.commons</groupId>
-    		<artifactId>commons-csv</artifactId>
-    		<version>1.1</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.1</version>
 		</dependency>
 
 	</dependencies>
@@ -242,17 +246,31 @@
 			</plugin>
 
 			<!-- Read application.properties -->
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>properties-maven-plugin</artifactId> 
-				<version>1.0.0</version> <executions> <execution> <phase>initialize</phase> 
-				<goals> <goal>read-project-properties</goal> </goals> </execution> </executions> 
-				<configuration> <files> <file>src/main/resources/application.properties</file> 
-				</files> </configuration> </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<files>
+						<file>src/main/resources/application.properties</file>
+					</files>
+				</configuration>
+			</plugin>
 
 			<!-- General Maven Execution Plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
+
 					<!-- NPM Install -->
 					<execution>
 						<id>exec-npm-install</id>
@@ -267,6 +285,7 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
+
 					<!-- Protractor Testing for AngularJS -->
 					<execution>
 						<id>exec-npm-run-protractor</id>
@@ -283,6 +302,7 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
+
 					<!-- Compass Compile -->
 					<execution>
 						<id>exec-compass-compile</id>
@@ -297,11 +317,15 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-					<!-- Grunt Deploy <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
+
+					<!-- Grunt Deploy -->
+					<!-- <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
 						<configuration> <executable>grunt</executable> <arguments> <argument>deploy</argument> 
 						</arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
+
 				</executions>
 			</plugin>
+
 			<!-- Karma Testing for AngularJS -->
 			<plugin>
 				<groupId>com.kelveden</groupId>
@@ -321,6 +345,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<!-- Assembly Plugin to generate Release zip file -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -339,8 +364,10 @@
 				</executions>
 			</plugin>
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
+
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
@@ -367,6 +394,7 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+
 			</plugins>
 		</pluginManagement>
 
@@ -383,11 +411,6 @@
 			</resource>
 		</resources>
 
-		<!-- <resources> <resource> <directory>src/main/webapp/</directory> <excludes> 
-			<exclude>app/node_modules/**</exclude> </excludes> </resource> </resources> -->
-
 	</build>
-
-
 
 </project>

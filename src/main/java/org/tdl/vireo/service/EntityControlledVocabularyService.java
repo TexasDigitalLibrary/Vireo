@@ -16,8 +16,11 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.EntityCVWhitelist;
 import org.tdl.vireo.model.Language;
@@ -35,6 +38,8 @@ import org.tdl.vireo.model.repo.LanguageRepo;
  */
 @Service
 public class EntityControlledVocabularyService {
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
     
     // default whitelist consists only of Embargo guarantor
     private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] {
@@ -98,7 +103,7 @@ public class EntityControlledVocabularyService {
             
         }
         
-        System.out.println("\n\nDEFAULT WHITELIST:\n" + whitelist + "\n\n");
+        logger.info("\n\nDEFAULT WHITELIST:\n" + whitelist + "\n\n");
     }
     
     private boolean isPropertyEnum(String entityName, String propertyName) {
@@ -146,7 +151,7 @@ public class EntityControlledVocabularyService {
             }
         }
         else {
-            System.out.println("Entity " + entityName + " is not an available entity!\n");
+            logger.info("Entity " + entityName + " is not an available entity!\n");
         }
     }
     
@@ -184,7 +189,7 @@ public class EntityControlledVocabularyService {
                 propertyNames.add(propertyName);
             }
             else {
-                System.out.println("Property " + propertyName + " is not an available property on entity " + entityName + "!\n");
+                logger.info("Property " + propertyName + " is not an available property on entity " + entityName + "!\n");
                 return;
             }
             whitelist.put(entityName, propertyNames);
@@ -223,7 +228,7 @@ public class EntityControlledVocabularyService {
             }
         }
         else {
-            System.out.println("Entity " + entityName + " is not an available entity!\n");
+            logger.info("Entity " + entityName + " is not an available entity!\n");
         }
     }
         
@@ -253,7 +258,7 @@ public class EntityControlledVocabularyService {
             });                
         }
         else {
-            System.out.println("\nThere are no entity controlled vocabularies!\n");
+            logger.info("\nThere are no entity controlled vocabularies!\n");
         }
         
         List<String> properties = whitelist.get(entityName);
@@ -273,8 +278,6 @@ public class EntityControlledVocabularyService {
             }
         }
         
-        //System.out.println("\nEntity " + entityName + " with property " + property + " not allowed to be a controlled vocabulary!\n");
-
         // return empty array list
         return ret;
     }

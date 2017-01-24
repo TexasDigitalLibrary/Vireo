@@ -24,6 +24,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
@@ -31,6 +34,8 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
     @ManyToOne(optional = false)
     private User submitter;
@@ -152,9 +157,9 @@ public class Submission extends BaseEntity {
     	}
     	
     	if(this.submissionState != null) {
-    		System.out.println("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
+    		logger.info("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
     	} else {
-    		System.out.println("Changing status to " + submissionState.getName());
+    		logger.info("Changing status to " + submissionState.getName());
     	}	
     	
         this.submissionState = submissionState;

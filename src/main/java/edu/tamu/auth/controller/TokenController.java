@@ -145,7 +145,6 @@ public class TokenController {
 		for(String k : shibKeys) {
 			String p = headers.get(env.getProperty("shib."+k, ""));
 			token.makeClaim(k, p);
-			//System.out.println("Adding " + k +": " + p + " to JWT.");
 		}
 		return token;		
 	}
