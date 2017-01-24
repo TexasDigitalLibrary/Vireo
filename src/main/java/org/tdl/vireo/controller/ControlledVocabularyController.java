@@ -55,7 +55,7 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/controlled-vocabulary")
 public class ControlledVocabularyController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ControlledVocabularyCachingService controlledVocabularyCachingService;
@@ -68,7 +68,7 @@ public class ControlledVocabularyController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     /**
      * Endpoint to request all controlled vocabulary.
      * 
@@ -76,7 +76,7 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @ApiMapping("/all")
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     public ApiResponse getAllControlledVocabulary() {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc());
     }
@@ -90,8 +90,6 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @ApiMapping("/{name}")
-    //TODO:  commented this out 
-    //@Auth(role = "MANAGER")    
     public ApiResponse getControlledVocabularyByName(@ApiVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
     }
@@ -197,7 +195,7 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @ApiMapping("/export/{name}")
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     public ApiResponse exportControlledVocabulary(@ApiVariable String name) {
         logger.info("Exporting controlled vocabulary for " + name);
         ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
@@ -254,12 +252,12 @@ public class ControlledVocabularyController {
      * @param inputStream
      *            csv bitstream
      * @return ApiResponse with map of new words, updating words, and duplicate words
-     * @throws IOException 
+     * @throws IOException
      */
     // TODO: implement controller advice to catch exception and handle gracefully
     @Transactional
     @ApiMapping(value = "/compare/{name}", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")    
+    @Auth(role = "MANAGER")
     public ApiResponse compareControlledVocabulary(@ApiVariable String name, @ApiInputStream InputStream inputStream) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
@@ -267,8 +265,6 @@ public class ControlledVocabularyController {
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, wordsMap);
     }
-    
-    
 
     /**
      * Endpoint to import controlled vocabulary after confirmation.
@@ -278,8 +274,8 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value = "/import/{name}", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")    
+    @ApiMapping(value = "/import/{name}")
+    @Auth(role = "MANAGER")
     public ApiResponse importControlledVocabulary(@ApiVariable String name) {
         logger.info("Inporting controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
@@ -301,26 +297,26 @@ public class ControlledVocabularyController {
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
-       
+
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
-    	
-    	Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
 
-    	List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
-    	List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
-    	List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
+        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
 
-    	List<VocabularyWord> words = controlledVocabulary.getDictionary();
-    	
-    	Boolean headerPass = true;
-    	
-    	for (CSVRecord record : records) {
-    		
-    		if(headerPass) {
-    			headerPass = false;
-    			continue;
-    		}
-    		
+        List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
+        List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
+        List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
+
+        List<VocabularyWord> words = controlledVocabulary.getDictionary();
+
+        Boolean headerPass = true;
+
+        for (CSVRecord record : records) {
+
+            if (headerPass) {
+                headerPass = false;
+                continue;
+            }
+
             VocabularyWord currentVocabularyWord = new VocabularyWord(record.get("name"), record.get("definition"), record.get("identifier"));
 
             boolean isRepeat = false;
@@ -384,10 +380,10 @@ public class ControlledVocabularyController {
         cvCache.setDuplicateVocabularyWords(repeatedWords);
         cvCache.setUpdatingVocabularyWords(updatingWords);
         controlledVocabularyCachingService.addControlledVocabularyCache(cvCache);
-        
+
         return wordsMap;
     }
-    
+
     /**
      * Converts input stream to a string which represents the csv
      * 

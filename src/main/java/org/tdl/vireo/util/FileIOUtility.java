@@ -43,9 +43,7 @@ public class FileIOUtility {
 		
 		Path folder = getAbsolutePath(relativeFolderPath);
 		
-		for(String path : folder.toFile().list()) {
-			System.out.println(path);
-			
+		for(String path : folder.toFile().list()) {			
 			if(path.contains(name)) {
 				targetPath = path;
 				break;

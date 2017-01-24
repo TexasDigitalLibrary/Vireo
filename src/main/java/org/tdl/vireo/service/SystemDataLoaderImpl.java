@@ -196,13 +196,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 		try {
 			vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {});
 		} catch (IOException e) {
-			System.out.println("\n\nERROR generating default controlled vocabularies\n\n");
 			e.printStackTrace();
 			logger.debug("Unable to load default controlled vocabularies.");
 		}
 		
         for(VocabularyWord vw : vocabularyWords) {
-        	System.out.println("\nVOCABULARY WORD FOUND: " + vw.getName());
         	vw.setControlledVocabulary(submissionTypesCV);
         	vw = vocabularyWordRepo.save(vw);
         	submissionTypesCV.addValue(vw);
@@ -227,7 +225,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             }
         } catch (RuntimeException | IOException e) {
-            System.out.println("\n\nERROR Generating System Organization Categories\n\n");
             e.printStackTrace();
             logger.debug("Unable to initialize default embargos. ", e);
         }
@@ -582,7 +579,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
             }
         } catch (RuntimeException | IOException e) {
-            System.out.println("\n\nERROR Generating System InputTypes\n\n");
             e.printStackTrace();
             logger.debug("Unable to initialize default input types. ", e);
         }
