@@ -41,7 +41,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean enabled;
     
-    @OneToOne(cascade = ALL, fetch = EAGER)
+    @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Configuration mappedShibAttribute;
 
     public FieldProfile() {
@@ -213,6 +213,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
             fieldGlosses.add(fg);
         }
 
+        clone.setMappedShibAttribute(getMappedShibAttribute());
         clone.setHelp(getHelp());
         clone.setUsage(getUsage());
         clone.setEnabled(getEnabled());
