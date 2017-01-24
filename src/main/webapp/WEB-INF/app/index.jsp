@@ -385,6 +385,7 @@
 	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
+	    <script src="controllers/submission/submissionCompleteController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>
 	    
 	<!-- endbuild -->
