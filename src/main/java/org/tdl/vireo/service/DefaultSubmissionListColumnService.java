@@ -3,11 +3,16 @@ package org.tdl.vireo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 @Service
 public class DefaultSubmissionListColumnService {
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
     
     private List<SubmissionListColumn> defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
     
@@ -26,7 +31,7 @@ public class DefaultSubmissionListColumnService {
            this.defaultSubmissionListColumns.add(defaultSubmissionListColumn);
        }
        else {
-           System.out.println("Default submission list column is null!!");
+           logger.info("Default submission list column is null!!");
        }
     }
     
