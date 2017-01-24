@@ -13,7 +13,10 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
@@ -23,6 +26,8 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Entity
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
     
     @Column(nullable = false, unique = true)
     private String name;
@@ -123,7 +128,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
                 values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, craftPropertyName()));
             }
             catch(ClassNotFoundException e) {
-                System.out.println("Entity " + entityName + " not found!\n");
+                logger.info("Entity " + entityName + " not found!\n");
             }
         }
         return values;

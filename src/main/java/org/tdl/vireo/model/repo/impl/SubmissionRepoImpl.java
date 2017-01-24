@@ -10,12 +10,15 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
@@ -30,6 +33,8 @@ import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
+    
+    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -364,7 +369,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             			
                     	break;
             		
-            		default: System.out.println("No value path given for submissionListColumn " + submissionListColumn.getTitle());
+            		default: logger.info("No value path given for submissionListColumn " + submissionListColumn.getTitle());
             	}
 
             }
@@ -404,9 +409,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
         
         
-        System.out.println("QUERY:\n" + sqlQuery);
+        logger.debug("QUERY:\n" + sqlQuery);
 
-        System.out.println("COUNT QUERY:\n" + sqlCountQuery);
+        logger.debug("COUNT QUERY:\n" + sqlCountQuery);
 
         return new String[] { sqlQuery, sqlCountQuery };
     }
