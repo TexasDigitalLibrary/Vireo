@@ -222,3 +222,6 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 vireo.model("Submission", submissionModel);
 vireo.model("StudentSubmission", submissionModel);
+vireo.model("AdvisorSubmission", submissionModel);
+
+

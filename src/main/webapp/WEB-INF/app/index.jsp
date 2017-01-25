@@ -296,6 +296,7 @@
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
+	    <script src="repo/advisorSubmissionRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
 	    <script src="repo/attachmentTypeRepo.js"></script>
 	    <script src="repo/customActionDefinitionRepo.js"></script>
@@ -360,6 +361,7 @@
 	    <!-- Controllers -->
 	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
+	    <script src="controllers/submission/advisorReviewController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
