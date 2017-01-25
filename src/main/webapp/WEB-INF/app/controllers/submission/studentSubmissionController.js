@@ -15,7 +15,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
 		$scope.studentSubmissionRepoReady = true;
 		$scope.submission = new Submission(angular.fromJson(data.body).payload.Submission);
-		$scope.setActiveStep($scope.submission.submissionWorkflowSteps[0]);
 
 		$scope.onLastStep = function() {
 			var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);

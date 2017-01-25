@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -404,13 +405,8 @@ public class Submission extends BaseEntity {
 		this.reviewerNotes = reviewerNotes;
 	}
 	
-	private void generateAdvisorAccessHash() {
-				
-		HashCodeBuilder hcb = new HashCodeBuilder(11,17);
-		
-		int hash = Math.abs(hcb.append(submitter.getEmail()).toHashCode());
-		
-		setAdvisorAccessHash(String.valueOf(hash)+getTime().getTimeInMillis());
+	private void generateAdvisorAccessHash() {		
+		setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
 	}
 	
 	public void setAdvisorAccessHash(String string) {

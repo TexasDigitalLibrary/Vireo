@@ -1,0 +1,84 @@
+
+
+<div class="container review-page">
+	<h1 style="text-align: center">Review Application </h1>
+
+	<div class="row" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps">
+		<h3>{{submissionWorkflowStep.name}}</h3>
+		<hr>
+		<div class="row" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required">
+			<div class="col-sm-2 col-sm-offset-1 col-xs-12">
+				<span class="review-label pull-right-sm pull-right-lg">{{aggregateFieldProfile.fieldGlosses[0].value}}:</span>
+			</div>
+			<div class="col-sm-9 col-xs-12">
+				<ul class="list-unstyled">
+					<li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
+						{{fv.value}}<span ng-if="aggregateFieldProfile.inputType.name==InputType.INPUT_CONTACT"> ({{fv.identifier}})</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<h3>Application Activity</h3>
+		<hr>
+	</div>
+
+
+	<div class="row">
+		<h3>Approval</h3>
+		<hr>
+
+		<form>
+			
+			<div class="row">
+				<div class="col-sm-2 col-sm-offset-1 col-xs-12">
+					Approve Embargo:
+				</div>
+				<div class="col-sm-9 col-xs-12">
+					<ul class="list-unstyled">
+						<div class="radio">
+							<label><input type="radio" name="approveEmbargo">I approve of the embargo selection.</label>
+						</div>
+						<div class="radio">
+							<label><input type="radio" name="approveEmbargo">I reject the embargo selection. (Please leave a comment explaining why below)</label>
+						</div>
+					</ul>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-2 col-sm-offset-1 col-xs-12">
+					Approve Application:
+				</div>
+				<div class="col-sm-9 col-xs-12">
+					<ul class="list-unstyled">
+						<div class="radio">
+							<label><input type="radio" name="approveApplication">I approve this application.</label>
+						</div>
+						<div class="radio">
+							<label><input type="radio" name="approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
+						</div>
+					</ul>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-2 col-sm-offset-1 col-xs-12">
+					Comments:
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<div class="form-group">
+						<textarea class="form-control"></textarea>
+					</div>
+				</div>
+				<div class="col-xs-3">
+				</div>
+			</div>
+
+			<button class="btn btn-primary">Submit</button>
+
+		</form>
+	</div>
+</div>

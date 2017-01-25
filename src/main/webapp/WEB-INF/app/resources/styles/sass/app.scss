@@ -807,6 +807,7 @@ footer a, footer li, footer p {
 }
 
 .admin-page h1 + hr,
+.review-page h3 + hr,
 .my-profile h1 + hr {
   border: 0;
   height: 1px;
@@ -824,6 +825,10 @@ footer a, footer li, footer p {
 
 .admin-page .admin-content {
 
+}
+
+.review-page .review-label {
+  font-weight:bold;
 }
 
 .my-profile h1 {
@@ -986,6 +991,16 @@ footer a, footer li, footer p {
     margin-right: 10px;
     min-width: 50px;
     font-size: 1.25em;
+  }
+
+  .pull-right-sm {
+    float: right;
+    white-space: nowrap;
+  }
+
+  .pull-left-sm {
+    float: left;
+    white-space: nowrap;
   }
 
 }
