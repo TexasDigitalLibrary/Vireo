@@ -661,6 +661,16 @@ var apiMapping = {
 			'endpoint': '/channel',
 			'controller': 'submission',
 			'method': 'advisor'
+		},
+		file: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file'
+		},
+		fileInfo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file-info'
 		}
 	},
 	SubmissionListColumn: {

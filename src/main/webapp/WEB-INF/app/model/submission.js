@@ -147,7 +147,7 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 		};
 		
 		submission.file = function(uri) {
-
+			console.log(this.getMapping().file);
 			angular.extend(this.getMapping().file, {
 				data: {
 					'uri': uri

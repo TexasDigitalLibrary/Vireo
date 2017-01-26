@@ -23,7 +23,6 @@
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css">
 
 	<link rel="stylesheet" href="resources/styles/app.css" />	
@@ -285,7 +284,7 @@
 	    <script src="directives/dropZoneDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
 	    <script src="directives/fieldProfileReviewDirective.js"></script>
-	    <script src="directives/reviewRequiredFieldsDirective.js"></script>
+	    <script src="directives/reviewSubmissionFieldsDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
 	    <script src="directives/triptychDirective.js"></script>
