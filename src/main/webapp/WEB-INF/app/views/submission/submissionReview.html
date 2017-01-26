@@ -1,13 +1,10 @@
-<h1>Final Review</h1>
+<div class="container confirm-submit">
+	<h1>Confirm & Submit</h1>
 
-<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps container">
-	<div ng-repeat="workflowStep in submission.submissionWorkflowSteps" class="row">
-	  <div class="row"><div class="col-xs-12"><h3>{{workflowStep.name}}</h3></div></div>
+	<!-- links to incomplete fields here -->
 
-	  <div class="col-xs-12">
-		<div class="row" ng-repeat="fp in workflowStep.aggregateFieldProfiles">
-		  <div class="col-xs-12"><field-profile-review profile="fp"></field-profile-review></div>
-		</div>
-	  </div>
-	</div>
+	<reviewsubmissionsields submission="submission"></reviewsubmissionsields>
+
+	<!-- submit button here -->
+
 </div>
