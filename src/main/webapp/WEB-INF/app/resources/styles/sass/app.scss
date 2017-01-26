@@ -1,4 +1,7 @@
 @import "sass/main";
+@import "./overrides/all";
+@import "./imports";
+@import "./directives/all";
 
 body {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
@@ -186,8 +189,8 @@ main footer {
 
 .btn-danger {
   color: #fff;
-  background-color: #CD7674;
-  border-color: #813735;
+  background-color: $brand-danger;
+  border-color: darken($brand-danger,15%);
 }
 
 .btn-danger.active, .btn-danger.focus, .btn-danger:active, .btn-danger:focus, .btn-danger:hover, .open>.dropdown-toggle.btn-danger {
@@ -233,7 +236,7 @@ main footer {
 }
 
 .label-remove {
-  color: #CD7674;
+  color: $brand-danger;
 }
 
 .label-remove:hover {
@@ -273,7 +276,7 @@ main footer {
 
 .assume-status {
   float: left;
-  color: #CD7674;
+  color: $brand-danger;
 }
 
 .control {
@@ -1729,7 +1732,7 @@ footer a, footer li, footer p {
 
 // Now Filtering By Side Module
 .now-filtering-by .glyphicon {
-  color: #CD7674;
+  color: $brand-danger;
 }
 
 .now-filtering-by a {
