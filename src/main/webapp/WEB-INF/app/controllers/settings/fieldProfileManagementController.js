@@ -1,7 +1,8 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, AttachmentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, AttachmentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ConfigurationRepo) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+	$scope.shibbolethAttributes = ConfigurationRepo.getAllMapByType().shibboleth;
 	$scope.workflowStepRepo = WorkflowStepRepo;	
 
 	$scope.fieldProfileRepo = FieldProfileRepo;
@@ -114,7 +115,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				fieldGlosses: [],
 				controlledVocabularies: []
 			};
-
 			angular.extend($scope.documentData.attachmentType, $scope.attachmentTypes[0]);
 			
 			$scope.closeModal();
@@ -159,7 +159,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 		$scope.selectFieldProfile = function(index) {
 			var fieldProfile = $scope.step.aggregateFieldProfiles[index];
-			$scope.modalData = fieldProfile;
+			angular.extend($scope.modalData, fieldProfile);
 			
 
 			if($scope.modalData.fieldPredicate.attachmentTypePredicate) {
