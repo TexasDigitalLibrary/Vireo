@@ -2,13 +2,16 @@
 	<div class="col-xs-12">
 		<ul class="nav nav-pills nav-justified">
 			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
-				<a ng-click="setAcitveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right" ng-if="!$last"></span></a>
+				<a ng-click="setActiveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right"></span></a>
+			</li>
+			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
+				<a ng-click="setActiveStep({name:'review'})">Confirm & Submit</a>
 			</li>
 		</ul>
 	</div>
 </div>
 
-<div class="row">
+<div class="row" ng-if="activeStep.name != 'review'">
 
 	<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps">
 		<ul class="list-unstyled">
@@ -28,10 +31,20 @@
 
 </div>
 
+<div class="row" ng-if="activeStep.name == 'review'">
+
+	<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps">
+		<div ng-include="'views/submission/submissionReview.html'"></div>
+	</div>	
+
+</div>
+
 <div class="row">
 	<div class="col-xs-12">
 		<ul class="inline-list">
-			<li><button class="btn btn-default" ng-click="setAcitveStep(nextStep)" ng-if="!onLastStep()">Continue to {{nextStep.name}}</button></li>
-		</ul>
+			<li><button class="btn btn-default" ng-click="setActiveStep(nextStep)" ng-if="!onLastStep()">Continue to {{nextStep.name}}</button></li>
+			<li><button class="btn btn-default" ng-click="setActiveStep({name:'review'})" ng-if="onLastStep() && activeStep.name != 'review' && studentSubmissionRepoReady">Continue to Review</button></li>
+			<li><button class="btn btn-default" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()">Submit</button></li>
+		</ul>		
 	</div>
 </div>
