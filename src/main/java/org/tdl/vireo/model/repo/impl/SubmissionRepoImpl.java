@@ -53,7 +53,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState) {
+    public Submission create(User submitter, Organization organization, SubmissionState startingState) {    	
         Submission submission = new Submission(submitter, organization, startingState);
         submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
         return submissionRepo.save(submission);

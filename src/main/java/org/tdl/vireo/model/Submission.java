@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -24,9 +26,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
+import groovy.ui.SystemOutputInterceptor;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
@@ -68,15 +72,17 @@ public class Submission extends BaseEntity {
     
     @Lob
     private String reviewerNotes;
+    
+    @Column(nullable = true)
+    private String advisorAccessHash;
 
-    public Submission() {
+    public Submission() {    	
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setAttachments(new HashSet<DeprecatedAttachment>());
-
     }
 
     /**
@@ -87,6 +93,7 @@ public class Submission extends BaseEntity {
         this();
         setSubmitter(submitter);
         setOrganization(organization);
+        generateAdvisorAccessHash();
     }
 
     /**
@@ -144,11 +151,7 @@ public class Submission extends BaseEntity {
     public void setSubmissionState(SubmissionState submissionState) {
     	
     	if(submissionState.getName().equals("Submitted")) {
-    		Calendar today = Calendar.getInstance();
-    		today.clear(Calendar.HOUR); 
-    		today.clear(Calendar.MINUTE); 
-    		today.clear(Calendar.SECOND);
-    		setSubmissionDate(today);
+    		setSubmissionDate(getTime());
     	}
     	
     	if(this.submissionState != null) {
@@ -160,6 +163,14 @@ public class Submission extends BaseEntity {
         this.submissionState = submissionState;
         
     }
+
+	private Calendar getTime() {
+		Calendar time = Calendar.getInstance();
+		time.clear(Calendar.HOUR); 
+		time.clear(Calendar.MINUTE); 
+		time.clear(Calendar.SECOND);
+		return time;
+	}
 
 	/**
      * @return the organization
@@ -392,6 +403,18 @@ public class Submission extends BaseEntity {
 	 */
 	public void setReviewerNotes(String reviewerNotes) {
 		this.reviewerNotes = reviewerNotes;
+	}
+	
+	private void generateAdvisorAccessHash() {		
+		setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
+	}
+	
+	public void setAdvisorAccessHash(String string) {
+		advisorAccessHash = string;
+	}
+	
+	public String getAdvisorAccessHash() {
+		return advisorAccessHash;
 	}
 
     
