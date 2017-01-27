@@ -108,6 +108,19 @@ public class SubmissionController {
     public ApiResponse getOne(@ApiVariable Long submissionId) {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId));
     }
+    
+    @Transactional
+    @ApiMapping("/advisor-review/{submissionHash}")
+    public ApiResponse getOne(@ApiVariable String submissionHash) {
+    	    	
+    	Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
+    	
+    	System.out.println("submissionHash" + submissionHash);
+    	System.out.println("hashAsInt" + submissionHash);
+    	System.out.println("submission" + submission);
+    	
+        return new ApiResponse(SUCCESS, submission);
+    }
 
     @Transactional
     @ApiMapping("/create")
@@ -361,8 +374,6 @@ public class SubmissionController {
     	});
     	
 		
-	}
-
-    
+	}    
 
 }

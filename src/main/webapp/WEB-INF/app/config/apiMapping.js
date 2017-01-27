@@ -650,6 +650,29 @@ var apiMapping = {
 			'controller': 'submission'
 		}
 	},
+	AdvisorSubmission: {
+		lazy: true,
+		getByHash: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'advisor-review'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission',
+			'method': 'advisor'
+		},
+		file: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file'
+		},
+		fileInfo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file-info'
+		}
+	},
 	SubmissionListColumn: {
 		all: {
 			'endpoint': '/private/queue',

@@ -202,10 +202,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 		}
 		
         for(VocabularyWord vw : vocabularyWords) {
-        	System.out.println("\nVOCABULARY WORD FOUND: " + vw.getName());
-        	vw.setControlledVocabulary(submissionTypesCV);
-        	vw = vocabularyWordRepo.save(vw);
-        	submissionTypesCV.addValue(vw);
+        	if(vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
+	        	vw.setControlledVocabulary(submissionTypesCV);
+	        	vw = vocabularyWordRepo.save(vw);
+	        	submissionTypesCV.addValue(vw);
+        	}
         }
         
         submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
