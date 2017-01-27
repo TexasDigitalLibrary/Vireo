@@ -4,7 +4,9 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
         restrict: 'E',
         scope: {
         	submission: "=",
-            filterOptional: "=?"
+            filterOptional: "=?",
+            hideLinks: "=?",
+            setActiveStep: "&"
         },
         link: function($scope){
 

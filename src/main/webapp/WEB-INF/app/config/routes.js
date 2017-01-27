@@ -21,6 +21,11 @@ vireo.config(function($locationProvider, $routeProvider) {
 			controller: 'StudentSubmissionController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
+		when('/submission/:submissionId/step/:stepNum', {
+			templateUrl: 'views/submission/submission.html',
+			controller: 'StudentSubmissionController',
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+		}).
 		when('/review/:advisorAccessHash', {
 			templateUrl: 'views/submission/advisorReview.html',
 			controller: 'AdvisorReviewController'
