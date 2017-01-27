@@ -115,10 +115,6 @@ public class SubmissionController {
     	    	
     	Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
     	
-    	System.out.println("submissionHash" + submissionHash);
-    	System.out.println("hashAsInt" + submissionHash);
-    	System.out.println("submission" + submission);
-    	
         return new ApiResponse(SUCCESS, submission);
     }
 
