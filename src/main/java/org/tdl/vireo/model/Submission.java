@@ -36,6 +36,7 @@ import groovy.ui.SystemOutputInterceptor;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
+
     @ManyToOne(optional = false)
     private User submitter;
 
@@ -70,6 +71,9 @@ public class Submission extends BaseEntity {
 
     private Set<DeprecatedAttachment> attachments;
     
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private List<CustomActionValue> customActionValues;
+    
     @Lob
     private String reviewerNotes;
     
@@ -82,6 +86,7 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
+        setCustomActionValues(new ArrayList<CustomActionValue>());
         setAttachments(new HashSet<DeprecatedAttachment>());
     }
 
@@ -417,5 +422,38 @@ public class Submission extends BaseEntity {
 		return advisorAccessHash;
 	}
 
-    
+	/**
+	 * @return the customActionValues
+	 */
+	public List<CustomActionValue> getCustomActionValues() {
+		return customActionValues;
+	}
+
+	/**
+	 * @param customActionValues the customActionValues to set
+	 */
+	public void setCustomActionValues(List<CustomActionValue> customActionValues) {
+		this.customActionValues = customActionValues;
+	}
+	
+	public void addCustomActionValue(CustomActionValue customActionValue){
+		this.customActionValues.add(customActionValue);
+	}
+	
+	/**
+	 * 
+	 * @param customActionValue
+	 * @return
+	 */
+	public CustomActionValue editCustomActionValue(CustomActionValue customActionValue) {
+		for (CustomActionValue cav : this.customActionValues) {
+			if (cav.getId().equals(customActionValue.getId())) {
+				cav.setDefinition(customActionValue.getDefinition());
+				cav.setValue(customActionValue.getValue());
+				return cav;
+			}
+		}
+		this.customActionValues.add(customActionValue);
+		return customActionValue;
+	}
 }

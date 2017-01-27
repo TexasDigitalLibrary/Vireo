@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
@@ -163,6 +164,12 @@ public class SubmissionController {
     }
     
     @Transactional
+    @ApiMapping("/{submissionId}/update-custom-action-value")
+    @Auth(role = "MANAGER")
+    public ApiResponse updateCustomActionValue(@ApiVariable("submissionId") Long submissionId, @ApiModel CustomActionValue customActionValue) {
+        return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId).editCustomActionValue(customActionValue));
+	}
+
     @ApiMapping("/{submissionId}/change-status")
     @Auth(role = "STUDENT")
     public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {
@@ -368,8 +375,7 @@ public class SubmissionController {
     			
     		}
     	});
-    	
-		
+
 	}    
 
 }

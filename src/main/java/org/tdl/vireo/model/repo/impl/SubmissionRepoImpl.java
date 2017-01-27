@@ -17,12 +17,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -43,6 +47,12 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
+    
+	@Autowired
+	private CustomActionDefinitionRepo customActionDefinitionRepo;
+	
+	@Autowired
+	private CustomActionValueRepo customActionValueRepo;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -53,10 +63,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState) {    	
-        Submission submission = new Submission(submitter, organization, startingState);
-        submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
-        return submissionRepo.save(submission);
+    public Submission create(User submitter, Organization organization, SubmissionState startingState) {
+        Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
+        
+		for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
+			customActionValueRepo.create(submission, cad, false);
+		}
+        
+		submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
+		return submissionRepo.save(submission);
     }
 
     @Override

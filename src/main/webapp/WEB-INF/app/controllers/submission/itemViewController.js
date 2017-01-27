@@ -306,10 +306,14 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			}
 	    };
 
-	    $scope.customActionsBox = {
-	        "title": "Custom Actions",
-	        "viewUrl": "views/sideboxes/customActions.html"
-	    };
+	  $scope.customActionsBox = {
+		  "title": "Custom Actions",
+		  "viewUrl": "views/sideboxes/customActions.html",
+		  "submission": $scope.submission,
+		  "updateCustomActionValue": function(cav) {
+		   	$scope.submission.updateCustomActionValue(cav);
+		  }
+	  };
 		
 		SidebarService.addBoxes([
 		    $scope.activeDocumentBox,

@@ -197,6 +197,14 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 
+		submission.updateCustomActionValue = function(customActionValue) {
+			angular.extend(submission.getMapping().updateCustomActionValue, {
+				method: submission.id+"/update-custom-action-value",
+				data: customActionValue
+			});
+			return WsApi.fetch(submission.getMapping().updateCustomActionValue);
+		};
+
 		submission.changeStatus = function(status) {
 
 			angular.extend(this.getMapping().changeStatus, {
@@ -241,5 +249,3 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 vireo.model("Submission", submissionModel);
 vireo.model("StudentSubmission", submissionModel);
 vireo.model("AdvisorSubmission", submissionModel);
-
-
