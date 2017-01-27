@@ -69,6 +69,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 		for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
 			customActionValueRepo.create(submission, cad, false);
 		}
+        
 		submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
 		return submissionRepo.save(submission);
     }

@@ -46,6 +46,24 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return fieldValues;
 		};
 
+		submission.getFieldValuesByInputType = function(inputType) {
+
+			var fieldValues = [];
+
+			for(var i in submission.submissionWorkflowSteps) {
+				var workflowStep = submission.submissionWorkflowSteps[i];
+				for(var j in workflowStep.aggregateFieldProfiles) {
+					var fieldProfile = workflowStep.aggregateFieldProfiles[j];
+					if(fieldProfile.inputType.name == inputType) {
+						angular.extend(fieldValues,submission.getFieldValuesByFieldPredicate(fieldProfile.fieldPredicate));
+					}
+				}
+			}
+
+
+			return fieldValues;
+		};
+
 		submission.findFieldValueById = function(id) {
 
 			var foundFieldValue = null;
@@ -129,7 +147,7 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 		};
 		
 		submission.file = function(uri) {
-
+			console.log(this.getMapping().file);
 			angular.extend(this.getMapping().file, {
 				data: {
 					'uri': uri
@@ -230,3 +248,4 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 
 vireo.model("Submission", submissionModel);
 vireo.model("StudentSubmission", submissionModel);
+vireo.model("AdvisorSubmission", submissionModel);

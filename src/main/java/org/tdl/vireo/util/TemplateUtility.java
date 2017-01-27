@@ -2,6 +2,7 @@ package org.tdl.vireo.util;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.Submission;
@@ -10,6 +11,8 @@ import org.tdl.vireo.model.User;
 @Service
 public class TemplateUtility {
 	
+	@Autowired
+	private AppInfoUtility appInfoUtil;
 	
 	private static final String FULL_NAME = "FULL_NAME";
 	private static final String FIRST_NAME = "FIRST_NAME";
@@ -55,7 +58,7 @@ public class TemplateUtility {
         		//TODO: We should use a url builder service to create/retrieve these.
         		.replaceAll("\\{"+STUDENT_URL+"\\}", STUDENT_URL)
         		.replaceAll("\\{"+SUBMISSION_URL+"\\}", SUBMISSION_URL)
-        		.replaceAll("\\{"+ADVISOR_URL+"\\}", ADVISOR_URL)
+        		.replaceAll("\\{"+ADVISOR_URL+"\\}", appInfoUtil.getRunningAddress() + "/review/" + submission.getAdvisorAccessHash())
         		.replaceAll("\\{"+DEPOSIT_URI+"\\}", DEPOSIT_URI)
         		.replaceAll("\\{"+REGISTRATION_URL+"\\}", REGISTRATION_URL)
         		

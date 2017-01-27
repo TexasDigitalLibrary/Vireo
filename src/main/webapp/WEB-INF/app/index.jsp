@@ -23,7 +23,6 @@
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
 	
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css">
 
 	<link rel="stylesheet" href="resources/styles/app.css" />	
@@ -284,6 +283,8 @@
 	    <script src="directives/selectedDirective.js"></script>
 	    <script src="directives/dropZoneDirective.js"></script>
 	    <script src="directives/fieldProfileDirective.js"></script>
+	    <script src="directives/fieldProfileReviewDirective.js"></script>
+	    <script src="directives/reviewSubmissionFieldsDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
 	    <script src="directives/triptychDirective.js"></script>
@@ -295,6 +296,7 @@
 
 	    <!-- Repos -->	    
 	    <script src="repo/abstractAppRepo.js"></script>
+	    <script src="repo/advisorSubmissionRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
 	    <script src="repo/attachmentTypeRepo.js"></script>
 	    <script src="repo/customActionDefinitionRepo.js"></script>
@@ -361,6 +363,7 @@
 	    <!-- Controllers -->
 	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
+	    <script src="controllers/submission/advisorReviewController.js"></script>
 	    <script src="controllers/applicationSettingsController.js"></script>	    
 	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>	    
 	    <script src="controllers/headerController.js"></script>
@@ -386,6 +389,7 @@
 	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
+	    <script src="controllers/submission/submissionCompleteController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>
 	    
 	<!-- endbuild -->
