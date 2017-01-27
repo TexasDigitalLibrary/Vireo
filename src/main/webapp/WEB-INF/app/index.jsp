@@ -387,7 +387,6 @@
 	    <script src="controllers/submission/submissionListController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>
-	    <script src="controllers/sideBars/customActionSideBarController.js"></script>
 	    
 	<!-- endbuild -->
 
