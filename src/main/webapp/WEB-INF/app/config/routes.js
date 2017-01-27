@@ -21,11 +21,6 @@ vireo.config(function($locationProvider, $routeProvider) {
 			controller: 'SubmissionCompleteController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
-		when('/submission/:submissionId/:workflowStep', {
-			templateUrl: 'views/submission/submission.html',
-			controller: 'StudentSubmissionController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
-		}).
 		when('/submission/:submissionId', {
 			templateUrl: 'views/submission/submission.html',
 			controller: 'StudentSubmissionController',
