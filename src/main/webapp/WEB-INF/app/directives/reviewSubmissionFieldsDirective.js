@@ -26,12 +26,16 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
                 
                 var violation = true;
 
-                for(var i in $scope.submission.fieldValues) {
-                    var fv = $scope.submission.fieldValues[i];
+                if(!aggregateFieldProfile.optional) {
+                    for(var i in $scope.submission.fieldValues) {
+                        var fv = $scope.submission.fieldValues[i];
 
-                    if(aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id && fv.value !== "") violation=false; 
+                        if(aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id && fv.value !== "") violation=false; 
+                    }    
+                } else {
+                    violation = false;
                 }
-
+                
                 return violation;
             };
 

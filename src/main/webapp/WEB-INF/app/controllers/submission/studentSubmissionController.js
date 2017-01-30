@@ -38,7 +38,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 				step = {name: "review"};
 				stepNum = reviewStepNum;
 			} else {
-				console.log("foo");
 				stepIndex = 0;
 				stepNum = stepIndex+1;
 				step = $scope.submission.submissionWorkflowSteps[stepIndex];
