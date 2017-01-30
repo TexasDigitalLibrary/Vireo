@@ -140,6 +140,21 @@
 					results="workflowStepRepo.ValidationResults">
 				</validatedinput>
 			</div>
+
+			<div class="form-group">
+				<validatedselect
+					options="modalData.shibbolethAttributes"
+					optionproperty="name"
+					model="modalData"
+					property="ShibbolethAttributeMapping"
+					label="Shibboleth Attribute Mapping"
+					placeholder="Shibboleth attribute mapping of the new field"
+					form="forms.create"
+					validations="fieldProfileRepo.getValidations()"
+				  <!-- results="workflowStepRepo.ValidationResults"> -->
+					results="">
+				</validatedselect>
+			</div>
 			
 			<toggleButton 
 				label="Overridable:"
