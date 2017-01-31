@@ -1,4 +1,4 @@
-vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, StudentSubmissionRepo, Submission, SubmissionStateRepo) {
+vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, Submission, SubmissionStateRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -13,6 +13,9 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	$scope.studentSubmissionRepoReady = false;
 
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
+  		$timeout(function() {
+            $anchorScroll();
+        });
 		$scope.studentSubmissionRepoReady = true;
 		$scope.submission = new Submission(angular.fromJson(data.body).payload.Submission);
 

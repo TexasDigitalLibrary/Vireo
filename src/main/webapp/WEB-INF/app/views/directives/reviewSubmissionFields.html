@@ -13,6 +13,9 @@
 		</div>
 		<div class="col-sm-9 col-xs-12">
 			<ul class="list-unstyled">
+
+				<li ng-if="requiredViolation(aggregateFieldProfile)&&!hideLinks"><a href="{{'submission/'+submission.id+'/step/'+($parent.$parent.$index+1)+'#'+aggregateFieldProfile.fieldPredicate.value}}" class="danger">[fix]</li>
+
 				<li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
 					<span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
 						{{fv.value}}<span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT"> ({{fv.identifier}})</span> 
