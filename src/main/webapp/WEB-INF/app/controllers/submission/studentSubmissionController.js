@@ -6,10 +6,13 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 		$scope.submittedSubmissionState = SubmissionStateRepo.findByName('Submitted');
 	});
 
-	$scope.onLastStep = function() {
-		return true;
-	};
-	
+	if(!$routeParams.stepNum) {
+		$location.path("submission/"+$scope.submission.id+"/step/"+stepNum);
+	}
+
+	$scope.hashFieldPredicate = $location.hash();
+	console.log($scope.hashFieldPredicate);
+
 	$scope.studentSubmissionRepoReady = false;
 
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
@@ -32,7 +35,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
 	$scope.setActiveStep = function(step) {
 
-		var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
+		var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step); 
 		var reviewStepNum = $scope.submission.submissionWorkflowSteps.length+1;
 		var stepNum = stepIndex+1;
 		
@@ -52,8 +55,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 		$scope.nextStep = $scope.submission.submissionWorkflowSteps[stepNum];
 		$scope.activeStep = step;
 
-		$location.path("submission/"+$scope.submission.id+"/step/"+stepNum, false);
+		var nextLocation = "submission/"+$scope.submission.id+"/step/"+stepNum;
 
+		// Only change path if it differs from the current path. 
+		if("/"+nextLocation !== $location.path()) $location.path(nextLocation, false);
 	};
 
 	$scope.submit = function() {
