@@ -11,7 +11,6 @@ vireo.run(function($route, $rootScope, $location) {
         if (reload === false) {
             var lastRoute = $route.current;
             var un = $rootScope.$on('$locationChangeSuccess', function () {
-                console.log("unbind");
                 $route.current = lastRoute;
                 un();
             });

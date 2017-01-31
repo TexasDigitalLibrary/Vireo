@@ -6,16 +6,13 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 		$scope.submittedSubmissionState = SubmissionStateRepo.findByName('Submitted');
 	});
 
-	if(!$routeParams.stepNum) {
-		$location.path("submission/"+$scope.submission.id+"/step/"+stepNum);
-	}
-
 	$scope.hashFieldPredicate = $location.hash();
 	console.log($scope.hashFieldPredicate);
 
 	$scope.studentSubmissionRepoReady = false;
 
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
+
   		$timeout(function() {
             $anchorScroll();
         });

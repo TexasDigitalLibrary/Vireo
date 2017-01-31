@@ -1,38 +1,50 @@
 [
 	{
-		"name": "INPUT_TEXT" 
+		"name": "INPUT_TEXT",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_EMAIL" 
+		"name": "INPUT_EMAIL",
+		"validationPatern": "/^(([^<>()\\[\\]\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/" 
 	},
 	{
-		"name": "INPUT_CONTACT" 
+		"name": "INPUT_CONTACT",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_PASSWORD" 
+		"name": "INPUT_PASSWORD",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_CHECKBOX" 
+		"name": "INPUT_CHECKBOX",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_DATETIME" 
+		"name": "INPUT_DATETIME",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_FILE" 
+		"name": "INPUT_FILE",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_RADIO" 
+		"name": "INPUT_RADIO",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_TEL" 
+		"name": "INPUT_TEL",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_URL" 
+		"name": "INPUT_URL",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_TEXTAREA" 
+		"name": "INPUT_TEXTAREA",
+		"validationPatern": null 
 	},
 	{
-		"name": "INPUT_SELECT"
+		"name": "INPUT_SELECT",
+		"validationPatern": null
 	}
 ]
