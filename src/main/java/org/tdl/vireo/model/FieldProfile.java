@@ -41,9 +41,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean enabled;
     
-    @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private Configuration mappedShibAttribute;
-
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
@@ -52,20 +49,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
-
-    /**
-	 * @return the mappedShibAttribute
-	 */
-	public Configuration getMappedShibAttribute() {
-		return mappedShibAttribute;
-	}
-
-	/**
-	 * @param mappedShibAttribute the mappedShibAttribute to set
-	 */
-	public void setMappedShibAttribute(Configuration mappedShibAttribute) {
-		this.mappedShibAttribute = mappedShibAttribute;
-	}
 
 	public FieldProfile(WorkflowStep originatingWorkflowStep) {
         this();

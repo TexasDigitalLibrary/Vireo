@@ -3,6 +3,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.shibbolethAttributes = ConfigurationRepo.getAllMapByType().shibboleth;
+
 	$scope.workflowStepRepo = WorkflowStepRepo;	
 
 	$scope.fieldProfileRepo = FieldProfileRepo;
