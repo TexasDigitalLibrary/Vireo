@@ -28,16 +28,21 @@ import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.util.FileIOUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
@@ -52,6 +57,7 @@ import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.EmailSender;
+import edu.tamu.framework.validation.Validator;
 
 @Controller
 @ApiMapping("/submission")
@@ -69,6 +75,9 @@ public class SubmissionController {
 
     @Autowired
     private FieldValueRepo fieldValueRepo;
+    
+    @Autowired
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
     
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -146,17 +155,29 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-field-value")
+    @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
+    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue, @ApiVariable String fieldProfileId) {
 
         Submission submission = submissionRepo.findOne(submissionId);
+        
+        SubmissionFieldProfile fieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        
+        System.out.println("fieldProfile");
+        System.out.println(fieldProfile);
 
         if (fieldValue.getId() == null) {
+        	
+        	System.out.println("Field Value is new");
+        	
+        	Validator validator = new FieldValueValidator(fieldProfile);
+        	fieldValue.setModelValidator(validator);
+        	
             submission.addFieldValue(fieldValue);
             submission = submissionRepo.save(submission);
             fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
         } else {
+        	System.out.println("Field Value is old");
             fieldValue = fieldValueRepo.save(fieldValue);
         }
 

@@ -40,6 +40,7 @@ import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
@@ -387,6 +388,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected FieldProfileRepo fieldProfileRepo;
+    
+    @Autowired
+    protected SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
     @Autowired
     protected FieldValueRepo fieldValueRepo;

@@ -85,10 +85,10 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return emptyFieldValue;
 		};
 
-		submission.saveFieldValue = function(fieldValue) {
+		submission.saveFieldValue = function(fieldValue, fieldProfile) {
 
 			angular.extend(this.getMapping().saveFieldValue, {
-				method: submission.id+"/update-field-value",
+				method: submission.id+"/update-field-value/"+fieldProfile.id,
 				data: fieldValue
 			});
 
