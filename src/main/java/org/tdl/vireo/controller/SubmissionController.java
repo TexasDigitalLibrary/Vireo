@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,9 +55,12 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
+import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.EmailSender;
+import edu.tamu.framework.util.ValidationUtility;
+import edu.tamu.framework.validation.ValidationResults;
 import edu.tamu.framework.validation.Validator;
 
 @Controller
@@ -96,6 +100,9 @@ public class SubmissionController {
     
     @Autowired
     private FileIOUtility fileIOUtility;
+    
+    @Autowired
+    private ValidationUtility validationUtility;
 
     @Transactional
     @ApiMapping("/all")
@@ -161,27 +168,45 @@ public class SubmissionController {
 
         Submission submission = submissionRepo.findOne(submissionId);
         
-        SubmissionFieldProfile fieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
-        
-        System.out.println("fieldProfile");
-        System.out.println(fieldProfile);
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
 
+        ApiResponse apiResponse;
+        
         if (fieldValue.getId() == null) {
-        	
-        	System.out.println("Field Value is new");
-        	
-        	Validator validator = new FieldValueValidator(fieldProfile);
+        	        	
+        	Validator validator = new FieldValueValidator(submissionFieldProfile);
         	fieldValue.setModelValidator(validator);
         	
-            submission.addFieldValue(fieldValue);
-            submission = submissionRepo.save(submission);
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+        	ValidationResults validationResults = fieldValue.validate(fieldValue);
+        	
+        	if(validationResults.isValid()) {
+        		submission.addFieldValue(fieldValue);
+                submission = submissionRepo.save(submission);
+                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+                
+                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                
+        	} else {
+        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        	}
+            
         } else {
-        	System.out.println("Field Value is old");
-            fieldValue = fieldValueRepo.save(fieldValue);
+        	
+        	Validator validator = new FieldValueValidator(submissionFieldProfile);
+        	fieldValue.setModelValidator(validator);
+        	
+        	ValidationResults validationResults = fieldValue.validate(fieldValue);
+        	
+        	if(validationResults.isValid()) {
+        		fieldValue = fieldValueRepo.save(fieldValue);     
+                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+        	} else {
+        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        	}
+            
         }
 
-        return new ApiResponse(SUCCESS, fieldValue);
+        return apiResponse;
     }
     
     @Transactional

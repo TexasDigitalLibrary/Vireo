@@ -31,7 +31,10 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 					return $q(function(resolve) {
 						// give typeahead time to set the value
 						$timeout(function() {
-							$scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function() {
+							$scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function(res) {
+
+								console.log(res);
+
 								delete fieldValue.updating;
 								if($scope.fieldProfileForm !== undefined) {
 									$scope.fieldProfileForm.$setPristine();
