@@ -1,16 +1,28 @@
-var submissionModel = function ($q, FileApi, RestApi, WsApi) {
+var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 	return function Submission() {
 		
 		var submission = this;
 
+		//Instantiate all fieldvalues as model instances
+		submission.ready().then(function() {
+			var fieldValues = angular.copy(submission.fieldValues);
+			if(submission.fieldValues) {
+				submission.fieldValues.length = 0;
+				for(var i in fieldValues) {
+					var fieldValue = fieldValues[i];
+					submission.fieldValues.push(new FieldValue(fieldValue));
+				}
+			}
+		});
+
 		// additional model methods and variables
 		var createEmptyFieldValue = function(fieldPredicate) {
-			return {
+			return new FieldValue({
 				id: null,
 				value: "",
 				fieldPredicate: fieldPredicate
-			};
+			});
 		};
 
 		//Override
@@ -95,13 +107,26 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
 			promise.then(function(response) {
-				var updatedFieldValue = angular.fromJson(response.body).payload.FieldValue;
-				for(var i in submission.fieldValues) {
-					var currentFieldValue = submission.fieldValues[i];
-					if((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
-						angular.extend(currentFieldValue, updatedFieldValue);
+
+				var responseObj = angular.fromJson(response.body);
+				
+
+				console.log(responseObj);
+
+				if(responseObj.meta.type === "INVALID") {
+					fieldValue.setIsValid(false);
+					fieldValue.setValidationMessage(responseObj.payload.HashMap.value.pattern);
+				} else {
+					fieldValue.setIsValid(true);
+					var updatedFieldValue = responseObj.payload.FieldValue;
+					for(var i in submission.fieldValues) {
+						var currentFieldValue = submission.fieldValues[i];
+						if((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
+							angular.extend(currentFieldValue, updatedFieldValue);
+						}
 					}
 				}
+				
 			});
 
 			return promise;

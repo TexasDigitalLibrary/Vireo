@@ -32,9 +32,6 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 						// give typeahead time to set the value
 						$timeout(function() {
 							$scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function(res) {
-
-								console.log(res);
-
 								delete fieldValue.updating;
 								if($scope.fieldProfileForm !== undefined) {
 									$scope.fieldProfileForm.$setPristine();
@@ -278,9 +275,6 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 			};
 
 			$scope.isHashedFieldProfile = function(fv) {
-				// console.log("fv.fieldPredicate.value", fv.fieldPredicate.value);
-				// console.log("$scope.hfp", $scope.hfp);
-				// console.log("fv.fieldPredicate.value === $scope.hfp", fv.fieldPredicate.value === $scope.hfp);
 				return fv.fieldPredicate.value === $scope.hfp;
 			};
 			
