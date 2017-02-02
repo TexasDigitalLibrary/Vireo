@@ -13,11 +13,12 @@ public class FieldValueValidator extends BaseModelValidator {
         String predicateProperty = "fieldPredicate";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Field Value requires a predicate", predicateProperty, true));
         
-        
+        String valueProperty = "value";
         if(submissionFieldProfile.getInputType().getValidationPatern() != null) {
-        	String valueProperty = "value";
         	this.addInputValidator(new InputValidator(InputValidationType.pattern, "Value is not a valid email address", valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
         }
+        
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Value must be at least 5 characters", valueProperty, 5));
 
     }
     

@@ -7,7 +7,11 @@
 			<div class="field-value-input row" ng-repeat="fieldValue in fieldValues track by $index">
 				<div class="col-xs-5">
 					<div ng-class="{'invalid': isHashedFieldProfile(fieldValue) || !fieldValue.isValid()}" ng-include="includeTemplateUrl"></div>
-					<span ng-if="!fieldValue.isValid()">{{fieldValue.getValidationMessage()}}</span>
+					<div  ng-if="!fieldValue.isValid()" class="alert alert-danger">
+						<ul ng-class="{'list-unstyled': fieldValue.getValidationMessages().length === 1}">
+							<li ng-repeat="message in fieldValue.getValidationMessages()">{{message}}</li>
+						</ul>
+					</div>
 				</div>
 				<div class="col-xs-1" >
 					<button ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove pull-left" ng-click="removeFieldValue(fieldValue)">-</button>

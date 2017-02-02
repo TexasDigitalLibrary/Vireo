@@ -99,6 +99,9 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 		submission.saveFieldValue = function(fieldValue, fieldProfile) {
 
+			fieldValue.setIsValid(true);
+			fieldValue.setValidationMessages([]);
+
 			angular.extend(this.getMapping().saveFieldValue, {
 				method: submission.id+"/update-field-value/"+fieldProfile.id,
 				data: fieldValue
@@ -110,12 +113,15 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 				var responseObj = angular.fromJson(response.body);
 				
-
 				console.log(responseObj);
 
 				if(responseObj.meta.type === "INVALID") {
 					fieldValue.setIsValid(false);
-					fieldValue.setValidationMessage(responseObj.payload.HashMap.value.pattern);
+
+					angular.forEach(responseObj.payload.HashMap.value, function(value) {
+						fieldValue.addValidationMessage(value);	
+					});
+					
 				} else {
 					fieldValue.setIsValid(true);
 					var updatedFieldValue = responseObj.payload.FieldValue;
@@ -137,7 +143,10 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 				angular.forEach(workflowStep.aggregateFieldProfiles, function(fp) {
 					if(!fp.optional) {
 						angular.forEach(submission.getFieldValuesByFieldPredicate(fp.fieldPredicate), function(fieldValues) {
-							if(!fieldValues.value || fieldValues.value === "") fieldValues.setIsValid(false);
+							if(!fieldValues.value || fieldValues.value === "") {
+								fieldValues.setIsValid(false);
+								fieldValues.addValidationMessage("This field is required");
+							}
 						});	
 					}
 				});

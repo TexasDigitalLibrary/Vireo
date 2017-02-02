@@ -5,7 +5,7 @@ vireo.model("FieldValue", function FieldValue(WsApi) {
 		// additional model methods and variables
 		var fieldValue = this;
 		var isValid = true;
-		var validationMessage = "Is not valid!";
+		var validationMessages = [];
 
 		fieldValue.setIsValid = function(valid) {
 			isValid = valid;
@@ -15,12 +15,17 @@ vireo.model("FieldValue", function FieldValue(WsApi) {
 			return isValid;
 		};
 
-		fieldValue.setValidationMessage = function(message) {
-			validationMessage = message;
+		fieldValue.setValidationMessages = function(messages) {
+			validationMessages.length = 0;
+			angular.extend(validationMessages, messages);
 		};
 
-		fieldValue.getValidationMessage = function() {
-			return validationMessage;
+		fieldValue.addValidationMessage = function(message) {
+			validationMessages.push(message);
+		};
+
+		fieldValue.getValidationMessages = function() {
+			return validationMessages;
 		};
 
 		fieldValue.save = function(submissionId) {
