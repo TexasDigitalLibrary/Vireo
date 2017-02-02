@@ -12,6 +12,7 @@
 							<li ng-repeat="message in fieldValue.getValidationMessages()">{{message}}</li>
 						</ul>
 					</div>
+					{{fieldValue.value}}
 				</div>
 				<div class="col-xs-1" >
 					<button ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove pull-left" ng-click="removeFieldValue(fieldValue)">-</button>
@@ -25,6 +26,7 @@
 			<div class="field-value-input row">
 				<div class="col-xs-11">
 					<div ng-include="includeTemplateUrl"></div>
+					{{fieldValue.value}}
 				</div>
 			</div>
 		</div>		
