@@ -131,6 +131,18 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 			return promise;
 		};
+
+		submission.validate = function() {
+			angular.forEach(submission.submissionWorkflowSteps, function(workflowStep) {
+				angular.forEach(workflowStep.aggregateFieldProfiles, function(fp) {
+					if(!fp.optional) {
+						angular.forEach(submission.getFieldValuesByFieldPredicate(fp.fieldPredicate), function(fieldValues) {
+							if(!fieldValues.value || fieldValues.value === "") fieldValues.setIsValid(false);
+						});	
+					}
+				});
+			});
+		};
 		
 		submission.removeFieldValue = function(fieldValue) {
 
