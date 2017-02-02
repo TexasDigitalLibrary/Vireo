@@ -274,12 +274,6 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 				});
 			};
 
-			$scope.isHashedFieldProfile = function(fv) {
-				return fv.fieldPredicate.value === $scope.hfp;
-			};
-			
-			console.log("$scope.hfp", $scope.hfp);
-
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};

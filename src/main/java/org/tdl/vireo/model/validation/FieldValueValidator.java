@@ -18,8 +18,6 @@ public class FieldValueValidator extends BaseModelValidator {
         	this.addInputValidator(new InputValidator(InputValidationType.pattern, "Value is not a valid email address", valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
         }
         
-        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Value must be at least 5 characters", valueProperty, 5));
-
     }
     
 }

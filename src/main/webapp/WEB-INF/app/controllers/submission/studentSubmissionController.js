@@ -5,10 +5,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	SubmissionStateRepo.ready().then(function(){
 		$scope.submittedSubmissionState = SubmissionStateRepo.findByName('Submitted');
 	});
-
-	$scope.hashFieldPredicate = $location.hash();
-	console.log($scope.hashFieldPredicate);
-
+	
 	$scope.studentSubmissionRepoReady = false;
 
 	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
@@ -16,8 +13,13 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
   		$timeout(function() {
             $anchorScroll();
         });
+
 		$scope.studentSubmissionRepoReady = true;
 		$scope.submission = new Submission(angular.fromJson(data.body).payload.Submission);
+
+		if($location.hash()) {
+			$scope.submission.validateRequired();
+		}
 
 		$scope.onLastStep = function() {
 			var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);

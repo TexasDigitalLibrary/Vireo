@@ -101,6 +101,14 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 			fieldValue.setIsValid(true);
 			fieldValue.setValidationMessages([]);
+			
+			if(!fieldValue.value || fieldValue.value ==="") {
+				return $q(function(resolve) {
+					fieldValue.setIsValid(false);
+					fieldValue.addValidationMessage("This field is required");
+					resolve();
+				});
+			}
 
 			angular.extend(this.getMapping().saveFieldValue, {
 				method: submission.id+"/update-field-value/"+fieldProfile.id,
@@ -138,7 +146,7 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			return promise;
 		};
 
-		submission.validate = function() {
+		submission.validateRequired = function() {
 			angular.forEach(submission.submissionWorkflowSteps, function(workflowStep) {
 				angular.forEach(workflowStep.aggregateFieldProfiles, function(fp) {
 					if(!fp.optional) {
