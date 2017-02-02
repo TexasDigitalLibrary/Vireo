@@ -1,50 +1,62 @@
 [
 	{
 		"name": "INPUT_TEXT",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_EMAIL",
-		"validationPatern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+		"validationPatern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+		"validationMessage": "Field must be a valid email address"
 	},
 	{
 		"name": "INPUT_CONTACT",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_PASSWORD",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_CHECKBOX",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_DATETIME",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_FILE",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_RADIO",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_TEL",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_URL",
-		"validationPatern": null 
+		"validationPatern": "^(https?|ftp|file|wss?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+[-a-zA-Z0-9+&@#/%=~_|?]",
+		"validationMessage": "Field must be in a valid URL format (http://mydomain.com)"
 	},
 	{
 		"name": "INPUT_TEXTAREA",
-		"validationPatern": null 
+		"validationPatern": null,
+		"validationMessage": null
 	},
 	{
 		"name": "INPUT_SELECT",
-		"validationPatern": null
+		"validationPatern": null,
+		"validationMessage": null
 	}
 ]

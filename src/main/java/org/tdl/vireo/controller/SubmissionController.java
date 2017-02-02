@@ -182,7 +182,7 @@ public class SubmissionController {
         	if(validationResults.isValid()) {
         		submission.addFieldValue(fieldValue);
                 submission = submissionRepo.save(submission);
-                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
                 
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
                 

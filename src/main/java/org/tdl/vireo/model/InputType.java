@@ -16,6 +16,9 @@ public class InputType extends BaseEntity {
     @Column
     private String validationPatern;
     
+    @Column
+    private String validationMessage;
+    
     // TODO: add Map of validations for input type
     
     // TODO: add url for fetching data, controlled vocabulary, or additional logic if needed
@@ -51,5 +54,13 @@ public class InputType extends BaseEntity {
     public void setValidationPatern(String patern) {
     	validationPatern = patern;
     }
+    
+    public String getValidationMessage() {
+        return validationMessage;
+    }
 
+    public void setValidationMessage(String message) {
+        validationMessage = message;
+    }
+    
 }

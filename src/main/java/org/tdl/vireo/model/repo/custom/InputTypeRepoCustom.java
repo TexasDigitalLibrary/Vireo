@@ -6,6 +6,6 @@ public interface InputTypeRepoCustom {
 
     public InputType create(String name);
     
-    public InputType create(String name, String patern);
+    public InputType create(InputType inputType);
 
 }

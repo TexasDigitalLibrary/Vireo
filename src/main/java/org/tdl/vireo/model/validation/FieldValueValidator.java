@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.validation;
 
+import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 
 import edu.tamu.framework.enums.InputValidationType;
@@ -13,9 +14,17 @@ public class FieldValueValidator extends BaseModelValidator {
         String predicateProperty = "fieldPredicate";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Field Value requires a predicate", predicateProperty, true));
         
+        InputType inputType = submissionFieldProfile.getInputType();
         String valueProperty = "value";
-        if(submissionFieldProfile.getInputType().getValidationPatern() != null) {
-        	this.addInputValidator(new InputValidator(InputValidationType.pattern, "Value is not a valid email address", valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
+        
+        System.out.println(inputType.getValidationMessage());
+        
+        if(inputType.getValidationPatern() != null) {
+            String validationMessage = inputType.getValidationMessage() != null ? inputType.getValidationMessage() : "Field is not a valid format";
+        	this.addInputValidator(new InputValidator(InputValidationType.pattern, validationMessage, valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
+        }
+        if (!submissionFieldProfile.getOptional()) {
+            this.addInputValidator(new InputValidator(InputValidationType.minlength, "Required fields cannot be empty", valueProperty, 1));
         }
         
     }
