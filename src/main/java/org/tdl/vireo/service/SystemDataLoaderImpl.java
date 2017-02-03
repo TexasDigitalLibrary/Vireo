@@ -576,7 +576,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 InputType newInputType = inputTypeRepo.findByName(inputType.getName());
                 
                 if (newInputType == null) {
-                    newInputType = inputType.getValidationPatern()!=null?inputTypeRepo.create(inputType.getName(), inputType.getValidationPatern()):inputTypeRepo.create(inputType.getName());
+                    newInputType = inputTypeRepo.create(inputType);
                 } else {
                     newInputType.setName(inputType.getName());
                     newInputType = inputTypeRepo.save(newInputType);
