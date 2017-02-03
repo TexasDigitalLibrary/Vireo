@@ -4,15 +4,15 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 		
 		var submission = this;
 
-		//Instantiate all fieldvalues as model instances
-		submission.ready().then(function() {
+		submission.enableBeforeMethods();
+
+		submission.before(function() {
 			var fieldValues = angular.copy(submission.fieldValues);
-			if(submission.fieldValues) {
-				submission.fieldValues.length = 0;
-				for(var i in fieldValues) {
-					var fieldValue = fieldValues[i];
-					submission.fieldValues.push(new FieldValue(fieldValue));
-				}
+			if(submission.fieldValues) submission.fieldValues.length = 0;
+			
+			for(var i in fieldValues) {
+				var fieldValue = fieldValues[i];
+				submission.fieldValues.push(new FieldValue(fieldValue));
 			}
 		});
 
@@ -36,6 +36,25 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 				}
 			});
 			return promise;
+		};
+
+		submission.getFieldProfileByPredicate = function(predicate) {
+
+			var fieldProfile = null;
+
+			for(var i in submission.submissionWorkflowSteps) {
+				var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
+				for(var j in submissionWorkflowStep.aggregateFieldProfiles) {
+					var currentFieldProfile = submissionWorkflowStep.aggregateFieldProfiles[j];
+					if(currentFieldProfile.fieldPredicate.id === predicate.id) {
+						fieldProfile = currentFieldProfile;
+						break;
+					}
+				}
+			}
+
+			return fieldProfile;
+
 		};
 
 		submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
@@ -121,8 +140,6 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 				var responseObj = angular.fromJson(response.body);
 				
-				console.log(responseObj);
-
 				if(responseObj.meta.type === "INVALID") {
 					fieldValue.setIsValid(false);
 
@@ -146,18 +163,10 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			return promise;
 		};
 
-		submission.validateRequired = function() {
-			angular.forEach(submission.submissionWorkflowSteps, function(workflowStep) {
-				angular.forEach(workflowStep.aggregateFieldProfiles, function(fp) {
-					if(!fp.optional) {
-						angular.forEach(submission.getFieldValuesByFieldPredicate(fp.fieldPredicate), function(fieldValues) {
-							if(!fieldValues.value || fieldValues.value === "") {
-								fieldValues.setIsValid(false);
-								fieldValues.addValidationMessage("This field is required");
-							}
-						});	
-					}
-				});
+		submission.validate = function() {
+			console.log(submission.fieldValues.length);
+			angular.forEach(submission.fieldValues, function(fv) {
+				submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
 			});
 		};
 		

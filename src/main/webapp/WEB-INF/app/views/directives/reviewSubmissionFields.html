@@ -8,14 +8,13 @@
 	<hr>
 	<div class="row" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required">
 		<div class="col-sm-2 col-sm-offset-1 col-xs-12">
-			<span class="review-label pull-right-sm pull-right-lg" ng-class="{'danger': requiredViolation(aggregateFieldProfile)}">
+			<span class="review-label pull-right-sm pull-right-lg" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">
 			{{aggregateFieldProfile.fieldGlosses[0].value}}:</span>
 		</div>
 		<div class="col-sm-9 col-xs-12">
 			<ul class="list-unstyled">
-				<li ng-if="requiredViolation(aggregateFieldProfile)&&!hideLinks"><a href="{{'submission/'+submission.id+'/step/'+($parent.$parent.$index+1)+'#'+aggregateFieldProfile.fieldPredicate.value}}" class="danger">[fix]</a></li>
-
 				<li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
+					<a ng-if="!fv.isValid()&&!hideLinks" href="{{'submission/'+submission.id+'/step/'+($parent.$parent.$index+1)+'#'+aggregateFieldProfile.fieldPredicate.value}}" class="danger">[fix]</a>
 					<span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
 						{{fv.value}}<span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT"> ({{fv.identifier}})</span> 
 					</span>

@@ -273,7 +273,7 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 					}
 				});
 			};
-
+			
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};

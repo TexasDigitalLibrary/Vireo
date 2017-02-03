@@ -1,4 +1,4 @@
-vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, Submission, FieldValue, SubmissionStateRepo) {
+vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission, FieldValue, SubmissionStateRepo) {
 
 	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -15,10 +15,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         });
 
 		$scope.studentSubmissionRepoReady = true;
-		$scope.submission = new Submission(angular.fromJson(data.body).payload.Submission);
+		$scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
 
 		if($location.hash()) {
-			$scope.submission.validateRequired();
+			$scope.submission.validate();
 		}
 
 		$scope.onLastStep = function() {
@@ -58,10 +58,15 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
 		// Only change path if it differs from the current path. 
 		if("/"+nextLocation !== $location.path()) $location.path(nextLocation, false);
+
 	};
 
 	$scope.submit = function() {
 	  $scope.submission.changeStatus($scope.submittedSubmissionState);
 	};
+
+	$scope.reviewSubmission = function() {
+		$scope.setActiveStep({name:'review'})
+	}
 
 });
