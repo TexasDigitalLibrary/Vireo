@@ -34,7 +34,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
 	});
 
-	$scope.setActiveStep = function(step) {
+	$scope.setActiveStep = function(step, hash) {
 
 		var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step); 
 		var reviewStepNum = $scope.submission.submissionWorkflowSteps.length+1;
@@ -57,6 +57,8 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 		$scope.activeStep = step;
 
 		var nextLocation = "submission/"+$scope.submission.id+"/step/"+stepNum;
+
+		if(hash) nextLocation+="#"+hash;
 
 		// Only change path if it differs from the current path. 
 		if("/"+nextLocation !== $location.path()) $location.path(nextLocation, false);

@@ -1,4 +1,4 @@
-vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, AdvisorSubmissionRepo) {
+vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldValue, AdvisorSubmissionRepo) {
     return {
     	templateUrl: 'views/directives/reviewSubmissionFields.html',
         restrict: 'E',
@@ -49,6 +49,10 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
                     });
 
                 });
+            };
+
+            $scope.jumpToStep = function(wfs,hash) {
+                $scope.$parent.setActiveStep(wfs, hash);
             };
 
         }

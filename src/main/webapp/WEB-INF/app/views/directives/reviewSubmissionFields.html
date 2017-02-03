@@ -1,9 +1,9 @@
 <div class="row review-required-fields-directive" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps track by $index">
 	<h3>
 		{{submissionWorkflowStep.name}} 
-		<a ng-if="!hideLinks" href="{{'submission/'+submission.id+'/step/'+($index+1)+'#review'}}">
+		<span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
 			<span class="glyphicon glyphicon-link"></span>
-		</a>
+		</span>
 	</h3>
 	<hr>
 	<div class="row" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required">
@@ -14,7 +14,7 @@
 		<div class="col-sm-9 col-xs-12">
 			<ul class="list-unstyled">
 				<li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
-					<a ng-if="!fv.isValid()&&!hideLinks" href="{{'submission/'+submission.id+'/step/'+($parent.$parent.$parent.$index+1)+'#'+aggregateFieldProfile.fieldPredicate.value}}" class="text-danger">[fix]</a>
+					<span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
 					<span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
 						{{fv.value}}<span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT"> ({{fv.identifier}})</span> 
 					</span>
