@@ -10,10 +10,21 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			var fieldValues = angular.copy(submission.fieldValues);
 			if(submission.fieldValues) submission.fieldValues.length = 0;
 			
-			for(var i in fieldValues) {
-				var fieldValue = fieldValues[i];
+			//populate fieldValues with models for existing values
+			angular.forEach(fieldValues, function(fieldValue){
 				submission.fieldValues.push(new FieldValue(fieldValue));
-			}
+			});
+
+			//populate fieldValues with models for empty values
+			angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
+				angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+					var fieldValuesByFieldPredicate = submission.getFieldValuesByFieldPredicate(fp.fieldPredicate);
+					if(!fieldValuesByFieldPredicate.length) {
+						submission.fieldValues.push(createEmptyFieldValue(fp.fieldPredicate));
+					}
+				});
+			});
+
 		});
 
 		// additional model methods and variables
@@ -67,12 +78,6 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 					fieldValues.push(fieldValue);
 				}
 			}
-			
-			if (fieldValues.length === 0) {
-				var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
-				submission.fieldValues.push(emptyFieldValue);
-				fieldValues.push(emptyFieldValue);
-			}
 
 			return fieldValues;
 		};
@@ -121,7 +126,7 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			fieldValue.setIsValid(true);
 			fieldValue.setValidationMessages([]);
 			
-			if(!fieldValue.value || fieldValue.value ==="") {
+			if((!fieldValue.value || fieldValue.value ==="")&&!fieldProfile.optional) {
 				return $q(function(resolve) {
 					fieldValue.setIsValid(false);
 					fieldValue.addValidationMessage("This field is required");
@@ -164,7 +169,6 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 		};
 
 		submission.validate = function() {
-			console.log(submission.fieldValues.length);
 			angular.forEach(submission.fieldValues, function(fv) {
 				submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
 			});
