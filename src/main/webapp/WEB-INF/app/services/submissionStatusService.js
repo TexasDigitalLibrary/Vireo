@@ -4,9 +4,7 @@ vireo.service("SubmissionStatusService", function(SubmissionStateRepo) {
 
 	SubmissionStateRepo.ready().then(function() {
 		 SubmissionStateRepo.getAll().forEach(function(state) {
-		 	console.log(state)
     		SubmissionStatusService[state.name] = state.name;
-    		console.log(SubmissionStatusService)
    		});
 	});
 
