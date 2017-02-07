@@ -16,9 +16,7 @@ public class FieldValueValidator extends BaseModelValidator {
         
         InputType inputType = submissionFieldProfile.getInputType();
         String valueProperty = "value";
-        
-        System.out.println(inputType.getValidationMessage());
-        
+                
         if(inputType.getValidationPatern() != null) {
             String validationMessage = inputType.getValidationMessage() != null ? inputType.getValidationMessage() : "Field is not a valid format";
         	this.addInputValidator(new InputValidator(InputValidationType.pattern, validationMessage, valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
