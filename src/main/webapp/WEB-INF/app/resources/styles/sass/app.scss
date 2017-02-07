@@ -1,6 +1,7 @@
 @import "sass/main";
 @import "./overrides/all";
 @import "./imports";
+@import "./views/all";
 @import "./directives/all";
 
 body {
@@ -1469,103 +1470,6 @@ footer a, footer li, footer p {
   line-height: 22px;
 }
 
-.field-profile .input-group.file-input-group {
-  max-width: 100%;
-}
-
-.field-profile label {
-  font-weight: normal;
-}
-
-.field-profile label.required {
-  font-weight: bold;
-}
-
-.field-profile label.required::before {
-  content: "*  ";
-}
-
-.field-profile .file-info-tip {
-  /*margin-top: 10px;
-  margin-right: 12px;*/
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-.field-profile .file-preview {
-  display: inline-block;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.field-profile .file-preview img,
-.field-profile .file-preview .glyphicon {
-    display: inline-block;
-    font-size: 6em;
-    max-width: 69px;
-}
-
-.field-profile .file-info {
-    padding-left: 0;
-    padding-right: 0;
-    display: inline-block;
-    vertical-align:top;
-}
-
-.field-profile .file-info p {
-    margin-bottom: -2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 20ch;
-}
-
-.field-profile .file-info .file-name{
-  font-weight: bold;
-}
-
-.file-preview-container {
-  padding-top: 35px;
-  padding-left: 0;
-  padding-right: 0;
-
-}
-
-.field-profile .glyphicon.file-upload-icon {
-  text-align: center;
-  font-size: 1em;
-}
-
-.field-profile .glyphicon.file-upload-icon.glyphicon-ok {
-  color: green;
-  margin-left: 15px;
-}
-
-.field-profile .glyphicon.file-upload-icon.glyphicon-trash {
-  margin-right: 15px;
-}
-
-.field-profile .glyphicon.file-upload-icon.glyphicon-remove {
-  width: 100%;
-  margin: auto;
-}
-
-.field-profile .glyphicon.file-upload-icon.glyphicon-trash:hover {
-  cursor:pointer;
-}
-
-.field-profile .file-upload-progress {
-  width: 80%;
-  height: 20px;
-  margin: auto;
-  margin-top: 5px;
-}
-
-.field-profile .table {
-  margin-top: -40px;
-}
-
 /********************
 * ETD Table Styling *
 ********************/
@@ -1584,67 +1488,6 @@ footer a, footer li, footer p {
     text-transform: capitalize;
     padding: 0px;
   }
-}
-
-/***********************
-** STUDENT SUBMISSION **
-************************/
-
-.submission-workflow-steps-navigation {
-  margin-bottom: 25px;
-}
-
-.submission-workflow-step-navigation a {
-  width: 95%;
-  color: white;
-  background: rgb(31, 58, 71);
-  background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: -webkit-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: -ms-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-}
-
-.submission-workflow-step-navigation a:hover,
-.submission-workflow-step-navigation.active a {
-  cursor: pointer;
-  background: rgb(31, 58, 71);
-  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-}
-
-.field-value-input:not(:last-of-type) {
-  margin-bottom: 5px;
-}
-
-.select-toggle:hover {
-  cursor: pointer;
-}
-
-.select-option {
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: 400;
-  line-height: 1.42857143;
-  white-space: nowrap;
-}
-
-.select-option:hover {
-  cursor: pointer;
-  background: #efefef;
-}
-
-.select-value {
-  white-space: nowrap;
-}
-
-
-
-.organization-create-button {
-  white-space:normal !important;
-  word-wrap:break-word; 
 }
 
 /********
@@ -1841,8 +1684,6 @@ footer a, footer li, footer p {
 }
 
 //<span class="glyphicon glyphicon-pencil"></span>
-
-@import "item-view";
 
 .submission-review-item {
 	padding-bottom:5px;

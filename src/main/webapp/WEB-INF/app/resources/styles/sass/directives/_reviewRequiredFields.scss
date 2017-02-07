@@ -2,3 +2,16 @@
 .review-required-fields-directive .danger {
 	color: $brand-danger;
 }
+
+.review-required-fields-directive .link-to-step {
+	color: $brand-primary;
+}
+
+.review-required-fields-directive .link-to-field:hover,
+.review-required-fields-directive .link-to-step:hover {
+	cursor: pointer
+}
+
+.review-required-fields-directive .link-to-field {
+	color: $brand-danger;
+}

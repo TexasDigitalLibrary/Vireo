@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,16 +29,21 @@ import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.util.FileIOUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
@@ -49,9 +55,13 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
+import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.EmailSender;
+import edu.tamu.framework.util.ValidationUtility;
+import edu.tamu.framework.validation.ValidationResults;
+import edu.tamu.framework.validation.Validator;
 
 @Controller
 @ApiMapping("/submission")
@@ -71,6 +81,9 @@ public class SubmissionController {
     private FieldValueRepo fieldValueRepo;
     
     @Autowired
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    
+    @Autowired
     private OrganizationRepo organizationRepo;
 
     @Autowired
@@ -87,6 +100,9 @@ public class SubmissionController {
     
     @Autowired
     private FileIOUtility fileIOUtility;
+    
+    @Autowired
+    private ValidationUtility validationUtility;
 
     @Transactional
     @ApiMapping("/all")
@@ -146,21 +162,51 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-field-value")
+    @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
+    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue, @ApiVariable String fieldProfileId) {
 
         Submission submission = submissionRepo.findOne(submissionId);
+        
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
 
+        ApiResponse apiResponse;
+        
         if (fieldValue.getId() == null) {
-            submission.addFieldValue(fieldValue);
-            submission = submissionRepo.save(submission);
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue().equals("null") ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+        	        	
+        	Validator validator = new FieldValueValidator(submissionFieldProfile);
+        	fieldValue.setModelValidator(validator);
+        	
+        	ValidationResults validationResults = fieldValue.validate(fieldValue);
+        	
+        	if(validationResults.isValid()) {
+        		submission.addFieldValue(fieldValue);
+                submission = submissionRepo.save(submission);
+                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+                
+                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                
+        	} else {
+        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        	}
+            
         } else {
-            fieldValue = fieldValueRepo.save(fieldValue);
+        	
+        	Validator validator = new FieldValueValidator(submissionFieldProfile);
+        	fieldValue.setModelValidator(validator);
+        	
+        	ValidationResults validationResults = fieldValue.validate(fieldValue);
+        	
+        	if(validationResults.isValid()) {
+        		fieldValue = fieldValueRepo.save(fieldValue);     
+                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+        	} else {
+        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        	}
+            
         }
 
-        return new ApiResponse(SUCCESS, fieldValue);
+        return apiResponse;
     }
     
     @Transactional
@@ -170,6 +216,7 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId).editCustomActionValue(customActionValue));
 	}
 
+    @Transactional
     @ApiMapping("/{submissionId}/change-status")
     @Auth(role = "STUDENT")
     public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {

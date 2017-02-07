@@ -4,7 +4,8 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 		restrict: 'E',
 		replace: 'false',
 		scope: {
-			profile: "="
+			profile: "=",
+			hfp: "="
 		},
 		link: function($scope) {
 			
@@ -30,7 +31,7 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 					return $q(function(resolve) {
 						// give typeahead time to set the value
 						$timeout(function() {
-							$scope.submission.saveFieldValue(fieldValue).then(function() {
+							$scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function(res) {
 								delete fieldValue.updating;
 								if($scope.fieldProfileForm !== undefined) {
 									$scope.fieldProfileForm.$setPristine();
@@ -273,7 +274,6 @@ vireo.directive("field",  function($controller, $q, $timeout, FileApi) {
 				});
 			};
 			
-
 			$scope.includeTemplateUrl = "views/inputtype/"+$scope.profile.inputType.name.toLowerCase().replace("_", "-")+".html";
 		}
 	};

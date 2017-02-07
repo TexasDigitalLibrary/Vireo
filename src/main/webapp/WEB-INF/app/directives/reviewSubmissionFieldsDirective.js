@@ -1,4 +1,4 @@
-vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, AdvisorSubmissionRepo) {
+vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldValue, AdvisorSubmissionRepo) {
     return {
     	templateUrl: 'views/directives/reviewSubmissionFields.html',
         restrict: 'E',
@@ -12,6 +12,10 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
 
             $scope.InputTypes = InputTypes;
 
+            $scope.submission.ready().then(function() {
+                $scope.submission.validate();
+            });
+
         	$scope.required = function(aggregateFieldProfile) {
 				return !$scope.filterOptional || !aggregateFieldProfile.optional;
 			};
@@ -19,20 +23,21 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
 			$scope.predicateMatch = function(fv) {
 				return function(aggregateFieldProfile) {
 			        return aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id;
-			    }
+			    };
 			};
 
-            $scope.requiredViolation = function(aggregateFieldProfile) {
-                
-                var violation = true;
+             $scope.hasValidationViolation = function(predicate) {
+        
+                var fieldValues = $scope.submission.getFieldValuesByFieldPredicate(predicate);
 
-                for(var i in $scope.submission.fieldValues) {
-                    var fv = $scope.submission.fieldValues[i];
-
-                    if(aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id && fv.value !== "") violation=false; 
+                for(var i in fieldValues) {
+                    var fieldValue = fieldValues[i];
+                    if (!fieldValue.isValid()) {
+                        return true;
+                    }
                 }
 
-                return violation;
+                return false;
             };
 
             $scope.getFile = function(fieldValue) {
@@ -44,6 +49,10 @@ vireo.directive('reviewsubmissionsields', function(InputTypes, FieldValue, Advis
                     });
 
                 });
+            };
+
+            $scope.jumpToStep = function(wfs,hash) {
+                $scope.$parent.setActiveStep(wfs, hash);
             };
 
         }
