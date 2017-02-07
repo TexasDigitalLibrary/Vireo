@@ -355,6 +355,7 @@
 	    <!-- Constants -->
 		<script src="constants/emailRecipientType.js"></script>
 		<script src="constants/inputType.js"></script>		
+		<script src="constants/submissionStatuses.js"></script>	
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
