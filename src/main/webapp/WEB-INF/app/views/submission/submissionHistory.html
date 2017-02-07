@@ -8,37 +8,37 @@
 	<div class="row pageHead">
 		<h3 class="span11">Submission History</h3>
 	</div>
+	<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+		<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+	 	  <tr ng-repeat="row in $data track by row.id">
+			<td title="'Organization'">{{row.organization.name}}</td>
+			<td title="'Status'">{{row.submissionState.name}}</td>
+			<td title="'Date Submitted'">{{row.submissionDate === null ? "Not Submitted" : row.submissionDate}}</td>
+			<td title="'Assigned To'">{{row.assignee === null ? "Not Assigned" : row.assignee.firstName + ' ' + row.assignee.lastName}}</td>
+			<td title="'Actions'">
+				<button class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
+				<a href="{{'/submission/' + row.id}}" ng-if="row.submissionState.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">Continue</a>
+			</td>
+		  </tr>
+		</table>
 	
-	<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
- 	  <tr ng-repeat="row in $data track by row.id">
-		<td title="'Organization'">{{row.organization.name}}</td>
-		<td title="'Status'">{{row.submissionState.name}}</td>
-		<td title="'Date Submitted'">{{row.submissionDate === null ? "Not Submitted" : row.submissionDate}}</td>
-		<td title="'Assigned To'">{{row.assignee === null ? "Not Assigned" : row.assignee.firstName + ' ' + row.assignee.lastName}}</td>
-		<td title="'Actions'">
-			<button class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
-			<a href="{{'/submission/' + row.id}}" ng-if="row.submissionState.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">Continue<a/>
-		</td>
-	  </tr>
-	</table>
+		<div ng-controller="SettingsController">
+			<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
 
-	<div ng-controller="SettingsController">
-		<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
+			<modal 
+				modal-id="confirmNewSubmission" 
+				modal-view="views/modals/submissions/confirmNewSubmission.html" 
+				modal-header-class="modal-header-danger"
+				static="true">
+			</modal>
 
-		<modal 
-			modal-id="confirmNewSubmission" 
-			modal-view="views/modals/submissions/confirmNewSubmission.html" 
-			modal-header-class="modal-header-danger"
-			static="true">
-		</modal>
+			<modal 
+				modal-id="confirmDeleteSubmission" 
+				modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
+				modal-header-class="modal-header-danger"
+				static="true">
+			</modal>
 
-		<modal 
-			modal-id="confirmDeleteSubmission" 
-			modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
-			modal-header-class="modal-header-danger"
-			static="true">
-		</modal>
-
+		</div>
 	</div>
-
 </div>
