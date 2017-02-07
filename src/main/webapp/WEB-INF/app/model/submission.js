@@ -129,7 +129,6 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			fieldValue.setValidationMessages([]);
 
 			if((!fieldValue.value || fieldValue.value ==="")&&!fieldProfile.optional) {
-				console.log(fieldProfile.optional);
 				return $q(function(resolve) {
 					fieldValue.setIsValid(false);
 					fieldValue.addValidationMessage("This field is required");
