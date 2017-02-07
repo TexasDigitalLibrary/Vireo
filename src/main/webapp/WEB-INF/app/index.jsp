@@ -313,6 +313,7 @@
 	    <script src="repo/inputTypeRepo.js"></script>
 	    <script src="repo/fieldPredicateRepo.js"></script>
 	    <script src="repo/fieldGlossRepo.js"></script>	    
+	    <script src="repo/packagerRepo.js"></script>
 	    <script src="repo/studentSubmissionRepo.js"></script>
 	    <script src="repo/savedFilterRepo.js"></script>
 	    <script src="repo/submissionRepo.js"></script>
@@ -340,6 +341,7 @@
 		<script src="model/embargo.js"></script>
 		<script src="model/organization.js"></script>
 		<script src="model/organizationCategory.js"></script>
+		<script src="model/packager.js"></script>
 	    <script src="model/inputType.js"></script>
 	    <script src="model/fieldPredicate.js"></script>
 	    <script src="model/fieldGloss.js"></script>	    

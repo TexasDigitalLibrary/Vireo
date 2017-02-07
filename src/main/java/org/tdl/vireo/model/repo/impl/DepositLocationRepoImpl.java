@@ -2,6 +2,7 @@ package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 
@@ -16,7 +17,7 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     private DepositLocationRepo depositLocationRepo;
 
     @Override
-    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
+    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor) {
         DepositLocation depositLocation = new DepositLocation(name, repository, collection, username, password, onBehalfOf, packager, depositor);
         depositLocation.setPosition(depositLocationRepo.count() + 1);
         return depositLocationRepo.save(depositLocation);                

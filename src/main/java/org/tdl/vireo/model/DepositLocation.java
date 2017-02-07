@@ -2,8 +2,11 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.tdl.vireo.model.packager.AbstractPackager;
+import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.validation.DepositLocationValidator;
 
 import edu.tamu.framework.model.BaseOrderedEntity;
@@ -35,8 +38,8 @@ public class DepositLocation extends BaseOrderedEntity {
 	private String onBehalfOf;
 
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
-	@Column(nullable = false)
-	private String packager;
+	@OneToOne(targetEntity=AbstractPackager.class, orphanRemoval=true)
+	private Packager packager;
 	
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
 	@Column(nullable = false)
@@ -56,7 +59,7 @@ public class DepositLocation extends BaseOrderedEntity {
 	 * @param name
 	 *            The name of the new deposit location.
 	 */
-	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
+	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor) {
 	    this();
 		setName(name);
 		setRepository(repository);
@@ -155,14 +158,14 @@ public class DepositLocation extends BaseOrderedEntity {
     /**
      * @return the packager
      */
-    public String getPackager() {
+    public Packager getPackager() {
         return packager;
     }
 
     /**
      * @param packager the packager to set
      */
-    public void setPackager(String packager) {
+    public void setPackager(Packager packager) {
         this.packager = packager;
     }
 

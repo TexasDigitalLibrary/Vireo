@@ -1,4 +1,4 @@
-vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DragAndDropListenerFactory) {
+vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, PackagerRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.depositLocationRepo = DepositLocationRepo;
@@ -14,11 +14,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		"FileDeposit": "File Deposit" 
 	};
 
+	$scope.packagers = PackagerRepo.getAll();
 
-	$scope.packagers = { 
-		"VireoExport": "Vireo Export"
-	};
-	
 	$scope.ready = $q.all([DepositLocationRepo.ready()]);
 
 	$scope.dragging = false;
@@ -40,8 +37,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
     			$scope.modalData.refresh();
     		}
 			$scope.modalData = {
-				depositor: 'Sword1Deposit',
-				packager: 'VireoExport'
+				depositor: 'Sword1Deposit'
 			};
 			$scope.closeModal();
 		};

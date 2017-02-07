@@ -28,5 +28,6 @@ public interface SystemDataLoader {
     public void generateSystemDefaults();
     
     public void loadDefaultControlledVocabularies();
-        
+
+    public void loadPackagers();
 }

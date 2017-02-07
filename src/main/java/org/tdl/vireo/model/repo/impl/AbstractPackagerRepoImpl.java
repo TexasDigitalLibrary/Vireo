@@ -1,0 +1,20 @@
+package org.tdl.vireo.model.repo.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.model.packager.DSpaceMetsPackager;
+import org.tdl.vireo.model.packager.Packager;
+import org.tdl.vireo.model.repo.AbstractPackagerRepo;
+import org.tdl.vireo.model.repo.custom.AbstractPackagerRepoCustom;
+
+public class AbstractPackagerRepoImpl implements AbstractPackagerRepoCustom {
+	@Autowired
+	private AbstractPackagerRepo abstractPackagerRepo; 
+
+	
+	@Override
+    public Packager createDSpaceMetsPackager() {
+        return abstractPackagerRepo.save(new DSpaceMetsPackager());              
+    }
+}

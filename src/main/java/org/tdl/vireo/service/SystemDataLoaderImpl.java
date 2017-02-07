@@ -46,6 +46,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
@@ -120,12 +121,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private EntityControlledVocabularyService entityControlledVocabularyService;
     
     private VocabularyWordRepo vocabularyWordRepo;
+    
+    private AbstractPackagerRepo abstractPackagerRepo;
 
     private ProquestLanguageCodesService proquestLanguageCodesService;
 
     //TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, AttachmentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, AttachmentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo, AbstractPackagerRepo abstractPackagerRepo) {
 
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
@@ -150,6 +153,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.submissionListColumnRepo = submissionListColumnRepo;
         this.defaultSubmissionListColumnService = defaultSubmissionListColumnService;
         this.vocabularyWordRepo = vocabularyWordRepo;
+        this.abstractPackagerRepo = abstractPackagerRepo;
         
         logger.info("Generating all system input types");
         loadSystemInputTypes();
@@ -186,6 +190,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         
         logger.info("Loading pre-defined controlled vocabularies");
         loadDefaultControlledVocabularies();
+        
+        logger.info("Loading Packagers");
+        loadPackagers();
     }
     
     @Override
@@ -877,6 +884,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
         }
+    }
+    
+    public void loadPackagers() {
+    	abstractPackagerRepo.createDSpaceMetsPackager();
     }
 
     /**
