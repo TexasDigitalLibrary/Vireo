@@ -13,8 +13,8 @@
 	 	  <tr ng-repeat="row in $data track by row.id">
 			<td title="'Organization'">{{row.organization.name}}</td>
 			<td title="'Status'">{{row.submissionState.name}}</td>
-			<td title="'Date Submitted'">{{row.submissionDate === null ? "Not Submitted" : row.submissionDate}}</td>
-			<td title="'Assigned To'">{{row.assignee === null ? "Not Assigned" : row.assignee.firstName + ' ' + row.assignee.lastName}}</td>
+			<td title="'Date Submitted'">{{row.submissionDate || "Not Submitted" | date: M/d/yyyy}}</td>
+			<td title="'Assigned To'">{{row.assignee.settings.displayName || "Not Assigned"}}</td>
 			<td title="'Actions'">
 				<button class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
 				<a href="{{'/submission/' + row.id}}" ng-if="row.submissionState.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">Continue</a>
