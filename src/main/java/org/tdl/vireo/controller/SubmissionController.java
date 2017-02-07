@@ -216,6 +216,7 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId).editCustomActionValue(customActionValue));
 	}
 
+    @Transactional
     @ApiMapping("/{submissionId}/change-status")
     @Auth(role = "STUDENT")
     public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {

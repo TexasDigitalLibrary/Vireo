@@ -66,11 +66,13 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	};
 
 	$scope.submit = function() {
-	  $scope.submission.changeStatus($scope.submittedSubmissionState);
+	  $scope.submission.changeStatus($scope.submittedSubmissionState).then(function() {
+	  	$location.path("/submission/complete");	
+	  });
 	};
 
 	$scope.reviewSubmission = function() {
-		$scope.setActiveStep({name:'review'})
+		$scope.setActiveStep({name:'review'});
 	}
 
 });
