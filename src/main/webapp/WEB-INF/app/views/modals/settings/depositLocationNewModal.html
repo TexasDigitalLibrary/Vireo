@@ -101,7 +101,7 @@
         </validatedinput>
 
     	<div class="form-group">
-        	<button ng-click="testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+        	<button ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
     	</div>
     </div>
 
@@ -109,7 +109,7 @@
     	<button 
             type="button" 
             class="btn btn-warning" 
-            ng-click="resetDepositLocation()">Cancel</button>
+            ng-click="modalData.resetDepositLocation()">Cancel</button>
     	<button 
             id="depositLocation-save" 
             type="submit" 

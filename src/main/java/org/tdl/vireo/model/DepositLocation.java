@@ -38,7 +38,7 @@ public class DepositLocation extends BaseOrderedEntity {
 	private String onBehalfOf;
 
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
-	@OneToOne(targetEntity=AbstractPackager.class, orphanRemoval=true)
+	@OneToOne(targetEntity=AbstractPackager.class, orphanRemoval=true, optional = true)
 	private Packager packager;
 	
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)

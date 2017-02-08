@@ -1,4 +1,4 @@
-vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, PackagerRepo, DragAndDropListenerFactory) {
+vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DepositLocation, PackagerRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.depositLocationRepo = DepositLocationRepo;
@@ -36,9 +36,22 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
     			$scope.modalData.refresh();
     		}
-			$scope.modalData = {
-				depositor: 'Sword1Deposit'
+			$scope.modalData = {};
+			
+			$scope.modalData.name = "jason's Dspace";
+			$scope.modalData.depositor = 'Sword1Deposit';
+			$scope.modalData.repository = 'http://jsavell.libary.tamu.edu';
+			$scope.modalData.collection = 'collection';
+			$scope.modalData.timeout = 30;
+			$scope.modalData.onBehalfOf = "Vireo";
+			
+			$scope.modalData.testDepositLocation = function() {
+				var testData = angular.copy($scope.modalData);
+				delete testData.packager;
+				var testableDepositLocation = new DepositLocation(testData);
+				testableDepositLocation.testConnection();
 			};
+
 			$scope.closeModal();
 		};
 

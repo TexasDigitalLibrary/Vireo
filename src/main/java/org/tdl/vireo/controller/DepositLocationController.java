@@ -81,4 +81,17 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS);
     }
     
+    @ApiMapping("/test-connection")
+    @Auth(role = "MANAGER")
+    public ApiResponse testConnection(@ApiValidatedModel DepositLocation depositLocation) {
+    	System.out.println(depositLocation);
+    	return new ApiResponse(SUCCESS, depositLocation);
+    }
+    
+    @ApiMapping("/find-collections")
+    public ApiResponse findCollection(@ApiValidatedModel DepositLocation depositLocation) {
+    	System.out.println(depositLocation);
+    	return new ApiResponse(SUCCESS);
+    } 
+    
 }
