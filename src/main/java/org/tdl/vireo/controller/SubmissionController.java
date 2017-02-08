@@ -36,6 +36,7 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -45,6 +46,7 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.util.OrcidUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -102,7 +104,10 @@ public class SubmissionController {
     private FileIOUtility fileIOUtility;
     
     @Autowired
-    private ValidationUtility validationUtility;
+    private OrcidUtility orcidUtility;
+    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
     @Transactional
     @ApiMapping("/all")
@@ -180,6 +185,12 @@ public class SubmissionController {
         	ValidationResults validationResults = fieldValue.validate(fieldValue);
         	
         	if(validationResults.isValid()) {
+        	    
+        	    System.out.println(configurationRepo.getByName("orcid_authentication").getValue());
+        	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")&& configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
+        	        System.out.println("\n\n\n\n\n Is an ORCID " + orcidUtility.verifyOrcid(fieldValue.getValue()) + "\n\n\n\n");
+        	    }
+        	    
         		submission.addFieldValue(fieldValue);
                 submission = submissionRepo.save(submission);
                 fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
@@ -198,6 +209,11 @@ public class SubmissionController {
         	ValidationResults validationResults = fieldValue.validate(fieldValue);
         	
         	if(validationResults.isValid()) {
+        	    System.out.println(configurationRepo.getByName("orcid_authentication").getValue());
+        	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")&& configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
+                    System.out.println("\n\n\n\n\n Is an ORCID " + orcidUtility.verifyOrcid(fieldValue.getValue()) + "\n\n\n\n");
+                }
+        	    
         		fieldValue = fieldValueRepo.save(fieldValue);     
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
         	} else {
