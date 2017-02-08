@@ -9,6 +9,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 		}).
 		when('/submission/history', {
 			templateUrl: 'views/submission/submissionHistory.html',
+			controller: 'SubmissionHistoryController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/new', {
@@ -29,6 +30,11 @@ vireo.config(function($locationProvider, $routeProvider) {
 		when('/submission/:submissionId/step/:stepNum', {
 			templateUrl: 'views/submission/submission.html',
 			controller: 'StudentSubmissionController',
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+		}).
+		when('/submission/:submissionId/view', {
+			templateUrl: 'views/submission/submissionView.html',
+			controller: 'SubmissionViewController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/review/:advisorAccessHash', {
