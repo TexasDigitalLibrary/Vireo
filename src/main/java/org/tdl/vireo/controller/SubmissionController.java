@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -35,6 +36,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -140,6 +142,23 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME));
+
+        submission.getSubmissionWorkflowSteps().forEach(ws -> {
+        	ws.getAggregateFieldProfiles().forEach(afp -> {
+        		Configuration mappedShibAttribute = afp.getMappedShibAttribute();
+        		if (mappedShibAttribute != null) {
+	        		if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
+	        			String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
+	        			
+						FieldValue fieldValue = fieldValueRepo.create(afp);
+	
+						fieldValue.setValue(credentialValue);
+						submission.addFieldValue(fieldValue);
+	        		}
+        		}
+        	});
+        });
+    	submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }
