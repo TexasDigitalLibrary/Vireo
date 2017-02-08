@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public interface DepositLocationRepo extends JpaRepository<DepositLocation, Long>, DepositLocationRepoCustom {
 
     public DepositLocation findByName(String name);

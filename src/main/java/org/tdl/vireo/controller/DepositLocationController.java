@@ -16,6 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
@@ -44,9 +47,8 @@ public class DepositLocationController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
-        logger.info("Creating deposit location with name " + depositLocation.getName());
-        depositLocation = depositLocationRepo.create(depositLocation.getName(), depositLocation.getRepository(), depositLocation.getCollection(), depositLocation.getUsername(), depositLocation.getPassword(), depositLocation.getOnBehalfOf(), depositLocation.getPackager(), depositLocation.getDepositor());
+    public ApiResponse createDepositLocation(@ApiData JsonNode depositLocationJson) {
+        DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, depositLocation);
     }
@@ -83,8 +85,8 @@ public class DepositLocationController {
     
     @ApiMapping("/test-connection")
     @Auth(role = "MANAGER")
-    public ApiResponse testConnection(@ApiValidatedModel DepositLocation depositLocation) {
-    	System.out.println(depositLocation);
+    public ApiResponse testConnection(@ApiData JsonNode depositLocationJson) {
+    	DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
     	return new ApiResponse(SUCCESS, depositLocation);
     }
     
