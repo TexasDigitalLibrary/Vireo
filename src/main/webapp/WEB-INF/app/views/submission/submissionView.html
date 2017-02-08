@@ -1,0 +1,18 @@
+<div ng-controller="SubmissionViewController">
+
+  <ul class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li class="active">Submission</li>
+  </ul>
+
+  <div class="row pageHead">
+    <h3 class="span11">Submission History</h3>
+  </div>
+  
+  <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+    <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+      <tr ng-repeat="row in $data track by row.id">
+
+      </tr>
+    </table>
+  </div>
