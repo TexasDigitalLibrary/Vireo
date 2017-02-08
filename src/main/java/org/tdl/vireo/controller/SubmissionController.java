@@ -353,6 +353,13 @@ public class SubmissionController {
     	return new ApiResponse(SUCCESS, newUri);
     }
     
+    @ApiMapping(value="/{submissionId}/deposit/{depositId}")
+    @Auth(role="MANAGER")
+    public ApiResponse depositSubmission(@ApiVariable Long submissionId, @ApiVariable Long depositId) {
+    	//exportservice.
+    	return null;
+    }
+    
     private void processEmailWorkflowRules(Submission submission) {
     	    	
     	List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();

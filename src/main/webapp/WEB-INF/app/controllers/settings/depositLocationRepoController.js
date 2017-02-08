@@ -16,7 +16,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
 	$scope.packagers = PackagerRepo.getAll();
 
-	$scope.ready = $q.all([DepositLocationRepo.ready()]);
+	$scope.ready = $q.all([DepositLocationRepo.ready(),PackagerRepo.ready()]);
 
 	$scope.dragging = false;
 	
