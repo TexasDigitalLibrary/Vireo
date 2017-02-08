@@ -1,51 +1,56 @@
-<div class="row submission-workflow-steps-navigation">
-	<div class="col-xs-12">
-		<ul class="nav nav-pills nav-justified">
-			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
-				<a ng-click="setActiveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right"></span></a>
-			</li>
-			<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
-				<a ng-click="setActiveStep({name:'review'})">Confirm & Submit</a>
-			</li>
-		</ul>
-	</div>
+<div class="student-submission-loader" ng-class="{'ready': studentSubmissionRepoReady}">
+	<img src="resources/images/ajax-loader.gif" />
 </div>
 
-<div class="row" ng-if="activeStep.name != 'review'">
-
-	<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps">
-		<ul class="list-unstyled">
-			<li ng-repeat="fp in activeStep.aggregateFieldProfiles">
-				<field-profile-display profile="fp" ng-if="fp.mappedShibAttribute"></field-profile-display>
-				<field profile="fp" ng-if="!fp.mappedShibAttribute"></field>
-			</li>
-		</ul>
+<div class="container student-submission" ng-class="{'ready': studentSubmissionRepoReady}">
+	<div class="row submission-workflow-steps-navigation">
+		<div class="col-xs-12">
+			<ul class="nav nav-pills nav-justified">
+				<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
+					<a ng-click="setActiveStep(workflowStep)">{{$index+1}}. {{workflowStep.name}} <span class="glyphicon glyphicon-arrow-right pull-right"></span></a>
+				</li>
+				<li  class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
+					<a ng-click="reviewSubmission()">Confirm & Submit</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 
-	<div class="col-xs-12 col-sm-3 submission-notes">
-		<ul class="list-unstyled">
-			<li ng-repeat="n in activeStep.aggregateNotes">
-				<submissionnote note="n"></submissionnote>
-			</li>
-		</ul>
+	<div class="row" ng-if="activeStep.name != 'review'">
+
+		<div class="col-xs-12 col-sm-9 submission-workflow-steps">
+			<ul class="list-unstyled">
+				<li ng-repeat="fp in activeStep.aggregateFieldProfiles">
+					<field-profile-display profile="fp" ng-if="fp.mappedShibAttribute"></field-profile-display>
+					<field profile="fp" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute"></field>
+				</li>
+			</ul>
+		</div>
+
+		<div class="col-xs-12 col-sm-3 submission-notes">
+			<ul class="list-unstyled">
+				<li ng-repeat="n in activeStep.aggregateNotes">
+					<submissionnote note="n"></submissionnote>
+				</li>
+			</ul>
+		</div>
 	</div>
 
-</div>
+	<div class="row" ng-if="activeStep.name == 'review'">
 
-<div class="row" ng-if="activeStep.name == 'review'">
+		<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps">
+			<div ng-include="'views/submission/submissionReview.html'"></div>
+		</div>	
 
-	<div class="col-xs-12 col-sm-7 col-sm-offset-2 submission-workflow-steps">
-		<div ng-include="'views/submission/submissionReview.html'"></div>
-	</div>	
+	</div>
 
-</div>
-
-<div class="row">
-	<div class="col-xs-12">
-		<ul class="inline-list">
-			<li><button class="btn btn-default" ng-click="setActiveStep(nextStep)" ng-if="!onLastStep()">Continue to {{nextStep.name}}</button></li>
-			<li><button class="btn btn-default" ng-click="setActiveStep({name:'review'})" ng-if="onLastStep() && activeStep.name != 'review' && studentSubmissionRepoReady">Continue to Review</button></li>
-			<li><button class="btn btn-default" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()">Submit</button></li>
-		</ul>		
+	<div class="row">
+		<div class="col-xs-12">
+			<ul class="inline-list">
+				<li><button class="btn btn-default" ng-click="setActiveStep(nextStep)" ng-if="!onLastStep()">Continue to {{nextStep.name}}</button></li>
+				<li><button class="btn btn-default" ng-click="setActiveStep({name:'review'})" ng-if="onLastStep() && activeStep.name != 'review' && studentSubmissionRepoReady">Continue to Review</button></li>
+				<li><button class="btn btn-primary" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()" ng-disabled="!submission.isValid">Submit</button></li>
+			</ul>
+		</div>
 	</div>
 </div>

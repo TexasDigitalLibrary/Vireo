@@ -355,6 +355,7 @@
 	    <!-- Constants -->
 		<script src="constants/emailRecipientType.js"></script>
 		<script src="constants/inputType.js"></script>		
+		<script src="constants/submissionStatuses.js"></script>	
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
@@ -388,6 +389,7 @@
 	    <script src="controllers/submission/newSubmissionController.js"></script>
 	    <script src="controllers/submission/studentSubmissionController.js"></script>
 	    <script src="controllers/submission/submissionListController.js"></script>
+	    <script src="controllers/submission/submissionViewController.js"></script>
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	    <script src="controllers/submission/submissionCompleteController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>

@@ -1,4 +1,4 @@
-<div ng-controller="SubmissionHistoryController">
+<div class="container">
 
 	<ul class="breadcrumb">
 		<li><a href="/">Home</a></li>
@@ -8,37 +8,38 @@
 	<div class="row pageHead">
 		<h3 class="span11">Submission History</h3>
 	</div>
+	<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+		<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+	 	  <tr ng-repeat="row in $data track by row.id">
+			<td title="'Organization'">{{row.organization.name}}</td>
+			<td title="'Status'">{{row.submissionState.name}}</td>
+			<td title="'Date Submitted'">{{row.submissionDate || "Not Submitted" | date: M/d/yyyy}}</td>
+			<td title="'Assigned To'">{{row.assignee.settings.displayName || "Not Assigned"}}</td>
+			<td title="'Actions'">
+				<button ng-if="row.submissionState.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
+				<a href="{{'/submission/' + row.id}}" ng-if="row.submissionState.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">Continue</a>
+				<a href="{{'/submission/' + row.id + '/view'}}" ng-if="row.submissionState.name !== SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">View</a>
+			</td>
+		  </tr>
+		</table>
 	
-	<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
- 	  <tr ng-repeat="row in $data track by row.id">
-		<td title="'ID'">{{row.id}}</td>
-		<td title="'Organization'">{{row.organization.name}}</td>
-		<td title="'Status'">{{row.submissionState.name}}</td>
-		<td title="'Date Submitted'">TODO</td>
-		<td title="'Assigned To'">TODO</td>
-		<td title="'Actions'">
-			<button class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
-		</td>
-	  </tr>
-	</table>
+		<div ng-controller="SettingsController">
+			<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
 
-	<div ng-controller="SettingsController">
-		<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
+			<modal 
+				modal-id="confirmNewSubmission" 
+				modal-view="views/modals/submissions/confirmNewSubmission.html" 
+				modal-header-class="modal-header-danger"
+				static="true">
+			</modal>
 
-		<modal 
-			modal-id="confirmNewSubmission" 
-			modal-view="views/modals/submissions/confirmNewSubmission.html" 
-			modal-header-class="modal-header-danger"
-			static="true">
-		</modal>
+			<modal 
+				modal-id="confirmDeleteSubmission" 
+				modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
+				modal-header-class="modal-header-danger"
+				static="true">
+			</modal>
 
-		<modal 
-			modal-id="confirmDeleteSubmission" 
-			modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
-			modal-header-class="modal-header-danger"
-			static="true">
-		</modal>
-
+		</div>
 	</div>
-
 </div>

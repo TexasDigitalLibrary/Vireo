@@ -1,16 +1,41 @@
-var submissionModel = function ($q, FileApi, RestApi, WsApi) {
+var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 	return function Submission() {
 		
 		var submission = this;
 
+		submission.isValid = false;
+
+		submission.enableBeforeMethods();
+
+		submission.before(function() {
+			var fieldValues = angular.copy(submission.fieldValues);
+			if(submission.fieldValues) submission.fieldValues.length = 0;
+			
+			//populate fieldValues with models for existing values
+			angular.forEach(fieldValues, function(fieldValue){
+				submission.fieldValues.push(new FieldValue(fieldValue));
+			});
+
+			//populate fieldValues with models for empty values
+			angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
+				angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+					var fieldValuesByFieldPredicate = submission.getFieldValuesByFieldPredicate(fp.fieldPredicate);
+					if(!fieldValuesByFieldPredicate.length) {
+						submission.fieldValues.push(createEmptyFieldValue(fp.fieldPredicate));
+					}
+				});
+			});
+
+		});
+
 		// additional model methods and variables
 		var createEmptyFieldValue = function(fieldPredicate) {
-			return {
+			return new FieldValue({
 				id: null,
 				value: "",
 				fieldPredicate: fieldPredicate
-			};
+			});
 		};
 
 		//Override
@@ -26,6 +51,25 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return promise;
 		};
 
+		submission.getFieldProfileByPredicate = function(predicate) {
+
+			var fieldProfile = null;
+
+			for(var i in submission.submissionWorkflowSteps) {
+				var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
+				for(var j in submissionWorkflowStep.aggregateFieldProfiles) {
+					var currentFieldProfile = submissionWorkflowStep.aggregateFieldProfiles[j];
+					if(currentFieldProfile.fieldPredicate.id === predicate.id) {
+						fieldProfile = currentFieldProfile;
+						break;
+					}
+				}
+			}
+
+			return fieldProfile;
+
+		};
+
 		submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
 
 			var fieldValues = [];
@@ -35,12 +79,6 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 				if(fieldValue.fieldPredicate.value == fieldPredicate.value) {
 					fieldValues.push(fieldValue);
 				}
-			}
-			
-			if (fieldValues.length === 0) {
-				var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
-				submission.fieldValues.push(emptyFieldValue);
-				fieldValues.push(emptyFieldValue);
 			}
 
 			return fieldValues;
@@ -85,26 +123,79 @@ var submissionModel = function ($q, FileApi, RestApi, WsApi) {
 			return emptyFieldValue;
 		};
 
-		submission.saveFieldValue = function(fieldValue) {
+		submission.saveFieldValue = function(fieldValue, fieldProfile) {
+
+			fieldValue.setIsValid(true);
+			fieldValue.setValidationMessages([]);
+
+			if((!fieldValue.value || fieldValue.value ==="")&&!fieldProfile.optional) {
+				return $q(function(resolve) {
+					fieldValue.setIsValid(false);
+					fieldValue.addValidationMessage("This field is required");
+					resolve();
+				});
+			}
 
 			angular.extend(this.getMapping().saveFieldValue, {
-				method: submission.id+"/update-field-value",
+				method: submission.id+"/update-field-value/"+fieldProfile.id,
 				data: fieldValue
 			});
 
 			var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
 			promise.then(function(response) {
-				var updatedFieldValue = angular.fromJson(response.body).payload.FieldValue;
-				for(var i in submission.fieldValues) {
-					var currentFieldValue = submission.fieldValues[i];
-					if((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
-						angular.extend(currentFieldValue, updatedFieldValue);
+
+				var responseObj = angular.fromJson(response.body);
+				
+				if(responseObj.meta.type === "INVALID") {
+					fieldValue.setIsValid(false);
+
+					angular.forEach(responseObj.payload.HashMap.value, function(value) {
+						fieldValue.addValidationMessage(value);	
+					});
+					
+				} else {
+					fieldValue.setIsValid(true);
+					var updatedFieldValue = responseObj.payload.FieldValue;
+					for(var i in submission.fieldValues) {
+						var currentFieldValue = submission.fieldValues[i];
+						if((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
+							angular.extend(currentFieldValue, updatedFieldValue);
+						}
 					}
 				}
+				
 			});
 
 			return promise;
+		};
+
+		submission.validate = function() {
+
+			submission.isValid = false;
+
+			var savePromises = [];
+
+			angular.forEach(submission.fieldValues, function(fv) {
+				var savePromise = submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
+				savePromises.push(savePromise);
+			});
+
+			$q.all(savePromises).then(function() {
+				var valid = true;
+				
+				for(var i in submission.fieldValues) {
+					var fv = submission.fieldValues[i];
+					if(!fv.isValid()) {
+						valid = false;
+						break;
+					}
+				}
+
+				submission.isValid = valid;
+
+			});
+
 		};
 		
 		submission.removeFieldValue = function(fieldValue) {
