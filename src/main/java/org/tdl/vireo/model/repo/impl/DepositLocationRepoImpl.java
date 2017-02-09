@@ -52,6 +52,11 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     
     @Override
     public DepositLocation createDetached(JsonNode depositLocationJson) {
+    	Packager packager = null;
+    	if (depositLocationJson.has("packager")) {
+    		packager = (Packager) packagerRepo.getOne(depositLocationJson.get("packager").get("id").asLong());
+    	}
+    	
    	 	DepositLocation depositLocation = createDetached(	
    			depositLocationJson.get("name").asText(), 
    			depositLocationJson.get("repository").asText(), 
@@ -59,7 +64,7 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
    			depositLocationJson.get("username").asText(), 
    			depositLocationJson.get("password").asText(), 
    			depositLocationJson.get("onBehalfOf").asText(), 
-   			(Packager) packagerRepo.getOne(depositLocationJson.get("packager").get("id").asLong()), 
+   			packager, 
    			depositLocationJson.get("depositor").asText());
 		return depositLocation;
 	}

@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.service.DepositorService;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -37,6 +39,9 @@ public class DepositLocationController {
     
     @Autowired 
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private DepositorService depositorService;
     
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
@@ -87,6 +92,8 @@ public class DepositLocationController {
     @Auth(role = "MANAGER")
     public ApiResponse testConnection(@ApiData JsonNode depositLocationJson) {
     	DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
+    	Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+    	depositor.getCollections(depositLocation);
     	return new ApiResponse(SUCCESS, depositLocation);
     }
     

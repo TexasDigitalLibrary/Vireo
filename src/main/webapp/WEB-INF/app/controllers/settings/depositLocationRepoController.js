@@ -10,7 +10,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	});
 
 	$scope.protocols = { 
-		"Sword1Deposit": "SWORD Version 1",
+		"SWORDv1Depositor": "SWORD Version 1",
 		"FileDeposit": "File Deposit" 
 	};
 
@@ -39,7 +39,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			$scope.modalData = {};
 			
 			$scope.modalData.name = "jason's Dspace";
-			$scope.modalData.depositor = 'Sword1Deposit';
+			$scope.modalData.depositor = 'SWORDv1Depositor';
 			$scope.modalData.repository = 'http://jsavell.libary.tamu.edu';
 			$scope.modalData.collection = 'collection';
 			$scope.modalData.timeout = 30;

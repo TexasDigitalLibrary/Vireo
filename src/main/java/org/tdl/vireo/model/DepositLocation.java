@@ -43,7 +43,7 @@ public class DepositLocation extends BaseOrderedEntity {
 	
 	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
 	@Column(nullable = false)
-	private String depositor;
+	private String depositorName;
 	
 	@Column(nullable = false)
 	private Integer timeout;
@@ -59,7 +59,7 @@ public class DepositLocation extends BaseOrderedEntity {
 	 * @param name
 	 *            The name of the new deposit location.
 	 */
-	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor) {
+	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositorName) {
 	    this();
 		setName(name);
 		setRepository(repository);
@@ -68,7 +68,7 @@ public class DepositLocation extends BaseOrderedEntity {
 		setPassword(password);
 		setOnBehalfOf(onBehalfOf);
 		setPackager(packager);
-		setDepositor(depositor);
+		setDepositorName(depositorName);
 	}
 
     /**
@@ -172,15 +172,15 @@ public class DepositLocation extends BaseOrderedEntity {
     /**
      * @return the depositor
      */
-    public String getDepositor() {
-        return depositor;
+    public String getDepositorName() {
+        return depositorName;
     }
 
     /**
      * @param depositor the depositor to set
      */
-    public void setDepositor(String depositor) {
-        this.depositor = depositor;
+    public void setDepositorName(String depositorName) {
+        this.depositorName = depositorName;
     }
 
     /**
