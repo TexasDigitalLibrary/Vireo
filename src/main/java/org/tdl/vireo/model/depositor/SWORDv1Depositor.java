@@ -18,6 +18,7 @@ import org.tdl.vireo.model.DepositLocation;
 public class SWORDv1Depositor implements Depositor {
 	private String name;
 	private final String USER_AGENT = "Vireo Sword 1.0 Depositor";
+	private final int DEFAULT_TIMEOUT = 60000;
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -26,20 +27,21 @@ public class SWORDv1Depositor implements Depositor {
 	}
 
 	public Map<String, String> getCollections(DepositLocation depLocation) {
-		System.out.println("*** GETTING COLLECTIONS ***");
  		try {
 			Map<String, String> foundCollections = new HashMap<String, String>();
 
 			if(depLocation == null || depLocation.getRepository() == null)
 				throw new IllegalArgumentException("Bad deposit location or repository URL when trying to getCollections()");
 
-			
+			logger.debug("Getting Collections via SWORD from: "+depLocation.getRepository());
+
 			URL repositoryURL = new URL(depLocation.getRepository());
-			
+
 			//Building the client
 			Client client = new Client();
 			// get the timeout from the location, or default it to the default
-			client.setSocketTimeout(depLocation.getTimeout() == null ? DepositLocation.DEFAULT_TIMEOUT : (depLocation.getTimeout() * 1000));
+			client.setSocketTimeout(depLocation.getTimeout() == null ? DEFAULT_TIMEOUT : (depLocation.getTimeout() * 1000));
+
 			client.setServer(repositoryURL.getHost(), repositoryURL.getPort());
 			client.setUserAgent(USER_AGENT);
 			
@@ -74,7 +76,6 @@ public class SWORDv1Depositor implements Depositor {
 					foundCollections.put(collection.getTitle(), collection.getLocation());
 				}
 			}		
-			
 			return foundCollections;
 
 		} catch (MalformedURLException murle) {

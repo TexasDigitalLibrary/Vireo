@@ -25,10 +25,6 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     @Override
 	public DepositLocation create(JsonNode depositLocationJson) {
     	
-    	
-    	System.out.println(depositLocationJson.get("packager"));
-    	System.out.println(depositLocationJson.get("packager").get("id"));
-    	
     	Packager packager = (Packager) packagerRepo.findOne(depositLocationJson.get("packager").get("id").asLong());
     	
     	 DepositLocation depositLocation = create(	
@@ -39,13 +35,14 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     			depositLocationJson.get("password").asText(), 
     			depositLocationJson.get("onBehalfOf").asText(), 
     			packager, 
-    			depositLocationJson.get("depositor").asText());
+    			depositLocationJson.get("depositor").asText(),
+    	 		depositLocationJson.get("timeout").asInt());
 		return depositLocation;
 	}
 
     @Override
-    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor) {
-        DepositLocation depositLocation = createDetached(name, repository, collection, username, password, onBehalfOf, packager, depositor);
+    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
+        DepositLocation depositLocation = createDetached(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
         depositLocation.setPosition(depositLocationRepo.count() + 1);
         return depositLocationRepo.save(depositLocation);                
     }
@@ -57,20 +54,31 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     		packager = (Packager) packagerRepo.getOne(depositLocationJson.get("packager").get("id").asLong());
     	}
     	
+    	String onBehalfOf = null;
+    	if (depositLocationJson.has("onBehalfOf")) {
+    		onBehalfOf = depositLocationJson.get("onBehalfOf").asText();
+    	}
+    	
+    	Integer timeout = null;
+    	if (depositLocationJson.has("timeout")) {
+    		timeout = depositLocationJson.get("timeout").asInt();
+    	}
+    	
    	 	DepositLocation depositLocation = createDetached(	
    			depositLocationJson.get("name").asText(), 
    			depositLocationJson.get("repository").asText(), 
    			depositLocationJson.get("collection").asText(), 
    			depositLocationJson.get("username").asText(), 
    			depositLocationJson.get("password").asText(), 
-   			depositLocationJson.get("onBehalfOf").asText(), 
+   			onBehalfOf, 
    			packager, 
-   			depositLocationJson.get("depositor").asText());
+   			depositLocationJson.get("depositor").asText(),
+   			timeout);
 		return depositLocation;
 	}
     
     @Override
-    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor) {
+    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
    	 	DepositLocation depositLocation = new DepositLocation(	
    			name, 
    			repository, 
@@ -79,7 +87,8 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
    			password, 
    			onBehalfOf, 
    			packager, 
-   			depositor);
+   			depositor,
+   			timeout);
 		return depositLocation;
 	}
     

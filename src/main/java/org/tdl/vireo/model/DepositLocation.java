@@ -59,7 +59,7 @@ public class DepositLocation extends BaseOrderedEntity {
 	 * @param name
 	 *            The name of the new deposit location.
 	 */
-	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositorName) {
+	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositorName,int timeout) {
 	    this();
 		setName(name);
 		setRepository(repository);
@@ -69,6 +69,7 @@ public class DepositLocation extends BaseOrderedEntity {
 		setOnBehalfOf(onBehalfOf);
 		setPackager(packager);
 		setDepositorName(depositorName);
+		setTimeout(timeout);
 	}
 
     /**
