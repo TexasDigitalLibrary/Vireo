@@ -4,6 +4,8 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 		
 		var submission = this;
 
+		submission.isValid = false;
+
 		submission.enableBeforeMethods();
 
 		submission.before(function() {
@@ -125,7 +127,7 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 			fieldValue.setIsValid(true);
 			fieldValue.setValidationMessages([]);
-			
+
 			if((!fieldValue.value || fieldValue.value ==="")&&!fieldProfile.optional) {
 				return $q(function(resolve) {
 					fieldValue.setIsValid(false);
@@ -169,9 +171,31 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 		};
 
 		submission.validate = function() {
+
+			submission.isValid = false;
+
+			var savePromises = [];
+
 			angular.forEach(submission.fieldValues, function(fv) {
-				submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
+				var savePromise = submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
+				savePromises.push(savePromise);
 			});
+
+			$q.all(savePromises).then(function() {
+				var valid = true;
+				
+				for(var i in submission.fieldValues) {
+					var fv = submission.fieldValues[i];
+					if(!fv.isValid()) {
+						valid = false;
+						break;
+					}
+				}
+
+				submission.isValid = valid;
+
+			});
+
 		};
 		
 		submission.removeFieldValue = function(fieldValue) {
