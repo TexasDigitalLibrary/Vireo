@@ -169,59 +169,43 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue, @ApiVariable String fieldProfileId) {
-
-        Submission submission = submissionRepo.findOne(submissionId);
-        
-        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
-
+    public ApiResponse updateFieldValue(
+            @ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue,
+            @ApiVariable String fieldProfileId, @ApiCredentials Credentials credentials
+        ) {
         ApiResponse apiResponse;
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        Validator validator = new FieldValueValidator(submissionFieldProfile);
+        fieldValue.setModelValidator(validator);
+        ValidationResults validationResults = fieldValue.validate(fieldValue);
         
         if (fieldValue.getId() == null) {
-        	        	
-        	Validator validator = new FieldValueValidator(submissionFieldProfile);
-        	fieldValue.setModelValidator(validator);
-        	
-        	ValidationResults validationResults = fieldValue.validate(fieldValue);
-        	
-        	if(validationResults.isValid()) {
-        	    
-        	    System.out.println(configurationRepo.getByName("orcid_authentication").getValue());
-        	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")&& configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
-        	        System.out.println("\n\n\n\n\n Is an ORCID " + orcidUtility.verifyOrcid(fieldValue.getValue()) + "\n\n\n\n");
-        	    }
-        	    
-        		submission.addFieldValue(fieldValue);
-                submission = submissionRepo.save(submission);
-                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-                
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
-                
-        	} else {
-        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
-        	}
-            
+            Submission submission = submissionRepo.findOne(submissionId);
+            submission.addFieldValue(fieldValue);
+            submission = submissionRepo.save(submission);
+            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
         } else {
-        	
-        	Validator validator = new FieldValueValidator(submissionFieldProfile);
-        	fieldValue.setModelValidator(validator);
-        	
-        	ValidationResults validationResults = fieldValue.validate(fieldValue);
-        	
-        	if(validationResults.isValid()) {
-        	    System.out.println(configurationRepo.getByName("orcid_authentication").getValue());
-        	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")&& configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
-                    System.out.println("\n\n\n\n\n Is an ORCID " + orcidUtility.verifyOrcid(fieldValue.getValue()) + "\n\n\n\n");
-                }
-        	    
-        		fieldValue = fieldValueRepo.save(fieldValue);     
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
-        	} else {
-        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
-        	}
-            
+            fieldValue = fieldValueRepo.save(fieldValue);
         }
-
+        	
+    	apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
+    	    
+	    System.out.println("ordic verification value is: " + configurationRepo.getByName("orcid_authentication").getValue());
+	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
+	        
+	        apiResponse = orcidUtility.verifyOrcid(fieldValue.getValue(), credentials, fieldValue);
+	        System.out.println("apiResponse: " + apiResponse.getMeta().getMessage());
+	    }
+    	return apiResponse;
+    }
+    
+    private ApiResponse getApiResponseFromValidationResults(ValidationResults validationResults, FieldValue fieldValue) {
+        ApiResponse apiResponse;
+        if (validationResults.isValid()) {
+            apiResponse = new ApiResponse(SUCCESS, fieldValue);   
+        } else {
+            apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        }
         return apiResponse;
     }
     
@@ -438,6 +422,5 @@ public class SubmissionController {
     		}
     	});
 
-	}    
-
+	}
 }
