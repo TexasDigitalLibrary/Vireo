@@ -99,7 +99,7 @@
         </validatedinput>
 
     	<div class="form-group">
-        	<button ng-disabled="modalData.isTestDepositing()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
+        	<button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
                 <span ng-show="modalData.isTestDepositing()">Testing...</span>
                 <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
             </button>

@@ -64,6 +64,10 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 				return isTestDepositing;
 			}
 
+			$scope.modalData.isTestable = function() {
+				return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositor && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
+			}
+
 			$scope.closeModal();
 		};
 
