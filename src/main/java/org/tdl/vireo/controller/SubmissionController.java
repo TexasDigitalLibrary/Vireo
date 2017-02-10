@@ -170,10 +170,10 @@ public class SubmissionController {
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
     public ApiResponse updateFieldValue(
-            @ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue,
-            @ApiVariable String fieldProfileId, @ApiCredentials Credentials credentials
-        ) {
-        ApiResponse apiResponse;
+        @ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue,
+        @ApiVariable String fieldProfileId, @ApiCredentials Credentials credentials
+    ) {
+        ApiResponse apiResponse = null;
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
         Validator validator = new FieldValueValidator(submissionFieldProfile);
         fieldValue.setModelValidator(validator);
@@ -190,11 +190,12 @@ public class SubmissionController {
         	
     	apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
     	    
-	    System.out.println("ordic verification value is: " + configurationRepo.getByName("orcid_authentication").getValue());
+	    //System.out.println("ordic verification value is: " + configurationRepo.getByName("orcid_authentication").getValue());
 	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
-	        
-	        apiResponse = orcidUtility.verifyOrcid(fieldValue.getValue(), credentials, fieldValue);
-	        System.out.println("apiResponse: " + apiResponse.getMeta().getMessage());
+	        if (apiResponse.getMeta().getType() == SUCCESS) {
+	            apiResponse = orcidUtility.verifyOrcid(fieldValue.getValue(), credentials, fieldValue);
+	        }
+	        //System.out.println("apiResponse: " + apiResponse.getMeta().getMessage());
 	    }
     	return apiResponse;
     }

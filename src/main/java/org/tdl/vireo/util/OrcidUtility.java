@@ -4,6 +4,9 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,32 +21,43 @@ import edu.tamu.framework.model.Credentials;
 
 @Service
 public class OrcidUtility {
-    
+
     private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
-    
+
     public ApiResponse verifyOrcid(String orcid, Credentials credentials, FieldValue fieldValue) {
+        Map<String, String> errors = new HashMap<String, String>();
         ApiResponse apiResponse = null;
         if (orcid == "") {
-            apiResponse = new ApiResponse(INVALID, "No ORCID");
+            errors.put("orcid-no-orcid", "No ORCID");
         } else {
             Document doc = this.getDocument(orcid);
             if (doc == null) {
-                apiResponse = new ApiResponse(INVALID, "No document found");
-            } else if (doc.getElementsByTagName("orcid-message") == null) {
-                apiResponse = new ApiResponse(INVALID, "No document found");
-            } else if (!credentials.getFirstName().equals(doc.getElementsByTagName("given-names").item(0).getTextContent())) {
-                apiResponse = new ApiResponse(INVALID, "Wrong firstname");
-            } else if (!credentials.getLastName().equals(doc.getElementsByTagName("family-name").item(0).getTextContent())) {
-                apiResponse = new ApiResponse(INVALID, "Wrong lastname)");
-            } else if (!credentials.getEmail().equals(doc.getElementsByTagName("email").item(0).getTextContent())) {
-                apiResponse = new ApiResponse(INVALID, "wrongemail");
+                errors.put("orcid-no-document", "No document found");
             } else {
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                if (doc.getElementsByTagName("orcid-message") == null) {
+                    errors.put("orcid-no-document", "No document found");
+                }
+                if (!credentials.getFirstName().equals(doc.getElementsByTagName("given-names").item(0).getTextContent())) {
+                    errors.put("orcid-invalid-first-name", "Wrong firstname");
+                }
+                if (!credentials.getLastName().equals(doc.getElementsByTagName("family-name").item(0).getTextContent())) {
+                    errors.put("orcid-invalid-last-name", "Wrong lastname");
+                }
+                if (!credentials.getEmail().equals(doc.getElementsByTagName("email").item(0).getTextContent())) {
+                    errors.put("orcid-no-invalid-email", "Wrong email");
+                }
             }
-        } 
+            if (errors.isEmpty()) {
+                apiResponse = new ApiResponse(SUCCESS, fieldValue);
+            } else {
+                Map<String, Map<String, String>> errorsMap = new HashMap<String, Map<String, String>>();
+                errorsMap.put("value", errors);
+                apiResponse = new ApiResponse(INVALID, errorsMap);
+            }
+        }
         return apiResponse;
     }
-    
+
     private Document getDocument(String orcid) {
         DocumentBuilder builder = this.getBuilder();
         Document doc = null;
@@ -58,7 +72,7 @@ public class OrcidUtility {
         }
         return doc;
     }
-    
+
     private DocumentBuilder getBuilder() {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
