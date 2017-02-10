@@ -50,18 +50,9 @@
             validations="depositLocationRepo.getValidations()"
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
-<!--
-        <validatedinput
-            model="modalData"
-            property="collection"
-            label="Collection"
-            placeholder="Collection"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
--->
-        <select ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections"></select>
+
+        <label for="collection">Collection</label>
+        <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
         <validatedinput
             model="modalData"

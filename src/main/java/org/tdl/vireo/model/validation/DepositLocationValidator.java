@@ -21,8 +21,6 @@ public class DepositLocationValidator extends BaseModelValidator {
         
         String collectionProperty = "collection";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Deposit Location requires a collection", collectionProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Deposit Location collection must be at least 2 characters", collectionProperty, 2));
-        this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Deposit Location collection cannot be more than 255 characters", collectionProperty, 255));
         
         String usernameProperty = "username";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Deposit Location requires a username", usernameProperty, true));
