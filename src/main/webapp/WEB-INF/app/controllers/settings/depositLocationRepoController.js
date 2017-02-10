@@ -25,6 +25,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	$scope.trashCanId = 'deposit-location-trash';
 
 	$scope.forms = {};
+
+	var isTestDepositing = false;
 		
 	$scope.ready.then(function() {
 
@@ -44,6 +46,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			$scope.modalData.timeout = 240;
 			
 			$scope.modalData.testDepositLocation = function() {
+				isTestDepositing = true;
 				var testData = angular.copy($scope.modalData);
 				delete testData.packager;
 				var testableDepositLocation = new DepositLocation(testData);
@@ -53,8 +56,13 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 					angular.forEach(collections, function(uri,name) {
 						$scope.collections.push({"name":name,"uri":uri});
 					});
+					isTestDepositing = false;
 				});
 			};
+
+			$scope.modalData.isTestDepositing = function() {
+				return isTestDepositing;
+			}
 
 			$scope.closeModal();
 		};

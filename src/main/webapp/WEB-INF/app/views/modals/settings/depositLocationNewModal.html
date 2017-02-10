@@ -51,7 +51,12 @@
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
 
-        <label for="collection">Collection</label>
+        <label for="collection">
+            Collection
+            <span ng-if="modalData.isTestDepositing()"> (Getting collections)</span>
+            <span ng-if="!modalData.isTestDepositing() && collections.length==0"> (Please get collections)</span>
+
+        </label>
         <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
         <validatedinput
@@ -94,7 +99,10 @@
         </validatedinput>
 
     	<div class="form-group">
-        	<button ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+        	<button ng-disabled="modalData.isTestDepositing()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
+                <span ng-show="modalData.isTestDepositing()">Testing...</span>
+                <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
+            </button>
     	</div>
     </div>
 
