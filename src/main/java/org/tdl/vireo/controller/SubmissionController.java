@@ -179,24 +179,37 @@ public class SubmissionController {
         fieldValue.setModelValidator(validator);
         ValidationResults validationResults = fieldValue.validate(fieldValue);
         
+        if (isOrcidVerificationActive(submissionFieldProfile, fieldValue)) {
+            apiResponse = orcidUtility.verifyOrcid(credentials, fieldValue);
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
+            } else {
+                validationResults.setValid(false);
+            }
+        } else {
+            apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
+        }
+        
         if (fieldValue.getId() == null) {
             Submission submission = submissionRepo.findOne(submissionId);
-            submission.addFieldValue(fieldValue);
-            submission = submissionRepo.save(submission);
-            fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+            if (validationResults.isValid()) {
+                submission.addFieldValue(fieldValue);
+                submission = submissionRepo.save(submission);
+                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+            }
         } else {
-            fieldValue = fieldValueRepo.save(fieldValue);
+            if (validationResults.isValid()) {
+                fieldValue = fieldValueRepo.save(fieldValue);
+            }
         }
-        	
-    	apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
-
-	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
-	        if (apiResponse.getMeta().getType() == SUCCESS) {
-	            apiResponse = orcidUtility.verifyOrcid(credentials, fieldValue);
-	        }
-
-	    }
+	    
     	return apiResponse;
+    }
+    
+    private boolean isOrcidVerificationActive(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue) {
+        return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")
+                && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")
+                && fieldValue.getValue().length() > 0;
     }
     
     private ApiResponse getApiResponseFromValidationResults(ValidationResults validationResults, FieldValue fieldValue) {
