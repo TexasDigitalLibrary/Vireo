@@ -189,13 +189,12 @@ public class SubmissionController {
         }
         	
     	apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
-    	    
-	    //System.out.println("ordic verification value is: " + configurationRepo.getByName("orcid_authentication").getValue());
+
 	    if (submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")) {
 	        if (apiResponse.getMeta().getType() == SUCCESS) {
-	            apiResponse = orcidUtility.verifyOrcid(fieldValue.getValue(), credentials, fieldValue);
+	            apiResponse = orcidUtility.verifyOrcid(credentials, fieldValue);
 	        }
-	        //System.out.println("apiResponse: " + apiResponse.getMeta().getMessage());
+
 	    }
     	return apiResponse;
     }

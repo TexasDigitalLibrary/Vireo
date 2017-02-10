@@ -14,6 +14,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.FieldValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import edu.tamu.framework.model.ApiResponse;
@@ -24,26 +26,26 @@ public class OrcidUtility {
 
     private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
 
-    public ApiResponse verifyOrcid(String orcid, Credentials credentials, FieldValue fieldValue) {
+    public ApiResponse verifyOrcid(Credentials credentials, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
         ApiResponse apiResponse = null;
-        if (orcid == "") {
+        if (fieldValue.getValue() == "") {
             errors.put("orcid-no-orcid", "No ORCID");
         } else {
-            Document doc = this.getDocument(orcid);
+            Document doc = this.getDocument(fieldValue.getValue());
             if (doc == null) {
                 errors.put("orcid-no-document", "No document found");
             } else {
                 if (doc.getElementsByTagName("orcid-message") == null) {
                     errors.put("orcid-no-document", "No document found");
                 }
-                if (!credentials.getFirstName().equals(doc.getElementsByTagName("given-names").item(0).getTextContent())) {
+                if (!tagMatchesCredentials(credentials.getFirstName(), doc.getElementsByTagName("given-names"))) {
                     errors.put("orcid-invalid-first-name", "Wrong firstname");
                 }
-                if (!credentials.getLastName().equals(doc.getElementsByTagName("family-name").item(0).getTextContent())) {
+                if (!tagMatchesCredentials(credentials.getLastName(), doc.getElementsByTagName("family-name"))) {
                     errors.put("orcid-invalid-last-name", "Wrong lastname");
                 }
-                if (!credentials.getEmail().equals(doc.getElementsByTagName("email").item(0).getTextContent())) {
+                if (!tagMatchesCredentials(credentials.getEmail(), doc.getElementsByTagName("email"))) {
                     errors.put("orcid-no-invalid-email", "Wrong email");
                 }
             }
@@ -56,6 +58,16 @@ public class OrcidUtility {
             }
         }
         return apiResponse;
+    }
+    
+    private boolean tagMatchesCredentials(String credential, NodeList tags) {
+        boolean hasMatch = false;
+        for (int i = 0; i < tags.getLength(); i++) {
+            if (tags.item(i).getTextContent().equals(credential)) {
+                hasMatch = true;
+            }
+        }
+        return hasMatch;
     }
 
     private Document getDocument(String orcid) {
