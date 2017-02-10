@@ -14,6 +14,8 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 		"FileDeposit": "File Deposit" 
 	};
 
+	$scope.collections = [];
+
 	$scope.packagers = PackagerRepo.getAll();
 
 	$scope.ready = $q.all([DepositLocationRepo.ready(),PackagerRepo.ready()]);
@@ -38,18 +40,20 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
     		}
 			$scope.modalData = {};
 			
-			$scope.modalData.name = "jason's Dspace";
 			$scope.modalData.depositor = 'SWORDv1Depositor';
-			$scope.modalData.repository = 'http://jsavell.libary.tamu.edu';
-			$scope.modalData.collection = 'collection';
-			$scope.modalData.timeout = 30;
-			$scope.modalData.onBehalfOf = "Vireo";
+			$scope.modalData.timeout = 240;
 			
 			$scope.modalData.testDepositLocation = function() {
 				var testData = angular.copy($scope.modalData);
 				delete testData.packager;
 				var testableDepositLocation = new DepositLocation(testData);
-				testableDepositLocation.testConnection();
+				testableDepositLocation.testConnection().then(function(response) {
+					var data = angular.fromJson(response.body);
+					var collections = data.payload.HashMap;
+					angular.forEach(collections, function(uri,name) {
+						$scope.collections.push({"name":name,"uri":uri});
+					});
+				});
 			};
 
 			$scope.closeModal();

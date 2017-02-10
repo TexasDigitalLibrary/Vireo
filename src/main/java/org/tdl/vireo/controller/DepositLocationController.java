@@ -93,8 +93,7 @@ public class DepositLocationController {
     public ApiResponse testConnection(@ApiData JsonNode depositLocationJson) {
     	DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
     	Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
-    	System.out.println(depositor.getCollections(depositLocation));
-    	return new ApiResponse(SUCCESS, depositLocation);
+    	return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));
     }
     
     @ApiMapping("/find-collections")

@@ -50,7 +50,7 @@
             validations="depositLocationRepo.getValidations()"
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
-
+<!--
         <validatedinput
             model="modalData"
             property="collection"
@@ -60,6 +60,8 @@
             validations="depositLocationRepo.getValidations()"
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
+-->
+        <select ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections"></select>
 
         <validatedinput
             model="modalData"

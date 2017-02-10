@@ -67,7 +67,7 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
    	 	DepositLocation depositLocation = createDetached(	
    			depositLocationJson.get("name").asText(), 
    			depositLocationJson.get("repository").asText(), 
-   			depositLocationJson.get("collection").asText(), 
+   			null, 
    			depositLocationJson.get("username").asText(), 
    			depositLocationJson.get("password").asText(), 
    			onBehalfOf, 
