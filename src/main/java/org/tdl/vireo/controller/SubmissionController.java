@@ -173,12 +173,40 @@ public class SubmissionController {
         @ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue,
         @ApiVariable String fieldProfileId, @ApiCredentials Credentials credentials
     ) {
-        ApiResponse apiResponse = null;
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        ApiResponse apiResponse = activateOrcidVerification(submissionFieldProfile, fieldValue, credentials);
+        saveFieldValueIfValid(apiResponse, submissionId, fieldValue);
+	    
+    	return apiResponse;
+    }
+    
+    private ValidationResults getValidationResults(String fieldProfileId, FieldValue fieldValue) {
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
         Validator validator = new FieldValueValidator(submissionFieldProfile);
         fieldValue.setModelValidator(validator);
         ValidationResults validationResults = fieldValue.validate(fieldValue);
-        
+        return validationResults;
+    }
+    
+    private FieldValue saveFieldValueIfValid(ApiResponse apiResponse, Long submissionId, FieldValue fieldValue) {
+        if (fieldValue.getId() == null) {
+            Submission submission = submissionRepo.findOne(submissionId);
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                submission.addFieldValue(fieldValue);
+                submission = submissionRepo.save(submission);
+                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+            }
+        } else {
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                fieldValue = fieldValueRepo.save(fieldValue);
+            }
+        }
+        return fieldValue;
+    }
+    
+    private ApiResponse activateOrcidVerification(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue, Credentials credentials) {
+        ApiResponse apiResponse = null;
+        ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
         if (isOrcidVerificationActive(submissionFieldProfile, fieldValue)) {
             apiResponse = orcidUtility.verifyOrcid(credentials, fieldValue);
             if (apiResponse.getMeta().getType().equals(SUCCESS)) {
@@ -189,27 +217,14 @@ public class SubmissionController {
         } else {
             apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
         }
-        
-        if (fieldValue.getId() == null) {
-            Submission submission = submissionRepo.findOne(submissionId);
-            if (validationResults.isValid()) {
-                submission.addFieldValue(fieldValue);
-                submission = submissionRepo.save(submission);
-                fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-            }
-        } else {
-            if (validationResults.isValid()) {
-                fieldValue = fieldValueRepo.save(fieldValue);
-            }
-        }
-	    
-    	return apiResponse;
+        return apiResponse;
     }
     
     private boolean isOrcidVerificationActive(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue) {
         return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")
                 && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")
-                && fieldValue.getValue().length() > 0;
+                && fieldValue.getValue().length() > 0
+                && getValidationResults(submissionFieldProfile.getId().toString(), fieldValue).isValid();
     }
     
     private ApiResponse getApiResponseFromValidationResults(ValidationResults validationResults, FieldValue fieldValue) {
