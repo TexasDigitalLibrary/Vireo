@@ -176,9 +176,14 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 			var savePromises = [];
 
-			angular.forEach(submission.fieldValues, function(fv) {
-				var savePromise = submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
-				savePromises.push(savePromise);
+			angular.forEach(submission.fieldValues, function(fv) {				
+
+				var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);	
+
+				if(!fieldProfile.optional || (fv.value!=="" && fieldProfile.optional)) {
+					var savePromise = submission.saveFieldValue(fv, fieldProfile);
+					savePromises.push(savePromise);
+				}
 			});
 
 			$q.all(savePromises).then(function() {
