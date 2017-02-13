@@ -112,7 +112,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		};
 		
 		$scope.hasPrimaryDocument = function() {
-        	return $scope.primaryDocumentFieldValue !== undefined;
+        	return $scope.primaryDocumentFieldValue !== undefined && $scope.primaryDocumentFieldValue.id;
         }
 
 		$scope.deleteFieldValue = function(fieldValue) {
