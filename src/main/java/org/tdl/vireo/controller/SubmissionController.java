@@ -38,6 +38,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -47,6 +48,7 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.util.OrcidUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -104,7 +106,10 @@ public class SubmissionController {
     private FileIOUtility fileIOUtility;
     
     @Autowired
-    private ValidationUtility validationUtility;
+    private OrcidUtility orcidUtility;
+    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
     @Transactional
     @ApiMapping("/all")
@@ -183,48 +188,71 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    public ApiResponse updateFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue, @ApiVariable String fieldProfileId) {
-
-        Submission submission = submissionRepo.findOne(submissionId);
-        
+    public ApiResponse updateFieldValue(
+        @ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue,
+        @ApiVariable String fieldProfileId, @ApiCredentials Credentials credentials
+    ) {
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
-
-        ApiResponse apiResponse;
-        
+        ApiResponse apiResponse = activateOrcidVerification(submissionFieldProfile, fieldValue, credentials);
+        saveFieldValueIfValid(apiResponse, submissionId, fieldValue);
+	    
+    	return apiResponse;
+    }
+    
+    private ValidationResults getValidationResults(String fieldProfileId, FieldValue fieldValue) {
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        Validator validator = new FieldValueValidator(submissionFieldProfile);
+        fieldValue.setModelValidator(validator);
+        ValidationResults validationResults = fieldValue.validate(fieldValue);
+        return validationResults;
+    }
+    
+    private FieldValue saveFieldValueIfValid(ApiResponse apiResponse, Long submissionId, FieldValue fieldValue) {
         if (fieldValue.getId() == null) {
-        	        	
-        	Validator validator = new FieldValueValidator(submissionFieldProfile);
-        	fieldValue.setModelValidator(validator);
-        	
-        	ValidationResults validationResults = fieldValue.validate(fieldValue);
-        	
-        	if(validationResults.isValid()) {
-        		submission.addFieldValue(fieldValue);
+            Submission submission = submissionRepo.findOne(submissionId);
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                submission.addFieldValue(fieldValue);
                 submission = submissionRepo.save(submission);
                 fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-                
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
-                
-        	} else {
-        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
-        	}
-            
+            }
         } else {
-        	
-        	Validator validator = new FieldValueValidator(submissionFieldProfile);
-        	fieldValue.setModelValidator(validator);
-        	
-        	ValidationResults validationResults = fieldValue.validate(fieldValue);
-        	
-        	if(validationResults.isValid()) {
-        		fieldValue = fieldValueRepo.save(fieldValue);     
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
-        	} else {
-        		apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
-        	}
-            
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                fieldValue = fieldValueRepo.save(fieldValue);
+            }
         }
-
+        return fieldValue;
+    }
+    
+    private ApiResponse activateOrcidVerification(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue, Credentials credentials) {
+        ApiResponse apiResponse = null;
+        ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
+        if (isOrcidVerificationActive(submissionFieldProfile, fieldValue)) {
+            apiResponse = orcidUtility.verifyOrcid(credentials, fieldValue);
+            if (apiResponse.getMeta().getType().equals(SUCCESS)) {
+                apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
+            } else {
+                validationResults.setValid(false);
+            }
+        } else {
+            apiResponse = getApiResponseFromValidationResults(validationResults, fieldValue);
+        }
+        return apiResponse;
+    }
+    
+    private boolean isOrcidVerificationActive(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue) {
+        return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID")
+                && configurationRepo.getByName("orcid_authentication").getValue().toLowerCase().equals("true")
+                && fieldValue.getValue().length() > 0
+                && getValidationResults(submissionFieldProfile.getId().toString(), fieldValue).isValid();
+    }
+    
+    private ApiResponse getApiResponseFromValidationResults(ValidationResults validationResults, FieldValue fieldValue) {
+        ApiResponse apiResponse;
+        if (validationResults.isValid()) {
+            apiResponse = new ApiResponse(SUCCESS, fieldValue);   
+        } else {
+            apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        }
         return apiResponse;
     }
     
@@ -442,6 +470,5 @@ public class SubmissionController {
     		}
     	});
 
-	}    
-
+	}
 }
