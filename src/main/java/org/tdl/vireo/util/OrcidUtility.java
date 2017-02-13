@@ -30,23 +30,23 @@ public class OrcidUtility {
         Map<String, String> errors = new HashMap<String, String>();
         ApiResponse apiResponse = null;
         if (fieldValue.getValue() == "") {
-            errors.put("orcid-no-orcid", "No ORCID");
+            errors.put("orcid-no-orcid", "Field must be a valid ORCID");
         } else {
             Document doc = this.getDocument(fieldValue.getValue());
             if (doc == null) {
-                errors.put("orcid-no-document", "No document found");
+                errors.put("orcid-no-document", "No public profile was found for this ORCID");
             } else {
                 if (doc.getElementsByTagName("orcid-message") == null) {
-                    errors.put("orcid-no-document", "No document found");
+                    errors.put("orcid-no-document", "No public profile was found for this ORCID");
                 }
                 if (!tagMatchesCredentials(credentials.getFirstName(), doc.getElementsByTagName("given-names"))) {
-                    errors.put("orcid-invalid-first-name", "Wrong firstname");
+                    errors.put("orcid-invalid-first-name", "The first name you registered with does not match this ORCID profile");
                 }
                 if (!tagMatchesCredentials(credentials.getLastName(), doc.getElementsByTagName("family-name"))) {
-                    errors.put("orcid-invalid-last-name", "Wrong lastname");
+                    errors.put("orcid-invalid-last-name", "The last name you registered with does not match this ORCID profile");
                 }
                 if (!tagMatchesCredentials(credentials.getEmail(), doc.getElementsByTagName("email"))) {
-                    errors.put("orcid-no-invalid-email", "Wrong email");
+                    errors.put("orcid-no-invalid-email", "The email you registered with does not match this ORCID profile");
                 }
             }
             if (errors.isEmpty()) {
