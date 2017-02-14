@@ -6,15 +6,19 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
         	submission: "=",
             filterOptional: "=?",
             hideLinks: "=?",
-            setActiveStep: "&"
+            setActiveStep: "&",
+            validate: "=?"
+        },
+        controller: function($scope) {
+            if($scope.validate) {
+                $scope.submission.ready().then(function() {
+                    $scope.submission.validate();
+                });    
+            }
         },
         link: function($scope){
 
             $scope.InputTypes = InputTypes;
-
-            $scope.submission.ready().then(function() {
-                $scope.submission.validate();
-            });
 
         	$scope.required = function(aggregateFieldProfile) {
 				return !$scope.filterOptional || !aggregateFieldProfile.optional;
@@ -32,7 +36,7 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
 
                 for(var i in fieldValues) {
                     var fieldValue = fieldValues[i];
-                    if (!fieldValue.isValid()) {
+                    if (fieldValue.isValid && !fieldValue.isValid()) {
                         return true;
                     }
                 }

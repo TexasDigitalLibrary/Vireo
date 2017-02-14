@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -213,6 +214,19 @@ public class Submission extends BaseEntity {
      */
     public void addFieldValue(FieldValue fieldValue) {
         getFieldValues().add(fieldValue);
+    }
+    
+    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate predicate) {
+    	
+    	List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+    
+    	this.getFieldValues().forEach(fv -> {
+    		if(predicate.equals(fv.getFieldPredicate())) {
+    			fielsValues.add(fv);
+    		}
+    	});
+    	
+    	return fielsValues;
     }
 
     /**
@@ -455,5 +469,21 @@ public class Submission extends BaseEntity {
 		}
 		this.customActionValues.add(customActionValue);
 		return customActionValue;
+	}
+
+	public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
+		
+		List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+		
+		this.submissionWorkflowSteps.forEach(submissionWorkflowSteps -> {
+			submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
+				if(afp.getInputType().equals(inputType)) {
+					List<FieldValue> foundFieldValues = this.getFieldValuesByPredicate(afp.getFieldPredicate());
+					fieldValues.addAll(foundFieldValues);
+				}
+			});
+		});
+		
+		return fieldValues;
 	}
 }

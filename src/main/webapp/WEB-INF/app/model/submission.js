@@ -176,9 +176,14 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 
 			var savePromises = [];
 
-			angular.forEach(submission.fieldValues, function(fv) {
-				var savePromise = submission.saveFieldValue(fv, submission.getFieldProfileByPredicate(fv.fieldPredicate));
-				savePromises.push(savePromise);
+			angular.forEach(submission.fieldValues, function(fv) {				
+
+				var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);	
+
+				if(!fieldProfile.optional || (fv.value!=="" && fieldProfile.optional)) {
+					var savePromise = submission.saveFieldValue(fv, fieldProfile);
+					savePromises.push(savePromise);
+				}
 			});
 
 			$q.all(savePromises).then(function() {
@@ -332,10 +337,21 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			return promise;
 		};
 
-		return submission;
-	}
+		submission.sendAdvisorEmail = function() {
 
-}
+			angular.extend(this.getMapping().sendAdvisorEmail, {
+				method: submission.id+"/send-advisor-email",
+			});
+
+			var promise = WsApi.fetch(this.getMapping().sendAdvisorEmail);
+
+			return promise;
+		};
+
+		return submission;
+	};
+
+};
 
 vireo.model("Submission", submissionModel);
 vireo.model("StudentSubmission", submissionModel);

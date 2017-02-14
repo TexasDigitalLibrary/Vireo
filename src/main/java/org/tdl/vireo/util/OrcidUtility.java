@@ -26,9 +26,8 @@ public class OrcidUtility {
 
     private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
 
-    public ApiResponse verifyOrcid(Credentials credentials, FieldValue fieldValue) {
+    public Map<String, String> verifyOrcid(Credentials credentials, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
-        ApiResponse apiResponse = null;
         if (fieldValue.getValue() == "") {
             errors.put("orcid-no-orcid", "Field must be a valid ORCID");
         } else {
@@ -49,17 +48,10 @@ public class OrcidUtility {
                     errors.put("orcid-no-invalid-email", "The email you registered with does not match this ORCID profile");
                 }
             }
-            if (errors.isEmpty()) {
-                apiResponse = new ApiResponse(SUCCESS, fieldValue);
-            } else {
-                Map<String, Map<String, String>> errorsMap = new HashMap<String, Map<String, String>>();
-                errorsMap.put("value", errors);
-                apiResponse = new ApiResponse(INVALID, errorsMap);
-            }
         }
-        return apiResponse;
+        return errors;
     }
-    
+
     private boolean tagMatchesCredentials(String credential, NodeList tags) {
         boolean hasMatch = false;
         for (int i = 0; i < tags.getLength(); i++) {
