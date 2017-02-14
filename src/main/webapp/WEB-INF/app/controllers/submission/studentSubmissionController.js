@@ -66,9 +66,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 	};
 
 	$scope.submit = function() {
-
-	  console.log($scope.submittedSubmissionState);
-
 	  $scope.submission.changeStatus($scope.submittedSubmissionState).then(function() {
 	  	$location.path("/submission/complete");	
 	  });
