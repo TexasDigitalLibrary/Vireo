@@ -5,11 +5,14 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -27,14 +30,17 @@ import javax.persistence.UniqueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.AppContextInitializedHandler;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
+import groovy.ui.SystemOutputInterceptor;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
-    
+
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
     @ManyToOne(optional = false)
@@ -56,7 +62,7 @@ public class Submission extends BaseEntity {
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
-    
+
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
@@ -70,9 +76,15 @@ public class Submission extends BaseEntity {
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
 
     private Set<DeprecatedAttachment> attachments;
-    
+
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private List<CustomActionValue> customActionValues;
+
     @Lob
     private String reviewerNotes;
+
+    @Column(nullable = true)
+    private String advisorAccessHash;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -80,8 +92,8 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLog(new HashSet<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
+        setCustomActionValues(new ArrayList<CustomActionValue>());
         setAttachments(new HashSet<DeprecatedAttachment>());
-
     }
 
     /**
@@ -92,6 +104,7 @@ public class Submission extends BaseEntity {
         this();
         setSubmitter(submitter);
         setOrganization(organization);
+        generateAdvisorAccessHash();
     }
 
     /**
@@ -104,7 +117,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return the submitter
      */
     public User getSubmitter() {
@@ -112,7 +125,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param submitter
      */
     public void setSubmitter(User submitter) {
@@ -120,7 +133,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public User getAssignee() {
@@ -147,24 +160,28 @@ public class Submission extends BaseEntity {
      *            the submissionState to set
      */
     public void setSubmissionState(SubmissionState submissionState) {
-    	
+
     	if(submissionState.getName().equals("Submitted")) {
-    		Calendar today = Calendar.getInstance();
-    		today.clear(Calendar.HOUR); 
-    		today.clear(Calendar.MINUTE); 
-    		today.clear(Calendar.SECOND);
-    		setSubmissionDate(today);
+    		setSubmissionDate(getTime());
     	}
-    	
+
     	if(this.submissionState != null) {
     		logger.info("Changing status from " +this.submissionState.getName() +" to " + submissionState.getName());
     	} else {
     		logger.info("Changing status to " + submissionState.getName());
-    	}	
-    	
+    	}
+
         this.submissionState = submissionState;
-        
+
     }
+
+	private Calendar getTime() {
+		Calendar time = Calendar.getInstance();
+		time.clear(Calendar.HOUR);
+		time.clear(Calendar.MINUTE);
+		time.clear(Calendar.SECOND);
+		return time;
+	}
 
 	/**
      * @return the organization
@@ -197,15 +214,28 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param fieldValue
      */
     public void addFieldValue(FieldValue fieldValue) {
         getFieldValues().add(fieldValue);
     }
 
+    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate predicate) {
+
+    	List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+
+    	this.getFieldValues().forEach(fv -> {
+    		if(predicate.equals(fv.getFieldPredicate())) {
+    			fielsValues.add(fv);
+    		}
+    	});
+
+    	return fielsValues;
+    }
+
     /**
-     * 
+     *
      * @param fieldValue
      */
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
@@ -221,9 +251,9 @@ public class Submission extends BaseEntity {
 
         return foundFieldValue;
     }
-    
+
 	public List<FieldValue> getFieldValueByPredicate(FieldPredicate fieldPredicate) {
-		
+
 		List<FieldValue> foundFieldValues = new ArrayList<FieldValue>();
 
         for (FieldValue fieldValue : getFieldValues()) {
@@ -233,11 +263,11 @@ public class Submission extends BaseEntity {
         }
 
         return foundFieldValues;
-		
+
 	}
 
     /**
-     * 
+     *
      * @param fieldValue
      */
     public void removeFieldValue(FieldValue fieldValue) {
@@ -260,7 +290,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param submissionWorkflowStep
      */
     public void addSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
@@ -268,7 +298,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param submissionWorkflowStep
      */
     public void removeSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
@@ -306,7 +336,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param actionLog
      */
     public void addActionLog(ActionLog actionLog) {
@@ -314,7 +344,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param actionLog
      */
     public void removeActionLog(ActionLog actionLog) {
@@ -337,7 +367,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param emabargoType
      */
     public void addEmbargoType(Embargo embargoType) {
@@ -345,7 +375,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param embargoType
      */
     public void removeEmbargoType(Embargo embargoType) {
@@ -368,7 +398,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param attachment
      */
     public void addAttachment(DeprecatedAttachment attachment) {
@@ -376,7 +406,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param actionLog
      */
     public void removeAttachment(DeprecatedAttachment attachment) {
@@ -384,7 +414,7 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
 	public String getReviewerNotes() {
@@ -392,12 +422,73 @@ public class Submission extends BaseEntity {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reviewerNotes
 	 */
 	public void setReviewerNotes(String reviewerNotes) {
 		this.reviewerNotes = reviewerNotes;
 	}
 
-    
+	private void generateAdvisorAccessHash() {
+		setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
+	}
+
+	public void setAdvisorAccessHash(String string) {
+		advisorAccessHash = string;
+	}
+
+	public String getAdvisorAccessHash() {
+		return advisorAccessHash;
+	}
+
+	/**
+	 * @return the customActionValues
+	 */
+	public List<CustomActionValue> getCustomActionValues() {
+		return customActionValues;
+	}
+
+	/**
+	 * @param customActionValues the customActionValues to set
+	 */
+	public void setCustomActionValues(List<CustomActionValue> customActionValues) {
+		this.customActionValues = customActionValues;
+	}
+
+	public void addCustomActionValue(CustomActionValue customActionValue){
+		this.customActionValues.add(customActionValue);
+	}
+
+	/**
+	 *
+	 * @param customActionValue
+	 * @return
+	 */
+	public CustomActionValue editCustomActionValue(CustomActionValue customActionValue) {
+		for (CustomActionValue cav : this.customActionValues) {
+			if (cav.getId().equals(customActionValue.getId())) {
+				cav.setDefinition(customActionValue.getDefinition());
+				cav.setValue(customActionValue.getValue());
+				return cav;
+			}
+		}
+		this.customActionValues.add(customActionValue);
+		return customActionValue;
+	}
+
+	public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
+
+		List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+
+		this.submissionWorkflowSteps.forEach(submissionWorkflowSteps -> {
+			submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
+				if(afp.getInputType().equals(inputType)) {
+					List<FieldValue> foundFieldValues = this.getFieldValuesByPredicate(afp.getFieldPredicate());
+					fieldValues.addAll(foundFieldValues);
+				}
+			});
+		});
+
+		return fieldValues;
+	}
 }

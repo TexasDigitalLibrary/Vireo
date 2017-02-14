@@ -8,6 +8,4 @@ import org.tdl.vireo.model.repo.custom.CustomActionValueRepoCustom;
 
 public interface CustomActionValueRepo extends JpaRepository<CustomActionValue, Long>, CustomActionValueRepoCustom {
 
-    public CustomActionValue findBySubmissionAndDefinition(Submission submission, CustomActionDefinition customActionDefinition);
-
 }

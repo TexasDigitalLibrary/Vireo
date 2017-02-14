@@ -24,17 +24,16 @@ public class FieldValue extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private FieldPredicate fieldPredicate;
 
-    public FieldValue() {
-        setModelValidator(new FieldValueValidator());
-    }
+    public FieldValue() {}
 
     /**
      * 
      * @param predicate
      */
-    public FieldValue(FieldPredicate predicate) {
+    public FieldValue(SubmissionFieldProfile submissionFieldProfile) {
         this();
-        setFieldPredicate(predicate);
+        setModelValidator(new FieldValueValidator(submissionFieldProfile));
+        setFieldPredicate(submissionFieldProfile.getFieldPredicate());
     }
 
     /**

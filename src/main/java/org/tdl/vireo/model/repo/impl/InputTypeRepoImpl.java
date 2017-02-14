@@ -14,5 +14,12 @@ public class InputTypeRepoImpl implements InputTypeRepoCustom {
     public InputType create(String name) {
         return inputTypeRepo.save(new InputType(name));
     }
+    
+    public InputType create(InputType inputType) {
+    	InputType newInputType = create(inputType.getName());
+    	newInputType.setValidationPatern(inputType.getValidationPatern());
+    	newInputType.setValidationMessage(inputType.getValidationMessage());
+        return inputTypeRepo.save(newInputType);
+    }
 
 }
