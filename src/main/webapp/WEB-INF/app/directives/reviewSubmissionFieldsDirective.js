@@ -6,12 +6,15 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
         	submission: "=",
             filterOptional: "=?",
             hideLinks: "=?",
-            setActiveStep: "&"
+            setActiveStep: "&",
+            validate: "=?"
         },
         controller: function($scope) {
-            $scope.submission.ready().then(function() {
-                $scope.submission.validate();
-            });
+            if($scope.validate) {
+                $scope.submission.ready().then(function() {
+                    $scope.submission.validate();
+                });    
+            }
         },
         link: function($scope){
 

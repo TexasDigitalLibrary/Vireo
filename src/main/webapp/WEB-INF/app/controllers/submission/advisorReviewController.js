@@ -4,7 +4,9 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
 
 	$scope.InputType = InputTypes;
 
+	$scope.advisorSubmissionRepoReady = false;
 	AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function(data) {
+		$scope.advisorSubmissionRepoReady = true;
 		$scope.submission = new AdvisorSubmission(angular.fromJson(data.body).payload.Submission);
 	});
 
