@@ -112,7 +112,7 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 		};
 		
 		$scope.hasPrimaryDocument = function() {
-        	return $scope.primaryDocumentFieldValue !== undefined;
+        	return $scope.primaryDocumentFieldValue !== undefined && $scope.primaryDocumentFieldValue.id;
         }
 
 		$scope.deleteFieldValue = function(fieldValue) {
@@ -269,6 +269,14 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	        "advanced": true,
 	        "allUsers": $scope.allUsers,
 	        "user": new User(),
+	        "sending": false,
+	        "sendAdvisorEmail": function() {
+	        	$scope.submissionStatusBox.sending = true;
+	        	$scope.submission.sendAdvisorEmail().then(function() {
+	        		$scope.submissionStatusBox.sending = false;
+	        		$scope.closeModal();
+	        	});
+	        },
 	        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
 	        "changeStatus": function(newStatus) {
 				$scope.submission.changeStatus(newStatus).then(function() {
@@ -306,10 +314,14 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 			}
 	    };
 
-	    $scope.customActionsBox = {
-	        "title": "Custom Actions",
-	        "viewUrl": "views/sideboxes/customActions.html"
-	    };
+	  $scope.customActionsBox = {
+		  "title": "Custom Actions",
+		  "viewUrl": "views/sideboxes/customActions.html",
+		  "submission": $scope.submission,
+		  "updateCustomActionValue": function(cav) {
+		   	$scope.submission.updateCustomActionValue(cav);
+		  }
+	  };
 		
 		SidebarService.addBoxes([
 		    $scope.activeDocumentBox,

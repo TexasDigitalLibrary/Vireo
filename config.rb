@@ -8,6 +8,7 @@ sass_dir = "src/main/webapp/WEB-INF/app/resources/styles/sass"
 images_dir = "src/main/webapp/WEB-INF/app/resources/images"
 javascripts_dir = "src/main/webapp/WEB-INF/app/resources/scripts"
 add_import_path "src/main/webapp/WEB-INF/app/bower_components/core/app/resources/styles/"
+add_import_path "src/main/webapp/WEB-INF/app/bower_components/"
 
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed

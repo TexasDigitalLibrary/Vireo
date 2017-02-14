@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
@@ -38,7 +39,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     
     @Column(nullable = true)
     private Boolean enabled;
-
+    
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
@@ -48,7 +49,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep) {
+	public FieldProfile(WorkflowStep originatingWorkflowStep) {
         this();
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }
@@ -194,6 +195,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
             fieldGlosses.add(fg);
         }
 
+        clone.setMappedShibAttribute(getMappedShibAttribute());
         clone.setHelp(getHelp());
         clone.setUsage(getUsage());
         clone.setEnabled(getEnabled());

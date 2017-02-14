@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -52,6 +53,9 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
+    
+    @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    private Configuration mappedShibAttribute;
 
     /**
      * @return the fieldPredicate
@@ -279,5 +283,20 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().remove(controlledVocabulary);
     }
+    
+    
+    /**
+	 * @return the mappedShibAttribute
+	 */
+	public Configuration getMappedShibAttribute() {
+		return mappedShibAttribute;
+	}
+
+	/**
+	 * @param mappedShibAttribute the mappedShibAttribute to set
+	 */
+	public void setMappedShibAttribute(Configuration mappedShibAttribute) {
+		this.mappedShibAttribute = mappedShibAttribute;
+	}
 
 }
