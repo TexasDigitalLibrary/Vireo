@@ -269,6 +269,14 @@ vireo.controller("ItemViewController", function ($anchorScroll, $controller, $lo
 	        "advanced": true,
 	        "allUsers": $scope.allUsers,
 	        "user": new User(),
+	        "sending": false,
+	        "sendAdvisorEmail": function() {
+	        	$scope.submissionStatusBox.sending = true;
+	        	$scope.submission.sendAdvisorEmail().then(function() {
+	        		$scope.submissionStatusBox.sending = false;
+	        		$scope.closeModal();
+	        	});
+	        },
 	        "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
 	        "changeStatus": function(newStatus) {
 				$scope.submission.changeStatus(newStatus).then(function() {

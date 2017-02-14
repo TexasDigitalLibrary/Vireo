@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,21 +27,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
-import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -60,13 +61,10 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.EmailSender;
-import edu.tamu.framework.util.ValidationUtility;
 import edu.tamu.framework.validation.ValidationResults;
-import edu.tamu.framework.validation.Validator;
 
 @Controller
 @ApiMapping("/submission")
@@ -92,6 +90,9 @@ public class SubmissionController {
     private OrganizationRepo organizationRepo;
 
     @Autowired
+    private InputTypeRepo inputTypeRepo;
+    
+    @Autowired
     private SubmissionStateRepo submissionStateRepo;
 
     @Autowired
@@ -99,6 +100,9 @@ public class SubmissionController {
 
     @Autowired
     private EmailSender emailSender;
+    
+    @Autowired
+    private EmailTemplateRepo emailTemplateRepo;
 
     @Autowired
     private TemplateUtility templateUtility;
@@ -412,6 +416,30 @@ public class SubmissionController {
         fileIOUtility.delete(oldUri);
         return new ApiResponse(SUCCESS, newUri);
     }
+    
+    @ApiMapping("/{submissionId}/send-advisor-email")
+    @Auth(role = "MANAGER")
+    public ApiResponse sendAdvisorEmail(@ApiVariable Long submissionId) {
+    	
+    	Submission submission = submissionRepo.findOne(submissionId);
+        
+    	InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT"); 
+        
+    	EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired("SYSTEM Advisor Review Request", true);
+    	
+    	String subject = templateUtility.compileString(template.getSubject(), submission);
+        String content = templateUtility.compileTemplate(template, submission);
+        
+        submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
+        	try {
+				emailSender.sendEmail(fv.getIdentifier(), subject, content);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+        });
+    	
+    	return new ApiResponse(SUCCESS);
+    }
 
     private void processEmailWorkflowRules(Submission submission) {
 
@@ -437,4 +465,5 @@ public class SubmissionController {
         });
 
     }
+    
 }

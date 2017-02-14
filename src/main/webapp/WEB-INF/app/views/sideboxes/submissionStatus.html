@@ -20,8 +20,17 @@
 			<span ng-if="!box.savingDate" class="glyphicon glyphicon-pencil"></span> <span ng-if="box.savingDate" class="glyphicon glyphicon-refresh spinning"></span> {{box.submission.submissionDate || "not submitted" | date: 'M/d/yyyy'}}
 		</li>
 
+		<li><button ng-click="openModal('#advisorEmail')" class="btn btn-default">Generate Advisor Email</button></li>
+
 	</ul>
 </div>
+
+<modal 
+	modal-id="advisorEmail" 
+	modal-view="views/modals/view/advisorEmail.html" 
+	modal-header-class="modal-header-primary"
+	static="true">
+</modal>
 
 <modal 
 	modal-id="submissionStatus" 

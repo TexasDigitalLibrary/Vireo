@@ -337,10 +337,21 @@ var submissionModel = function ($q, FileApi, RestApi, FieldValue, WsApi) {
 			return promise;
 		};
 
-		return submission;
-	}
+		submission.sendAdvisorEmail = function() {
 
-}
+			angular.extend(this.getMapping().sendAdvisorEmail, {
+				method: submission.id+"/send-advisor-email",
+			});
+
+			var promise = WsApi.fetch(this.getMapping().sendAdvisorEmail);
+
+			return promise;
+		};
+
+		return submission;
+	};
+
+};
 
 vireo.model("Submission", submissionModel);
 vireo.model("StudentSubmission", submissionModel);
