@@ -5,12 +5,10 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,11 +25,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
-import groovy.ui.SystemOutputInterceptor;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
