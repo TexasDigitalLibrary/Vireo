@@ -1,8 +1,5 @@
 package org.tdl.vireo.util;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.ApiResponseType.INVALID;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +11,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.FieldValue;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
 @Service
