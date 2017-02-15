@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetControlledVocabulary()" aria-label="Close">
+	<button type="button" class="close" ng-click="resetControlledVocabulary(true)" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
 	<h3 class="modal-title">Are You Sure?</h3>
@@ -16,7 +16,7 @@
 	</div>
 
 	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary()">Cancel</button>
+		<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary(true)">Cancel</button>
 		<button id="controlledVocabulary-confirm" type="submit" class="btn btn-primary">Confirm</button>
 	</div>
 </form>
