@@ -137,23 +137,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
-        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME));
-        submission.getSubmissionWorkflowSteps().forEach(ws -> {
-        	ws.getAggregateFieldProfiles().forEach(afp -> {
-        		Configuration mappedShibAttribute = afp.getMappedShibAttribute();
-        		if (mappedShibAttribute != null) {
-	        		if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
-	        			String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
-	        			
-						FieldValue fieldValue = fieldValueRepo.create(afp);
-	
-						fieldValue.setValue(credentialValue);
-						submission.addFieldValue(fieldValue);
-	        		}
-        		}
-        	});
-        });
-    	submissionRepo.save(submission);
+        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }

@@ -17,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -27,10 +29,13 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
+import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
+
+import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
@@ -40,6 +45,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
 
+	@Autowired
+	private FieldValueRepo fieldValueRepo;
 
     @Autowired
     private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
@@ -52,7 +59,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	
 	@Autowired
 	private CustomActionValueRepo customActionValueRepo;
-
+	
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -62,15 +69,32 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState) {
-        Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
+    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) {
+    	Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
         
-		for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
-			customActionValueRepo.create(submission, cad, false);
-		}
+    	for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
+    		customActionValueRepo.create(submission, cad, false);
+    	}
         
-		submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
-		return submissionRepo.save(submission);
+    	submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
+		
+        submission.getSubmissionWorkflowSteps().forEach(ws -> {
+        	ws.getAggregateFieldProfiles().forEach(afp -> {
+        		Configuration mappedShibAttribute = afp.getMappedShibAttribute();
+        		if (mappedShibAttribute != null) {
+	        		if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
+	        			String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
+	        			
+						FieldValue fieldValue = fieldValueRepo.create(afp);
+	
+						fieldValue.setValue(credentialValue);
+						submission.addFieldValue(fieldValue);
+	        		}
+        		}
+        	});
+        });
+        
+        return submissionRepo.save(submission);
     }
 
     @Override
