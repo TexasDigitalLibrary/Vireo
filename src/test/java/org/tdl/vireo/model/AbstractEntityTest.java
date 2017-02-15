@@ -1,6 +1,8 @@
 package org.tdl.vireo.model;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -49,6 +51,8 @@ import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
+
+import edu.tamu.framework.model.Credentials;
 
 @WebAppConfiguration
 @RunWith(OrderedRunner.class)
@@ -459,6 +463,8 @@ public abstract class AbstractEntityTest {
     protected EntityCVWhitelist entityCVWhitelist;
     
     protected ControlledVocabulary controlledVocabulary;
+    
+    private Credentials credentials;
 
     @Test
     @Order(value = 1)
@@ -475,5 +481,22 @@ public abstract class AbstractEntityTest {
     @Test
     @Order(value = 4)
     public abstract void testCascade();
+    
+    protected Credentials getCredentials() {
+    	if (credentials == null) {
+	        Map<String,String> token = new HashMap<String,String>();
+	        token.put("lastName", TEST_USER_LASTNAME);
+	        token.put("firstName", TEST_USER_FIRSTNAME);
+	        token.put("netid", "netid");
+	        token.put("uin", "uin");
+	        token.put("exp", "expires");
+	        token.put("email", TEST_USER_EMAIL);
+	        token.put("role", TEST_USER_ROLE.toString());
+	        token.put("affiliation", TEST_SHIBBOLETH_AFFILIATION);
+	
+	        credentials = new Credentials(token);
+    	}
+    	return credentials;
+    }
 
 }

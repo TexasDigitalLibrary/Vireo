@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
-import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -151,24 +150,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
-        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME));
-
-        submission.getSubmissionWorkflowSteps().forEach(ws -> {
-            ws.getAggregateFieldProfiles().forEach(afp -> {
-                Configuration mappedShibAttribute = afp.getMappedShibAttribute();
-                if (mappedShibAttribute != null) {
-                    if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
-                        String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
-
-                        FieldValue fieldValue = fieldValueRepo.create(afp);
-
-                        fieldValue.setValue(credentialValue);
-                        submission.addFieldValue(fieldValue);
-                    }
-                }
-            });
-        });
-        submissionRepo.save(submission);
+        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         return new ApiResponse(SUCCESS, submission);
     }
@@ -177,13 +159,15 @@ public class SubmissionController {
     @ApiMapping("/delete/{id}")
     @Auth(role = "STUDENT")
     public ApiResponse deleteSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long id) {
-        Submission submissionToDelete = submissionRepo.findOne(id);
-        ApiResponse response = new ApiResponse(SUCCESS);
-        if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() < AppRole.MANAGER.ordinal()) {
-            response = new ApiResponse(ERROR, "Insufficient permisions to delte this submission.");
-        } else {
-            submissionRepo.delete(id);
-        }
+    	Submission submissionToDelete = submissionRepo.findOne(id);
+    	
+    	ApiResponse response = new ApiResponse(SUCCESS);
+    	if(!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() <  AppRole.MANAGER.ordinal()) {
+    		response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+    	} else {
+    		submissionRepo.delete(id);
+    	}
+    	
         return response;
     }
 

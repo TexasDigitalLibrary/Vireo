@@ -69,7 +69,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -97,10 +97,10 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testDuplication() {
 
-        submissionRepo.create(submitter, organization, submissionState);
+        submissionRepo.create(submitter, organization, submissionState, getCredentials());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(submitter, organization, submissionState);
+            submissionRepo.create(submitter, organization, submissionState, getCredentials());
         } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
@@ -109,7 +109,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testDelete() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
@@ -133,7 +133,7 @@ public class SubmissionTest extends AbstractEntityTest {
         Long severableFieldValueId = severableFieldValue.getId();
 
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
@@ -210,7 +210,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Test
     public void testUniqueConstraint() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -225,7 +225,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
         try {
 
-            submissionRepo.create(submitter, organization, submissionState);
+            submissionRepo.create(submitter, organization, submissionState, getCredentials());
             assertTrue(false);
         } catch (Exception e) {
             // good
