@@ -1,15 +1,16 @@
-<div class="container">
+<div class="container submission-history">
 
 	<ul class="breadcrumb">
 		<li><a href="/">Home</a></li>
 		<li class="active">Submissions</li>
 	</ul>
 
-	<div class="row pageHead">
+	<div class="row page-head">
 		<h3 class="span11">Submission History</h3>
 	</div>
-	<div class="col-xs-12 col-sm-8 col-sm-offset-2">
-		<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped" id="etd-table">
+
+	<div class="col-xs-12 history-table">
+		<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped etd-table">
 	 	  <tr ng-repeat="row in $data track by row.id">
 			<td title="'Organization'">{{row.organization.name}}</td>
 			<td title="'Status'">{{row.submissionState.name}}</td>

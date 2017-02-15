@@ -595,6 +595,10 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
+		sendAdvisorEmail: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'	
+		},
 		removeFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'

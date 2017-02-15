@@ -154,7 +154,7 @@
 						"name": "Verify Personal Information"
 					},
 					"inputType": {
-						"name": "INPUT_TEXT"
+						"name": "INPUT_ORCID"
 					},
 					"repeatable": false,
 					"overrideable": true,
