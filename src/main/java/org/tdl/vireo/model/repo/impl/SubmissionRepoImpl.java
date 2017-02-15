@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.CustomActionDefinition;
-import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;

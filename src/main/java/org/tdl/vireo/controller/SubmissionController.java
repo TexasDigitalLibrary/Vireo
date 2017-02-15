@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,19 +26,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionValue;
-import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailWorkflowRule;
-import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
-import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -57,7 +54,6 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.EmailSender;
@@ -142,7 +138,6 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME));
-
         submission.getSubmissionWorkflowSteps().forEach(ws -> {
         	ws.getAggregateFieldProfiles().forEach(afp -> {
         		Configuration mappedShibAttribute = afp.getMappedShibAttribute();
@@ -172,7 +167,7 @@ public class SubmissionController {
     	
     	ApiResponse response = new ApiResponse(SUCCESS);
     	if(!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() <  AppRole.MANAGER.ordinal()) {
-    		response = new ApiResponse(ERROR, "Insufficient permisions to delte this submission.");
+    		response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
     	} else {
     		submissionRepo.delete(id);
     	}
