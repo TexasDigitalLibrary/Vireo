@@ -31,18 +31,6 @@ main footer {
     color: #333333;
 }
 
-.pageHead {
-    margin: 0;
-    padding: 0 0 10px 0;
-    border-bottom: 1px solid #cccccc;
-}
-
-.pageHead h3 {
-    font-size: 2.2em;
-    font-weight: normal;
-    margin: 0;
-}
-
 .center {
     text-align: center;
 }
@@ -1468,26 +1456,6 @@ footer a, footer li, footer p {
   font-size: 13px;
   font-weight: normal;
   line-height: 22px;
-}
-
-/********************
-* ETD Table Styling *
-********************/
-
-
-#etd-table, .etd-table {
-  .header {
-    background: #ffffff;
-    background: -moz-linear-gradient(top, #ffffff 0%, #e4e4e4 100%);
-    background: -webkit-linear-gradient(top, #ffffff 0%,#e4e4e4 100%);
-    background: linear-gradient(to bottom, #ffffff 0%,#e4e4e4 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
-  }
-
-  th {
-    text-transform: capitalize;
-    padding: 0px;
-  }
 }
 
 /********
