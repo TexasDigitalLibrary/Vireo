@@ -172,12 +172,26 @@ public class MockTokenController {
                     newToken.makeClaim(lastNameHeader, "Daniels");
                     newToken.makeClaim(firstNameHeader, "Jack");
                     newToken.makeClaim(emailHeader, "aggieJack@tamu.edu");
+                    
+                    newToken.makeClaim(birthYearHeader, "1977");
+                    newToken.makeClaim(middleNameHeader, "Jay");
+                    newToken.makeClaim(orcidHeader, "0000-0000-0000-0000");
+                    newToken.makeClaim(permEmailHeader, "aggieJack@tamu.edu");
+                    newToken.makeClaim(permPhoneHeader, "800-555-1234");
+                    newToken.makeClaim(permAddressHeader, "5000 TAMU");
                 } else {
                     newToken.makeClaim(netIdHeader, "bobBoring");
                     newToken.makeClaim(institutionalIdentifierHeader, "987654321");
                     newToken.makeClaim(lastNameHeader, "Boring");
                     newToken.makeClaim(firstNameHeader, "Bob");
                     newToken.makeClaim(emailHeader, "bobBoring@tamu.edu");
+                    
+                    newToken.makeClaim(birthYearHeader, "1978");
+                    newToken.makeClaim(middleNameHeader, "Be");
+                    newToken.makeClaim(orcidHeader, "0000-0000-0000-0001");
+                    newToken.makeClaim(permEmailHeader, "bobBoring@tamu.edu");
+                    newToken.makeClaim(permPhoneHeader, "800-555-4321");
+                    newToken.makeClaim(permAddressHeader, "5000 TAMU");
                 }
             }
         }
