@@ -114,6 +114,7 @@ public class MockTokenController {
      * 
      */
     @RequestMapping("/refresh")
+    @SkipAop
     public JWT refresh(@RequestParam() Map<String, String> params, @RequestHeader() Map<String, String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
         return makeToken(params, headers);
     }
