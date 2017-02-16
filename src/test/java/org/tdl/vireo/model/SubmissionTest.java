@@ -27,7 +27,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
-        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
@@ -42,7 +42,7 @@ public class SubmissionTest extends AbstractEntityTest {
         
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
         
-        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TYPE_NAME);
+        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
         
         fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
@@ -56,11 +56,11 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
         assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
         
-        attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
-        assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
+        attachmentType = deprecatedAttachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        assertEquals("The attachmentType does not exist!", 1, deprecatedAttachmentTypeRepo.count());
 
-        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
-        assertEquals("The attachment does not exist!", 1, attachmentRepo.count());
+        attachment = deprecatedAttachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
+        assertEquals("The attachment does not exist!", 1, deprecatedAttachmentRepo.count());
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
@@ -200,7 +200,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
         assertEquals("The workflow steps were deleted!", 2, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
-        assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
+        assertEquals("The attachment were orphaned", 0, deprecatedAttachmentRepo.count());
         assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
         // and, going another level deep on the cascade from field values to their predicates,
@@ -260,8 +260,8 @@ public class SubmissionTest extends AbstractEntityTest {
             namedSearchFilterRepo.delete(nsf);
         });
         userRepo.deleteAll();
-        attachmentRepo.deleteAll();
-        attachmentTypeRepo.deleteAll();
+        deprecatedAttachmentRepo.deleteAll();
+        deprecatedAttachmentTypeRepo.deleteAll();
     }
 
 }

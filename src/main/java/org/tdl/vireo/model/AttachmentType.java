@@ -8,7 +8,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.validation.DocumentTypeValidator;
+import org.tdl.vireo.model.validation.AttachmentTypeValidator;
 
 import edu.tamu.framework.model.BaseOrderedEntity;
 
@@ -24,7 +24,7 @@ public class AttachmentType extends BaseOrderedEntity {
 	private FieldPredicate fieldPredicate;
 
 	public AttachmentType() {
-	    setModelValidator(new DocumentTypeValidator());
+	    setModelValidator(new AttachmentTypeValidator());
 	}
 
 	/**

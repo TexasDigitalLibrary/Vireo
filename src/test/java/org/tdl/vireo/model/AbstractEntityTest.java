@@ -292,7 +292,9 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_INCLUDED_SUBMISSION_STATE_NAME = "Test Included Submission State Name";
     protected static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
 
-    protected static final String TEST_FIELD_PROFILE_INPUT_TYPE_NAME = "INPUT_TEXT";
+    protected static final String TEST_FIELD_PROFILE_INPUT_TEXT_NAME = "INPUT_TEXT";
+    
+    protected static final String TEST_FIELD_PROFILE_INPUT_FILE_NAME = "INPUT_FILE";
 
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
     
@@ -326,10 +328,10 @@ public abstract class AbstractEntityTest {
     protected UserRepo userRepo;
 
     @Autowired
-    protected DeprecatedAttachmentRepo attachmentRepo;
+    protected DeprecatedAttachmentRepo deprecatedAttachmentRepo;
     
     @Autowired
-    protected DeprecatedAttachmentTypeRepo attachmentTypeRepo;
+    protected DeprecatedAttachmentTypeRepo deprecatedAttachmentTypeRepo;
 
     @Autowired
     protected AddressRepo addressRepo;
@@ -344,7 +346,7 @@ public abstract class AbstractEntityTest {
     protected DepositLocationRepo depositLocationRepo;
     
     @Autowired
-    protected AttachmentTypeRepo documentTypesRepo;
+    protected AttachmentTypeRepo attachmentTypeRepo;
     
     @Autowired
     protected AbstractEmailRecipientRepo emailRecipientRepo;
