@@ -1,25 +1,28 @@
-vireo.controller('NewSubmissionController', function ($controller, $scope, $location, OrganizationRepo, StudentSubmissionRepo) {
+vireo.controller('NewSubmissionController', function($controller, $scope, $location, OrganizationRepo, StudentSubmissionRepo) {
 
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+  angular.extend(this, $controller('AbstractController', {
+    $scope: $scope
+  }));
 
-	$scope.organizations = OrganizationRepo.getAll();
+  $scope.organizations = OrganizationRepo.getAll();
 
-	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
+  $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
-	$scope.setSelectedOrganization = function(organization) {
-		OrganizationRepo.setSelectedOrganization(organization);
-	};
+  $scope.setSelectedOrganization = function(organization) {
+    OrganizationRepo.setSelectedOrganization(organization);
+  };
 
-	$scope.getSelectedOrganization = function() {
-		return $scope.selectedOrganization;
-	};
+  $scope.getSelectedOrganization = function() {
+    return $scope.selectedOrganization;
+  };
 
-	$scope.createSubmission = function() {
-		StudentSubmissionRepo.create({
-			'organizationId': $scope.getSelectedOrganization().id
-		}).then(function(data) {
-			$location.path("/submission/" + angular.fromJson(data.body).payload.Submission.id);
-		});
-	};
-	
+  $scope.createSubmission = function() {
+    StudentSubmissionRepo.create({
+      'organizationId': $scope.getSelectedOrganization().id
+    }).then(function(data) {
+      StudentSubmissionRepo.add(angular.fromJson(data.body).payload.Submission);
+      $location.path("/submission/" + angular.fromJson(data.body).payload.Submission.id);
+    });
+  };
+
 });
