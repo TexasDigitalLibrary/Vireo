@@ -27,20 +27,6 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
-        
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-        assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
-        
-    	SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-    	assertEquals("The submission field profile does not exist!", 1, submissionFieldProfileRepo.count());
-        
-        fieldValue = fieldValueRepo.create(submissionfieldProfile.getFieldPredicate());
-        fieldValue.setValue(TEST_FIELD_VALUE);
-        fieldValue = fieldValueRepo.save(fieldValue);
-        assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
-        assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
-
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
@@ -53,7 +39,23 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
-
+        
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
+        
+        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TYPE_NAME);
+        
+        fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
+        
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
+        assertEquals("The submission field profile does not exist!", 1, submissionFieldProfileRepo.count());
+        
+        fieldValue = fieldValueRepo.create(submissionFieldProfile.getFieldPredicate());
+        fieldValue.setValue(TEST_FIELD_VALUE);
+        fieldValue = fieldValueRepo.save(fieldValue);
+        assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
+        assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
+        
         attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
         assertEquals("The attachmentType does not exist!", 1, attachmentTypeRepo.count());
 
@@ -120,14 +122,12 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     @Transactional
     public void testCascade() {
+        organization = organizationRepo.findOne(organization.getId());
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
         SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(severableWorkflowStep);
 
-        organization = organizationRepo.findOne(organization.getId());
-
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         SubmissionFieldProfile severableSubmissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
         FieldValue severableFieldValue = fieldValueRepo.create(severableSubmissionfieldProfile.getFieldPredicate());
         
@@ -203,10 +203,9 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The attachment were orphaned", 0, attachmentRepo.count());
         assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
-        // and, going another level deep on the cascade from field values to
-        // their predicates,
-        // see that the field predicates were not deleted.
-        assertEquals("The field predicates were orphaned!", 2, fieldPredicateRepo.count());
+        // and, going another level deep on the cascade from field values to their predicates,
+        // see that the field predicate was not deleted.
+        assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
     }
 
     @Test
@@ -229,9 +228,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
             submissionRepo.create(submitter, organization, submissionState, getCredentials());
             assertTrue(false);
-        } catch (Exception e) {
-            // good
-        }
+        } catch (Exception e) { /* SUCCESS */ }
     }
 
     @After
@@ -245,13 +242,19 @@ public class SubmissionTest extends AbstractEntityTest {
         });
         submissionWorkflowStepRepo.deleteAll();
         actionLogRepo.deleteAll();
-        fieldValueRepo.deleteAll();
-        fieldPredicateRepo.deleteAll();
+        fieldValueRepo.deleteAll();        
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
-        assertEquals("The organization repo wouldn't clear!", 0, organizationRepo.count());
         organizationCategoryRepo.deleteAll();
+        fieldProfileRepo.findAll().forEach(fieldProfile -> {
+            fieldProfileRepo.delete(fieldProfile);
+        });
+        submissionFieldProfileRepo.findAll().forEach(fieldProfile -> {
+            submissionFieldProfileRepo.delete(fieldProfile);
+        });
+        fieldPredicateRepo.deleteAll();
+        inputTypeRepo.deleteAll();
         embargoRepo.deleteAll();
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);

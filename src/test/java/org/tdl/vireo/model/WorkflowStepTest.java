@@ -1456,8 +1456,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
     @After
     public void cleanUp() {
         
-        
-        
         noteRepo.findAll().forEach(note -> {
             noteRepo.delete(note);
         });

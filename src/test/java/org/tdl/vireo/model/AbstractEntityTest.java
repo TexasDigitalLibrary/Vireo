@@ -464,6 +464,9 @@ public abstract class AbstractEntityTest {
     
     protected ControlledVocabulary controlledVocabulary;
     
+    protected FieldProfile fieldProfile;
+    
+    
     private Credentials credentials;
 
     @Test
