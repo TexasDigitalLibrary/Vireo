@@ -1,78 +1,80 @@
-vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission, FieldValue, SubmissionStateRepo) {
+vireo.controller("StudentSubmissionController", function($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission, FieldValue) {
 
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+  angular.extend(this, $controller('AbstractController', {
+    $scope: $scope
+  }));
 
-	SubmissionStateRepo.ready().then(function(){
-		$scope.submittedSubmissionState = SubmissionStateRepo.findByName('Submitted');
-	});
-	
-	$scope.studentSubmissionRepoReady = false;
+  $scope.studentSubmissionRepoReady = false;
 
-	StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
+  StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
 
-  		$timeout(function() {
-            $anchorScroll();
-        });
+    $timeout(function() {
+      $anchorScroll();
+    });
 
-		$scope.studentSubmissionRepoReady = true;
-		$scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
+    $scope.studentSubmissionRepoReady = true;
+    $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
 
-		if($location.hash()) {
-			$scope.submission.ready().then(function() {
-				$scope.submission.validate();
-			});
-		}
+    if ($location.hash()) {
+      $scope.submission.ready().then(function() {
+        $scope.submission.validate();
+      });
+    }
 
-		$scope.onLastStep = function() {
-			var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
-			return currentStepIndex === -1;
-		};
+    $scope.onLastStep = function() {
+      var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
+      return currentStepIndex === -1;
+    };
 
-		var currentStep = $routeParams.stepNum?$scope.submission.submissionWorkflowSteps[$routeParams.stepNum-1]:$scope.submission.submissionWorkflowSteps[0];
+    var currentStep = $routeParams.stepNum ? $scope.submission.submissionWorkflowSteps[$routeParams.stepNum - 1] : $scope.submission.submissionWorkflowSteps[0];
 
-		$scope.setActiveStep(currentStep);
+    $scope.setActiveStep(currentStep);
 
-	});
+  });
 
-	$scope.setActiveStep = function(step, hash) {
+  $scope.setActiveStep = function(step, hash) {
 
-		var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step); 
-		var reviewStepNum = $scope.submission.submissionWorkflowSteps.length+1;
-		var stepNum = stepIndex+1;
-		
-		if(!step) {
-			if(parseInt($routeParams.stepNum) === reviewStepNum) {
-				step = {name: "review"};
-				stepNum = reviewStepNum;
-			} else {
-				stepIndex = 0;
-				stepNum = stepIndex+1;
-				step = $scope.submission.submissionWorkflowSteps[stepIndex];
-			}
-		} else if(step.name === "review") {
-			stepNum = reviewStepNum;
-		}
+    var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
+    var reviewStepNum = $scope.submission.submissionWorkflowSteps.length + 1;
+    var stepNum = stepIndex + 1;
 
-		$scope.nextStep = $scope.submission.submissionWorkflowSteps[stepNum];
-		$scope.activeStep = step;
+    if (!step) {
+      if (parseInt($routeParams.stepNum) === reviewStepNum) {
+        step = {
+          name: "review"
+        };
+        stepNum = reviewStepNum;
+      } else {
+        stepIndex = 0;
+        stepNum = stepIndex + 1;
+        step = $scope.submission.submissionWorkflowSteps[stepIndex];
+      }
+    } else if (step.name === "review") {
+      stepNum = reviewStepNum;
+    }
 
-		var nextLocation = "submission/"+$scope.submission.id+"/step/"+stepNum;
+    $scope.nextStep = $scope.submission.submissionWorkflowSteps[stepNum];
+    $scope.activeStep = step;
 
-		if(hash) nextLocation+="#"+hash;
+    var nextLocation = "submission/" + $scope.submission.id + "/step/" + stepNum;
 
-		// Only change path if it differs from the current path. 
-		if("/"+nextLocation !== $location.path()) $location.path(nextLocation, false);
+    if (hash) nextLocation += "#" + hash;
 
-	};
+    // Only change path if it differs from the current path.
+    if ("/" + nextLocation !== $location.path()) $location.path(nextLocation, false);
 
-	$scope.submit = function() {
-	  $scope.submission.changeStatus($scope.submittedSubmissionState).then(function() {
-	  	$location.path("/submission/complete");	
-	  });
-	};
+  };
 
-	$scope.reviewSubmission = function() {
-		$scope.setActiveStep({name:'review'});
-	}
+  $scope.submit = function() {
+    $scope.submission.submit().then(function() {
+      $location.path("/submission/complete");
+    });
+  };
+
+  $scope.reviewSubmission = function() {
+    $scope.setActiveStep({
+      name: 'review'
+    });
+  }
 
 });

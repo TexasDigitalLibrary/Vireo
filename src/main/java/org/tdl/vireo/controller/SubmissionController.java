@@ -90,7 +90,7 @@ public class SubmissionController {
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
-    
+
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
 
@@ -99,7 +99,7 @@ public class SubmissionController {
 
     @Autowired
     private EmailSender emailSender;
-    
+
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
 
@@ -159,15 +159,15 @@ public class SubmissionController {
     @ApiMapping("/delete/{id}")
     @Auth(role = "STUDENT")
     public ApiResponse deleteSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long id) {
-    	Submission submissionToDelete = submissionRepo.findOne(id);
-    	
-    	ApiResponse response = new ApiResponse(SUCCESS);
-    	if(!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() <  AppRole.MANAGER.ordinal()) {
-    		response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
-    	} else {
-    		submissionRepo.delete(id);
-    	}
-    	
+        Submission submissionToDelete = submissionRepo.findOne(id);
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+        if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() < AppRole.MANAGER.ordinal()) {
+            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+        } else {
+            submissionRepo.delete(id);
+        }
+
         return response;
     }
 
@@ -221,16 +221,22 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/change-status")
+    @ApiMapping("/{submissionId}/change-status/{submissionStateName}")
     @Auth(role = "STUDENT")
-    public ApiResponse changeStatus(@ApiVariable("submissionId") Long submissionId, @ApiModel SubmissionState submissionState) {
+    public ApiResponse changeStatus(@ApiVariable Long submissionId, @ApiVariable String submissionStateName) {
         Submission submission = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
-            submission.setSubmissionState(submissionState);
-            submission = submissionRepo.saveAndFlush(submission);
-            simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+
+            SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
+            if (submissionState != null) {
+                submission.setSubmissionState(submissionState);
+                submission = submissionRepo.saveAndFlush(submission);
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+            } else {
+                response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
+            }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -400,29 +406,29 @@ public class SubmissionController {
         fileIOUtility.delete(oldUri);
         return new ApiResponse(SUCCESS, newUri);
     }
-    
+
     @ApiMapping("/{submissionId}/send-advisor-email")
     @Auth(role = "MANAGER")
     public ApiResponse sendAdvisorEmail(@ApiVariable Long submissionId) {
-    	
-    	Submission submission = submissionRepo.findOne(submissionId);
-        
-    	InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT"); 
-        
-    	EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired("SYSTEM Advisor Review Request", true);
-    	
-    	String subject = templateUtility.compileString(template.getSubject(), submission);
+
+        Submission submission = submissionRepo.findOne(submissionId);
+
+        InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT");
+
+        EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired("SYSTEM Advisor Review Request", true);
+
+        String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
-        
+
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-        	try {
-				emailSender.sendEmail(fv.getIdentifier(), subject, content);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
+            try {
+                emailSender.sendEmail(fv.getIdentifier(), subject, content);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         });
-    	
-    	return new ApiResponse(SUCCESS);
+
+        return new ApiResponse(SUCCESS);
     }
 
     private void processEmailWorkflowRules(Submission submission) {
@@ -449,5 +455,5 @@ public class SubmissionController {
         });
 
     }
-    
+
 }

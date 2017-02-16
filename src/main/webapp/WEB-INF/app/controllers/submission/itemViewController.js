@@ -282,7 +282,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
       },
       "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
       "changeStatus": function(newStatus) {
-        $scope.submission.changeStatus(newStatus).then(function() {
+        $scope.submission.changeStatus(newStatus.name).then(function() {
           $scope.submissionStatusBox.resetStatus();
         });
       },

@@ -1,54 +1,50 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
+  <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">Change Submission Status</h3>
+  <h3 class="modal-title">Change Submission Status</h3>
 </div>
 
 <div class="modal-body">
-	<div class="row">
-		<div class="col-xs-12">
-			
-            <h2>Current Transitions</h2>
-            <ul class="list-inline">
-                <li ng-init="state=box.SubmissionStateRepo.findById(stateId)" ng-repeat="stateId in box.submission.submissionState.transitionSubmissionStates" ng-click="box.submission.changeStatus(state); working=true;"><button class="btn btn-default">{{state.name}} <span ng-if="working" class="glyphicon glyphicon-refresh spinning"></span></button></li>
-            </ul>
+  <div class="row">
+    <div class="col-xs-12">
 
-			<div class="form-expand"><a href ng-click="box.advanced = !box.advanced">Advanced</a></div>
+      <h2>Current Transitions</h2>
+      <ul class="list-inline">
+        <li ng-init="state=box.SubmissionStateRepo.findById(stateId)" ng-repeat="stateId in box.submission.submissionState.transitionSubmissionStates" ng-click="box.submission.changeStatus(state); working=true;"><button class="btn btn-default">{{state.name}} <span ng-if="working" class="glyphicon glyphicon-refresh spinning"></span></button></li>
+      </ul>
 
-            <div class="field-profile-section" ng-class="{'field-profile-open': box.advanced, 'field-profile-closed': !box.advanced}">
-        
-            <div ng-if="!inputFile" class="form-group row">
+      <div class="form-expand"><a href ng-click="box.advanced = !box.advanced">Advanced</a></div>
 
-                <form class="form-inline" name="">
-                    <div class="form-group">
-                        <label class="control-title" for="newStatus"><strong>New Status</strong>:</label>                   
-                        <select 
-                            class="form-control" 
-                            name="newStatus"
-                            ng-model="box.newStatus" 
-                            ng-options="ss.name for ss in box.submissionStates">
+      <div class="field-profile-section" ng-class="{'field-profile-open': box.advanced, 'field-profile-closed': !box.advanced}">
+
+        <div ng-if="!inputFile" class="form-group row">
+
+          <form class="form-inline" name="">
+            <div class="form-group">
+              <label class="control-title" for="newStatus"><strong>New Status</strong>:</label>
+              <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStates">
                         </select>
-                        <button type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus);box.saveWorking=true">Save <span ng-if="box.saveWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
-                    </div>
-                    <div>
-                        <button ng-if="box.submission.submissionState.id !== box.cancelStatus.id" ng-click="box.changeStatus(box.cancelStatus);box.cancelWorking=true" class="btn btn-default">Cancel Submition <span ng-if="box.cancelWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
-                        <button ng-if="(box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete!=true) || box.deleteWorking" ng-click="box.confirmDelete=true" class="btn btn-danger">Delete Submition <span ng-if="box.deleteWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
-                        <div class="btn-group" ng-if="box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete==true && !box.deleteWorking">
-                            <button class="btn btn-danger disabled" disabled=true>Confirm</button>
-                            <button ng-click="box.deleteSubmission(); box.deleteWorking=true;" class="btn btn-danger"><span class="glyphicon glyphicon-ok"></span></button>
-                            <button ng-click="box.confirmDelete=false" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
-                        </div>
-                    </div>
-
-                </form>
-
+              <button type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus);box.saveWorking=true">Save <span ng-if="box.saveWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
+            </div>
+            <div>
+              <button ng-if="box.submission.submissionState.id !== box.cancelStatus.id" ng-click="box.changeStatus(box.cancelStatus);box.cancelWorking=true" class="btn btn-default">Cancel Submition <span ng-if="box.cancelWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
+              <button ng-if="(box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete!=true) || box.deleteWorking" ng-click="box.confirmDelete=true" class="btn btn-danger">Delete Submition <span ng-if="box.deleteWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
+              <div class="btn-group" ng-if="box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete==true && !box.deleteWorking">
+                <button class="btn btn-danger disabled" disabled=true>Confirm</button>
+                <button ng-click="box.deleteSubmission(); box.deleteWorking=true;" class="btn btn-danger"><span class="glyphicon glyphicon-ok"></span></button>
+                <button ng-click="box.confirmDelete=false" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+              </div>
             </div>
 
-		</div>
-    </div>
-</div>
+          </form>
 
-<div class="modal-footer">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="closeModal(); box.resetStatus()">Close</button>
-</div>
+  </div>
