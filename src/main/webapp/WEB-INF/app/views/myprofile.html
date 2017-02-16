@@ -1,11 +1,11 @@
-<div class="row my-profile">
+<div class="container my-profile">
 
 	<form name="userSettingsForm">
 
-		<div class="col-sm-12"  ng-controller="UserController">
+		<div class="col-sm-12" ng-controller="UserController">
 
 			<h1>Profile for <username></username></h1>
-			
+
 			<hr>
 
 			<div class="row my-profile-section">
@@ -19,13 +19,13 @@
 						</div>
 						<div class="col-sm-6">
 							<span class="profile-value"><useremail></useremail></span>
-						</div>	
+						</div>
 					</div>
 
 					<div class="row form-group required">
 						<div class="col-sm-6">
 							<label class="pull-right-lg control-label">First Name:</label>
-						</div>	
+						</div>
 						<div class="col-sm-6">
 							<span class="profile-value">{{user.firstName}}</span>
 						</div>
@@ -37,14 +37,14 @@
 						</div>
 						<div class="col-sm-6">
 							<span class="profile-value">{{user.middleName}}</span>
-						</div>	
+						</div>
 					</div>
 
 
 					<div class="row form-group">
 						<div class="col-sm-6">
 							<label class="pull-right-lg control-label">Last Name:</label>
-						</div>	
+						</div>
 						<div class="col-sm-6">
 							<span class="profile-value">{{user.lastName}}</span>
 						</div>
@@ -57,21 +57,9 @@
 						<div class="col-sm-6">
 							<span ng-if="(isAdmin() || isManager())" ng-hide="editdisplayName">
 								<span class="edit-handle glyphicon glyphicon-pencil" ng-click="editMode('displayName')"></span>
-								<span class="profile-value" ng-Dblclick="editMode('displayName')">{{settings.user.displayName}}</span>
+							<span class="profile-value" ng-Dblclick="editMode('displayName')">{{settings.user.displayName}}</span>
 							</span>
-							<input  id="displayName" 
-									type="text" 
-									name="displayName"
-									class="form-control"
-									ng-show="editdisplayName"
-									ng-if="(isAdmin() || isManager())" 
-									ng-model="settings.user.displayName" 
-									ng-change="updateUserSetting('displayName', 500)"
-									ng-blur="viewMode('displayName')"
-									ng-keyup="confirmEdit($event, 'displayName')"
-									tamu-force-focus="editdisplayName"
-									required 
-									shadow />
+							<input id="displayName" type="text" name="displayName" class="form-control" ng-show="editdisplayName" ng-if="(isAdmin() || isManager())" ng-model="settings.user.displayName" ng-change="updateUserSetting('displayName', 500)" ng-blur="viewMode('displayName')" ng-keyup="confirmEdit($event, 'displayName')" tamu-force-focus="editdisplayName" required shadow />
 							<span ng-if="isUser()">{{settings.user.displayName}}</span>
 						</div>
 					</div>
@@ -98,7 +86,7 @@
 
 
 				<div class="col-sm-6">
-				</div>				
+				</div>
 
 			</div>
 
@@ -111,81 +99,69 @@
 
 				<div class="col-sm-6">
 					<div class="row form-group">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Permanent Phone:</label>
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Phone:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{user.permanentPhone}}</span>
+						</div>
 					</div>
-					<div class="col-sm-6">
-						<span class="profile-value">{{user.permanentPhone}}</span>
-					</div>
-				</div>
 
-				<div class="row form-group" ng-if="(isAdmin() || isManager())">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Permanent Email:</label>
+					<div class="row form-group" ng-if="(isAdmin() || isManager())">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Email:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value"><useremail></useremail></span>
+						</div>
 					</div>
-					<div class="col-sm-6">
-						<span class="profile-value"><useremail></useremail></span>
-					</div>
-				</div>
 
-				<div class="row form-group" ng-if="(isAdmin() || isManager())" ng-class="{'has-error': hasError(userSettingsForm.preferedEmail.$error)}">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Preferred Email:</label>
-					</div>
-					<div class="col-sm-6">
-						<span ng-if="(isAdmin() || isManager())" ng-hide="editpreferedEmail">
+					<div class="row form-group" ng-if="(isAdmin() || isManager())" ng-class="{'has-error': hasError(userSettingsForm.preferedEmail.$error)}">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Preferred Email:</label>
+						</div>
+						<div class="col-sm-6">
+							<span ng-if="(isAdmin() || isManager())" ng-hide="editpreferedEmail">
 							<span class="edit-handle glyphicon glyphicon-pencil" ng-click="editMode('preferedEmail')"></span>
 							<span class="profile-value" ng-Dblclick="editMode('preferedEmail')">{{settings.user.preferedEmail}}</span>
-						</span>
-						<input  id="preferedEmail" 
-								type="email" 
-								name="preferedEmail"
-								class="form-control"
-								ng-show="editpreferedEmail"
-								ng-if="(isAdmin() || isManager())" 
-								ng-model="settings.user.preferedEmail" 
-								ng-change="updateUserSetting('preferedEmail', 500)"
-								ng-blur="viewMode('preferedEmail')"
-								ng-keyup="confirmEdit($event, 'preferedEmail')"
-								tamu-force-focus="editpreferedEmail"
-								required 
-								shadow />
-						<span ng-if="isUser()">{{settings.user.preferedEmail}}</span>
+							</span>
+							<input id="preferedEmail" type="email" name="preferedEmail" class="form-control" ng-show="editpreferedEmail" ng-if="(isAdmin() || isManager())" ng-model="settings.user.preferedEmail" ng-change="updateUserSetting('preferedEmail', 500)" ng-blur="viewMode('preferedEmail')" ng-keyup="confirmEdit($event, 'preferedEmail')" tamu-force-focus="editpreferedEmail" required shadow />
+							<span ng-if="isUser()">{{settings.user.preferedEmail}}</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="row form-group">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Permanent Address:</label>
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Permanent Address:</label>
+						</div>
+						<div class="col-sm-6">
+							<label class="profile-value control-label">{{user.permanentAddress}}</label>
+						</div>
 					</div>
-					<div class="col-sm-6">
-						<label class="profile-value control-label">{{user.permanentAddress}}</label>
-					</div>
-				</div>
 
-				<div class="row form-group">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Current Phone:</label>
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Current Phone:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{user.currentPhone}}</span>
+						</div>
 					</div>
-					<div class="col-sm-6">
-						<span class="profile-value">{{user.currentPhone}}</span>
-					</div>
-				</div>
 
-				<div class="row form-group">
-					<div class="col-sm-6">
-						<label class="pull-right-lg control-label">Current Address:</label>
+					<div class="row form-group">
+						<div class="col-sm-6">
+							<label class="pull-right-lg control-label">Current Address:</label>
+						</div>
+						<div class="col-sm-6">
+							<span class="profile-value">{{user.currentAddress}}</span>
+						</div>
 					</div>
-					<div class="col-sm-6">
-						<span class="profile-value">{{user.currentAddress}}</span>
-					</div>
-				</div>
 
-				</div>		
+				</div>
 				<div class="col-sm-6">
-				</div>		
+				</div>
 
-						
+
 
 			</div>
 
@@ -197,8 +173,8 @@
 						<span ng-click="updateUserSetting('ccEmail')">
 							<input  id="ccEmail"
 									type="checkbox"
-									name="ccEmail" 
-									ng-true-value="'true'" 
+									name="ccEmail"
+									ng-true-value="'true'"
 									ng-model="settings.user.ccEmail" />
 							<span>I want to receive a copy of all emails sent by the system on my behalf.</span>
 						</span>
@@ -211,8 +187,8 @@
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('notes_email_student_by_default')">
 									<input  type="checkbox"
-											name="notes_email_student_by_default" 
-											ng-true-value="'true'" 
+											name="notes_email_student_by_default"
+											ng-true-value="'true'"
 											ng-model="settings.user.notes_email_student_by_default" />
 									<span>Email the student</span>
 								</label>
@@ -220,19 +196,19 @@
 
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('notes_cc_student_advisor_by_default')">
-									<input  name="notes_cc_student_advisor_by_default" 
-											type="checkbox" 
-											ng-true-value="'true'" 
+									<input  name="notes_cc_student_advisor_by_default"
+											type="checkbox"
+											ng-true-value="'true'"
 											ng-model="settings.user.notes_cc_student_advisor_by_default" />
 									<span>CC student's advisor</span>
-								</label>	
+								</label>
 							</div>
 
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('notes_flag_submission_as_needs_corrections_by_default')">
-									<input  name="notes_flag_submission_as_needs_corrections_by_default" 
-											type="checkbox" 
-											ng-true-value="'true'" 
+									<input  name="notes_flag_submission_as_needs_corrections_by_default"
+											type="checkbox"
+											ng-true-value="'true'"
 											ng-model="settings.user.notes_flag_submission_as_needs_corrections_by_default" />
 									<span>Flag submission as Needs Corrections</span>
 								</label>
@@ -240,44 +216,44 @@
 
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('notes_mark_comment_as_private_by_default')">
-									<input name="notes_mark_comment_as_private_by_default" 
+									<input name="notes_mark_comment_as_private_by_default"
 											type="checkbox"
-											ng-true-value="'true'" 
+											ng-true-value="'true'"
 											ng-model="settings.user.notes_mark_comment_as_private_by_default" />
 									<span>Mark comment as private</span>
 								</label>
 							</div>
 
-						</fieldset>	
+						</fieldset>
 
 						<fieldset class="fieldset-border">
 							<legend class="legendborder">When attaching files, which options should be checked by default?</legend>
 
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('attachment_email_student_by_default')">
-									<input  name="attachment_email_student_by_default" 
-											type="checkbox" 
-											ng-true-value="'true'" 
+									<input  name="attachment_email_student_by_default"
+											type="checkbox"
+											ng-true-value="'true'"
 											ng-model="settings.user.attachment_email_student_by_default" />
 								<span>Email the student</span>
-								</label>	
+								</label>
 							</div>
 
 							<div class="form-group checkbox">
 								<label ng-click="updateUserSetting('attachment_cc_student_advisor_by_default')">
-									<input  name="attachment_cc_student_advisor_by_default" 
-											type="checkbox" 
-											ng-true-value="'true'" 
+									<input  name="attachment_cc_student_advisor_by_default"
+											type="checkbox"
+											ng-true-value="'true'"
 											ng-model="settings.user.attachment_cc_student_advisor_by_default" />
 								<span>CC student's advisor</span>
 								</label>
 							</div>
 
 							<div class="form-group checkbox">
-							<label ng-click="updateUserSetting('attachment_flag_submission_as_needs_corrections_by_default')">
-								<input  name="attachment_flag_submission_as_needs_corrections_by_default" 
-										type="checkbox" 
-										ng-true-value="'true'" 
+								<label ng-click="updateUserSetting('attachment_flag_submission_as_needs_corrections_by_default')">
+								<input  name="attachment_flag_submission_as_needs_corrections_by_default"
+										type="checkbox"
+										ng-true-value="'true'"
 										ng-model="settings.user.attachment_flag_submission_as_needs_corrections_by_default" />
 							<span>Flag submission as Needs Corrections</span>
 							</label>
@@ -287,7 +263,7 @@
 					</div>
 				</div>
 
-				
+
 
 
 			</div>
