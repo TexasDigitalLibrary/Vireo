@@ -134,7 +134,7 @@ public class MockTokenController {
      * @exception JsonProcessingException
      * 
      */
-    private JWT makeToken(Map<String, String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+    private synchronized JWT makeToken(Map<String, String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
         JWT newToken = null;
 
         String token = params.get("token");
@@ -158,6 +158,9 @@ public class MockTokenController {
             for (Map.Entry<String, String> entry : jwtUtility.validateJWT(token).entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
+                if(key.equals("exp")) {
+                    continue;
+                }
                 newToken.makeClaim(key, value);
             }
         } else {
