@@ -27,10 +27,13 @@ public class SubmissionTest extends AbstractEntityTest {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
-        assertEquals("The field predicate does not exist!", 1, fieldPredicateRepo.count());
-
-        fieldValue = fieldValueRepo.create(fieldPredicate);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
+        
+    	SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
+    	assertEquals("The submission field profile does not exist!", 1, submissionFieldProfileRepo.count());
+        
+        fieldValue = fieldValueRepo.create(submissionfieldProfile);
         fieldValue.setValue(TEST_FIELD_VALUE);
         fieldValue = fieldValueRepo.save(fieldValue);
         assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
@@ -57,19 +60,25 @@ public class SubmissionTest extends AbstractEntityTest {
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
+
+        testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
+		assertEquals("The customActionDefinition repository is not 1!", 1, customActionDefinitionRepo.count());
+
     }
 
     @Override
     public void testCreate() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-
-        submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
+        
+        CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
+        CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
+        
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
 
@@ -81,15 +90,17 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
         assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
         assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
+        assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
+            
     }
 
     @Override
     public void testDuplication() {
 
-        submissionRepo.create(submitter, organization, submissionState);
+        submissionRepo.create(submitter, organization, submissionState, getCredentials());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
-            submissionRepo.create(submitter, organization, submissionState);
+            submissionRepo.create(submitter, organization, submissionState, getCredentials());
         } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
@@ -98,7 +109,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Override
     public void testDelete() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submissionRepo.delete(submission);
         assertEquals("Submission did not delete!", 0, submissionRepo.count());
@@ -114,13 +125,15 @@ public class SubmissionTest extends AbstractEntityTest {
 
         organization = organizationRepo.findOne(organization.getId());
 
-        FieldPredicate severableFieldPredicate = fieldPredicateRepo.create(TEST_SEVERABLE_FIELD_PREDICATE_VALUE, new Boolean(false));
-        FieldValue severableFieldValue = fieldValueRepo.create(severableFieldPredicate);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        SubmissionFieldProfile severableSubmissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
+        FieldValue severableFieldValue = fieldValueRepo.create(severableSubmissionfieldProfile);
+        
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
@@ -136,6 +149,9 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         numSteps++;
         submission.addFieldValue(severableFieldValue);
+
+        submissionRepo.saveAndFlush(submission);
+
         submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
         submission.addActionLog(severableActionLog);
@@ -155,11 +171,9 @@ public class SubmissionTest extends AbstractEntityTest {
 
         long fieldValueCount = fieldValueRepo.count();
         submission.removeFieldValue(severableFieldValue);
-        submission = submissionRepo.save(submission);
+        submission = submissionRepo.saveAndFlush(submission);
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
-        // need this to refresh the repo in the transaction. Otherwise, we can still get the orphan.
-        fieldValueRepo.flush();
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
         assertEquals("The field value was orphaned! ", null, orphan);
         assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
@@ -196,7 +210,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Test
     public void testUniqueConstraint() {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -211,7 +225,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
         try {
 
-            submissionRepo.create(submitter, organization, submissionState);
+            submissionRepo.create(submitter, organization, submissionState, getCredentials());
             assertTrue(false);
         } catch (Exception e) {
             // good
@@ -222,6 +236,8 @@ public class SubmissionTest extends AbstractEntityTest {
     public void cleanUp() {
         submissionRepo.deleteAll();
         submissionStateRepo.deleteAll();
+        customActionValueRepo.deleteAll();
+        customActionDefinitionRepo.deleteAll();
         workflowStepRepo.findAll().forEach(workflowStep -> {
             workflowStepRepo.delete(workflowStep);
         });

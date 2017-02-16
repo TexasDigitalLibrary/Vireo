@@ -7,6 +7,9 @@
 		<div><span>{{box.getPrimaryDocumentFileName()}}</span></div>
 		<div><a href ng-click="box.downloadPrimaryDocument()">Download</a></div>
 	</div>
+	<div class="col-sm-12 primary-file-title" ng-if="!box.hasPrimaryDocument()">
+		<div><span>None</span></div>
+	</div>
 	<div class="clearfix"></div>
 	
 	<sideboxsub>FILE OPTIONS</sideboxsub>

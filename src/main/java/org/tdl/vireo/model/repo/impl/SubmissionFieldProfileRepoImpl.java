@@ -20,7 +20,7 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelp(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getUsage(), fieldProfile.getHelp());
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndUsageAndHelpAndMappedShibAttribute(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getUsage(), fieldProfile.getHelp(),fieldProfile.getMappedShibAttribute());
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
@@ -33,7 +33,8 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
             submissionfieldProfile.setInputType(fieldProfile.getInputType());
             submissionfieldProfile.setOptional(fieldProfile.getOptional());
             submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
-            submissionfieldProfile.setUsage(submissionfieldProfile.getUsage());
+            submissionfieldProfile.setUsage(fieldProfile.getUsage());
+            submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
 
             submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
         }

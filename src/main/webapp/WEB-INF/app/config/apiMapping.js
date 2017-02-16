@@ -133,6 +133,17 @@ var apiMapping = {
 			'controller': 'settings/custom-action'
 		}
 	},
+	CustomActionValue: {
+		all: {
+			'endpoint': '/private/queue',
+			'controller': 'settings/custom-action',
+			'method': 'all'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'settings/custom-action'
+		}
+	},
 	Configuration: {
 		lazy: true,
 		all: {
@@ -584,6 +595,10 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
 		},
+		sendAdvisorEmail: {
+			'endpoint': '/private/queue',
+			'controller': 'submission'	
+		},
 		removeFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
@@ -622,6 +637,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'needs-correction'
+		},
+		updateCustomActionValue: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'update-custom-action-value'
 		}
 	},
 	StudentSubmission: {
@@ -630,6 +650,11 @@ var apiMapping = {
 			'endpoint': '/private/queue',
 			'controller': 'submission',
 			'method': 'all-by-user'
+		},
+		changeStatus: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'change-status'
 		},
 		one: {
 			'endpoint': '/private/queue',
@@ -648,6 +673,29 @@ var apiMapping = {
 		saveFieldValue: {
 			'endpoint': '/private/queue',
 			'controller': 'submission'
+		}
+	},
+	AdvisorSubmission: {
+		lazy: true,
+		getByHash: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'advisor-review'
+		},
+		listen: {
+			'endpoint': '/channel',
+			'controller': 'submission',
+			'method': 'advisor'
+		},
+		file: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file'
+		},
+		fileInfo: {
+			'endpoint': '/private/queue',
+			'controller': 'submission',
+			'method': 'file-info'
 		}
 	},
 	SubmissionListColumn: {

@@ -5,6 +5,7 @@ target/
 attachments/
 node_modules/
 .apt_generated/
+h2/
 src/main/resources/static/angular/app/
 src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .sass-cache

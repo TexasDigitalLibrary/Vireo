@@ -81,14 +81,10 @@ public class DocumentTypeTest extends AbstractEntityTest{
         assertEquals("The organization does not exist!", 1, organizationRepo.count());
        
         //Create a Submission
-        Submission submission = submissionRepo.create(submitter, organization, submissionState);
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 		
 		// Create a document type with implicitly created field predicate.
 		AttachmentType docType = documentTypesRepo.create(TEST_DOCUMENT_TYPE_NAME);
-		
-		// Create a field value using the document type's predicate and put in on the submission.
-		FieldValue fieldValue = fieldValueRepo.create(docType.getFieldPredicate());
-		submission.addFieldValue(fieldValue);
 		
 		documentTypesRepo.delete(docType);
 		fail();
