@@ -152,11 +152,15 @@ public class MockTokenController {
         String permPhoneHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER, "permanentPhoneNumber");
         String permAddressHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS, "permanentPostalAddress");
 
-        if (token != null) {
-            newToken = jwtUtility.makeToken(jwtUtility.validateJWT(token));
-        } else {
+        newToken = jwtUtility.craftToken();
 
-            newToken = new JWT(secret_key, expiration);
+        if (token != null) {
+            for (Map.Entry<String, String> entry : jwtUtility.validateJWT(token).entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                newToken.makeClaim(key, value);
+            }
+        } else {
 
             String mockUser = params.get("mock");
 
@@ -173,7 +177,7 @@ public class MockTokenController {
                     newToken.makeClaim(lastNameHeader, "Daniels");
                     newToken.makeClaim(firstNameHeader, "Jack");
                     newToken.makeClaim(emailHeader, "aggieJack@tamu.edu");
-                    
+
                     newToken.makeClaim(birthYearHeader, "1977");
                     newToken.makeClaim(middleNameHeader, "Jay");
                     newToken.makeClaim(orcidHeader, "0000-0000-0000-0000");
@@ -186,7 +190,7 @@ public class MockTokenController {
                     newToken.makeClaim(lastNameHeader, "Boring");
                     newToken.makeClaim(firstNameHeader, "Bob");
                     newToken.makeClaim(emailHeader, "bobBoring@tamu.edu");
-                    
+
                     newToken.makeClaim(birthYearHeader, "1978");
                     newToken.makeClaim(middleNameHeader, "Be");
                     newToken.makeClaim(orcidHeader, "0000-0000-0000-0001");

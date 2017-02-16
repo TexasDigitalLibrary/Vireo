@@ -18,16 +18,16 @@ public class AppRestInterceptor extends CoreRestInterceptor {
 
     @Autowired
     private UserRepo userRepo;
-    
+
     @Autowired
     private ConfigurationRepo configurationRepo;
-    
+
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @Value("${app.authority.admins}")
     private String[] admins;
-    
+
     // TODO: move static values into config
     @Override
     public Credentials getAnonymousCredentials() {
@@ -44,10 +44,10 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     }
 
     @Override
-    public Credentials confirmCreateUser(Credentials shib) {
+    public Credentials confirmCreateUser(Credentials credentials) {
 
-        User user = userRepo.findByEmail(shib.getEmail());
-        
+        User user = userRepo.findByEmail(credentials.getEmail());
+
         // get shib headers out of DB
         String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
         String birthYearHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
@@ -59,56 +59,56 @@ public class AppRestInterceptor extends CoreRestInterceptor {
 
             AppRole role = AppRole.STUDENT;
 
-            if (shib.getRole() == null) {
-                shib.setRole(role.toString());
+            if (credentials.getRole() == null) {
+                credentials.setRole(role.toString());
             }
-            String shibEmail = shib.getEmail();
+            String shibEmail = credentials.getEmail();
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
                     role = AppRole.ADMINISTRATOR;
-                    shib.setRole(role.toString());
+                    credentials.setRole(role.toString());
                 }
             }
 
             // User newUser =
-            user = userRepo.create(shib.getEmail(), shib.getFirstName(), shib.getLastName(), role);
-            user.setNetid(shib.getAllCredentials().get(netIdHeader));
-            if (shib.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(shib.getAllCredentials().get(birthYearHeader)));
+            user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
+            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
+            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
-            user.setMiddleName(shib.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(shib.getAllCredentials().get(orcidHeader));
-            if (shib.getAllCredentials().get(institutionalIdentifierHeader) != null) {
-                user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
+            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
+            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            if (credentials.getAllCredentials().get(institutionalIdentifierHeader) != null) {
+                user.setUin(Long.parseLong(credentials.getAllCredentials().get(institutionalIdentifierHeader)));
             }
-            
+
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
-            
+
             user = userRepo.save(user);
         } else {
 
-            if (user.getNetid() != null && !user.getNetid().equals(shib.getAllCredentials().get(netIdHeader))) {
-                user.setNetid(shib.getAllCredentials().get(netIdHeader));
+            if (user.getNetid() != null && !user.getNetid().equals(credentials.getAllCredentials().get(netIdHeader))) {
+                user.setNetid(credentials.getAllCredentials().get(netIdHeader));
             }
-            if (user.getBirthYear() != null && !user.getBirthYear().equals(shib.getAllCredentials().get(birthYearHeader))) {
-                user.setBirthYear(Integer.parseInt(shib.getAllCredentials().get(birthYearHeader)));
+            if (user.getBirthYear() != null && !user.getBirthYear().equals(credentials.getAllCredentials().get(birthYearHeader))) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
-            if (user.getMiddleName() != null && !user.getMiddleName().equals(shib.getAllCredentials().get(middleNameHeader))) {
-                user.setMiddleName(shib.getAllCredentials().get(middleNameHeader));
+            if (user.getMiddleName() != null && !user.getMiddleName().equals(credentials.getAllCredentials().get(middleNameHeader))) {
+                user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
             }
-            if (user.getOrcid() != null && !user.getOrcid().equals(shib.getAllCredentials().get(orcidHeader))) {
-                user.setOrcid(shib.getAllCredentials().get(orcidHeader));
+            if (user.getOrcid() != null && !user.getOrcid().equals(credentials.getAllCredentials().get(orcidHeader))) {
+                user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
             }
-            if (user.getUin() != null && !user.getUin().equals(shib.getAllCredentials().get(institutionalIdentifierHeader))) {
-                user.setUin(Long.parseLong(shib.getAllCredentials().get(institutionalIdentifierHeader)));
+            if (user.getUin() != null && !user.getUin().equals(credentials.getAllCredentials().get(institutionalIdentifierHeader))) {
+                user.setUin(Long.parseLong(credentials.getAllCredentials().get(institutionalIdentifierHeader)));
             }
 
             user = userRepo.save(user);
 
-            shib.setRole(user.getRole().toString());
+            credentials.setRole(user.getRole().toString());
         }
 
-        return shib;
+        return credentials;
     }
 
 }
