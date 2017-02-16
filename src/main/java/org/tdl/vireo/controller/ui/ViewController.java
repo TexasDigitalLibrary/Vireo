@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ViewController {
 
     // to avoid client side 404 errors and redirect put all AngularJs views in value
-    @RequestMapping(value = { "", "/", "/register", "/home/**", "/admin/**", "/submission/**", "/users/**", "/myprofile" })
+    @RequestMapping(value = { "", "/", "/home", "/register", "/myprofile", "/users", "/admin/**", "/submission/**", "/review/**" })
     public ModelAndView view(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView("WEB-INF/app/index.jsp");
         view.addObject("base", request.getServletContext().getContextPath());
