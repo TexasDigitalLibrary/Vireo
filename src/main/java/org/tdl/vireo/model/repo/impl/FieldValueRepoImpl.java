@@ -1,8 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.custom.FieldValueRepoCustom;
 
@@ -12,8 +12,8 @@ public class FieldValueRepoImpl implements FieldValueRepoCustom {
     private FieldValueRepo fieldValueRepo;
 
     @Override
-    public FieldValue create(SubmissionFieldProfile submissionFieldProfile) {    	
-        return fieldValueRepo.save(new FieldValue(submissionFieldProfile));
+    public FieldValue create(FieldPredicate fieldPredicate) {    	
+        return fieldValueRepo.save(new FieldValue(fieldPredicate));
     }
 
 }
