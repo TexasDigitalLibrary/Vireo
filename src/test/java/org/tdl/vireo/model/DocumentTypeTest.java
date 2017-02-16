@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
-public class DocumentTypeTest extends AbstractEntityTest{
+public class DocumentTypeTest extends AbstractEntityTest {
 
 	@Override
 	public void testCreate() {

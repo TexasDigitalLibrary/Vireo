@@ -90,7 +90,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 	        		if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
 	        			String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
 	        			
-						FieldValue fieldValue = fieldValueRepo.create(afp);
+						FieldValue fieldValue = fieldValueRepo.create(afp.getFieldPredicate());
 	
 						fieldValue.setValue(credentialValue);
 						submission.addFieldValue(fieldValue);

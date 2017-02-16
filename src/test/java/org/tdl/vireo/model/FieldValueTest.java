@@ -3,14 +3,18 @@ package org.tdl.vireo.model;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
+import org.junit.Before;
 
 public class FieldValueTest extends AbstractEntityTest {
+    
+    @Before
+    public void setup() {
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
+    }
 
     @Override
     public void testCreate() {
-    	FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-    	SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-        FieldValue fieldValue = fieldValueRepo.create(submissionfieldProfile);
+        FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValue.setValue(TEST_FIELD_VALUE);
         fieldValue = fieldValueRepo.save(fieldValue);
         assertEquals("The repository did not save the entity!", 1, fieldValueRepo.count());
@@ -20,9 +24,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-    	FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-    	SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-        FieldValue fieldValue = fieldValueRepo.create(submissionfieldProfile);
+        FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);
         assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
     }
@@ -34,9 +36,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
-    	FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
-    	SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-        FieldValue fieldValue = fieldValueRepo.create(submissionfieldProfile);
+        FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);
         assertEquals("The entity was not deleted!", 0, fieldValueRepo.count());
         assertEquals("The entity was deleted!", 1, fieldPredicateRepo.count());
