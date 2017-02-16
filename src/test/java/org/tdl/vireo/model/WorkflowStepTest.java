@@ -19,7 +19,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TYPE_NAME);
+        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
     }
     
     @Override
@@ -1455,8 +1455,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-        
-        
         
         noteRepo.findAll().forEach(note -> {
             noteRepo.delete(note);

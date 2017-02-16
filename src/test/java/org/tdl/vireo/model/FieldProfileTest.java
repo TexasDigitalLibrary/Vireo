@@ -26,7 +26,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         organization = organizationRepo.findOne(organization.getId());
-        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TYPE_NAME);
+        inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
     }
 
     @Override

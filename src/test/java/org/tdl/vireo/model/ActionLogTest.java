@@ -15,10 +15,10 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The user repository is not empty!", 1, userRepo.count());
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
-        attachmentType = attachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
-        assertEquals("The attachmentType repository is not empty!", 1, attachmentTypeRepo.count());
-        attachment = attachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
-        assertEquals("The attachment repository is not empty!", 1, attachmentRepo.count());
+        attachmentType = deprecatedAttachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
+        assertEquals("The attachmentType repository is not empty!", 1, deprecatedAttachmentTypeRepo.count());
+        attachment = deprecatedAttachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
+        assertEquals("The attachment repository is not empty!", 1, deprecatedAttachmentRepo.count());
         
         OrganizationCategory category = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
@@ -71,7 +71,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("Submission is not deleted", 1, submissionRepo.count());
         assertEquals("Submission State is not deleted", 1, submissionStateRepo.count());
         assertEquals("User is not deleted", 1, userRepo.count());
-        assertEquals("Attachment is not deleted", 1, attachmentRepo.count());
+        assertEquals("Attachment is not deleted", 1, deprecatedAttachmentRepo.count());
     }
 
     @After
@@ -85,8 +85,8 @@ public class ActionLogTest extends AbstractEntityTest {
             namedSearchFilterRepo.delete(nsf);
         });
         userRepo.deleteAll();        
-        attachmentRepo.deleteAll();
-        attachmentTypeRepo.deleteAll(); 
+        deprecatedAttachmentRepo.deleteAll();
+        deprecatedAttachmentTypeRepo.deleteAll(); 
     }
 
 }

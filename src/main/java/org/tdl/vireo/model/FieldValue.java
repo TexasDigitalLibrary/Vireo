@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.tdl.vireo.model.validation.FieldValueValidator;
-
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -30,10 +28,9 @@ public class FieldValue extends BaseEntity {
      * 
      * @param predicate
      */
-    public FieldValue(SubmissionFieldProfile submissionFieldProfile) {
+    public FieldValue(FieldPredicate fieldPredicate) {
         this();
-        setModelValidator(new FieldValueValidator(submissionFieldProfile));
-        setFieldPredicate(submissionFieldProfile.getFieldPredicate());
+        setFieldPredicate(fieldPredicate);
     }
 
     /**

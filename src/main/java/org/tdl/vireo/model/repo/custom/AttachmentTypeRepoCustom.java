@@ -13,6 +13,6 @@ public interface AttachmentTypeRepoCustom {
     
     public void sort(String column);
 
-    public void remove(AttachmentType documentType);
+    public void remove(AttachmentType attachmentType);
 
 }
