@@ -1,11 +1,11 @@
-<div class="row" ng-controller="UserRepoController">
+<div class="container" ng-controller="UserRepoController">
 
 	<!-- ADMINS AND MANAGERS ONLY -->
-	<div ng-if="!isManager() && !isAdmin()" class="row" ng-include src="'views/restrictedAccess.html'" ></div>
+	<div ng-if="!isManager() && !isAdmin()" class="row" ng-include src="'views/restrictedAccess.html'"></div>
 
-	
+
 	<div ng-if="isManager() || isAdmin()" class="col-12">
-		<div class="panel panel-default users-container">			
+		<div class="panel panel-default users-container">
 			<div class="panel-heading">
 				<h3 class="panel-title">Users</h3>
 			</div>
@@ -28,7 +28,7 @@
 								<select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
 									<option ng-repeat="role in allowableRoles(thisUser.role)">{{role}}</option>
 								</select>
-							</td>							
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -36,5 +36,3 @@
 		</div>
 	</div>
 </div>
-
-	
