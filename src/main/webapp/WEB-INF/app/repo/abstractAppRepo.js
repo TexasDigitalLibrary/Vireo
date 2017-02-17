@@ -1,10 +1,10 @@
 vireo.service("AbstractAppRepo", function () {
 
-	return function AbstractAppRepo() {
+  return function AbstractAppRepo() {
 
-		// additional app level repo methods and variables
+    // additional app level repo methods and variables
 
-		return this;
-	};
+    return this;
+  };
 
 });

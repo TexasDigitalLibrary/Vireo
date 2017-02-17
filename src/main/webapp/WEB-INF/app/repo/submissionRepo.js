@@ -1,77 +1,77 @@
 vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
 
-	var submissionRepo = this;
+  var submissionRepo = this;
 
-	// additional repo methods and variables
+  // additional repo methods and variables
 
-	submissionRepo.findSubmissionById = function(id) {
+  submissionRepo.findSubmissionById = function(id) {
 
-		var foundSubmission = submissionRepo.findById(id);
+    var foundSubmission = submissionRepo.findById(id);
 
-		var defer = $q.defer();
-		
-		if(!foundSubmission) {
-			submissionRepo.clearValidationResults();
-			angular.extend(submissionRepo.mapping.one, {
-				'method': 'get-one/' + id
-			});
-			var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
-			fetchPromise.then(function(res) {
+    var defer = $q.defer();
 
-				if(angular.fromJson(res.body).meta.type != "ERROR") {
-					// angular.extend(submissionRepo.list, angular.fromJson(res.body).payload);
-					foundSubmission = angular.fromJson(res.body).payload.Submission;
-					submissionRepo.add(foundSubmission);
-					defer.resolve(foundSubmission);
-				}
-			});	
-		} else {
-			defer.resolve(foundSubmission);
-		}
+    if(!foundSubmission) {
+      submissionRepo.clearValidationResults();
+      angular.extend(submissionRepo.mapping.one, {
+        'method': 'get-one/' + id
+      });
+      var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
+      fetchPromise.then(function(res) {
 
-		return defer.promise;
-	};
+        if(angular.fromJson(res.body).meta.type != "ERROR") {
+          // angular.extend(submissionRepo.list, angular.fromJson(res.body).payload);
+          foundSubmission = angular.fromJson(res.body).payload.Submission;
+          submissionRepo.add(foundSubmission);
+          defer.resolve(foundSubmission);
+        }
+      });
+    } else {
+      defer.resolve(foundSubmission);
+    }
 
-	submissionRepo.query = function(columns, page, size) {
-		angular.extend(submissionRepo.mapping.query, {
-			'method': 'query/' + page + '/' + size,
-			'data': columns
-		});
-		var promise = WsApi.fetch(submissionRepo.mapping.query);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type != "ERROR") {
-				angular.extend(submissionRepo, angular.fromJson(res.body).payload);
-			}
-		});
-		return promise;
-	};
+    return defer.promise;
+  };
 
-	submissionRepo.batchUpdateStatus = function(submissionState) {
+  submissionRepo.query = function(columns, page, size) {
+    angular.extend(submissionRepo.mapping.query, {
+      'method': 'query/' + page + '/' + size,
+      'data': columns
+    });
+    var promise = WsApi.fetch(submissionRepo.mapping.query);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type != "ERROR") {
+        angular.extend(submissionRepo, angular.fromJson(res.body).payload);
+      }
+    });
+    return promise;
+  };
 
-		console.log(submissionState);
+  submissionRepo.batchUpdateStatus = function(submissionState) {
 
-		angular.extend(submissionRepo.mapping.batchUpdateSubmissionState, {
-			'data': submissionState
-		});
-		var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionState);
-		
-		return promise;
+    console.log(submissionState);
 
-	};
+    angular.extend(submissionRepo.mapping.batchUpdateSubmissionState, {
+      'data': submissionState
+    });
+    var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionState);
 
-	submissionRepo.batchAssignTo = function(assignee) {
+    return promise;
 
-		console.log(assignee);
+  };
 
-		angular.extend(submissionRepo.mapping.batchAssignTo, {
-			'data': assignee
-		});
-		var promise = WsApi.fetch(submissionRepo.mapping.batchAssignTo);
-		
-		return promise;
+  submissionRepo.batchAssignTo = function(assignee) {
 
-	};
-	
-	return submissionRepo;
+    console.log(assignee);
 
-});	
+    angular.extend(submissionRepo.mapping.batchAssignTo, {
+      'data': assignee
+    });
+    var promise = WsApi.fetch(submissionRepo.mapping.batchAssignTo);
+
+    return promise;
+
+  };
+
+  return submissionRepo;
+
+});

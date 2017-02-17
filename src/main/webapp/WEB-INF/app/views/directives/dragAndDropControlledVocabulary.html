@@ -1,7 +1,7 @@
 <div class="controlled-vocabulary" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
-	<span>{{ item.position }}. </span>
-	<span ng-repeat="property in properties" class="repeated-span">
-		<span ng-show="!item.isEntityProperty" class="glyphicon glyphicon-user"></span>
-		<span ng-show="item.isEntityProperty" class="glyphicon glyphicon-globe"></span> {{ item[property] }}</span>
-	<span ng-if="!item.isEntityProperty" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
+  <span>{{ item.position }}. </span>
+  <span ng-repeat="property in properties" class="repeated-span">
+    <span ng-show="!item.isEntityProperty" class="glyphicon glyphicon-user"></span>
+    <span ng-show="item.isEntityProperty" class="glyphicon glyphicon-globe"></span> {{ item[property] }}</span>
+  <span ng-if="!item.isEntityProperty" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
 </div>

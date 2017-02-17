@@ -1,10 +1,10 @@
 <div class="row">
-    
+
     <div class="col-md-6">
 
         <div class="col-md-10 col-md-offset-1">
 
-            <validatedinput                
+            <validatedinput
                 type="text"
                 label="ProQuest Institution Code"
                 model="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
@@ -14,14 +14,14 @@
                 form-view="true"
                 tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
             </validatedinput>
-    	
-    	    <togglebutton
-    	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
-    	        label="Indexed by Search Engines"
-    	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
-    	        toggle-options="{{proquestIndexingOptions}}"
-    	        tool-tip="todo">
-    	    </togglebutton>
+
+          <togglebutton
+              ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
+              label="Indexed by Search Engines"
+              scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
+              toggle-options="{{proquestIndexingOptions}}"
+              tool-tip="todo">
+          </togglebutton>
 
         </div>
 
@@ -42,13 +42,13 @@
         </div>
 
     </div>
-    
+
 </div>
 
 <hr/>
 
 <div class="row">
-    
+
     <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
 
     <div class="col-md-6">
@@ -134,7 +134,7 @@
 
             <validatedinput
                 type="text"
-                label="Master of Landscape Architecture" 
+                label="Master of Landscape Architecture"
                 model="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture"
                 property="value"
                 validations="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture.getValidations()"

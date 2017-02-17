@@ -5,14 +5,14 @@ var mockLanguageRepo1 = [
         "name": "English"
     },
     {
-    	"id": 2,
-    	"position": null,
-    	"name": "Spanish"
+      "id": 2,
+      "position": null,
+      "name": "Spanish"
     },
     {
-    	"id": 3,
-    	"position": null,
-    	"name": "French"
+      "id": 3,
+      "position": null,
+      "name": "French"
     }
 ];
 
@@ -23,14 +23,14 @@ var mockLanguageRepo2 = [
         "name": "English"
     },
     {
-    	"id": 2,
-    	"position": null,
-    	"name": "Chinese"
+      "id": 2,
+      "position": null,
+      "name": "Chinese"
     },
     {
-    	"id": 3,
-    	"position": null,
-    	"name": "French"
+      "id": 3,
+      "position": null,
+      "name": "French"
     }
 ];
 
@@ -41,22 +41,22 @@ var mockLanguageRepo3 = [
         "name": "English"
     },
     {
-    	"id": 2,
-    	"position": null,
-    	"name": "Spanish"
+      "id": 2,
+      "position": null,
+      "name": "Spanish"
     },
     {
-    	"id": 3,
-    	"position": null,
-    	"name": "German"
+      "id": 3,
+      "position": null,
+      "name": "German"
     }
 ];
 
 angular.module('mock.languageRepo', []).
     service('LanguageRepo', function($q) {
-    	
-    	var self;
-    	
-        
+
+      var self;
+
+
         return LanguageRepo;
 });

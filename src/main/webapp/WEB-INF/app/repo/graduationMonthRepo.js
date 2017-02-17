@@ -1,7 +1,7 @@
 vireo.repo("GraduationMonthRepo", function GraduationMonthRepo() {
 
-	// additional repo methods and variables
+  // additional repo methods and variables
 
-	return this;
-	
+  return this;
+
 });

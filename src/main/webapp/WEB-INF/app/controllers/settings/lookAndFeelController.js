@@ -1,143 +1,143 @@
 vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsApi, RestApi) {
 
-	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+  angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-	$scope.modalData = {
-		newLogo: {}
-	};
-	
-	$scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value; 
+  $scope.modalData = {
+    newLogo: {}
+  };
 
-	$scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
+  $scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value;
 
-	$scope.previewLogo = function(files) {
-		if(files.length > 0) {
-			previewLogo(files[0]).then(function(result) {
-				
-				var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
-				
-				$scope.modalData.newLogo.fileType = fileType;
-				$scope.modalData.newLogo.file = result;
-	
-				angular.element('#newLogoConfirmUploadModal').modal('show');
-	
-			});
-		}
-	};
+  $scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
 
-	$scope.modalData.confirmLogoUpload = function() {
+  $scope.previewLogo = function(files) {
+    if(files.length > 0) {
+      previewLogo(files[0]).then(function(result) {
 
-		$scope.uplaodLogo = {};
+        var fileType = result.substring(result.indexOf("/")+1,result.indexOf(";"));
 
-		angular.copy($scope.modalData.newLogo, $scope.uplaodLogo);
+        $scope.modalData.newLogo.fileType = fileType;
+        $scope.modalData.newLogo.file = result;
 
-		delete $scope.uplaodLogo.file;
+        angular.element('#newLogoConfirmUploadModal').modal('show');
 
-		//TODO: This may be better if removed to a service
-		var uploadPromise = RestApi.post({
-			'endpoint': '', 
-			'controller': 'settings/look-and-feel',  
-			'method': 'logo/upload',
-			'data': $scope.uplaodLogo,
-			'file': $scope.modalData.newLogo.file
-		});
+      });
+    }
+  };
 
-		uploadPromise.then(
-			function(data) {
-				if(data.payload !== undefined) {
-					// validation
-				
-	                if(data.payload.Configuration !== undefined) {
-	                	updateLogos(data);
-	                }
-				}
-			}, 
-			function(data) {
-				if(data.payload !== undefined) {
-					// validation
-				}
-				console.log("Error");
-			}
-		);
+  $scope.modalData.confirmLogoUpload = function() {
 
-		return uploadPromise;
+    $scope.uplaodLogo = {};
 
-	};
+    angular.copy($scope.modalData.newLogo, $scope.uplaodLogo);
 
-	$scope.modalData.cancelLogoUpload = function() {
-		$scope.resetModalData();
-		angular.element('#newLogoConfirmUploadModal').modal('hide');
-	};
+    delete $scope.uplaodLogo.file;
 
-	$scope.resetLogo = function(setting) {
+    //TODO: This may be better if removed to a service
+    var uploadPromise = RestApi.post({
+      'endpoint': '',
+      'controller': 'settings/look-and-feel',
+      'method': 'logo/upload',
+      'data': $scope.uplaodLogo,
+      'file': $scope.modalData.newLogo.file
+    });
 
-		//TODO: This may be better if removed to a service
-		var resetPromise = WsApi.fetch({
-			'endpoint': '/private/queue', 
-			'controller': 'settings/look-and-feel', 
-			'method': 'logo/reset',
-			'data': {setting: setting},
-		});
+    uploadPromise.then(
+      function(data) {
+        if(data.payload !== undefined) {
+          // validation
 
-		resetPromise.then(
-			function(data) {
-				data = angular.fromJson(data.body);
-				if(data.payload !== undefined) {
-					// validation
-				
-	                if(data.payload.Configuration !== undefined) {
-	                	updateLogos(data);
-					}
-				}
-			}, 
-			function(data) {
-				data = angular.fromJson(data.body);
-				if(data.payload !== undefined) {
-					// validation
-				}
-				console.log("error");
-			}
-		);
+                  if(data.payload.Configuration !== undefined) {
+                    updateLogos(data);
+                  }
+        }
+      },
+      function(data) {
+        if(data.payload !== undefined) {
+          // validation
+        }
+        console.log("Error");
+      }
+    );
 
-		return resetPromise;
-	};
+    return uploadPromise;
 
-	var updateLogos = function(data) {
+  };
 
-		var newLogoConfiguration = typeof data.body === "string" ? JSON.parse(data.body).payload.Configuration : data.payload.Configuration;
+  $scope.modalData.cancelLogoUpload = function() {
+    $scope.resetModalData();
+    angular.element('#newLogoConfirmUploadModal').modal('hide');
+  };
 
-		if(newLogoConfiguration !== undefined) {
-			if(newLogoConfiguration.name == "left_logo") {
-				$scope.modalData.logoLeft = newLogoConfiguration.value;
-				$scope.settings.configurable.lookAndFeel.left_logo = newLogoConfiguration.value
-			}
-			if(newLogoConfiguration.name == "right_logo") {
-				$scope.modalData.logoRight = newLogoConfiguration.value;
-				$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
-			}
+  $scope.resetLogo = function(setting) {
 
-			$scope.resetModalData();
-		}
-		
-	};
+    //TODO: This may be better if removed to a service
+    var resetPromise = WsApi.fetch({
+      'endpoint': '/private/queue',
+      'controller': 'settings/look-and-feel',
+      'method': 'logo/reset',
+      'data': {setting: setting},
+    });
 
-	$scope.resetModalData = function() {
-		$scope.modalData.newLogo = {};
-		$scope.modalData.newLogo.setting = "left_logo";
-	};
+    resetPromise.then(
+      function(data) {
+        data = angular.fromJson(data.body);
+        if(data.payload !== undefined) {
+          // validation
 
-	var previewLogo = function(file) {
+                  if(data.payload.Configuration !== undefined) {
+                    updateLogos(data);
+          }
+        }
+      },
+      function(data) {
+        data = angular.fromJson(data.body);
+        if(data.payload !== undefined) {
+          // validation
+        }
+        console.log("error");
+      }
+    );
 
-		var defer = $q.defer();
-		var reader = new FileReader();
+    return resetPromise;
+  };
 
-		reader.onload = function() {
-			defer.resolve(reader.result);
-		};
+  var updateLogos = function(data) {
 
-		reader.readAsDataURL(file);
+    var newLogoConfiguration = typeof data.body === "string" ? JSON.parse(data.body).payload.Configuration : data.payload.Configuration;
 
-		return defer.promise;
-	};
-	
+    if(newLogoConfiguration !== undefined) {
+      if(newLogoConfiguration.name == "left_logo") {
+        $scope.modalData.logoLeft = newLogoConfiguration.value;
+        $scope.settings.configurable.lookAndFeel.left_logo = newLogoConfiguration.value
+      }
+      if(newLogoConfiguration.name == "right_logo") {
+        $scope.modalData.logoRight = newLogoConfiguration.value;
+        $scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
+      }
+
+      $scope.resetModalData();
+    }
+
+  };
+
+  $scope.resetModalData = function() {
+    $scope.modalData.newLogo = {};
+    $scope.modalData.newLogo.setting = "left_logo";
+  };
+
+  var previewLogo = function(file) {
+
+    var defer = $q.defer();
+    var reader = new FileReader();
+
+    reader.onload = function() {
+      defer.resolve(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+
+    return defer.promise;
+  };
+
 });

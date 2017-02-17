@@ -1,61 +1,61 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h3 class="panel-title">Manage {{getSelectedOrganization().name}}</h3>
-	</div>
+  <div class="panel-heading">
+    <h3 class="panel-title">Manage {{getSelectedOrganization().name}}</h3>
+  </div>
 
-	<div class="panel-body">
+  <div class="panel-body">
 
-		<validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+    <validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
 
-		<div class="col-md-6">
+    <div class="col-md-6">
 
-			<form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
+      <form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
 
-				<validatedinput
-					label="Name"
-					model="getSelectedOrganization()"
-					property="name"
-					placeholder="Name of the organization"
-					form="forms.update"
-					validations="getSelectedOrganization().getValidations()"
-					results="getSelectedOrganization().getValidationResults()">
-				</validatedinput>
+        <validatedinput
+          label="Name"
+          model="getSelectedOrganization()"
+          property="name"
+          placeholder="Name of the organization"
+          form="forms.update"
+          validations="getSelectedOrganization().getValidations()"
+          results="getSelectedOrganization().getValidationResults()">
+        </validatedinput>
 
-				<validatedselect
-					label="Category"
-					options="organizationCategories"
-					optionproperty="name"
-					model="getSelectedOrganization()"
-					property="category"
-					form="forms.update"
-					validations="getSelectedOrganization().getValidations()"
-					results="getSelectedOrganization().getValidationResults()">
-				</validatedselect>
+        <validatedselect
+          label="Category"
+          options="organizationCategories"
+          optionproperty="name"
+          model="getSelectedOrganization()"
+          property="category"
+          form="forms.update"
+          validations="getSelectedOrganization().getValidations()"
+          results="getSelectedOrganization().getValidationResults()">
+        </validatedselect>
 
-				<div class="pull-right">
-					<button
-						type="button"
-						class="btn btn-danger"
-						ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
-					<button
-						type="button"
-						class="btn btn-warning"
-						ng-click="resetManageOrganization()">Cancel</button>
-					<button
-						type="submit"
-						class="btn btn-primary"
-						ng-disabled="forms.update.$invalid">Save</button>
-				</div>
+        <div class="pull-right">
+          <button
+            type="button"
+            class="btn btn-danger"
+            ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+          <button
+            type="button"
+            class="btn btn-warning"
+            ng-click="resetManageOrganization()">Cancel</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid">Save</button>
+        </div>
 
-			</form>
+      </form>
 
-			<modal modal-id="organizationConfirmDeleteModal"
-				modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
-				modal-header-class="modal-header-danger"
-				modal-backdrop="static">
-			</modal>
+      <modal modal-id="organizationConfirmDeleteModal"
+        modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
+        modal-header-class="modal-header-danger"
+        modal-backdrop="static">
+      </modal>
 
-		</div>
-	</div>
+    </div>
+  </div>
 
 </div>

@@ -1,10 +1,10 @@
 vireo.model("AttachmentType", function AttachmentType() {
 
-	return function AttachmentType() {
-		
-		// additional model methods and variables
+  return function AttachmentType() {
 
-		return this;
-	}
+    // additional model methods and variables
+
+    return this;
+  }
 
 });

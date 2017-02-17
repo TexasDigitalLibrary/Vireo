@@ -1,3 +1,3 @@
 function setUpApp(bootstrapApp) {
-	bootstrapApp();
+  bootstrapApp();
 }

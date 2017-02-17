@@ -27,9 +27,9 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
                     $scope.forms[key].$setPristine();
                 }
             }
-        	if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
-    			$scope.modalData.refresh();
-    		}
+          if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+          $scope.modalData.refresh();
+        }
             $scope.modalData = {};
             $scope.closeModal();
         };
@@ -61,7 +61,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
         $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
             trashId: $scope.trashCanId,
             dragging: $scope.dragging,
-            select: $scope.selectOrganizationCategory,     
+            select: $scope.selectOrganizationCategory,
             model: $scope.organizationCategories,
             confirm: '#organizationCategoryConfirmRemoveModal',
             reorder: null,
@@ -88,7 +88,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     });
 
     $scope.organizationHierarchicalOptions = [
-        {"true": "On"}, 
+        {"true": "On"},
         {"false": "Off"}
     ];
 

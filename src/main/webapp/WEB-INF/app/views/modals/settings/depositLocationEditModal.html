@@ -1,8 +1,8 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Edit Deposit Location</h3>
+  <button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Edit Deposit Location</h3>
 </div>
 
 <form ng-submit="updateDepositLocation()" name="forms.update" novalidate>
@@ -107,13 +107,13 @@
     </div>
 
     <div class="modal-footer">
-        <button 
-            type="button" 
-            class="btn btn-warning" 
+        <button
+            type="button"
+            class="btn btn-warning"
             ng-click="resetDepositLocation()">Cancel</button>
-        <button 
-            id="depositLocation-save" 
-            type="submit" 
+        <button
+            id="depositLocation-save"
+            type="submit"
             class="btn btn-primary"
             ng-disabled="forms.update.$invalid">Update</button>
     </div>

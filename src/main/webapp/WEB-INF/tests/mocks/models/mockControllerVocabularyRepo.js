@@ -141,9 +141,9 @@ var mockControlledVocabularyRepo3 = [
 
 angular.module('mock.controlledVocabularyRepo', []).
     service('ControlledVocabularyRepo', function($q) {
-    	
-    	var self;
-    	
-        
+
+      var self;
+
+
         return ControlledVocabularyRepo;
 });

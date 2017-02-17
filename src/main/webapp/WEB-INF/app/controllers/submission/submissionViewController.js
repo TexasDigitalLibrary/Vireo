@@ -4,7 +4,7 @@ vireo.controller("SubmissionViewController", function ($controller, $scope, $rou
 
     $scope.studentSubmissionRepoReady = false;
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
-    	$scope.studentSubmissionRepoReady = true;
+      $scope.studentSubmissionRepoReady = true;
         $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
     });
 

@@ -4,16 +4,16 @@ angular.module('mock.wsApi', []).
         var WsApi = this;
 
         WsApi.fetch = function(apiReq) {
-        	
-        	var defer = $q.defer();
-        	
-        	            
+
+          var defer = $q.defer();
+
+
             return defer.promise;
         }
-        
-        WsApi.listen = function(apiReq) {        	
-        	var defer = $q.defer();
+
+        WsApi.listen = function(apiReq) {
+          var defer = $q.defer();
             return defer.promise;
         }
-            
+
 });
