@@ -1,0 +1,17 @@
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+max_line_length = 1000
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{js,json,yml,xml,scss,java}]
+charset = utf-8
+
+[*.{js,jsonyml,xml,html,scss}]
+indent_size = 2
+
+[*.{java, md}]
+indent_size = 4
