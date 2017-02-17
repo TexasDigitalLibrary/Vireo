@@ -21,7 +21,7 @@ public class EmbargoTest extends AbstractEntityTest {
         assertEquals("Embargo Repo did not save the correct embargo description!", TEST_EMBARGO_DESCRIPTION, testEmbargo.getDescription());
         assertEquals("Embargo Repo did not save the correct embargo duration!", TEST_EMBARGO_DURATION, testEmbargo.getDuration());
     }
-    
+
     @Override
     public void testDuplication() {
         embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
@@ -49,5 +49,5 @@ public class EmbargoTest extends AbstractEntityTest {
     public void cleanUp() {
         embargoRepo.deleteAll();
     }
-    
+
 }

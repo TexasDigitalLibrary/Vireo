@@ -13,5 +13,5 @@ public class AppRoleService extends CoreRoleService {
     public IRole valueOf(String role) {
         return AppRole.valueOf(AppRole.class, role);
     }
-    
+
 }

@@ -15,7 +15,7 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
 
     @Autowired
     private EmbargoRepo embargoRepo;
-    
+
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);

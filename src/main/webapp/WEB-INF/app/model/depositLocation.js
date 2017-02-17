@@ -1,10 +1,10 @@
 vireo.model("DepositLocation", function DepositLocation() {
 
-	return function DepositLocation() {
-		
-		// additional model methods and variables
+  return function DepositLocation() {
 
-		return this;
-	}
+    // additional model methods and variables
+
+    return this;
+  }
 
 });

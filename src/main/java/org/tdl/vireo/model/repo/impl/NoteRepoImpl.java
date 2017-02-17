@@ -11,7 +11,7 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.NoteRepoCustom;
 
 public class NoteRepoImpl extends HeritableRepo<Note, NoteRepo> implements NoteRepoCustom {
-    
+
     @Autowired
     private NoteRepo noteRepo;
 
@@ -33,7 +33,7 @@ public class NoteRepoImpl extends HeritableRepo<Note, NoteRepo> implements NoteR
         workflowStepRepo.save(originatingWorkflowStep);
         return noteRepo.findOne(note.getId());
     }
-    
+
     @Override
     public List<Note> findByOriginating(Note originatingNote) {
         return noteRepo.findByOriginatingNote(originatingNote);

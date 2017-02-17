@@ -1,18 +1,18 @@
 <div class="row admin-page" ng-controller="AdminController">
 
-	<div class="col-sm-2 admin-controls" ng-controller="SidebarController">
-		<sidebox heading="{{box.title}}" ng-repeat="box in sidebarBoxes">
-			<div ng-include="box.viewUrl"></div>
-		</sidebox>
-	</div>
+  <div class="col-sm-2 admin-controls" ng-controller="SidebarController">
+    <sidebox heading="{{box.title}}" ng-repeat="box in sidebarBoxes">
+      <div ng-include="box.viewUrl"></div>
+    </sidebox>
+  </div>
 
-	<div class="col-sm-10 admin-content">
-	
-		<div ng-if="isList()" ng-include="'views/admin/list.html'"></div>		
-		<div ng-if="isView()" ng-include="'views/admin/view.html'"></div>		
-		<div ng-if="isLog()" ng-include="'views/admin/log.html'"></div>		
-		<div ng-if="isSettings()" ng-include="'views/admin/settings.html'"></div>
+  <div class="col-sm-10 admin-content">
 
-	</div>
-	
+    <div ng-if="isList()" ng-include="'views/admin/list.html'"></div>
+    <div ng-if="isView()" ng-include="'views/admin/view.html'"></div>
+    <div ng-if="isLog()" ng-include="'views/admin/log.html'"></div>
+    <div ng-if="isSettings()" ng-include="'views/admin/settings.html'"></div>
+
+  </div>
+
 </div>

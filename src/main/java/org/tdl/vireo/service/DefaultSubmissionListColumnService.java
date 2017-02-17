@@ -11,21 +11,21 @@ import org.tdl.vireo.model.SubmissionListColumn;
 
 @Service
 public class DefaultSubmissionListColumnService {
-    
+
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
-    
+
     private List<SubmissionListColumn> defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
-    
+
     public DefaultSubmissionListColumnService() { }
-    
+
     public void setDefaultSubmissionListColumns(List<SubmissionListColumn> defaultSubmissionListColumns) {
         this.defaultSubmissionListColumns = defaultSubmissionListColumns;
     }
-    
+
     public List<SubmissionListColumn> getDefaultSubmissionListColumns() {
         return defaultSubmissionListColumns;
     }
-    
+
     public void addDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
        if(defaultSubmissionListColumn != null) {
            this.defaultSubmissionListColumns.add(defaultSubmissionListColumn);
@@ -34,7 +34,7 @@ public class DefaultSubmissionListColumnService {
            logger.info("Default submission list column is null!!");
        }
     }
-    
+
     public void removeDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
         this.defaultSubmissionListColumns.remove(defaultSubmissionListColumn);
     }

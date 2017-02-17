@@ -12,15 +12,15 @@ import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 public interface NoteRepoCustom {
 
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text);
-    
+
     public Note create(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable);
-    
+
     public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep requestingWorfklowStep, Note noteToRemove) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
 
     public Note update(Note note, Organization requestingOrganization) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
-    
+
     public void delete(Note note);
-    
+
     public List<Note> findByOriginating(Note originatingNote);
 
 }

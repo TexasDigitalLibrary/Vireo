@@ -10,7 +10,7 @@ import org.tdl.vireo.model.repo.custom.FieldGlossRepoCustom;
 public interface FieldGlossRepo extends JpaRepository<FieldGloss, Long>, FieldGlossRepoCustom {
 
     public List<FieldGloss> findByValue(String value);
-    
+
     public FieldGloss findByValueAndLanguage(String value, Language language);
 
 }

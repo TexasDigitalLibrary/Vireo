@@ -15,7 +15,7 @@ public interface SubmissionRepo extends JpaRepository<Submission, Long>, Submiss
     public List<Submission> findByOrganization(Organization organization);
 
     public List<Submission> findAllBySubmitter(User submitter);
-    
+
     public Submission findOneByAdvisorAccessHash(String hash);
 
 }

@@ -1,67 +1,67 @@
 [
-	{
-		"name": "INPUT_TEXT",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_EMAIL",
-		"validationPatern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-		"validationMessage": "Field must be a valid email address"
-	},
-	{
-		"name": "INPUT_CONTACT",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_PASSWORD",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_CHECKBOX",
-		"validationPatern": "^(true|false)$",
-		"validationMessage": "Checkboxes must be true or false"
-	},
-	{
-		"name": "INPUT_DATETIME",
-		"validationPatern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
-		"validationMessage": "Dates must be in MM/DD/YYYY format"
-	},
-	{
-		"name": "INPUT_FILE",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_RADIO",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_TEL",
-		"validationPatern": "^\\d{10}$|^(\\(\\d{3}\\)\\s?)\\d{3}-\\d{4}$|^\\d{3}([\\.\\- ])\\d{3}\\2\\d{4}$",
-		"validationMessage": "Field must contain a ten-digit phone number with area code"
-	},
-	{
-		"name": "INPUT_URL",
-		"validationPatern": "^(https?|ftp|file|wss?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+[-a-zA-Z0-9+&@#/%=~_|?]",
-		"validationMessage": "Field must be in a valid URL format (http://mydomain.com)"
-	},
-	{
-		"name": "INPUT_TEXTAREA",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_SELECT",
-		"validationPatern": null,
-		"validationMessage": null
-	},
-	{
-		"name": "INPUT_ORCID",
-		"validationPatern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
-		"validationMessage": "Field must be in a valid ORCID format nnnn-nnnn-nnnn-nnnn"
-	}
+{
+"name": "INPUT_TEXT",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_EMAIL",
+"validationPatern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+"validationMessage": "Field must be a valid email address"
+},
+{
+"name": "INPUT_CONTACT",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_PASSWORD",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_CHECKBOX",
+"validationPatern": "^(true|false)$",
+"validationMessage": "Checkboxes must be true or false"
+},
+{
+"name": "INPUT_DATETIME",
+"validationPatern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+"validationMessage": "Dates must be in MM/DD/YYYY format"
+},
+{
+"name": "INPUT_FILE",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_RADIO",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_TEL",
+"validationPatern": "^\\d{10}$|^(\\(\\d{3}\\)\\s?)\\d{3}-\\d{4}$|^\\d{3}([\\.\\- ])\\d{3}\\2\\d{4}$",
+"validationMessage": "Field must contain a ten-digit phone number with area code"
+},
+{
+"name": "INPUT_URL",
+"validationPatern": "^(https?|ftp|file|wss?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+[-a-zA-Z0-9+&@#/%=~_|?]",
+"validationMessage": "Field must be in a valid URL format (http://mydomain.com)"
+},
+{
+"name": "INPUT_TEXTAREA",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_SELECT",
+"validationPatern": null,
+"validationMessage": null
+},
+{
+"name": "INPUT_ORCID",
+"validationPatern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
+"validationMessage": "Field must be in a valid ORCID format nnnn-nnnn-nnnn-nnnn"
+}
 ]

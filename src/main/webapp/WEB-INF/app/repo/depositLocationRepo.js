@@ -1,7 +1,7 @@
 vireo.repo("DepositLocationRepo", function DepositLocationRepo() {
 
-	// additional repo methods and variables
+  // additional repo methods and variables
 
-	return this;
-	
+  return this;
+
 });

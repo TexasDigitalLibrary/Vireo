@@ -1,7 +1,7 @@
 vireo.repo("CustomActionValueRepo", function CustomActionValueRepo() {
 
-	// additional repo methods and variables
+  // additional repo methods and variables
 
-	return this;
+  return this;
 
 });

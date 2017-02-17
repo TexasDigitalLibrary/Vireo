@@ -1,18 +1,18 @@
 <div class="input-group">
-	<span class="input-group-addon" ng-click="date=true">
-		<span class="glyphicon glyphicon-calendar"></span>
-	</span>
-	<input
-		type="text"
-		class="form-control" 
-		uib-datepicker-popup="MM/dd/yyyy" 
-		ng-model="field.value"
-		ng-change=""
-		is-open="date"
-		ng-disabled="" 
-		ng-required="!fieldProfile.optional" 
-		close-text="Close"
-		stringtodate/>
-	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
-	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>		
+  <span class="input-group-addon" ng-click="date=true">
+    <span class="glyphicon glyphicon-calendar"></span>
+  </span>
+  <input
+    type="text"
+    class="form-control"
+    uib-datepicker-popup="MM/dd/yyyy"
+    ng-model="field.value"
+    ng-change=""
+    is-open="date"
+    ng-disabled=""
+    ng-required="!fieldProfile.optional"
+    close-text="Close"
+    stringtodate/>
+  <span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>
 </div>

@@ -49,7 +49,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage controlled vocabulary.
- * 
+ *
  */
 @RestController
 @ApiMapping("/settings/controlled-vocabulary")
@@ -71,7 +71,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to request all controlled vocabulary.
-     * 
+     *
      * @return ApiResponse with all controlled vocabulary
      */
     @Transactional
@@ -83,7 +83,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to request controlled vocabulary by name.
-     * 
+     *
      * @param name
      *            Name of controlled vocabulary
      * @return ApiResponse with requested controlled vocabulary
@@ -96,7 +96,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to create a new controlled vocabulary.
-     * 
+     *
      * @param data
      *            Json input data from request
      * @return ApiResponse with indicating success or error
@@ -114,7 +114,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to update controlled vocabulary.
-     * 
+     *
      * @param data
      *            Json input data with request
      * @return ApiResponse indicating success or error
@@ -132,7 +132,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to remove controlled vocabulary by provided index
-     * 
+     *
      * @param data
      *            Json input data with request
      * @return ApiResponse indicating success or error
@@ -150,7 +150,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to reorder controlled vocabulary.
-     * 
+     *
      * @param src
      *            source position
      * @param dest
@@ -170,7 +170,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to sort controlled vocabulary.
-     * 
+     *
      * @param column
      *            column to sort by
      * @return ApiResponse indicating success
@@ -188,7 +188,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to export controlled vocabulary to populate csv
-     * 
+     *
      * @param name
      *            name of controlled vocabulary to export
      * @return ApiResponse with map containing csv content
@@ -217,7 +217,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to get the import status of a given controlled vocabulary.
-     * 
+     *
      * @param name
      *            controlled vocabulary name
      * @return ApiResponse with a boolean whether import in progress or not
@@ -230,7 +230,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to cancel an inport of a given controlled vocabulary. Removes ControlledVocabularyCache from the ControlledVocabularyCacheService.
-     * 
+     *
      * @param name
      *            controlled vocabulary name
      * @return ApiResponse indicating success
@@ -246,7 +246,7 @@ public class ControlledVocabularyController {
 
     /**
      * Enpoint to compare a csv of controlled vocabulary to an existing controlled vocabulary.
-     * 
+     *
      * @param name
      *            controlled vocabulary to compare with
      * @param inputStream
@@ -268,7 +268,7 @@ public class ControlledVocabularyController {
 
     /**
      * Endpoint to import controlled vocabulary after confirmation.
-     * 
+     *
      * @param name
      *            controlled vocabulary name
      * @return ApiReponse indicating success
@@ -386,7 +386,7 @@ public class ControlledVocabularyController {
 
     /**
      * Converts input stream to a string which represents the csv
-     * 
+     *
      * @param ServletInputStream
      *            csv bitstream
      * @return string array of the csv rows

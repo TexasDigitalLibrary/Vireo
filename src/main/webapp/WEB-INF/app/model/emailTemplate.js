@@ -1,10 +1,10 @@
 vireo.model("EmailTemplate", function EmailTemplate() {
 
-	return function EmailTemplate() {
-		
-		// additional model methods and variables
+  return function EmailTemplate() {
 
-		return this;
-	}
+    // additional model methods and variables
+
+    return this;
+  }
 
 });

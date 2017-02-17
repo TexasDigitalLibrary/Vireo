@@ -16,11 +16,11 @@ public class NoteController {
 
     @Autowired
     private NoteRepo noteRepo;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getAllNotes() {
         return new ApiResponse(SUCCESS, noteRepo.findAll());
     }
-    
+
 }

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @DiscriminatorValue("Org")
 public class Note extends AbstractNote<Note> implements Heritable<Note>{
-    
+
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -29,31 +29,31 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-    
+
     @Column(nullable = true)
     private Boolean overrideable;
-    
+
     public Note() {
         setModelValidator(new NoteValidator());
         setOverrideable(true);
     }
-    
+
     public Note(String name, String text) {
         this();
         setName(name);
         setText(text);
     }
-    
+
     public Note(WorkflowStep originatingWorkflowStep, String name, String text) {
         this(name, text);
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }
-    
+
     public Note(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
         this(originatingWorkflowStep, name, text);
         setOverrideable(overrideable);
     }
-    
+
     /**
      * @return the originatingNote
      */
@@ -105,17 +105,17 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     public Note getOriginating() {
         return getOriginatingNote();
     }
-    
+
     @Override
     public Note clone() {
         Note clone = new Note();
-        
+
         clone.setName(getName());
         clone.setText(getText());
         clone.setOverrideable(getOverrideable());
         clone.setOriginatingNote(getOriginatingNote());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
-        
+
         return clone;
     }
 

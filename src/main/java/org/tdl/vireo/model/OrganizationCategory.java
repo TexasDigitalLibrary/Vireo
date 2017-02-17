@@ -38,7 +38,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param level
      */
@@ -48,7 +48,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return String name
      */
     public String getName() {
@@ -56,7 +56,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      */
     public void setName(String name) {
@@ -64,7 +64,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return Set<Organization> organizations
      */
     public Set<Organization> getOrganizations() {
@@ -72,7 +72,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param organizations
      */
     public void setOrganizations(Set<Organization> organizations) {
@@ -80,7 +80,7 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param organization
      * @return boolean success
      */
@@ -89,12 +89,12 @@ public class OrganizationCategory extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param organization
      * @return boolean success
      */
     public boolean removeOrganization(Organization organization) {
         return getOrganizations().remove(organization);
     }
-    
+
 }

@@ -8,7 +8,7 @@ import org.junit.Before;
 public class NamedSearchFilterTest extends AbstractEntityTest {
 
     // TODO: rewrite tests!!
-    
+
     @Before
     public void setUp() {
         assertEquals("SearchFilter Repo is not empty", 0, namedSearchFilterRepo.count());
@@ -17,22 +17,22 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        
+
     }
 
     @Override
     public void testDuplication() {
-        
+
     }
 
     @Override
     public void testDelete() {
-        
+
     }
 
     @Override
     public void testCascade() {
-        
+
     }
 
     @After
@@ -40,7 +40,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
         });
-        userRepo.deleteAll();        
+        userRepo.deleteAll();
     }
 
 }

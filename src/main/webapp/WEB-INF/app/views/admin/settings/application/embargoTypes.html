@@ -1,84 +1,84 @@
 <div id="embargo" class="row" ng-controller="EmbargoRepoController">
 
-	<validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
-	
-	<div class="row">
+  <validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
 
-		<div class="col-md-12">
-			<h3>Default Embargoes</h3>
+  <div class="row">
 
-	        <draganddroplist
-				dragging="dragging"
-				scope-value="defaultEmbargoes"
-				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
-				list-view='views/directives/dragAndDropTable.html'
-				item-view='views/directives/dragAndDropEmbargo.html'
-				sort-label="default"
-				listeners='dragControlListenersDefault'
-				edit='editEmbargo(index)'
-				sort-column='duration',
-				sort-action='sortAction'
-				sort-action-sort='sortDefault'
-				sort-method='sortEmbargoesDefault(column)'>
-			</draganddroplist>
+    <div class="col-md-12">
+      <h3>Default Embargoes</h3>
 
-			<button 
-				class="btn btn-default modal-add-btn"
-				ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
-				Add New
-			</button>
+          <draganddroplist
+        dragging="dragging"
+        scope-value="defaultEmbargoes"
+        properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
+        list-view='views/directives/dragAndDropTable.html'
+        item-view='views/directives/dragAndDropEmbargo.html'
+        sort-label="default"
+        listeners='dragControlListenersDefault'
+        edit='editEmbargo(index)'
+        sort-column='duration',
+        sort-action='sortAction'
+        sort-action-sort='sortDefault'
+        sort-method='sortEmbargoesDefault(column)'>
+      </draganddroplist>
 
-		</div>
-	</div>
-	
-	<div class="row">
+      <button
+        class="btn btn-default modal-add-btn"
+        ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
+        Add New
+      </button>
 
-		<div class="col-md-12">
-			<h3>ProQuest Embargoes</h3>
+    </div>
+  </div>
 
-	        <draganddroplist
-				dragging="dragging"
-				scope-value="proquestEmbargoes"
-				properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
-				list-view='views/directives/dragAndDropTable.html'
-				item-view='views/directives/dragAndDropEmbargo.html'
-				sort-label="proquest"
-				listeners='dragControlListenersProquest'
-				edit='editEmbargo(index)'
-				sort-column='duration',
-				sort-action='sortAction'
-				sort-action-sort='sortProquest'
-				sort-method='sortEmbargoesProquest(column)'>
-			</draganddroplist>
+  <div class="row">
 
-			<button 
-				class="btn btn-default modal-add-btn"
-				ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
-				Add New
-			</button>
+    <div class="col-md-12">
+      <h3>ProQuest Embargoes</h3>
 
-		</div>
-	</div>
-	
-	<modal modal-id="embargoNewModal" 
-		   modal-view="views/modals/settings/embargoNewModal.html" 
-		   modal-header-class="modal-header-primary"
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
+          <draganddroplist
+        dragging="dragging"
+        scope-value="proquestEmbargoes"
+        properties='["System", "Name", "Description", "Display", "# of Months", "Edit"]'
+        list-view='views/directives/dragAndDropTable.html'
+        item-view='views/directives/dragAndDropEmbargo.html'
+        sort-label="proquest"
+        listeners='dragControlListenersProquest'
+        edit='editEmbargo(index)'
+        sort-column='duration',
+        sort-action='sortAction'
+        sort-action-sort='sortProquest'
+        sort-method='sortEmbargoesProquest(column)'>
+      </draganddroplist>
 
-	<modal modal-id="embargoEditModal" 
-		   modal-view="views/modals/settings/embargoEditModal.html" 
-		   modal-header-class="modal-header-primary"
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
+      <button
+        class="btn btn-default modal-add-btn"
+        ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
+        Add New
+      </button>
 
-	<modal modal-id="embargoConfirmRemoveModal" 
-		   modal-view="views/modals/settings/embargoConfirmRemoveModal.html" 
-		   modal-header-class="modal-header-primary"
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
+    </div>
+  </div>
+
+  <modal modal-id="embargoNewModal"
+       modal-view="views/modals/settings/embargoNewModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="embargoEditModal"
+       modal-view="views/modals/settings/embargoEditModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="embargoConfirmRemoveModal"
+       modal-view="views/modals/settings/embargoConfirmRemoveModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
 
 </div>

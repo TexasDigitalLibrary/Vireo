@@ -19,7 +19,7 @@ public class DeprecatedAttachmentTypeTest extends AbstractEntityTest {
         assertEquals("Embargo Repo did not save the embargo!", 1, deprecatedAttachmentTypeRepo.count());
         assertEquals("Embargo Repo did not save the correct embargo name!", TEST_ATTACHMENT_TYPE_NAME, testAttachmentType.getName());
      }
-    
+
     @Override
     public void testDuplication() {
         deprecatedAttachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
@@ -47,5 +47,5 @@ public class DeprecatedAttachmentTypeTest extends AbstractEntityTest {
     public void cleanUp() {
         deprecatedAttachmentTypeRepo.deleteAll();
     }
-    
+
 }

@@ -1,16 +1,16 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetGraduationMonth()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Add Graduation Month</h3>
+  <button type="button" class="close" ng-click="resetGraduationMonth()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Graduation Month</h3>
 </div>
 
 <form ng-submit="createGraduationMonth()" name="forms.create" novalidate>
-	<div class="modal-body">
+  <div class="modal-body">
 
-		<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
+    <validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
-		<validatedselect
+    <validatedselect
             options="monthOptions"
             model="modalData"
             property="month"
@@ -20,17 +20,17 @@
             results="graduationMonthRepo.getValidationResults()">
         </validatedselect>
 
-	</div>
+  </div>
 
-	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-warning" 
-			ng-click="resetGraduationMonth()">Cancel</button>
-		<button 
-			id="graduationMonth-save" 
-			type="submit" 
-			class="btn btn-primary"
-			ng-disabled="forms.create.$invalid">Create</button>
-	</div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      ng-click="resetGraduationMonth()">Cancel</button>
+    <button
+      id="graduationMonth-save"
+      type="submit"
+      class="btn btn-primary"
+      ng-disabled="forms.create.$invalid">Create</button>
+  </div>
 </form>

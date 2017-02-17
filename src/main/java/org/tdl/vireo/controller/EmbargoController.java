@@ -36,7 +36,7 @@ public class EmbargoController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getEmbargoes() {
@@ -80,7 +80,7 @@ public class EmbargoController {
         logger.info("Reordering Embargoes with guarantor " + guarantorString);
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
         embargoRepo.reorder(src, dest, guarantor);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));        
+        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -94,5 +94,5 @@ public class EmbargoController {
         simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 }

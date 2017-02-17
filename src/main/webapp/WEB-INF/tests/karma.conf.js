@@ -32,23 +32,23 @@ module.exports = function(config){
             'app/components/**/*.js',
 
             'tests/testSetup.js',
-            
+
             'app/app.js',
-            
+
             'app/config/runTime.js',
-            
+
             'app/controllers/**/*.js',
 
             'app/directives/**/*.js',
-            
-            'app/services/**/*.js',            
-            
-            'app/model/**/*.js',            
-            
+
+            'app/services/**/*.js',
+
+            'app/model/**/*.js',
+
             'tests/mocks/**/*.js',
-            
+
             'tests/unit/**/*.js'
-            
+
         ],
 
         autoWatch : true,

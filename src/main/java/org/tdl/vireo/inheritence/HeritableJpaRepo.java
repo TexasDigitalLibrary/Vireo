@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HeritableJpaRepo<M extends Heritable> extends JpaRepository<M, Long> {
 
     public List<M> findByOriginating(M originatingHeritableModel);
-    
+
 }

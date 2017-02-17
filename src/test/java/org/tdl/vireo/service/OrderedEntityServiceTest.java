@@ -17,44 +17,44 @@ import org.tdl.vireo.runner.OrderedRunner;
 @ActiveProfiles({"test"})
 public class OrderedEntityServiceTest {
 
-	@Before
-	public void setup() {
+    @Before
+    public void setup() {
 
-	}
-	
+    }
+
     @Test
     @Order(value = 1)
     public void testFindByOrder() {
-        
+
     }
-    
+
     @Test
     @Order(value = 2)
     public void testSwap() {
-        
+
     }
-    
+
     @Test
     @Order(value = 3)
     public void testDelete() {
-        
+
     }
-    
+
     @Test
     @Order(value = 4)
     public void testReorder() {
-        
+
     }
-    
+
     @Test
     @Order(value = 5)
     public void testRemove() {
-        
-    }
-    
-    @After
-	public void cleanup() {
 
-	}
-    
+    }
+
+    @After
+    public void cleanup() {
+
+    }
+
 }

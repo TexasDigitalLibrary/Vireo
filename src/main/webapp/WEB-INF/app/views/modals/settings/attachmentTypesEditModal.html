@@ -1,38 +1,38 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetAttachmentTypes()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Edit Attachment Type</h3>
+  <button type="button" class="close" ng-click="resetAttachmentTypes()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Edit Attachment Type</h3>
 </div>
 
 
 <form ng-submit="updateAttachmentType()" name="forms.update" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+  <validationmessage results="modalData.ValidationResults"></validationmessage>
 
-	<div class="modal-body">
+  <div class="modal-body">
 
-		<validatedinput
-			model="modalData"
-			property="name"
-			label="Attachment Type Name"
-			placeholder="Name of the new attachment type"
-			form="forms.update"
-			validations="attachmentTypeRepo.getValidations()"
-			results="modalData.ValidationResults">
-		</validatedinput>
+    <validatedinput
+      model="modalData"
+      property="name"
+      label="Attachment Type Name"
+      placeholder="Name of the new attachment type"
+      form="forms.update"
+      validations="attachmentTypeRepo.getValidations()"
+      results="modalData.ValidationResults">
+    </validatedinput>
 
-	</div>
+  </div>
 
-	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-warning" 
-			ng-click="resetAttachmentTypes()">Cancel</button>
-		<button 
-			id="graduationMonth-save" 
-			type="submit" 
-			class="btn btn-primary" 
-			ng-disabled="forms.update.$invalid">Update</button>
-	</div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      ng-click="resetAttachmentTypes()">Cancel</button>
+    <button
+      id="graduationMonth-save"
+      type="submit"
+      class="btn btn-primary"
+      ng-disabled="forms.update.$invalid">Update</button>
+  </div>
 </form>

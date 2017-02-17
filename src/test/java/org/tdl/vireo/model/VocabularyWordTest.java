@@ -20,17 +20,17 @@ public class VocabularyWordTest extends AbstractEntityTest {
         assertEquals("VocabularyWord Repo did not save the correct vocab definition!", TEST_CONTROLLED_VOCABULARY_DEFINITION, testVocabularyWord.getDefinition());
         assertEquals("VocabularyWord Repo did not save the correct vocab identifier!", TEST_CONTROLLED_VOCABULARY_IDENTIFIER, testVocabularyWord.getIdentifier());
     }
-    
+
     @Override
     public void testDuplication() {
         vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER); 
-        assertEquals("The repository did persist duplicate vocabulary words!", 2, vocabularyWordRepo.count());         
+        vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
+        assertEquals("The repository did persist duplicate vocabulary words!", 2, vocabularyWordRepo.count());
     }
 
     @Override
     public void testDelete() {
-        VocabularyWord testVocabularyWord = vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER); 
+        VocabularyWord testVocabularyWord = vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         vocabularyWordRepo.delete(testVocabularyWord);
         assertEquals("VocabularyWord did not delete!", 0, vocabularyWordRepo.count());
     }
@@ -39,13 +39,13 @@ public class VocabularyWordTest extends AbstractEntityTest {
     public void testCascade() {
         language = languageRepo.create(TEST_LANGUAGE);
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
-        
+
         vocabularyWord = vocabularyWordRepo.create(TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        
+
         controlledVocabulary.addValue(vocabularyWord);
-        
+
         vocabularyWordRepo.delete(vocabularyWord);
-        
+
         assertEquals("The controlled vocabulary was deleted!", 1, controlledVocabularyRepo.count());
         assertEquals("The language was deleted!", 1, languageRepo.count());
     }
@@ -56,5 +56,5 @@ public class VocabularyWordTest extends AbstractEntityTest {
         vocabularyWordRepo.deleteAll();
         languageRepo.deleteAll();
     }
-    
+
 }

@@ -1,10 +1,10 @@
 describe('controller: DepositLocationRepoController', function() {
-	
-	var controller, scope;
 
-	beforeEach(module('core'));
+  var controller, scope;
 
-	beforeEach(module('vireo'));
-	
+  beforeEach(module('core'));
+
+  beforeEach(module('vireo'));
+
 
 });

@@ -1,18 +1,18 @@
 <div class="input-group" uib-dropdown>
-	<span class="input-group-addon select-toggle" uib-dropdown-toggle>
-		<span ng-if="!fieldValue.updating" class="caret"></span>
-		<span ng-if="fieldValue.updating" class="glyphicon glyphicon-remove-circle"> </span>
-	</span>
-	 <ul class="dropdown-menu" uib-dropdown-menu>
-		<li class="select-option"
-			ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; save(fieldValue);" 
-			ng-repeat="word in profile.controlledVocabularies[0].dictionary">
-			{{word.name}}
-		</li>
-	</ul>
-	<span class="form-control select-value" ng-bind="fieldValue.value || 'Choose {{profile.fieldGlosses[0].value}}'">			
-	</span>
-	<span class="input-group-addon">
+  <span class="input-group-addon select-toggle" uib-dropdown-toggle>
+    <span ng-if="!fieldValue.updating" class="caret"></span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-remove-circle"> </span>
+  </span>
+   <ul class="dropdown-menu" uib-dropdown-menu>
+    <li class="select-option"
+      ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; save(fieldValue);"
+      ng-repeat="word in profile.controlledVocabularies[0].dictionary">
+      {{word.name}}
+    </li>
+  </ul>
+  <span class="form-control select-value" ng-bind="fieldValue.value || 'Choose {{profile.fieldGlosses[0].value}}'">
+  </span>
+  <span class="input-group-addon">
         <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
         <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>

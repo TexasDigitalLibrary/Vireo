@@ -124,7 +124,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param email
      * @param firstName
      * @param lastName
@@ -139,7 +139,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param email
      * @param firstName
      * @param lastName
@@ -190,7 +190,7 @@ public class User extends BaseEntity implements CoreUser {
 
     /**
      * Stores an encoded password
-     * 
+     *
      * @param password
      *            the password to set
      */
@@ -319,7 +319,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param shibbolethAffiliation
      */
     public void addShibbolethAffiliation(String shibbolethAffiliation) {
@@ -327,7 +327,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param shibbolethAffiliation
      */
     public void removeShibbolethAffiliation(String shibbolethAffiliation) {
@@ -380,7 +380,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param organization
      */
     public void addOrganization(Organization organization) {
@@ -388,7 +388,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param organization
      */
     public void removeOrganization(Organization organization) {
@@ -411,7 +411,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void setUin(Long uin) {
@@ -419,7 +419,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public Long getUin() {

@@ -1,59 +1,59 @@
 vireo.controller("AttachmentTypesController", function ($controller, $scope, AttachmentTypeRepo, DragAndDropListenerFactory) {
-	
+
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
     $scope.attachmentTypeRepo = AttachmentTypeRepo;
 
-	$scope.attachmentTypes = AttachmentTypeRepo.getAll();
-	
-	AttachmentTypeRepo.listen(function(data) {
+  $scope.attachmentTypes = AttachmentTypeRepo.getAll();
+
+  AttachmentTypeRepo.listen(function(data) {
         $scope.resetAttachmentTypes();
-	});
-	
-	$scope.ready = AttachmentTypeRepo.ready();
+  });
 
-	$scope.dragging = false;
-	
-	$scope.trashCanId = 'attachment-types-trash';
-	
-	$scope.sortAction = "confirm";
+  $scope.ready = AttachmentTypeRepo.ready();
 
-    $scope.degreeLevels = { 
-		'UNDERGRADUATE': 'Undergraduate',
+  $scope.dragging = false;
+
+  $scope.trashCanId = 'attachment-types-trash';
+
+  $scope.sortAction = "confirm";
+
+    $scope.degreeLevels = {
+    'UNDERGRADUATE': 'Undergraduate',
         'MASTERS': 'Masters',
-    	'DOCTORAL': 'Doctoral'
+      'DOCTORAL': 'Doctoral'
     };
-    
+
     $scope.forms = {};
-    
+
     $scope.ready.then(function() {
 
-    	$scope.resetAttachmentTypes = function() {
+      $scope.resetAttachmentTypes = function() {
             $scope.attachmentTypeRepo.clearValidationResults();
-    		for(var key in $scope.forms) {
-    			if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-    				$scope.forms[key].$setPristine();
-    			}
-    		}
-    		if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
-    			$scope.modalData.refresh();
-    		}
+        for(var key in $scope.forms) {
+          if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+            $scope.forms[key].$setPristine();
+          }
+        }
+        if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+          $scope.modalData.refresh();
+        }
             $scope.modalData = {
                 degreeLevel: 'UNDERGRADUATE'
-            };            
+            };
             $scope.closeModal();
         };
 
         $scope.resetAttachmentTypes();
-        
+
         $scope.createNewAttachmentType = function() {
             AttachmentTypeRepo.create($scope.modalData);
-	    };	
+      };
 
         $scope.launchEditModal = function(index) {
             $scope.modalData = $scope.attachmentTypes[index -1];
             $scope.openModal('#attachmentTypesEditModal');
-	    };	
+      };
 
         $scope.updateAttachmentType = function() {
             $scope.modalData.save();

@@ -1,39 +1,39 @@
 vireo.model("FieldValue", function FieldValue(WsApi) {
 
-	return function FieldValue() {
-		
-		// additional model methods and variables
-		var fieldValue = this;
-		var isValid = true;
-		var validationMessages = [];
+  return function FieldValue() {
 
-		fieldValue.setIsValid = function(valid) {
-			isValid = valid;
-		};
+    // additional model methods and variables
+    var fieldValue = this;
+    var isValid = true;
+    var validationMessages = [];
 
-		fieldValue.isValid = function() {
-			return isValid;
-		};
+    fieldValue.setIsValid = function(valid) {
+      isValid = valid;
+    };
 
-		fieldValue.setValidationMessages = function(messages) {
-			validationMessages.length = 0;
-			angular.extend(validationMessages, messages);
-		};
+    fieldValue.isValid = function() {
+      return isValid;
+    };
 
-		fieldValue.addValidationMessage = function(message) {
-			validationMessages.push(message);
-		};
+    fieldValue.setValidationMessages = function(messages) {
+      validationMessages.length = 0;
+      angular.extend(validationMessages, messages);
+    };
 
-		fieldValue.getValidationMessages = function() {
-			return validationMessages;
-		};
+    fieldValue.addValidationMessage = function(message) {
+      validationMessages.push(message);
+    };
 
-		fieldValue.save = function(submissionId) {
-			var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
-			return $scope.submission.saveFieldValue(fieldValue, fieldProfile);;
-		};
+    fieldValue.getValidationMessages = function() {
+      return validationMessages;
+    };
 
-		return fieldValue;
-	}
+    fieldValue.save = function(submissionId) {
+      var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
+      return $scope.submission.saveFieldValue(fieldValue, fieldProfile);;
+    };
+
+    return fieldValue;
+  }
 
 });

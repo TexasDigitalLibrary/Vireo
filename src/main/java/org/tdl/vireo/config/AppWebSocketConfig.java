@@ -11,16 +11,16 @@ import edu.tamu.framework.config.CoreWebSocketConfig;
 @Configuration
 @EnableWebSocketMessageBroker
 public class AppWebSocketConfig extends CoreWebSocketConfig {
-    
+
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.setInterceptors(appStompInterceptor());
     }
-    
+
     @Bean
     public AppStompInterceptor appStompInterceptor() {
         return new AppStompInterceptor();
     }
-    
+
 }
 

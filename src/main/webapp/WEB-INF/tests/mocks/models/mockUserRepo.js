@@ -64,9 +64,9 @@ var mockUserRepo3 = [
 
 angular.module('mock.userRepo', []).
     service('UserRepo', function($q) {
-        
+
         var self;
-        
-        
+
+
         return UserRepo;
 });

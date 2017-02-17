@@ -27,7 +27,7 @@ public class FieldGlossTest extends AbstractEntityTest {
         fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE, language);
         try {
             fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE, language);
-        } 
+        }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldGlossRepo.count());
     }

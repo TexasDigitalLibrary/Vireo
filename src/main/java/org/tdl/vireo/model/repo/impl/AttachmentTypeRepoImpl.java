@@ -13,23 +13,23 @@ public class AttachmentTypeRepoImpl implements AttachmentTypeRepoCustom {
 
     @Autowired
     private OrderedEntityService orderedEntityService;
-    
+
     @Autowired
     private AttachmentTypeRepo attachmentTypeRepo;
-    
+
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-    
+
     @Override
     public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(AttachmentType.class, src, dest);
     }
-    
+
     @Override
     public void sort(String column) {
         orderedEntityService.sort(AttachmentType.class, column);
     }
-    
+
     @Override
     public void remove(AttachmentType attachmentType) {
         orderedEntityService.remove(attachmentTypeRepo, AttachmentType.class, attachmentType.getPosition());
@@ -39,12 +39,12 @@ public class AttachmentTypeRepoImpl implements AttachmentTypeRepoCustom {
     public AttachmentType create(String name) {
         return create(name, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), new Boolean(true))));
     }
-    
+
     @Override
     public AttachmentType create(String name, FieldPredicate fieldPredicate) {
         AttachmentType attachmentType = new AttachmentType(name, fieldPredicate);
         attachmentType.setPosition(attachmentTypeRepo.count() + 1);
         return attachmentTypeRepo.save(attachmentType);
     }
-    
+
 }

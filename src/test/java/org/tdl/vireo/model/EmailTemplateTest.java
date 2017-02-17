@@ -28,7 +28,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
         assertEquals("The repository didn't persist emailTemplate!", 1, emailTemplateRepo.count());
         try {
             emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
-        } 
+        }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The repository did persist 2 emailTemplate!", 1, emailTemplateRepo.count());
     }

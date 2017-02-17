@@ -1,30 +1,30 @@
 vireo.repo("SubmissionStateRepo", function SubmissionStateRepo() {
 
-	var submissionStateRepo = this;
+  var submissionStateRepo = this;
 
-	// additional repo methods and variables
-	
-	submissionStateRepo.findById = function(id) {
+  // additional repo methods and variables
 
-		var foundState = null;
+  submissionStateRepo.findById = function(id) {
 
-		angular.forEach(submissionStateRepo.getAll(), function(state) {
-			if(state.id === id) foundState = state;
-		});
+    var foundState = null;
 
-		return foundState;
-	};
+    angular.forEach(submissionStateRepo.getAll(), function(state) {
+      if(state.id === id) foundState = state;
+    });
 
-	submissionStateRepo.findByName = function(name) {
+    return foundState;
+  };
 
-		var foundState = null;
+  submissionStateRepo.findByName = function(name) {
 
-		angular.forEach(submissionStateRepo.getAll(), function(state) {
-			if(state.name == name) foundState = state;
-		});
-		return foundState;
-	};
+    var foundState = null;
 
-	return submissionStateRepo;
+    angular.forEach(submissionStateRepo.getAll(), function(state) {
+      if(state.name == name) foundState = state;
+    });
+    return foundState;
+  };
+
+  return submissionStateRepo;
 
 });

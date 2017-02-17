@@ -40,8 +40,8 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-    	CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
-    	CustomActionValue cav2 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        CustomActionValue cav2 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals("The action log entry was not duplicated", 2, customActionValueRepo.count());
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav1));
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav2));
@@ -65,7 +65,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-    	submissionRepo.deleteAll();
+        submissionRepo.deleteAll();
         customActionValueRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();

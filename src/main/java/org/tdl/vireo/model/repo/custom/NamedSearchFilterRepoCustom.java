@@ -4,7 +4,7 @@ import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 public interface NamedSearchFilterRepoCustom {
-	public NamedSearchFilter create(SubmissionListColumn submissionListColumn);
-	
-	public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter namedSearchFilter);
+    public NamedSearchFilter create(SubmissionListColumn submissionListColumn);
+
+    public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter namedSearchFilter);
 }

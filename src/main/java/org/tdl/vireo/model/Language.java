@@ -16,31 +16,31 @@ public class Language extends BaseOrderedEntity {
     public Language() {
         setModelValidator(new LanguageValidator());
     }
-    
+
     /**
-     * 
+     *
      * @param name
      */
     public Language(String name) {
         this.name = name;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public String getName() {
         return name;
     }
-    
-    
+
+
 
     /**
-     * 
+     *
      * @param name
      */
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

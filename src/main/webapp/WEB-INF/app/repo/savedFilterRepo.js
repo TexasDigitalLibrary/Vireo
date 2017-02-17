@@ -1,7 +1,7 @@
 vireo.repo("SavedFilterRepo", function SavedFilterRepo() {
 
-	var SavedFilterRepo = this;
+  var SavedFilterRepo = this;
 
-	return SavedFilterRepo;
+  return SavedFilterRepo;
 
 });

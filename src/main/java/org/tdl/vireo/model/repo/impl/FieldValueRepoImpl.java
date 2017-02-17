@@ -12,7 +12,7 @@ public class FieldValueRepoImpl implements FieldValueRepoCustom {
     private FieldValueRepo fieldValueRepo;
 
     @Override
-    public FieldValue create(FieldPredicate fieldPredicate) {    	
+    public FieldValue create(FieldPredicate fieldPredicate) {
         return fieldValueRepo.save(new FieldValue(fieldPredicate));
     }
 

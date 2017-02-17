@@ -1,206 +1,206 @@
 vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi) {
 
-	var organizationRepo = this;
+  var organizationRepo = this;
 
-	var selectedOrganization = new Organization({});
+  var selectedOrganization = new Organization({});
 
-	var selectiveListenCallbacks = [];
+  var selectiveListenCallbacks = [];
 
-	// additional repo methods and variables
+  // additional repo methods and variables
 
-	this.newOrganization = {};
+  this.newOrganization = {};
 
-	var extendWithOverwrite = function(targetObj, srcObj) {
-		var srcKeys = Object.keys(srcObj);
-		angular.forEach(srcKeys, function(key){
-			targetObj[key] = srcObj[key];
-		});
-		
-		var targetKeys = Object.keys(targetObj);
-		angular.forEach(targetKeys, function(key){
-			if(typeof srcObj[key] === undefined) {
-				delete targetObj[key];
-			}
-		});
-	};
+  var extendWithOverwrite = function(targetObj, srcObj) {
+    var srcKeys = Object.keys(srcObj);
+    angular.forEach(srcKeys, function(key){
+      targetObj[key] = srcObj[key];
+    });
 
-	this.create = function(organization, parentOrganization) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.create, {
-			'method': 'create/' + parentOrganization.id,
-			'data': organization
-		});
-		var promise = WsApi.fetch(this.mapping.create);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;
-	};
+    var targetKeys = Object.keys(targetObj);
+    angular.forEach(targetKeys, function(key){
+      if(typeof srcObj[key] === undefined) {
+        delete targetObj[key];
+      }
+    });
+  };
 
-	this.selectiveListen = function() {		
-		WsApi.listen(this.mapping.selectiveListen).then(null, null, function(rawApiResponse){
-			var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
+  this.create = function(organization, parentOrganization) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.create, {
+      'method': 'create/' + parentOrganization.id,
+      'data': organization
+    });
+    var promise = WsApi.fetch(this.mapping.create);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
 
-			if (broadcastedOrg.id == selectedOrganization.id) {
-				
-				
-				organizationRepo.lazyFetch(broadcastedOrg.id).then(function(fullBroadcastedOrg) {
-					organizationRepo.setSelectedOrganization(fullBroadcastedOrg);
-				})
+  this.selectiveListen = function() {
+    WsApi.listen(this.mapping.selectiveListen).then(null, null, function(rawApiResponse){
+      var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
 
-				angular.forEach(selectiveListenCallbacks, function(cb) {
-					cb(broadcastedOrg);
-				});
-			}
-		});
-	};
+      if (broadcastedOrg.id == selectedOrganization.id) {
 
-	this.selectiveListen();
 
-	this.listenSelectively = function(cb) {
-		selectiveListenCallbacks.push(cb);
-	};
+        organizationRepo.lazyFetch(broadcastedOrg.id).then(function(fullBroadcastedOrg) {
+          organizationRepo.setSelectedOrganization(fullBroadcastedOrg);
+        })
 
-	this.resetNewOrganization = function() {
-		for(var key in this.newOrganization) {
-			if(key != 'category' && key != 'parent') {
-				delete this.newOrganization[key];
-			}
-		}
-		return this.newOrganization;
-	};
+        angular.forEach(selectiveListenCallbacks, function(cb) {
+          cb(broadcastedOrg);
+        });
+      }
+    });
+  };
 
-	this.getNewOrganization = function() {
-		return this.newOrganization;
-	};
+  this.selectiveListen();
 
-	this.getSelectedOrganization = function() {
-		return selectedOrganization;
-	};
+  this.listenSelectively = function(cb) {
+    selectiveListenCallbacks.push(cb);
+  };
 
-	this.setSelectedOrganization = function(organization) {
-		this.lazyFetch(organization.id).then(function(fetchedOrg) {
-			extendWithOverwrite(selectedOrganization, fetchedOrg);
-		});
-		return selectedOrganization;
-	};
+  this.resetNewOrganization = function() {
+    for(var key in this.newOrganization) {
+      if(key != 'category' && key != 'parent') {
+        delete this.newOrganization[key];
+      }
+    }
+    return this.newOrganization;
+  };
 
-	this.lazyFetch = function(orgId) {
+  this.getNewOrganization = function() {
+    return this.newOrganization;
+  };
 
-		var fetchedOrgDefer = new $q.defer();
+  this.getSelectedOrganization = function() {
+    return selectedOrganization;
+  };
 
-		angular.extend(this.mapping.get, {
-			'method': 'get/' + orgId
-		});
+  this.setSelectedOrganization = function(organization) {
+    this.lazyFetch(organization.id).then(function(fetchedOrg) {
+      extendWithOverwrite(selectedOrganization, fetchedOrg);
+    });
+    return selectedOrganization;
+  };
 
-		var getOrgPromise = WsApi.fetch(this.mapping.get);
+  this.lazyFetch = function(orgId) {
 
-		getOrgPromise.then(function(rawApiResponse) {
-			
-			var fetchedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
+    var fetchedOrgDefer = new $q.defer();
 
-			angular.extend(organizationRepo.mapping.workflow, {
-				'method': fetchedOrg.id + '/workflow'
-			});
+    angular.extend(this.mapping.get, {
+      'method': 'get/' + orgId
+    });
 
-			var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
+    var getOrgPromise = WsApi.fetch(this.mapping.get);
 
-			workflowStepsPromise.then(function(data) {
-				var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
-				
-				if(aggregateWorkflowSteps !== undefined) {
-					fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
-				}
+    getOrgPromise.then(function(rawApiResponse) {
 
-				fetchedOrgDefer.resolve(fetchedOrg);
-			});
+      var fetchedOrg = JSON.parse(rawApiResponse.body).payload.Organization;
 
-		});
+      angular.extend(organizationRepo.mapping.workflow, {
+        'method': fetchedOrg.id + '/workflow'
+      });
 
-		return fetchedOrgDefer.promise;
-	};
+      var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
 
-	this.getChildren = function(id) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.children, {
-			'method': 'get-children/' + id
-		});
-		var promise = WsApi.fetch(this.mapping.children);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;	
-	};
+      workflowStepsPromise.then(function(data) {
+        var aggregateWorkflowSteps = JSON.parse(data.body).payload.PersistentList;
 
-	this.addWorkflowStep = function(workflowStep) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.addWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/create-workflow-step',
-			'data': workflowStep
-		});
-		var promise = WsApi.fetch(this.mapping.addWorkflowStep);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;
-	};
+        if(aggregateWorkflowSteps !== undefined) {
+          fetchedOrg.aggregateWorkflowSteps = aggregateWorkflowSteps;
+        }
 
-	this.updateWorkflowStep = function(workflowStep) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.updateWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/update-workflow-step',
-			'data': workflowStep
-		});
-		var promise = WsApi.fetch(this.mapping.updateWorkflowStep);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;
-	};
+        fetchedOrgDefer.resolve(fetchedOrg);
+      });
 
-	this.deleteWorkflowStep = function(workflowStep) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.deleteWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/delete-workflow-step',
-			'data': workflowStep
-		});
-		var promise = WsApi.fetch(this.mapping.deleteWorkflowStep);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;
-	};
+    });
 
-	this.reorderWorkflowStep = function(upOrDown, workflowStepID) {
-		organizationRepo.clearValidationResults();
-		angular.extend(this.mapping.reorderWorkflowStep, {
-			'method': this.getSelectedOrganization().id + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID
-		});
-		var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
-		promise.then(function(res) {
-			if(angular.fromJson(res.body).meta.type == "INVALID") {
-				angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-				console.log(organizationRepo);
-			}
-		});
-		return promise;
-	};
+    return fetchedOrgDefer.promise;
+  };
 
-	return this;
+  this.getChildren = function(id) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.children, {
+      'method': 'get-children/' + id
+    });
+    var promise = WsApi.fetch(this.mapping.children);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
+
+  this.addWorkflowStep = function(workflowStep) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.addWorkflowStep, {
+      'method': this.getSelectedOrganization().id + '/create-workflow-step',
+      'data': workflowStep
+    });
+    var promise = WsApi.fetch(this.mapping.addWorkflowStep);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
+
+  this.updateWorkflowStep = function(workflowStep) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.updateWorkflowStep, {
+      'method': this.getSelectedOrganization().id + '/update-workflow-step',
+      'data': workflowStep
+    });
+    var promise = WsApi.fetch(this.mapping.updateWorkflowStep);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
+
+  this.deleteWorkflowStep = function(workflowStep) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.deleteWorkflowStep, {
+      'method': this.getSelectedOrganization().id + '/delete-workflow-step',
+      'data': workflowStep
+    });
+    var promise = WsApi.fetch(this.mapping.deleteWorkflowStep);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
+
+  this.reorderWorkflowStep = function(upOrDown, workflowStepID) {
+    organizationRepo.clearValidationResults();
+    angular.extend(this.mapping.reorderWorkflowStep, {
+      'method': this.getSelectedOrganization().id + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID
+    });
+    var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
+    promise.then(function(res) {
+      if(angular.fromJson(res.body).meta.type == "INVALID") {
+        angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+        console.log(organizationRepo);
+      }
+    });
+    return promise;
+  };
+
+  return this;
 
 });

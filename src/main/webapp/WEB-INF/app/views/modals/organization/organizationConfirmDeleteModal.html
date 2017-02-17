@@ -7,14 +7,14 @@
 
 <form ng-submit="deleteOrganization(getSelectedOrganization())" novalidate>
 
-	<validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+  <validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
 
-	<div class="modal-body">
-		<h4>Really delete organization "{{ getSelectedOrganization().name }}"?</h4>
-	</div>
+  <div class="modal-body">
+    <h4>Really delete organization "{{ getSelectedOrganization().name }}"?</h4>
+  </div>
 
-	<div class="modal-footer">
-		<button type="button" class="btn btn-warning" ng-click="cancelDeleteOrganization()">Cancel</button>
-		<button id="organization-confirm" type="submit" class="btn btn-primary">Confirm</button>
-	</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-warning" ng-click="cancelDeleteOrganization()">Cancel</button>
+    <button id="organization-confirm" type="submit" class="btn btn-primary">Confirm</button>
+  </div>
 </form>

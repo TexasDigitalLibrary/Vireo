@@ -10,63 +10,63 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
 public class DepositLocation extends BaseOrderedEntity {
-    
+
     @Transient
     public static final Integer DEFAULT_TIMEOUT = 60;
 
-	@Column(nullable = false, unique = true)
-	private String name;
-	
-	// TODO: this is really a URL
-	@Column(nullable = false)
-	private String repository;
-	
-	@Column(nullable = false)
-	private String collection;
-	
-	@Column(nullable = false)
-	private String username;
-	
-	// TODO: encrypt!!!
-	@Column(nullable = false)
-	private String password;
-	
-	@Column(nullable = true)
-	private String onBehalfOf;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-	// TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
-	@Column(nullable = false)
-	private String packager;
-	
-	// TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
-	@Column(nullable = false)
-	private String depositor;
-	
-	@Column(nullable = false)
-	private Integer timeout;
-	
-	public DepositLocation() {
-	    setModelValidator(new DepositLocationValidator());
-	    setTimeout(DEFAULT_TIMEOUT);
+    // TODO: this is really a URL
+    @Column(nullable = false)
+    private String repository;
+
+    @Column(nullable = false)
+    private String collection;
+
+    @Column(nullable = false)
+    private String username;
+
+    // TODO: encrypt!!!
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = true)
+    private String onBehalfOf;
+
+    // TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
+    @Column(nullable = false)
+    private String packager;
+
+    // TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
+    @Column(nullable = false)
+    private String depositor;
+
+    @Column(nullable = false)
+    private Integer timeout;
+
+    public DepositLocation() {
+        setModelValidator(new DepositLocationValidator());
+        setTimeout(DEFAULT_TIMEOUT);
     }
-	
-	/**
-	 * Construct a new DepositLocation
-	 * 
-	 * @param name
-	 *            The name of the new deposit location.
-	 */
-	public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
-	    this();
-		setName(name);
-		setRepository(repository);
-		setCollection(collection);
-		setUsername(username);
-		setPassword(password);
-		setOnBehalfOf(onBehalfOf);
-		setPackager(packager);
-		setDepositor(depositor);
-	}
+
+    /**
+     * Construct a new DepositLocation
+     *
+     * @param name
+     *            The name of the new deposit location.
+     */
+    public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, String packager, String depositor) {
+        this();
+        setName(name);
+        setRepository(repository);
+        setCollection(collection);
+        setUsername(username);
+        setPassword(password);
+        setOnBehalfOf(onBehalfOf);
+        setPackager(packager);
+        setDepositor(depositor);
+    }
 
     /**
      * @return the name
@@ -192,5 +192,5 @@ public class DepositLocation extends BaseOrderedEntity {
      */
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
-    }	
+    }
 }

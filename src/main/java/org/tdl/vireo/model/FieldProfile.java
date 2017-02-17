@@ -35,10 +35,10 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
 
     @Column(nullable = true)
     private Boolean overrideable;
-    
+
     @Column(nullable = true)
     private Boolean enabled;
-    
+
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
@@ -48,13 +48,13 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
-	public FieldProfile(WorkflowStep originatingWorkflowStep) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep) {
         this();
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param repeatable
@@ -72,7 +72,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -86,7 +86,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -154,7 +154,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
+
     /**
      * @return the enabled
      */

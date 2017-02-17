@@ -12,18 +12,18 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage controlled vocabulary.
- * 
+ *
  */
 @RestController
 @ApiMapping("/settings/input-types")
 public class InputTypeController {
-    
+
     @Autowired
     private InputTypeRepo inputTypeRepo;
 
-	/**
+    /**
      * Endpoint to request all input types.
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/all")

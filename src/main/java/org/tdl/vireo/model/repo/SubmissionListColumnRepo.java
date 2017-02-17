@@ -7,5 +7,5 @@ import org.tdl.vireo.model.repo.custom.SubmissionListColumnRepoCustom;
 public interface SubmissionListColumnRepo extends JpaRepository<SubmissionListColumn, Long>, SubmissionListColumnRepoCustom {
 
     public SubmissionListColumn findByTitle(String title);
-    
+
 }

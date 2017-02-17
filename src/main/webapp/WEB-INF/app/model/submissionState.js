@@ -1,10 +1,10 @@
 vireo.model("SubmissionState", function SubmissionState() {
 
-	return function SubmissionState() {
-		
-		// additional model methods and variables
+  return function SubmissionState() {
 
-		return this;
-	};
+    // additional model methods and variables
+
+    return this;
+  };
 
 });

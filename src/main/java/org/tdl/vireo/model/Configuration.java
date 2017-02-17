@@ -14,7 +14,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 /**
  * Jpa specific implementation of Vireo's Configuration interface
- * 
+ *
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
@@ -28,14 +28,14 @@ public class Configuration extends BaseEntity {
 
     @Column(nullable = false, length = 255)
     private String type;
-    
+
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
     private Boolean isSystemRequired;
 
     /**
      * Construct a new JpaConfigurationImpl
-     * 
+     *
      * By default new ones are not system required.
      */
     public Configuration() {
@@ -45,13 +45,13 @@ public class Configuration extends BaseEntity {
 
     /**
      * Construct a new JpaConfigurationImpl
-     * 
+     *
      * @param name
      *            The name of the configuration parameter.
      * @param value
      *            The value of the configuration parameter.
      * @param type
-     *            The type of the configuration parameter.            
+     *            The type of the configuration parameter.
      */
     public Configuration(String name, String value, String type) {
         this();
@@ -87,7 +87,7 @@ public class Configuration extends BaseEntity {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * @return the type
      */
