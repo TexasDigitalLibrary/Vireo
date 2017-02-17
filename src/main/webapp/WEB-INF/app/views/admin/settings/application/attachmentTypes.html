@@ -1,63 +1,63 @@
 <div id="attachment-types" class="row" ng-controller="AttachmentTypesController">
 
-	<validationmessage results="attachmentTypeRepo.getValidationResults()"></validationmessage>
-	
-	<div class="col-sm-6">
+  <validationmessage results="attachmentTypeRepo.getValidationResults()"></validationmessage>
 
-		<div class="col-md-10 col-md-offset-1">
+  <div class="col-sm-6">
 
-			<button class="btn btn-default modal-add-btn" ng-click="openModal('#attachmentTypesNewModal')">
-				Add Attachment Type
-			</button>
+    <div class="col-md-10 col-md-offset-1">
 
-			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new document type."></div>
+      <button class="btn btn-default modal-add-btn" ng-click="openModal('#attachmentTypesNewModal')">
+        Add Attachment Type
+      </button>
 
-			<p ng-if="graduationMonths.length == 0">Add new Attachment Type</p>
+      <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new document type."></div>
 
-			<draganddroplist dragging="dragging"
-							 scope-value="attachmentTypes"
-							 properties='["name"]'
-							 item-view='views/directives/dragAndDropAttachmentType.html'
-							 listeners='dragControlListeners'
-							 edit='launchEditModal(index)'
-							 sort-column='name',
-							 sort-action='sortAction'
-	                         sort-method='sortAttachmentTypes(column)'
-	                         sort-label='Attachment Types'>
-	        </draganddroplist>
-	    </div>
-	</div>
-	
-	<div class="col-sm-6">
-		<div class="col-md-10 col-md-offset-1">
-			<trashcan id="{{trashCanId}}"
-					  dragging="dragging"
-					  listeners='dragControlListeners'>
-			</trashcan>
-		<div>
-	</div>
+      <p ng-if="graduationMonths.length == 0">Add new Attachment Type</p>
 
-	<modal modal-id="attachmentTypesNewModal" 
-		   modal-view="views/modals/settings/attachmentTypesNewModal.html" 
-		   modal-header-class="modal-header-primary"		   
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
+      <draganddroplist dragging="dragging"
+               scope-value="attachmentTypes"
+               properties='["name"]'
+               item-view='views/directives/dragAndDropAttachmentType.html'
+               listeners='dragControlListeners'
+               edit='launchEditModal(index)'
+               sort-column='name',
+               sort-action='sortAction'
+                           sort-method='sortAttachmentTypes(column)'
+                           sort-label='Attachment Types'>
+          </draganddroplist>
+      </div>
+  </div>
 
-	<modal modal-id="attachmentTypesEditModal" 
-		   modal-view="views/modals/settings/attachmentTypesEditModal.html" 
-		   modal-header-class="modal-header-primary"		   
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
+  <div class="col-sm-6">
+    <div class="col-md-10 col-md-offset-1">
+      <trashcan id="{{trashCanId}}"
+            dragging="dragging"
+            listeners='dragControlListeners'>
+      </trashcan>
+    <div>
+  </div>
 
-	<modal modal-id="attachmentTypesConfirmRemoveModal" 
-		   modal-view="views/modals/settings/attachmentTypesConfirmRemoveModal.html" 
-		   modal-header-class="modal-header-primary"		   
-		   modal-keyboard="false"
-		   modal-backdrop="static">
-	</modal>
-	
+  <modal modal-id="attachmentTypesNewModal"
+       modal-view="views/modals/settings/attachmentTypesNewModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="attachmentTypesEditModal"
+       modal-view="views/modals/settings/attachmentTypesEditModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
+
+  <modal modal-id="attachmentTypesConfirmRemoveModal"
+       modal-view="views/modals/settings/attachmentTypesConfirmRemoveModal.html"
+       modal-header-class="modal-header-primary"
+       modal-keyboard="false"
+       modal-backdrop="static">
+  </modal>
+
 </div>
 
 

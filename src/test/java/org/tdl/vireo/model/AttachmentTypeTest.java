@@ -8,51 +8,51 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 public class AttachmentTypeTest extends AbstractEntityTest {
 
-	@Override
-	public void testCreate() {
-		AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+    @Override
+    public void testCreate() {
+        AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The document type name was wrong!", attachmentType.getName(), TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The associated field predicate was wrong!", attachmentType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
-	}
+    }
 
-	@Override
-	public void testDuplication() {
-		attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+    @Override
+    public void testDuplication() {
+        attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         try {
-			attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-        } 
+            attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+        }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The document type was duplicated!", 1, attachmentTypeRepo.count());
-	}
+    }
 
-	@Override
-	public void testDelete() {
-		AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+    @Override
+    public void testDelete() {
+        AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         attachmentTypeRepo.delete(attachmentType);
         assertEquals("The document type was not deleted!", 0, attachmentTypeRepo.count());
-	}
+    }
 
-	@Override
-	public void testCascade() {
-		AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+    @Override
+    public void testCascade() {
+        AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         assertEquals("The document type was not created!", 1, attachmentTypeRepo.count());
         assertEquals("The field predicate was not created!", 1, fieldPredicateRepo.count());
         attachmentTypeRepo.delete(attachmentType);
         assertEquals("The document type was not deleted!", 0, attachmentTypeRepo.count());
         assertEquals("The field predicate was duplicated!", 0, fieldPredicateRepo.count());
-		
-	}
-	
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testFieldPredicateDeleteFailure() {
-		AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-		fieldPredicateRepo.delete(attachmentType.getFieldPredicate());
-	}
-	
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() {
-	    
-	    parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
+
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testFieldPredicateDeleteFailure() {
+        AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
+        fieldPredicateRepo.delete(attachmentType.getFieldPredicate());
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() {
+
+        parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
@@ -64,42 +64,42 @@ public class AttachmentTypeTest extends AbstractEntityTest {
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
-        
+
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_FILE_NAME);
-        
+
         // Create a attachment type with implicitly created field predicate.
         AttachmentType attachmentType = attachmentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-        
+
         fieldPredicate = fieldPredicateRepo.findByValue("_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
-        
+
         fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
         assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
-        
-		// Create a submitter.
-		submitter = userRepo.create(
-				TEST_SUBMISSION_SUBMITTER_EMAIL, 
-				TEST_SUBMISSION_SUBMITTER_FIRSTNAME, 
-				TEST_SUBMISSION_SUBMITTER_LASTNAME, 
-				TEST_SUBMISSION_SUBMITTER_ROLE);
-		
-		// Create a submission state
-		submissionState = submissionStateRepo.create(
-				TEST_SUBMISSION_STATE_NAME, 
-				TEST_SUBMISSION_STATE_ARCHIVED, 
-				TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE, 
-				TEST_SUBMISSION_STATE_DELETABLE, 
-				TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, 
-				TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, 
-				TEST_SUBMISSION_STATE_ACTIVE);
-		
+
+        // Create a submitter.
+        submitter = userRepo.create(
+                TEST_SUBMISSION_SUBMITTER_EMAIL,
+                TEST_SUBMISSION_SUBMITTER_FIRSTNAME,
+                TEST_SUBMISSION_SUBMITTER_LASTNAME,
+                TEST_SUBMISSION_SUBMITTER_ROLE);
+
+        // Create a submission state
+        submissionState = submissionStateRepo.create(
+                TEST_SUBMISSION_STATE_NAME,
+                TEST_SUBMISSION_STATE_ARCHIVED,
+                TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE,
+                TEST_SUBMISSION_STATE_DELETABLE,
+                TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER,
+                TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT,
+                TEST_SUBMISSION_STATE_ACTIVE);
+
         assertEquals("The user does not exist!", 1, userRepo.count());
 
         //Create a Submission
         submissionRepo.create(submitter, organization, submissionState, getCredentials());
-		
-		attachmentTypeRepo.delete(attachmentType);
-	}
-	
+
+        attachmentTypeRepo.delete(attachmentType);
+    }
+
     @After
     public void cleanUp() {
         submissionRepo.deleteAll();
@@ -111,7 +111,7 @@ public class AttachmentTypeTest extends AbstractEntityTest {
         });
         submissionWorkflowStepRepo.deleteAll();
         actionLogRepo.deleteAll();
-        fieldValueRepo.deleteAll();        
+        fieldValueRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });

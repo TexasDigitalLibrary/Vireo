@@ -17,68 +17,68 @@ import org.tdl.vireo.runner.OrderedRunner;
 @ActiveProfiles({"test"})
 public class EntityCVServiceTest {
 
-	@Before
-	public void setup() {
+    @Before
+    public void setup() {
 
-	}
-	
+    }
+
     @Test
     @Order(value = 1)
     public void testAddEntityToWhitelist() {
-        
+
     }
-    
+
     @Test
     @Order(value = 2)
     public void testRemoveEntityFromWhitelist() {
-        
+
     }
-    
+
     @Test
     @Order(value = 3)
     public void testAddEntityPropertyToWhitelist() {
-        
+
     }
-    
+
     @Test
     @Order(value = 4)
     public void testRemoveEntityPropertyFromWhitelist() {
-        
+
     }
-    
+
     @Test
     @Order(value = 5)
     public void testGetControlledVocabulary() {
-        
+
     }
-    
+
     @Test
     @Order(value = 6)
     public void testGetEntityNames() {
-        
+
     }
-    
+
     @Test
     @Order(value = 7)
     public void testGetAllEntityPropertyNames() {
-        
+
     }
-    
+
     @Test
     @Order(value = 8)
     public void testGetPropertyNames() {
-        
+
     }
-    
+
     @Test
     @Order(value = 9)
     public void testGetWhitelist() {
-        
-    }
-    
-    @After
-	public void cleanup() {
 
-	}
-    
+    }
+
+    @After
+    public void cleanup() {
+
+    }
+
 }

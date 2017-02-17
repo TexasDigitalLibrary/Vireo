@@ -30,8 +30,8 @@ var mockUser3 = {
 
 angular.module('mock.user', []).
     service('User', function($q) {
-    	
-    	var self;
-    	        
+
+      var self;
+
         return User;
 });

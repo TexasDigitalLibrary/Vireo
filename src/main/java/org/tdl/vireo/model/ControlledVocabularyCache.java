@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControlledVocabularyCache {
-    
+
     private Long timestamp;
-    
+
     private String controlledVocabularyName;
-    
+
     private List<VocabularyWord> newVocabularyWords;
-    
+
     private List<VocabularyWord[]> updatingVocabularyWords;
-    
+
     private List<VocabularyWord> duplicateVocabularyWords;
 
     public ControlledVocabularyCache() {
@@ -20,13 +20,13 @@ public class ControlledVocabularyCache {
         setUpdatingVocabularyWords(new ArrayList<VocabularyWord[]>());
         setDuplicateVocabularyWords(new ArrayList<VocabularyWord>());
     }
-    
+
     public ControlledVocabularyCache(Long timestamp, String controlledVocabularyName) {
         this();
         setTimestamp(timestamp);
         setControlledVocabularyName(controlledVocabularyName);
     }
-    
+
     /**
      * @return the timestamp
      */
@@ -96,5 +96,5 @@ public class ControlledVocabularyCache {
     public void setDuplicateVocabularyWords(List<VocabularyWord> duplicateVocabularyWords) {
         this.duplicateVocabularyWords = duplicateVocabularyWords;
     }
-    
+
 }

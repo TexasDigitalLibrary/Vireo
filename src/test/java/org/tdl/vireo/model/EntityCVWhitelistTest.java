@@ -21,7 +21,7 @@ public class EntityCVWhitelistTest extends AbstractEntityTest {
         assertEquals("EntityCVWhitelist Repo did not save the entity cv whitelist!", 1, entityCVWhitelistRepo.count());
         assertEquals("EntityCVWhitelist Repo did not save the correct entity cv whitelist entity name!", TEST_CONTROLLED_VOCABULARY_EMBARGO, entityCVWhitelist.getEntityName());
      }
-    
+
     @Override
     public void testDuplication() {
         entityCVWhitelistRepo.create(TEST_CONTROLLED_VOCABULARY_EMBARGO);
@@ -49,5 +49,5 @@ public class EntityCVWhitelistTest extends AbstractEntityTest {
     public void cleanUp() {
         entityCVWhitelistRepo.deleteAll();
     }
-    
+
 }

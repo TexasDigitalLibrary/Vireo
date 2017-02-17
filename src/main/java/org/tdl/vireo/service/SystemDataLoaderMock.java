@@ -14,13 +14,13 @@ public class SystemDataLoaderMock implements SystemDataLoader {
     @Override
     public void loadSystemOrganization() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void loadSystemSubmissionStates() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -34,17 +34,17 @@ public class SystemDataLoaderMock implements SystemDataLoader {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     @Override
     public void loadSystemInputTypes() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void generateAllSystemEmailTemplates() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -56,25 +56,25 @@ public class SystemDataLoaderMock implements SystemDataLoader {
     @Override
     public void generateAllSystemEmbargos() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void generateSystemDefaults() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void generateAllOrganizationCategories() {
         // TODO Auto-generated method stub
-        
+
     }
 
-	@Override
-	public void loadDefaultControlledVocabularies() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void loadDefaultControlledVocabularies() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

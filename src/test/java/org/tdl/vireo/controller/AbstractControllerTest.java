@@ -32,47 +32,47 @@ import edu.tamu.framework.util.MockEmailUtility;
 @SpringApplicationConfiguration(classes = { Application.class })
 @ActiveProfiles({"test"})
 public abstract class AbstractControllerTest extends MockData {
-	
-	protected static final String SECRET_PROPERTY_NAME = "secret";
-	protected static final String SECRET_VALUE = "verysecretsecret";
-	
-	protected static final String JWT_SECRET_KEY_PROPERTY_NAME = "secret_key";
-	protected static final String JWT_SECRET_KEY_VALUE = "verysecretsecret";
-	
-	protected static final String JWT_EXPIRATION_PROPERTY_NAME = "expiration";
-	protected static final Long JWT_EXPIRATION_VALUE = 120000L;
-	
-	protected static final String SHIB_KEYS_PROPERTY_NAME = "shibKeys";
+
+    protected static final String SECRET_PROPERTY_NAME = "secret";
+    protected static final String SECRET_VALUE = "verysecretsecret";
+
+    protected static final String JWT_SECRET_KEY_PROPERTY_NAME = "secret_key";
+    protected static final String JWT_SECRET_KEY_VALUE = "verysecretsecret";
+
+    protected static final String JWT_EXPIRATION_PROPERTY_NAME = "expiration";
+    protected static final Long JWT_EXPIRATION_VALUE = 120000L;
+
+    protected static final String SHIB_KEYS_PROPERTY_NAME = "shibKeys";
     protected static final String[] SHIB_KEYS = new String[] { "netid", "uin", "lastName", "firstName", "email"};
-	
-	protected static final String EMAIL_HOST_PROPERTY_NAME = "host";
-	protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";
-	
-	@Spy
-	protected ObjectMapper objectMapper;
-	
-	@Spy
-	protected BCryptPasswordEncoder passwordEncoder;
-	
-	@Mock
+
+    protected static final String EMAIL_HOST_PROPERTY_NAME = "host";
+    protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";
+
+    @Spy
+    protected ObjectMapper objectMapper;
+
+    @Spy
+    protected BCryptPasswordEncoder passwordEncoder;
+
+    @Mock
     private SimpMessagingTemplate simpMessagingTemplate;
-	
-	@Mock
+
+    @Mock
     private Environment env;
-	
-	@Spy @InjectMocks
-	protected AuthUtility authUtility;
-	
-	@Spy @InjectMocks
-	protected JwtUtility jwtUtility;
-	
-	@Autowired @Spy
-	@Qualifier("mockEmailUtility")
+
+    @Spy @InjectMocks
+    protected AuthUtility authUtility;
+
+    @Spy @InjectMocks
+    protected JwtUtility jwtUtility;
+
+    @Autowired @Spy
+    @Qualifier("mockEmailUtility")
     protected MockEmailUtility emailUtility;
 
-	@Spy @InjectMocks
+    @Spy @InjectMocks
     protected TemplateUtility templateUtility;
-    	
-	protected Credentials TEST_CREDENTIALS = new Credentials();
-    
+
+    protected Credentials TEST_CREDENTIALS = new Credentials();
+
 }

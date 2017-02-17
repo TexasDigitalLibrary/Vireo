@@ -1,10 +1,10 @@
 describe('controller: UserRepoController', function() {
-	
-	var controller, location, scope;
 
-	beforeEach(module('core'));
+  var controller, location, scope;
 
-	beforeEach(module('vireo'));
-	
-		
+  beforeEach(module('core'));
+
+  beforeEach(module('vireo'));
+
+
 });

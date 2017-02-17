@@ -47,7 +47,7 @@ public class Embargo extends BaseOrderedEntity {
 
     /**
      * New Embargo Types just need a name, description and duration
-     * 
+     *
      * @param name
      * @param description
      * @param duration

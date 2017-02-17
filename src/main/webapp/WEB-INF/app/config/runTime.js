@@ -1,12 +1,12 @@
 vireo.run(function($route, $rootScope, $location) {
 
-	angular.element("body").fadeIn(1000);
+  angular.element("body").fadeIn(1000);
 
-	// Add runtime tasks here
+  // Add runtime tasks here
 
-	// Allow the passing of an additional parameter which 
-	// Will allow the path to be changed with out route reload
-	var original = $location.path;
+  // Allow the passing of an additional parameter which
+  // Will allow the path to be changed with out route reload
+  var original = $location.path;
     $location.path = function (path, reload) {
         if (reload === false) {
             var lastRoute = $route.current;
@@ -17,5 +17,5 @@ vireo.run(function($route, $rootScope, $location) {
         }
         return original.apply($location, [path]);
     };
-	
+
 });

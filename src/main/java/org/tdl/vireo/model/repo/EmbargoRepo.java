@@ -10,6 +10,6 @@ import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 public interface EmbargoRepo extends JpaRepository<Embargo, Long>, EmbargoRepoCustom {
 
     public Embargo findByNameAndGuarantorAndIsSystemRequired(String name, EmbargoGuarantor guarantor, Boolean isSystemRequired);
-    
-    public List<Embargo> findAllByOrderByGuarantorAscPositionAsc();    
+
+    public List<Embargo> findAllByOrderByGuarantorAscPositionAsc();
 }

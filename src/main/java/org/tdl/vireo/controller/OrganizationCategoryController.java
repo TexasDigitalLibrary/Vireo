@@ -25,22 +25,22 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/settings/organization-category")
 public class OrganizationCategoryController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-    
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
-    
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Transactional
     @ApiMapping("/all")
     @Auth(role="MANAGER")
     public ApiResponse getOrganizationCategories() {
         return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }
-    
+
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -50,7 +50,7 @@ public class OrganizationCategoryController {
         simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
         return new ApiResponse(SUCCESS, organizationCategory);
     }
-    
+
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -70,6 +70,6 @@ public class OrganizationCategoryController {
         simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 
 }

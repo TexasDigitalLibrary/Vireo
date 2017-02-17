@@ -15,7 +15,7 @@ public class FieldValue extends BaseEntity {
 
     @Column(columnDefinition = "text", nullable = true)
     private String value;
-    
+
     @Column(nullable = true)
     private String identifier;
 
@@ -25,7 +25,7 @@ public class FieldValue extends BaseEntity {
     public FieldValue() {}
 
     /**
-     * 
+     *
      * @param predicate
      */
     public FieldValue(FieldPredicate fieldPredicate) {
@@ -49,14 +49,14 @@ public class FieldValue extends BaseEntity {
     }
 
     public String getIdentifier() {
-		return identifier;
-	}
+        return identifier;
+    }
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	/**
+    /**
      * @return the predicate
      */
     public FieldPredicate getFieldPredicate() {
@@ -70,5 +70,5 @@ public class FieldValue extends BaseEntity {
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;
     }
-    
+
 }

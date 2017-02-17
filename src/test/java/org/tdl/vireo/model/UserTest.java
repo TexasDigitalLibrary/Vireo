@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class UserTest extends AbstractEntityTest {
-   
+
     @Before
     public void setUp() {
         assertEquals("The user repository was not empty!", 0, userRepo.count());
@@ -28,7 +28,7 @@ public class UserTest extends AbstractEntityTest {
         userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         try {
             userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
-        } 
+        }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The user repository duplicated the user!", 1, userRepo.count());
     }
@@ -51,7 +51,7 @@ public class UserTest extends AbstractEntityTest {
         assertEquals("The address does not exist!", 2, addressRepo.count());
         ContactInfo permanentContactInfo = contactInfoRepo.create(permanentAddress, TEST_PERMANENT_PHONE, TEST_PERMANENT_EMAIL);
         assertEquals("The contact info does not exist!", 2, contactInfoRepo.count());
-        
+
         OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 

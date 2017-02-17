@@ -18,13 +18,13 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
 
     @Autowired
     SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
-    
+
     @Autowired
     SubmissionFieldProfileRepo submissionFieldProfileRepo;
-    
+
     @Autowired
     SubmissionNoteRepo submissionNoteStepRepo;
-    
+
     @Override
     public List<SubmissionWorkflowStep> cloneWorkflow(Organization organization) {
 
@@ -43,9 +43,9 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
         SubmissionWorkflowStep submissionWorkflowStep = new SubmissionWorkflowStep(workflowStep.getName());
 
         for (FieldProfile fieldProfile : workflowStep.getAggregateFieldProfiles()) {
-        	if(fieldProfile.getEnabled()) {
-        		submissionWorkflowStep.addFieldProfile(submissionFieldProfileRepo.create(fieldProfile));
-        	}
+            if(fieldProfile.getEnabled()) {
+                submissionWorkflowStep.addFieldProfile(submissionFieldProfileRepo.create(fieldProfile));
+            }
         }
 
         for (Note note : workflowStep.getAggregateNotes()) {
@@ -53,6 +53,6 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
         }
         return submissionWorkflowStepRepo.save(submissionWorkflowStep);
     }
-    
-    
+
+
 }

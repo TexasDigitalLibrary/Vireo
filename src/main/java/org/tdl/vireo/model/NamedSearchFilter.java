@@ -16,33 +16,33 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class NamedSearchFilter extends BaseEntity {
-	
-	private String name;
+
+    private String name;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private SubmissionListColumn submissionListColumn;
-    
+
     @ElementCollection(fetch = EAGER)
     private Set<FilterCriterion> filterCriteria;
-    
+
     @Column(nullable = false)
     private Boolean allColumnSearch;
-    
+
     @Column(nullable = false)
     private Boolean exactMatch;
-    
+
     public NamedSearchFilter() {
         setFilters(new HashSet<FilterCriterion>());
         setAllColumnSearch(true);
         setExactMatch(false);
     }
-    
+
     public NamedSearchFilter(SubmissionListColumn submissionListColumn) {
         this();
         setAllColumnSearch(false);
         setSubmissionListColumn(submissionListColumn);
     }
-    
+
     /**
      * @return the submissionListColumn
      */
@@ -75,61 +75,61 @@ public class NamedSearchFilter extends BaseEntity {
     public void setFilters(Set<FilterCriterion> filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
-    
+
     public void addFilter(FilterCriterion filterCriterion) {
-    	filterCriteria.add(filterCriterion);
+        filterCriteria.add(filterCriterion);
     }
-    
-    public void addFilter(String filterValue, String filterGloss) {				
-		addFilter(filterGloss == null ? new FilterCriterion(filterValue) : new FilterCriterion(filterValue, filterGloss)); 
-	}
-    
+
+    public void addFilter(String filterValue, String filterGloss) {
+        addFilter(filterGloss == null ? new FilterCriterion(filterValue) : new FilterCriterion(filterValue, filterGloss));
+    }
+
     public void removeFilter(FilterCriterion filter) {
-    	filterCriteria.remove(filter);
+        filterCriteria.remove(filter);
     }
-    
+
     public Boolean getAllColumnSearch() {
-    	return allColumnSearch;
+        return allColumnSearch;
     }
-    
+
     public void setAllColumnSearch(Boolean allColumnSearch) {
-    	this.allColumnSearch = allColumnSearch;
+        this.allColumnSearch = allColumnSearch;
     }
-    
-	public Boolean getExactMatch() {
-		return exactMatch;
-	}
 
-	public void setExactMatch(Boolean exactMatch) {
-		this.exactMatch = exactMatch;
-	}
+    public Boolean getExactMatch() {
+        return exactMatch;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setExactMatch(Boolean exactMatch) {
+        this.exactMatch = exactMatch;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Set<String> getFilterValues() {
-		
-		Set<String> filterValues = new HashSet<String>();
-		filterCriteria.forEach(filterCriterion -> {
-			filterValues.add(filterCriterion.getValue());
-		});
-		
-		return filterValues;
-	}
-	
-	public Set<String> getFilterGlosses() {
-		
-		Set<String> filterGlosses = new HashSet<String>();
-		filterCriteria.forEach(filterCriterion -> {
-			filterGlosses.add(filterCriterion.getGloss());
-		});
-		
-		return filterGlosses;
-	}
-    
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<String> getFilterValues() {
+
+        Set<String> filterValues = new HashSet<String>();
+        filterCriteria.forEach(filterCriterion -> {
+            filterValues.add(filterCriterion.getValue());
+        });
+
+        return filterValues;
+    }
+
+    public Set<String> getFilterGlosses() {
+
+        Set<String> filterGlosses = new HashSet<String>();
+        filterCriteria.forEach(filterCriterion -> {
+            filterGlosses.add(filterCriterion.getGloss());
+        });
+
+        return filterGlosses;
+    }
+
 }

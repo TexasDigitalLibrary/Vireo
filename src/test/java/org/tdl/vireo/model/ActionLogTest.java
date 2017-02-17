@@ -9,7 +9,7 @@ public class ActionLogTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
-        
+
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
@@ -19,10 +19,10 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The attachmentType repository is not empty!", 1, deprecatedAttachmentTypeRepo.count());
         attachment = deprecatedAttachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
         assertEquals("The attachment repository is not empty!", 1, deprecatedAttachmentRepo.count());
-        
+
         OrganizationCategory category = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
-        
+
         testSubmission = submissionRepo.create(testUser, organization, submissionState, getCredentials());
 
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
@@ -84,9 +84,9 @@ public class ActionLogTest extends AbstractEntityTest {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
         });
-        userRepo.deleteAll();        
+        userRepo.deleteAll();
         deprecatedAttachmentRepo.deleteAll();
-        deprecatedAttachmentTypeRepo.deleteAll(); 
+        deprecatedAttachmentTypeRepo.deleteAll();
     }
 
 }

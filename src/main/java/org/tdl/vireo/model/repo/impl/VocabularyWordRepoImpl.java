@@ -15,17 +15,17 @@ public class VocabularyWordRepoImpl implements VocabularyWordRepoCustom {
     public VocabularyWord create(String name) {
         return vocabularyWordRepo.save(new VocabularyWord(name));
     }
-    
+
     @Override
     public VocabularyWord create(String name, String definition) {
         return vocabularyWordRepo.save(new VocabularyWord(name, definition));
     }
-    
+
     @Override
     public VocabularyWord create(String name, String definition, String identifier) {
         return vocabularyWordRepo.save(new VocabularyWord(name, definition, identifier));
     }
-    
+
     @Override
     public VocabularyWord create(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier) {
         return vocabularyWordRepo.save(new VocabularyWord(controlledVocabulary, name, definition, identifier));

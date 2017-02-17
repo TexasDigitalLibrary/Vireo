@@ -1,18 +1,18 @@
 <td class="draggable-table-cell td-center-middle" data-as-sortable-item-handle>
-	<span ng-if="item.isSystemRequired" class="glyphicon glyphicon-globe"></span>
-	<span ng-if="!item.isSystemRequired" class="glyphicon glyphicon-user"></span>
+  <span ng-if="item.isSystemRequired" class="glyphicon glyphicon-globe"></span>
+  <span ng-if="!item.isSystemRequired" class="glyphicon glyphicon-user"></span>
 </td>
 <td class="draggable-table-cell" data-as-sortable-item-handle>{{item.name}}</td>
 <td class="draggable-table-cell" data-as-sortable-item-handle>{{item.description}}</td>
 <td class="draggable-table-cell" data-as-sortable-item-handle>
-	<span ng-if="item.isActive">Yes</span>
-	<span ng-if="!item.isActive">No</span>
+  <span ng-if="item.isActive">Yes</span>
+  <span ng-if="!item.isActive">No</span>
 </td>
 <td class="draggable-table-cell" data-as-sortable-item-handle>
-	<span ng-if="item.duration == null">Indefinite</span>
-	<span ng-if="item.duration != null">{{item.duration}}</span>
+  <span ng-if="item.duration == null">Indefinite</span>
+  <span ng-if="item.duration != null">{{item.duration}}</span>
 </td>
 <td class="draggable-table-cell" data-as-sortable-item-handle>
-	<button ng-show="isMouseHover" class="btn btn-default" ng-click="edit({index:item.id})">Edit</button>
-	<button ng-show="!isMouseHover" disabled class="btn btn-default">Edit</button>
+  <button ng-show="isMouseHover" class="btn btn-default" ng-click="edit({index:item.id})">Edit</button>
+  <button ng-show="!isMouseHover" disabled class="btn btn-default">Edit</button>
 </td>

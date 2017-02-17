@@ -5,13 +5,13 @@ import edu.tamu.framework.validation.BaseModelValidator;
 import edu.tamu.framework.validation.InputValidator;
 
 public class SubmissionStateValidator extends BaseModelValidator {
-    
+
     public SubmissionStateValidator() {
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission State requires a name", nameProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Submission State name must be at least 1 characters", nameProperty, 1));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Submission State name cannot be more than 255 characters", nameProperty, 255));
-        
+
         String isArchivedProperty = "isArchived";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission State requires an archived flag", isArchivedProperty, true));
 
@@ -29,7 +29,7 @@ public class SubmissionStateValidator extends BaseModelValidator {
 
         String isActiveProperty = "isActive";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission State requires an active flag", isActiveProperty, true));
-        
+
     }
-    
+
 }

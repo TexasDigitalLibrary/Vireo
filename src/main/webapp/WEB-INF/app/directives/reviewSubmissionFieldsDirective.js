@@ -1,9 +1,9 @@
 vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldValue, AdvisorSubmissionRepo) {
     return {
-    	templateUrl: 'views/directives/reviewSubmissionFields.html',
+      templateUrl: 'views/directives/reviewSubmissionFields.html',
         restrict: 'E',
         scope: {
-        	submission: "=",
+          submission: "=",
             filterOptional: "=?",
             hideLinks: "=?",
             setActiveStep: "&",
@@ -13,25 +13,25 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
             if($scope.validate) {
                 $scope.submission.ready().then(function() {
                     $scope.submission.validate();
-                });    
+                });
             }
         },
         link: function($scope){
 
             $scope.InputTypes = InputTypes;
 
-        	$scope.required = function(aggregateFieldProfile) {
-				return !$scope.filterOptional || !aggregateFieldProfile.optional;
-			};
+          $scope.required = function(aggregateFieldProfile) {
+        return !$scope.filterOptional || !aggregateFieldProfile.optional;
+      };
 
-			$scope.predicateMatch = function(fv) {
-				return function(aggregateFieldProfile) {
-			        return aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id;
-			    };
-			};
+      $scope.predicateMatch = function(fv) {
+        return function(aggregateFieldProfile) {
+              return aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id;
+          };
+      };
 
              $scope.hasValidationViolation = function(predicate) {
-        
+
                 var fieldValues = $scope.submission.getFieldValuesByFieldPredicate(predicate);
 
                 for(var i in fieldValues) {
@@ -47,7 +47,7 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
             $scope.getFile = function(fieldValue) {
                  $scope.submission.fileInfo(fieldValue.value).then(function(data) {
                     fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                    
+
                     $scope.submission.file(fieldValue.value).then(function(data) {
                         saveAs(new Blob([data], { type:fieldValue.fileInfo.type }), fieldValue.fileInfo.name);
                     });

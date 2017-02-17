@@ -8,7 +8,7 @@ import org.tdl.vireo.model.validation.CommitteeMemberValidator;
 import edu.tamu.framework.model.BaseEntity;
 
 /**
- * 
+ *
  * @author gad
  */
 @Entity
@@ -27,14 +27,14 @@ public class CommitteeMember extends BaseEntity {
     private String email;
 
     /**
-     * 
+     *
      */
     public CommitteeMember() {
         setModelValidator(new CommitteeMemberValidator());
     }
 
     /**
-     * 
+     *
      * @param firstName
      * @param lastName
      * @param email

@@ -6,23 +6,23 @@
 </div>
 
 <div class="modal-body">
-	<div class="row">
-		<div class="col-xs-12">
-			<p>This batch operation will modify the assignee of all the submissions selected by the currently active filter.</p>
+  <div class="row">
+    <div class="col-xs-12">
+      <p>This batch operation will modify the assignee of all the submissions selected by the currently active filter.</p>
 
-			<p>This operation may take quite some time depending on how many submissions are currently selected.</p>
+      <p>This operation may take quite some time depending on how many submissions are currently selected.</p>
 
-			<form class="form-inline" name="">
-                <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>	                
-                <select 
-                	class="form-control" 
-                	name="newStatus"
-                	ng-model="box.assignee" 
-                	ng-options="au.settings.displayName for au in box.allUsers | filter:box.assignable">
+      <form class="form-inline" name="">
+                <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>
+                <select
+                  class="form-control"
+                  name="newStatus"
+                  ng-model="box.assignee"
+                  ng-options="au.settings.displayName for au in box.allUsers | filter:box.assignable">
                 </select>
-	        </form>
+          </form>
 
-		</div>
+    </div>
     </div>
 </div>
 

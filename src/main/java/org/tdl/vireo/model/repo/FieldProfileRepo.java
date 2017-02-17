@@ -11,11 +11,11 @@ import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 public interface FieldProfileRepo extends HeritableJpaRepo<FieldProfile>, FieldProfileRepoCustom {
 
     public FieldProfile findByFieldPredicateAndOriginatingWorkflowStep(FieldPredicate fieldPredicate, WorkflowStep originatingWorkflowStep);
-    
+
     public List<FieldProfile> findByOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep);
-    
+
     public List<FieldProfile> findByOriginatingFieldProfile(FieldProfile originatingFieldProfile);
-    
+
     public void delete(FieldProfile fieldProfile);
 
 }

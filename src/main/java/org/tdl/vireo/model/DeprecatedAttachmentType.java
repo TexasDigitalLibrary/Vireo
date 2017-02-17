@@ -13,12 +13,12 @@ public class DeprecatedAttachmentType extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
-    
+
     public DeprecatedAttachmentType() {
         setModelValidator(new AttachmentTypeValidator());
         setName("PRIMARY");
     }
-    
+
     public DeprecatedAttachmentType(String name) {
         this();
         setName(name);
@@ -31,5 +31,5 @@ public class DeprecatedAttachmentType extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

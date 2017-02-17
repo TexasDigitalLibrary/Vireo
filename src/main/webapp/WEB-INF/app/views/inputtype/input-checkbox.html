@@ -1,9 +1,9 @@
-<input  type="checkbox" 
-		ng-model="fieldValue.value" 
-		ng-true-value="'true'" 
-		ng-false-value="'false'"
-		ng-disabled="fieldValue.updating"
-		ng-click="save(fieldValue)"
+<input  type="checkbox"
+    ng-model="fieldValue.value"
+    ng-true-value="'true'"
+    ng-false-value="'false'"
+    ng-disabled="fieldValue.updating"
+    ng-click="save(fieldValue)"
 >
 <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
 <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>

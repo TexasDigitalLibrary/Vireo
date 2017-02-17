@@ -1,54 +1,54 @@
 vireo.model("NamedSearchFilterGroup", function (WsApi) {
 
-	return function NamedSearchFilterGroup() {
-		var namedSearchFilterGroup = this;
+  return function NamedSearchFilterGroup() {
+    var namedSearchFilterGroup = this;
 
-		namedSearchFilterGroup.set = function(filter) {
+    namedSearchFilterGroup.set = function(filter) {
 
-			angular.extend(apiMapping.NamedSearchFilterGroup.setFilter, {
-				"data": filter
-			});
+      angular.extend(apiMapping.NamedSearchFilterGroup.setFilter, {
+        "data": filter
+      });
 
-			var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().setFilter);
+      var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().setFilter);
 
-			return promise;
-		};
+      return promise;
+    };
 
-		namedSearchFilterGroup.addFilter = function(criterionName, filterValue, filterGloss, exactMatch) {
-			
-			angular.extend(apiMapping.NamedSearchFilterGroup.addFilter, {
-				"data": {
-					"criterionName": criterionName,
-					"filterValue": filterValue,
-					"filterGloss": filterGloss,
-					"exactMatch": exactMatch
-				}
-			});
+    namedSearchFilterGroup.addFilter = function(criterionName, filterValue, filterGloss, exactMatch) {
 
-			var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().addFilter);
+      angular.extend(apiMapping.NamedSearchFilterGroup.addFilter, {
+        "data": {
+          "criterionName": criterionName,
+          "filterValue": filterValue,
+          "filterGloss": filterGloss,
+          "exactMatch": exactMatch
+        }
+      });
 
-			return promise;
+      var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().addFilter);
 
-		};
+      return promise;
 
-		namedSearchFilterGroup.removeFilter = function(namedSearchFilterName, filterCriterion) {
+    };
 
-			angular.extend(apiMapping.NamedSearchFilterGroup.removeFilter, {
-				'method': 'remove-filter-criterion/'+namedSearchFilterName,
-				"data": filterCriterion
-			});
+    namedSearchFilterGroup.removeFilter = function(namedSearchFilterName, filterCriterion) {
 
-			var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().removeFilter);
+      angular.extend(apiMapping.NamedSearchFilterGroup.removeFilter, {
+        'method': 'remove-filter-criterion/'+namedSearchFilterName,
+        "data": filterCriterion
+      });
 
-			return promise;
-		};
+      var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().removeFilter);
 
-		namedSearchFilterGroup.clearFilters = function() {
-			var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().clearFilters);
-			return promise;
-		};
+      return promise;
+    };
 
-		return namedSearchFilterGroup;
-	};
+    namedSearchFilterGroup.clearFilters = function() {
+      var promise = WsApi.fetch(namedSearchFilterGroup.getMapping().clearFilters);
+      return promise;
+    };
+
+    return namedSearchFilterGroup;
+  };
 
 });

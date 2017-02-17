@@ -28,8 +28,8 @@ import edu.tamu.framework.model.jwt.JWT;
 import edu.tamu.framework.util.JwtUtility;
 
 /**
- * 
- * 
+ *
+ *
  * @author
  *
  */
@@ -75,7 +75,7 @@ public class MockTokenController {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      * @throws NoSuchPaddingException
-     * 
+     *
      */
     @RequestMapping("/token")
     @SkipAop
@@ -111,7 +111,7 @@ public class MockTokenController {
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
     @RequestMapping("/refresh")
     @SkipAop
@@ -132,7 +132,7 @@ public class MockTokenController {
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
     private synchronized JWT makeToken(Map<String, String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
         JWT newToken = null;

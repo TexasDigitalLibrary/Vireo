@@ -8,33 +8,33 @@ import org.tdl.vireo.model.validation.GraduationMonthValidator;
 import edu.tamu.framework.model.BaseOrderedEntity;
 
 /**
- * 
+ *
  * @author gad
  */
 @Entity
 public class GraduationMonth extends BaseOrderedEntity {
 
-	@Column(nullable = false, unique = true)
-	private int month;
-	
-	/**
-	 * 
-	 */
-	public GraduationMonth() {
-	    setModelValidator(new GraduationMonthValidator());
+    @Column(nullable = false, unique = true)
+    private int month;
+
+    /**
+     *
+     */
+    public GraduationMonth() {
+        setModelValidator(new GraduationMonthValidator());
     }
 
-	/**
-	 * Create a new JpaGraduationMonthImpl
-	 * 
-	 * @param month
-	 *            The integer of the month, starting with 0 = january.
-	 */
-	public GraduationMonth(int month) {
-	    this();
-	    setMonth(month);
-	}
-	
+    /**
+     * Create a new JpaGraduationMonthImpl
+     *
+     * @param month
+     *            The integer of the month, starting with 0 = january.
+     */
+    public GraduationMonth(int month) {
+        this();
+        setMonth(month);
+    }
+
     /**
      * @return the month
      */

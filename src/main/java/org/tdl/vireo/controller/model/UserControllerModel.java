@@ -11,9 +11,9 @@ import edu.tamu.framework.model.ValidatingBase;
 
 /**
  * Model used to validate deserialized {@link UserController} objects coming from the front-end
- * 
+ *
  * Not persisted as an {@link Entity}, used as transient model -- needs to extend {@link BaseEntity} because of {@link AppControllerAspect} casting during validation
- * 
+ *
  * @author gad
  *
  */
@@ -39,5 +39,5 @@ public class UserControllerModel extends ValidatingBase {
     public void setSettingValue(String settingValue) {
         this.settingValue = settingValue;
     }
-    
+
 }

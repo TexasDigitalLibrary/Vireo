@@ -1,53 +1,53 @@
 <div class="admin-settings" ng-controller="OrganizationSettingsController">
 
-	<validationmessage results="organizationRepo.ValidationResults"></validationmessage>
-	
-	<div class="row">
-		<triptych header="ORGANIZATIONS AND WORKFLOWS" managed="true" expcol="false"></triptych>
-	</div>
+  <validationmessage results="organizationRepo.ValidationResults"></validationmessage>
 
-	<div class="row">
-		<div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
-			<div class="row" ng-if="showOrganizationManagement()">
-				<div class="panel-heading">
-					<h3 class="panel-title">
+  <div class="row">
+    <triptych header="ORGANIZATIONS AND WORKFLOWS" managed="true" expcol="false"></triptych>
+  </div>
 
-						<ul class="inline-list">
-							<li ng-click="activateManagementPane('edit')">
-								<span	class="management-pane-selector"
-										ng-class="{active: managementPaneIsActive('edit')}"
-										ng-click="activateManagementPane('edit')" >
-										<span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
-								</span>
-							</li>
-							<li ng-click="activateManagementPane('workflow')">
-								<span	class="management-pane-selector"
-										ng-click="activateManagementPane('workflow')"
-										ng-class="{active: managementPaneIsActive('workflow')}">
-										<span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
-								</span>
-							</li>
-							<li ng-click="activateManagementPane('email')">
-								<span	class="management-pane-selector"
-										ng-click="activateManagementPane('email')"
-										ng-class="{active: managementPaneIsActive('email')}">
-										<span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
-								</span>
-							</li>
-						</ul>
-					</h3>
-				</div>
-				<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('edit')}">
-					<span ng-include="'views/admin/settings/organization/manageOrganization.html'">
-				</div>
-				<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
-					<span ng-include="'views/admin/settings/organization/manageWorkflow.html'">
-				</div>
-				<div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('email')}">
-					<span ng-include="'views/admin/settings/organization/emailWorkflowRules.html'">
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="row">
+    <div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
+      <div class="row" ng-if="showOrganizationManagement()">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+
+            <ul class="inline-list">
+              <li ng-click="activateManagementPane('edit')">
+                <span	class="management-pane-selector"
+                    ng-class="{active: managementPaneIsActive('edit')}"
+                    ng-click="activateManagementPane('edit')" >
+                    <span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
+                </span>
+              </li>
+              <li ng-click="activateManagementPane('workflow')">
+                <span	class="management-pane-selector"
+                    ng-click="activateManagementPane('workflow')"
+                    ng-class="{active: managementPaneIsActive('workflow')}">
+                    <span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
+                </span>
+              </li>
+              <li ng-click="activateManagementPane('email')">
+                <span	class="management-pane-selector"
+                    ng-click="activateManagementPane('email')"
+                    ng-class="{active: managementPaneIsActive('email')}">
+                    <span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
+                </span>
+              </li>
+            </ul>
+          </h3>
+        </div>
+        <div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('edit')}">
+          <span ng-include="'views/admin/settings/organization/manageOrganization.html'">
+        </div>
+        <div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('workflow')}">
+          <span ng-include="'views/admin/settings/organization/manageWorkflow.html'">
+        </div>
+        <div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('email')}">
+          <span ng-include="'views/admin/settings/organization/emailWorkflowRules.html'">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 

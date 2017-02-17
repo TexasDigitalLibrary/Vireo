@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 
 public class FieldValueTest extends AbstractEntityTest {
-    
+
     @Before
     public void setup() {
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
@@ -31,7 +31,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        
+
     }
 
     @Override

@@ -23,28 +23,28 @@ public class VireoSpringBanner implements Banner {
             "    \\|__|/        \\|__| \\|__|\\|__| \\|_______| \\|_______|",
             "                                                        "
     };
-    
+
     private static final String VIREO_BOOT = " :: 01010110 01101001 01110010 01100101 01101111 :: ";
 
     private static final int STRAP_LINE_SIZE = 42;
-    
+
     @SuppressWarnings("deprecation")
     @Override
     public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
         for (String line : BANNER) {
             out.println(line);
         }
-        
+
         String version = this.getClass().getPackage().getImplementationVersion();
-        
+
         version = environment.getProperty("info.build.version");
-        
+
         // shouldn't ever be null, but just in case get it from the manifest
-        if (version == null || version.equals("@project.version@")) {           
-            Manifest manifest = getManifest(this.getClass());            
+        if (version == null || version.equals("@project.version@")) {
+            Manifest manifest = getManifest(this.getClass());
             version = manifest.getMainAttributes().getValue("Implementation-Version");
         }
-        
+
         version = (version == null ? "" : " (v" + version + ")");
         String padding = "";
         while (padding.length() < STRAP_LINE_SIZE - (version.length() + VIREO_BOOT.length())) {
@@ -53,7 +53,7 @@ public class VireoSpringBanner implements Banner {
         out.println(AnsiOutput.toString(AnsiElement.GREEN, VIREO_BOOT, AnsiElement.DEFAULT, padding, AnsiElement.FAINT, version));
         out.println();
     }
-    
+
     private static Manifest getManifest(Class<?> clz) {
         String resource = "/" + clz.getName().replace(".", "/") + ".class";
         String fullPath = clz.getResource(resource).toString();
@@ -68,6 +68,6 @@ public class VireoSpringBanner implements Banner {
             throw new RuntimeException("Loading MANIFEST for class " + clz + " failed!", e);
         }
     }
-    
-   
+
+
 }

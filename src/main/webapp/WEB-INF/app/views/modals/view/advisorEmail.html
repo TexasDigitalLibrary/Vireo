@@ -1,21 +1,21 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Are you sure?</h3>
+  <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Are you sure?</h3>
 </div>
 
 <form novalidate>
 
-	<div class="modal-body">
-		<p>Confirm generation of advisor email</p>
-	</div>
+  <div class="modal-body">
+    <p>Confirm generation of advisor email</p>
+  </div>
 
-	<div class="modal-footer">
-		<button ng-disabled="box.sending" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
-		<button ng-disabled="box.sending" type="button" class="btn btn-primary" ng-click="box.sendAdvisorEmail()">
-			<span ng-if="!box.sending">Confirm</span>
-			<span ng-if="box.sending">Sending <span class="glyphicon glyphicon-refresh spinning"></span></span>
-		</button>
-	</div>
+  <div class="modal-footer">
+    <button ng-disabled="box.sending" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button ng-disabled="box.sending" type="button" class="btn btn-primary" ng-click="box.sendAdvisorEmail()">
+      <span ng-if="!box.sending">Confirm</span>
+      <span ng-if="box.sending">Sending <span class="glyphicon glyphicon-refresh spinning"></span></span>
+    </button>
+  </div>
 </form>

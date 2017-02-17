@@ -11,7 +11,7 @@ import edu.tamu.framework.model.repo.SymlinkRepo;
 
 /**
  * Handler for when the servlet context refreshes.
- * 
+ *
  * @author
  *
  */
@@ -28,6 +28,6 @@ public class AppContextInitializedHandler extends CoreContextInitializedHandler 
 
     @Override
     protected void after(ContextRefreshedEvent event) {
-        
+
     }
 }

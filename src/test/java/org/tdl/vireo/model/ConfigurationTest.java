@@ -7,7 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.config.constant.ConfigurationName;
 
 public class ConfigurationTest extends AbstractEntityTest {
-    
+
     @Override
     public void testCreate() {
         // set vireo.install.dir
@@ -24,7 +24,7 @@ public class ConfigurationTest extends AbstractEntityTest {
             configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR_CHANGED,"application");
         }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-        
+
         assertEquals("The configuration was duplicated!", 1, configurationRepo.count());
     }
 

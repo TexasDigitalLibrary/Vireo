@@ -28,20 +28,20 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/graduation-month")
 public class GraduationMonthController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private GraduationMonthRepo graduationMonthRepo;
-    
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse allGraduationMonths() {       
+    public ApiResponse allGraduationMonths() {
         return new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc());
     }
-    
+
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -51,7 +51,7 @@ public class GraduationMonthController {
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, graduationMonth);
     }
-    
+
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -71,7 +71,7 @@ public class GraduationMonthController {
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
@@ -81,7 +81,7 @@ public class GraduationMonthController {
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = GraduationMonth.class, params = { "0" }) })
@@ -91,5 +91,5 @@ public class GraduationMonthController {
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 }

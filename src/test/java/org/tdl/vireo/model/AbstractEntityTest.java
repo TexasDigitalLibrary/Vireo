@@ -76,7 +76,7 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_FIELD_PROFILE_OPTIONAL = false;
     protected static final boolean TEST_FIELD_PROFILE_OVERRIDEABLE = true;
     protected static final String  TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
-    
+
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
     protected static final String TEST_USER_FIRSTNAME = "TDL";
     protected static final String TEST_USER_LASTNAME = "Admin";
@@ -93,7 +93,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_STATE = "Texas";
     protected static final String TEST_POSTAL_CODE = "78759";
     protected static final String TEST_COUNTRY = "USA";
-    
+
     // LanguageTest
     protected static final String TEST_LANGUAGE_NAME = "Test Language";
 
@@ -111,7 +111,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_WORD = "Test Severable Vocabulary Word";
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_DEFINITION = "Test Severable Vocabulary Definition";
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER = "Test Severable Vocabulary Identifier";
-    
+
     // must be the name of the property on the entity
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO = "Embargo";
@@ -125,7 +125,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_DEPOSIT_ONBEHALFOF = "Test Deposit OnBehalfOf";
     protected static final String TEST_DEPOSIT_PACKAGER = "Test Deposit Packager";
     protected static final String TEST_DEPOSIT_DEPOSITOR = "Test Deposit Depositor";
-    
+
     // DocumentType test
     protected static final String TEST_DOCUMENT_TYPE_NAME = "Test Document Type";
 
@@ -147,7 +147,7 @@ public abstract class AbstractEntityTest {
     // Organization Category test
     protected static final String TEST_CATEGORY_NAME = "Test Category";
     protected static final String TEST_ORGANIZATION_NAME = "Test Organization";
-    
+
     // Field Predicate Test
     protected static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
     protected static final String TEST_SEVERABLE_FIELD_GLOSS_VALUE = "Test Severable Gloss";
@@ -179,7 +179,7 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_WORKFLOW_INHERITABILITY = true;
     protected static final String TEST_SEVERABLE_FIELD_PROFILE_USAGE = "Test Severable Field Profile Usage";
     protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE = false;
-    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_ENABLED = false;    
+    protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_ENABLED = false;
     protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_OPTIONAL = false;
 
     // Submission Test
@@ -293,28 +293,28 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
 
     protected static final String TEST_FIELD_PROFILE_INPUT_TEXT_NAME = "INPUT_TEXT";
-    
+
     protected static final String TEST_FIELD_PROFILE_INPUT_FILE_NAME = "INPUT_FILE";
 
     protected static final String TEST_ORGANIZATION_CATEGORY_NAME = "Test Organization Category";
-    
+
     protected static final String TEST_NOTE_NAME = "Test Note Name";
     protected static final String TEST_NOTE_TEXT = "Test Note Text";
-    
+
     protected static final String TEST_SEVERABLE_NOTE_NAME = "Test Severable Note Name";
     protected static final String TEST_SEVERABLE_NOTE_TEXT = "Test Severable Note Text";
 
     protected static final AppRole TEST_USER_ROLE = AppRole.STUDENT;
-    
+
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();
-    
+
     @Autowired
     protected EntityControlledVocabularyService entityControlledVocabularyService;
 
     @Autowired
     protected InputTypeRepo inputTypeRepo;
-    
+
     @Autowired
     protected ActionLogRepo actionLogRepo;
 
@@ -329,7 +329,7 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected DeprecatedAttachmentRepo deprecatedAttachmentRepo;
-    
+
     @Autowired
     protected DeprecatedAttachmentTypeRepo deprecatedAttachmentTypeRepo;
 
@@ -344,10 +344,10 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected DepositLocationRepo depositLocationRepo;
-    
+
     @Autowired
     protected AttachmentTypeRepo attachmentTypeRepo;
-    
+
     @Autowired
     protected AbstractEmailRecipientRepo emailRecipientRepo;
 
@@ -356,7 +356,7 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected EmailWorkflowRuleRepo emailWorkflowRuleRepo;
-    
+
     @Autowired
     protected ConfigurationRepo configurationRepo;
 
@@ -365,13 +365,13 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected ControlledVocabularyRepo controlledVocabularyRepo;
-    
+
     @Autowired
     protected VocabularyWordRepo vocabularyWordRepo;
 
     @Autowired
     protected LanguageRepo languageRepo;
-    
+
     @Autowired
     protected NoteRepo noteRepo;
 
@@ -386,7 +386,7 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
-    
+
     @Autowired
     protected EmbargoRepo embargoRepo;
 
@@ -394,7 +394,7 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected FieldProfileRepo fieldProfileRepo;
-    
+
     @Autowired
     protected SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
@@ -409,10 +409,10 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected NamedSearchFilterGroupRepo namedSearchFilterRepo;
-    
+
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;
-    
+
     protected InputType inputType;
 
     protected ActionLog includedActionLog;
@@ -421,7 +421,7 @@ public abstract class AbstractEntityTest {
     protected Address testAddress;
 
     protected DeprecatedAttachment attachment;
-    
+
     protected DeprecatedAttachmentType attachmentType;
 
     protected CustomActionDefinition testCustomActionDefinition;
@@ -457,18 +457,18 @@ public abstract class AbstractEntityTest {
     protected User excludedSubmitter;
 
     protected WorkflowStep workflowStep;
-    
+
     protected SubmissionWorkflowStep submissionWorkflowStep;
-    
+
     protected VocabularyWord vocabularyWord;
-    
+
     protected EntityCVWhitelist entityCVWhitelist;
-    
+
     protected ControlledVocabulary controlledVocabulary;
-    
+
     protected FieldProfile fieldProfile;
-    
-    
+
+
     private Credentials credentials;
 
     @Test
@@ -486,22 +486,22 @@ public abstract class AbstractEntityTest {
     @Test
     @Order(value = 4)
     public abstract void testCascade();
-    
+
     protected Credentials getCredentials() {
-    	if (credentials == null) {
-	        Map<String,String> token = new HashMap<String,String>();
-	        token.put("lastName", TEST_USER_LASTNAME);
-	        token.put("firstName", TEST_USER_FIRSTNAME);
-	        token.put("netid", "netid");
-	        token.put("uin", "uin");
-	        token.put("exp", "expires");
-	        token.put("email", TEST_USER_EMAIL);
-	        token.put("role", TEST_USER_ROLE.toString());
-	        token.put("affiliation", TEST_SHIBBOLETH_AFFILIATION);
-	
-	        credentials = new Credentials(token);
-    	}
-    	return credentials;
+        if (credentials == null) {
+            Map<String,String> token = new HashMap<String,String>();
+            token.put("lastName", TEST_USER_LASTNAME);
+            token.put("firstName", TEST_USER_FIRSTNAME);
+            token.put("netid", "netid");
+            token.put("uin", "uin");
+            token.put("exp", "expires");
+            token.put("email", TEST_USER_EMAIL);
+            token.put("role", TEST_USER_ROLE.toString());
+            token.put("affiliation", TEST_SHIBBOLETH_AFFILIATION);
+
+            credentials = new Credentials(token);
+        }
+        return credentials;
     }
 
 }

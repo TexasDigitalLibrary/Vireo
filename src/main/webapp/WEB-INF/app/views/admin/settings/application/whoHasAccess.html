@@ -20,10 +20,10 @@
                         <td>{{user.firstName}} {{user.lastName}}</td>
                         <td>{{user.email}}</td>
                         <td>
-                            <select 
-                                ng-options="key as value for (key, value) in roles" 
-                                class="form-control" 
-                                ng-model="user.role" 
+                            <select
+                                ng-options="key as value for (key, value) in roles"
+                                class="form-control"
+                                ng-model="user.role"
                                 ng-change="updateRole(user)"></select>
                         </td>
                     </tr>
@@ -33,9 +33,9 @@
 
     </div>
 
-    <modal 
+    <modal
         modal-id="addMemberModal"
-        modal-view="views/modals/whoHasAccessModal.html" 
+        modal-view="views/modals/whoHasAccessModal.html"
         modal-header-class="modal-header-primary"
         modal-keyboard="false"
         modal-backdrop="static">

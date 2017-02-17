@@ -33,29 +33,29 @@ public class LookAndFeelController {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Autowired
     private FileIOUtility fileIOUtility;
-    
+
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse uploadLogo(@ApiModel LookAndFeelControllerModel lfModel, @ApiInputStream InputStream inputStream) throws IOException {
-        
+
         String logoName = lfModel.getSetting();
         String logoFileName = logoName + "." + lfModel.getFileType();
-       
+
         // TODO: folder should be a configuration
         String path = "public/" + configurationRepo.getByName(ConfigurationName.THEME_PATH).getValue() + logoFileName;
 
         logger.info("Changing logo " + logoName);
-        
+
         fileIOUtility.write(inputStream, path);
-        
+
         Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
-        
+
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, newLogoConfig);
     }
@@ -65,7 +65,7 @@ public class LookAndFeelController {
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
-        Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting()); 
+        Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting());
         Configuration defaultLogoConfig = configurationRepo.reset(systemLogo);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, defaultLogoConfig);

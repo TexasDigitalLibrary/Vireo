@@ -5,13 +5,13 @@ import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Organization;
 
 public interface AbstractEmailRecipientRepoCustom {
-	
-	public EmailRecipient createOrganizationRecipient(Organization organization);
 
-	EmailRecipient createAssigneeRecipient();
+    public EmailRecipient createOrganizationRecipient(Organization organization);
 
-	EmailRecipient createSubmitterRecipient();
+    EmailRecipient createAssigneeRecipient();
 
-	EmailRecipient createContactRecipient(String label, FieldPredicate fieldPredicate);
+    EmailRecipient createSubmitterRecipient();
+
+    EmailRecipient createContactRecipient(String label, FieldPredicate fieldPredicate);
 
 }

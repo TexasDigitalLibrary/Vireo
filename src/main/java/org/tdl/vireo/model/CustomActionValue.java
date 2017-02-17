@@ -14,18 +14,18 @@ import edu.tamu.framework.model.BaseEntity;
 
 /**
  * The value of a custom action associated with a particular submission.
- * 
+ *
  */
 @Entity
 public class CustomActionValue extends BaseEntity {
-    
+
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private CustomActionDefinition definition;
 
     @Column(nullable = false)
     private Boolean value;
 
-    public CustomActionValue() { 
+    public CustomActionValue() {
         setModelValidator(new CustomActionValueValidator());
     }
 

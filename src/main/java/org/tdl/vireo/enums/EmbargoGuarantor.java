@@ -19,10 +19,10 @@ public enum EmbargoGuarantor {
     public String toString() {
         return this.name();
     }
-    
+
     /**
      * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
-     * 
+     *
      * @param from
      * @return
      */

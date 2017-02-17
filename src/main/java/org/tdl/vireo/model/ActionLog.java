@@ -17,7 +17,7 @@ import org.tdl.vireo.model.validation.ActionLogValidator;
 import edu.tamu.framework.model.BaseEntity;
 
 /**
- * 
+ *
  */
 @Entity
 public class ActionLog extends BaseEntity {

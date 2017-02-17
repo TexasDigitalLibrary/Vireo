@@ -11,7 +11,7 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
     @Autowired
     EmailTemplateRepo emailTemplateRepo;
-    
+
     @Autowired
     private OrderedEntityService orderedEntityService;
 
@@ -21,21 +21,21 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
         emailTemplate.setPosition(emailTemplateRepo.count()+1);
         return emailTemplateRepo.save(emailTemplate);
     }
-    
+
     @Override
     public EmailTemplate findByNameOverride(String name) {
-        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);        
+        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
         if(emailTemplate == null) {
             emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
-        }        
+        }
         return emailTemplate;
     }
-    
+
     @Override
     public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(EmailTemplate.class, src, dest);
     }
-    
+
     @Override
     public void sort(String column) {
         orderedEntityService.sort(EmailTemplate.class, column);
@@ -45,5 +45,5 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     public void remove(EmailTemplate emailTemplate) {
         orderedEntityService.remove(emailTemplateRepo, EmailTemplate.class, emailTemplate.getPosition());
     }
-    
+
 }

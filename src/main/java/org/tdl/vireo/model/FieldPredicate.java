@@ -12,16 +12,16 @@ public class FieldPredicate extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String value;
-    
+
     @Column(nullable = false, unique = false)
     private Boolean documentTypePredicate;
 
-	public FieldPredicate() { 
+    public FieldPredicate() {
         setModelValidator(new FieldPredicateValidator());
     }
-	
+
     /**
-     * 
+     *
      * @param value
      */
     public FieldPredicate(String value, Boolean documentTypePredicate) {
@@ -44,9 +44,9 @@ public class FieldPredicate extends BaseEntity {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
-     * 
+     *
      * @return documentTypePredicate
      */
     public Boolean getDocumentTypePredicate() {
@@ -54,7 +54,7 @@ public class FieldPredicate extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param documentTypePredicate
      */
     public void setDocumentTypePredicate(Boolean documentTypePredicate) {

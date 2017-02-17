@@ -3,7 +3,7 @@ package org.tdl.vireo.enums;
 import edu.tamu.framework.model.IRole;
 
 public enum AppRole implements IRole {
-    
+
     // NEVER CHANGE THE INT VALUES OR YOU'LL RUIN THE DB
     NONE(0),
     STUDENT(1),
@@ -25,5 +25,5 @@ public enum AppRole implements IRole {
     public String toString() {
         return this.name();
     }
-    
+
 }

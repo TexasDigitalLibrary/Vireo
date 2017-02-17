@@ -1,11 +1,11 @@
 var submissionListColumnModel = function SubmissionListColumn() {
 
-	return function SubmissionListColumn() {
-		
-		// additional model methods and variables
+  return function SubmissionListColumn() {
 
-		return this;
-	}
+    // additional model methods and variables
+
+    return this;
+  }
 
 }
 

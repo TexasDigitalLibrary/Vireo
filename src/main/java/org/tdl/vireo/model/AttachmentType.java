@@ -15,30 +15,30 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "field_predicate_id" } ) } )
 public class AttachmentType extends BaseOrderedEntity {
-	
 
-	@Column(nullable = false, length = 255)
-	private String name;
 
-	@OneToOne(cascade = DETACH, orphanRemoval = true, optional = false)
-	private FieldPredicate fieldPredicate;
+    @Column(nullable = false, length = 255)
+    private String name;
 
-	public AttachmentType() {
-	    setModelValidator(new AttachmentTypeValidator());
-	}
+    @OneToOne(cascade = DETACH, orphanRemoval = true, optional = false)
+    private FieldPredicate fieldPredicate;
 
-	/**
-	 * Create a new JpaDocumentTypeImpl
-	 * 
-	 * @param name
-	 *            The name of the new document type.
-	 */
-	public AttachmentType(String name) {
-	    this();
-		setName(name);
-	}
-	
-	public AttachmentType(String name, FieldPredicate fieldPredicate) {
+    public AttachmentType() {
+        setModelValidator(new AttachmentTypeValidator());
+    }
+
+    /**
+     * Create a new JpaDocumentTypeImpl
+     *
+     * @param name
+     *            The name of the new document type.
+     */
+    public AttachmentType(String name) {
+        this();
+        setName(name);
+    }
+
+    public AttachmentType(String name, FieldPredicate fieldPredicate) {
         this(name);
         setFieldPredicate(fieldPredicate);
     }
@@ -63,7 +63,7 @@ public class AttachmentType extends BaseOrderedEntity {
     public FieldPredicate getFieldPredicate() {
         return fieldPredicate;
     }
-    
+
     /**
      * @param fieldPredicate the predicate to set
      */

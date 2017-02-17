@@ -30,25 +30,25 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage langauges.
- * 
+ *
  */
 @Controller
 @ApiMapping("/settings/language")
 public class LanguageController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-    
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private LanguageRepo languageRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Autowired
     private ProquestLanguageCodesService proquestLanguageCodes;
-    
+
     /**
-     * 
+     *
      * @return
      */
     @Transactional
@@ -57,9 +57,9 @@ public class LanguageController {
     public ApiResponse getAllLanguages() {
         return new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc());
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/create")
@@ -71,9 +71,9 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, language);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/update")
@@ -85,9 +85,9 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, language);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/remove")
@@ -99,10 +99,10 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     /**
      * Endpoint to reorder languages.
-     * 
+     *
      * @param src
      *            source position
      * @param dest
@@ -121,7 +121,7 @@ public class LanguageController {
 
     /**
      * Endpoint to sort languages.
-     * 
+     *
      * @param column
      *            column to sort by
      * @return ApiResponse indicating success
@@ -135,15 +135,15 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/proquest")
     @Auth(role = "MANAGER")
-    public ApiResponse getProquestLanguageCodes() {        
+    public ApiResponse getProquestLanguageCodes() {
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }
-    
+
 }

@@ -20,7 +20,7 @@ public class DepositLocationTest extends AbstractEntityTest {
         depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, TEST_DEPOSIT_PACKAGER, TEST_DEPOSIT_DEPOSITOR);
         try {
             depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, TEST_DEPOSIT_PACKAGER, TEST_DEPOSIT_DEPOSITOR);
-        } 
+        }
         catch (DataIntegrityViolationException e) { /* SUCCESS */ }
         assertEquals("The desposit location was duplicated!", 1, depositLocationRepo.count());
     }

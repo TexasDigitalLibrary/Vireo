@@ -15,11 +15,11 @@ public abstract class AbstractNote<N> extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-   
+
     @Column(nullable = false, columnDefinition = "text")
     private String text;
-    
-        
+
+
     public String getName() {
         return name;
     }
@@ -34,5 +34,5 @@ public abstract class AbstractNote<N> extends BaseEntity {
 
     public void setText(String text) {
         this.text = text;
-    }    
+    }
 }

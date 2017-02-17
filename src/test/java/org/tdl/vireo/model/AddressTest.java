@@ -30,13 +30,13 @@ public class AddressTest extends AbstractEntityTest {
         addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         assertEquals("Duplicate address entry is not saved", 2, addressRepo.count());
     }
-    
+
     @Override
     public void testDelete() {
         Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         addressRepo.delete(testAddress);
         assertEquals("The contact info was not deleted", 0, addressRepo.count());
-    }   
+    }
 
     @Override
     public void testCascade() {

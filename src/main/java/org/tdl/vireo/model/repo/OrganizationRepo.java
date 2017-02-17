@@ -10,11 +10,11 @@ import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 public interface OrganizationRepo extends JpaRepository<Organization, Long>, OrganizationRepoCustom {
 
     public List<Organization> findByAggregateWorkflowStepsId(Long workflowStepId);
-    
+
     public List<Organization> findByOriginalWorkflowStepsId(Long workflowStepId);
-    
+
     public List<Organization> findByCategory(String name, OrganizationCategory category);
-    
+
     public Organization findByNameAndCategory(String name, OrganizationCategory category);
 
     public void delete(Organization organization);

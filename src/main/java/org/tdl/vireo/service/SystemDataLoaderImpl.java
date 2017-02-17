@@ -190,29 +190,29 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     @Override
     public void loadDefaultControlledVocabularies() {
-    	ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
+        ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
 
-    	List<VocabularyWord> vocabularyWords = null;
-		try {
-			vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Unable to load default controlled vocabularies.");
-		}
+        List<VocabularyWord> vocabularyWords = null;
+        try {
+            vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to load default controlled vocabularies.");
+        }
 
         for(VocabularyWord vw : vocabularyWords) {
-        	if(vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
-	        	vw.setControlledVocabulary(submissionTypesCV);
-	        	vw = vocabularyWordRepo.save(vw);
-	        	submissionTypesCV.addValue(vw);
-        	}
+            if(vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
+                vw.setControlledVocabulary(submissionTypesCV);
+                vw = vocabularyWordRepo.save(vw);
+                submissionTypesCV.addValue(vw);
+            }
         }
 
         submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
 
-	}
+    }
 
-	@Override
+    @Override
     public void generateAllOrganizationCategories() {
         try {
 
@@ -313,9 +313,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
 
-    	List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
+        List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
 
-    	for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
+        for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
 
             // check to see if the WorkflowStep exists
             WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
@@ -323,7 +323,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
 
-            	organization = organizationRepo.findOne(organization.getId());
+                organization = organizationRepo.findOne(organization.getId());
 
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
@@ -413,7 +413,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
 
-                	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                    newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), controlledVocabularies, fieldGlosses);
                 }
@@ -450,7 +450,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             workflowSteps.add(newWorkflowStep);
         }
-    	return workflowSteps;
+        return workflowSteps;
     }
 
     /**
