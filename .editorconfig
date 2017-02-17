@@ -13,5 +13,5 @@ charset = utf-8
 [*.{json,yml,xml,html,scss}]
 indent_size = 2
 
-[*.{js,java, md}]
+[*.{js,java,md}]
 indent_size = 4
