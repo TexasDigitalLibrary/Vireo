@@ -1,50 +1,52 @@
-vireo.controller('SubmissionHistoryController', function ($controller, $location, $scope, $timeout, NgTableParams, StudentSubmissionRepo, SubmissionStatuses) {
+vireo.controller('SubmissionHistoryController', function($controller, $location, $scope, $timeout, NgTableParams, StudentSubmissionRepo, SubmissionStatuses) {
 
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-	
-	$scope.SubmissionStatuses = SubmissionStatuses;
-	$scope.submissionToDelete={};
+  angular.extend(this, $controller('AbstractController', {
+    $scope: $scope
+  }));
 
-	var buildTable = function() {
-		return new NgTableParams({}, {
-			counts: [],
-			filterDelay: 0, 
-			dataset: StudentSubmissionRepo.getAll()
-	  	});
-	};
+  $scope.SubmissionStatuses = SubmissionStatuses;
+  $scope.submissionToDelete = {};
 
-	StudentSubmissionRepo.ready().then(function() {
+  var buildTable = function() {
+    return new NgTableParams({}, {
+      counts: [],
+      filterDelay: 0,
+      dataset: StudentSubmissionRepo.getAll()
+    });
+  };
 
-		$scope.tableParams = buildTable(); 
-		$scope.tableParams.reload();
+  StudentSubmissionRepo.ready().then(function() {
 
-	});
+    $scope.tableParams = buildTable();
+    $scope.tableParams.reload();
 
-	StudentSubmissionRepo.listen(function() {
-	  	$scope.tableParams.reload();
-	});
+  });
 
-	$scope.startNewSubmission = function(path) {
-		$scope.closeModal();
-		$timeout(function() {
-			$location.path(path);
-		}, 250);
-	};
+  StudentSubmissionRepo.listen(function() {
+    $scope.tableParams.reload();
+  });
 
-	$scope.confirmDelete = function(submission) {
-		$scope.openModal('#confirmDeleteSubmission');
-		$scope.submissionToDelete=submission;
-	};
+  $scope.startNewSubmission = function(path) {
+    $scope.closeModal();
+    $timeout(function() {
+      $location.path(path);
+    }, 250);
+  };
 
-	$scope.deleteSubmission = function() {
+  $scope.confirmDelete = function(submission) {
+    $scope.openModal('#confirmDeleteSubmission');
+    $scope.submissionToDelete = submission;
+  };
 
-		$scope.submissionToDelete.delete().then(function() {
-			$scope.closeModal();
-			$scope.deleting=false;
-			StudentSubmissionRepo.remove($scope.submissionToDelete);
-			$scope.submissionToDelete={};
-			$scope.tableParams.reload();
-		});
-	};
+  $scope.deleteSubmission = function() {
+    $scope.deleting = true;
+    $scope.submissionToDelete.delete().then(function() {
+      $scope.closeModal();
+      $scope.deleting = false;
+      StudentSubmissionRepo.remove($scope.submissionToDelete);
+      $scope.submissionToDelete = {};
+      $scope.tableParams.reload();
+    });
+  };
 
 });
