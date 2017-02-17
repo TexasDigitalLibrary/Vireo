@@ -127,9 +127,9 @@ var mockDepositLocationRepo3 = [
 
 angular.module('mock.depositLocationRepo', []).
     service('DepositLocationRepo', function($q) {
-    	
-    	var self;
-    	
-        
+
+      var self;
+
+
         return DepositLocationRepo;
 });

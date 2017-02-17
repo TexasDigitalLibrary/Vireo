@@ -1,44 +1,44 @@
 vireo.controller('OrganizationSettingsController', function ($controller, $scope, $q, AccordionService, OrganizationRepo, SidebarService) {
-	
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	$scope.organizationRepo = OrganizationRepo;
+  angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-	SidebarService.addBox({
-		"title": "Create Organization",
-		"viewUrl": "views/sideboxes/organization.html"
-	});
+  $scope.organizationRepo = OrganizationRepo;
 
-	$scope.organizations = OrganizationRepo.getAll();
+  SidebarService.addBox({
+    "title": "Create Organization",
+    "viewUrl": "views/sideboxes/organization.html"
+  });
 
-	$scope.activeManagementPane = 'edit';
-	
-	$scope.newOrganization = OrganizationRepo.getNewOrganization();
+  $scope.organizations = OrganizationRepo.getAll();
 
-	$scope.setSelectedOrganization = function(organization) {
-		if(OrganizationRepo.getSelectedOrganization().id !== organization.id) {
-			AccordionService.closeAll();
-		}
-		OrganizationRepo.setSelectedOrganization(organization);
-		$scope.newOrganization.parent = OrganizationRepo.getSelectedOrganization();
-	};
+  $scope.activeManagementPane = 'edit';
 
-	$scope.getSelectedOrganization = function() {
-		return OrganizationRepo.getSelectedOrganization();
-	};
+  $scope.newOrganization = OrganizationRepo.getNewOrganization();
 
-	$scope.activateManagementPane = function(pane) {
-		$scope.activeManagementPane = pane;
-	};
+  $scope.setSelectedOrganization = function(organization) {
+    if(OrganizationRepo.getSelectedOrganization().id !== organization.id) {
+      AccordionService.closeAll();
+    }
+    OrganizationRepo.setSelectedOrganization(organization);
+    $scope.newOrganization.parent = OrganizationRepo.getSelectedOrganization();
+  };
 
-	$scope.managementPaneIsActive = function(pane) {
-		return ($scope.activeManagementPane === pane);
-	}; 
+  $scope.getSelectedOrganization = function() {
+    return OrganizationRepo.getSelectedOrganization();
+  };
 
-	$scope.ready = $q.all([OrganizationRepo.ready()]);
+  $scope.activateManagementPane = function(pane) {
+    $scope.activeManagementPane = pane;
+  };
 
-	$scope.ready.then(function() {
-		$scope.newOrganization.parent = $scope.organizations[0];
-	});
+  $scope.managementPaneIsActive = function(pane) {
+    return ($scope.activeManagementPane === pane);
+  };
+
+  $scope.ready = $q.all([OrganizationRepo.ready()]);
+
+  $scope.ready.then(function() {
+    $scope.newOrganization.parent = $scope.organizations[0];
+  });
 
 });

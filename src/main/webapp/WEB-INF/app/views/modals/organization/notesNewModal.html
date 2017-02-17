@@ -1,58 +1,58 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button 
-		type="button" 
-		class="close" 
-		ng-click="resetNotes()"
-		aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Add Note</h3>
+  <button
+    type="button"
+    class="close"
+    ng-click="resetNotes()"
+    aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Note</h3>
 </div>
 
 <form ng-submit="createNote()" name="forms.create" novalidate>
 
-	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
+  <validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
-	<div class="modal-body">
+  <div class="modal-body">
 
-		<validatedinput
-			model="modalData"
-			property="name"
-			label="Name"
-			placeholder="Name of the new note"
-			form="forms.create"
-			validations="noteRepo.getValidations()"
-			results="workflowStepRepo.ValidationResults">
-		</validatedinput>
-		
-    	<validatedtextarea
+    <validatedinput
+      model="modalData"
+      property="name"
+      label="Name"
+      placeholder="Name of the new note"
+      form="forms.create"
+      validations="noteRepo.getValidations()"
+      results="workflowStepRepo.ValidationResults">
+    </validatedinput>
+
+      <validatedtextarea
             model="modalData"
             property="text"
             label="Text"
             rows="5"
-			form="forms.create"
-			validations="noteRepo.getValidations()"
+      form="forms.create"
+      validations="noteRepo.getValidations()"
             results="workflowStepRepo.ValidationResults">
         </validatedtextarea>
 
-		<!-- TODO: move togglebutton into framework and use in validatedinput -->
-    	<toggleButton 
-			label="Note is Overridable:"
-			scope-value="modalData.overrideable"
-			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-		</toggleButton>
-		
-	</div>
+    <!-- TODO: move togglebutton into framework and use in validatedinput -->
+      <toggleButton
+      label="Note is Overridable:"
+      scope-value="modalData.overrideable"
+      toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+    </toggleButton>
 
-	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-warning" 
-			ng-click="resetNotes()">Cancel</button>
-		<button 
-			id="notes-save" 
-			type="submit" 
-			class="btn btn-primary"
-			ng-disabled="forms.create.$invalid">Create</button>
-	</div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      ng-click="resetNotes()">Cancel</button>
+    <button
+      id="notes-save"
+      type="submit"
+      class="btn btn-primary"
+      ng-disabled="forms.create.$invalid">Create</button>
+  </div>
 </form>

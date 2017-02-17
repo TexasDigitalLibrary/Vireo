@@ -1,35 +1,35 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetLanguages()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Add Language</h3>
+  <button type="button" class="close" ng-click="resetLanguages()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Language</h3>
 </div>
 
 <form ng-submit="createLanguage()" name="forms.create" novalidate>
 
-	<validationmessage results="languageRepo.getValidationResults()"></validationmessage>
+  <validationmessage results="languageRepo.getValidationResults()"></validationmessage>
 
-	<div class="modal-body">
-		<validatedinput
-			model="modalData"
-			property="name"
-			label="Name"
-			placeholder="Name of the new language"
+  <div class="modal-body">
+    <validatedinput
+      model="modalData"
+      property="name"
+      label="Name"
+      placeholder="Name of the new language"
             form="forms.create"
             validations="languageRepo.getValidations()"
-			results="languageRepo.getValidationResults()">
-		</validatedinput>
-	</div>
+      results="languageRepo.getValidationResults()">
+    </validatedinput>
+  </div>
 
-	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-warning" 
-			ng-click="resetLanguages()">Cancel</button>
-		<button 
-			id="languages-save" 
-			type="submit" 
-			class="btn btn-primary"
-			ng-disabled="forms.create.$invalid">Create</button>
-	</div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-warning"
+      ng-click="resetLanguages()">Cancel</button>
+    <button
+      id="languages-save"
+      type="submit"
+      class="btn btn-primary"
+      ng-disabled="forms.create.$invalid">Create</button>
+  </div>
 </form>

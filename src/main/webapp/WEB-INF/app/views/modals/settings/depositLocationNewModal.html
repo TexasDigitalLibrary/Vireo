@@ -1,8 +1,8 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Add Deposit Location</h3>
+  <button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Deposit Location</h3>
 </div>
 
 <form ng-submit="createDepositLocation()" name="forms.create" novalidate>
@@ -99,19 +99,19 @@
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
 
-    	<div class="form-group">
-        	<button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
-    	</div>
+      <div class="form-group">
+          <button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+      </div>
     </div>
 
     <div class="modal-footer">
-    	<button 
-            type="button" 
-            class="btn btn-warning" 
+      <button
+            type="button"
+            class="btn btn-warning"
             ng-click="resetDepositLocation()">Cancel</button>
-    	<button 
-            id="depositLocation-save" 
-            type="submit" 
+      <button
+            id="depositLocation-save"
+            type="submit"
             class="btn btn-primary"
             ng-disabled="forms.create.$invalid">Create</button>
     </div>

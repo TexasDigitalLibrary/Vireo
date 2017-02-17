@@ -1,10 +1,10 @@
 vireo.model("FieldProfile", function FieldProfile() {
 
-	return function FieldProfile() {
-		
-		// additional model methods and variables
+  return function FieldProfile() {
 
-		return this;
-	}
+    // additional model methods and variables
+
+    return this;
+  }
 
 });

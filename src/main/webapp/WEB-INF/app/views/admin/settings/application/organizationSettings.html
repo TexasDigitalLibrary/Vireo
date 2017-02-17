@@ -1,13 +1,13 @@
 <div id="organization-settings" class="row" ng-controller="OrganizationCategoriesController">
 
     <validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
-   
+
     <div class="row">
         <div class="col-md-6">
 
             <div class="col-md-10 col-md-offset-1">
 
-                <toggleButton 
+                <toggleButton
                     ng-click="updateConfiguration('application', 'hierarchical')"
                     label="Hierarchical Organization Management:"
                     scope-value="settings.configurable.application.hierarchical.value"
@@ -23,7 +23,7 @@
     <hr/>
 
     <div class="row">
-        <div class="col-md-6">    
+        <div class="col-md-6">
             <div class="col-md-10 col-md-offset-1">
                 <button class="btn btn-default modal-add-btn" ng-click="openModal('#organizationCategoryNewModal')">
                     Add Organization Category
@@ -33,7 +33,7 @@
 
                 <p ng-if="organizationCategories.length == 0">Add new Organization Category</p>
 
-                <draganddroplist 
+                <draganddroplist
                     dragging="dragging"
                     scope-value="organizationCategories"
                     properties='["name"]'
@@ -47,7 +47,7 @@
 
         <div class="col-md-6">
             <div class="col-md-10 col-md-offset-1">
-                <trashcan 
+                <trashcan
                     id="{{trashCanId}}"
                     dragging="dragging"
                     listeners='dragControlListeners'>
@@ -56,28 +56,28 @@
         </div>
     </div>
 
-    <modal 
-        modal-id="organizationCategoryNewModal" 
-        modal-view="views/modals/settings/organizationCategoryNewModal.html" 
+    <modal
+        modal-id="organizationCategoryNewModal"
+        modal-view="views/modals/settings/organizationCategoryNewModal.html"
         modal-header-class="modal-header-primary"
         modal-keyboard="false"
         modal-backdrop="static">
     </modal>
 
-    <modal 
-        modal-id="organizationCategoryEditModal" 
-        modal-view="views/modals/settings/organizationCategoryEditModal.html" 
+    <modal
+        modal-id="organizationCategoryEditModal"
+        modal-view="views/modals/settings/organizationCategoryEditModal.html"
         modal-header-class="modal-header-primary"
         modal-keyboard="false"
         modal-backdrop="static">
     </modal>
 
-    <modal 
-        modal-id="organizationCategoryConfirmRemoveModal" 
-        modal-view="views/modals/settings/organizationCategoryConfirmRemoveModal.html" 
+    <modal
+        modal-id="organizationCategoryConfirmRemoveModal"
+        modal-view="views/modals/settings/organizationCategoryConfirmRemoveModal.html"
         modal-header-class="modal-header-primary"
         modal-keyboard="false"
         modal-backdrop="static">
     </modal>
-  
+
 </div>

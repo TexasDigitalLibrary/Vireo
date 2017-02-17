@@ -7,57 +7,57 @@
 
 
 <form ng-submit="box.saveFilter()" name="forms.saveFilter" novalidate>
-	<div class="modal-body">
-		<div class="row">
-			<div class="col-xs-12">
-				<p>Save your currently active filter by assigning it a name. If the name already exists then the filter will be replaced.</p>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-xs-12">
+        <p>Save your currently active filter by assigning it a name. If the name already exists then the filter will be replaced.</p>
 
-				<validatedinput
-					type="text"
-					model="box.activeFilters"
-					property="name"
-					label="Filter Name"
-					placeholder="The name of saved filter"
-					form="forms.saveFilter"
-					validations="box.activeFilters.getValidations()"
-					results="box.activeFilters.getValidationResults()">
-				</validatedinput>
+        <validatedinput
+          type="text"
+          model="box.activeFilters"
+          property="name"
+          label="Filter Name"
+          placeholder="The name of saved filter"
+          form="forms.saveFilter"
+          validations="box.activeFilters.getValidations()"
+          results="box.activeFilters.getValidationResults()">
+        </validatedinput>
 
-				<validatedinput
-					type="checkbox"
-					model="box.activeFilters"
-					property="publicFlag"
-					label="Public"
-					placeholder="I would like this filter to be available to all users."
-					form="forms.saveFilter"
-					validations="box.activeFilters.getValidations()"
-					results="box.activeFilters.getValidationResults()">
-				</validatedinput>
+        <validatedinput
+          type="checkbox"
+          model="box.activeFilters"
+          property="publicFlag"
+          label="Public"
+          placeholder="I would like this filter to be available to all users."
+          form="forms.saveFilter"
+          validations="box.activeFilters.getValidations()"
+          results="box.activeFilters.getValidationResults()">
+        </validatedinput>
 
-				<validatedinput
-					type="checkbox"
-					model="box.activeFilters"
-					property="columnsFlag"
-					label="Columns"
-					placeholder="I would like this filter to include visible columns."
-					form="forms.saveFilter"
-					validations="box.activeFilters.getValidations()"
-					results="box.activeFilters.getValidationResults()">
-				</validatedinput>
+        <validatedinput
+          type="checkbox"
+          model="box.activeFilters"
+          property="columnsFlag"
+          label="Columns"
+          placeholder="I would like this filter to include visible columns."
+          form="forms.saveFilter"
+          validations="box.activeFilters.getValidations()"
+          results="box.activeFilters.getValidationResults()">
+        </validatedinput>
 
-			</div>
-	    </div>
-	</div>
+      </div>
+      </div>
+  </div>
 
-	 <div class="modal-footer">        
+   <div class="modal-footer">
         <button type="button" class="btn btn-warning" ng-click="box.resetSaveFilter()">Cancel</button>
-        <button 
-        	id="filter-save" 
-			type="submit" 
-			class="btn btn-primary"
-			ng-disabled="forms.saveFilter.$invalid">
-			Save Filter
-		</button>
+        <button
+          id="filter-save"
+      type="submit"
+      class="btn btn-primary"
+      ng-disabled="forms.saveFilter.$invalid">
+      Save Filter
+    </button>
     </div>
 
 </form>

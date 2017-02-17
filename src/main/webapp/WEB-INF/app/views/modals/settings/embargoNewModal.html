@@ -1,8 +1,8 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetEmbargo()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
+  <button type="button" class="close" ng-click="resetEmbargo()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
 </div>
 
 <form ng-submit="createEmbargo()" name="forms.create" novalidate>
@@ -20,7 +20,7 @@
             validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
-    	
+
         <validatedinput
             model="modalData"
             property="description"
@@ -30,7 +30,7 @@
             validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
-        
+
         <validatedinput
             model="modalData"
             property="duration"
@@ -53,7 +53,7 @@
             validations="embargoRepo.getValidations()"
             results="embargoRepo.getValidationResults()">
         </validatedinput>
-        
+
         <validatedinput
             type="checkbox"
             model="modalData"
@@ -70,13 +70,13 @@
     </div>
 
     <div class="modal-footer">
-    	<button 
-            type="button" 
-            class="btn btn-warning" 
+      <button
+            type="button"
+            class="btn btn-warning"
             ng-click="resetEmbargo()">Cancel</button>
-    	<button 
-            id="embargo-save" 
-            type="submit" 
+      <button
+            id="embargo-save"
+            type="submit"
             class="btn btn-primary"
             ng-disabled="forms.create.$invalid">Create</button>
     </div>

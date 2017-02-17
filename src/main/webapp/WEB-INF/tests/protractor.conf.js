@@ -8,19 +8,19 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome'
   },
-  
-  onPrepare: function() {
-	  /* global angular: false, browser: false, jasmine: false */
 
-	  // Disable animations so e2e tests run more quickly
-	  var disableNgAnimate = function() {
-	    angular.module('disableNgAnimate', []).run(['$animate', function($animate) {
-	      $animate.enabled(false);
-	    }]);
-	  };
-	  browser.addMockModule('disableNgAnimate', disableNgAnimate);
-	  browser.driver.manage().window().maximize();
-	  browser.executeScript('$.fx.off = true');
+  onPrepare: function() {
+    /* global angular: false, browser: false, jasmine: false */
+
+    // Disable animations so e2e tests run more quickly
+    var disableNgAnimate = function() {
+      angular.module('disableNgAnimate', []).run(['$animate', function($animate) {
+        $animate.enabled(false);
+      }]);
+    };
+    browser.addMockModule('disableNgAnimate', disableNgAnimate);
+    browser.driver.manage().window().maximize();
+    browser.executeScript('$.fx.off = true');
   },
 
   chromeOnly: true,

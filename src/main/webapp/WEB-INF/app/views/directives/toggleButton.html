@@ -1,13 +1,13 @@
 <div class="toggle-button">
-	<div class="col-sm-6">
-		<span class="toggle-button-heading">{{ label }}</span>
-	</div>
-	<div class="col-sm-6">
-		<div class="with-tool-tip">
-			<div class="btn-group">
-	      		<input type="button" ng-repeat="option in options track by $index" class="btn btn-sm btn-default" ng-click="setActive(option.evaluation)" ng-class="{'active': scopeValue.toString() == option.evaluation}" value="{{ option.gloss }}"/>
-	    	</div>
-	    	<span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ toolTip }}"></span>
-    	</div>
-	</div>
+  <div class="col-sm-6">
+    <span class="toggle-button-heading">{{ label }}</span>
+  </div>
+  <div class="col-sm-6">
+    <div class="with-tool-tip">
+      <div class="btn-group">
+            <input type="button" ng-repeat="option in options track by $index" class="btn btn-sm btn-default" ng-click="setActive(option.evaluation)" ng-class="{'active': scopeValue.toString() == option.evaluation}" value="{{ option.gloss }}"/>
+        </div>
+        <span ng-if="toolTip" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ toolTip }}"></span>
+      </div>
+  </div>
 </div>
