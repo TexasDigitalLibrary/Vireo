@@ -16,28 +16,23 @@ vireo.directive("info", function(FieldValue) {
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
         controller: function($scope) {
-            $scope.fieldValues = [];
 
-            for (var i in $scope.submission.fieldValues) {
-                if ($scope.submission.fieldValues[i].fieldPredicate.value == $scope.fieldProfile.fieldPredicate.value) {
-                    $scope.fieldValues.push(new FieldValue($scope.submission.fieldValues[i]));
-                }
-            }
+            $scope.fieldPredicateFilter = function (fieldValue) {
+                return fieldValue.fieldPredicate.value === $scope.fieldProfile.fieldPredicate.value;
+            };
 
             $scope.addFieldValue = function() {
-                $scope.fieldValues.push(new FieldValue({
-                    fieldPredicate: $scope.fieldProfile.fieldPredicate
-                }));
+                $scope.submission.addFieldValue($scope.fieldProfile.fieldPredicate);
             };
 
             $scope.removeFieldValue = function(fieldValue) {
                 fieldValue.updating = true;
                 if (fieldValue.value !== undefined) {
                     $scope.submission.removeFieldValue(fieldValue).then(function(response) {
-                        $scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
+                        fieldValue.updating = false;
                     });
                 } else {
-                    $scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
+                    $scope.submission.fieldValues.splice($scope.submission.fieldValues.indexOf(fieldValue), 1);
                 }
             };
 
@@ -58,10 +53,6 @@ vireo.directive("info", function(FieldValue) {
                 fieldValue.editing = false;
                 delete fieldValue.updating;
             };
-
-            if ($scope.fieldValues.length === 0) {
-                $scope.addFieldValue();
-            }
 
             $scope.inputTel = function() {
                 return $scope.fieldProfile.inputType.name == 'INPUT_TEL';

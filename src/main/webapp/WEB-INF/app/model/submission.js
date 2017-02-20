@@ -29,6 +29,55 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
     });
 
+    submission.before(function() {
+        angular.extend(apiMapping.Submission.fieldValuesListen, {
+          'method': submission.id + '/field-values'
+        });
+        WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
+            var newReatable = true;
+            var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
+            for(var i in submission.fieldValues) {
+                var fieldValue = submission.fieldValues[i];
+                if(fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
+                    if(fieldValue.id) {
+                        if(fieldValue.id === newFieldValue.id) {
+                            angular.extend(fieldValue, newFieldValue);
+                            newReatable = false;
+                            break;
+                        }
+                        else {
+                            //
+                        }
+                    }
+                    else {
+                        angular.extend(fieldValue, newFieldValue);
+                        newReatable = false;
+                        break;
+                    }
+                }
+            }
+            if(newReatable) {
+                submission.fieldValues.push(new FieldValue(newFieldValue));
+            }
+        });
+    });
+
+    submission.before(function() {
+        angular.extend(apiMapping.Submission.fieldValueRemovedListen, {
+          'method': submission.id + '/removed-field-value'
+        });
+        WsApi.listen(apiMapping.Submission.fieldValueRemovedListen).then(null, null, function(data) {
+            var removedFieldValue = angular.fromJson(data.body).payload.FieldValue;
+            for(var i in submission.fieldValues) {
+                var fieldValue = submission.fieldValues[i];
+                if(fieldValue.id === removedFieldValue.id) {
+                    submission.fieldValues.splice(i, 1);
+                    break;
+                }
+            }
+        });
+    });
+
     // additional model methods and variables
     var createEmptyFieldValue = function(fieldPredicate) {
       return new FieldValue({
@@ -206,7 +255,6 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
     };
 
     submission.removeFieldValue = function(fieldValue) {
-
       angular.extend(this.getMapping().removeFieldValue, {
         method: submission.id + "/remove-field-value",
         data: fieldValue
