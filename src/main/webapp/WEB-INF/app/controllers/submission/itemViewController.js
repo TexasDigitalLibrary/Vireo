@@ -326,10 +326,17 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
       }
     };
 
+    $scope.flaggedFieldProfilesBox = {
+        "title": "Flagged Fields",
+        "viewUrl": "views/sideboxes/flaggedFieldProfiles.html",
+        "submission": $scope.submission
+    };
+
     SidebarService.addBoxes([
       $scope.activeDocumentBox,
       $scope.submissionStatusBox,
-      $scope.customActionsBox
+      $scope.customActionsBox,
+      $scope.flaggedFieldProfilesBox
     ]);
 
   });

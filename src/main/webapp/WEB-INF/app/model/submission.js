@@ -353,6 +353,20 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
       return promise;
     };
 
+    submission.getFlaggedFieldProfiles = function() {
+
+        var fieldProfiles = [];
+
+        angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
+            angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+              if (fp.flagged) fieldProfiles.push(fp);
+            });
+          });
+
+        return fieldProfiles;
+
+    };
+
     return submission;
   };
 
