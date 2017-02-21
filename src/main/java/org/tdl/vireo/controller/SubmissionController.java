@@ -72,6 +72,8 @@ public class SubmissionController {
     private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
 
     private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
+    
+    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME = "Corrections Received";
 
     @Autowired
     private UserRepo userRepo;
@@ -320,8 +322,21 @@ public class SubmissionController {
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
+        return new ApiResponse(SUCCESS, new ApiResponse(SUCCESS, submission));
+    }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/submit-corrections")
+    @Auth(role = "STUDENT")
+    public ApiResponse setSubmissionCorrectionsReceived(@ApiVariable Long submissionId) {
+        Submission submission = submissionRepo.findOne(submissionId);
+        SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
+        submission.setSubmissionState(needsCorrectionState);
+        submissionRepo.save(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
         return new ApiResponse(SUCCESS);
     }
+
 
     @Transactional
     @ApiMapping("/query/{page}/{size}")
