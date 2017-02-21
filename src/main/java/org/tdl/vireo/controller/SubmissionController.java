@@ -186,15 +186,17 @@ public class SubmissionController {
                 orcidErrors = orcidUtility.verifyOrcid(credentials, fieldValue);
             }
             if (orcidErrors.isEmpty()) {
+                Submission submission = submissionRepo.findOne(submissionId);
                 if (fieldValue.getId() == null) {
-                    Submission submission = submissionRepo.findOne(submissionId);
                     submission.addFieldValue(fieldValueRepo.save(fieldValue));
                     submission = submissionRepo.save(submission);
                     fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
+                    
                 } else {
                     fieldValue = fieldValueRepo.save(fieldValue);
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
             } else {
                 Map<String, Map<String, String>> orcidErrorsMap = new HashMap<String, Map<String, String>>();
                 orcidErrorsMap.put("value", orcidErrors);
@@ -300,6 +302,7 @@ public class SubmissionController {
         Submission submission = submissionRepo.findOne(submissionId);
         submission.removeFieldValue(fieldValue);
         submissionRepo.save(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/removed-field-value", new ApiResponse(SUCCESS, fieldValue));
         return new ApiResponse(SUCCESS);
     }
 

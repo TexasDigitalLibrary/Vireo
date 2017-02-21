@@ -577,6 +577,14 @@ var apiMapping = {
             'endpoint': '/channel',
             'controller': 'submission'
         },
+        fieldValuesListen: {
+            'endpoint': '/channel',
+            'controller': 'submission'
+        },
+        fieldValueRemovedListen: {
+            'endpoint': '/channel',
+            'controller': 'submission'
+        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -676,6 +684,10 @@ var apiMapping = {
             'method': 'submit-corrections'
         },
         saveFieldValue: {
+            'endpoint': '/private/queue',
+            'controller': 'submission'
+        },
+        removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'
         }
@@ -921,5 +933,5 @@ var apiMapping = {
             'controller': 'submission-list',
             'method': 'remove-saved-filter'
         }
-    }
+    };
 }

@@ -361,6 +361,8 @@
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
 
+    <!-- filters -->
+    <script src="filters/fieldValuePerProfile.js"></script>
 
 	    <!-- Controllers -->
 	    <script src="controllers/abstractController.js"></script>
