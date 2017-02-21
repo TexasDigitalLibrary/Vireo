@@ -1,0 +1,23 @@
+vireo.directive("submissiondialog", function() {
+    return {
+        templateUrl: function(element, attr) {
+            return "views/directives/submissionDialog-" + attr.type + ".html"
+        },
+        scope: {
+            submission: '='
+        },
+        link: function($scope, element, attr, parent) {
+            $scope.ac = ['-', '+'];
+            $scope.toggle = function() {
+                $scope.ac.reverse()
+            }
+        },
+        controller: function($scope) {
+            $scope.submitCorrections = function() {
+                $scope.submission.submitCorrections().then(function(response) {
+                    angular.extend($scope.submission, angular.fromJson(response.body).payload.Submission);
+                });
+            }
+        }
+    }
+});

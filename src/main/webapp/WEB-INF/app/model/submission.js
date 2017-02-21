@@ -37,7 +37,6 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
                 var newReatable = true;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
-                var potentialFieldValue;
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
@@ -46,21 +45,15 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                                 angular.extend(fieldValue, newFieldValue);
                                 newReatable = false;
                                 break;
+                            } else {
+                                //
                             }
                         } else {
-                            if (fieldValue.value === newFieldValue.value) {
-                                angular.extend(fieldValue, newFieldValue);
-                                newReatable = false;
-                                break;
-                            } else {
-                                potentialFieldValue = fieldValue;
-                            }
+                            angular.extend(fieldValue, newFieldValue);
+                            newReatable = false;
+                            break;
                         }
                     }
-                }
-                if (potentialFieldValue) {
-                    angular.extend(potentialFieldValue, newFieldValue);
-                    newReatable = false;
                 }
                 if (newReatable) {
                     submission.fieldValues.push(new FieldValue(newFieldValue));
@@ -256,6 +249,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
         };
 
         submission.removeFieldValue = function(fieldValue) {
+
             angular.extend(this.getMapping().removeFieldValue, {
                 method: submission.id + "/remove-field-value",
                 data: fieldValue
@@ -280,19 +274,15 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.fileInfo = function(fieldValue) {
+        submission.fileInfo = function(uri) {
 
             angular.extend(this.getMapping().fileInfo, {
                 data: {
-                    'uri': fieldValue.value
+                    'uri': uri
                 }
             });
 
             var promise = WsApi.fetch(this.getMapping().fileInfo);
-
-            promise.then(function(data) {
-                fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-            });
 
             return promise;
         };
@@ -309,11 +299,11 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.removeFile = function(fieldValue) {
+        submission.removeFile = function(uri) {
 
             angular.extend(this.getMapping().removeFile, {
                 data: {
-                    'uri': fieldValue.value
+                    'uri': uri
                 }
             });
 
@@ -343,6 +333,17 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             });
 
             var promise = WsApi.fetch(this.getMapping().needsCorrection);
+
+            return promise;
+        };
+
+        submission.submitCorrections = function() {
+
+            angular.extend(this.getMapping().submitCorrections, {
+                method: submission.id + "/submit-corrections"
+            });
+
+            var promise = WsApi.fetch(this.getMapping().submitCorrections);
 
             return promise;
         };
@@ -405,25 +406,26 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.getFlaggedFieldProfiles = function() {
-
-            var fieldProfiles = [];
-
-            angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
-                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
-                    if (fp.flagged)
-                        fieldProfiles.push(fp);
-                    }
-                );
-            });
-
-            return fieldProfiles;
-
-        };
-
         return submission;
     };
 
+    submission.getFlaggedFieldProfiles = function() {
+
+        var fieldProfiles = [];
+
+        angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
+            angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+                if (fp.flagged)
+                    fieldProfiles.push(fp);
+                }
+            );
+        });
+
+        return fieldProfiles;
+
+    };
+
+    return submission;
 };
 
 vireo.model("Submission", submissionModel);

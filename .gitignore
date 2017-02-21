@@ -14,5 +14,6 @@ src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .externalToolBuilders
 .classpath
 .settings
+.project
 .tern-project
 *.log*

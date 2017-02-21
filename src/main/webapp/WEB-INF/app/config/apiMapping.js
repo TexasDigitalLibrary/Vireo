@@ -315,7 +315,10 @@ var apiMapping = {
         }
     },
     FieldValue: {
-
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'submission'
+        }
     },
     GraduationMonth: {
         all: {
@@ -675,6 +678,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'create'
         },
+        submitCorrections: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'submit-corrections'
+        },
         saveFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'
@@ -817,12 +825,12 @@ var apiMapping = {
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
-            'method': 'settings',
+            'method': 'settings'
         },
         update: {
             'endpoint': '/private/queue',
             'controller': 'user',
-            'method': 'settings/update',
+            'method': 'settings/update'
         },
         listen: {
             'endpoint': '/channel',
@@ -944,6 +952,6 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
             'method': 'remove-saved-filter'
-        },
-    }
+        }
+    };
 }

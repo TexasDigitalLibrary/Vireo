@@ -1,4 +1,4 @@
-vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldValue, AdvisorSubmissionRepo) {
+vireo.directive('reviewsubmissionsfields', function($location, InputTypes, FieldValue, AdvisorSubmissionRepo) {
     return {
     	templateUrl: 'views/directives/reviewSubmissionFields.html',
         restrict: 'E',
@@ -13,7 +13,7 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
             if($scope.validate) {
                 $scope.submission.ready().then(function() {
                     $scope.submission.validate();
-                });    
+                });
             }
         },
         link: function($scope){
@@ -31,7 +31,7 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
 			};
 
              $scope.hasValidationViolation = function(predicate) {
-        
+
                 var fieldValues = $scope.submission.getFieldValuesByFieldPredicate(predicate);
 
                 for(var i in fieldValues) {
@@ -47,7 +47,7 @@ vireo.directive('reviewsubmissionsields', function($location, InputTypes, FieldV
             $scope.getFile = function(fieldValue) {
                  $scope.submission.fileInfo(fieldValue.value).then(function(data) {
                     fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                    
+
                     $scope.submission.file(fieldValue.value).then(function(data) {
                         saveAs(new Blob([data], { type:fieldValue.fileInfo.type }), fieldValue.fileInfo.name);
                     });
