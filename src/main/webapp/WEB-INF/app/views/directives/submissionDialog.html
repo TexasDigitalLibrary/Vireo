@@ -1,6 +1,6 @@
 <div class="dialog alert">
   <span class="dialog-close toggle-href" ng-click="toggle()">[{{ac[0]}}]</span>
-  <h4>Current Submission State:</h4>
+  <h4 class="dialog-header">Current Submission State:</h4>
   <span class="submission-state">{{submission.submissionState.name}}</span>
   <div class="dialog-content" ng-class="{'dialog-open': ac[0] === '-', 'dialog-closed': ac[0] === '+'}">Your Submission cannot be changed at this time.</div>
 </div>

@@ -30,12 +30,22 @@ submissiondialog div.dialog span.dialog-close {
   float: right;
 }
 
+submissiondialog div.dialog h4.dialog-header {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+submissiondialog div.dialog span.submission-state {
+  font-weight: bold;
+}
+
 .dialog-content {
-  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
-  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
-  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
-  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -webkit-transition: max-height 0.55s ease-in-out, opacity 0.25s ease-in-out;
+  -moz-transition: max-height 0.55s ease-in-out, opacity 0.25s ease-in-out;
+  -o-transition: max-height 0.55s ease-in-out, opacity 0.25s ease-in-out;
+  transition: max-height 0.55s ease-in-out, opacity 0.25s ease-in-out;
   overflow: hidden;
+  margin-top: 10px;
 }
 
 .dialog-closed {
