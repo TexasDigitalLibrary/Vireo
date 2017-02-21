@@ -56,6 +56,9 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     
     @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Configuration mappedShibAttribute;
+    
+    @Column(nullable = true)
+    private Boolean flagged;
 
     /**
      * @return the fieldPredicate
@@ -256,6 +259,21 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     public void clearControlledVocabulary() {
         this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
+    }
+    
+    /**
+     * @return the flagged
+     */
+    public Boolean getFlagged() {
+        return flagged;
+    }
+
+    /**
+     * @param overrideable
+     *            the flagged to set
+     */
+    public void setFlagged(Boolean flagged) {
+        this.flagged = flagged;
     }
 
     // TODO : Restrict multiple controlled vocabulary with the same language

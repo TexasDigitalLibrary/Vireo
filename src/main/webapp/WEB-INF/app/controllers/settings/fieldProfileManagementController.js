@@ -4,7 +4,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
 	$scope.shibbolethAttributes = ConfigurationRepo.getAllMapByType().shibboleth;
 
-	$scope.workflowStepRepo = WorkflowStepRepo;	
+	$scope.workflowStepRepo = WorkflowStepRepo;
 
 	$scope.fieldProfileRepo = FieldProfileRepo;
 
@@ -28,7 +28,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 	$scope.sortAction = "confirm";
 
 	$scope.uploadAction = "confirm";
-	
+
 
 	$scope.filteredPredicates = {};
 
@@ -113,11 +113,12 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				},
 				optional: true,
 				repeatable: false,
+                flagged: false,
 				fieldGlosses: [],
 				controlledVocabularies: []
 			};
 			angular.extend($scope.documentData.attachmentType, $scope.attachmentTypes[0]);
-			
+
 			$scope.closeModal();
 		};
 
@@ -161,7 +162,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 		$scope.selectFieldProfile = function(index) {
 			var fieldProfile = $scope.step.aggregateFieldProfiles[index];
 			angular.extend($scope.modalData, fieldProfile);
-			
+
 
 			if($scope.modalData.fieldPredicate.attachmentTypePredicate) {
 				angular.forEach($scope.attachmentTypes, function(attachmentType) {
@@ -171,7 +172,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 					}
 				});
 			}
-			
+
 		};
 
 		$scope.editFieldProfile = function(index) {

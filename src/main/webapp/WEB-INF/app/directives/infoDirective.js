@@ -8,7 +8,8 @@ vireo.directive("info", function(FieldValue) {
             submission: '=',
             fieldProfile: '=',
             fields: '=',
-            label: '@'
+            label: '@',
+            stacked: '=?'
         },
         link: function($scope, element, attr) {
             var edit = attr.edit !== undefined

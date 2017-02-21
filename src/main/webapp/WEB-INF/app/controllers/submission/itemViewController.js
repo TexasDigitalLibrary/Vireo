@@ -225,11 +225,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
             "getPrimaryDocumentFileName": function() {
-                return $scope.primaryDocumentFieldValue !== undefined
-                    ? $scope.primaryDocumentFieldValue.fileInfo !== undefined
-                        ? $scope.primaryDocumentFieldValue.fileInfo.name
-                        : ''
-                    : '';
+                return $scope.primaryDocumentFieldValue !== undefined ? $scope.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.primaryDocumentFieldValue.fileInfo.name : '' : '';
             },
             "downloadPrimaryDocument": function() {
                 $scope.getFile($scope.primaryDocumentFieldValue);
@@ -309,7 +305,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             }
         };
 
-        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.customActionsBox]);
+        $scope.flaggedFieldProfilesBox = {
+            "title": "Flagged Fields",
+            "viewUrl": "views/sideboxes/flaggedFieldProfiles.html",
+            "submission": $scope.submission
+        };
+
+        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.customActionsBox, $scope.flaggedFieldProfilesBox]);
 
     });
 
