@@ -682,6 +682,26 @@ var apiMapping = {
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'
+        },
+        fileInfo: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'file-info'
+        },
+        file: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'file'
+        },
+        renameFile: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'rename-file'
+        },
+        removeFile: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'remove-file'
         }
     },
     AdvisorSubmission: {
