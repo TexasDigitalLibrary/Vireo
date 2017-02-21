@@ -13,8 +13,8 @@
 		</tabs>
 
 	</div>
-	
-	<div class="row" ng-show="loaded">	
+
+	<div class="row" ng-show="loaded">
 		<h1>REVIEWER NOTES</h1>
 		<div class="form-inline reviewer-notes">
 			<span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
@@ -27,13 +27,31 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row" ng-show="loaded">
 		<h1>ACTION LOG</h1>
+
+    <table class="table table-bordered table-striped table-hover action-log-table">
+      <thead>
+        <tr>
+          <th>Action By</th>
+          <th>Action / Comment</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="actionLog in submission.actionLogs" ng-class="{'danger': actionLog.privateFlag}">
+          <td>{{actionLog.user.settings.displayName}}</td>
+          <td>{{actionLog.entry}} <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam></td>
+          <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
+        </tr>
+      </tbody>
+    </table>
+
 	</div>
-	
+
 	<div class="row" ng-show="loaded">
-		<a name="all-files"></a> 
+		<a name="all-files"></a>
 		<h1>ALL FILES</h1>
 		<table class="table table-bordered table-striped table-hover etd-table">
 			<thead>
@@ -46,7 +64,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">	
+				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">
 					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
 					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
 					<td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
@@ -63,7 +81,7 @@
 					<th colspan="5"><button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button></th>
 				</tr>
 			</tfoot>
-		</table>		
+		</table>
 	</div>
 
 </div>

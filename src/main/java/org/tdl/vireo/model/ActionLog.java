@@ -14,6 +14,10 @@ import javax.persistence.TemporalType;
 
 import org.tdl.vireo.model.validation.ActionLogValidator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -23,6 +27,8 @@ import edu.tamu.framework.model.BaseEntity;
 public class ActionLog extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Submission.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Submission submission;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)

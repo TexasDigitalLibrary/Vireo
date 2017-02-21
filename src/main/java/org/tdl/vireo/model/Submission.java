@@ -62,9 +62,6 @@ public class Submission extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<ActionLog> actionLog;
-
     @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private Set<Embargo> embargoTypes;
 
@@ -74,6 +71,9 @@ public class Submission extends BaseEntity {
 
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<CustomActionValue> customActionValues;
+    
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private List<ActionLog> actionLogs;
 
     @Lob
     private String reviewerNotes;
@@ -85,7 +85,7 @@ public class Submission extends BaseEntity {
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
-        setActionLog(new HashSet<ActionLog>());
+        setActionLogs(new ArrayList<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setCustomActionValues(new ArrayList<CustomActionValue>());
         setAttachments(new HashSet<DeprecatedAttachment>());
@@ -318,16 +318,16 @@ public class Submission extends BaseEntity {
     /**
      * @return the actionLog
      */
-    public Set<ActionLog> getActionLog() {
-        return actionLog;
+    public List<ActionLog> getActionLogs() {
+        return actionLogs;
     }
 
     /**
      * @param actionLog
      *            the actionLog to set
      */
-    public void setActionLog(Set<ActionLog> actionLog) {
-        this.actionLog = actionLog;
+    public void setActionLogs(List<ActionLog> actionLogs) {
+        this.actionLogs = actionLogs;
     }
 
     /**
@@ -335,7 +335,7 @@ public class Submission extends BaseEntity {
      * @param actionLog
      */
     public void addActionLog(ActionLog actionLog) {
-        getActionLog().add(actionLog);
+        getActionLogs().add(actionLog);
     }
 
     /**
@@ -343,7 +343,7 @@ public class Submission extends BaseEntity {
      * @param actionLog
      */
     public void removeActionLog(ActionLog actionLog) {
-        getActionLog().remove(actionLog);
+        getActionLogs().remove(actionLog);
     }
 
     /**
@@ -472,7 +472,7 @@ public class Submission extends BaseEntity {
         return customActionValue;
     }
 
-    public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
+	public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
 
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
