@@ -1,4 +1,4 @@
-var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
+var submissionModel = function($q, FileApi, RestApi, FieldValue, ActionLog, WsApi) {
 
   return function Submission() {
 
@@ -30,11 +30,31 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
     });
 
     submission.before(function() {
+        var actionLogs = angular.copy(submission.actionLogs);
+        if (submission.actionLogs) submission.actionLogs.length = 0;
+
+        //populate actionlogs with models for existing values
+        angular.forEach(actionLogs, function(actionLog) {
+            submission.actionLogs.push(new ActionLog(actionLog));
+        });
+
+        angular.extend(apiMapping.Submission.actionLogListen, {
+            'method': submission.id + '/action-logs'
+        });
+
+        WsApi.listen(apiMapping.Submission.actionLogListen).then(null, null, function(data) {
+            var newActionLog = angular.fromJson(data.body).payload.ActionLog;
+            submission.actionLogs.push(new ActionLog(newActionLog));
+        });
+
+    });
+
+    submission.before(function() {
         angular.extend(apiMapping.Submission.fieldValuesListen, {
           'method': submission.id + '/field-values'
         });
         WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
-            var newReatable = true;
+            var newRepeatable = true;
             var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
             for(var i in submission.fieldValues) {
                 var fieldValue = submission.fieldValues[i];
@@ -42,7 +62,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                     if(fieldValue.id) {
                         if(fieldValue.id === newFieldValue.id) {
                             angular.extend(fieldValue, newFieldValue);
-                            newReatable = false;
+                            newRepeatable = false;
                             break;
                         }
                         else {
@@ -51,12 +71,12 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                     }
                     else {
                         angular.extend(fieldValue, newFieldValue);
-                        newReatable = false;
+                        newRepeatable = false;
                         break;
                     }
                 }
             }
-            if(newReatable) {
+            if(newRepeatable) {
                 submission.fieldValues.push(new FieldValue(newFieldValue));
             }
         });

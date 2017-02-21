@@ -200,7 +200,14 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                
+                if(submissionFieldProfile.getLogged()) {
+                	ActionLog actionLog = actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+                	simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, actionLog));
+                }
+                
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
+                
             } else {
                 Map<String, Map<String, String>> orcidErrorsMap = new HashMap<String, Map<String, String>>();
                 orcidErrorsMap.put("value", orcidErrors);
@@ -209,6 +216,7 @@ public class SubmissionController {
         } else {
             apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
         }
+        
         return apiResponse;
     }
 

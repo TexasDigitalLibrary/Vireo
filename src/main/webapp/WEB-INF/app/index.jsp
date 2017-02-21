@@ -298,7 +298,7 @@
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/advisorSubmissionRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
-	    <script src="repo/attachmentTypeRepo.js"></script>
+        <script src="repo/attachmentTypeRepo.js"></script>
 	    <script src="repo/customActionDefinitionRepo.js"></script>
 	    <script src="repo/depositLocationRepo.js"></script>
 	    <script src="repo/emailTemplateRepo.js"></script>
@@ -329,6 +329,7 @@
 	    <script src="model/namedSearchFilterGroup.js"></script>
 		<script src="model/language.js"></script>
 		<script src="model/attachmentType.js"></script>
+        <script src="model/actionLog.js"></script>
 		<script src="model/customActionDefinition.js"></script>
 		<script src="model/depositLocation.js"></script>
 		<script src="model/emailTemplate.js"></script>
