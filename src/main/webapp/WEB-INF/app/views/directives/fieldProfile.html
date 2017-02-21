@@ -4,7 +4,7 @@
 			<label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
 		</div>
 		<div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name != 'INPUT_FILE'">
-			<div class="field-value-input row" ng-repeat="fieldValue in fieldValues track by $index">
+			<div class="field-value-input row" ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate">
 				<div class="col-xs-5">
 					<div ng-class="{'invalid': !fieldValue.isValid()}" ng-include="includeTemplateUrl"></div>
 					<div  ng-if="!fieldValue.isValid()" class="alert alert-danger">
@@ -28,6 +28,6 @@
 					{{fieldValue.value}}
 				</div>
 			</div>
-		</div>		
+		</div>
 	</div>
 </form>

@@ -3,6 +3,7 @@
 @import "./imports";
 @import "./views/all";
 @import "./directives/all";
+@import "./sideboxes/all";
 
 body {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
@@ -43,7 +44,7 @@ main footer {
     border-top: 1px solid #e5e5e5;
 }
 
-.form-group {  
+.form-group {
   margin: 18px 0 18px 0;
   font-size: 13px;
   font-weight: normal;
@@ -131,7 +132,7 @@ main footer {
   text-decoration: none !important;
 }
 
-.tab-pane .well { 
+.tab-pane .well {
   min-height: 600px
 }
 
@@ -315,7 +316,7 @@ main footer {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#43606e', endColorstr='#1b333f');
 
   border-top: 1px solid #8d8d8d;
-  
+
   height: 65px;
   padding-top: 7px;
 }
@@ -378,7 +379,7 @@ main footer {
   border: solid thin  #DDDDDD;
   border-bottom: none;
   box-shadow: 3px -2px 8px -6px #43606E, 0px 2px 0px 0px #FFFFFF;
-  cursor: default; 
+  cursor: default;
 }
 
 sidebox {
@@ -542,7 +543,7 @@ togglebutton {
 
 .tooltip-span-adjust {
   margin-left: 10px;
-  margin-bottom: 14px;  
+  margin-bottom: 14px;
   line-height: 2;
   vertical-align: top;
 }
@@ -577,7 +578,7 @@ h4 {
 
 .lock-control {
   font-size:0.95em;
-  margin: 0 0 10px; 
+  margin: 0 0 10px;
 }
 
 .lock-control a {
@@ -878,7 +879,7 @@ footer a, footer li, footer p {
   color: #70706f;
 }
 
-.control-group.required .control-label:before { 
+.control-group.required .control-label:before {
    content:"*";
    color:#70706f;
 }
@@ -895,7 +896,7 @@ footer a, footer li, footer p {
   padding-bottom: 12px;
 }
 
-.btn:focus , input[type=color]:focus { 
+.btn:focus , input[type=color]:focus {
   outline:none;
 }
 
@@ -959,7 +960,7 @@ footer a, footer li, footer p {
 }
 
 @media screen and (min-width: 768px) {
-  
+
   .footer, .header, .marketing {
     padding-left: 0;
     padding-right: 0;
@@ -979,7 +980,7 @@ footer a, footer li, footer p {
 
 }
 
-@media (min-width: 767px) and (max-width: 991px) { 
+@media (min-width: 767px) and (max-width: 991px) {
 
   .tab-nav li {
     padding: 0px 10px;
@@ -1055,7 +1056,7 @@ footer a, footer li, footer p {
 
 .triptych .panel-wrapper.closing {
   max-width: 0%;
-} 
+}
 
 .triptych .panel-wrapper.opening {
   max-width: 100%;
@@ -1162,12 +1163,12 @@ footer a, footer li, footer p {
 .triptych-panel.previously-active .list-group-item.selected {
     color: #70706f;
     background: #E6ECE8;
-}   
+}
 
 .triptych-panel .list-group-item.selected {
     color: #fff;
     background: #92AA9C;
-} 
+}
 
 .triptych-panel .panel-body {
   max-height: 200px;
@@ -1581,7 +1582,7 @@ footer a, footer li, footer p {
   transition: max-height 0.5s ease-out;
 }
 
-.further-filter-by .status-list li { 
+.further-filter-by .status-list li {
   margin-left: -25px;
 }
 
@@ -1613,7 +1614,7 @@ footer a, footer li, footer p {
   cursor:pointer;
 }
 
-.further-filter-by div[uib-datepicker-popup-wrap] { 
+.further-filter-by div[uib-datepicker-popup-wrap] {
   z-index: 9999999;
 }
 
