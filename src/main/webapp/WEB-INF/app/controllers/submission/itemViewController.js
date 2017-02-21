@@ -34,34 +34,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
 
         $scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
 
-        $scope.documentFieldValues = [];
-
         $scope.primaryDocumentFieldValue;
 
-        var getFileInfo = function(fieldValue) {
+        $scope.getFileInfo = function(fieldValue) {
             $scope.submission.fileInfo(fieldValue).then(function(data) {
                 fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                $scope.documentFieldValues.push(fieldValue);
                 if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
                     $scope.primaryDocumentFieldValue = fieldValue;
-                }
-            });
-        };
-
-        for (var i in $scope.submission.fieldValues) {
-            var fieldValue = $scope.submission.fieldValues[i];
-            if (fieldValue.fieldPredicate.documentTypePredicate && fieldValue.id) {
-                getFileInfo(new FieldValue(fieldValue));
-            }
-        }
-
-        var updateFileInfo = function(fieldValue) {
-            $scope.submission.fileInfo(fieldValue).then(function(data) {
-                for (var i in $scope.documentFieldValues) {
-                    if ($scope.documentFieldValues[i].id == fieldValue.id) {
-                        $scope.documentFieldValues[i].fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                        break;
-                    }
                 }
             });
         };
@@ -128,7 +107,6 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                     if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
                         delete $scope.primaryDocumentFieldValue;
                     }
-                    $scope.documentFieldValues.splice($scope.documentFieldValues.indexOf(fieldValue), 1);
                 });
             });
 
@@ -157,7 +135,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.cancel = function(fieldValue) {
             $scope.closeModal();
             fieldValue.refresh();
-            updateFileInfo(fieldValue);
+            $scope.getFileInfo(fieldValue);
         };
 
         $scope.addFileData = {};
@@ -190,11 +168,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(res) {
 
-                    updateFileInfo(fieldValue);
-
-                    if ($scope.documentFieldValues.indexOf(fieldValue) === -1) {
-                        $scope.documentFieldValues.push(fieldValue);
-                    }
+                    $scope.getFileInfo(fieldValue);
 
                     if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
                         $scope.primaryDocumentFieldValue = fieldValue;
