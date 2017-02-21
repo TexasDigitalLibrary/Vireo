@@ -11,15 +11,15 @@
 .item-view ul.info-list span.glyphicon.glyphicon-plus {
   margin-left: 25px;
 }
+
 .item-view ul.info-list span.glyphicon.glyphicon-minus {
   margin-left: 25px;
 }
 
 .item-view ul.info-list .input-group .glyphicon {
   top: 0;
-  margin-right: 0px;
+  margin-right: 0;
 }
-
 
 .item-view ul.info-list .info-conteiner {
   display: inline-flex;
@@ -41,18 +41,19 @@
   margin-bottom: 2px;
   bottom: 5px;
 }
-
 @media screen and (max-width: 775px) {
   .item-view ul.info-list .info-label {
     text-align: left;
   }
+
   .item-view ul.info-list .info-data {
-    margin-left: 0px;
+    margin-left: 0;
     margin-bottom: 5px;
   }
+
   .item-view ul.info-list .info-form {
-    margin: 0px;
-    bottom: 0px;
+    margin: 0;
+    bottom: 0;
   }
 }
 
@@ -123,7 +124,7 @@
 
 .section-closed {
   opacity: 0;
-  max-height: 0px;
+  max-height: 0;
 }
 
 .section-open {
@@ -137,4 +138,8 @@
 
 .action-log-table .private-flag {
   font-weight: bold;
+}
+
+div .item-view div.row h1 span.spinning {
+  font-size: 32px;
 }

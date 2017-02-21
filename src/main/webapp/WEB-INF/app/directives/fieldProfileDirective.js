@@ -1,4 +1,4 @@
-vireo.directive("field", function($controller, $q, $timeout, FileApi) {
+vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
   return {
     templateUrl: 'views/directives/fieldProfile.html',
     restrict: 'E',
@@ -19,14 +19,6 @@ vireo.directive("field", function($controller, $q, $timeout, FileApi) {
 
       $scope.image = undefined;
 
-      var refreshValues = function() {
-        $scope.fieldValues = $scope.submission.getFieldValuesByFieldPredicate($scope.profile.fieldPredicate);
-      };
-
-      $scope.submission.ready().then(function() {
-        refreshValues();
-      });
-
       $scope.save = function(fieldValue) {
         if ($scope.fieldProfileForm.$dirty) {
           fieldValue.updating = true;
@@ -38,7 +30,6 @@ vireo.directive("field", function($controller, $q, $timeout, FileApi) {
                 if ($scope.fieldProfileForm !== undefined) {
                   $scope.fieldProfileForm.$setPristine();
                 }
-                refreshValues();
                 resolve();
               });
             }, 500);
@@ -46,24 +37,19 @@ vireo.directive("field", function($controller, $q, $timeout, FileApi) {
         }
       };
 
+      $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
+
       $scope.addFieldValue = function() {
-        refreshValues();
         return $scope.submission.addFieldValue($scope.profile.fieldPredicate);
       };
 
-      var remove = function(fieldValue) {
-        $scope.fieldValues.splice($scope.fieldValues.indexOf(fieldValue), 1);
-        $scope.submission.fieldValues.splice($scope.submission.fieldValues.indexOf(fieldValue), 1);
-      }
-
       $scope.removeFieldValue = function(fieldValue) {
         if (fieldValue.id === null) {
-          remove(fieldValue);
+          $scope.submission.fieldValues.splice($scope.submission.fieldValues.indexOf(fieldValue), 1);
         } else {
           fieldValue.updating = true;
           $scope.submission.removeFieldValue(fieldValue).then(function() {
-            delete fieldValue.updating;
-            remove(fieldValue);
+              fieldValue.updating = false;
           });
         }
       };
