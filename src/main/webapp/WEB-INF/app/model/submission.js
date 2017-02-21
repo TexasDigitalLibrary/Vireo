@@ -113,6 +113,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             }
 
             return fieldProfile;
+
         };
 
         submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
@@ -287,7 +288,6 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
         };
 
         submission.file = function(uri) {
-            console.log(this.getMapping().file);
             angular.extend(this.getMapping().file, {
                 data: {
                     'uri': uri
@@ -426,8 +426,6 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
     };
 
     return submission;
-};
-
 };
 
 vireo.model("Submission", submissionModel);
