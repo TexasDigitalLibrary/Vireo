@@ -1,12 +1,17 @@
 <div class="container">
   <ul class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li><a href="/submission/history">Submissions</a></li>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a href="/submission/history">Submissions</a>
+    </li>
     <li class="active">View</li>
   </ul>
   <h1>Submission View</h1>
   <div class="student-submission-loader" ng-class="{'ready': studentSubmissionRepoReady}">
-    <img src="resources/images/ajax-loader.gif" />
+    <img src="resources/images/ajax-loader.gif"/>
   </div>
   <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="studentSubmissionRepoReady"></reviewsubmissionsfields>
+  <submissiondialog submission="submission"></submissiondialog>
 </div>
