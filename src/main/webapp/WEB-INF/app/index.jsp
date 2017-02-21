@@ -5,32 +5,32 @@
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
-	
+
 	<script type="text/javascript">
 		window.location.base = "${base}";
 	</script>
-	
+
 	<base href="${base}/">
-	
+
 	<title>Vireo :: Texas Digital Library</title>
-	
+
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool">
-	
+
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
 	<link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
-	
+
 	<link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css">
 
-	<link rel="stylesheet" href="resources/styles/app.css" />	
+	<link rel="stylesheet" href="resources/styles/app.css" />
 
 	<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
 
 	<script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
-	
+
 </head>
 <body>
 	<!--[if lt IE 7]>
@@ -41,7 +41,7 @@
 	<main>
 		<nav class="navbar navbar-default">
   			<div class="container-fluid" ng-controller="AuthenticationController">
-  			
+
 	    		<div class="navbar-header">
 	      			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 				        <span class="sr-only">Toggle navigation</span>
@@ -50,21 +50,21 @@
 				        <span class="icon-bar"></span>
 			      	</button>
 			    </div>
-			    
+
 			    <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary"></modal>
 				<modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
 
-	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">		      	
+	    		<div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			      	<ul class="nav navbar-nav navbar-right">
 			      		<li class="dropdown">
 			      			<a href ng-click="openModal('#loginModal')">Login</a>
 			      		</li>
 						<li class="dropdown">
 			      			<a href ng-click="openModal('#verifyEmailModal')">Register</a>
-			      		</li>						
+			      		</li>
 					</ul>
 	    		</div>
-	    			    		
+
 	    		<div ng-if="!isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			      	<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
@@ -96,11 +96,11 @@
 						</li>
 					</ul>
 	    		</div>
-	    		
-	    		
+
+
 	  		</div>
 		</nav>
-		
+
 		<header class="container-fluid site-title" ng-controller="HeaderController">
 			<div class="container">
 				<div class="row">
@@ -117,7 +117,7 @@
 			      		</li>
 			      		<li ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
 			      			<a href="admin/settings">Settings</a>
-			      		</li>						
+			      		</li>
 					</ul>
 				</div>
 			</div>
@@ -126,9 +126,9 @@
 		<alerts types="WARNING, ERROR"></alerts>
 		<alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
 		<alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
-				
-		<div class="container-fluid main">			
-			<div ng-view class="view"></div>					
+
+		<div class="container-fluid main">
+			<div ng-view class="view"></div>
 		</div>
 
 
@@ -158,15 +158,15 @@
 
 	<!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
 
-	
+
 	<!-- Bower component -->
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="bower_components/FileSaver/FileSaver.min.js"></script>
-	
+
 	<script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
 	<script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
-	
+
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
@@ -184,13 +184,13 @@
 	<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
 
-	
+
 	<!--  Core libraries -->
-	
+
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/core_concat.js -->
 
 		<!-- TODO: concat core js -->
-	
+
 	<!-- endbuild -->
 
 		<!-- Core Configuration -->
@@ -241,7 +241,7 @@
 	  	<script src="bower_components/core/app/services/alertservice.js"></script>
 	  	<script src="bower_components/core/app/services/validationstore.js"></script>
 	  	<script src="bower_components/core/app/services/userservice.js"></script>
-	  	
+
 	  	<!-- Repo -->
 	  	<script src="bower_components/core/app/repo/abstractRepo.js"></script>
 
@@ -256,8 +256,8 @@
 	    <script src="bower_components/core/app/controllers/loginController.js"></script>
 	    <script src="bower_components/core/app/controllers/userController.js"></script>
 	    <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
-		
-	    
+
+
 
 	<!-- build:js src/main/resources/static/ui/app/resources/scripts/app_concat.js -->
 
@@ -286,6 +286,7 @@
 	    <script src="directives/fieldProfileDisplayDirective.js"></script>
 	    <script src="directives/reviewSubmissionFieldsDirective.js"></script>
 	    <script src="directives/submissionNoteDirective.js"></script>
+			<script src="directives/submissionDialogDirective.js"></script>
 	    <script src="directives/stringToDateDirective.js"></script>
 	    <script src="directives/triptychDirective.js"></script>
 	    <script src="directives/infoDirective.js"></script>
@@ -294,7 +295,7 @@
 	    <script src="services/sidebarService.js"></script>
 	    <script src="services/itemViewService.js"></script>
 
-	    <!-- Repos -->	    
+	    <!-- Repos -->
 	    <script src="repo/abstractAppRepo.js"></script>
 	    <script src="repo/advisorSubmissionRepo.js"></script>
 	    <script src="repo/languageRepo.js"></script>
@@ -312,7 +313,7 @@
 	    <script src="repo/organizationCategoryRepo.js"></script>
 	    <script src="repo/inputTypeRepo.js"></script>
 	    <script src="repo/fieldPredicateRepo.js"></script>
-	    <script src="repo/fieldGlossRepo.js"></script>	    
+	    <script src="repo/fieldGlossRepo.js"></script>
 	    <script src="repo/studentSubmissionRepo.js"></script>
 	    <script src="repo/savedFilterRepo.js"></script>
 	    <script src="repo/submissionRepo.js"></script>
@@ -324,7 +325,7 @@
 	    <script src="repo/managerFilterColumnRepo.js"></script>
 	    <script src="repo/customActionValueRepo.js"></script>
 
-	    <!-- Models --> 
+	    <!-- Models -->
 		<script src="model/abstractAppModel.js"></script>
 	    <script src="model/namedSearchFilterGroup.js"></script>
 		<script src="model/language.js"></script>
@@ -342,7 +343,7 @@
 		<script src="model/organizationCategory.js"></script>
 	    <script src="model/inputType.js"></script>
 	    <script src="model/fieldPredicate.js"></script>
-	    <script src="model/fieldGloss.js"></script>	    
+	    <script src="model/fieldGloss.js"></script>
 	    <script src="model/savedFilter.js"></script>
 	    <script src="model/submission.js"></script>
 	    <script src="model/submissionState.js"></script>
@@ -354,8 +355,8 @@
 
 	    <!-- Constants -->
 		<script src="constants/emailRecipientType.js"></script>
-		<script src="constants/inputType.js"></script>		
-		<script src="constants/submissionStatuses.js"></script>	
+		<script src="constants/inputType.js"></script>
+		<script src="constants/submissionStatuses.js"></script>
 
 	    <!-- Factories -->
 		<script src="factories/dragAndDropListenerFactory.js"></script>
@@ -365,20 +366,20 @@
 	    <script src="controllers/abstractController.js"></script>
 	    <script src="controllers/adminController.js"></script>
 	    <script src="controllers/submission/advisorReviewController.js"></script>
-	    <script src="controllers/applicationSettingsController.js"></script>	    
-	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>	    
+	    <script src="controllers/applicationSettingsController.js"></script>
+	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>
 	    <script src="controllers/headerController.js"></script>
 	    <script src="controllers/settings/lookAndFeelController.js"></script>
         <script src="controllers/organizationSettingsController.js"></script>
         <script src="controllers/settings/organizationManagementController.js"></script>
 	    <script src="controllers/settingsController.js"></script>
-	    <script src="controllers/sidebarController.js"></script>  
+	    <script src="controllers/sidebarController.js"></script>
 	    <script src="controllers/userRepoController.js"></script>
 	    <script src="controllers/settings/customActionSettingsController.js"></script>
-	    <script src="controllers/settings/depositLocationRepoController.js"></script> 
+	    <script src="controllers/settings/depositLocationRepoController.js"></script>
 	    <script src="controllers/settings/embargoRepoController.js"></script>
-	    <script src="controllers/settings/graduationMonthRepoController.js"></script> 
-	    <script src="controllers/settings/emailTemplateRepoController.js"></script> 
+	    <script src="controllers/settings/graduationMonthRepoController.js"></script>
+	    <script src="controllers/settings/emailTemplateRepoController.js"></script>
 	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
 	    <script src="controllers/settings/languagesController.js"></script>
 	    <script src="controllers/settings/attachmentTypesController.js"></script>
@@ -393,7 +394,7 @@
 	    <script src="controllers/submission/submissionHistoryController.js"></script>
 	    <script src="controllers/submission/submissionCompleteController.js"></script>
 	    <script src="controllers/submission/itemViewController.js"></script>
-	    
+
 	<!-- endbuild -->
 
 	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
