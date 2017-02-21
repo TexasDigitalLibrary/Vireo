@@ -37,6 +37,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
                 var newReatable = true;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
+                var potentialFieldValue;
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
@@ -51,9 +52,15 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                                 angular.extend(fieldValue, newFieldValue);
                                 newReatable = false;
                                 break;
+                            } else {
+                                potentialFieldValue = fieldValue;
                             }
                         }
                     }
+                }
+                if (potentialFieldValue) {
+                    angular.extend(potentialFieldValue, newFieldValue);
+                    newReatable = false;
                 }
                 if (newReatable) {
                     submission.fieldValues.push(new FieldValue(newFieldValue));
