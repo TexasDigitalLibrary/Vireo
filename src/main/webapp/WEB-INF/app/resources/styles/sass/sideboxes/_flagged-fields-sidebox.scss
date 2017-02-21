@@ -1,5 +1,11 @@
 
 .sidebox-body ul.info-list {
-  padding: 0px;
+  padding: 25px;
+}
+
+@media (max-width: 1700px) {
+  .sidebox-body ul.info-list {
+    padding: 0px;
+  }
 }
 

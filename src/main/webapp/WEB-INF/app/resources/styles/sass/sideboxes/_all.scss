@@ -1,5 +1,8 @@
 @import "flagged-fields-sidebox";
 
-.sidebox-body ul {
-  padding: 15px;
+
+@media (max-width: 1700px) {
+    .sidebox-body ul {
+      padding: 15px;
+    }
 }
