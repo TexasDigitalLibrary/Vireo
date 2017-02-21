@@ -32,19 +32,20 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-    
+
     @Column(nullable = true)
     private Boolean overrideable;
-    
+
     @Column(nullable = true)
     private Boolean enabled;
-    
+
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
         setEnabled(true);
         setOptional(true);
         setFlagged(false);
+        setLogged(false);
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
@@ -55,7 +56,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param repeatable
@@ -74,7 +75,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -88,7 +89,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -141,7 +142,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
-    
+
     /**
      * @return the overrideable
      */
@@ -156,7 +157,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
+
     /**
      * @return the enabled
      */
