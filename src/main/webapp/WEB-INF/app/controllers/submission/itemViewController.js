@@ -120,7 +120,10 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function() {
+                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(response) {
+                    if (angular.fromJson(response.body).meta.type === "INVALID") {
+                        fieldValue.refresh();
+                    }
                     fieldValue.updating = false;
                 });
             });
@@ -166,15 +169,18 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(res) {
+                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(response) {
+                    if (angular.fromJson(response.body).meta.type === "INVALID") {
+                        fieldValue.refresh();
+                    } else {
+                        $scope.getFileInfo(fieldValue);
 
-                    $scope.getFileInfo(fieldValue);
+                        if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
+                            $scope.primaryDocumentFieldValue = fieldValue;
+                        }
 
-                    if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
-                        $scope.primaryDocumentFieldValue = fieldValue;
+                        $scope.resetAddFile();
                     }
-
-                    $scope.resetAddFile();
                 });
 
             }, function(response) {

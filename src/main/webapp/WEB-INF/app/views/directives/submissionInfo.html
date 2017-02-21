@@ -1,79 +1,86 @@
 <div ng-init="init()">
 
-	<div ng-if="immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
+  <div ng-if="immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
-		<div class="info-container">
+    <div class="info-container">
 
-			<div class="col-sm-4 info-label">
-				<label><span ng-if="$index < 1">{{label}}:</span></label>
-			</div>
+      <div class="col-sm-4 info-label">
+        <label>
+          <span ng-if="$index < 1">{{label}}:</span>
+        </label>
+      </div>
 
-			<div class="col-sm-8 info-data">
-				<span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
-				<span ng-if="inputTel()">
-					<a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
-					<span ng-if="!field.value" class="info-empty">none</span>
-				</span>
-				<span ng-if="inputUrl()">
-					<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
-					<span ng-if="!field.value" class="info-empty">none</span>
-				</span>
-				<span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
-				<span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
-			</div>
+      <div class="col-sm-8 info-data">
+        <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
+        <span ng-if="inputTel()">
+          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <span ng-if="!field.value" class="info-empty">none</span>
+        </span>
+        <span ng-if="inputUrl()">
+          <a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
+          <span ng-if="!field.value" class="info-empty">none</span>
+        </span>
+        <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+      </div>
 
-			<div class="clearfix"></div>
-		</div>
+      <div class="clearfix"></div>
+    </div>
 
-	</div>
+  </div>
 
-	<div ng-if="!immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter"">
+  <div ng-if="!immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
-		<div ng-if="!field.editing" class="info-container">
+    <div ng-if="!field.editing" class="info-container" ng-class="{'text-danger': !field.isValid()}">
 
-			<div class="col-sm-4 info-label">
-				<label><span ng-if="$index < 1">{{label}}:</span></label>
-			</div>
+      <div class="col-sm-4 info-label">
+        <label>
+          <span ng-if="$index < 1">{{label}}:</span>
+        </label>
+      </div>
 
-			<div class="col-sm-8 info-data">
-				<!-- conditionally show the edit clicker or the progress spinner -->
-				<span ng-if="!field.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="editFieldValue(field)"></span>
-				<span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+      <div class="col-sm-8 info-data">
+        <!-- conditionally show the edit clicker or the progress spinner -->
+        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="editFieldValue(field)"></span>
+        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
 
-				<!-- conditionally show the proper form of the field value -->
-				<span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
-				<span ng-if="inputTel()">
-					<a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
-					<span ng-if="!field.value" class="info-empty">none</span>
-				</span>
-				<span ng-if="inputUrl()">
-					<a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
-					<span ng-if="!field.value" class="info-empty">none</span>
-				</span>
-				<span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
-				<span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+        <!-- conditionally show the proper form of the field value -->
+        <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
+        <span ng-if="inputTel()">
+          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <span ng-if="!field.value" class="info-empty">none</span>
+        </span>
+        <span ng-if="inputUrl()">
+          <a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
+          <span ng-if="!field.value" class="info-empty">none</span>
+        </span>
+        <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
 
-				<span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
-				<span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
-			</div>
+        <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
+        <span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
 
-			<div class="clearfix"></div>
-		</div>
+        <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
+        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary toggle-href" ng-click="refreshFieldValue(field)"></span>
+      </div>
 
-		<form ng-submit="save(field)">
+      <div class="clearfix"></div>
+    </div>
 
-			<div ng-if="field.editing" class="info-container">
+    <form ng-submit="save(field)">
 
-				<div class="col-sm-4 info-label">
-					<label><span ng-if="$index < 1">{{label}}:</span></label>
-				</div>
-				<ng-include class="col-sm-8 info-form" src="edit"></ng-include>
+      <div ng-if="field.editing" class="info-container">
 
-				<div class="clearfix"></div>
-			</div>
+        <div class="col-sm-4 info-label">
+          <label>
+            <span ng-if="$index < 1">{{label}}:</span>
+          </label>
+        </div>
+        <ng-include class="col-sm-8 info-form" src="edit"></ng-include>
 
-		</form>
+        <div class="clearfix"></div>
+      </div>
 
-	<div>
+    </form>
 
-</div>
+  </div>

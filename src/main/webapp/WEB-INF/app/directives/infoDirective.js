@@ -11,12 +11,20 @@ vireo.directive("info", function(FieldValue) {
             label: '@'
         },
         link: function($scope, element, attr) {
-            var edit = attr.edit !== undefined ? attr.edit : 'text';
+            var edit = attr.edit !== undefined
+                ? attr.edit
+                : 'text';
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
         controller: function($scope) {
 
-            $scope.fieldPredicateFilter = function (fieldValue) {
+            $scope.refreshFieldValue = function(fieldValue) {
+                fieldValue.refresh();
+                fieldValue.setIsValid(true);
+                fieldValue.setValidationMessages([]);
+            };
+
+            $scope.fieldPredicateFilter = function(fieldValue) {
                 return fieldValue.fieldPredicate.value === $scope.fieldProfile.fieldPredicate.value;
             };
 
