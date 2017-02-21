@@ -114,6 +114,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 				optional: true,
 				repeatable: false,
                 flagged: false,
+                logged: false,
 				fieldGlosses: [],
 				controlledVocabularies: []
 			};
