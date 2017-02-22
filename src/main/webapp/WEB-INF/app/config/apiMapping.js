@@ -953,5 +953,5 @@ var apiMapping = {
             'controller': 'submission-list',
             'method': 'remove-saved-filter'
         }
-    };
-}
+    }
+};
