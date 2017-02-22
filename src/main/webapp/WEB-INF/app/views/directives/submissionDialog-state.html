@@ -1,0 +1,17 @@
+<div ng-show="submission" class="dialog state" ng-class="{'immutable': submission.submissionState.name != 'Needs Correction', 'needs-correction': submission.submissionState.name == 'Needs Correction'}">
+  <span class="dialog-close toggle-href" ng-click="show.reverse()">[{{show[0]}}]</span>
+  <h4 class="dialog-header">Current Submission State:</h4>
+  <span class="submission-state">{{submission.submissionState.name}}</span>
+  <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
+    <span ng-if="submission.submissionState.name != 'Needs Correction'">Your Submission cannot be changed at this time.</span>
+    <div ng-if="submission.submissionState.name == 'Needs Correction'">
+      <p>The application requires you to make corrections. Please make the indicated corrections and upload the new manuscript. After clicking the "Corrections Completed" button you will no longer be able to edit the application.</p>
+      <a class="needs-correction-link" href="#">Click here to jump down to replace manuscript</a>
+      <div class="needs-correction-action row center">
+        <button class="btn btn-default" ng-click="submitCorrections()" ng-diabled="submittingCorrections">Submit Corrections
+          <span ng-if="submittingCorrections" class="glyphicon glyphicon-refresh spinning"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

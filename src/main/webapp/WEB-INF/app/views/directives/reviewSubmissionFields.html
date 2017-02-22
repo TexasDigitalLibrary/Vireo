@@ -1,28 +1,31 @@
-<div class="row review-required-fields-directive" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps track by $index">
-	<h3>
-		{{submissionWorkflowStep.name}} 
-		<span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
-			<span class="glyphicon glyphicon-link"></span>
-		</span>
-	</h3>
-	<hr>
-	<div class="row" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required">
-		<div class="col-sm-2 col-sm-offset-1 col-xs-12">
-			<span class="review-label pull-right-sm pull-right-lg" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">
-			{{aggregateFieldProfile.fieldGlosses[0].value}}:</span>
-		</div>
-		<div class="col-sm-9 col-xs-12">
-			<ul class="list-unstyled">
-				<li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
-					<span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
-					<span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
-						{{fv.value}}<span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT"> ({{fv.identifier}})</span> 
-					</span>
-					<span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
-						<a href ng-click="getFile(fv)">{{fv.value}}</a>
-					</span>
-				</li>
-			</ul>
-		</div>
-	</div>
+<div class="review-required-fields-directive" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps track by $index">
+  <h3>
+    {{submissionWorkflowStep.name}}
+    <span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
+      <span class="glyphicon glyphicon-link"></span>
+    </span>
+  </h3>
+  <hr/>
+
+  <form class="form-horizontal">
+    <div class="form-group" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required">
+      <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.fieldGlosses[0].value}}:</label>
+      <div class="col-sm-9 field-values">
+        <ul class="list-unstyled">
+          <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
+            <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
+            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
+              {{fv.value}}
+              <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
+                ({{fv.identifier}})</span>
+            </span>
+            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
+              <a href ng-click="getFile(fv)">{{fv.value}}</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
+
 </div>

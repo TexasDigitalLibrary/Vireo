@@ -1,17 +1,40 @@
+.review-required-fields-directive {
+  display: inline-block;
+  width: 100%;
+}
 
 .review-required-fields-directive .danger {
-	color: $brand-danger;
+  color: $brand-danger;
 }
 
 .review-required-fields-directive .link-to-step {
-	color: $brand-primary;
+  color: $brand-primary;
 }
 
 .review-required-fields-directive .link-to-field:hover,
 .review-required-fields-directive .link-to-step:hover {
-	cursor: pointer
+  cursor: pointer;
 }
 
 .review-required-fields-directive .link-to-field {
-	color: $brand-danger;
+  color: $brand-danger;
+}
+
+.review-required-fields-directive div.form-group {
+  margin: 2px 0;
+}
+
+.form-horizontal .control-label {
+  padding-top: 0;
+  font-size: 14px;
+}
+@media (max-width: 768px) {
+  .review-required-fields-directive .field-values {
+    margin-left: 10px;
+  }
+}
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    padding-top: 0;
+  }
 }

@@ -75,6 +75,8 @@ public class SubmissionController {
 
     private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
 
+    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME = "Corrections Received";
+
     @Autowired
     private UserRepo userRepo;
 
@@ -116,7 +118,7 @@ public class SubmissionController {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
-    
+
     @Autowired
     private ActionLogRepo actionLogRepo;
 
@@ -195,26 +197,26 @@ public class SubmissionController {
                     submission.addFieldValue(fieldValueRepo.save(fieldValue));
                     submission = submissionRepo.save(submission);
                     fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-                    
-                    if(submissionFieldProfile.getLogged()) {
-                    	actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+
+                    if (submissionFieldProfile.getLogged()) {
+                        actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
                     }
-                    
+
                 } else {
-                	
-                	FieldValue oldFieldValue = fieldValueRepo.findOne(fieldValue.getId());
-                	String oldValue = oldFieldValue.getValue();
-                	fieldValue = fieldValueRepo.save(fieldValue);
-                	
-                	if(submissionFieldProfile.getLogged()) {
-	                	actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " +fieldValue.getValue());
-                	}
-                	
+
+                    FieldValue oldFieldValue = fieldValueRepo.findOne(fieldValue.getId());
+                    String oldValue = oldFieldValue.getValue();
+                    fieldValue = fieldValueRepo.save(fieldValue);
+
+                    if (submissionFieldProfile.getLogged()) {
+                        actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                    }
+
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
-                
+
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
-                
+
             } else {
                 Map<String, Map<String, String>> orcidErrorsMap = new HashMap<String, Map<String, String>>();
                 orcidErrorsMap.put("value", orcidErrors);
@@ -223,7 +225,22 @@ public class SubmissionController {
         } else {
             apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
         }
-        
+
+        return apiResponse;
+    }
+
+    @Transactional
+    @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
+    @Auth(role = "STUDENT")
+    public ApiResponse validateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
+        ApiResponse apiResponse = null;
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
+        if (validationResults.isValid()) {
+            apiResponse = new ApiResponse(SUCCESS, validationResults.getMessages());
+        } else {
+            apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        }
         return apiResponse;
     }
 
@@ -254,15 +271,15 @@ public class SubmissionController {
 
             SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
             if (submissionState != null) {
-                
-            	SubmissionState oldSubmissionState = submission.getSubmissionState();
-            	String oldSubmissionStateName = oldSubmissionState.getName();
-            	
-            	submission.setSubmissionState(submissionState);
+
+                SubmissionState oldSubmissionState = submission.getSubmissionState();
+                String oldSubmissionStateName = oldSubmissionState.getName();
+
+                submission.setSubmissionState(submissionState);
                 submission = submissionRepo.saveAndFlush(submission);
-                
-                actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " +oldSubmissionStateName+" to " + submissionStateName);
-                
+
+                actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionStateName);
+
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
@@ -292,9 +309,9 @@ public class SubmissionController {
             submission.setSubmissionDate(cal);
             submission = submissionRepo.save(submission);
             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
-            
+
             actionLogRepo.createPublicLog(submission, credentials, "Submission submitted: " + submission.getSubmissionDate().getTime());
-            
+
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -316,11 +333,11 @@ public class SubmissionController {
         if (submission != null) {
             submission.setAssignee(assignee);
             submission = submissionRepo.save(submission);
-            
-            actionLogRepo.createPublicLog(submission, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "("+ assignee.getEmail() +")");
-            
+
+            actionLogRepo.createPublicLog(submission, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+
             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
-            
+
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -353,19 +370,28 @@ public class SubmissionController {
     @ApiMapping("/{submissionId}/needs-correction")
     @Auth(role = "MANAGER")
     public ApiResponse setSubmissionNeedsCorrection(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
-        
-    	Submission submission = submissionRepo.findOne(submissionId);
+        Submission submission = submissionRepo.findOne(submissionId);
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
-        String oldSubmissionStateName = submission.getSubmissionState().getName();        
-        
+        String oldSubmissionStateName = submission.getSubmissionState().getName();
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
-        
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " +oldSubmissionStateName+" to " + NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
-        
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
-        
-        return new ApiResponse(SUCCESS);
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
+        ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
+        return apiResponse;
+    }
+
+    @Transactional
+    @ApiMapping("/{submissionId}/submit-corrections")
+    @Auth(role = "STUDENT")
+    public ApiResponse setSubmissionCorrectionsReceived(@ApiVariable Long submissionId) {
+        Submission submission = submissionRepo.findOne(submissionId);
+        SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
+        submission.setSubmissionState(needsCorrectionState);
+        submissionRepo.save(submission);
+        ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
+        return apiResponse;
     }
 
     @Transactional
@@ -382,14 +408,14 @@ public class SubmissionController {
     public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-        	
-        	String oldSubmissionStateName = sub.getSubmissionState().getName();
-        	
+
+            String oldSubmissionStateName = sub.getSubmissionState().getName();
+
             sub.setSubmissionState(submissionState);
             submissionRepo.saveAndFlush(sub);
-            
-            actionLogRepo.createPublicLog(sub, credentials, "Submission status was changed from " +oldSubmissionStateName+" to " + submissionState.getName());
-            
+
+            actionLogRepo.createPublicLog(sub, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
+
             processEmailWorkflowRules(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -402,7 +428,7 @@ public class SubmissionController {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
-            actionLogRepo.createPublicLog(sub, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "("+ assignee.getEmail() +")");
+            actionLogRepo.createPublicLog(sub, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             submissionRepo.save(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -480,7 +506,7 @@ public class SubmissionController {
                 e.printStackTrace();
             }
         });
-        
+
         actionLogRepo.createPublicLog(submission, credentials, "Advisor review email manually generated.");
 
         return new ApiResponse(SUCCESS);

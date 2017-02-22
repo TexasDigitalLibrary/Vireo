@@ -1,35 +1,37 @@
 <div class="item-view" ng-controller="ItemViewController">
 
-	<modal modal-id="addFileModal" modal-view="views/modals/view/addFileModal.html" modal-header-class="modal-header-primary"></modal>
+  <modal modal-id="addFileModal" modal-view="views/modals/view/addFileModal.html" modal-header-class="modal-header-primary"></modal>
 
-	<div class="row">
-		<h1>
-			<span ng-if="!submission"><span class="glyphicon glyphicon-refresh spinning"></span> Loading Submission...</span>
-			<span ng-if="submission">{{title}}</span>
-		</h1>
-		<hr>
-	 	<tabs ng-show="loaded">
-			<tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
-		</tabs>
+  <div class="row">
+    <h1>
+      <span ng-if="!submission">
+        <span class="glyphicon glyphicon-refresh spinning"></span>
+        Loading Submission...</span>
+      <span ng-if="submission">{{title}}</span>
+    </h1>
+    <hr>
+    <tabs ng-show="loaded">
+      <tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
+    </tabs>
 
-	</div>
+  </div>
 
-	<div class="row" ng-show="loaded">
-		<h1>REVIEWER NOTES</h1>
-		<div class="form-inline reviewer-notes">
-			<span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
-			<span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"> </span>
-			<span ng-if="!editingReviewerNotes" ng-class="{'info-empty': !submission.reviewerNotes}">{{submission.reviewerNotes || 'none'}}</span>
-			<div class="input-group" ng-if="editingReviewerNotes">
-				<textarea class="form-control" ng-model="submission.reviewerNotes" cols="200"></textarea>
-				<span class="glyphicon glyphicon-ok toggle-href" ng-click="saveReviewerNotes()"></span>
-				<span class="glyphicon glyphicon-remove toggle-href" ng-click="cancelReviewerNotes()"></span>
-			</div>
-		</div>
-	</div>
+  <div class="row" ng-show="loaded">
+    <h1>REVIEWER NOTES</h1>
+    <div class="form-inline reviewer-notes">
+      <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
+      <span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"></span>
+      <span ng-if="!editingReviewerNotes" ng-class="{'info-empty': !submission.reviewerNotes}">{{submission.reviewerNotes || 'none'}}</span>
+      <div class="input-group" ng-if="editingReviewerNotes">
+        <textarea class="form-control" ng-model="submission.reviewerNotes" cols="200"></textarea>
+        <span class="glyphicon glyphicon-ok toggle-href" ng-click="saveReviewerNotes()"></span>
+        <span class="glyphicon glyphicon-remove toggle-href" ng-click="cancelReviewerNotes()"></span>
+      </div>
+    </div>
+  </div>
 
-	<div class="row" ng-show="loaded">
-		<h1>ACTION LOG</h1>
+  <div class="row" ng-show="loaded">
+    <h1>ACTION LOG</h1>
 
     <table class="table table-bordered table-striped table-hover action-log-table">
       <thead>
@@ -42,11 +44,13 @@
       <tbody>
         <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit" ng-class="{'danger': actionLog.privateFlag}">
           <td>{{actionLog.user.settings.displayName}}</td>
-          <td>{{actionLog.entry}} <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam></td>
+          <td>{{actionLog.entry}}
+            <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
+          </td>
           <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
         </tr>
       </tbody>
-       <tfoot ng-if="submission.actionLogs.length>actionLogLimit">
+      <tfoot ng-if="submission.actionLogs.length>actionLogLimit">
         <tr>
           <td ng-click="updateActionLogLimit()">
             <span class="action-log-more-less" ng-if="actionLogCurrentLimit===actionLogLimit">[more]</span>
@@ -58,40 +62,44 @@
       </tfoot>
     </table>
 
-	</div>
+  </div>
 
-	<div class="row" ng-show="loaded">
-		<a name="all-files"></a>
-		<h1>ALL FILES</h1>
-		<table class="table table-bordered table-striped table-hover etd-table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>File</th>
-					<th>Type</th>
-					<th>Time</th>
-					<th>Edit</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="documentFieldValue in documentFieldValues track by $index">
-					<td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
-					<td><a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a></td>
-					<td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
-					<td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
-					<td class="all-files-action">
-						<modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
-						<span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
-						<span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
-					</td>
-				</tr>
-			</tbody>
-			<tfoot class="header">
-				<tr>
-					<th colspan="5"><button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button></th>
-				</tr>
-			</tfoot>
-		</table>
-	</div>
+  <div class="row" ng-show="loaded">
+    <a name="all-files"></a>
+    <h1>ALL FILES</h1>
+    <table class="table table-bordered table-striped table-hover etd-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>File</th>
+          <th>Type</th>
+          <th>Time</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id" ng-init="getFileInfo(documentFieldValue)">
+          <td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+          <td>
+            <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
+          </td>
+          <td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
+          <td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
+          <td class="all-files-action">
+            <modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
+            <span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+            <span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="header">
+        <tr>
+          <th colspan="5">
+            <button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button>
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 
 </div>

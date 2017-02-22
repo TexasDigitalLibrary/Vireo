@@ -1,9 +1,12 @@
 package org.tdl.vireo.util;
 
+import javax.activation.MimetypesFileTypeMap;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +15,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.tika.Tika;
 
 import javax.imageio.ImageIO;
 
@@ -28,6 +33,8 @@ public class FileIOUtility {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	private final Tika tike = new Tika();
 	
 	public void write(byte[] data, String relativePath) throws IOException {
 		Files.write(processRelativePath(relativePath), data);
@@ -38,18 +45,14 @@ public class FileIOUtility {
 	}
 	
 	public String find(String relativeFolderPath, String name) {
-		
 		String targetPath = null;
-		
 		Path folder = getAbsolutePath(relativeFolderPath);
-		
 		for(String path : folder.toFile().list()) {			
 			if(path.contains(name)) {
 				targetPath = path;
 				break;
 			}
 		}
-		
 		return targetPath;
 	}
 	
@@ -83,7 +86,7 @@ public class FileIOUtility {
 		Map<String, Object> fileInfo = new HashMap<String, Object>();
 		String fileName = path.getFileName().toString();
 		fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
-		fileInfo.put("type", Files.probeContentType(path));
+		fileInfo.put("type", tike.detect(path.toString()));
 		fileInfo.put("time", attr.creationTime().toMillis());
 		fileInfo.put("size", attr.size());
 		fileInfo.put("uploaded", true);
