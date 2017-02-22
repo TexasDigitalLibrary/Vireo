@@ -1,18 +1,24 @@
 <div class="container">
-  <ul class="breadcrumb">
-    <li>
-      <a href="/">Home</a>
-    </li>
-    <li>
-      <a href="/submission/history">Submissions</a>
-    </li>
-    <li class="active">View</li>
-  </ul>
-  <h1>Submission View</h1>
-  <submissiondialog submission="submission" type="actions"></submissiondialog>
-  <div class="student-submission-loader" ng-class="{'ready': studentSubmissionRepoReady}">
-    <img src="resources/images/ajax-loader.gif"/>
+  <div class="submission-view-container">
+    <div class="submission-view-top">
+      <ul class="breadcrumb">
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/submission/history">Submissions</a>
+        </li>
+        <li class="active">View</li>
+      </ul>
+      <h1>Submission View</h1>
+      <submissiondialog submission="submission" type="actions"></submissiondialog>
+      <div class="student-submission-loader" ng-class="{'ready': studentSubmissionRepoReady}">
+        <img src="resources/images/ajax-loader.gif"/>
+      </div>
+      <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="studentSubmissionRepoReady"></reviewsubmissionsfields>
+    </div>
+    <div class="submission-view-bottom">
+      <submissiondialog submission="submission" type="state"></submissiondialog>
+    </div>
   </div>
-  <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="studentSubmissionRepoReady"></reviewsubmissionsfields>
-  <submissiondialog submission="submission" type="state"></submissiondialog>
 </div>
