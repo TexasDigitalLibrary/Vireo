@@ -90,6 +90,12 @@
         toggle-options='[{"true": "Yes"},{"false": "No"}]'>
       </toggleButton>
 
+      <toggleButton
+        label="Overridable:"
+        scope-value="modalData.overrideable"
+        toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+      </toggleButton>
+
 			<div ng-if="!inputFile" class="form-group row">
 				<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 				<validatedinput
@@ -166,11 +172,6 @@
 				</validatedselect>
 			</div>
 
-			<toggleButton
-				label="Overridable:"
-				scope-value="modalData.overrideable"
-				toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-			</toggleButton>
 		</div>
 
 	</div>
