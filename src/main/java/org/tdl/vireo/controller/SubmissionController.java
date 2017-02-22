@@ -352,7 +352,7 @@ public class SubmissionController {
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
         ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
-        simpMessagingTemplate.convertAndSend("/channel/submission", apiResponse);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
         return apiResponse;
     }
 
