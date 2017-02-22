@@ -42,15 +42,24 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
                 var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
+                var emptyFieldValues = [];
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
-                        if (fieldValue.id === newFieldValue.id) {
-                            angular.extend(fieldValue, newFieldValue);
-                            replacedFieldValue = true;
-                            break;
+                        if (fieldValue.id) {
+                            if (fieldValue.id === newFieldValue.id) {
+                                angular.extend(fieldValue, newFieldValue);
+                                replacedFieldValue = true;
+                                break;
+                            }
+                        } else {
+                            emptyFieldValues.push(fieldValue);
                         }
                     }
+                }
+                if (emptyFieldValues.length === 1) {
+                    angular.extend(emptyFieldValues[0], newFieldValue);
+                    replacedFieldValue = true;
                 }
                 if (!replacedFieldValue) {
                     submission.fieldValues.push(new FieldValue(newFieldValue));
