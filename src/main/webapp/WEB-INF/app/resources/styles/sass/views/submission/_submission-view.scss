@@ -1,0 +1,18 @@
+.submission-view-container {
+  display: table;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.submission-view-top {
+  display: table-row;
+  table-layout: fixed;
+  height: 100%;
+  padding-top: 15px;
+}
+
+.submission-view-bottom {
+  display: table-row;
+  width: 100%;
+}

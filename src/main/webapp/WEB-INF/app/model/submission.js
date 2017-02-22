@@ -8,15 +8,16 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
         submission.enableBeforeMethods();
 
-        submission.before(function() {
-            var fieldValues = angular.copy(submission.fieldValues);
-            if (submission.fieldValues)
-                submission.fieldValues.length = 0;
+        //populate fieldValues with models for existing values
+        var instantiateFieldValues = function() {
+            for (var i in submission.fieldValues) {
+                var fieldValue = submission.fieldValues[i];
+                angular.extend(fieldValue, new FieldValue(fieldValue));
+            }
+        }
 
-            //populate fieldValues with models for existing values
-            angular.forEach(fieldValues, function(fieldValue) {
-                submission.fieldValues.push(new FieldValue(fieldValue));
-            });
+        submission.before(function() {
+            instantiateFieldValues();
 
             //populate fieldValues with models for empty values
             angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
@@ -28,6 +29,10 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 });
             });
 
+            submission.listen(function() {
+                instantiateFieldValues();
+            });
+
         });
 
         submission.before(function() {
@@ -35,27 +40,28 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 'method': submission.id + '/field-values'
             });
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
-                var newReatable = true;
+                var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
+                var emptyFieldValues = [];
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
                         if (fieldValue.id) {
                             if (fieldValue.id === newFieldValue.id) {
                                 angular.extend(fieldValue, newFieldValue);
-                                newReatable = false;
+                                replacedFieldValue = true;
                                 break;
-                            } else {
-                                //
                             }
                         } else {
-                            angular.extend(fieldValue, newFieldValue);
-                            newReatable = false;
-                            break;
+                            emptyFieldValues.push(fieldValue);
                         }
                     }
                 }
-                if (newReatable) {
+                if (emptyFieldValues.length === 1) {
+                    angular.extend(emptyFieldValues[0], newFieldValue);
+                    replacedFieldValue = true;
+                }
+                if (!replacedFieldValue) {
                     submission.fieldValues.push(new FieldValue(newFieldValue));
                 }
             });
@@ -79,7 +85,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
         // additional model methods and variables
         var createEmptyFieldValue = function(fieldPredicate) {
-            return new FieldValue({id: null, value: "", fieldPredicate: fieldPredicate});
+            return new FieldValue({value: "", fieldPredicate: fieldPredicate});
         };
 
         //Override
@@ -168,6 +174,45 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return emptyFieldValue;
         };
 
+        submission.validateFieldValue = function(fieldValue, fieldProfile) {
+
+            fieldValue.setIsValid(true);
+            fieldValue.setValidationMessages([]);
+
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+                return $q(function(resolve) {
+                    fieldValue.setIsValid(false);
+                    fieldValue.addValidationMessage("This field is required");
+                    resolve();
+                });
+            }
+
+            angular.extend(this.getMapping().validateFieldValue, {
+                method: submission.id + "/validate-field-value/" + fieldProfile.id,
+                data: fieldValue
+            });
+
+            var promise = WsApi.fetch(this.getMapping().validateFieldValue);
+
+            promise.then(function(response) {
+
+                var responseObj = angular.fromJson(response.body);
+
+                if (responseObj.meta.type === "INVALID") {
+                    fieldValue.setIsValid(false);
+
+                    angular.forEach(responseObj.payload.HashMap.value, function(value) {
+                        fieldValue.addValidationMessage(value);
+                    });
+
+                }
+
+            });
+
+            return promise;
+
+        };
+
         submission.saveFieldValue = function(fieldValue, fieldProfile) {
 
             fieldValue.setIsValid(true);
@@ -202,10 +247,27 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 } else {
                     fieldValue.setIsValid(true);
                     var updatedFieldValue = responseObj.payload.FieldValue;
-                    for (var i in submission.fieldValues) {
+                    var matchingFieldValues = {};
+                    for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                         var currentFieldValue = submission.fieldValues[i];
-                        if ((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
-                            angular.extend(currentFieldValue, updatedFieldValue);
+                        if ((currentFieldValue.id === undefined || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
+
+                            matchingFieldValues[i] = currentFieldValue;
+
+                            for (var j in matchingFieldValues) {
+                                if (currentFieldValue.file !== undefined) {
+                                    matchingFieldValues[j].file = currentFieldValue.file;
+                                }
+                            }
+                        }
+                    }
+                    var updated = false;
+                    for (var i in matchingFieldValues) {
+                        if (!updated) {
+                            updated = true;
+                            angular.extend(matchingFieldValues[i], updatedFieldValue);
+                        } else {
+                            submission.fieldValues.splice(i, 1);
                         }
                     }
                 }
@@ -226,7 +288,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);
 
                 if (!fieldProfile.optional || (fv.value !== "" && fieldProfile.optional)) {
-                    var savePromise = submission.saveFieldValue(fv, fieldProfile);
+                    var savePromise = submission.validateFieldValue(fv, fieldProfile);
                     savePromises.push(savePromise);
                 }
             });
@@ -260,6 +322,22 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
+        submission.removeUnsavedFieldValue = function(fieldValue) {
+            if (!fieldValue.id) {
+                submission.fieldValues.splice(submission.fieldValues.indexOf(fieldValue), 1);
+            }
+        };
+
+        submission.removeAllUnsavedFieldValuesByPredicate = function(fieldPredicate) {
+            for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
+                var fieldValue = submission.fieldValues[i];
+                if (fieldValue.fieldPredicate.id === fieldPredicate.id) {
+                    submission.removeUnsavedFieldValue(fieldValue);
+                }
+            }
+            submission.addFieldValue(fieldPredicate);
+        };
+
         submission.saveReviewerNotes = function(reviewerNotes) {
 
             angular.extend(this.getMapping().saveReviewerNotes, {
@@ -274,11 +352,11 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.fileInfo = function(uri) {
+        submission.fileInfo = function(fieldValue) {
 
             angular.extend(this.getMapping().fileInfo, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -287,10 +365,10 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.file = function(uri) {
+        submission.file = function(fieldValue) {
             angular.extend(this.getMapping().file, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -299,11 +377,11 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.removeFile = function(uri) {
+        submission.removeFile = function(fieldValue) {
 
             angular.extend(this.getMapping().removeFile, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -312,12 +390,12 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.renameFile = function(uri, newName) {
+        submission.renameFile = function(fieldValue) {
 
             angular.extend(this.getMapping().renameFile, {
                 data: {
-                    'uri': uri,
-                    'newName': newName
+                    'uri': fieldValue.value,
+                    'newName': fieldValue.fileInfo.name
                 }
             });
 

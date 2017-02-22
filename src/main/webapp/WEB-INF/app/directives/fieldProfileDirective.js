@@ -11,6 +11,8 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
 
             angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
+            $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";
+
             $scope.submission = $scope.$parent.submission;
 
             $scope.progress = 0;
@@ -35,37 +37,21 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                 }
             };
 
-            var refreshFieldValues = function() {
-                $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
-                $scope.fieldValue = $scope.fieldValues[0];
-            };
-
-            refreshFieldValues();
-
-            var remove = function(removeFieldValue) {
-                for (var i in $scope.fieldValues) {
-                    var fieldValue = $scope.fieldValues[i];
-                    if (fieldValue.id === removeFieldValue.id) {
-                        $scope.fieldValues.splice(i, 1);
-                        break;
-                    }
-                }
-                refreshFieldValues();
+            $scope.hasFile = function(fieldValue) {
+                return fieldValue !== undefined && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.value && fieldValue.value.length > 0;
             };
 
             $scope.addFieldValue = function() {
-                $scope.submission.addFieldValue($scope.profile.fieldPredicate);
-                refreshFieldValues();
+                return $scope.submission.addFieldValue($scope.profile.fieldPredicate);
             };
 
             $scope.removeFieldValue = function(fieldValue) {
                 if (fieldValue.id === null) {
-                    remove(fieldValue);
+                    $scope.submission.removeUnsavedFieldValue(fieldValue);
                 } else {
                     fieldValue.updating = true;
                     $scope.submission.removeFieldValue(fieldValue).then(function() {
                         fieldValue.updating = false;
-                        remove(fieldValue);
                     });
                 }
             };
@@ -96,26 +82,20 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
             $scope.queueUpload = function(files) {
                 if (files.length > 0) {
                     $scope.previewing = true;
-                    if ($scope.profile.repeatable === true) {
-                        var lastExistingFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
-                        for (var i in files) {
-                            if (i == 0 && $scope.hasFile(lastExistingFieldValue)) {
-                                $scope.addFieldValue();
-                            }
-                            if (i > 0) {
-                                $scope.addFieldValue();
-                            }
-                        }
-                        var j = 0;
-                        for (var i in $scope.fieldValues) {
-                            var fieldValue = $scope.fieldValues[i];
-                            if (!$scope.hasFile(fieldValue)) {
-                                fieldValue.file = files[j];
-                                j++;
-                            }
-                        }
+                    var i = 1;
+                    refreshFieldValues();
+                    if (!$scope.profile.repeatable) {
+                        $scope.fieldValue.file = files[0];
                     } else {
-                        $scope.fieldValues[0].file = files[0];
+                        var firstEmptyFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
+                        if (firstEmptyFieldValue.file === undefined) {
+                            firstEmptyFieldValue.file = files[0];
+                        } else {
+                            i = 0;
+                        }
+                    }
+                    for (; i < files.length; i++) {
+                        $scope.addFieldValue().file = files[i];
                     }
                 }
             };
@@ -124,6 +104,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                 $scope.progress = 0;
                 $scope.uploading = true;
                 var promises = [];
+                refreshFieldValues();
                 for (var i in $scope.fieldValues) {
                     var fieldValue = $scope.fieldValues[i];
                     if (fieldValue.file.uploaded === undefined) {
@@ -146,6 +127,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                             $scope.submission.removeFile(fieldValue);
                         }
                         fieldValue.value = response.data.meta.message;
+                        fieldValue.file.uploaded = true;
                         $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function() {
                             fieldValue.uploading = false;
                             resolve();
@@ -160,46 +142,19 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
             };
 
             $scope.cancelUpload = function() {
-                for (var i = $scope.fieldValues.length - 1; i >= 0; i--) {
-                    var fieldValue = $scope.fieldValues[i];
-                    if (!$scope.hasFile(fieldValue)) {
-                        if (i > 0) {
-                            remove(fieldValue);
-                        }
-                    }
-                }
+                $scope.submission.removeAllUnsavedFieldValuesByPredicate($scope.profile.fieldPredicate);
                 $scope.previewing = false;
+                refreshFieldValues();
             };
 
             $scope.cancel = function(fieldValue) {
-                if ($scope.fieldValues.length == 0) {
-                    delete fieldValue.file;
-                } else {
-                    remove(fieldValue);
+                $scope.submission.removeUnsavedFieldValue(fieldValue);
+                refreshFieldValues();
+                if ($scope.fieldValues.length === 0) {
+                    $scope.addFieldValue();
+                    refreshFieldValues();
+                    $scope.previewing = false;
                 }
-                var stillPreviewing = false;
-                for (var i in $scope.fieldValues) {
-                    if (!$scope.hasFile($scope.fieldValues[i]) && $scope.fieldValues[i].file !== undefined) {
-                        stillPreviewing = true;
-                        break;
-                    }
-                }
-                $scope.previewing = stillPreviewing;
-            };
-
-            $scope.hasFile = function(fieldValue) {
-                return fieldValue.value && fieldValue.value.length > 0;
-            };
-
-            $scope.hasFiles = function() {
-                var hasFiles = false;
-                for (var i in $scope.fieldValues) {
-                    if ($scope.hasFile($scope.fieldValues[i])) {
-                        hasFiles = true;
-                        break;
-                    }
-                }
-                return hasFiles;
             };
 
             $scope.fetchFileInfo = function(fieldValue) {
@@ -212,7 +167,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
 
             $scope.getPreview = function(fieldValue) {
                 var preview;
-                if (fieldValue.file !== undefined && fieldValue.file.type !== null) {
+                if (fieldValue !== undefined && fieldValue.file !== undefined && fieldValue.file.type !== null) {
                     if (fieldValue.file.type.includes("image/png")) {
                         preview = "resources/images/png-logo.jpg";
                     } else if (fieldValue.file.type.includes("image/jpeg")) {
@@ -238,10 +193,12 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                 var hash = 0;
                 if (fieldValue !== undefined) {
                     var uri = fieldValue.value;
-                    for (i = 0; i < uri.length; i++) {
-                        char = uri.charCodeAt(i);
-                        hash = ((hash << 5) - hash) + char;
-                        hash = hash & hash;
+                    if (uri !== undefined) {
+                        for (i = 0; i < uri.length; i++) {
+                            char = uri.charCodeAt(i);
+                            hash = ((hash << 5) - hash) + char;
+                            hash = hash & hash;
+                        }
                     }
                 }
                 return hash;
@@ -253,16 +210,31 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                     $scope.submission.removeFieldValue(fieldValue).then(function() {
                         $scope.deleting = false;
                         $scope.previewing = false;
-                        remove(fieldValue);
-                        if ($scope.fieldValues.length === 0) {
+                        delete fieldValue.file;
+                        delete fieldValue.value;
+                        if (!$scope.profile.repeatable) {
                             $scope.addFieldValue();
                         }
+                        refreshFieldValues();
                         $scope.closeModal();
                     });
                 });
             };
 
-            $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";
+            var refreshFieldValues = function() {
+                $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
+                $scope.fieldValue = $scope.fieldValues[0];
+
+                for (var i in $scope.fieldValues) {
+                    if ($scope.hasFile($scope.fieldValues[i])) {
+                        $scope.hasFiles = true;
+                        break;
+                    }
+                }
+            };
+
+            refreshFieldValues();
+
         }
     };
 });

@@ -207,6 +207,21 @@ public class SubmissionController {
         }
         return apiResponse;
     }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
+    @Auth(role = "STUDENT")
+    public ApiResponse validateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
+        ApiResponse apiResponse = null;
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
+        if (validationResults.isValid()) {
+            apiResponse = new ApiResponse(SUCCESS, validationResults.getMessages());
+        } else {
+            apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        }
+        return apiResponse;
+    }
 
     private ValidationResults getValidationResults(String fieldProfileId, FieldValue fieldValue) {
         fieldValue.setModelValidator(new FieldValueValidator(submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId))));
@@ -336,8 +351,9 @@ public class SubmissionController {
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
-        return new ApiResponse(SUCCESS);
+        ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
+        return apiResponse;
     }
 
 

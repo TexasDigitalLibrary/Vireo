@@ -294,6 +294,7 @@
         <script src="directives/fieldProfileDirective.js"></script>
         <script src="directives/fieldProfileDisplayDirective.js"></script>
         <script src="directives/reviewSubmissionFieldsDirective.js"></script>
+        <script src="directives/submissionDialogDirective.js"></script>
         <script src="directives/submissionNoteDirective.js"></script>
         <script src="directives/stringToDateDirective.js"></script>
         <script src="directives/triptychDirective.js"></script>

@@ -687,6 +687,10 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission'
         },
+        validateFieldValue: {
+            'endpoint': '/private/queue',
+            'controller': 'submission'
+        },
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'

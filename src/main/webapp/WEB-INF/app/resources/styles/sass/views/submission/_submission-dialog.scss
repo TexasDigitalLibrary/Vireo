@@ -1,13 +1,7 @@
-submissiondialog div.dialog {}
-@media (max-width: 1540px) {
-  submissiondialog div.dialog {}
-}
-
-submissiondialog div.dialog.state {
+submissiondialog div.dialog {
   position: fixed;
   width: 300px;
   bottom: 6%;
-  right: 2%;
   padding: 10px 20px;
   margin-bottom: 18px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -16,15 +10,23 @@ submissiondialog div.dialog.state {
   border-radius: 4px;
 }
 @media (max-width: 1540px) {
-  submissiondialog div.dialog.state {
+  submissiondialog div.dialog {
     opacity: 0.9;
-    position: fixed;
+    padding: 10px 20px;
+    z-index: 1;
+  }
+}
+
+submissiondialog div.dialog.state {
+  right: 2%;
+}
+@media (max-width: 1540px) {
+  submissiondialog div.dialog.state {
+    position: relative;
     bottom: 4%;
     left: 50%;
     width: 50%;
     margin-left: -26%;
-    padding: 10px 20px;
-    z-index: 1;
   }
 }
 
@@ -54,30 +56,17 @@ submissiondialog div.dialog.state.needs-correction {
 }
 
 submissiondialog div.dialog.actions {
-  position: fixed;
-  width: 300px;
-  bottom: 6%;
   left: 2%;
-  padding: 10px 20px;
-  margin-bottom: 18px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #d9edf7;
   border: 1px solid #bce8f1;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   color: #31708f;
 }
 @media (max-width: 1540px) {
   submissiondialog div.dialog.actions {
-    width: 50%;
-    opacity: 0.9;
     position: relative;
     left: 50%;
     width: 50%;
     margin-left: -26%;
-    padding: 10px 20px;
-    z-index: 1;
   }
 }
 
