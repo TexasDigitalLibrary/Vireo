@@ -207,6 +207,21 @@ public class SubmissionController {
         }
         return apiResponse;
     }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
+    @Auth(role = "STUDENT")
+    public ApiResponse validateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
+        ApiResponse apiResponse = null;
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
+        if (validationResults.isValid()) {
+            apiResponse = new ApiResponse(SUCCESS, validationResults.getMessages());
+        } else {
+            apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
+        }
+        return apiResponse;
+    }
 
     private ValidationResults getValidationResults(String fieldProfileId, FieldValue fieldValue) {
         fieldValue.setModelValidator(new FieldValueValidator(submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId))));

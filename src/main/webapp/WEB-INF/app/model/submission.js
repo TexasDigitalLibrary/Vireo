@@ -160,6 +160,45 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return emptyFieldValue;
         };
 
+        submission.validateFieldValue = function(fieldValue, fieldProfile) {
+
+            fieldValue.setIsValid(true);
+            fieldValue.setValidationMessages([]);
+
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+                return $q(function(resolve) {
+                    fieldValue.setIsValid(false);
+                    fieldValue.addValidationMessage("This field is required");
+                    resolve();
+                });
+            }
+
+            angular.extend(this.getMapping().validateFieldValue, {
+                method: submission.id + "/validate-field-value/" + fieldProfile.id,
+                data: fieldValue
+            });
+
+            var promise = WsApi.fetch(this.getMapping().validateFieldValue);
+
+            promise.then(function(response) {
+
+                var responseObj = angular.fromJson(response.body);
+
+                if (responseObj.meta.type === "INVALID") {
+                    fieldValue.setIsValid(false);
+
+                    angular.forEach(responseObj.payload.HashMap.value, function(value) {
+                        fieldValue.addValidationMessage(value);
+                    });
+
+                }
+
+            });
+
+            return promise;
+
+        };
+
         submission.saveFieldValue = function(fieldValue, fieldProfile) {
 
             fieldValue.setIsValid(true);
@@ -235,7 +274,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);
 
                 if (!fieldProfile.optional || (fv.value !== "" && fieldProfile.optional)) {
-                    var savePromise = submission.saveFieldValue(fv, fieldProfile);
+                    var savePromise = submission.validateFieldValue(fv, fieldProfile);
                     savePromises.push(savePromise);
                 }
             });
