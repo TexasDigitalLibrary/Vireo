@@ -82,14 +82,17 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
             $scope.queueUpload = function(files) {
                 if (files.length > 0) {
                     $scope.previewing = true;
-                    var i;
+                    var i = 1;
                     refreshFieldValues();
-                    var firstEmptyFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
-                    if (firstEmptyFieldValue.file === undefined) {
-                        firstEmptyFieldValue.file = files[0];
-                        i = 1;
+                    if (!$scope.profile.repeatable) {
+                        $scope.fieldValue.file = files[0];
                     } else {
-                        i = 0;
+                        var firstEmptyFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
+                        if (firstEmptyFieldValue.file === undefined) {
+                            firstEmptyFieldValue.file = files[0];
+                        } else {
+                            i = 0;
+                        }
                     }
                     for (; i < files.length; i++) {
                         $scope.addFieldValue().file = files[i];
@@ -146,11 +149,12 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
 
             $scope.cancel = function(fieldValue) {
                 $scope.submission.removeUnsavedFieldValue(fieldValue);
-                if (fieldValues().length === 0) {
+                refreshFieldValues();
+                if ($scope.fieldValues.length === 0) {
                     $scope.addFieldValue();
+                    refreshFieldValues();
                     $scope.previewing = false;
                 }
-                refreshFieldValues();
             };
 
             $scope.fetchFileInfo = function(fieldValue) {
