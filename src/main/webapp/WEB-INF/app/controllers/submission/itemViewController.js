@@ -8,6 +8,14 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
 
   $scope.allUsers = UserRepo.getAll();
 
+
+  $scope.actionLogLimit = 10;
+  $scope.actionLogCurrentLimit = $scope.actionLogLimit;
+
+  $scope.updateActionLogLimit = function() {
+    $scope.actionLogCurrentLimit=$scope.actionLogCurrentLimit===$scope.actionLogLimit?$scope.submission.actionLogs.length:$scope.actionLogLimit;
+  }
+
   var ready = $q.all([FieldPredicateRepo.ready(), SubmissionRepo.findSubmissionById($routeParams.id), UserRepo.ready(), SubmissionStateRepo.ready()]);
 
   ready.then(function() {
