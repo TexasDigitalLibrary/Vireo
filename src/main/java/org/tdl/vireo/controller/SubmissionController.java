@@ -336,8 +336,9 @@ public class SubmissionController {
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
-        return new ApiResponse(SUCCESS);
+        ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission", apiResponse);
+        return apiResponse;
     }
 
 
