@@ -136,6 +136,18 @@
   cursor: pointer;
 }
 
+.action-log-table .private-flag {
+  font-weight: bold;
+}
+
+.action-log-more-less {
+  font-weight: bold;
+}
+
+.action-log-more-less:hover {
+    cursor: pointer;
+}
+
 div .item-view div.row h1 span.spinning {
   font-size: 32px;
 }

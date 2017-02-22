@@ -52,6 +52,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter your first name.",
 					"fieldGlosses": [
@@ -106,6 +108,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter your last name.",
 					"fieldGlosses": [
@@ -133,6 +137,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter your email.",
 					"fieldGlosses": [
@@ -241,6 +247,8 @@
 					"overrideable": true,
 					"enabled": false,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the college you belong to.",
 					"fieldGlosses": [
@@ -295,6 +303,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the department you belong to.",
 					"fieldGlosses": [
@@ -322,6 +332,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Choose the type of degree you are seeking.",
 					"fieldGlosses": [
@@ -349,6 +361,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the discipline you specialized in.",
 					"fieldGlosses": [
@@ -376,6 +390,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter a phone number where you can be reached even after you have left school",
 					"fieldGlosses": [
@@ -403,6 +419,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter an address where you can be reached even after you complete and leave school.",
 					"fieldGlosses": [
@@ -430,6 +448,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter an email address you will always have.",
 					"fieldGlosses": [
@@ -524,6 +544,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "By checking here you agree to the above license in its entirety.",
 					"fieldGlosses": [
@@ -551,6 +573,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
 					"fieldGlosses": [
@@ -620,6 +644,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the title of your document.",
 					"fieldGlosses": [
@@ -647,6 +673,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Example: May 2008",
 					"fieldGlosses": [
@@ -701,6 +729,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Choose the type of your submission.",
 					"fieldGlosses": [
@@ -736,6 +766,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Provide the abstract of your document.",
 					"fieldGlosses": [
@@ -763,6 +795,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
 					"fieldGlosses": [
@@ -790,6 +824,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Provide a primary subject, and up to two additional subjects.",
 					"fieldGlosses": [
@@ -844,6 +880,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the names and email addresses of your non-chairing committee members",
 					"fieldGlosses": [
@@ -871,6 +909,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "Enter the name and email address for your committee chair.",
 					"fieldGlosses": [
@@ -925,6 +965,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "With your advisor's approval you may request a delay in the publication (embargo) of your work.",
 					"fieldGlosses": [
@@ -1014,6 +1056,8 @@
 					"overrideable": true,
 					"enabled": true,
 					"optional": false,
+          "flagged": false,
+          "logged": false,
 					"usage": "",
 					"help": "",
 					"fieldGlosses": [

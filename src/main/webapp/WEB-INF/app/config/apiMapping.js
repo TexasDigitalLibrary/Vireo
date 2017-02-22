@@ -577,6 +577,10 @@ var apiMapping = {
             'endpoint': '/channel',
             'controller': 'submission'
         },
+        actionLogListen: {
+            'endpoint': '/channel',
+            'controller': 'submission'
+        },
         fieldValuesListen: {
             'endpoint': '/channel',
             'controller': 'submission'

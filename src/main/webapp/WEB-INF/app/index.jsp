@@ -307,6 +307,7 @@
         <!-- Repos -->
         <script src="repo/abstractAppRepo.js"></script>
         <script src="repo/advisorSubmissionRepo.js"></script>
+        <script src="repo/attachmentTypeRepo.js"></script>
         <script src="repo/languageRepo.js"></script>
         <script src="repo/attachmentTypeRepo.js"></script>
         <script src="repo/customActionDefinitionRepo.js"></script>
@@ -336,6 +337,7 @@
 
         <!-- Models -->
         <script src="model/abstractAppModel.js"></script>
+        <script src="model/actionLog.js"></script>
         <script src="model/namedSearchFilterGroup.js"></script>
         <script src="model/language.js"></script>
         <script src="model/attachmentType.js"></script>

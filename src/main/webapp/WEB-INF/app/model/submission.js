@@ -1,4 +1,4 @@
-var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
+var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsApi) {
 
     return function Submission() {
 
@@ -16,8 +16,17 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             }
         }
 
+        //populate actionLogs with models for existing values
+        var instantiateActionLogs = function() {
+            for (var i in submission.actionLogs) {
+                var actionLog = submission.actionLogs[i];
+                angular.extend(actionLog, new ActionLog(actionLog));
+            }
+        }
+
         submission.before(function() {
             instantiateFieldValues();
+            instantiateActionLogs();
 
             //populate fieldValues with models for empty values
             angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
@@ -31,6 +40,16 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
             submission.listen(function() {
                 instantiateFieldValues();
+                instantiateActionLogs();
+            });
+
+            angular.extend(apiMapping.Submission.actionLogListen, {
+                'method': submission.id + '/action-logs'
+            });
+
+            WsApi.listen(apiMapping.Submission.actionLogListen).then(null, null, function(response) {
+                var newActionLog = angular.fromJson(response.body).payload.ActionLog;
+                submission.actionLogs.push(new ActionLog(newActionLog));
             });
 
         });

@@ -18,7 +18,7 @@
 
 	<!-- TODO: figure out how to validate glosses and controlled vocabularies -->
 
-	<div class="modal-body">
+	<div class="modal-body field-profiles-new-modal">
 
 		<div class="form-group row">
 			<label for="field-profiles-gloss">Label</label>
@@ -56,13 +56,6 @@
 			toggle-options='[{"false": "Yes"},{"true": "No"}]'>
 		</toggleButton>
 
-    <toggleButton
-      label="Flagged:"
-      scope-value="modalData.flagged"
-      toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-    </toggleButton>
-
-
 		<div class="form-expand"><a href ng-click="controlledVocabulary = !controlledVocabulary">Controlled Vocabulary</a></div>
 
 		<div class="field-profile-section" ng-class="{'field-profile-open': controlledVocabulary, 'field-profile-closed': !controlledVocabulary}">
@@ -85,6 +78,24 @@
 		<div class="form-expand"><a href ng-click="advanced = !advanced">Advanced</a></div>
 
 		<div class="field-profile-section" ng-class="{'field-profile-open': advanced, 'field-profile-closed': !advanced}">
+
+      <toggleButton
+        label="Flagged:"
+        scope-value="modalData.flagged"
+        toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+      </toggleButton>
+
+      <toggleButton
+        label="Logged:"
+        scope-value="modalData.logged"
+        toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+      </toggleButton>
+
+      <toggleButton
+        label="Overridable:"
+        scope-value="modalData.overrideable"
+        toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+      </toggleButton>
 
 			<div ng-if="!inputFile" class="form-group row">
 				<validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
@@ -161,11 +172,6 @@
 				</validatedselect>
 			</div>
 
-			<toggleButton
-				label="Overridable:"
-				scope-value="modalData.overrideable"
-				toggle-options='[{"true": "Yes"},{"false": "No"}]'>
-			</toggleButton>
 		</div>
 
 	</div>

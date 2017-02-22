@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -38,6 +39,7 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -72,7 +74,7 @@ public class SubmissionController {
     private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
 
     private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
-    
+
     private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME = "Corrections Received";
 
     @Autowired
@@ -117,6 +119,9 @@ public class SubmissionController {
     @Autowired
     private ConfigurationRepo configurationRepo;
 
+    @Autowired
+    private ActionLogRepo actionLogRepo;
+
     @Transactional
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
@@ -154,6 +159,7 @@ public class SubmissionController {
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
         Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
+        actionLogRepo.createPublicLog(submission, credentials, "Submission created.");
         return new ApiResponse(SUCCESS, submission);
     }
 
@@ -191,12 +197,26 @@ public class SubmissionController {
                     submission.addFieldValue(fieldValueRepo.save(fieldValue));
                     submission = submissionRepo.save(submission);
                     fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
-                    
+
+                    if (submissionFieldProfile.getLogged()) {
+                        actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+                    }
+
                 } else {
+
+                    FieldValue oldFieldValue = fieldValueRepo.findOne(fieldValue.getId());
+                    String oldValue = oldFieldValue.getValue();
                     fieldValue = fieldValueRepo.save(fieldValue);
+
+                    if (submissionFieldProfile.getLogged()) {
+                        actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                    }
+
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
+
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
+
             } else {
                 Map<String, Map<String, String>> orcidErrorsMap = new HashMap<String, Map<String, String>>();
                 orcidErrorsMap.put("value", orcidErrors);
@@ -205,9 +225,10 @@ public class SubmissionController {
         } else {
             apiResponse = new ApiResponse(INVALID, validationResults.getMessages());
         }
+
         return apiResponse;
     }
-    
+
     @Transactional
     @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
@@ -242,7 +263,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/change-status/{submissionStateName}")
     @Auth(role = "STUDENT")
-    public ApiResponse changeStatus(@ApiVariable Long submissionId, @ApiVariable String submissionStateName) {
+    public ApiResponse changeStatus(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String submissionStateName) {
         Submission submission = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
@@ -250,8 +271,15 @@ public class SubmissionController {
 
             SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
             if (submissionState != null) {
+
+                SubmissionState oldSubmissionState = submission.getSubmissionState();
+                String oldSubmissionStateName = oldSubmissionState.getName();
+
                 submission.setSubmissionState(submissionState);
                 submission = submissionRepo.saveAndFlush(submission);
+
+                actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionStateName);
+
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
@@ -268,7 +296,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/submit-date")
     @Auth(role = "STUDENT")
-    public ApiResponse submitDate(@ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
+    public ApiResponse submitDate(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -281,6 +309,9 @@ public class SubmissionController {
             submission.setSubmissionDate(cal);
             submission = submissionRepo.save(submission);
             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+
+            actionLogRepo.createPublicLog(submission, credentials, "Submission submitted: " + submission.getSubmissionDate().getTime());
+
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -291,7 +322,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/assign-to")
     @Auth(role = "STUDENT")
-    public ApiResponse assign(@ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
+    public ApiResponse assign(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
         Submission submission = submissionRepo.findOne(submissionId);
 
         if (assignee != null) {
@@ -302,7 +333,11 @@ public class SubmissionController {
         if (submission != null) {
             submission.setAssignee(assignee);
             submission = submissionRepo.save(submission);
+
+            actionLogRepo.createPublicLog(submission, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+
             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -334,15 +369,18 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/needs-correction")
     @Auth(role = "MANAGER")
-    public ApiResponse setSubmissionNeedsCorrection(@ApiVariable Long submissionId) {
+    public ApiResponse setSubmissionNeedsCorrection(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
         Submission submission = submissionRepo.findOne(submissionId);
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
+        String oldSubmissionStateName = submission.getSubmissionState().getName();
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
-        simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submission));
-        return new ApiResponse(SUCCESS, new ApiResponse(SUCCESS, submission));
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
+        ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
+        return apiResponse;
     }
-    
+
     @Transactional
     @ApiMapping("/{submissionId}/submit-corrections")
     @Auth(role = "STUDENT")
@@ -355,7 +393,6 @@ public class SubmissionController {
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
         return apiResponse;
     }
-
 
     @Transactional
     @ApiMapping("/query/{page}/{size}")
@@ -371,8 +408,14 @@ public class SubmissionController {
     public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
+
+            String oldSubmissionStateName = sub.getSubmissionState().getName();
+
             sub.setSubmissionState(submissionState);
             submissionRepo.saveAndFlush(sub);
+
+            actionLogRepo.createPublicLog(sub, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
+
             processEmailWorkflowRules(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -385,6 +428,7 @@ public class SubmissionController {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
+            actionLogRepo.createPublicLog(sub, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             submissionRepo.save(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -443,7 +487,8 @@ public class SubmissionController {
 
     @ApiMapping("/{submissionId}/send-advisor-email")
     @Auth(role = "MANAGER")
-    public ApiResponse sendAdvisorEmail(@ApiVariable Long submissionId) {
+    @Transactional
+    public ApiResponse sendAdvisorEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -461,6 +506,8 @@ public class SubmissionController {
                 e.printStackTrace();
             }
         });
+
+        actionLogRepo.createPublicLog(submission, credentials, "Advisor review email manually generated.");
 
         return new ApiResponse(SUCCESS);
     }

@@ -39,6 +39,9 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean optional;
+    
+    @Column(nullable = false)
+    private Boolean logged;
 
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
@@ -121,7 +124,15 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         this.optional = optional;
     }
 
-    /**
+    public Boolean getLogged() {
+		return logged;
+	}
+
+	public void setLogged(Boolean logged) {
+		this.logged = logged;
+	}
+
+	/**
      * 
      * @return
      */

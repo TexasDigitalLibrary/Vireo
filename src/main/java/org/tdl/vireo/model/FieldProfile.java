@@ -32,19 +32,20 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-    
+
     @Column(nullable = true)
     private Boolean overrideable;
-    
+
     @Column(nullable = true)
     private Boolean enabled;
-    
+
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
         setEnabled(true);
         setOptional(true);
         setFlagged(false);
+        setLogged(false);
         setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
@@ -55,14 +56,14 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param repeatable
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
         this(originatingWorkflowStep);
         setFieldPredicate(fieldPredicate);
         setInputType(inputType);
@@ -71,10 +72,11 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setEnabled(enabled);
         setOptional(optional);
         setFlagged(flagged);
+        setLogged(logged);
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -82,13 +84,13 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional, flagged);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional, flagged, logged);
         setUsage(usage);
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -96,18 +98,18 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional, flagged);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional, flagged, logged);
         setHelp(help);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged);
         addControlledVocabulary(0, controlledVocabulary);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged);
         setControlledVocabularies(controlledVocabularies);
         setFieldGlosses(fieldGlosses);
     }
@@ -141,7 +143,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
-    
+
     /**
      * @return the overrideable
      */
@@ -156,7 +158,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
-    
+
     /**
      * @return the enabled
      */
