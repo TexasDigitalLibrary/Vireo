@@ -196,15 +196,24 @@ public class SubmissionController {
                     submission = submissionRepo.save(submission);
                     fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
                     
+                    if(submissionFieldProfile.getLogged()) {
+                    	ActionLog actionLog = actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+                    	simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, actionLog));
+                    }
+                    
                 } else {
-                    fieldValue = fieldValueRepo.save(fieldValue);
+                	
+                	FieldValue oldFieldValue = fieldValueRepo.findOne(fieldValue.getId());
+                	String oldValue = oldFieldValue.getValue();
+                	fieldValue = fieldValueRepo.save(fieldValue);
+                	
+                	if(submissionFieldProfile.getLogged()) {
+	                	ActionLog actionLog = actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " +fieldValue.getValue());
+	                	simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, actionLog));
+                	}
+                	
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
-                
-                if(submissionFieldProfile.getLogged()) {
-                	ActionLog actionLog = actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
-                	simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, actionLog));
-                }
                 
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
                 
@@ -265,7 +274,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/submit-date")
     @Auth(role = "STUDENT")
-    public ApiResponse submitDate(@ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
+    public ApiResponse submitDate(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -278,6 +287,7 @@ public class SubmissionController {
             submission.setSubmissionDate(cal);
             submission = submissionRepo.save(submission);
             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+            actionLogRepo.createPublicLog(submission, credentials, "Submission submitted: " + submission.getSubmissionDate().getTime());
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
