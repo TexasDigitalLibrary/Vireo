@@ -8,15 +8,16 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
         submission.enableBeforeMethods();
 
-        submission.before(function() {
-            var fieldValues = angular.copy(submission.fieldValues);
-            if (submission.fieldValues)
-                submission.fieldValues.length = 0;
+        //populate fieldValues with models for existing values
+        var instantiateFieldValues = function() {
+            for (var i in submission.fieldValues) {
+                var fieldValue = submission.fieldValues[i];
+                angular.extend(fieldValue, new FieldValue(fieldValue));
+            }
+        }
 
-            //populate fieldValues with models for existing values
-            angular.forEach(fieldValues, function(fieldValue) {
-                submission.fieldValues.push(new FieldValue(fieldValue));
-            });
+        submission.before(function() {
+            instantiateFieldValues();
 
             //populate fieldValues with models for empty values
             angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
@@ -26,6 +27,10 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                         submission.fieldValues.push(createEmptyFieldValue(fp.fieldPredicate));
                     }
                 });
+            });
+
+            submission.listen(function() {
+                instantiateFieldValues();
             });
 
         });

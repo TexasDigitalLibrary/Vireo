@@ -32,7 +32,6 @@
   <div ng-if="!immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
     <div ng-if="!field.editing" class="info-container" ng-class="{'text-danger': !field.isValid()}">
-
       <div class="col-sm-4 info-label">
         <label>
           <span ng-if="$index < 1">{{label}}:</span>
