@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.DeprecatedAttachment;
 import org.tdl.vireo.model.Submission;
@@ -15,7 +16,10 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
+import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 public class ActionLogRepoImpl implements ActionLogRepoCustom {
 
@@ -28,11 +32,18 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
     @Autowired
     SubmissionRepo submissionRepo;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+    
     @Override
     public ActionLog create(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, DeprecatedAttachment attachment, String entry, boolean privateFlag) {
     	submission.addActionLog(new ActionLog(submission, submissionState, user, actionDate, attachment, entry, privateFlag));
     	submission = submissionRepo.save(submission);
-        return actionLogRepo.findBySubmissionAndActionDate(submission, actionDate);
+    	
+    	ActionLog log = actionLogRepo.findBySubmissionAndActionDate(submission, actionDate);
+    	simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
+    	
+        return log;
     }
 
 	@Override
