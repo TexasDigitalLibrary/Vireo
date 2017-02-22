@@ -8,7 +8,7 @@ vireo.directive("submissiondialog", function() {
             submission: '='
         },
         link: function($scope, element, attr, parent) {
-            $scope.show = [true, false];
+            $scope.show = ['-', '+'];
         },
         controller: function($scope) {
             $scope.submitCorrections = function() {
