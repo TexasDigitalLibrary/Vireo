@@ -79,7 +79,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         };
 
         $scope.getFile = function(fieldValue) {
-            $scope.submission.file(fieldValue.value).then(function(data) {
+            $scope.submission.file(fieldValue).then(function(data) {
                 saveAs(new Blob([data], {type: fieldValue.fileInfo.type}), fieldValue.fileInfo.name);
             });
         };
@@ -115,7 +115,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.saveFieldValue = function(fieldValue) {
             fieldValue.updating = true;
             $scope.closeModal();
-            $scope.submission.renameFile(fieldValue.value, fieldValue.fileInfo.name).then(function(response) {
+            $scope.submission.renameFile(fieldValue).then(function(response) {
                 fieldValue.value = angular.fromJson(response.body).meta.message;
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
@@ -225,7 +225,11 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
             "getPrimaryDocumentFileName": function() {
-                return $scope.primaryDocumentFieldValue !== undefined ? $scope.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.primaryDocumentFieldValue.fileInfo.name : '' : '';
+                return $scope.primaryDocumentFieldValue !== undefined
+                    ? $scope.primaryDocumentFieldValue.fileInfo !== undefined
+                        ? $scope.primaryDocumentFieldValue.fileInfo.name
+                        : ''
+                    : '';
             },
             "downloadPrimaryDocument": function() {
                 $scope.getFile($scope.primaryDocumentFieldValue);

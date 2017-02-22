@@ -35,27 +35,19 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 'method': submission.id + '/field-values'
             });
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
-                var newReatable = true;
+                var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
-                        if (fieldValue.id) {
-                            if (fieldValue.id === newFieldValue.id) {
-                                angular.extend(fieldValue, newFieldValue);
-                                newReatable = false;
-                                break;
-                            } else {
-                                //
-                            }
-                        } else {
+                        if (fieldValue.id === newFieldValue.id) {
                             angular.extend(fieldValue, newFieldValue);
-                            newReatable = false;
+                            replacedFieldValue = true;
                             break;
                         }
                     }
                 }
-                if (newReatable) {
+                if (!replacedFieldValue) {
                     submission.fieldValues.push(new FieldValue(newFieldValue));
                 }
             });
@@ -79,7 +71,7 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
 
         // additional model methods and variables
         var createEmptyFieldValue = function(fieldPredicate) {
-            return new FieldValue({id: null, value: "", fieldPredicate: fieldPredicate});
+            return new FieldValue({value: "", fieldPredicate: fieldPredicate});
         };
 
         //Override
@@ -202,10 +194,27 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
                 } else {
                     fieldValue.setIsValid(true);
                     var updatedFieldValue = responseObj.payload.FieldValue;
-                    for (var i in submission.fieldValues) {
+                    var matchingFieldValues = {};
+                    for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                         var currentFieldValue = submission.fieldValues[i];
-                        if ((currentFieldValue.id === null || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
-                            angular.extend(currentFieldValue, updatedFieldValue);
+                        if ((currentFieldValue.id === undefined || currentFieldValue.id === updatedFieldValue.id) && currentFieldValue.value == updatedFieldValue.value && currentFieldValue.fieldPredicate.id == updatedFieldValue.fieldPredicate.id) {
+
+                            matchingFieldValues[i] = currentFieldValue;
+
+                            for (var j in matchingFieldValues) {
+                                if (currentFieldValue.file !== undefined) {
+                                    matchingFieldValues[j].file = currentFieldValue.file;
+                                }
+                            }
+                        }
+                    }
+                    var updated = false;
+                    for (var i in matchingFieldValues) {
+                        if (!updated) {
+                            updated = true;
+                            angular.extend(matchingFieldValues[i], updatedFieldValue);
+                        } else {
+                            submission.fieldValues.splice(i, 1);
                         }
                     }
                 }
@@ -260,6 +269,22 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
+        submission.removeUnsavedFieldValue = function(fieldValue) {
+            if (!fieldValue.id) {
+                submission.fieldValues.splice(submission.fieldValues.indexOf(fieldValue), 1);
+            }
+        };
+
+        submission.removeAllUnsavedFieldValuesByPredicate = function(fieldPredicate) {
+            for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
+                var fieldValue = submission.fieldValues[i];
+                if (fieldValue.fieldPredicate.id === fieldPredicate.id) {
+                    submission.removeUnsavedFieldValue(fieldValue);
+                }
+            }
+            submission.addFieldValue(fieldPredicate);
+        };
+
         submission.saveReviewerNotes = function(reviewerNotes) {
 
             angular.extend(this.getMapping().saveReviewerNotes, {
@@ -274,11 +299,11 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.fileInfo = function(uri) {
+        submission.fileInfo = function(fieldValue) {
 
             angular.extend(this.getMapping().fileInfo, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -287,10 +312,10 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.file = function(uri) {
+        submission.file = function(fieldValue) {
             angular.extend(this.getMapping().file, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -299,11 +324,11 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.removeFile = function(uri) {
+        submission.removeFile = function(fieldValue) {
 
             angular.extend(this.getMapping().removeFile, {
                 data: {
-                    'uri': uri
+                    'uri': fieldValue.value
                 }
             });
 
@@ -312,12 +337,12 @@ var submissionModel = function($q, FileApi, RestApi, FieldValue, WsApi) {
             return promise;
         };
 
-        submission.renameFile = function(uri, newName) {
+        submission.renameFile = function(fieldValue) {
 
             angular.extend(this.getMapping().renameFile, {
                 data: {
-                    'uri': uri,
-                    'newName': newName
+                    'uri': fieldValue.value,
+                    'newName': fieldValue.fileInfo.name
                 }
             });
 
