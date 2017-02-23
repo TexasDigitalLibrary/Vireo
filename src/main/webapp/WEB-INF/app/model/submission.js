@@ -14,7 +14,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 var fieldValue = submission.fieldValues[i];
                 angular.extend(fieldValue, new FieldValue(fieldValue));
             }
-        }
+        };
 
         //populate actionLogs with models for existing values
         var instantiateActionLogs = function() {
@@ -22,7 +22,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 var actionLog = submission.actionLogs[i];
                 angular.extend(actionLog, new ActionLog(actionLog));
             }
-        }
+        };
+
+        // additional model methods and variables
+        var createEmptyFieldValue = function(fieldPredicate) {
+            return new FieldValue({value: "", fieldPredicate: fieldPredicate});
+        };
 
         submission.before(function() {
             instantiateFieldValues();
@@ -107,14 +112,8 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
         });
 
-        // additional model methods and variables
-        var createEmptyFieldValue = function(fieldPredicate) {
-            return new FieldValue({value: "", fieldPredicate: fieldPredicate});
-        };
-
         //Override
         submission.delete = function() {
-            var submission = this;
             angular.extend(apiMapping.Submission.remove, {
                 'method': "delete/" + submission.id
             });
@@ -508,26 +507,33 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
+        submission.getFlaggedFieldProfiles = function() {
+
+            var fieldProfiles = [];
+
+            angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
+                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+                    if (fp.flagged)
+                        fieldProfiles.push(fp);
+                    }
+                );
+            });
+
+            return fieldProfiles;
+
+        };
+
+        submission.addMessage = function(message) {
+            angular.extend(this.getMapping().addMessage, {
+                method: submission.id + "/add-message",
+                data: message
+            });
+            var promise = WsApi.fetch(this.getMapping().addMessage);
+            return promise;
+        };
+
         return submission;
     };
-
-    submission.getFlaggedFieldProfiles = function() {
-
-        var fieldProfiles = [];
-
-        angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
-            angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
-                if (fp.flagged)
-                    fieldProfiles.push(fp);
-                }
-            );
-        });
-
-        return fieldProfiles;
-
-    };
-
-    return submission;
 };
 
 vireo.model("Submission", submissionModel);

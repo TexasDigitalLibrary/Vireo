@@ -7,4 +7,14 @@ vireo.controller("SubmissionViewController", function($controller, $scope, $rout
         $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
     });
 
+    $scope.message = '';
+
+    $scope.addMessage = function() {
+        $scope.messaging = true;
+        $scope.submission.addMessage($scope.message).then(function() {
+            $scope.messaging = false;
+            $scope.message = '';
+        });
+    };
+
 });

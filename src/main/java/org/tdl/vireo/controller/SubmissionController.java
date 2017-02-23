@@ -394,6 +394,15 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/add-message")
+    @Auth(role = "STUDENT")
+    public ApiResponse addMessage(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData String message) {
+        Submission submission = submissionRepo.findOne(submissionId);
+        actionLogRepo.createPublicLog(submission, credentials, message);
+        return new ApiResponse(SUCCESS);
+    }
+
+    @Transactional
     @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {

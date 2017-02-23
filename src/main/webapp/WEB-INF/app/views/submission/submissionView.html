@@ -30,7 +30,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit" ng-class="{'danger': actionLog.privateFlag}">
+              <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit | filter: {privateFlag: 'false'}" ng-class="{'danger': actionLog.privateFlag}">
                 <td>{{actionLog.user.settings.displayName}}</td>
                 <td>{{actionLog.entry}}
                   <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
@@ -51,6 +51,27 @@
           </table>
         </div>
       </div>
+
+      <div class="row" ng-show="loaded">
+        <h3>Application Activity</h3>
+        <hr/>
+        <div class="col-md-8 col-md-offset-2">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="comment">Message:</label>
+              <div class="col-sm-8">
+                <textarea class="submission-view-message-textarea" rows="10" ng-model="message" ng-disabled="messaging"></textarea>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-default submission-view-message-button" type="button" ng-click="addMessage()" ng-disabled="messaging">Add Message
+                  <span ng-if="messaging" class="glyphicon glyphicon-refresh spinning"></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
 
     <div class="submission-view-bottom">
