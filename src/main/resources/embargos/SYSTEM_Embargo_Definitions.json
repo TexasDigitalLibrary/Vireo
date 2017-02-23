@@ -1,74 +1,73 @@
-[
-	{
-		"name": "None",
-		"description": "The work will be published after approval.",
-		"duration": 0,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 0
-	},
-	{
-		"name": "Journal Hold",
-		"description": "The work will be delayed for publication by one year because of a restriction from publication in an academic journal.",
-		"duration": 12,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 0
-	},
-	{
-		"name": "Patent Hold",
-		"description": "The work will be delayed for publication by two years because of patent related activities.",
-		"duration": 24,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 0
-	},
-	{
-		"name": "Other Embargo Period",
-		"description": "The work will be delayed for publication by an indefinite amount of time.",
-		"duration": null,
-		"isActive": false,
-		"isSystemRequired": true,
-		"guarantor": 0
-	},
-	{
-		"name": "None",
-		"description": "The work will be published after approval.",
-		"duration": 0,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 1
-	},
-	{
-		"name": "6-month Journal Hold",
-		"description": "The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
-		"duration": 6,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 1
-	},
-	{
-		"name": "1-year Journal Hold",
-		"description": "The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
-		"duration": 12,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 1
-	},
-	{
-		"name": "2-year Journal Hold",
-		"description": "The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
-		"duration": 24,
-		"isActive": true,
-		"isSystemRequired": true,
-		"guarantor": 1
-	},
-	{
-		"name": "Flexible/Delayed Release Embargo Period",
-		"description": "The work will be delayed for publication by an indefinite amount of time.",
-		"duration": null,
-		"isActive": false,
-		"isSystemRequired": true,
-		"guarantor": 1
-	}
+[{
+    "name": "None",
+    "description": "The work will be published after approval.",
+    "duration": 0,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 0
+  },
+  {
+    "name": "Journal Hold",
+    "description": "The work will be delayed for publication by one year because of a restriction from publication in an academic journal.",
+    "duration": 12,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 0
+  },
+  {
+    "name": "Patent Hold",
+    "description": "The work will be delayed for publication by two years because of patent related activities.",
+    "duration": 24,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 0
+  },
+  {
+    "name": "Other Embargo Period",
+    "description": "The work will be delayed for publication by an indefinite amount of time.",
+    "duration": null,
+    "isActive": false,
+    "isSystemRequired": true,
+    "guarantor": 0
+  },
+  {
+    "name": "None",
+    "description": "The work will be published after approval.",
+    "duration": 0,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 1
+  },
+  {
+    "name": "6-month Journal Hold",
+    "description": "The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
+    "duration": 6,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 1
+  },
+  {
+    "name": "1-year Journal Hold",
+    "description": "The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
+    "duration": 12,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 1
+  },
+  {
+    "name": "2-year Journal Hold",
+    "description": "The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
+    "duration": 24,
+    "isActive": true,
+    "isSystemRequired": true,
+    "guarantor": 1
+  },
+  {
+    "name": "Flexible/Delayed Release Embargo Period",
+    "description": "The work will be delayed for publication by an indefinite amount of time.",
+    "duration": null,
+    "isActive": false,
+    "isSystemRequired": true,
+    "guarantor": 1
+  }
 ]

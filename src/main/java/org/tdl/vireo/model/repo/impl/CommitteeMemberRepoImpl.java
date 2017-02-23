@@ -14,4 +14,5 @@ public class CommitteeMemberRepoImpl implements CommitteeMemberRepoCustom {
     public CommitteeMember create(String firstName, String lastName, String email) {
         return committeeMemberRepo.save(new CommitteeMember(firstName, lastName, email));
     }
+
 }

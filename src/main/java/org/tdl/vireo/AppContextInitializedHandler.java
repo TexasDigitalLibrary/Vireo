@@ -28,6 +28,6 @@ public class AppContextInitializedHandler extends CoreContextInitializedHandler 
 
     @Override
     protected void after(ContextRefreshedEvent event) {
-        
+
     }
 }

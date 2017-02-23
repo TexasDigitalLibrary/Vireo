@@ -12,7 +12,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
-    
+
     @Override
     public Configuration create(String name, String value, String type) {
         return configurationRepo.save(new Configuration(name, value, type));

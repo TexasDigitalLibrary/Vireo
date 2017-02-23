@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
-import org.tdl.vireo.enums.RecipientType;
 
 public class EmailWorkflowRuleTest extends AbstractEntityTest {
 

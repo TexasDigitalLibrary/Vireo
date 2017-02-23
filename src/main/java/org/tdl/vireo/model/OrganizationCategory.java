@@ -13,15 +13,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.validation.OrganizationCategoryValidator;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.framework.model.BaseEntity;
-import org.tdl.vireo.model.validation.OrganizationCategoryValidator;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name"}) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 public class OrganizationCategory extends BaseEntity {
 
     @Column(nullable = false)
@@ -96,5 +97,5 @@ public class OrganizationCategory extends BaseEntity {
     public boolean removeOrganization(Organization organization) {
         return getOrganizations().remove(organization);
     }
-    
+
 }

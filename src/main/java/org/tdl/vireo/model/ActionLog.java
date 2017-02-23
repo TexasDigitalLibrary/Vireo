@@ -14,10 +14,6 @@ import javax.persistence.TemporalType;
 
 import org.tdl.vireo.model.validation.ActionLogValidator;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -27,21 +23,14 @@ import edu.tamu.framework.model.BaseEntity;
 public class ActionLog extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Submission.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Submission submission;
-
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionState submissionState;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private User user;
 
+    @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar actionDate;
-
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
-    private DeprecatedAttachment attachment;
 
     @Column(nullable = false, columnDefinition = "text")
     private String entry;
@@ -53,30 +42,13 @@ public class ActionLog extends BaseEntity {
         setModelValidator(new ActionLogValidator());
     }
 
-    public ActionLog(Submission submission, SubmissionState submissionState, User user, Calendar actionDate, DeprecatedAttachment attachment, String entry, boolean privateFlag) {
+    public ActionLog(SubmissionState submissionState, User user, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submission = submission;
         this.submissionState = submissionState;
         this.user = user;
         this.actionDate = actionDate;
-        this.attachment = attachment;
         this.entry = entry;
         this.privateFlag = privateFlag;
-    }
-
-    /**
-     * @return the submission
-     */
-    public Submission getSubmission() {
-        return submission;
-    }
-
-    /**
-     * @param submission
-     *            the submission to set
-     */
-    public void setSubmission(Submission submission) {
-        this.submission = submission;
     }
 
     /**
@@ -122,21 +94,6 @@ public class ActionLog extends BaseEntity {
      */
     public void setActionDate(Calendar actionDate) {
         this.actionDate = actionDate;
-    }
-
-    /**
-     * @return the attachment
-     */
-    public DeprecatedAttachment getAttachment() {
-        return attachment;
-    }
-
-    /**
-     * @param attachment
-     *            the attachment to set
-     */
-    public void setAttachment(DeprecatedAttachment attachment) {
-        this.attachment = attachment;
     }
 
     /**

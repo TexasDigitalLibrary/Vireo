@@ -1,39 +1,5 @@
-// CONVENTION: must match model name, case sensitive
+document // CONVENTION: must match model name, case sensitive
 var apiMapping = {
-    AttachmentType: {
-        all: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type',
-            'method': 'all'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'settings/attachment-type'
-        },
-        create: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type',
-            'method': 'create'
-        },
-        update: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type',
-            'method': 'update'
-        },
-        remove: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type',
-            'method': 'remove'
-        },
-        reorder: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type'
-        },
-        sort: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/attachment-type'
-        }
-    },
     ControlledVocabulary: {
         all: {
             'endpoint': '/private/queue',
@@ -208,6 +174,40 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/deposit-location'
+        }
+    },
+    DocumentType: {
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'settings/document-type'
+        },
+        create: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type',
+            'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type',
+            'method': 'remove'
+        },
+        reorder: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type'
+        },
+        sort: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/document-type'
         }
     },
     Embargo: {

@@ -28,17 +28,17 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/email-template")
 public class EmailTemplateController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-    
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse allEmailTemplates() {       
+    public ApiResponse allEmailTemplates() {
         return new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc());
     }
 
@@ -51,7 +51,7 @@ public class EmailTemplateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, emailTemplate);
     }
-    
+
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -71,7 +71,7 @@ public class EmailTemplateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = EmailTemplate.class, params = { "0", "1" }) })
@@ -81,7 +81,7 @@ public class EmailTemplateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = EmailTemplate.class, params = { "0" }) })
@@ -91,5 +91,5 @@ public class EmailTemplateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 }

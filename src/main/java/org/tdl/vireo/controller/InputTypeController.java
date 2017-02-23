@@ -17,11 +17,11 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/input-types")
 public class InputTypeController {
-    
+
     @Autowired
     private InputTypeRepo inputTypeRepo;
 
-	/**
+    /**
      * Endpoint to request all input types.
      * 
      * @return ApiResponse with all input types.

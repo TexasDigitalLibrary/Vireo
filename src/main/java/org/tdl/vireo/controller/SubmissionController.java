@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
-import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;

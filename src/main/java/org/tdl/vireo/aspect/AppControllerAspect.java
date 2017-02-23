@@ -8,5 +8,5 @@ import edu.tamu.framework.aspect.CoreControllerAspect;
 @Component
 @Aspect
 public class AppControllerAspect extends CoreControllerAspect {
-        
+
 }

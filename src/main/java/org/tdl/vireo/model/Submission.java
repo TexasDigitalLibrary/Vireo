@@ -3,7 +3,6 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +14,7 @@ import java.util.UUID;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -62,17 +62,14 @@ public class Submission extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private Set<Embargo> embargoTypes;
 
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-
-    private Set<DeprecatedAttachment> attachments;
-
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<CustomActionValue> customActionValues;
-    
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+
+    @JoinColumn
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<ActionLog> actionLogs;
 
     @Lob
@@ -88,7 +85,6 @@ public class Submission extends BaseEntity {
         setActionLogs(new ArrayList<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
         setCustomActionValues(new ArrayList<CustomActionValue>());
-        setAttachments(new HashSet<DeprecatedAttachment>());
     }
 
     /**
@@ -378,37 +374,6 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the attachments
-     */
-    public Set<DeprecatedAttachment> getAttachments() {
-        return attachments;
-    }
-
-    /**
-     * @param attachments
-     *            the attachments to set
-     */
-    public void setAttachments(Set<DeprecatedAttachment> attachments) {
-        this.attachments = attachments;
-    }
-
-    /**
-     *
-     * @param attachment
-     */
-    public void addAttachment(DeprecatedAttachment attachment) {
-        getAttachments().add(attachment);
-    }
-
-    /**
-     *
-     * @param actionLog
-     */
-    public void removeAttachment(DeprecatedAttachment attachment) {
-        getAttachments().remove(attachment);
-    }
-
-    /**
      *
      * @return
      */
@@ -472,7 +437,7 @@ public class Submission extends BaseEntity {
         return customActionValue;
     }
 
-	public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
+    public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
 
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 

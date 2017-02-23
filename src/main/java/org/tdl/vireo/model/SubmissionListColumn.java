@@ -53,7 +53,7 @@ public class SubmissionListColumn extends BaseEntity {
 
     @Transient
     private Boolean visible;
-    
+
     @Transient
     private Boolean exactMatch;
 
@@ -256,24 +256,24 @@ public class SubmissionListColumn extends BaseEntity {
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }
-    
+
     /**
      * 
      * @return
      */
     public Boolean getExactMatch() {
-		return exactMatch;
-	}
+        return exactMatch;
+    }
 
     /**
      * 
      * @param exactMatch
      */
-	public void setExactMatch(Boolean exactMatch) {
-		this.exactMatch = exactMatch;
-	}
+    public void setExactMatch(Boolean exactMatch) {
+        this.exactMatch = exactMatch;
+    }
 
-	/**
+    /**
      * @return the status
      */
     public String getStatus() {

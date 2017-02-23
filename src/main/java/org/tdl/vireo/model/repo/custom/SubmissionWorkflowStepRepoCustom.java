@@ -7,9 +7,9 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.WorkflowStep;
 
 public interface SubmissionWorkflowStepRepoCustom {
-       
+
     public List<SubmissionWorkflowStep> cloneWorkflow(Organization organization);
-    
+
     public SubmissionWorkflowStep cloneWorkflowStep(WorkflowStep workflowStep);
 
 }

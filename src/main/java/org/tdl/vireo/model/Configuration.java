@@ -28,7 +28,7 @@ public class Configuration extends BaseEntity {
 
     @Column(nullable = false, length = 255)
     private String type;
-    
+
     @Column(nullable = false)
     @JsonProperty("isSystemRequired")
     private Boolean isSystemRequired;
@@ -51,7 +51,7 @@ public class Configuration extends BaseEntity {
      * @param value
      *            The value of the configuration parameter.
      * @param type
-     *            The type of the configuration parameter.            
+     *            The type of the configuration parameter.
      */
     public Configuration(String name, String value, String type) {
         this();
@@ -68,7 +68,8 @@ public class Configuration extends BaseEntity {
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -82,12 +83,13 @@ public class Configuration extends BaseEntity {
     }
 
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * @return the type
      */
@@ -96,7 +98,8 @@ public class Configuration extends BaseEntity {
     }
 
     /**
-     * @param type - the type to set
+     * @param type
+     *            - the type to set
      */
     public void setType(String type) {
         this.type = type;
@@ -111,7 +114,8 @@ public class Configuration extends BaseEntity {
     }
 
     /**
-     * @param isSystemRequired the isSystemRequired to set
+     * @param isSystemRequired
+     *            the isSystemRequired to set
      */
     @JsonIgnore
     public void isSystemRequired(Boolean isSystemRequired) {

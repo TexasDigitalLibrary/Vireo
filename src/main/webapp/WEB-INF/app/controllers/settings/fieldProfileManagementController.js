@@ -1,4 +1,4 @@
-vireo.controller("FieldProfileManagementController", function($q, $controller, $scope, $filter, DragAndDropListenerFactory, AttachmentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ConfigurationRepo) {
+vireo.controller("FieldProfileManagementController", function($q, $controller, $scope, $filter, DragAndDropListenerFactory, DocumentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ConfigurationRepo) {
 
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
@@ -22,7 +22,7 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
 
     $scope.inputTypes = InputTypeRepo.getAll();
 
-    $scope.attachmentTypes = AttachmentTypeRepo.getAll();
+    $scope.documentTypes = DocumentTypeRepo.getAll();
 
     $scope.dragging = false;
 
@@ -33,12 +33,12 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
     $scope.filteredPredicates = {};
 
     $scope.documentData = {
-        attachmentType: {}
+        documentType: {}
     };
 
     $scope.forms = {};
 
-    $scope.ready = $q.all([ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), FieldGlossRepo.ready(), InputTypeRepo.ready(), AttachmentTypeRepo.ready()]);
+    $scope.ready = $q.all([ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), FieldGlossRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
 
     $scope.ready.then(function() {
 
@@ -60,14 +60,14 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
         $scope.inputTypeChanged = function() {
             if ($scope.modalData.inputType.name == "INPUT_FILE") {
                 $scope.inputFile = true;
-                $scope.modalData.fieldPredicate = $scope.documentData.attachmentType.fieldPredicate;
+                $scope.modalData.fieldPredicate = $scope.documentData.documentType.fieldPredicate;
             } else {
                 $scope.inputFile = false;
             }
         };
 
-        $scope.attachmentTypeChanged = function() {
-            $scope.modalData.fieldPredicate = $scope.documentData.attachmentType.fieldPredicate;
+        $scope.documentTypeChanged = function() {
+            $scope.modalData.fieldPredicate = $scope.documentData.documentType.fieldPredicate;
         };
 
         $scope.resetFieldProfiles = function() {
@@ -108,7 +108,7 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
                 fieldGlosses: [],
                 controlledVocabularies: []
             };
-            angular.extend($scope.documentData.attachmentType, $scope.attachmentTypes[0]);
+            angular.extend($scope.documentData.documentType, $scope.documentTypes[0]);
 
             $scope.closeModal();
         };
@@ -135,7 +135,7 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
         };
 
         $scope.createFieldPredicate = function() {
-            FieldPredicateRepo.create({value: $scope.modalData.fieldPredicate, attachmentTypePredicate: false}).then(function(response) {
+            FieldPredicateRepo.create({value: $scope.modalData.fieldPredicate, documentTypePredicate: false}).then(function(response) {
                 var body = angular.fromJson(response.body);
                 if (body.meta.type == "SUCCESS") {
                     $scope.modalData.fieldPredicate = body.payload.FieldPredicate;
@@ -151,10 +151,10 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
             var fieldProfile = $scope.step.aggregateFieldProfiles[index];
             angular.extend($scope.modalData, fieldProfile);
 
-            if ($scope.modalData.fieldPredicate.attachmentTypePredicate) {
-                angular.forEach($scope.attachmentTypes, function(attachmentType) {
-                    if (attachmentType.fieldPredicate.id == $scope.modalData.fieldPredicate.id) {
-                        angular.extend($scope.documentData.attachmentType, attachmentType);
+            if ($scope.modalData.fieldPredicate.documentTypePredicate) {
+                angular.forEach($scope.documentTypes, function(documentType) {
+                    if (documentType.fieldPredicate.id == $scope.modalData.fieldPredicate.id) {
+                        angular.extend($scope.documentData.documentType, documentType);
                         $scope.inputTypeChanged();
                     }
                 });
@@ -203,7 +203,7 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
 
         $scope.buildFilteredPredicateList = function() {
             $scope.filteredPredicates = $filter('filter')($scope.fieldPredicates, function(predicate) {
-                return !predicate.attachmentTypePredicate;
+                return !predicate.documentTypePredicate;
             });
         };
 

@@ -13,11 +13,11 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/submission-state")
 public class SubmissionStateController {
-	
+
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
-	
-	@ApiMapping("/all")
+
+    @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getAllSubmissionStates() {
         return new ApiResponse(SUCCESS, submissionStateRepo.findAll());

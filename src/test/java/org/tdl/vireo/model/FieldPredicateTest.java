@@ -19,8 +19,8 @@ public class FieldPredicateTest extends AbstractEntityTest {
         fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         try {
             fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
-        } 
-        catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldPredicateRepo.count());
     }
 

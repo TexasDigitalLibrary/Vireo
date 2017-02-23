@@ -10,16 +10,15 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id", "overrideable" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id", "overrideable" }))
 public abstract class AbstractNote<N> extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-   
+
     @Column(nullable = false, columnDefinition = "text")
     private String text;
-    
-        
+
     public String getName() {
         return name;
     }
@@ -34,5 +33,5 @@ public abstract class AbstractNote<N> extends BaseEntity {
 
     public void setText(String text) {
         this.text = text;
-    }    
+    }
 }

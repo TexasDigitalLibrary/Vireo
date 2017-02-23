@@ -1,10 +1,7 @@
 package org.tdl.vireo.model.repo;
 
-import java.util.Calendar;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.ActionLog;
-import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
@@ -13,6 +10,6 @@ public interface ActionLogRepo extends JpaRepository<ActionLog, Long>, ActionLog
 
     public ActionLog findByUserAndSubmissionState(User user, SubmissionState submissionState);
 
-	public ActionLog findBySubmissionAndActionDate(Submission submission, Calendar actionDate);
+    public void delete(ActionLog actionLog);
 
 }

@@ -24,13 +24,13 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/field-gloss")
 public class FieldGlossController {
-    
+
     @Autowired
     private FieldGlossRepo fieldGlossRepo;
-    
+
     @Autowired
     private LanguageRepo languageRepo;
-    
+
     /**
      * Endpoint to request all field glosses.
      * 
@@ -41,7 +41,7 @@ public class FieldGlossController {
     public ApiResponse getAllFieldGlosses() {
         return new ApiResponse(SUCCESS, fieldGlossRepo.findAll());
     }
-    
+
     /**
      * Endpoint to create a field gloss
      * 

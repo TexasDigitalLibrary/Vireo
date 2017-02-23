@@ -16,5 +16,5 @@ public class ViewController {
         view.addObject("base", request.getServletContext().getContextPath());
         return view;
     }
-       
+
 }

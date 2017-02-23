@@ -17,16 +17,16 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 public class ContactInfo extends BaseEntity {
 
-    @OneToOne(cascade = {DETACH, MERGE, REFRESH, REMOVE}, optional = true, orphanRemoval = true, fetch = LAZY)
+    @OneToOne(cascade = { DETACH, MERGE, REFRESH, REMOVE }, optional = true, orphanRemoval = true, fetch = LAZY)
     private Address address;
-    
+
     @Column(nullable = true)
     private String phone;
-    
+
     @Column(nullable = true)
     private String email;
 
-    public ContactInfo() { 
+    public ContactInfo() {
         setModelValidator(new ContactInfoValidator());
     }
 

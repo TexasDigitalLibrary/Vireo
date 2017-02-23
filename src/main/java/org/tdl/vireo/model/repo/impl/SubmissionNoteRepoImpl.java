@@ -13,14 +13,14 @@ public class SubmissionNoteRepoImpl implements SubmissionNoteRepoCustom {
 
     @Override
     public SubmissionNote create(Note note) {
-        
+
         SubmissionNote submissionNote = submissionNoteRepo.findByNameAndText(note.getName(), note.getText());
-        
-        if(submissionNote == null) {
+
+        if (submissionNote == null) {
             submissionNote = new SubmissionNote(note.getName(), note.getText());
             submissionNote = submissionNoteRepo.save(submissionNote);
         }
-        
+
         return submissionNote;
     }
 

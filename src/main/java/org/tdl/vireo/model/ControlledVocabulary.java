@@ -26,24 +26,24 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Entity
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
-    
+
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
-    
+
     @Column(nullable = false, unique = true)
     private String name;
-    
+
     @Column(nullable = true, unique = false)
     private String entityName;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
-    
+
     @ManyToMany(cascade = { ALL }, fetch = EAGER)
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
-    
+
     @Column(nullable = false)
     private Boolean isEntityProperty;
-    
+
     @Column(nullable = false)
     private Boolean isEnum;
 
@@ -64,7 +64,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
         setName(name);
         setLanguage(language);
     }
-    
+
     /**
      * 
      * @param name
@@ -77,7 +77,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
         setEntityName(entityName);
         setIsEntityProperty(true);
     }
-    
+
     /**
      * @return the name
      */
@@ -92,7 +92,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * 
      * @return
@@ -110,34 +110,29 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list
-     * of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through 
-     * a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName
-     * and name of the controlled vocabulary. This name is also the property name of the entity. 
+     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
      * 
      * @return the values
      */
     public List<VocabularyWord> getDictionary() {
         List<VocabularyWord> values = new ArrayList<VocabularyWord>();
-        if(!getIsEntityProperty()) {
+        if (!getIsEntityProperty()) {
             values.addAll(dictionary);
-        }
-        else {
-            try {                
+        } else {
+            try {
                 EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
                 values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, craftPropertyName()));
-            }
-            catch(ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 logger.info("Entity " + entityName + " not found!\n");
             }
         }
         return values;
     }
-    
+
     private String craftPropertyName() {
         return name.substring(name.indexOf(getEntityName()) + getEntityName().length() + 1, name.length());
     }
-    
+
     /**
      * 
      * @return Language language
@@ -159,7 +154,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      *            the values to set
      */
     public void setDictionary(List<VocabularyWord> values) {
-        if(!getIsEntityProperty()) {
+        if (!getIsEntityProperty()) {
             dictionary = values;
         }
     }
@@ -169,7 +164,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param value
      */
     public void addValue(VocabularyWord value) {
-        if(!getIsEntityProperty() && !dictionary.contains(value)) {
+        if (!getIsEntityProperty() && !dictionary.contains(value)) {
             dictionary.add(value);
         }
     }
@@ -179,7 +174,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      * @param value
      */
     public void removeValue(VocabularyWord value) {
-        if(!getIsEntityProperty()) {
+        if (!getIsEntityProperty()) {
             dictionary.remove(value);
         }
     }
@@ -192,7 +187,8 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * @param isEntityProperty the isEntityProperty to set
+     * @param isEntityProperty
+     *            the isEntityProperty to set
      */
     public void setIsEntityProperty(Boolean isEntityProperty) {
         this.isEntityProperty = isEntityProperty;
@@ -206,7 +202,8 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * @param isEnum the isEnum to set
+     * @param isEnum
+     *            the isEnum to set
      */
     public void setIsEnum(Boolean isEnum) {
         this.isEnum = isEnum;

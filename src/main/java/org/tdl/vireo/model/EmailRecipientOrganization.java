@@ -11,30 +11,31 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class EmailRecipientOrganization extends AbstractEmailRecipient implements EmailRecipient {
-		
-	@ManyToOne
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+
+    @ManyToOne
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-	private Organization organization;
+    private Organization organization;
 
-	public EmailRecipientOrganization() {}
-	
-	public EmailRecipientOrganization(Organization organization) {
-		setName(organization.getName());
-		this.organization = organization;
-	}
+    public EmailRecipientOrganization() {
+    }
 
-	@Override
-	public List<String> getEmails(Submission submission) {
-		return getOrganization().getEmails();
-	}
+    public EmailRecipientOrganization(Organization organization) {
+        setName(organization.getName());
+        this.organization = organization;
+    }
 
-	public Organization getOrganization() {
-		return organization;
-	}
+    @Override
+    public List<String> getEmails(Submission submission) {
+        return getOrganization().getEmails();
+    }
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 
 }

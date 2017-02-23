@@ -23,10 +23,10 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/field-predicates")
 public class FieldPredicateController {
-    
+
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-    
+
     /**
      * Endpoint to request all field predicates.
      * 
@@ -37,7 +37,7 @@ public class FieldPredicateController {
     public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
     }
-    
+
     /**
      * Endpoint to request all field predicates.
      * 
@@ -48,7 +48,7 @@ public class FieldPredicateController {
     public ApiResponse getFieldPredicateByValue(@ApiVariable String value) {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findByValue(value));
     }
-    
+
     /**
      * Endpoint to create a field predicate
      * 
