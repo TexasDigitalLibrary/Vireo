@@ -1,4 +1,4 @@
-document // CONVENTION: must match model name, case sensitive
+// CONVENTION: must match model name, case sensitive
 var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
