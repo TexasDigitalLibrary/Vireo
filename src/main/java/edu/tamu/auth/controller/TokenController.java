@@ -146,11 +146,4 @@ public class TokenController {
         return token;
     }
 
-    /*
-     * @RequestMapping("/test-token")
-     * 
-     * @SkipAop protected String anonymous() throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException { JWT token = new JWT(secret_key, expiration); token.makeClaim("firstName", "Jack"); token.makeClaim("lastName", "Daniels"); token.makeClaim("email", "aggieJack@tamu.edu"); token.makeClaim("uin", "123456789"); token.makeClaim("netid", "aggieJack");
-     * token.makeClaim("role", "ADMINISTRATOR"); token.makeClaim("exp", String.valueOf(((new Date()).getTime() + 3155692597470L))); return token.getTokenAsString(); }
-     */
-
 }
