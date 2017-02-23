@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControlledVocabularyCache {
-    
+
     private Long timestamp;
-    
+
     private String controlledVocabularyName;
-    
+
     private List<VocabularyWord> newVocabularyWords;
-    
+
     private List<VocabularyWord[]> updatingVocabularyWords;
-    
+
     private List<VocabularyWord> duplicateVocabularyWords;
 
     public ControlledVocabularyCache() {
@@ -20,13 +20,13 @@ public class ControlledVocabularyCache {
         setUpdatingVocabularyWords(new ArrayList<VocabularyWord[]>());
         setDuplicateVocabularyWords(new ArrayList<VocabularyWord>());
     }
-    
+
     public ControlledVocabularyCache(Long timestamp, String controlledVocabularyName) {
         this();
         setTimestamp(timestamp);
         setControlledVocabularyName(controlledVocabularyName);
     }
-    
+
     /**
      * @return the timestamp
      */
@@ -35,7 +35,8 @@ public class ControlledVocabularyCache {
     }
 
     /**
-     * @param timestamp the timestamp to set
+     * @param timestamp
+     *            the timestamp to set
      */
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
@@ -49,7 +50,8 @@ public class ControlledVocabularyCache {
     }
 
     /**
-     * @param controlledVocabularyId the controlledVocabularyId to set
+     * @param controlledVocabularyId
+     *            the controlledVocabularyId to set
      */
     public void setControlledVocabularyName(String controlledVocabularyName) {
         this.controlledVocabularyName = controlledVocabularyName;
@@ -63,7 +65,8 @@ public class ControlledVocabularyCache {
     }
 
     /**
-     * @param newVocabularyWords the newVocabularyWords to set
+     * @param newVocabularyWords
+     *            the newVocabularyWords to set
      */
     public void setNewVocabularyWords(List<VocabularyWord> newVocabularyWords) {
         this.newVocabularyWords = newVocabularyWords;
@@ -77,7 +80,8 @@ public class ControlledVocabularyCache {
     }
 
     /**
-     * @param updatingVocabularyWords the updatingVocabularyWords to set
+     * @param updatingVocabularyWords
+     *            the updatingVocabularyWords to set
      */
     public void setUpdatingVocabularyWords(List<VocabularyWord[]> updatingVocabularyWords) {
         this.updatingVocabularyWords = updatingVocabularyWords;
@@ -91,10 +95,11 @@ public class ControlledVocabularyCache {
     }
 
     /**
-     * @param duplicateVocabularyWords the duplicateVocabularyWords to set
+     * @param duplicateVocabularyWords
+     *            the duplicateVocabularyWords to set
      */
     public void setDuplicateVocabularyWords(List<VocabularyWord> duplicateVocabularyWords) {
         this.duplicateVocabularyWords = duplicateVocabularyWords;
     }
-    
+
 }

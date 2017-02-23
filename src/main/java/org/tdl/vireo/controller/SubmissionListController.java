@@ -35,300 +35,298 @@ import edu.tamu.framework.model.Credentials;
 @Controller
 @ApiMapping("/submission-list")
 public class SubmissionListController {
-	
-	private final static String SEARCH_BOX_TITLE = "Search Box";
-
-	@Autowired
-	private SubmissionListColumnRepo submissionListColumnRepo;
-
-	@Autowired
-	private UserRepo userRepo;
-
-	@Autowired
-	private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
-
-	@Autowired
-	private SimpMessagingTemplate simpMessagingTemplate;
-
-	@Autowired
-	private NamedSearchFilterRepo filterCriterionRepo;
-
-	@Autowired
-	private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
-
-	@ApiMapping("/all-columns")
-	@Auth(role = "STUDENT")
-	@Transactional
-	public ApiResponse getSubmissionViewColumns() {
-		return new ApiResponse(SUCCESS, submissionListColumnRepo.findAll());
-	}
-
-	@Transactional
-	@ApiMapping("/columns-by-user")
-	@Auth(role = "STUDENT")
-	public ApiResponse getSubmissionViewColumnsByUser(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
-	}
-
-	@Transactional
-	@ApiMapping("/filter-columns-by-user")
-	@Auth(role = "STUDENT")
-	public ApiResponse getFilterColumnsByUser(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		return new ApiResponse(SUCCESS, user.getFilterColumns());
-	}
-
-	@Transactional
-	@ApiMapping("/pagesize-by-user")
-	@Auth(role = "STUDENT")
-	public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		return new ApiResponse(SUCCESS, user.getPageSize());
-	}
-
-	@Transactional
-	@ApiMapping("/update-user-columns/{pageSize}")
-	@Auth(role = "STUDENT")
-	public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		user.setPageSize(pageSize);
-		user.setSubmissionViewColumns(submissionViewColumns);
-		user = userRepo.save(user);
-
-		return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
-	}
-
-	@Transactional
-	@ApiMapping("/reset-user-columns")
-	@Auth(role = "STUDENT")
-	public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
-		user = userRepo.save(user);
-		return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
-	}
-
-	@Transactional
-	@ApiMapping("/update-user-filter-columns")
-	@Auth(role = "STUDENT")
-	public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> filterColumns) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		user.setFilterColumns(filterColumns);
-		user = userRepo.save(user);
-		return new ApiResponse(SUCCESS, user.getFilterColumns());
-	}
-
-	@ApiMapping("/set-active-filter")
-	@Auth(role = "MANAGER")
-	public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
-
-		User user = userRepo.findByEmail(credentials.getEmail());
-
-		List<Long> ids = new ArrayList<Long>();
-
-		user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
-			ids.add(namedSearchFilter.getId());
-		});
-
-		user.getActiveFilter().getNamedSearchFilters().clear();
-
-		user = userRepo.save(user);
-
-		ids.forEach(id -> {
-			filterCriterionRepo.delete(id);
-		});
 
-		NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-		activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
-
-		if (activeFilter.getColumnsFlag()) {
-			user.getSubmissionViewColumns().clear();
-			user.getSubmissionViewColumns().addAll(user.getActiveFilter().getSavedColumns());
-		}
-
-		user = userRepo.save(user);
-
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
-
-		return new ApiResponse(SUCCESS);
-
-	}
-
-	@ApiMapping("/active-filters")
-	@Auth(role = "MANAGER")
-	public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		return new ApiResponse(SUCCESS, user.getActiveFilter());
-	}
-
-	@ApiMapping("/saved-filters")
-	@Auth(role = "MANAGER")
-	public ApiResponse getSavedFilters(@ApiCredentials Credentials credentials) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		return new ApiResponse(SUCCESS, user.getActiveFilter());
-	}
-
-	@ApiMapping("/remove-saved-filter")
-	@Auth(role = "MANAGER")
-	public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) {
-		User user = userRepo.findByEmail(credentials.getEmail());
-		user.getSavedFilters().remove(savedFilter);
-		userRepo.save(user);
-		namedSearchFilterGroupRepo.delete(savedFilter.getId());
-		return getSavedFilters(credentials);
-	}
+    private final static String SEARCH_BOX_TITLE = "Search Box";
+
+    @Autowired
+    private SubmissionListColumnRepo submissionListColumnRepo;
+
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private NamedSearchFilterRepo filterCriterionRepo;
+
+    @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+
+    @ApiMapping("/all-columns")
+    @Auth(role = "STUDENT")
+    @Transactional
+    public ApiResponse getSubmissionViewColumns() {
+        return new ApiResponse(SUCCESS, submissionListColumnRepo.findAll());
+    }
+
+    @Transactional
+    @ApiMapping("/columns-by-user")
+    @Auth(role = "STUDENT")
+    public ApiResponse getSubmissionViewColumnsByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+
+    @Transactional
+    @ApiMapping("/filter-columns-by-user")
+    @Auth(role = "STUDENT")
+    public ApiResponse getFilterColumnsByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getFilterColumns());
+    }
+
+    @Transactional
+    @ApiMapping("/pagesize-by-user")
+    @Auth(role = "STUDENT")
+    public ApiResponse getSubmissionViewPageSizeByUser(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getPageSize());
+    }
+
+    @Transactional
+    @ApiMapping("/update-user-columns/{pageSize}")
+    @Auth(role = "STUDENT")
+    public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.setPageSize(pageSize);
+        user.setSubmissionViewColumns(submissionViewColumns);
+        user = userRepo.save(user);
+
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+
+    @Transactional
+    @ApiMapping("/reset-user-columns")
+    @Auth(role = "STUDENT")
+    public ApiResponse resetUserSubmissionViewColumns(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
+        user = userRepo.save(user);
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+
+    @Transactional
+    @ApiMapping("/update-user-filter-columns")
+    @Auth(role = "STUDENT")
+    public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> filterColumns) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.setFilterColumns(filterColumns);
+        user = userRepo.save(user);
+        return new ApiResponse(SUCCESS, user.getFilterColumns());
+    }
+
+    @ApiMapping("/set-active-filter")
+    @Auth(role = "MANAGER")
+    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
-	@ApiMapping("/add-filter-criterion")
-	@Auth(role = "MANAGER")
-	public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
+        User user = userRepo.findByEmail(credentials.getEmail());
 
-		String criterionName = data.get("criterionName").asText();
-		String filterValue = data.get("filterValue").asText();
-		Boolean exactMatch = data.get("exactMatch").asBoolean();
+        List<Long> ids = new ArrayList<Long>();
 
-		JsonNode filterGlossNode = data.get("filterGloss");
-		
-		String filterGloss = null;
-		
-		if (filterGlossNode != null) {
-			filterGloss = filterGlossNode.asText();
-		}
+        user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
+            ids.add(namedSearchFilter.getId());
+        });
 
-		User user = userRepo.findByEmail(credentials.getEmail());
+        user.getActiveFilter().getNamedSearchFilters().clear();
 
-		NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        user = userRepo.save(user);
 
-		NamedSearchFilter namedSearchFilter = null;
+        ids.forEach(id -> {
+            filterCriterionRepo.delete(id);
+        });
 
-		for (NamedSearchFilter criterion : activeFilter.getNamedSearchFilters()) {
-			if (criterion.getName().equals(criterionName)) {
-				namedSearchFilter = criterion;
-				break;
-			}
-		}
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
 
-		if (namedSearchFilter == null) {
-			namedSearchFilter = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
-		}
+        if (activeFilter.getColumnsFlag()) {
+            user.getSubmissionViewColumns().clear();
+            user.getSubmissionViewColumns().addAll(user.getActiveFilter().getSavedColumns());
+        }
 
-		namedSearchFilter.addFilter(filterValue, filterGloss);
-		
-		namedSearchFilter.setExactMatch(exactMatch);
-		
-		namedSearchFilter.setAllColumnSearch(criterionName.equals(SEARCH_BOX_TITLE) ? true : false);
+        user = userRepo.save(user);
 
-		user.getActiveFilter().addFilterCriterion(namedSearchFilter);
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
-		user = userRepo.save(user);
+        return new ApiResponse(SUCCESS);
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+    }
 
-		return new ApiResponse(SUCCESS);
-	}
+    @ApiMapping("/active-filters")
+    @Auth(role = "MANAGER")
+    public ApiResponse getActiveFilters(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getActiveFilter());
+    }
 
-	@ApiMapping("/remove-filter-criterion/{namedSearchFilterName}")
-	@Auth(role = "MANAGER")
-	public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
+    @ApiMapping("/saved-filters")
+    @Auth(role = "MANAGER")
+    public ApiResponse getSavedFilters(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        return new ApiResponse(SUCCESS, user.getActiveFilter());
+    }
 
-		User user = userRepo.findByEmail(credentials.getEmail());
+    @ApiMapping("/remove-saved-filter")
+    @Auth(role = "MANAGER")
+    public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        user.getSavedFilters().remove(savedFilter);
+        userRepo.save(user);
+        namedSearchFilterGroupRepo.delete(savedFilter.getId());
+        return getSavedFilters(credentials);
+    }
 
-		NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+    @ApiMapping("/add-filter-criterion")
+    @Auth(role = "MANAGER")
+    public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
 
-		for (NamedSearchFilter namedSearchFilter : activeFilter.getNamedSearchFilters()) {
-			if (namedSearchFilter.getName().equals(namedSearchFilterName)) {
-				for (FilterCriterion fc : namedSearchFilter.getFilters()) {
-					if (fc.getValue().equals(filterCriterion.getValue())
-							&& fc.getGloss().equals(filterCriterion.getGloss())) {
-						namedSearchFilter.removeFilter(fc);
-						if (namedSearchFilter.getFilters().size() == 0) {
-							activeFilter.removeNamedSearchFilter(namedSearchFilter);
-						}
-						break;
-					}
-				}
-				break;
-			}
-		}
+        String criterionName = data.get("criterionName").asText();
+        String filterValue = data.get("filterValue").asText();
+        Boolean exactMatch = data.get("exactMatch").asBoolean();
 
-		user = userRepo.save(user);
+        JsonNode filterGlossNode = data.get("filterGloss");
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(),
-				new ApiResponse(SUCCESS, user.getActiveFilter()));
+        String filterGloss = null;
 
-		return new ApiResponse(SUCCESS);
-	}
+        if (filterGlossNode != null) {
+            filterGloss = filterGlossNode.asText();
+        }
 
-	@ApiMapping("/clear-filter-criteria")
-	@Auth(role = "MANAGER")
-	public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
 
-		User user = userRepo.findByEmail(credentials.getEmail());
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
 
-		user.getActiveFilter().getNamedSearchFilters().clear();
+        NamedSearchFilter namedSearchFilter = null;
 
-		userRepo.save(user);
+        for (NamedSearchFilter criterion : activeFilter.getNamedSearchFilters()) {
+            if (criterion.getName().equals(criterionName)) {
+                namedSearchFilter = criterion;
+                break;
+            }
+        }
 
-		user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
-			filterCriterionRepo.delete(namedSearchFilter);
-		});
+        if (namedSearchFilter == null) {
+            namedSearchFilter = filterCriterionRepo.create(submissionListColumnRepo.findByTitle(criterionName));
+        }
 
-		simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        namedSearchFilter.addFilter(filterValue, filterGloss);
 
-		return new ApiResponse(SUCCESS);
-	}
+        namedSearchFilter.setExactMatch(exactMatch);
 
-	@ApiMapping("/all-saved-filter-criteria")
-	@Auth(role = "MANAGER")
-	public ApiResponse getAllSaveFilterCriteria(@ApiCredentials Credentials credentials) {
+        namedSearchFilter.setAllColumnSearch(criterionName.equals(SEARCH_BOX_TITLE) ? true : false);
 
-		User user = userRepo.findByEmail(credentials.getEmail());
+        user.getActiveFilter().addFilterCriterion(namedSearchFilter);
 
-		List<NamedSearchFilterGroup> userSavedFilters = user.getSavedFilters();
-		List<NamedSearchFilterGroup> publicSavedFilters = namedSearchFilterGroupRepo.findByPublicFlagTrue();
+        user = userRepo.save(user);
 
-		List<NamedSearchFilterGroup> allSavedFilters = new ArrayList<NamedSearchFilterGroup>();
-		allSavedFilters.addAll(userSavedFilters);
-		allSavedFilters.addAll(publicSavedFilters);
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
-		return new ApiResponse(SUCCESS, userSavedFilters);
-	}
+        return new ApiResponse(SUCCESS);
+    }
 
-	@ApiMapping("/save-filter-criteria")
-	@Auth(role = "MANAGER")
-	public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
+    @ApiMapping("/remove-filter-criterion/{namedSearchFilterName}")
+    @Auth(role = "MANAGER")
+    public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
 
-		User user = userRepo.findByEmail(credentials.getEmail());
+        User user = userRepo.findByEmail(credentials.getEmail());
 
-		NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
 
-		if (existingFilter != null) {
-			existingFilter = namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
-			user = userRepo.findByEmail(credentials.getEmail());
+        for (NamedSearchFilter namedSearchFilter : activeFilter.getNamedSearchFilters()) {
+            if (namedSearchFilter.getName().equals(namedSearchFilterName)) {
+                for (FilterCriterion fc : namedSearchFilter.getFilters()) {
+                    if (fc.getValue().equals(filterCriterion.getValue()) && fc.getGloss().equals(filterCriterion.getGloss())) {
+                        namedSearchFilter.removeFilter(fc);
+                        if (namedSearchFilter.getFilters().size() == 0) {
+                            activeFilter.removeNamedSearchFilter(namedSearchFilter);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
 
-		} else {
+        user = userRepo.save(user);
 
-			boolean foundFilter = false;
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
-			for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
-				if (filter.getName().equals(namedSearchFilterGroup.getName())) {
-					filter.getNamedSearchFilters().clear();
-					filter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
-					foundFilter = true;
-					break;
+        return new ApiResponse(SUCCESS);
+    }
 
-				}
-			}
+    @ApiMapping("/clear-filter-criteria")
+    @Auth(role = "MANAGER")
+    public ApiResponse clearFilterCriteria(@ApiCredentials Credentials credentials) {
 
-			if (!foundFilter) {
-				user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
-			}
+        User user = userRepo.findByEmail(credentials.getEmail());
 
-		}
+        user.getActiveFilter().getNamedSearchFilters().clear();
 
-		userRepo.save(user);
+        userRepo.save(user);
 
-		return new ApiResponse(SUCCESS);
-	}
+        user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
+            filterCriterionRepo.delete(namedSearchFilter);
+        });
+
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+
+        return new ApiResponse(SUCCESS);
+    }
+
+    @ApiMapping("/all-saved-filter-criteria")
+    @Auth(role = "MANAGER")
+    public ApiResponse getAllSaveFilterCriteria(@ApiCredentials Credentials credentials) {
+
+        User user = userRepo.findByEmail(credentials.getEmail());
+
+        List<NamedSearchFilterGroup> userSavedFilters = user.getSavedFilters();
+        List<NamedSearchFilterGroup> publicSavedFilters = namedSearchFilterGroupRepo.findByPublicFlagTrue();
+
+        List<NamedSearchFilterGroup> allSavedFilters = new ArrayList<NamedSearchFilterGroup>();
+        allSavedFilters.addAll(userSavedFilters);
+        allSavedFilters.addAll(publicSavedFilters);
+
+        return new ApiResponse(SUCCESS, userSavedFilters);
+    }
+
+    @ApiMapping("/save-filter-criteria")
+    @Auth(role = "MANAGER")
+    public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
+
+        User user = userRepo.findByEmail(credentials.getEmail());
+
+        NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
+
+        if (existingFilter != null) {
+            existingFilter = namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
+            user = userRepo.findByEmail(credentials.getEmail());
+
+        } else {
+
+            boolean foundFilter = false;
+
+            for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
+                if (filter.getName().equals(namedSearchFilterGroup.getName())) {
+                    filter.getNamedSearchFilters().clear();
+                    filter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
+                    foundFilter = true;
+                    break;
+
+                }
+            }
+
+            if (!foundFilter) {
+                user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
+            }
+
+        }
+
+        userRepo.save(user);
+
+        return new ApiResponse(SUCCESS);
+    }
 
 }

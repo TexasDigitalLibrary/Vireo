@@ -35,18 +35,18 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/settings/language")
 public class LanguageController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-    
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private LanguageRepo languageRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Autowired
     private ProquestLanguageCodesService proquestLanguageCodes;
-    
+
     /**
      * 
      * @return
@@ -57,7 +57,7 @@ public class LanguageController {
     public ApiResponse getAllLanguages() {
         return new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc());
     }
-    
+
     /**
      * 
      * @return
@@ -71,7 +71,7 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, language);
     }
-    
+
     /**
      * 
      * @return
@@ -85,7 +85,7 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, language);
     }
-    
+
     /**
      * 
      * @return
@@ -99,7 +99,7 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     /**
      * Endpoint to reorder languages.
      * 
@@ -135,15 +135,15 @@ public class LanguageController {
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     /**
      * 
      * @return
      */
     @ApiMapping("/proquest")
     @Auth(role = "MANAGER")
-    public ApiResponse getProquestLanguageCodes() {        
+    public ApiResponse getProquestLanguageCodes() {
         return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
     }
-    
+
 }

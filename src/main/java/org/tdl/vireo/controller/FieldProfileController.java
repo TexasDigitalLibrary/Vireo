@@ -16,11 +16,11 @@ public class FieldProfileController {
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse getAllFieldProfiles() {
         return new ApiResponse(SUCCESS, fieldProfileRepo.findAll());
     }
-    
+
 }

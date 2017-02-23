@@ -18,14 +18,14 @@ import edu.tamu.framework.model.BaseEntity;
  */
 @Entity
 public class CustomActionValue extends BaseEntity {
-    
+
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private CustomActionDefinition definition;
 
     @Column(nullable = false)
     private Boolean value;
 
-    public CustomActionValue() { 
+    public CustomActionValue() {
         setModelValidator(new CustomActionValueValidator());
     }
 

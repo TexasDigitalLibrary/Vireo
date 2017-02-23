@@ -5,7 +5,7 @@ import edu.tamu.framework.validation.BaseModelValidator;
 import edu.tamu.framework.validation.InputValidator;
 
 public class FieldGlossValidator extends BaseModelValidator {
-    
+
     public FieldGlossValidator() {
         String valueProperty = "value";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Field Gloss requires a value", valueProperty, true));
@@ -15,5 +15,5 @@ public class FieldGlossValidator extends BaseModelValidator {
         String languageProperty = "language";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Field Gloss requires a language", languageProperty, true));
     }
-    
+
 }

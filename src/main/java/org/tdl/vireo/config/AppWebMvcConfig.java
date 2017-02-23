@@ -21,14 +21,14 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
 
     @Value("${app.ui.path}")
     private String path;
-        
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
-        
+
         // TODO: investigate and implement dynamic resource locations at runtime via symlinks
-        // paths: "/data/attachments/**", "/conf/theme/**"
+        // paths: "/data/documents/**", "/conf/theme/**"
         // locations: BASE_PATH + symlink
         registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
 

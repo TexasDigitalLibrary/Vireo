@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
+import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
@@ -28,8 +30,6 @@ import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -47,19 +47,19 @@ public class OrganizationController {
 
     @Autowired
     private OrganizationRepo organizationRepo;
-    
+
     @Autowired
     private AbstractEmailRecipientRepo abstractEmailRecipientRepo;
-    
+
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-    
+
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-  
+
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
-    
+
     @Autowired
     private SubmissionStateRepo submissionStateRepo;
 
@@ -111,83 +111,85 @@ public class OrganizationController {
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
-    
+
     @Transactional
     @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
     @Auth(role = "MANAGER")
     public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
-    	
-    	ApiResponse response = new ApiResponse(SUCCESS);
-    	
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+
         Organization org = organizationRepo.findOne(requestingOrgID);
         SubmissionState submissionState = submissionStateRepo.findOne(dataNode.get("submissionStateId").asLong());
         JsonNode recipientNode = dataNode.get("recipient");
         EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
-        
+
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
-        
-        if(emailRecipient==null) response = new ApiResponse(ERROR, "Could not create recipient.");
-        
+
+        if (emailRecipient == null)
+            response = new ApiResponse(ERROR, "Could not create recipient.");
+
         EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
-        
+
         org.addEmailWorkflowRule(newEmailWorkflowRule);
-        
+
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
-        
+
         return response;
     }
-    
+
     @Transactional
     @ApiMapping("/{requestingOrgID}/edit-email-workflow-rule/{emailWorkflowRuleId}")
     @Auth(role = "MANAGER")
     public ApiResponse editEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId, @ApiData JsonNode dataNode) {
-    	
-    	ApiResponse response = new ApiResponse(SUCCESS);
-    	
-    	JsonNode recipientNode = dataNode.get("recipient");
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+
+        JsonNode recipientNode = dataNode.get("recipient");
         EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
-        
+
         EmailWorkflowRule emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
-        
+
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
-        
-        if(emailRecipient==null) response = new ApiResponse(ERROR, "Could not create recipient.");
-        
+
+        if (emailRecipient == null)
+            response = new ApiResponse(ERROR, "Could not create recipient.");
+
         emailWorkflowRuleToUpdate.setEmailTemplate(emailTemplate);
         emailWorkflowRuleToUpdate.setEmailRecipient(emailRecipient);
-        
+
         emailWorkflowRuleRepo.save(emailWorkflowRuleToUpdate);
-        
+
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
-        
+
         return response;
     }
-    
+
     @Transactional
     @ApiMapping("/{requestingOrgID}/remove-email-workflow-rule/{emailWorkflowRuleId}")
     @Auth(role = "MANAGER")
     public ApiResponse removeEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId) {
-    	
-    	Organization org = organizationRepo.findOne(requestingOrgID);
-    	EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
-    	
-    	org.removeEmailWorkflowRule(rule);
-    	
+
+        Organization org = organizationRepo.findOne(requestingOrgID);
+        EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+
+        org.removeEmailWorkflowRule(rule);
+
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @Transactional
     @ApiMapping("/{requestingOrgID}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
     @Auth(role = "MANAGER")
     public ApiResponse changeEmailWorkflowRuleActivation(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId) {
-    	
-    	EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
-    	
-    	rule.isDisabled(!rule.isDisabled());
-    	
-    	emailWorkflowRuleRepo.save(rule);
-    	
+
+        EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+
+        rule.isDisabled(!rule.isDisabled());
+
+        emailWorkflowRuleRepo.save(rule);
+
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
         return new ApiResponse(SUCCESS);
     }
@@ -273,38 +275,38 @@ public class OrganizationController {
 
         return new ApiResponse(SUCCESS);
     }
-    
+
     private EmailRecipient buildRecipient(JsonNode recipientNode) {
-    	
-    	EmailRecipient emailRecipient;
-        
-        switch(recipientNode.get("type").asText()) {
-        
-        	case "SUBMITTER": {
-        		emailRecipient = abstractEmailRecipientRepo.createSubmitterRecipient();
-        		break;
-        	}
-        	case "ASSIGNEE": {
-        		emailRecipient = abstractEmailRecipientRepo.createAssigneeRecipient();
-        		break;
-        	}
-        	case "ORGANIZATION": {
-        		Organization recipientOrganization = organizationRepo.findOne(recipientNode.get("data").asLong());
-        		emailRecipient = abstractEmailRecipientRepo.createOrganizationRecipient(recipientOrganization);
-        		break;
-        	}
-        	case "CONTACT": {
-        		FieldPredicate recipientPredicate = fieldPredicateRepo.findOne(recipientNode.get("data").asLong());
-        		emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("name").asText(), recipientPredicate);
-        		break;
-        	}
-        	default: {
-        		emailRecipient = null;
-        	}
-        
+
+        EmailRecipient emailRecipient;
+
+        switch (recipientNode.get("type").asText()) {
+
+        case "SUBMITTER": {
+            emailRecipient = abstractEmailRecipientRepo.createSubmitterRecipient();
+            break;
         }
-    	
-    	return emailRecipient;
+        case "ASSIGNEE": {
+            emailRecipient = abstractEmailRecipientRepo.createAssigneeRecipient();
+            break;
+        }
+        case "ORGANIZATION": {
+            Organization recipientOrganization = organizationRepo.findOne(recipientNode.get("data").asLong());
+            emailRecipient = abstractEmailRecipientRepo.createOrganizationRecipient(recipientOrganization);
+            break;
+        }
+        case "CONTACT": {
+            FieldPredicate recipientPredicate = fieldPredicateRepo.findOne(recipientNode.get("data").asLong());
+            emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("name").asText(), recipientPredicate);
+            break;
+        }
+        default: {
+            emailRecipient = null;
+        }
+
+        }
+
+        return emailRecipient;
     }
 
 }

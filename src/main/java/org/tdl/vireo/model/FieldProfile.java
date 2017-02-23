@@ -50,7 +50,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
-	public FieldProfile(WorkflowStep originatingWorkflowStep) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep) {
         this();
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }

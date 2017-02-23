@@ -39,34 +39,28 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
-        
+
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
-        
+
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
-        
+
         fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED);
         assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
-        
+
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
         assertEquals("The submission field profile does not exist!", 1, submissionFieldProfileRepo.count());
-        
+
         fieldValue = fieldValueRepo.create(submissionFieldProfile.getFieldPredicate());
         fieldValue.setValue(TEST_FIELD_VALUE);
         fieldValue = fieldValueRepo.save(fieldValue);
         assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
         assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
-        
-        attachmentType = deprecatedAttachmentTypeRepo.create(TEST_ATTACHMENT_TYPE_NAME);
-        assertEquals("The attachmentType does not exist!", 1, deprecatedAttachmentTypeRepo.count());
-
-        attachment = deprecatedAttachmentRepo.create(TEST_ATTACHMENT_NAME, TEST_UUID, attachmentType);
-        assertEquals("The attachment does not exist!", 1, deprecatedAttachmentRepo.count());
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
 
         testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
-		assertEquals("The customActionDefinition repository is not 1!", 1, customActionDefinitionRepo.count());
+        assertEquals("The customActionDefinition repository is not 1!", 1, customActionDefinitionRepo.count());
 
     }
 
@@ -77,12 +71,11 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
-        
+
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
-        
+
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
 
@@ -92,10 +85,9 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct organization!", submission.getOrganization(), organization);
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
-        assertEquals("Saved submission did not contain the correct attachment!", true, submission.getAttachments().contains(attachment));
         assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
         assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
-            
+
     }
 
     @Override
@@ -105,8 +97,9 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         try {
             submissionRepo.create(submitter, organization, submissionState, getCredentials());
-        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-        
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
+
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
     }
 
@@ -130,14 +123,13 @@ public class SubmissionTest extends AbstractEntityTest {
 
         SubmissionFieldProfile severableSubmissionfieldProfile = submissionFieldProfileRepo.create(fieldProfile);
         FieldValue severableFieldValue = fieldValueRepo.create(severableSubmissionfieldProfile.getFieldPredicate());
-        
+
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
-
         Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
-        ActionLog severableActionLog = actionLogRepo.create(submission, submissionState, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, attachment, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
+        ActionLog severableActionLog = actionLogRepo.create(submission, submitter, TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE, TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATE_ACTION_LOG_FLAG);
         submission = submissionRepo.findOne(submission.getId());
 
         int numSteps = submission.getSubmissionWorkflowSteps().size();
@@ -154,7 +146,6 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submissionRepo.saveAndFlush(submission);
 
-        submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
         submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
@@ -167,7 +158,7 @@ public class SubmissionTest extends AbstractEntityTest {
         numSteps--;
         submission = submissionRepo.save(submission);
         assertEquals("The workflow step was not removed!", numSteps, submission.getSubmissionWorkflowSteps().size());
-        
+
         // 2 submission workflow steps added during the create method!
         assertEquals("The workflow step was deleted!", 4, submissionWorkflowStepRepo.count());
 
@@ -196,11 +187,9 @@ public class SubmissionTest extends AbstractEntityTest {
         // the field values are deleted
         // the workflow steps are not deleted
         // the actionlog is deleted
-        // the attachment is deleted
         assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
         assertEquals("The workflow steps were deleted!", 2, workflowStepRepo.count());
         assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
-        assertEquals("The attachment were orphaned", 0, deprecatedAttachmentRepo.count());
         assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
 
         // and, going another level deep on the cascade from field values to their predicates,
@@ -215,7 +204,6 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        submission.addAttachment(attachment);
         submission.addEmbargoType(embargoType);
 
         submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
@@ -228,7 +216,8 @@ public class SubmissionTest extends AbstractEntityTest {
 
             submissionRepo.create(submitter, organization, submissionState, getCredentials());
             assertTrue(false);
-        } catch (Exception e) { /* SUCCESS */ }
+        } catch (Exception e) {
+            /* SUCCESS */ }
     }
 
     @After
@@ -242,7 +231,7 @@ public class SubmissionTest extends AbstractEntityTest {
         });
         submissionWorkflowStepRepo.deleteAll();
         actionLogRepo.deleteAll();
-        fieldValueRepo.deleteAll();        
+        fieldValueRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);
         });
@@ -260,8 +249,6 @@ public class SubmissionTest extends AbstractEntityTest {
             namedSearchFilterRepo.delete(nsf);
         });
         userRepo.deleteAll();
-        deprecatedAttachmentRepo.deleteAll();
-        deprecatedAttachmentTypeRepo.deleteAll();
     }
 
 }

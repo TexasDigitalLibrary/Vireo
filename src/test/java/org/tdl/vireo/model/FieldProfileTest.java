@@ -8,9 +8,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.repo.impl.ComponentNotPresentOnOrgException;
-import org.tdl.vireo.model.repo.impl.HeritableModelNonOverrideableException;
-import org.tdl.vireo.model.repo.impl.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
+import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
+import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 
 public class FieldProfileTest extends AbstractEntityTest {
 
@@ -46,7 +46,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED);
         try {
             fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED);
-        } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, fieldProfileRepo.count());
     }
 

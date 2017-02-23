@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
 public class Embargo extends BaseOrderedEntity {
 
     @Column(nullable = false)
@@ -157,6 +157,7 @@ public class Embargo extends BaseOrderedEntity {
 
     /**
      * Assumes that the incoming Object embargo is @Valid
+     * 
      * @param obj
      * @return
      */
@@ -166,10 +167,10 @@ public class Embargo extends BaseOrderedEntity {
         if (super.equals(obj)) {
             Embargo embargo = (Embargo) obj;
             // if we have the same name, description, duration and guarantor
-            if(embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())){
+            if (embargo.getName().equals(this.getName()) && embargo.getDescription().equals(this.getDescription()) && embargo.getGuarantor().equals(this.getGuarantor())) {
                 // duration is valid as null
                 Integer tempDuration = embargo.getDuration();
-                if(tempDuration != null) {
+                if (tempDuration != null) {
                     return tempDuration.equals(this.getDuration());
                 } else {
                     return tempDuration == this.getDuration();

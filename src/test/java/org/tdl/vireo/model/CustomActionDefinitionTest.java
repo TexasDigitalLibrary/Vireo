@@ -24,12 +24,12 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
     @Override
     public void testDuplication() {
         customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
-        
+
         try {
             customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
-        } 
-        catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-        
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
+
         assertEquals("Custom Action Definition entry was duplicated", 1, customActionDefinitionRepo.count());
     }
 

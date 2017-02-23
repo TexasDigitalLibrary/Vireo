@@ -34,14 +34,14 @@ public class CustomActionValueTest extends AbstractEntityTest {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals("The custom action value was not created in the repository", 1, customActionValueRepo.count());
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(testCustomActionValue));
-//        assertEquals("Saved custom Action Value does not contain the correct submitter first name", TEST_USER_FIRSTNAME, testCustomActionValue.getSubmission().getSubmitter().getFirstName());
+        // assertEquals("Saved custom Action Value does not contain the correct submitter first name", TEST_USER_FIRSTNAME, testCustomActionValue.getSubmission().getSubmitter().getFirstName());
         // TODO - similar tests for custom action definition
     }
 
     @Override
     public void testDuplication() {
-    	CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
-    	CustomActionValue cav2 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        CustomActionValue cav2 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals("The action log entry was not duplicated", 2, customActionValueRepo.count());
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav1));
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav2));
@@ -65,7 +65,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @After
     public void cleanUp() {
-    	submissionRepo.deleteAll();
+        submissionRepo.deleteAll();
         customActionValueRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();

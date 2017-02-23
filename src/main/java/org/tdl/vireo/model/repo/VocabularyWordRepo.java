@@ -8,5 +8,5 @@ import org.tdl.vireo.model.repo.custom.VocabularyWordRepoCustom;
 public interface VocabularyWordRepo extends JpaRepository<VocabularyWord, Long>, VocabularyWordRepoCustom {
 
     VocabularyWord findByNameAndControlledVocabulary(String name, ControlledVocabulary controlledVocabulary);
-        
+
 }

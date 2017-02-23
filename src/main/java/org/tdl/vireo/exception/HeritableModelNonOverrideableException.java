@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.repo.impl;
+package org.tdl.vireo.exception;
 
 public class HeritableModelNonOverrideableException extends Exception {
 

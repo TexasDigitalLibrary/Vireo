@@ -39,7 +39,6 @@ public class MockChannelInterceptor extends ChannelInterceptorAdapter {
 
     private final PathMatcher matcher = new AntPathMatcher();
 
-
     public void setIncludedDestinations(String... patterns) {
         this.destinationPatterns.addAll(Arrays.asList(patterns));
     }
@@ -55,8 +54,7 @@ public class MockChannelInterceptor extends ChannelInterceptorAdapter {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         if (this.destinationPatterns.isEmpty()) {
             this.messages.add(message);
-        }
-        else {
+        } else {
             StompHeaderAccessor headers = StompHeaderAccessor.wrap(message);
             if (headers.getDestination() != null) {
                 for (String pattern : this.destinationPatterns) {

@@ -14,11 +14,11 @@ import org.tdl.vireo.model.User;
 import edu.tamu.framework.model.Credentials;
 
 public interface SubmissionRepoCustom {
-    
+
     public Submission create(User submitter, Organization organization, SubmissionState submissionState, Credentials credentials);
-    
+
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable);
-    
+
     public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums);
 
 }

@@ -1,26 +1,25 @@
-[
-	{
-		"name": "College",
-		"organizations": []
-	},
-	{
-		"name": "Degree",
-		"organizations": []
-	},
-	{
-		"name": "Department",
-		"organizations": []
-	},
-	{
-		"name": "Major",
-		"organizations": []
-	},
-	{
-		"name": "Program",
-		"organizations": []
-	},
-	{
-		"name": "Administrative Group",
-		"organizations": []
-	}
+[{
+    "name": "College",
+    "organizations": []
+  },
+  {
+    "name": "Degree",
+    "organizations": []
+  },
+  {
+    "name": "Department",
+    "organizations": []
+  },
+  {
+    "name": "Major",
+    "organizations": []
+  },
+  {
+    "name": "Program",
+    "organizations": []
+  },
+  {
+    "name": "Administrative Group",
+    "organizations": []
+  }
 ]

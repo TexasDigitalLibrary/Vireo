@@ -21,43 +21,43 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }) )
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }))
 public class VocabularyWord extends BaseEntity {
-    
+
     @Column(nullable = false)
     private String name;
-    
+
     @Column(nullable = true)
     private String definition;
-    
+
     @Column(nullable = true)
     private String identifier;
-    
+
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
     @Fetch(FetchMode.SELECT)
-    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, scope=VocabularyWord.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = VocabularyWord.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private ControlledVocabulary controlledVocabulary;
-    
-    public VocabularyWord() { 
+
+    public VocabularyWord() {
         setModelValidator(new VocabularyWordValidator());
     }
-    
+
     public VocabularyWord(String name) {
         this();
         setName(name);
     }
-    
+
     public VocabularyWord(String name, String definition) {
         this(name);
         setDefinition(definition);
     }
-    
+
     public VocabularyWord(String name, String definition, String identifier) {
         this(name, definition);
         setIdentifier(identifier);
     }
-    
+
     public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier) {
         this(name, definition, identifier);
         setControlledVocabulary(controlledVocabulary);
@@ -94,5 +94,5 @@ public class VocabularyWord extends BaseEntity {
     public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         this.controlledVocabulary = controlledVocabulary;
     }
-    
+
 }

@@ -17,10 +17,10 @@ import org.tdl.vireo.model.ControlledVocabularyCache;
  */
 @Service
 public class ControlledVocabularyCachingService {
-    
+
     @Value("${app.cvcache.duration}")
     private Long duration;
-    
+
     private Map<String, ControlledVocabularyCache> cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
 
     /**
@@ -30,24 +30,24 @@ public class ControlledVocabularyCachingService {
     public void addControlledVocabularyCache(ControlledVocabularyCache cvCache) {
         cvCacheMap.put(cvCache.getControlledVocabularyName(), cvCache);
     }
-    
+
     /**
      * 
      * @param controlledVocabularyName
      */
-    public void removeControlledVocabularyCache(String controlledVocabularyName) { 
+    public void removeControlledVocabularyCache(String controlledVocabularyName) {
         cvCacheMap.remove(controlledVocabularyName);
     }
-    
+
     /**
      * 
      * @param controlledVocabularyName
      * @return
      */
-    public ControlledVocabularyCache getControlledVocabularyCache(String controlledVocabularyName) { 
+    public ControlledVocabularyCache getControlledVocabularyCache(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName);
     }
-    
+
     /**
      * 
      * @param controlledVocabularyName
@@ -56,27 +56,27 @@ public class ControlledVocabularyCachingService {
     public boolean doesControlledVocabularyExist(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName) != null;
     }
-    
+
     /**
      * 
      */
     public void clearCache() {
         cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
     }
-    
+
     /**
      * 
      */
     @Scheduled(fixedDelay = 1800000)
     public void cleanCache() {
-        List<String> expired = new ArrayList<String>();        
-        Long now = new Date().getTime();        
-        cvCacheMap.values().parallelStream().forEach(cvCache -> {            
+        List<String> expired = new ArrayList<String>();
+        Long now = new Date().getTime();
+        cvCacheMap.values().parallelStream().forEach(cvCache -> {
             Long expiration = cvCache.getTimestamp() + duration;
-            if(expiration >= now) {
+            if (expiration >= now) {
                 expired.add(cvCache.getControlledVocabularyName());
             }
-        });        
+        });
         expired.parallelStream().forEach(cvCacheKey -> {
             cvCacheMap.remove(cvCacheKey);
         });

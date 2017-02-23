@@ -4,7 +4,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 
 public interface SubmissionFieldProfileRepoCustom {
-    
+
     public SubmissionFieldProfile create(FieldProfile fieldProfile);
-    
+
 }

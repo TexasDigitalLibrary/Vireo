@@ -28,7 +28,7 @@ public class Address extends BaseEntity {
     @Column(nullable = true)
     private String country;
 
-    public Address() { 
+    public Address() {
         setModelValidator(new AddressValidator());
     }
 

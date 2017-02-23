@@ -24,8 +24,8 @@ public class LanguageTest extends AbstractEntityTest {
         languageRepo.create(TEST_LANGUAGE_NAME);
         try {
             languageRepo.create(TEST_LANGUAGE_NAME);
-        } 
-        catch (DataIntegrityViolationException e) { /* SUCCESS */ }
+        } catch (DataIntegrityViolationException e) {
+            /* SUCCESS */ }
         assertEquals("The repository duplicated entity!", 1, languageRepo.count());
     }
 

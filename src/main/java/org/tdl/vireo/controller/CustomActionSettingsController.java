@@ -26,20 +26,20 @@ import edu.tamu.framework.model.ApiResponse;
 @Controller
 @ApiMapping("/settings/custom-action")
 public class CustomActionSettingsController {
-    
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
-    
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     CustomActionDefinitionRepo customActionDefinitionRepo;
-    
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     public ApiResponse getCustomActions() {
-       return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
+        return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
     }
-    
+
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -49,7 +49,7 @@ public class CustomActionSettingsController {
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
-    
+
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -59,7 +59,7 @@ public class CustomActionSettingsController {
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
-    
+
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
@@ -69,7 +69,7 @@ public class CustomActionSettingsController {
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = CustomActionDefinition.class, params = { "0", "1" }) })
@@ -79,5 +79,5 @@ public class CustomActionSettingsController {
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 }

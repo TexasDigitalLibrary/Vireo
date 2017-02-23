@@ -1,6 +1,7 @@
 package org.tdl.vireo.enums;
 
 public enum EmbargoGuarantor {
+
     // NEVER CHANGE THE VALUES OR YOU'LL RUIN THE DB
     DEFAULT(0),
     PROQUEST(1);
@@ -19,7 +20,7 @@ public enum EmbargoGuarantor {
     public String toString() {
         return this.name();
     }
-    
+
     /**
      * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
      * 
@@ -27,9 +28,9 @@ public enum EmbargoGuarantor {
      * @return
      */
     public static EmbargoGuarantor fromString(String from) {
-        if(from != null) {
-            for(EmbargoGuarantor val : EmbargoGuarantor.values()) {
-                if(val.toString().equals(from.toUpperCase())){
+        if (from != null) {
+            for (EmbargoGuarantor val : EmbargoGuarantor.values()) {
+                if (val.toString().equals(from.toUpperCase())) {
                     return val;
                 }
             }

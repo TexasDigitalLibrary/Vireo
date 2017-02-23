@@ -9,9 +9,9 @@ import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
 public interface GraduationMonthRepo extends JpaRepository<GraduationMonth, Long>, GraduationMonthRepoCustom {
 
     public GraduationMonth findByMonth(int month);
-    
+
     public GraduationMonth findByPosition(Long position);
-    
+
     public List<GraduationMonth> findAllByOrderByPositionAsc();
-        
+
 }

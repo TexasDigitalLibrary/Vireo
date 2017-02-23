@@ -24,29 +24,28 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-
 @Entity
 @DiscriminatorValue("Org")
 @SuppressWarnings("rawtypes")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_organization_id" }))
 public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfile, Note> implements HeratibleWorkflowStep {
-   
+
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     protected Organization originatingOrganization;
-    
+
     @ManyToOne(cascade = { REFRESH, MERGE }, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-   
+
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<FieldProfile> originalFieldProfiles;
-    
+
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, mappedBy = "originatingWorkflowStep")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -55,7 +54,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
 
     public WorkflowStep() {
         setModelValidator(new WorkflowStepValidator());
-    	setAggregateFieldProfiles(new ArrayList<FieldProfile>());
+        setAggregateFieldProfiles(new ArrayList<FieldProfile>());
         setOriginalFieldProfiles(new ArrayList<FieldProfile>());
         setAggregateNotes(new ArrayList<Note>());
         setOriginalNotes(new ArrayList<Note>());
@@ -66,7 +65,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         setName(name);
         setOverrideable(true);
     }
-    
+
     public WorkflowStep(String name, Organization originatingOrganization) {
         this(name);
         setOriginatingOrganization(originatingOrganization);
@@ -80,12 +79,13 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     * @param originatingWorkflowStep
+     *            the originatingWorkflowStep to set
      */
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
     }
-    
+
     /**
      * @return the originatingOrganization
      */
@@ -94,12 +94,13 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * @param originatingOrganization the originatingOrganization to set
+     * @param originatingOrganization
+     *            the originatingOrganization to set
      */
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
-    
+
     /**
      * 
      * @return
@@ -121,10 +122,10 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
      * @param fieldProfile
      */
     public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
-        if(!getOriginalFieldProfiles().contains(originalFieldProfile)) {
+        if (!getOriginalFieldProfiles().contains(originalFieldProfile)) {
             getOriginalFieldProfiles().add(originalFieldProfile);
         }
-    	addAggregateFieldProfile(originalFieldProfile);
+        addAggregateFieldProfile(originalFieldProfile);
     }
 
     /**
@@ -132,10 +133,10 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
      * @param fieldProfile
      */
     public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
-    	getOriginalFieldProfiles().remove(originalFieldProfile);
-    	removeAggregateFieldProfile(originalFieldProfile);
+        getOriginalFieldProfiles().remove(originalFieldProfile);
+        removeAggregateFieldProfile(originalFieldProfile);
     }
-    
+
     /**
      * 
      * @param fp1
@@ -145,8 +146,8 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     public boolean replaceOriginalFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
         int pos = 0;
-        for(FieldProfile fp : getOriginalFieldProfiles()) {
-            if(fp.getId().equals(fp1.getId())) {
+        for (FieldProfile fp : getOriginalFieldProfiles()) {
+            if (fp.getId().equals(fp1.getId())) {
                 getOriginalFieldProfiles().remove(fp1);
                 getOriginalFieldProfiles().add(pos, fp2);
                 res = true;
@@ -157,10 +158,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         replaceAggregateFieldProfile(fp1, fp2);
         return res;
     }
-    
-    
 
-    
     /**
      * 
      * @param fieldPredicate
@@ -183,7 +181,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     public void addOriginalNote(Note originalNote) {
-        if(!getOriginalNotes().contains(originalNote)) {
+        if (!getOriginalNotes().contains(originalNote)) {
             getOriginalNotes().add(originalNote);
         }
         addAggregateNote(originalNote);
@@ -193,12 +191,12 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         getOriginalNotes().remove(originalNote);
         removeAggregateNote(originalNote);
     }
-   
+
     public boolean replaceOriginalNote(Note n1, Note n2) {
         boolean res = false;
         int pos = 0;
-        for(Note n : getOriginalNotes()) {
-            if(n.getId().equals(n1.getId())) {
+        for (Note n : getOriginalNotes()) {
+            if (n.getId().equals(n1.getId())) {
                 getOriginalNotes().remove(n1);
                 getOriginalNotes().add(pos, n2);
                 res = true;
@@ -212,40 +210,40 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
 
     @Override
     public void removeAggregateHeritableModel(Heritable heritableModel) {
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             removeAggregateNote((Note) heritableModel);
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             removeAggregateFieldProfile((FieldProfile) heritableModel);
         }
     }
 
     @Override
     public void addOriginalHeritableModel(Heritable heritableModel) {
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             addOriginalNote((Note) heritableModel);
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             addOriginalFieldProfile((FieldProfile) heritableModel);
         }
     }
 
     @Override
     public void addAggregateHeritableModel(Heritable heritableModel) {
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             addAggregateNote((Note) heritableModel);
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             addAggregateFieldProfile((FieldProfile) heritableModel);
         }
     }
 
     @Override
     public void removeOriginalHeritableModel(Heritable heritableModel) {
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             removeOriginalNote((Note) heritableModel);
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             removeOriginalFieldProfile((FieldProfile) heritableModel);
         }
     }
@@ -253,10 +251,10 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     @Override
     public List getOriginalHeritableModels(Heritable heritableModel) {
         List results = new ArrayList();
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             results = getOriginalNotes();
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             results = getOriginalFieldProfiles();
         }
         return results;
@@ -265,10 +263,10 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     @Override
     public List getAggregateHeritableModels(Heritable heritableModel) {
         List results = new ArrayList();
-        if(heritableModel.getClass().equals(Note.class)) {
+        if (heritableModel.getClass().equals(Note.class)) {
             results = getAggregateNotes();
         }
-        if(heritableModel.getClass().equals(FieldProfile.class)) {
+        if (heritableModel.getClass().equals(FieldProfile.class)) {
             results = getAggregateFieldProfiles();
         }
         return results;
@@ -277,41 +275,41 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     @Override
     public boolean replaceAggregateHeritableModel(Heritable newHeritableModel, Heritable oldHeritableModel) {
         boolean results = false;
-        if(newHeritableModel.getClass().equals(Note.class)) {
+        if (newHeritableModel.getClass().equals(Note.class)) {
             results = replaceAggregateNote((Note) newHeritableModel, (Note) oldHeritableModel);
         }
-        if(newHeritableModel.getClass().equals(FieldProfile.class)) {
+        if (newHeritableModel.getClass().equals(FieldProfile.class)) {
             results = replaceAggregateFieldProfile((FieldProfile) newHeritableModel, (FieldProfile) oldHeritableModel);
         }
         return results;
     }
-    
+
     @Override
     public WorkflowStep clone() {
-        
+
         // not cloning id or originals
-        
+
         WorkflowStep clone = new WorkflowStep();
-        
+
         List<Note> aggregateNotes = new ArrayList<Note>();
-        for(Note n : getAggregateNotes()) {
+        for (Note n : getAggregateNotes()) {
             aggregateNotes.add(n);
         }
-        
-        List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();                
-        for(FieldProfile fp : getAggregateFieldProfiles()) {
+
+        List<FieldProfile> aggregateFieldProfiles = new ArrayList<FieldProfile>();
+        for (FieldProfile fp : getAggregateFieldProfiles()) {
             aggregateFieldProfiles.add(fp);
         }
-        
+
         clone.setName(getName());
         clone.setOverrideable(getOverrideable());
         clone.setOriginatingOrganization(getOriginatingOrganization());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
-        
+
         clone.setAggregateNotes(aggregateNotes);
-        
+
         clone.setAggregateFieldProfiles(aggregateFieldProfiles);
-        
+
         return clone;
     }
 

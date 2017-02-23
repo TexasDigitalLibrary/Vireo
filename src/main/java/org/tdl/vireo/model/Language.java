@@ -16,7 +16,7 @@ public class Language extends BaseOrderedEntity {
     public Language() {
         setModelValidator(new LanguageValidator());
     }
-    
+
     /**
      * 
      * @param name
@@ -24,7 +24,7 @@ public class Language extends BaseOrderedEntity {
     public Language(String name) {
         this.name = name;
     }
-    
+
     /**
      * 
      * @return
@@ -32,8 +32,6 @@ public class Language extends BaseOrderedEntity {
     public String getName() {
         return name;
     }
-    
-    
 
     /**
      * 
@@ -42,5 +40,5 @@ public class Language extends BaseOrderedEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

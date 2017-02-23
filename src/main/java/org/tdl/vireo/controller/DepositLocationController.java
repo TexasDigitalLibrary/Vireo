@@ -27,20 +27,20 @@ import edu.tamu.framework.model.ApiResponse;
 @ApiMapping("/settings/deposit-location")
 public class DepositLocationController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private DepositLocationRepo depositLocationRepo;
-    
-    @Autowired 
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse allDepositLocations() {       
+    public ApiResponse allDepositLocations() {
         return new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc());
     }
-    
+
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
@@ -50,7 +50,7 @@ public class DepositLocationController {
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, depositLocation);
     }
-    
+
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -70,7 +70,7 @@ public class DepositLocationController {
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DepositLocation.class, params = { "0", "1" }) })
@@ -80,5 +80,5 @@ public class DepositLocationController {
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
-    
+
 }

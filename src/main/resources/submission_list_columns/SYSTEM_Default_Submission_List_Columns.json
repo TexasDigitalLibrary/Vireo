@@ -1,209 +1,208 @@
-[	
-    {
-		"title": "ID",
-		"sort": "ASC",
-		"valuePath": ["id"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Status",
-		"sort": "NONE",
-		"valuePath": ["submissionState", "name"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Organization",
-		"sort": "NONE",
-		"valuePath": ["organization", "name"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Organization category",
-		"sort": "NONE",
-		"valuePath": ["organization", "category", "name"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Assigned to",
-		"sort": "NONE",
-		"valuePath": ["assignee", "email"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Submission date",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Approval date",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Embargo type",
-		"sort": "NONE",
-		"valuePath": ["embargoTypes", "name"],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Institutional ID",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Graduation semester",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Primary document",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "License agreement date",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Committee approval date",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Committee embargo approval date",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_DATE"
-		}
-	},
-	{
-		"title": "Committee members",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Committee contact email",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Degree level",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Custom actions",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Deposit ID",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Notes",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Last event",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Event time",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	},
-	{
-		"title": "Search Box",
-		"sort": "NONE",
-		"valuePath": [],
-		"status": null,
-		"inputType": {
-			"name": "INPUT_TEXT"
-		}
-	}
+[{
+    "title": "ID",
+    "sort": "ASC",
+    "valuePath": ["id"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Status",
+    "sort": "NONE",
+    "valuePath": ["submissionState", "name"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Organization",
+    "sort": "NONE",
+    "valuePath": ["organization", "name"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Organization category",
+    "sort": "NONE",
+    "valuePath": ["organization", "category", "name"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Assigned to",
+    "sort": "NONE",
+    "valuePath": ["assignee", "email"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Submission date",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Approval date",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Embargo type",
+    "sort": "NONE",
+    "valuePath": ["embargoTypes", "name"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Institutional ID",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Graduation semester",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Primary document",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "License agreement date",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Committee approval date",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Committee embargo approval date",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DATE"
+    }
+  },
+  {
+    "title": "Committee members",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Committee contact email",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Degree level",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Custom actions",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Deposit ID",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Notes",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Last event",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Event time",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Search Box",
+    "sort": "NONE",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  }
 ]

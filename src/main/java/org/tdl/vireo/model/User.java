@@ -5,7 +5,6 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,10 @@ import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -79,13 +81,15 @@ public class User extends BaseEntity implements CoreUser {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = ALL, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = ALL, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
 
-    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = LAZY)
+    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Organization> organizations;
 
     @Column(nullable = false)

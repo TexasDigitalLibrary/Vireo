@@ -158,7 +158,7 @@ public class MockTokenController {
             for (Map.Entry<String, String> entry : jwtUtility.validateJWT(token).entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                if(key.equals("exp")) {
+                if (key.equals("exp")) {
                     continue;
                 }
                 newToken.makeClaim(key, value);

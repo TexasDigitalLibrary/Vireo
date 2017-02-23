@@ -39,7 +39,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean optional;
-    
+
     @Column(nullable = false)
     private Boolean logged;
 
@@ -56,10 +56,10 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
-    
+
     @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Configuration mappedShibAttribute;
-    
+
     @Column(nullable = true)
     private Boolean flagged;
 
@@ -125,14 +125,14 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     public Boolean getLogged() {
-		return logged;
-	}
+        return logged;
+    }
 
-	public void setLogged(Boolean logged) {
-		this.logged = logged;
-	}
+    public void setLogged(Boolean logged) {
+        this.logged = logged;
+    }
 
-	/**
+    /**
      * 
      * @return
      */
@@ -271,7 +271,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void clearControlledVocabulary() {
         this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
     }
-    
+
     /**
      * @return the flagged
      */
@@ -312,20 +312,20 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         getControlledVocabularies().remove(controlledVocabulary);
     }
-    
-    
-    /**
-	 * @return the mappedShibAttribute
-	 */
-	public Configuration getMappedShibAttribute() {
-		return mappedShibAttribute;
-	}
 
-	/**
-	 * @param mappedShibAttribute the mappedShibAttribute to set
-	 */
-	public void setMappedShibAttribute(Configuration mappedShibAttribute) {
-		this.mappedShibAttribute = mappedShibAttribute;
-	}
+    /**
+     * @return the mappedShibAttribute
+     */
+    public Configuration getMappedShibAttribute() {
+        return mappedShibAttribute;
+    }
+
+    /**
+     * @param mappedShibAttribute
+     *            the mappedShibAttribute to set
+     */
+    public void setMappedShibAttribute(Configuration mappedShibAttribute) {
+        this.mappedShibAttribute = mappedShibAttribute;
+    }
 
 }

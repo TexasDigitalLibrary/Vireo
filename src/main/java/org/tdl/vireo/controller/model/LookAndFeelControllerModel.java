@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.tdl.vireo.aspect.AppControllerAspect;
+import org.tdl.vireo.controller.LookAndFeelController;
 
 import edu.tamu.framework.model.BaseEntity;
 import edu.tamu.framework.model.ValidatingBase;
@@ -23,7 +24,8 @@ public class LookAndFeelControllerModel extends ValidatingBase {
 
     private String fileType;
 
-    public LookAndFeelControllerModel() { }
+    public LookAndFeelControllerModel() {
+    }
 
     /**
      * @return the setting

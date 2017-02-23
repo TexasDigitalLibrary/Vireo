@@ -10,32 +10,32 @@ import edu.tamu.framework.service.OrderedEntityService;
 public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
     @Autowired
-    EmailTemplateRepo emailTemplateRepo;
-    
+    private EmailTemplateRepo emailTemplateRepo;
+
     @Autowired
     private OrderedEntityService orderedEntityService;
 
     @Override
     public EmailTemplate create(String name, String subject, String message) {
         EmailTemplate emailTemplate = new EmailTemplate(name, subject, message);
-        emailTemplate.setPosition(emailTemplateRepo.count()+1);
+        emailTemplate.setPosition(emailTemplateRepo.count() + 1);
         return emailTemplateRepo.save(emailTemplate);
     }
-    
+
     @Override
     public EmailTemplate findByNameOverride(String name) {
-        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);        
-        if(emailTemplate == null) {
+        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
+        if (emailTemplate == null) {
             emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
-        }        
+        }
         return emailTemplate;
     }
-    
+
     @Override
     public void reorder(Long src, Long dest) {
         orderedEntityService.reorder(EmailTemplate.class, src, dest);
     }
-    
+
     @Override
     public void sort(String column) {
         orderedEntityService.sort(EmailTemplate.class, column);
@@ -45,5 +45,5 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     public void remove(EmailTemplate emailTemplate) {
         orderedEntityService.remove(emailTemplateRepo, EmailTemplate.class, emailTemplate.getPosition());
     }
-    
+
 }

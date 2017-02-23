@@ -18,8 +18,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class Note extends AbstractNote<Note> implements Heritable<Note>{
-    
+public class Note extends AbstractNote<Note> implements Heritable<Note> {
+
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -29,31 +29,31 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
-    
+
     @Column(nullable = true)
     private Boolean overrideable;
-    
+
     public Note() {
         setModelValidator(new NoteValidator());
         setOverrideable(true);
     }
-    
+
     public Note(String name, String text) {
         this();
         setName(name);
         setText(text);
     }
-    
+
     public Note(WorkflowStep originatingWorkflowStep, String name, String text) {
         this(name, text);
         setOriginatingWorkflowStep(originatingWorkflowStep);
     }
-    
+
     public Note(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
         this(originatingWorkflowStep, name, text);
         setOverrideable(overrideable);
     }
-    
+
     /**
      * @return the originatingNote
      */
@@ -62,7 +62,8 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     }
 
     /**
-     * @param originatingNote the originatingNote to set
+     * @param originatingNote
+     *            the originatingNote to set
      */
     public void setOriginatingNote(Note originatingNote) {
         this.originatingNote = originatingNote;
@@ -76,7 +77,8 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     }
 
     /**
-     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     * @param originatingWorkflowStep
+     *            the originatingWorkflowStep to set
      */
     public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
         this.originatingWorkflowStep = originatingWorkflowStep;
@@ -90,7 +92,8 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     }
 
     /**
-     * @param overrideable the overrideable to set
+     * @param overrideable
+     *            the overrideable to set
      */
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
@@ -105,17 +108,17 @@ public class Note extends AbstractNote<Note> implements Heritable<Note>{
     public Note getOriginating() {
         return getOriginatingNote();
     }
-    
+
     @Override
     public Note clone() {
         Note clone = new Note();
-        
+
         clone.setName(getName());
         clone.setText(getText());
         clone.setOverrideable(getOverrideable());
         clone.setOriginatingNote(getOriginatingNote());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
-        
+
         return clone;
     }
 

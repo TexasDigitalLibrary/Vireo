@@ -3,7 +3,7 @@ package org.tdl.vireo.model.repo.custom;
 import org.tdl.vireo.model.Configuration;
 
 public interface ConfigurationRepoCustom {
-    
+
     /**
      * Creates a configuration
      * 
@@ -15,7 +15,7 @@ public interface ConfigurationRepoCustom {
      * @return
      */
     public Configuration create(String name, String value, String type);
-    
+
     /**
      * Resets existing configuration to its system value
      * 
@@ -24,16 +24,17 @@ public interface ConfigurationRepoCustom {
      * @return
      */
     public Configuration reset(Configuration configuration);
-        
+
     /**
      * Gets a Configuration from the repo
      * 
      * Will always pick a non-isSystemRequired if it exists.
+     * 
      * @param name
      * @return
      */
     public Configuration getByName(String name);
-    
+
     /**
      * Gets a String value from the configuration repo.
      * 
@@ -44,7 +45,7 @@ public interface ConfigurationRepoCustom {
      * @return config value or fallback
      */
     public String getValue(String name, String fallback);
-    
+
     /**
      * Gets an Integer value from the configuration repo.
      * 

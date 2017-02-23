@@ -26,9 +26,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.AttachmentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
@@ -44,9 +44,9 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.AttachmentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -107,7 +107,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private LanguageRepo languageRepo;
 
-    private AttachmentTypeRepo attachmentTypeRepo;
+    private DocumentTypeRepo documentTypeRepo;
 
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
@@ -123,9 +123,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private ProquestLanguageCodesService proquestLanguageCodesService;
 
-    //TODO: decompose service with orderable/dependent loading
+    // TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, AttachmentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo) {
 
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
@@ -142,7 +142,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.fieldGlossRepo = fieldGlossRepo;
         this.controlledVocabularyRepo = controlledVocabularyRepo;
         this.languageRepo = languageRepo;
-        this.attachmentTypeRepo = documentTypeRepo;
+        this.documentTypeRepo = documentTypeRepo;
         this.emailWorkflowRuleRepo = emailWorkflowRuleRepo;
         this.submissionStateRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
@@ -190,38 +190,40 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     @Override
     public void loadDefaultControlledVocabularies() {
-    	ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
+        ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
 
-    	List<VocabularyWord> vocabularyWords = null;
-		try {
-			vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {});
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.debug("Unable to load default controlled vocabularies.");
-		}
+        List<VocabularyWord> vocabularyWords = null;
+        try {
+            vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to load default controlled vocabularies.");
+        }
 
-        for(VocabularyWord vw : vocabularyWords) {
-        	if(vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
-	        	vw.setControlledVocabulary(submissionTypesCV);
-	        	vw = vocabularyWordRepo.save(vw);
-	        	submissionTypesCV.addValue(vw);
-        	}
+        for (VocabularyWord vw : vocabularyWords) {
+            if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
+                vw.setControlledVocabulary(submissionTypesCV);
+                vw = vocabularyWordRepo.save(vw);
+                submissionTypesCV.addValue(vw);
+            }
         }
 
         submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
 
-	}
+    }
 
-	@Override
+    @Override
     public void generateAllOrganizationCategories() {
         try {
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
+            });
 
             for (OrganizationCategory organizationCategory : organizationCategories) {
                 OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
 
-                if(dbOrganizationCategory == null) {
+                if (dbOrganizationCategory == null) {
                     dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
                 }
 
@@ -261,9 +263,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 systemOrganization = organization;
             }
 
-
             organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
-
 
             // temporary set of EmailWorkflowRule
             List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
@@ -313,9 +313,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
 
-    	List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
+        List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
 
-    	for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
+        for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
 
             // check to see if the WorkflowStep exists
             WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
@@ -323,22 +323,20 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
 
-            	organization = organizationRepo.findOne(organization.getId());
+                organization = organizationRepo.findOne(organization.getId());
 
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
 
-
-            for(FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
+            for (FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
 
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
 
                 // create new FieldPredicate if not already exists
                 if (fieldPredicate == null) {
-                     fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
+                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
                 }
-
 
                 // check to see if the InputType exists
                 InputType inputType = inputTypeRepo.findByName(fieldProfile.getInputType().getName());
@@ -346,8 +344,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (inputType == null) {
                     inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
                 }
-
-
 
                 // temporary list of ControlledVocabulary
                 List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
@@ -367,10 +363,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                     // create new ControlledVocabulary if not already exists
                     if (newControlledVocabulary == null) {
-                        if(controlledVocabulary.getEntityName() != null) {
+                        if (controlledVocabulary.getEntityName() != null) {
                             newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getEntityName(), language);
-                        }
-                        else {
+                        } else {
                             newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
                         }
                     }
@@ -378,7 +373,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     controlledVocabularies.add(newControlledVocabulary);
 
                 });
-
 
                 // temporary list of FieldGloss
                 List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
@@ -405,20 +399,16 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 });
 
-
-
                 // check to see if the FieldProfile exists
                 FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
 
-                	newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                    newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses);
                 }
-
-
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
 
@@ -429,7 +419,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             // temporary list of Note
             List<Note> notes = new ArrayList<Note>();
 
-            for(Note note : workflowStep.getOriginalNotes()) {
+            for (Note note : workflowStep.getOriginalNotes()) {
 
                 // check to see if the Note exists
                 Note newNote = noteRepo.findByNameAndOriginatingWorkflowStep(note.getName(), newWorkflowStep);
@@ -450,7 +440,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             workflowSteps.add(newWorkflowStep);
         }
-    	return workflowSteps;
+        return workflowSteps;
     }
 
     /**
@@ -545,19 +535,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 throw new IllegalStateException("Unable to identify the template's message.");
             }
 
-
             EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
 
-            if(template == null) {
+            if (template == null) {
                 template = emailTemplateRepo.create(name, subject, message);
                 template.isSystemRequired(true);
-            }
-            else {
+            } else {
                 template.setSubject(subject);
                 template.setMessage(message);
             }
-
-
 
             return emailTemplateRepo.save(template);
 
@@ -568,7 +554,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     public void loadSystemInputTypes() {
         try {
-            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
+            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {
+            });
 
             for (InputType inputType : inputTypes) {
                 InputType newInputType = inputTypeRepo.findByName(inputType.getName());
@@ -634,7 +621,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {
+            });
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
@@ -650,16 +638,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
 
                 if (dbSubmissionListColumn == null) {
-                    if(submissionListColumn.getPredicate() != null) {
+                    if (submissionListColumn.getPredicate() != null) {
                         submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath(), inputType);
-                    }
-                    else {
+                    } else {
                         submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
                     }
-                }
-                else {
+                } else {
                     dbSubmissionListColumn.setSort(submissionListColumn.getSort());
-                    if(submissionListColumn.getPredicate() != null) {
+                    if (submissionListColumn.getPredicate() != null) {
                         dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
                         dbSubmissionListColumn.setPredicatePath(submissionListColumn.getPredicatePath());
                     }
@@ -674,15 +660,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {});
-            int count = 0; for(String defaultTitle : defaultSubmissionListColumnTitles) {
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {
+            });
+            int count = 0;
+            for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
-                if(dbSubmissionListColumn.getSort() != Sort.NONE) {
+                if (dbSubmissionListColumn.getSort() != Sort.NONE) {
                     dbSubmissionListColumn.setSortOrder(++count);
                     defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
-                }
-                else {
+                } else {
                     defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
                 }
             }
@@ -715,7 +701,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
+            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {
+            });
 
             for (Embargo embargoDefinition : embargoDefinitions) {
                 Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
@@ -724,8 +711,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
                     dbEmbargo.isSystemRequired(true);
                     embargoRepo.save(dbEmbargo);
-                }
-                else {
+                } else {
                     dbEmbargo.setDescription(embargoDefinition.getDescription());
                     dbEmbargo.setDuration(embargoDefinition.getDuration());
                     dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
@@ -783,31 +769,30 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<AttachmentType> attachmentTypes = objectMapper.readValue(getFileFromResource("classpath:/attachment_types/SYSTEM_Attachment_Types.json"), new TypeReference<List<AttachmentType>>() {});
+            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {
+            });
 
-            for (AttachmentType attachmentType : attachmentTypes) {
+            for (DocumentType documentType : documentTypes) {
 
-                FieldPredicate fieldPredicate = attachmentType.getFieldPredicate();
+                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
 
                 FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
-                if(dbFieldPredicate == null) {
+                if (dbFieldPredicate == null) {
                     dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(true));
-                }
-                else {
+                } else {
                     dbFieldPredicate.setValue(fieldPredicate.getValue());
                     dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
                     dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
                 }
 
-                AttachmentType dbAttachmentType = attachmentTypeRepo.findByNameAndFieldPredicate(attachmentType.getName(), dbFieldPredicate);
+                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
 
-                if (dbAttachmentType == null) {
-                    dbAttachmentType = attachmentTypeRepo.create(attachmentType.getName(), dbFieldPredicate);
-                }
-                else {
-                    dbAttachmentType.setName(attachmentType.getName());
-                    dbAttachmentType.setFieldPredicate(dbFieldPredicate);
-                    attachmentTypeRepo.save(dbAttachmentType);
+                if (dbDocumentType == null) {
+                    dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
+                } else {
+                    dbDocumentType.setName(documentType.getName());
+                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
+                    documentTypeRepo.save(dbDocumentType);
                 }
             }
         } catch (RuntimeException | IOException e) {

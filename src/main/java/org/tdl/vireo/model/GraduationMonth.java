@@ -14,27 +14,27 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Entity
 public class GraduationMonth extends BaseOrderedEntity {
 
-	@Column(nullable = false, unique = true)
-	private int month;
-	
-	/**
-	 * 
-	 */
-	public GraduationMonth() {
-	    setModelValidator(new GraduationMonthValidator());
+    @Column(nullable = false, unique = true)
+    private int month;
+
+    /**
+     * 
+     */
+    public GraduationMonth() {
+        setModelValidator(new GraduationMonthValidator());
     }
 
-	/**
-	 * Create a new JpaGraduationMonthImpl
-	 * 
-	 * @param month
-	 *            The integer of the month, starting with 0 = january.
-	 */
-	public GraduationMonth(int month) {
-	    this();
-	    setMonth(month);
-	}
-	
+    /**
+     * Create a new JpaGraduationMonthImpl
+     * 
+     * @param month
+     *            The integer of the month, starting with 0 = january.
+     */
+    public GraduationMonth(int month) {
+        this();
+        setMonth(month);
+    }
+
     /**
      * @return the month
      */
@@ -43,7 +43,8 @@ public class GraduationMonth extends BaseOrderedEntity {
     }
 
     /**
-     * @param month the month to set
+     * @param month
+     *            the month to set
      */
     public void setMonth(int month) {
         this.month = month;
