@@ -178,6 +178,16 @@ public class SubmissionController {
 
         return response;
     }
+    
+    @Transactional
+    @ApiMapping("/add-comment/{id}")
+    @Auth(role = "STUDENT")
+    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode, @ApiVariable Long submissionId) {
+        
+    	System.out.println(dataNode);
+
+        return new ApiResponse(SUCCESS);
+    }
 
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")

@@ -1,0 +1,65 @@
+<form>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+        <button type="button" class="close" ng-click="resetCommentModal(addCommentModal)" aria-title="Close">
+            <span class="modal-close" aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title">Add Comment</h3>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+            <div class="col-xs-12">
+
+                <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.emailTo&&addCommentModal.commentVisiblity==='public'}">
+                    <label>To:</label>
+                    <input type="text" class="form-control" ng-model="addCommentModal.emailToRecipient" />
+                </div>
+
+                <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.emailCc&&addCommentModal.commentVisiblity==='public'}">
+                    <label>CC:</label>
+                    <input type="text" class="form-control" ng-model="addCommentModal.emailCcRecipient" />
+                </div>
+
+                <div class="form-group">
+                    <label>Subject:</label>
+                    <input type="text" class="form-control" ng-model="addCommentModal.subject" />
+                </div>
+
+                <div class="form-group comment-body">
+                    <textarea class="form-control" ng-model="addCommentModal.message"></textarea>
+                </div>
+
+                <div class="form-group email-template">
+                    <select class="form-control" ng-model="addCommentModal.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addCommentModal.message=addCommentModal.selectedTemplate.message">
+                    </select>
+                </div>
+
+                <div class="form-group public-private">
+
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="public" ng-model="addCommentModal.commentVisiblity">Comment is public</label>
+                    </div>
+
+                    <div class="recipient-options email-element" ng-class="{'email-active': addCommentModal.commentVisiblity==='public'}">
+                        <div class="checkbox">
+                          <label><input type="checkbox" ng-model="addCommentModal.emailTo" ng-change="!addCommentModal.emailTo?addCommentModal.emailCc=emailTo:addCommentModal.emailCc=addCommentModal.emailCc">Add Email Recipient</label>
+                        </div>
+                        <div class="checkbox">
+                          <label><input type="checkbox" ng-model="addCommentModal.emailCc" ng-disabled="!addCommentModal.emailTo">Add CC Recipient</label>
+                        </div>
+                    </div>
+
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="private" ng-model="addCommentModal.commentVisiblity" ng-click="addCommentModal.emailTo=false;addCommentModal.emailCc=false">Comment is private</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="resetCommentModal(addCommentModal)">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="addComment(addCommentModal)">Comment</button>
+    </div>
+</form>
