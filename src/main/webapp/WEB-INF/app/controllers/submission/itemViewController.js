@@ -31,7 +31,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
     $scope.addComment = function(addCommentModal) {
         addCommentModal.adding = true;
         $scope.submission.addComment(addCommentModal).then(function() {
-            $scope.closeModal();
+            $scope.resetCommentModal();
             addCommentModal.adding = false;
         });
     };

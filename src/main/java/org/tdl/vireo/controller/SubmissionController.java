@@ -16,11 +16,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.mail.Address;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -191,7 +195,30 @@ public class SubmissionController {
     	String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
     	
     	if(commentVisibility.equals("public")) {
+    		
+    		boolean emailTo = dataNode.get("emailTo").asBoolean();
+    		
     		actionLogRepo.createPublicLog(submission, credentials, subject+": "+templatedMessage);
+    		
+    		if(emailTo) {
+    			    			
+        		boolean emailCc = dataNode.get("emailCc").asBoolean();
+    			
+    			SimpleMailMessage smm = new SimpleMailMessage();
+    			    		    			
+    			smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+    			
+    			if(emailCc) {
+    				smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+    			}
+    			
+    			smm.setSubject(subject);
+    			smm.setText(templatedMessage);
+    			
+    			emailSender.send(smm);
+    			
+    		}
+    		
     	} else {
     		actionLogRepo.createPrivateLog(submission, credentials, subject+": "+templatedMessage);
     	}
