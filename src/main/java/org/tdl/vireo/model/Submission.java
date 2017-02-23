@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,14 +63,14 @@ public class Submission extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private Set<Embargo> embargoTypes;
 
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<CustomActionValue> customActionValues;
 
     @JoinColumn
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<ActionLog> actionLogs;
 
     @Lob

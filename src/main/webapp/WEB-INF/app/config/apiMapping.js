@@ -1,5 +1,6 @@
 document // CONVENTION: must match model name, case sensitive
 var apiMapping = {
+    ActionLog: {},
     ControlledVocabulary: {
         all: {
             'endpoint': '/private/queue',
