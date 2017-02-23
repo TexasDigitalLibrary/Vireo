@@ -180,11 +180,21 @@ public class SubmissionController {
     }
     
     @Transactional
-    @ApiMapping("/add-comment/{id}")
+    @ApiMapping("/add-comment/{submissionId}")
     @Auth(role = "STUDENT")
     public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode, @ApiVariable Long submissionId) {
+    	
+    	Submission submission = submissionRepo.findOne(submissionId);
         
-    	System.out.println(dataNode);
+    	String commentVisibility = dataNode.get("commentVisiblity").asText();
+    	String subject = dataNode.get("subject").asText();
+    	String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+    	
+    	if(commentVisibility.equals("public")) {
+    		actionLogRepo.createPublicLog(submission, credentials, subject+": "+templatedMessage);
+    	} else {
+    		actionLogRepo.createPrivateLog(submission, credentials, subject+": "+templatedMessage);
+    	}
 
         return new ApiResponse(SUCCESS);
     }

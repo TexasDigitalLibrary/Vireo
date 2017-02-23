@@ -59,7 +59,13 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="resetCommentModal(addCommentModal)">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="addComment(addCommentModal)">Comment</button>
+        <button type="button" class="btn btn-default" ng-click="resetCommentModal(addCommentModal)" ng-disabled="addCommentModal.adding">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="addComment(addCommentModal)" ng-disabled="addCommentModal.adding">
+            <span ng-if="!addCommentModal.adding">Comment</span>
+            <span ng-if="addCommentModal.adding">
+                Adding Comment
+                <span class="glyphicon glyphicon-refresh spinning"></span>
+            </span>
+        </button>
     </div>
 </form>

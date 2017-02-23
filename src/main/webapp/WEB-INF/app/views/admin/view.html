@@ -51,7 +51,7 @@
       <tbody>
         <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit" ng-class="{'danger': actionLog.privateFlag}">
           <td>{{actionLog.user.settings.displayName}}</td>
-          <td>{{actionLog.entry}}
+          <td class="message-cell">{{actionLog.entry}}
             <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
           </td>
           <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>

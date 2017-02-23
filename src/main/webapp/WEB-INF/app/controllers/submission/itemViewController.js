@@ -9,14 +9,31 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
     $scope.emailTemplates = EmailTemplateRepo.getAll();
 
     EmailTemplateRepo.ready().then(function() {
-        $scope.emailTemplates.unshift({name:"Choose a Message Template"});
+
+
+
+        var addDefaultTemplate = true;
+        for(var i in $scope.emailTemplates) {
+            var template = $scope.emailTemplates[i];
+            if(template.name==="Choose a Message Template") {
+                addDefaultTemplate = false;
+                break;
+            }
+        }
+
+        if(addDefaultTemplate) $scope.emailTemplates.unshift({name:"Choose a Message Template"});
+
         $scope.resetCommentModal($scope.addCommentModal);
     });
 
     $scope.addCommentModal = {};
 
     $scope.addComment = function(addCommentModal) {
-        $scope.submission.addComment(addCommentModal);
+        addCommentModal.adding = true;
+        $scope.submission.addComment(addCommentModal).then(function() {
+            $scope.closeModal();
+            addCommentModal.adding = false;
+        });
     };
 
     $scope.resetCommentModal = function(addCommentModal) {
