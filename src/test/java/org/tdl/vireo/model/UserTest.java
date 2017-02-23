@@ -52,24 +52,12 @@ public class UserTest extends AbstractEntityTest {
         ContactInfo permanentContactInfo = contactInfoRepo.create(permanentAddress, TEST_PERMANENT_PHONE, TEST_PERMANENT_EMAIL);
         assertEquals("The contact info does not exist!", 2, contactInfoRepo.count());
 
-        OrganizationCategory parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
-        assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
-
-        Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        assertEquals("The organization does not exist!", 1, organizationRepo.count());
-
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
-        testUser.addOrganization(organization);
         testUser.putSetting(TEST_SETTING_KEY, TEST_SETTING_VALUE);
         testUser.addShibbolethAffiliation(TEST_SHIBBOLETH_AFFILIATION);
         testUser.setPermanentContactInfo(permanentContactInfo);
         testUser.setCurrentContactInfo(currentContactInfo);
         testUser = userRepo.save(testUser);
-
-        // test sever organization
-        testUser.removeOrganization(organization);
-        testUser = userRepo.save(testUser);
-        assertEquals("The organization was not removed from the user", 0, testUser.getOrganizations().size());
 
         // test delete user
         userRepo.delete(testUser);
