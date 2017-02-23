@@ -16,6 +16,11 @@ submissiondialog div.dialog {
     z-index: 1;
   }
 }
+@media (min-width: 1540px) {
+  submissiondialog div.dialog {
+    box-shadow: 3px 3px 10px -6px #000000;
+  }
+}
 
 submissiondialog div.dialog.state {
   right: 2%;

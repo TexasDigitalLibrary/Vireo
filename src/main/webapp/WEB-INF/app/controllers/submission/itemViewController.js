@@ -7,6 +7,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
     $scope.allUsers = UserRepo.getAll();
 
     $scope.actionLogLimit = 10;
+
     $scope.actionLogCurrentLimit = $scope.actionLogLimit;
 
     $scope.updateActionLogLimit = function() {
