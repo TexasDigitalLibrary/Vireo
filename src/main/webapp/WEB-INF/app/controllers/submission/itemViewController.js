@@ -31,13 +31,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
     $scope.addComment = function(addCommentModal) {
         addCommentModal.adding = true;
         $scope.submission.addComment(addCommentModal).then(function() {
-            $scope.resetCommentModal();
-            addCommentModal.adding = false;
+            $scope.resetCommentModal(addCommentModal);
         });
     };
 
     $scope.resetCommentModal = function(addCommentModal) {
         $scope.closeModal();
+        addCommentModal.adding = false;
         addCommentModal.commentVisiblity = "public";
         addCommentModal.emailToRecipient = "";
         addCommentModal.emailCcRecipient = "";
