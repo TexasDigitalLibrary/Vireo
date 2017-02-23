@@ -1,10 +1,10 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,7 @@ import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -81,16 +78,11 @@ public class User extends BaseEntity implements CoreUser {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
-    @OneToOne(cascade = ALL, fetch = EAGER, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
-    @OneToOne(cascade = ALL, fetch = EAGER, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
-
-    @ManyToMany(cascade = { DETACH, REFRESH }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Set<Organization> organizations;
 
     @Column(nullable = false)
     private AppRole role;
@@ -119,7 +111,6 @@ public class User extends BaseEntity implements CoreUser {
     public User() {
         setModelValidator(new UserValidator());
         setSettings(new TreeMap<String, String>());
-        setOrganizations(new TreeSet<Organization>());
         setShibbolethAffiliations(new TreeSet<String>());
         setSubmissionViewColumns(new ArrayList<SubmissionListColumn>());
         setFilterColumns(new ArrayList<SubmissionListColumn>());
@@ -201,21 +192,6 @@ public class User extends BaseEntity implements CoreUser {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    /**
-     * @return the institutionalIdentifier
-     */
-    // public String getInstitutionalIdentifier() {
-    // return institutionalIdentifier;
-    // }
-
-    /**
-     * @param institutionalIdentifier
-     *            the institutionalIdentifier to set
-     */
-    // public void setInstitutionalIdentifier(String institutionalIdentifier) {
-    // this.institutionalIdentifier = institutionalIdentifier;
-    // }
 
     /**
      * @return the firstName
@@ -366,37 +342,6 @@ public class User extends BaseEntity implements CoreUser {
      */
     public void setPermanentContactInfo(ContactInfo permanentContactInfo) {
         this.permanentContactInfo = permanentContactInfo;
-    }
-
-    /**
-     * @return the organizations
-     */
-    public Set<Organization> getOrganizations() {
-        return organizations;
-    }
-
-    /**
-     * @param organizations
-     *            the organizations to set
-     */
-    public void setOrganizations(Set<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
-    /**
-     * 
-     * @param organization
-     */
-    public void addOrganization(Organization organization) {
-        getOrganizations().add(organization);
-    }
-
-    /**
-     * 
-     * @param organization
-     */
-    public void removeOrganization(Organization organization) {
-        getOrganizations().remove(organization);
     }
 
     /**
