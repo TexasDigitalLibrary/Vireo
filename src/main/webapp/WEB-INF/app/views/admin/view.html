@@ -31,7 +31,14 @@
   </div>
 
   <div class="row" ng-show="loaded">
+
     <h1>ACTION LOG</h1>
+
+    <div class="col-xs-12">
+      <button class="btn btn-default add-comment-btn pull-right" ng-click="openModal('#addCommentModal')">Add Comment</button>
+    </div>
+
+    <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary"></modal>
 
     <table class="table table-bordered table-striped table-hover action-log-table">
       <thead>
@@ -44,7 +51,7 @@
       <tbody>
         <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit" ng-class="{'danger': actionLog.privateFlag}">
           <td>{{actionLog.user.settings.displayName}}</td>
-          <td>{{actionLog.entry}}
+          <td class="message-cell">{{actionLog.entry}}
             <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
           </td>
           <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
