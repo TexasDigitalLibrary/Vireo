@@ -15,7 +15,7 @@
       <span ng-if="(hasFile(fieldValue) || previewing) && !getPreview(fieldValue)" class="glyphicon glyphicon-file select-toggle" ng-click="getFile(fieldValue)"></span>
       <div ng-if="hasFile(fieldValue) || previewing">
         <span class="file-upload-icon glyphicon glyphicon-ok"></span>
-        <span class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
+        <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
       </div>
     </div>
     <div class="file-info" ng-if="hasFile(fieldValue) || previewing">
@@ -45,7 +45,7 @@
     </div>
   </div>
   <div class="col-md-7 col-sm-12 file-preview-container" ng-if="previewing || hasFiles">
-    <table class="table table-condensed table-hover">
+    <table class="table table-condensed table-hover multiple-file-upload-table">
       <thead>
         <tr>
           <th>File</th>
@@ -59,7 +59,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate">
+        <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate" ng-if="fieldValue.fileInfo">
           <td ng-if="!fieldValue.uploading" class="file-info">
             <p class="file-name select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.fileInfo.name}}</p>
           </td>

@@ -16,7 +16,8 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         SubmissionRepo.findSubmissionById($routeParams.id),
         UserRepo.getAll(),
         SubmissionStateRepo.getAll(),
-        EmailTemplateRepo.getAll()
+        EmailTemplateRepo.getAll(),
+        FieldPredicateRepo.getAll()
     ]);
 
     ready.then(function(resolved) {
@@ -25,10 +26,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         var users = resolved[1];
         var submissionStates = resolved[2];
         var emailTemplates = resolved[3];
+        var fieldPredicates = resolved[4];
 
         $scope.loaded = true;
 
         $scope.submission = submission;
+
+        $scope.fieldPredicates = fieldPredicates;
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;

@@ -33,26 +33,25 @@
                   <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}}
                     KB)</strong>
                 </div>
-                <div ng-if="!submission.primaryDocumentFieldValue">
-                  <button class="btn btn-default" type="button" ng-click="openUploadManuscriptModal()">Upload Manuscript
-                  </button>
-                </div>
               </div>
               <div class="col-sm-2">
-                <button ng-if="submission.primaryDocumentFieldValue" class="btn btn-default" type="button" ng-click="replaceManuscript()" ng-disabled="replacingManuscript">Replace Manuscript
-                  <span ng-if="replacingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
+                <button ng-if="submission.primaryDocumentFieldValue" class="btn btn-default" type="button" ng-click="archiveManuscript()" ng-disabled="archivingManuscript">Replace Manuscript
+                  <span ng-if="archivingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
                 </button>
+              </div>
+              <div class="col-sm-10 col-sm-offset-1">
+                <field ng-if="!submission.primaryDocumentFieldValue" profile="submission.getPrimaryDocumentFieldProfile()"></field>
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Additional Documents:</label>
               <div class="col-sm-6">
-                <span ng-if="false">
+                <span ng-show="documentFieldValues.length === 0">
                   <i>No additional documents uploaded</i>
                 </span>
-                <span ng-if="true">
+                <span ng-show="documentFieldValues.length > 0">
                   <ul class="list-unstyled">
-                    <li ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id && !isPrimaryDocument(documentFieldValue.fieldPredicate)">
+                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:{id: '!!',  fieldPredicate: {value: '!_doctype_primary'}} | documentFieldValuePerProfile)">
                       <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
                       <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
@@ -67,16 +66,18 @@
                     <span ng-if="removingUploads" class="glyphicon glyphicon-refresh spinning"></span>
                   </button>
                 </span>
-
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
-              <div class="col-sm-6">
-                <button class="btn btn-default" type="button" ng-click="openUploadAdditionalDocumentsModal()">Upload
-                </button>
+              <div class="col-sm-4">
+                <select class="form-control" ng-model="fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' }) track by documentFieldPredicate.value">
+                  <option value="">-- select document type --</option>
+                </select>
               </div>
-              <div class="col-sm-2"></div>
+              <div class="col-sm-10 col-sm-offset-1">
+                <field ng-if="fieldPredicate && submission.getFieldProfileByPredicate(fieldPredicate)" profile="submission.getFieldProfileByPredicate(fieldPredicate)"></field>
+              </div>
             </div>
           </form>
         </div>

@@ -1,6 +1,10 @@
-vireo.controller("SubmissionViewController", function($controller, $filter, $q, $scope, $routeParams, FileUploadService, StudentSubmissionRepo, StudentSubmission) {
+vireo.controller("SubmissionViewController", function($controller, $filter, $q, $scope, $routeParams, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, StudentSubmission) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+
+    $scope.fieldPredicate = {};
+
+    $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(response) {
         $scope.loaded = true;
@@ -46,6 +50,8 @@ vireo.controller("SubmissionViewController", function($controller, $filter, $q, 
 
     $scope.removingUploads = false;
 
+    $scope.archivingManuscript = false;
+
     $scope.queueRemove = function(fieldValue) {
         var index = $scope.removeQueue.indexOf(fieldValue);
         if (index >= 0) {
@@ -64,6 +70,20 @@ vireo.controller("SubmissionViewController", function($controller, $filter, $q, 
         }
         $q.all(removePromises).then(function() {
             $scope.removingUploads = false;
+        });
+    };
+
+    $scope.cancelUpload = function() {
+        $scope.removeQueue = [];
+        $scope.removingUploads = false;
+        $scope.closeModal();
+    };
+
+    $scope.archiveManuscript = function() {
+        $scope.archivingManuscript = true;
+        FileUploadService.removeFile($scope.submission, $scope.submission.primaryDocumentFieldValue).then(function() {
+            $scope.archivingManuscript = false;
+            $scope.submission.addFieldValue($scope.submission.getPrimaryDocumentFieldProfile().fieldPredicate);
         });
     };
 

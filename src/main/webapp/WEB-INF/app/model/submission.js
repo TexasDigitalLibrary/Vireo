@@ -189,6 +189,25 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
         };
 
+        submission.getPrimaryDocumentFieldProfile = function() {
+
+            var fieldProfile = null;
+
+            for (var i in submission.submissionWorkflowSteps) {
+                var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
+                for (var j in submissionWorkflowStep.aggregateFieldProfiles) {
+                    var currentFieldProfile = submissionWorkflowStep.aggregateFieldProfiles[j];
+                    if (currentFieldProfile.fieldPredicate.value === '_doctype_primary') {
+                        fieldProfile = currentFieldProfile;
+                        break;
+                    }
+                }
+            }
+
+            return fieldProfile;
+
+        };
+
         submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
 
             var fieldValues = [];

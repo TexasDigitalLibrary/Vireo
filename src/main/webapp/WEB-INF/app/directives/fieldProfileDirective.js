@@ -4,8 +4,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
         restrict: 'E',
         replace: 'false',
         scope: {
-            profile: "=",
-            hfp: "="
+            profile: "="
         },
         link: function($scope) {
 
