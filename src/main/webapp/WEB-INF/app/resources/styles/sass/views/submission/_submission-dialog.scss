@@ -106,6 +106,15 @@ ul.dialog-actions-list {
   margin-top: 10px;
 }
 
+.dialog-confirm {
+  -webkit-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -moz-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -o-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  overflow: hidden;
+  color: red;
+}
+
 .dialog-closed {
   opacity: 0;
   max-height: 0;

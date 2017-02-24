@@ -19,7 +19,7 @@
       </div>
       <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
 
-      <div class="row" ng-if="loaded && submission.submissionState.name == 'Needs Correction'">
+      <div id="upload-files" class="row" ng-if="loaded && submission.submissionState.name == 'Needs Correction'">
         <span class="text-danger">
           <h3>Upload Files</h3>
           <hr class="submission-view-upload-files-hr"/>
