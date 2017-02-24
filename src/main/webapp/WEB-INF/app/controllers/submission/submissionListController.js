@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, UserRepo, CustomActionDefinitionRepo, ItemViewService) {
+vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -507,7 +507,6 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     };
 
     $scope.viewSubmission = function(submission) {
-        ItemViewService.selectSubmission(submission.id);
         $location.path("/admin/view/" + submission.submissionWorkflowSteps[0].id + "/" + submission.id);
     };
 
