@@ -1,6 +1,10 @@
 <div class="container review-page">
-  <h1 class="center">Review Application
-  </h1>
+  <h1 class="center">Review Application</h1>
+  <div class="student-submission-loader" ng-class="{'ready': advisorSubmissionRepoReady}">
+    <span>
+      <span class="glyphicon glyphicon-refresh spinning"></span>
+      Loading Submission ...</span>
+  </div>
 
   <reviewsubmissionsfields submission="submission" filter-optional="true" hide-links="true" ng-if="advisorSubmissionRepoReady"></reviewsubmissionsfields>
 

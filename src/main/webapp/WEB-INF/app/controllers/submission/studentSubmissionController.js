@@ -70,7 +70,6 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
     };
 
     $scope.submit = function() {
-        console.log('submit')
         $scope.submitting = true;
         $scope.submission.submit().then(function() {
             $scope.submitting = false;
