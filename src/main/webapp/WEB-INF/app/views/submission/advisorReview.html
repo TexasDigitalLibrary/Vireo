@@ -16,33 +16,33 @@
     <form>
       <div class="row">
         <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-          Approve Embargo:
+          <span ng-if="approveEmbargo===false||approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:
         </div>
         <div class="col-sm-9 col-xs-12">
-          <ul class="list-unstyled">
+          <div class="form-group">
             <div class="radio">
-              <label><input type="radio" name="approveEmbargo">I approve of the embargo selection.</label>
+              <label><input type="radio" ng-value="true" ng-dblclick="approveEmbargo=undefined" ng-model="approveEmbargo">I approve of the embargo selection.</label>
             </div>
             <div class="radio">
-              <label><input type="radio" name="approveEmbargo">I reject the embargo selection. (Please leave a comment explaining why below)</label>
+              <label><input type="radio" ng-value="false" ng-dblclick="approveEmbargo=undefined" ng-model="approveEmbargo">I reject the embargo selection. (Please leave a comment explaining why below)</label>
             </div>
-          </ul>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-          Approve Application:
+          <span ng-if="approveApplication===false||approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:
         </div>
         <div class="col-sm-9 col-xs-12">
-          <ul class="list-unstyled">
+          <div class="form-group">
             <div class="radio">
-              <label><input type="radio" name="approveApplication">I approve this application.</label>
+              <label><input type="radio" ng-value="true" ng-dblclick="approveApplication=undefined" ng-model="approveApplication">I approve this application.</label>
             </div>
             <div class="radio">
-              <label><input type="radio" name="approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
+              <label><input type="radio" ng-value="false" ng-dblclick="approveApplication=undefined" ng-model="approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
             </div>
-          </ul>
+          </div>
         </div>
       </div>
 
@@ -52,7 +52,7 @@
         </div>
         <div class="col-sm-6 col-xs-12">
           <div class="form-group">
-            <textarea class="form-control"></textarea>
+            <textarea class="form-control" ng-model="comment"></textarea>
           </div>
         </div>
         <div class="col-xs-3"></div>
@@ -60,7 +60,8 @@
 
       <div class="row">
         <div class="col-xs-12 center">
-          <button class="btn btn-primary">Submit</button>
+          <button class="btn btn-primary" ng-disabled="(approveEmbargo===undefined&&approveApplication===undefined)||(approveApplication===false&&!comment)||(approveEmbargo===false&&!comment)">Submit</button>
+          <span ng-if="!comment&&(approveApplication===false||approveEmbargo===false)" class="glyphicon glyphicon-info-sign text-danger" tooltip="A comment must be added."></span>
         </div>
       </div>
 
