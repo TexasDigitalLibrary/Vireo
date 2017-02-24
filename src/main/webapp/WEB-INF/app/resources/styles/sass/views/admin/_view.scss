@@ -140,6 +140,10 @@
   font-weight: bold;
 }
 
+.action-log-table .message-cell {
+  max-width: 350px;
+}
+
 .action-log-more-less {
   font-weight: bold;
 }
@@ -148,6 +152,34 @@
     cursor: pointer;
 }
 
+.comment-body textarea {
+  height: 250px;
+}
+
+.email-element {
+  max-height: 0px;
+  overflow: hidden;
+  margin: 0px;
+  transition: max-height 0.35s linear, margin 0.35s linear;
+}
+
+.recipient-options .checkbox {
+  margin-left: 25px;
+}
+
+.email-element.email-active,
+.email-to.email-active,
+.email-cc.email-active {
+  max-height: 100px;
+  overflow: hidden;
+  margin: 18px 0 18px 0;
+  transition: max-height 0.35s linear, margin 0.35s linear;
+}
+
 div .item-view div.row h1 span.spinning {
   font-size: 32px;
+}
+
+button.btn.btn-default.add-comment-btn {
+  margin-bottom: 10px;
 }

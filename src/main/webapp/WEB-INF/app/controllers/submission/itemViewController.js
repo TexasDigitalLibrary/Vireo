@@ -1,10 +1,52 @@
-vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.allUsers = UserRepo.getAll();
+
+    $scope.emailTemplates = EmailTemplateRepo.getAll();
+
+    EmailTemplateRepo.ready().then(function() {
+
+        var addDefaultTemplate = true;
+        for (var i in $scope.emailTemplates) {
+            var template = $scope.emailTemplates[i];
+            if (template.name === "Choose a Message Template") {
+                addDefaultTemplate = false;
+                break;
+            }
+        }
+
+        if (addDefaultTemplate)
+            $scope.emailTemplates.unshift({name: "Choose a Message Template"});
+
+        $scope.resetCommentModal($scope.addCommentModal);
+    });
+
+    $scope.addCommentModal = {};
+
+    $scope.addComment = function(addCommentModal) {
+        addCommentModal.adding = true;
+        $scope.submission.addComment(addCommentModal).then(function() {
+            $scope.resetCommentModal(addCommentModal);
+        });
+    };
+
+    $scope.resetCommentModal = function(addCommentModal) {
+        $scope.closeModal();
+        addCommentModal.adding = false;
+        addCommentModal.commentVisiblity = "public";
+        addCommentModal.emailToRecipient = "";
+        addCommentModal.emailCcRecipient = "";
+        addCommentModal.emailTo = false;
+        addCommentModal.emailCc = false;
+        addCommentModal.subject = "";
+        addCommentModal.message = "";
+        addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
+        addCommentModal.selectedTemplate = $scope.emailTemplates[0];
+    };
 
     $scope.actionLogLimit = 10;
 
@@ -14,7 +56,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit
             ? $scope.submission.actionLogs.length
             : $scope.actionLogLimit;
-    }
+    };
 
     var ready = $q.all([
         FieldPredicateRepo.ready(),
@@ -229,6 +271,10 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                 }
             }
             return firstAssignable;
+        };
+
+        $scope.resetAddCommentModal = function() {
+            $scope.closeModal();
         };
 
         $scope.activeDocumentBox = {
