@@ -17,15 +17,22 @@
     <form>
       <div class="row">
         <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-          <span ng-if="approveEmbargo===false||approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:
+          <span ng-if="approval.approveEmbargo===false||approval.approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:
         </div>
         <div class="col-sm-9 col-xs-12">
-          <div class="form-group">
+          <div class="form-group" ng-if="!submission.approveApplicationDate">
             <div class="radio">
-              <label><input type="radio" ng-value="true" ng-dblclick="approveEmbargo=undefined" ng-model="approveEmbargo">I approve of the embargo selection.</label>
+              <label><input type="radio" ng-value="true" ng-dblclick="approval.approveEmbargo=undefined" ng-model="approval.approveEmbargo">I approve of the embargo selection.</label>
             </div>
             <div class="radio">
-              <label><input type="radio" ng-value="false" ng-dblclick="approveEmbargo=undefined" ng-model="approveEmbargo">I reject the embargo selection. (Please leave a comment explaining why below)</label>
+              <label><input type="radio" ng-value="false" ng-dblclick="approval.approveEmbargo=undefined" ng-model="approval.approveEmbargo">I reject the embargo selection. (Please leave a comment explaining why below)</label>
+            </div>
+          </div>
+          <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
+          <div class="form-group" ng-if="submission.approveEmbargoDate">
+            <p>Application was approved on {{submission.approveApplicationDate | date:'MMM dd, yyyy HH:mm'}}</p>
+            <div class="checkbox" ng-init="approval.clearApproveEmbargo=false">
+              <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveEmbargo" ngTrueValue="true" ngFalseValue="false">I unapprove this application.</label>
             </div>
           </div>
         </div>
@@ -33,15 +40,22 @@
 
       <div class="row">
         <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-          <span ng-if="approveApplication===false||approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:
+          <span ng-if="approval.approveApplication===false||approval.approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:
         </div>
         <div class="col-sm-9 col-xs-12">
-          <div class="form-group">
+          <div class="form-group" ng-if="!submission.approveApplicationDate">
             <div class="radio">
-              <label><input type="radio" ng-value="true" ng-dblclick="approveApplication=undefined" ng-model="approveApplication">I approve this application.</label>
+              <label><input type="radio" ng-value="true" ng-dblclick="approval.approveApplication=undefined" ng-model="approval.approveApplication">I approve this application.</label>
             </div>
             <div class="radio">
-              <label><input type="radio" ng-value="false" ng-dblclick="approveApplication=undefined" ng-model="approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
+              <label><input type="radio" ng-value="false" ng-dblclick="approval.approveApplication=undefined" ng-model="approval.approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
+            </div>
+          </div>
+          <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
+          <div class="form-group" ng-if="submission.approveApplicationDate">
+            <p>Application was approved on {{submission.approveApplicationDate | date:'MMM dd, yyyy HH:mm'}}</p>
+            <div class="checkbox" ng-init="approval.clearApproveApplication=false">
+              <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveApplication" ngTrueValue="true" ngFalseValue="false">I unapprove this embargo.</label>
             </div>
           </div>
         </div>
@@ -53,7 +67,7 @@
         </div>
         <div class="col-sm-6 col-xs-12">
           <div class="form-group">
-            <textarea class="form-control" ng-model="comment"></textarea>
+            <textarea class="form-control" ng-model="approval.message"></textarea>
           </div>
         </div>
         <div class="col-xs-3"></div>
@@ -61,11 +75,9 @@
 
       <div class="row">
         <div class="col-xs-12 center">
-          <button class="btn btn-primary" ng-disabled="(approveEmbargo===undefined&&approveApplication===undefined)||(approveApplication===false&&!comment)||(approveEmbargo===false&&!comment)">Submit</button>
-          <span ng-if="!comment&&(approveApplication===false||approveEmbargo===false)" class="glyphicon glyphicon-info-sign text-danger" tooltip="A comment must be added."></span>
+          <button class="btn btn-primary" ng-disabled="((approval.approveEmbargo===undefined&&approval.approveApplication===undefined)&&!approval.message)||(approval.approveApplication===false&&!approval.message)||(approval.approveEmbargo===false&&!approval.message)" ng-click="addComment(approval)">Submit <span class="glyphicon glyphicon-refresh spinning" ng-if="updatingApproval"></span></button>
         </div>
       </div>
-
     </form>
   </div>
 </div>

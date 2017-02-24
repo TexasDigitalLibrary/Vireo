@@ -513,6 +513,20 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
+        submission.updateAdvisorApproval = function(approval) {
+
+            console.log(approval);
+
+            angular.extend(this.getMapping().updateAdvisorApproval, {
+                method: submission.id + "/update-advisor-approval",
+                data: approval
+            });
+
+            var promise = WsApi.fetch(this.getMapping().updateAdvisorApproval);
+
+            return promise;
+        };
+
         submission.sendAdvisorEmail = function() {
 
             angular.extend(this.getMapping().sendAdvisorEmail, {
