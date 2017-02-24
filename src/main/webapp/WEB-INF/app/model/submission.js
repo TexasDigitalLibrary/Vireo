@@ -45,7 +45,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
                 fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
             });
-            if (fieldValue.fieldPredicate.value.substring(9).toUpperCase() === 'PRIMARY') {
+            if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
                 submission.primaryDocumentFieldValue = fieldValue;
             }
         };
@@ -131,7 +131,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.id === removedFieldValue.id) {
                         submission.fieldValues.splice(i, 1);
-                        if (fieldValue.id == submission.primaryDocumentFieldValue.id) {
+                        if (submission.primaryDocumentFieldValue !== undefined && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                             delete submission.primaryDocumentFieldValue;
                         }
                         break;
@@ -453,6 +453,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
         submission.file = function(fieldValue) {
             angular.extend(this.getMapping().file, {
+                method: submission.id + "/file",
                 data: {
                     'uri': fieldValue.value
                 }
@@ -466,6 +467,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         submission.removeFile = function(fieldValue) {
 
             angular.extend(this.getMapping().removeFile, {
+                method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + '/remove-file',
                 data: {
                     'uri': fieldValue.value
                 }
@@ -476,9 +478,25 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
+        submission.archiveFile = function(fieldValue) {
+
+            angular.extend(this.getMapping().archiveFile, {
+                method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + "/archive-file",
+                data: {
+                    'uri': fieldValue.value,
+                    'name': fieldValue.fileInfo.name
+                }
+            });
+
+            var promise = WsApi.fetch(this.getMapping().archiveFile);
+
+            return promise;
+        };
+
         submission.renameFile = function(fieldValue) {
 
             angular.extend(this.getMapping().renameFile, {
+                method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + "/rename-file",
                 data: {
                     'uri': fieldValue.value,
                     'newName': fieldValue.fileInfo.name
@@ -593,6 +611,10 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
             var promise = WsApi.fetch(this.getMapping().addMessage);
             return promise;
+        };
+
+        submission.getFileType = function(fieldPredicate) {
+            return fieldPredicate.value.substring(9).toUpperCase();
         };
 
         return submission;

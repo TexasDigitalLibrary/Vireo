@@ -16,10 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.mail.Address;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,60 +164,60 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/delete/{id}")
+    @ApiMapping("/delete/{submissionId}")
     @Auth(role = "STUDENT")
-    public ApiResponse deleteSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long id) {
-        Submission submissionToDelete = submissionRepo.findOne(id);
+    public ApiResponse deleteSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
+        Submission submissionToDelete = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() < AppRole.MANAGER.ordinal()) {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
         } else {
-            submissionRepo.delete(id);
+            submissionRepo.delete(submissionId);
         }
 
         return response;
     }
-    
+
     @Transactional
     @ApiMapping("/add-comment/{submissionId}")
     @Auth(role = "STUDENT")
     public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode, @ApiVariable Long submissionId) {
-    	
-    	Submission submission = submissionRepo.findOne(submissionId);
-        
-    	String commentVisibility = dataNode.get("commentVisiblity").asText();
-    	String subject = dataNode.get("subject").asText();
-    	String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
-    	
-    	if(commentVisibility.equals("public")) {
-    		
-    		boolean emailTo = dataNode.get("emailTo").asBoolean();
-    		
-    		actionLogRepo.createPublicLog(submission, credentials, subject+": "+templatedMessage);
-    		
-    		if(emailTo) {
-    			    			
-        		boolean emailCc = dataNode.get("emailCc").asBoolean();
-    			
-    			SimpleMailMessage smm = new SimpleMailMessage();
-    			    		    			
-    			smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
-    			
-    			if(emailCc) {
-    				smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
-    			}
-    			
-    			smm.setSubject(subject);
-    			smm.setText(templatedMessage);
-    			
-    			emailSender.send(smm);
-    			
-    		}
-    		
-    	} else {
-    		actionLogRepo.createPrivateLog(submission, credentials, subject+": "+templatedMessage);
-    	}
+
+        Submission submission = submissionRepo.findOne(submissionId);
+
+        String commentVisibility = dataNode.get("commentVisiblity").asText();
+        String subject = dataNode.get("subject").asText();
+        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+
+        if (commentVisibility.equals("public")) {
+
+            boolean emailTo = dataNode.get("emailTo").asBoolean();
+
+            actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
+
+            if (emailTo) {
+
+                boolean emailCc = dataNode.get("emailCc").asBoolean();
+
+                SimpleMailMessage smm = new SimpleMailMessage();
+
+                smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+
+                if (emailCc) {
+                    smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+                }
+
+                smm.setSubject(subject);
+                smm.setText(templatedMessage);
+
+                emailSender.send(smm);
+
+            }
+
+        } else {
+            actionLogRepo.createPrivateLog(submission, credentials, subject + ": " + templatedMessage);
+        }
 
         return new ApiResponse(SUCCESS);
     }
@@ -430,11 +427,13 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/submit-corrections")
     @Auth(role = "STUDENT")
-    public ApiResponse setSubmissionCorrectionsReceived(@ApiVariable Long submissionId) {
+    public ApiResponse setSubmissionCorrectionsReceived(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
         Submission submission = submissionRepo.findOne(submissionId);
+        String oldSubmissionStateName = submission.getSubmissionState().getName();
         SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
         submission.setSubmissionState(needsCorrectionState);
         submissionRepo.save(submission);
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
         ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
         return apiResponse;
@@ -489,33 +488,62 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping(value = "/upload", method = RequestMethod.POST)
-    @Auth(role = "STUDENT")
-    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @RequestParam("file") MultipartFile file) throws IOException {
-        int hash = credentials.getEmail().hashCode();
-        String fileName = file.getOriginalFilename();
-        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
-        fileIOUtility.write(file.getBytes(), uri);
-        return new ApiResponse(SUCCESS, uri);
-    }
-
     @ApiMapping(value = "/file")
     @Auth(role = "STUDENT")
-    public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
+    public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestData) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
-        Path path = fileIOUtility.getAbsolutePath(requestHeaders.get("uri"));
+        String uri = requestData.get("uri");
+        Path path = fileIOUtility.getAbsolutePath(uri);
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
     }
 
-    @ApiMapping(value = "/remove-file")
+    @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/upload", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse submissionFile(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
+    public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @RequestParam("file") MultipartFile file) throws IOException {
+        int hash = credentials.getEmail().hashCode();
+        String fileName = file.getOriginalFilename();
+        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
+        fileIOUtility.write(file.getBytes(), uri);
+
+        JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+
+        actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
+        return new ApiResponse(SUCCESS, uri);
+    }
+
+    @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/rename-file")
+    @Auth(role = "MANAGER")
+    public ApiResponse renameFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
+        String newName = requestData.get("newName");
+        String oldUri = requestData.get("uri");
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
+        fileIOUtility.copy(oldUri, newUri);
+        fileIOUtility.delete(oldUri);
+
+        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+
+        actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
+        return new ApiResponse(SUCCESS, newUri);
+    }
+
+    @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/remove-file")
+    @Auth(role = "STUDENT")
+    public ApiResponse removeFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         ApiResponse apiResponse = null;
         int hash = credentials.getEmail().hashCode();
-        String uri = requestHeaders.get("uri");
+        String uri = requestData.get("uri");
         if (uri.contains(String.valueOf(hash))) {
+
+            JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+
             fileIOUtility.delete(uri);
+
+            actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+
             apiResponse = new ApiResponse(SUCCESS);
         } else {
             apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
@@ -523,21 +551,27 @@ public class SubmissionController {
         return apiResponse;
     }
 
-    @ApiMapping(value = "/file-info")
+    @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/archive-file")
     @Auth(role = "STUDENT")
-    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestHeaders) throws IOException {
-        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestHeaders.get("uri")));
-    }
-
-    @ApiMapping(value = "/rename-file")
-    @Auth(role = "MANAGER")
-    public ApiResponse renameFile(@ApiData Map<String, String> requestData) throws IOException {
-        String newName = requestData.get("newName");
+    public ApiResponse archiveFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
+        ApiResponse apiResponse = null;
+        String name = requestData.get("name");
         String oldUri = requestData.get("uri");
-        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
         fileIOUtility.copy(oldUri, newUri);
         fileIOUtility.delete(oldUri);
-        return new ApiResponse(SUCCESS, newUri);
+
+        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+
+        actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
+        return apiResponse;
+    }
+
+    @ApiMapping(value = "/file-info")
+    @Auth(role = "STUDENT")
+    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestData) throws IOException {
+        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
 
     @ApiMapping("/{submissionId}/send-advisor-email")

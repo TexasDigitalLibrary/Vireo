@@ -81,7 +81,7 @@ vireo.controller("SubmissionViewController", function($controller, $filter, $q, 
 
     $scope.archiveManuscript = function() {
         $scope.archivingManuscript = true;
-        FileUploadService.removeFile($scope.submission, $scope.submission.primaryDocumentFieldValue).then(function() {
+        FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue).then(function() {
             $scope.archivingManuscript = false;
             $scope.submission.addFieldValue($scope.submission.getPrimaryDocumentFieldProfile().fieldPredicate);
         });

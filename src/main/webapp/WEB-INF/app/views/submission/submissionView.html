@@ -24,7 +24,7 @@
           <h3>Upload Files</h3>
           <hr class="submission-view-upload-files-hr"/>
         </span>
-        <div class="col-md-8 col-md-offset-2">
+        <div>
           <form class="form-horizontal">
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
@@ -39,7 +39,9 @@
                   <span ng-if="archivingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
                 </button>
               </div>
-              <div class="col-sm-10 col-sm-offset-1">
+            </div>
+            <div class="form-group">
+              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': submission.primaryDocumentFieldValue === undefined, 'dialog-closed': submission.primaryDocumentFieldValue !== undefined}">
                 <field ng-if="!submission.primaryDocumentFieldValue" profile="submission.getPrimaryDocumentFieldProfile()"></field>
               </div>
             </div>
@@ -71,12 +73,14 @@
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
               <div class="col-sm-4">
-                <select class="form-control" ng-model="fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' }) track by documentFieldPredicate.value">
+                <select class="form-control" ng-model="fieldPredicate" ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' }) track by documentFieldPredicate.value">
                   <option value="">-- select document type --</option>
                 </select>
               </div>
-              <div class="col-sm-10 col-sm-offset-1">
-                <field ng-if="fieldPredicate && submission.getFieldProfileByPredicate(fieldPredicate)" profile="submission.getFieldProfileByPredicate(fieldPredicate)"></field>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': fieldProfile, 'dialog-closed': !fieldProfile}">
+                <field ng-if="fieldProfile" profile="fieldProfile"></field>
               </div>
             </div>
           </form>

@@ -725,6 +725,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'remove-file'
         },
+        archiveFile: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'archive-file'
+        },
         addMessage: {
             'endpoint': '/private/queue',
             'controller': 'submission',

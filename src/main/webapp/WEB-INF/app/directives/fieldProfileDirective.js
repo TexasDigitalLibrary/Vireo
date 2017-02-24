@@ -1,4 +1,4 @@
-vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
+vireo.directive("field", function($controller, $filter, $q, $timeout, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -87,6 +87,9 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                         $scope.fieldValue.fileInfo = $scope.fieldValue.file = files[0];
                     } else {
                         var firstEmptyFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
+                        if (firstEmptyFieldValue.id) {
+                            firstEmptyFieldValue = $scope.addFieldValue();
+                        }
                         if (firstEmptyFieldValue.file === undefined) {
                             firstEmptyFieldValue.fileInfo = firstEmptyFieldValue.file = files[0];
                         } else {
@@ -107,7 +110,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                 refreshFieldValues();
                 for (var i in $scope.fieldValues) {
                     var fieldValue = $scope.fieldValues[i];
-                    if (fieldValue.file.uploaded === undefined) {
+                    if (fieldValue.fileInfo.uploaded === undefined) {
                         fieldValue.progress = 0;
                         fieldValue.uploading = true;
                         promises.push(upload(fieldValue));
@@ -122,12 +125,12 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
 
             var upload = function(fieldValue) {
                 return $q(function(resolve) {
-                    FileApi.upload({'endpoint': '', 'controller': 'submission', 'method': 'upload', 'file': fieldValue.file}).then(function(response) {
+                    FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
                         if ($scope.hasFile(fieldValue)) {
                             $scope.submission.removeFile(fieldValue);
                         }
                         fieldValue.value = response.data.meta.message;
-                        fieldValue.file.uploaded = true;
+                        fieldValue.fileInfo.uploaded = true;
                         $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function() {
                             fieldValue.uploading = false;
                             resolve();
