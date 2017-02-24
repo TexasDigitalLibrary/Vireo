@@ -13,7 +13,9 @@
       <h1>Submission View</h1>
       <submissiondialog submission="submission" type="actions"></submissiondialog>
       <div class="student-submission-loader" ng-class="{'ready': loaded}">
-        <img src="resources/images/ajax-loader.gif"/>
+        <span>
+          <span class="glyphicon glyphicon-refresh spinning"></span>
+          Loading Submission ...</span>
       </div>
       <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
 
@@ -27,26 +29,52 @@
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
               <div class="col-sm-6">
-                <span></span>
+                <div ng-if="submission.primaryDocumentFieldValue">{{submission.primaryDocumentFieldValue.fileInfo.name}}
+                  <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}}
+                    KB)</strong>
+                </div>
+                <div ng-if="!submission.primaryDocumentFieldValue">
+                  <button class="btn btn-default" type="button" ng-click="openUploadManuscriptModal()">Upload Manuscript
+                  </button>
+                </div>
               </div>
               <div class="col-sm-2">
-                <button class="btn btn-default" type="button" ng-click="replaceManuscript()" ng-disabled="replacingManiuscript">Replace Manuscript
-                  <span ng-if="replacingManiuscript" class="glyphicon glyphicon-refresh spinning"></span>
+                <button ng-if="submission.primaryDocumentFieldValue" class="btn btn-default" type="button" ng-click="replaceManuscript()" ng-disabled="replacingManuscript">Replace Manuscript
+                  <span ng-if="replacingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
                 </button>
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Additional Documents:</label>
               <div class="col-sm-6">
-                <span>
+                <span ng-if="false">
                   <i>No additional documents uploaded</i>
                 </span>
+                <span ng-if="true">
+                  <ul class="list-unstyled">
+                    <li ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id && !isPrimaryDocument(documentFieldValue.fieldPredicate)">
+                      <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
+                      <span>{{documentFieldValue.fileInfo.name}}
+                        <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
+                          -
+                          {{documentFieldValue.fileInfo.size}}
+                          KB)</strong>
+                        <span ng-if="documentFieldValue.removing" class="glyphicon glyphicon-refresh spinning"></span>
+                      </span>
+                    </li>
+                  </ul>
+                  <button ng-if="removeQueue.length > 0" class="btn btn-default" type="button" ng-click="removeAdditionalUploads()" ng-disabled="removingUploads">Remove Selected
+                    <span ng-if="removingUploads" class="glyphicon glyphicon-refresh spinning"></span>
+                  </button>
+                </span>
+
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-3" for="manuscript">Browse for Additional Document:</label>
+              <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
               <div class="col-sm-6">
-                <span></span>
+                <button class="btn btn-default" type="button" ng-click="openUploadAdditionalDocumentsModal()">Upload
+                </button>
               </div>
               <div class="col-sm-2"></div>
             </div>
@@ -69,7 +97,7 @@
             <tbody>
               <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit | filter: {privateFlag: 'false'}" ng-class="{'danger': actionLog.privateFlag}">
                 <td>{{actionLog.user.settings.displayName}}</td>
-                <td>{{actionLog.entry}}
+                <td class="message-cell">{{actionLog.entry}}
                   <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
                 </td>
                 <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
@@ -90,7 +118,7 @@
       </div>
 
       <div class="row" ng-show="loaded">
-        <h3>Application Activity</h3>
+        <h3>Leave a Message</h3>
         <hr/>
         <div class="col-md-8 col-md-offset-2">
           <form class="form-horizontal">

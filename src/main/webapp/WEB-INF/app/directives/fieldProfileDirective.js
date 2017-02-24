@@ -85,17 +85,18 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                     var i = 1;
                     refreshFieldValues();
                     if (!$scope.profile.repeatable) {
-                        $scope.fieldValue.file = files[0];
+                        $scope.fieldValue.fileInfo = $scope.fieldValue.file = files[0];
                     } else {
                         var firstEmptyFieldValue = $scope.fieldValues[$scope.fieldValues.length - 1];
                         if (firstEmptyFieldValue.file === undefined) {
-                            firstEmptyFieldValue.file = files[0];
+                            firstEmptyFieldValue.fileInfo = firstEmptyFieldValue.file = files[0];
                         } else {
                             i = 0;
                         }
                     }
                     for (; i < files.length; i++) {
-                        $scope.addFieldValue().file = files[i];
+                        var fieldValue = $scope.addFieldValue();
+                        fieldValue.fileInfo = fieldValue.file = files[i];
                     }
                 }
             };
@@ -157,22 +158,14 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
                 }
             };
 
-            $scope.fetchFileInfo = function(fieldValue) {
-                if ($scope.hasFile(fieldValue)) {
-                    $scope.submission.fileInfo(fieldValue).then(function(data) {
-                        fieldValue.file = angular.fromJson(data.body).payload.ObjectNode;
-                    });
-                }
-            };
-
             $scope.getPreview = function(fieldValue) {
                 var preview;
-                if (fieldValue !== undefined && fieldValue.file !== undefined && fieldValue.file.type !== null) {
-                    if (fieldValue.file.type.includes("image/png")) {
+                if (fieldValue !== undefined && fieldValue.fileInfo !== undefined && fieldValue.fileInfo.type !== null) {
+                    if (fieldValue.fileInfo.type.includes("image/png")) {
                         preview = "resources/images/png-logo.jpg";
-                    } else if (fieldValue.file.type.includes("image/jpeg")) {
+                    } else if (fieldValue.fileInfo.type.includes("image/jpeg")) {
                         preview = "resources/images/jpg-logo.png";
-                    } else if (fieldValue.file.type.includes("pdf")) {
+                    } else if (fieldValue.fileInfo.type.includes("pdf")) {
                         preview = "resources/images/pdf-logo.gif";
                     }
                 }
@@ -182,10 +175,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileApi) {
             $scope.getFile = function(fieldValue) {
                 if ($scope.hasFile(fieldValue)) {
                     $scope.submission.file(fieldValue.value).then(function(data) {
-                        saveAs(new Blob([data], {type: fieldValue.file.type}), fieldValue.file.name);
+                        saveAs(new Blob([data], {type: fieldValue.fileInfo.type}), fieldValue.fileInfo.name);
                     });
                 } else {
-                    saveAs(fieldValue.file);
+                    saveAs(fieldValue.fileInfo);
                 }
             };
 

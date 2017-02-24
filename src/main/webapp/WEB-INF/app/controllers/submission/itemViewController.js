@@ -1,52 +1,6 @@
-vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileApi, ItemViewService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileApi, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-
-    $scope.fieldPredicates = FieldPredicateRepo.getAll();
-
-    $scope.allUsers = UserRepo.getAll();
-
-    $scope.emailTemplates = EmailTemplateRepo.getAll();
-
-    EmailTemplateRepo.ready().then(function() {
-
-        var addDefaultTemplate = true;
-        for (var i in $scope.emailTemplates) {
-            var template = $scope.emailTemplates[i];
-            if (template.name === "Choose a Message Template") {
-                addDefaultTemplate = false;
-                break;
-            }
-        }
-
-        if (addDefaultTemplate)
-            $scope.emailTemplates.unshift({name: "Choose a Message Template"});
-
-        $scope.resetCommentModal($scope.addCommentModal);
-    });
-
-    $scope.addCommentModal = {};
-
-    $scope.addComment = function(addCommentModal) {
-        addCommentModal.adding = true;
-        $scope.submission.addComment(addCommentModal).then(function() {
-            $scope.resetCommentModal(addCommentModal);
-        });
-    };
-
-    $scope.resetCommentModal = function(addCommentModal) {
-        $scope.closeModal();
-        addCommentModal.adding = false;
-        addCommentModal.commentVisiblity = "public";
-        addCommentModal.emailToRecipient = "";
-        addCommentModal.emailCcRecipient = "";
-        addCommentModal.emailTo = false;
-        addCommentModal.emailCc = false;
-        addCommentModal.subject = "";
-        addCommentModal.message = "";
-        addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
-        addCommentModal.selectedTemplate = $scope.emailTemplates[0];
-    };
 
     $scope.actionLogLimit = 10;
 
@@ -59,43 +13,77 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
     };
 
     var ready = $q.all([
-        FieldPredicateRepo.ready(),
         SubmissionRepo.findSubmissionById($routeParams.id),
-        UserRepo.ready(),
-        SubmissionStateRepo.ready()
+        UserRepo.getAll(),
+        SubmissionStateRepo.getAll(),
+        EmailTemplateRepo.getAll()
     ]);
 
-    ready.then(function() {
+    ready.then(function(resolved) {
+
+        var submission = resolved[0];
+        var users = resolved[1];
+        var submissionStates = resolved[2];
+        var emailTemplates = resolved[3];
 
         $scope.loaded = true;
 
-        $scope.submission = ItemViewService.selectSubmission($routeParams.id);
-
-        SubmissionStateRepo.ready().then(function() {
-            $scope.submissionStatusBox.newStatus = submissionStates[0];
-        });
-
-        UserRepo.ready().then(function() {
-            $scope.submissionStatusBox.assignee = firstAssignable();
-        });
+        $scope.submission = submission;
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
         var organization = $scope.submission.organization.name;
-        var submissionStates = SubmissionStateRepo.getAll();
 
-        $scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
-
-        $scope.primaryDocumentFieldValue;
-
-        $scope.getFileInfo = function(fieldValue) {
-            $scope.submission.fileInfo(fieldValue).then(function(data) {
-                fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
-                    $scope.primaryDocumentFieldValue = fieldValue;
+        var firstAssignable = function() {
+            var firstAssignable;
+            for (var i in users) {
+                if (users[i].role === "ADMINISTRATOR" || users[i].role === "MANAGER") {
+                    firstAssignable = users[i];
+                    break;
                 }
+            }
+            return firstAssignable;
+        };
+
+        var addDefaultTemplate = true;
+        for (var i in emailTemplates) {
+            var template = emailTemplates[i];
+            if (template.name === "Choose a Message Template") {
+                addDefaultTemplate = false;
+                break;
+            }
+        }
+
+        if (addDefaultTemplate) {
+            emailTemplates.unshift({name: "Choose a Message Template"});
+        }
+
+        $scope.addCommentModal = {};
+
+        $scope.resetCommentModal = function(addCommentModal) {
+            $scope.closeModal();
+            addCommentModal.adding = false;
+            addCommentModal.commentVisiblity = "public";
+            addCommentModal.emailToRecipient = "";
+            addCommentModal.emailCcRecipient = "";
+            addCommentModal.emailTo = false;
+            addCommentModal.emailCc = false;
+            addCommentModal.subject = "";
+            addCommentModal.message = "";
+            addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
+            addCommentModal.selectedTemplate = emailTemplates[0];
+        };
+
+        $scope.addComment = function(addCommentModal) {
+            addCommentModal.adding = true;
+            $scope.submission.addComment(addCommentModal).then(function() {
+                $scope.resetCommentModal(addCommentModal);
             });
         };
+
+        $scope.resetCommentModal($scope.addCommentModal);
+
+        $scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
 
         $scope.showTab = function(workflowStep) {
             var show = false;
@@ -137,31 +125,20 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         };
 
         $scope.getFileType = function(fieldPredicate) {
-            var type = fieldPredicate.value;
-            return type.substring(9).toUpperCase();
+            return FileUploadService.getFileType(fieldPredicate);
         };
 
         $scope.isPrimaryDocument = function(fieldPredicate) {
             return $scope.getFileType(fieldPredicate) == 'PRIMARY';
         };
 
-        $scope.hasPrimaryDocument = function() {
-            return $scope.primaryDocumentFieldValue !== undefined && $scope.primaryDocumentFieldValue.id;
-        }
-
         $scope.deleteFieldValue = function(fieldValue) {
             fieldValue.updating = true;
-            $scope.submission.removeFile(fieldValue).then(function(res) {
+            FileUploadService.removeFile($scope.submission, fieldValue).then(function() {
                 $scope.closeModal();
-                $scope.submission.removeFieldValue(fieldValue).then(function() {
-                    $scope.confirm = false;
-                    delete fieldValue.updating;
-                    if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
-                        delete $scope.primaryDocumentFieldValue;
-                    }
-                });
+                $scope.confirm = false;
+                delete fieldValue.updating;
             });
-
         };
 
         $scope.saveFieldValue = function(fieldValue) {
@@ -190,7 +167,6 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.cancel = function(fieldValue) {
             $scope.closeModal();
             fieldValue.refresh();
-            $scope.getFileInfo(fieldValue);
         };
 
         $scope.addFileData = {};
@@ -225,12 +201,6 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
-                        $scope.getFileInfo(fieldValue);
-
-                        if ($scope.isPrimaryDocument(fieldValue.fieldPredicate)) {
-                            $scope.primaryDocumentFieldValue = fieldValue;
-                        }
-
                         $scope.resetAddFile();
                     }
                 });
@@ -262,17 +232,6 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             return disable;
         };
 
-        var firstAssignable = function() {
-            var firstAssignable;
-            for (var i in $scope.allUsers) {
-                if ($scope.allUsers[i].role === "ADMINISTRATOR" || $scope.allUsers[i].role === "MANAGER") {
-                    firstAssignable = $scope.allUsers[i];
-                    break;
-                }
-            }
-            return firstAssignable;
-        };
-
         $scope.resetAddCommentModal = function() {
             $scope.closeModal();
         };
@@ -281,14 +240,14 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
             "getPrimaryDocumentFileName": function() {
-                return $scope.primaryDocumentFieldValue !== undefined
-                    ? $scope.primaryDocumentFieldValue.fileInfo !== undefined
-                        ? $scope.primaryDocumentFieldValue.fileInfo.name
+                return $scope.submission.primaryDocumentFieldValue !== undefined
+                    ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined
+                        ? $scope.submission.primaryDocumentFieldValue.fileInfo.name
                         : ''
                     : '';
             },
             "downloadPrimaryDocument": function() {
-                $scope.getFile($scope.primaryDocumentFieldValue);
+                $scope.getFile($scope.submission.primaryDocumentFieldValue);
             },
             "uploadNewFile": function() {
                 $scope.openModal('#addFileModal');
@@ -298,11 +257,12 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                 $anchorScroll();
             },
             "hasPrimaryDocument": function() {
-                return $scope.hasPrimaryDocument();
+                return $scope.submission.primaryDocumentFieldValue && $scope.submission.primaryDocumentFieldValue.id;
             }
         };
 
         $scope.submissionStatusBox = {
+            "newStatus": submissionStates[0],
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
             "submission": $scope.submission,

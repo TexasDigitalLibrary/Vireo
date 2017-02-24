@@ -8,7 +8,7 @@
       <dropzone file-model="files" text="Drop a file here to begin upload" , patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
     </div>
   </div>
-  <div class="col-md-7 col-sm-12 file-preview-container" ng-init="fetchFileInfo(fieldValue)">
+  <div class="col-md-7 col-sm-12 file-preview-container">
     <modal ng-if="hasFile(fieldValue) || previewing" modal-id="{{'confirmDeleteFileModal' + getUriHash(fieldValue) }}" modal-view="views/modals/submissions/confirmDeleteFile.html" modal-header-class="modal-header-danger"></modal>
     <div class="file-preview">
       <img ng-if="(hasFile(fieldValue) || previewing) && getPreview(fieldValue)" class="select-toggle" ngf-src="getPreview(fieldValue)" ng-click="getFile(fieldValue)">
@@ -19,9 +19,9 @@
       </div>
     </div>
     <div class="file-info" ng-if="hasFile(fieldValue) || previewing">
-      <p class="file-name">{{fieldValue.file.name}}</p>
-      <p class="file-type">{{fieldValue.file.type}}</p>
-      <p class="file-size">{{fieldValue.file.size + " bytes"}}</p>
+      <p class="file-name">{{fieldValue.fileInfo.name}}</p>
+      <p class="file-type">{{fieldValue.fileInfo.type}}</p>
+      <p class="file-size">{{fieldValue.fileInfo.size + " bytes"}}</p>
     </div>
     <div class="file-info" ng-if="previewing && !uploading">
       <button class="btn btn-success" ng-click="beginUpload(fieldValue)">
@@ -59,12 +59,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate" ng-init="fetchFileInfo(fieldValue)">
+        <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate">
           <td ng-if="!fieldValue.uploading" class="file-info">
-            <p class="file-name select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.file.name}}</p>
+            <p class="file-name select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.fileInfo.name}}</p>
           </td>
-          <td ng-if="!fieldValue.uploading">{{fieldValue.file.type}}</td>
-          <td ng-if="!fieldValue.uploading">{{fieldValue.file.size}}</td>
+          <td ng-if="!fieldValue.uploading">{{fieldValue.fileInfo.type}}</td>
+          <td ng-if="!fieldValue.uploading">{{fieldValue.fileInfo.size}}</td>
           <td ng-if="!fieldValue.uploading">
             <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-ok"></span>
           </td>
