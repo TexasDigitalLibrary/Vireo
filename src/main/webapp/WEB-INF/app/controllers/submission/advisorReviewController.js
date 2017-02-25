@@ -31,7 +31,7 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
             $scope.approval.clearApproveApplication=false;
             $scope.approval.clearApproveEmbargo=false
             $scope.approval.approveEmbargo=undefined;
-            $scope.submission.approveApplication=undefined;
+            $scope.approval.approveApplication=undefined;
             $scope.updatingApproval = false;
         });
     };
