@@ -587,18 +587,16 @@ public class SubmissionController {
 		}
 		
 		if(clearApproveApplicationNode!=null&&clearApproveApplicationNode.asBoolean()) {
-			submission.clearApproveEmbargo();
+			submission.clearApproveApplication();
 			actionLogRepo.createPublicLog(submission, credentials, "The committee has withdrawn its Application Approval.");
 		}
 		
 		if(messageNode!=null) actionLogRepo.createPublicLog(submission, credentials, "Advisor comments : "+messageNode.asText());
         
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, submission);
         
     }
     
-    
-
     private void processEmailWorkflowRules(Submission submission) {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();

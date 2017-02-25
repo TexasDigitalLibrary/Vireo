@@ -72,10 +72,10 @@ public class Submission extends BaseEntity {
     private Calendar approveApplicationDate;
     
     @Column(nullable = true)
-    private Boolean approveEmbargo;
+    private boolean approveEmbargo;
     
     @Column(nullable = true)
-    private Boolean approveApplication;
+    private boolean approveApplication;
 
     @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private Set<Embargo> embargoTypes;
@@ -99,6 +99,8 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLogs(new ArrayList<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
+        setApproveApplication(false);
+        setApproveEmbargo(false);
         setCustomActionValues(new ArrayList<CustomActionValue>());
     }
 
@@ -332,15 +334,23 @@ public class Submission extends BaseEntity {
         this.submissionDate = submissionDate;
     }
 
+    public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
+    	this.approveEmbargoDate = approveEmbargoDate;
+    }
+    
     public Calendar getApproveEmbargoDate() {
 		return approveEmbargoDate;
 	}
+    
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+    	this.approveApplicationDate = approveApplicationDate;
+    }
 
 	public Calendar getApproveApplicationDate() {
 		return approveApplicationDate;
 	}
 
-	public boolean isApproveEmbargo() {
+	public boolean getApproveEmbargo() {
 		return approveEmbargo;
 	}
 
@@ -355,10 +365,10 @@ public class Submission extends BaseEntity {
 	
 	public void clearApproveEmbargo() {
 		this.approveEmbargoDate = null;
-		this.approveEmbargo = null;
+		this.approveEmbargo = false;
 	}
 
-	public boolean isApproveApplication() {
+	public boolean getApproveApplication() {
 		return approveApplication;
 	}
 
@@ -373,7 +383,7 @@ public class Submission extends BaseEntity {
 	
 	public void clearApproveApplication() {
 		this.approveApplicationDate = null;
-		this.approveApplication = null;
+		this.approveApplication = false;
 	}
 
 	/**
