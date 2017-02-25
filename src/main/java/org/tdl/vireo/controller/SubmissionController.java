@@ -147,9 +147,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/advisor-review/{submissionHash}")
     public ApiResponse getOne(@ApiVariable String submissionHash) {
-
         Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
-
         return new ApiResponse(SUCCESS, submission);
     }
 
@@ -179,10 +177,11 @@ public class SubmissionController {
         return response;
     }
 
+    // TODO: follow single responsibility and remove redundency between the following two methods
     @Transactional
-    @ApiMapping("/add-comment/{submissionId}")
+    @ApiMapping("/{submissionId}/add-comment")
     @Auth(role = "STUDENT")
-    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode, @ApiVariable Long submissionId) {
+    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -221,6 +220,44 @@ public class SubmissionController {
 
         return new ApiResponse(SUCCESS);
     }
+    
+    @Transactional
+    @ApiMapping("/{submissionId}/send-email")
+    @Auth(role = "STUDENT")
+    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+
+        Submission submission = submissionRepo.findOne(submissionId);
+
+        String subject = dataNode.get("subject").asText();
+
+        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+
+        boolean emailTo = dataNode.get("emailTo").asBoolean();
+
+        actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
+
+        if (emailTo) {
+
+            boolean emailCc = dataNode.get("emailCc").asBoolean();
+
+            SimpleMailMessage smm = new SimpleMailMessage();
+
+            smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+
+            if (emailCc) {
+                smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+            }
+
+            smm.setSubject(subject);
+            smm.setText(templatedMessage);
+
+            emailSender.send(smm);
+
+        }
+
+        return new ApiResponse(SUCCESS);
+    }
+
 
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")

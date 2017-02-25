@@ -1,4 +1,4 @@
-vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileApi, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("ItemViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -31,6 +31,8 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.loaded = true;
 
         $scope.submission = submission;
+        
+        $scope.emailTemplates = emailTemplates;
 
         $scope.fieldPredicates = fieldPredicates;
 
@@ -173,7 +175,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             fieldValue.refresh();
         };
 
-        $scope.addFileData = {};
+        var resetFileData = function() {
+        	$scope.addFileData = {
+            	selectedTemplate: emailTemplates[0]
+            };
+        }
+
+        resetFileData();
 
         $scope.queueUpload = function(files) {
             $scope.addFileData.files = files;
@@ -186,12 +194,12 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.submitAddFile = function() {
 
             $scope.addFileData.uploading = true;
-
-            FileApi.upload({'endpoint': '', 'controller': 'submission', 'method': 'upload', 'file': $scope.addFileData.files[0]}).then(function(response) {
-
-                var fieldValue = $scope.addFileData.addFileSelection == 'replace'
-                    ? $scope.primaryDocumentFieldValue
-                    : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+            
+            var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+            
+            fieldValue.file = $scope.addFileData.files[0];
+            
+            FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
 
                 if ($scope.addFileData.addFileSelection == 'replace') {
                     $scope.submission.removeFile($scope.primaryDocumentFieldValue);
@@ -205,7 +213,16 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
-                        $scope.resetAddFile();
+                    	$scope.submission.sendEmail({
+                    		subject: $scope.addFileData.emailSubject,
+                    		message: $scope.addFileData.emailBody,
+                    		emailTo: $scope.addFileData.addEmailRecipeints,
+                    		emailCc: $scope.addFileData.addCCRecipeints,
+                    		emailToRecipient: $scope.addFileData.emailTo,
+                    		emailCcRecipient: $scope.addFileData.emailCC
+                    	}).then(function() {
+                    		$scope.resetAddFile();
+                    	});
                     }
                 });
 
@@ -220,12 +237,14 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             }
 
         };
+        
 
+        
         $scope.resetAddFile = function() {
-            $scope.addFileData = {};
+        	resetFileData();
             $scope.closeModal();
         };
-
+        
         $scope.disableSubmitAddFile = function() {
             var disable = true;
             if ($scope.addFileData.addFileSelection == 'replace') {
