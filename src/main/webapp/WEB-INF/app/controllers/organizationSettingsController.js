@@ -1,14 +1,14 @@
 vireo.controller('OrganizationSettingsController', function($controller, $scope, $q, AccordionService, OrganizationRepo, SidebarService) {
 
 	angular.extend(this, $controller('AbstractController', {
-		$scope : $scope
+		$scope: $scope
 	}));
 
 	$scope.organizationRepo = OrganizationRepo;
 
 	SidebarService.addBox({
-		"title" : "Create Organization",
-		"viewUrl" : "views/sideboxes/organization.html"
+		"title": "Create Organization",
+		"viewUrl": "views/sideboxes/organization.html"
 	});
 
 	$scope.organizations = OrganizationRepo.getAll();
