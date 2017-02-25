@@ -43,13 +43,18 @@
 								ng-class="{'selected': panel.selected.organization.id == organization.id}">
 								<ul class="inline-list pull-right" ng-if="attr.managed">
 									<li ng-click="activateManagementPane('edit')">
-										<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}"></span>
+										<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}" tooltip="Manage organization"></span>
 									</li>
 									<li ng-click="activateManagementPane('workflow')">
-										<span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}"></span>
+										<span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}" tooltip="Manage workflow"></span>
 									</li>
 									<li ng-click="activateManagementPane('email')">
-										<span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}"></span>
+										<span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}" tooltip="Manage email workflow rules"></span>
+									</li>
+								</ul>
+								<ul class="inline-list pull-right" ng-if="!attr.managed">
+									<li ng-if="hasSubmission(organization)" ng-click="gotoSubmission(organization)">
+										<span class="context-icons glyphicon glyphicon-list-alt pull-right" tooltip="Continue submission"></span>
 									</li>
 								</ul>
 								<span>
