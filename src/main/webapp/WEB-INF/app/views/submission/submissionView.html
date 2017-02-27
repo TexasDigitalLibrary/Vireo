@@ -1,6 +1,7 @@
 <div class="container review-page">
   <div class="submission-view-container">
     <div class="submission-view-top">
+
       <ul class="breadcrumb">
         <li>
           <a href="/">Home</a>
@@ -10,12 +11,14 @@
         </li>
         <li class="active">View</li>
       </ul>
-      <h1>Submission View</h1>
+
+      <h1 class="center">Submission View</h1>
       <div class="student-submission-loader" ng-class="{'ready': loaded}">
         <span>
           <span class="glyphicon glyphicon-refresh spinning"></span>
           Loading Submission ...</span>
       </div>
+
       <submissiondialog submission="submission" type="actions"></submissiondialog>
       <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
       <div id="upload-files" class="row" ng-if="loaded && submission.submissionState.name == 'Needs Correction'">
@@ -89,7 +92,7 @@
       <div class="row" ng-show="loaded">
         <h3>Application Activity</h3>
         <hr/>
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
           <actionlog submission="submission" public="'true'"></actionlog>
         </div>
       </div>

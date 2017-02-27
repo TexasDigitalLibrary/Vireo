@@ -4,7 +4,8 @@ vireo.directive("submissiondialog", function($anchorScroll, $location) {
             return "views/directives/submissionDialog-" + attr.type + ".html"
         },
         scope: {
-            submission: '='
+            submission: '=',
+            messages: '='
         },
         link: function($scope, element, attr, parent) {
             $scope.show = ['-', '+'];

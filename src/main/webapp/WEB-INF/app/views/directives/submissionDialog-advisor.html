@@ -1,0 +1,21 @@
+<div ng-show="submission" class="dialog state" ng-class="{'immutable': submission.submissionState.name != 'Needs Correction', 'needs-correction': submission.submissionState.name == 'Needs Correction'}">
+  <span class="dialog-close toggle-href" ng-click="show.reverse()">[{{show[0]}}]</span>
+  <h4 class="dialog-header">Current Submission State:</h4>
+  <span class="submission-state">{{submission.submissionState.name}}</span>
+  <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
+    <span ng-if="submission.submissionState.name != 'Needs Correction'">
+      <p>
+        <strong>This Submission can be reviewed at this time.</strong>
+      </p>
+    </span>
+    <div ng-if="submission.submissionState.name == 'Needs Correction'"></div>
+
+    <div class="dialog-messages">
+      <div class="alert alert-success alert-dismissable" ng-repeat="message in messages track by $index">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Your input has been recorded.</strong>
+        {{message}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -621,8 +621,6 @@ public class SubmissionController {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
-        System.out.println(dataNode);
-
         JsonNode approveApplicationNode = dataNode.get("approveApplication");
         JsonNode approveEmbargoNode = dataNode.get("approveEmbargo");
         JsonNode messageNode = dataNode.get("message");

@@ -2,8 +2,6 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
     return function Submission() {
 
-        console.log(this);
-
         var submission = this;
 
         submission.isValid = false;
@@ -537,8 +535,6 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         };
 
         submission.updateAdvisorApproval = function(approval) {
-
-            console.log(approval);
 
             angular.extend(this.getMapping().updateAdvisorApproval, {
                 method: submission.id + "/update-advisor-approval",
