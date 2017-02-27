@@ -31,7 +31,7 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.loaded = true;
 
         $scope.submission = submission;
-        
+
         $scope.emailTemplates = emailTemplates;
 
         $scope.fieldPredicates = fieldPredicates;
@@ -176,8 +176,8 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         };
 
         var resetFileData = function() {
-        	$scope.addFileData = {
-            	selectedTemplate: emailTemplates[0]
+            $scope.addFileData = {
+                selectedTemplate: emailTemplates[0]
             };
         }
 
@@ -194,11 +194,13 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
         $scope.submitAddFile = function() {
 
             $scope.addFileData.uploading = true;
-            
-            var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
-            
+
+            var fieldValue = $scope.addFileData.addFileSelection == 'replace'
+                ? $scope.primaryDocumentFieldValue
+                : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+
             fieldValue.file = $scope.addFileData.files[0];
-            
+
             FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
 
                 if ($scope.addFileData.addFileSelection == 'replace') {
@@ -213,16 +215,16 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
-                    	$scope.submission.sendEmail({
-                    		subject: $scope.addFileData.emailSubject,
-                    		message: $scope.addFileData.emailBody,
-                    		emailTo: $scope.addFileData.addEmailRecipeints,
-                    		emailCc: $scope.addFileData.addCCRecipeints,
-                    		emailToRecipient: $scope.addFileData.emailTo,
-                    		emailCcRecipient: $scope.addFileData.emailCC
-                    	}).then(function() {
-                    		$scope.resetAddFile();
-                    	});
+                        $scope.submission.sendEmail({
+                            subject: $scope.addFileData.emailSubject,
+                            message: $scope.addFileData.emailBody,
+                            emailTo: $scope.addFileData.addEmailRecipeints,
+                            emailCc: $scope.addFileData.addCCRecipeints,
+                            emailToRecipient: $scope.addFileData.emailTo,
+                            emailCcRecipient: $scope.addFileData.emailCC
+                        }).then(function() {
+                            $scope.resetAddFile();
+                        });
                     }
                 });
 
@@ -237,14 +239,12 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             }
 
         };
-        
 
-        
         $scope.resetAddFile = function() {
-        	resetFileData();
+            resetFileData();
             $scope.closeModal();
         };
-        
+
         $scope.disableSubmitAddFile = function() {
             var disable = true;
             if ($scope.addFileData.addFileSelection == 'replace') {
@@ -303,8 +303,12 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
                 });
             },
             "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
-            "changeStatus": function(newStatus) {
-                $scope.submission.changeStatus(newStatus.name).then(function() {
+            "changeStatus": function(state) {
+                $scope.submissionStatusBox.updating = true;
+                state.updating = true;
+                $scope.submission.changeStatus(state.name).then(function() {
+                    delete state.updating;
+                    delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
                 });
             },
@@ -322,11 +326,11 @@ vireo.controller("ItemViewController", function($anchorScroll, $controller, $loc
             "assignee": firstAssignable(),
             "resetStatus": function() {
                 $scope.submissionStatusBox.advanced = true;
-                $scope.submissionStatusBox.cancelWorking = false;
-                $scope.submissionStatusBox.saveWorking = false;
-                $scope.submissionStatusBox.assignWorking = false;
-                $scope.submissionStatusBox.assignSaveWorking = false;
-                $scope.submissionStatusBox.unassignWorking = false;
+                // $scope.submissionStatusBox.cancelWorking = false;
+                // $scope.submissionStatusBox.saveWorking = false;
+                // $scope.submissionStatusBox.assignWorking = false;
+                // $scope.submissionStatusBox.assignSaveWorking = false;
+                // $scope.submissionStatusBox.unassignWorking = false;
                 $scope.submissionStatusBox.newStatus = submissionStates[0];
                 $scope.submissionStatusBox.assignee = firstAssignable();
                 $scope.closeModal();
