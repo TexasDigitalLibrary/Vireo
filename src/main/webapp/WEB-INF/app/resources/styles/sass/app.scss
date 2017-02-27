@@ -491,6 +491,10 @@ sidebox ul input {
   height: 24px;
 }
 
+.sidebox-body ul {
+  padding: 15px;
+}
+
 .hover-pointer:hover {
   cursor: pointer;
 }
@@ -845,10 +849,21 @@ footer p {
 .admin-settings .panel-heading span {
   text-transform: uppercase;
 }
+@media (min-width:768px) {
+  .admin-page {
+    margin-right: 10px;
+  }
 
-.admin-page .admin-controls {}
+  .admin-page .admin-controls {
+    width: 260px;
+    float: left;
+  }
 
-.admin-page .admin-content {}
+  .admin-page .admin-content {
+    width: calc(100% - 260px);
+    float: right;
+  }
+}
 
 .review-page .review-label {
   font-weight: bold;
