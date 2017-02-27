@@ -17,7 +17,9 @@
   </div>
 
   <div class="row" ng-show="loaded">
-    <h1>REVIEWER NOTES</h1>
+    <div class="view-section-header">
+      <h1>REVIEWER NOTES</h1>
+    </div>
     <div class="form-inline reviewer-notes">
       <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
       <span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"></span>
@@ -32,10 +34,9 @@
 
   <div class="row" ng-show="loaded">
 
-    <h1>ACTION LOG</h1>
-
-    <div class="col-xs-12">
-      <button class="btn btn-default add-comment-btn pull-right" ng-click="openModal('#addCommentModal')">Add Comment</button>
+    <div class="view-section-header">
+      <h1>ACTION LOG</h1>
+      <button class="btn btn-default view-action-button" ng-click="openModal('#addCommentModal')">Add Comment</button>
     </div>
 
     <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary"></modal>
@@ -46,7 +47,10 @@
 
   <div class="row" ng-show="loaded">
     <a name="all-files"></a>
-    <h1>ALL FILES</h1>
+    <div class="view-section-header">
+      <h1>ALL FILES</h1>
+      <button class="btn btn-default view-action-button" ng-click="openModal('#addFileModal')">Add File</button>
+    </div>
     <table class="table table-bordered table-striped table-hover etd-table">
       <thead>
         <tr>
@@ -58,7 +62,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id" ng-init="getFileInfo(documentFieldValue)">
+        <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id">
           <td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
           <td>
             <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
@@ -72,13 +76,6 @@
           </td>
         </tr>
       </tbody>
-      <tfoot class="header">
-        <tr>
-          <th colspan="5">
-            <button class="btn btn-default pull-right" ng-click="openModal('#addFileModal')">Add File</button>
-          </th>
-        </tr>
-      </tfoot>
     </table>
   </div>
 

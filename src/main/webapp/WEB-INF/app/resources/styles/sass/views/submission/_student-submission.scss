@@ -1,23 +1,23 @@
 /***********************
 ** STUDENT SUBMISSION **
 ************************/
-
-.student-submission-loader.ready,
-.student-submission {
-	opacity: 0;
-  	transition: opacity 0.5s ease-in;
+.student-submission,
+.student-submission-loader.ready {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
 }
 
 .student-submission-loader,
 .student-submission.ready {
-	opacity: 1;
-  	transition: opacity 0.5s ease-in;
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
 }
 
 .student-submission-loader {
-	position: absolute;
-	top: 250px;
-	right: 50%;
+  top: 250px;
+  width: 100%;
+  text-align: center;
+  font-size: 2em;
 }
 
 .submission-workflow-steps-navigation {
@@ -71,6 +71,6 @@
 }
 
 .organization-create-button {
-  white-space:normal !important;
-  word-wrap:break-word; 
+  white-space: normal !important;
+  word-wrap: break-word;
 }

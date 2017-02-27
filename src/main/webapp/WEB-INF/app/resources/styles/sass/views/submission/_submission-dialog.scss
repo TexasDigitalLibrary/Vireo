@@ -16,6 +16,11 @@ submissiondialog div.dialog {
     z-index: 1;
   }
 }
+@media (min-width: 1540px) {
+  submissiondialog div.dialog {
+    box-shadow: 3px 3px 10px -6px #000000;
+  }
+}
 
 submissiondialog div.dialog.state {
   right: 2%;
@@ -99,6 +104,15 @@ ul.dialog-actions-list {
   transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
   overflow: hidden;
   margin-top: 10px;
+}
+
+.dialog-confirm {
+  -webkit-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -moz-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -o-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  overflow: hidden;
+  color: red;
 }
 
 .dialog-closed {

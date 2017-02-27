@@ -555,6 +555,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'add-comment'
         },
+        sendEmail: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'send-email'
+        },
         assignTo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -729,6 +734,16 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'remove-file'
+        },
+        archiveFile: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'archive-file'
+        },
+        addMessage: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'add-message'
         }
     },
     AdvisorSubmission: {
