@@ -85,10 +85,10 @@
 
           <div class="row">
             <div class="col-xs-12 center">
-              <button class="btn btn-primary" ng-disabled="disableCheck(approval)" ng-click="addComment(approval)" ng-disabled="updatingApproval">Submit
-                <span class="glyphicon glyphicon-refresh spinning" ng-if="updatingApproval"></span>
+              <button class="btn btn-primary" ng-disabled="disableCheck(approval)" ng-click="addComment(approval)">Submit
+                <span class="glyphicon glyphicon-refresh spinning" ng-if="approval.updating"></span>
               </button>
-              <span ng-if="disableCheck(approval)" class="glyphicon glyphicon-info-sign text-danger" tooltip="A comment is required."></div>
+              <span ng-if="disableCheck(approval) && !approval.updating" class="glyphicon glyphicon-info-sign text-danger" tooltip="A comment is required."></div>
             </div>
           </div>
 

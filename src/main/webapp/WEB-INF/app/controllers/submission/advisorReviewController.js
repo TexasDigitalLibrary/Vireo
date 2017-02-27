@@ -26,8 +26,7 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
     };
 
     $scope.addComment = function(approval) {
-        $scope.updatingApproval = true;
-        console.log('add comment')
+        $scope.approval.updating = true;
         $scope.submission.updateAdvisorApproval(approval).then(function(res) {
             $scope.submission = new Submission(angular.fromJson(res.body).payload.Submission);
             $scope.approval.message = "";
@@ -35,16 +34,13 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
             $scope.approval.clearApproveEmbargo = false
             $scope.approval.approveEmbargo = undefined;
             $scope.approval.approveApplication = undefined;
-            $scope.updatingApproval = false;
-            console.log('add message')
+            $scope.approval.updating = false;
             $scope.messages.push(message);
-            console.log($scope.messages)
         });
     };
 
     $scope.disableCheck = function(approval) {
         var dissabled = true;
-        //((approval.approveEmbargo===undefined&&approval.approveApplication===undefined)&&!approval.message)||(approval.approveApplication===false&&!approval.message)||(approval.approveEmbargo===false&&!approval.message)
 
         if (approval.approveEmbargo && (approval.approveApplication === undefined || approval.approveApplication)) {
             dissabled = false;
@@ -56,6 +52,10 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
 
         if (approval.message) {
             dissabled = false;
+        }
+
+        if (approval.updating) {
+            dissabled = true;
         }
 
         return dissabled;
