@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
+  <button type="button" class="close" ng-click="box.resetStatus()" aria-title="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
   <h3 class="modal-title">Change Submission Status</h3>
@@ -22,7 +22,7 @@
         <a href ng-click="box.advanced = !box.advanced">Advanced</a>
       </div>
 
-      <div class="field-profile-section" ng-class="{'section-closed': box.advanced, 'section-closed': !box.advanced}">
+      <div class="advanced-section" ng-class="{'section-closed': box.advanced, 'section-closed': !box.advanced}">
 
         <div class="form-group row">
 
