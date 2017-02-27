@@ -28,7 +28,7 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
     $scope.addComment = function(approval) {
         $scope.approval.updating = true;
         $scope.submission.updateAdvisorApproval(approval).then(function(res) {
-            $scope.submission = new Submission(angular.fromJson(res.body).payload.Submission);
+            angular.extend($scope.submission, angular.fromJson(res.body).payload.Submission);
             $scope.approval.message = "";
             $scope.approval.clearApproveApplication = false;
             $scope.approval.clearApproveEmbargo = false

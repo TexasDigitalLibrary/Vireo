@@ -25,13 +25,14 @@
         <form class="advisor-review-form">
           <div class="row">
             <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-              <span ng-if="approval.approveEmbargo===false||approval.approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:
+              <label>
+                <span ng-if="approval.approveEmbargo===false||approval.approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:</label>
             </div>
             <div class="col-sm-9 col-xs-12">
               <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
               <div class="form-group" ng-if="submission.approveEmbargoDate">
                 <p>Application was approved on
-                  {{submission.approveApplicationDate | date:'MMM dd, yyyy HH:mm'}}</p>
+                  {{submission.approveEmbargoDate | date:'MMM dd, yyyy HH:mm'}}</p>
                 <div class="checkbox" ng-init="approval.clearApproveEmbargo=false">
                   <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveEmbargo" ngTrueValue="true" ngFalseValue="false">I unapprove this embargo.</label>
                 </div>
@@ -49,7 +50,8 @@
 
           <div class="row">
             <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-              <span ng-if="approval.approveApplication===false||approval.approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:
+              <label>
+                <span ng-if="approval.approveApplication===false||approval.approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:</label>
             </div>
             <div class="col-sm-9 col-xs-12">
               <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
@@ -73,7 +75,7 @@
 
           <div class="row">
             <div class="col-sm-2 col-sm-offset-1 col-xs-12">
-              Comments:
+              <label>Comments:</label>
             </div>
             <div class="col-sm-6 col-xs-12">
               <div class="form-group">
