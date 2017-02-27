@@ -845,12 +845,11 @@ footer p {
 .admin-settings .panel-heading span {
   text-transform: uppercase;
 }
-
-.admin-page {
-  margin-right: 10px;
-  overflow: hidden;
-}
 @media (min-width:768px) {
+  .admin-page {
+    margin-right: 10px;
+  }
+
   .admin-page .admin-controls {
     width: 250px;
     float: left;
