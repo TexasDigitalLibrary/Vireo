@@ -277,6 +277,7 @@
 
         <!-- Directives -->
         <script src="directives/accordionDirective.js"></script>
+        <script src="directives/actionLogDirective.js"></script>
         <script src="directives/deHashColorDirective.js"></script>
         <script src="directives/tabsDirective.js"></script>
         <script src="directives/sideBoxDirective.js"></script>
@@ -406,7 +407,7 @@
         <script src="controllers/submission/submissionViewController.js"></script>
         <script src="controllers/submission/submissionHistoryController.js"></script>
         <script src="controllers/submission/submissionCompleteController.js"></script>
-        <script src="controllers/submission/itemViewController.js"></script>
+        <script src="controllers/submission/adminSubmissionViewController.js"></script>
 
         <!-- endbuild -->
 

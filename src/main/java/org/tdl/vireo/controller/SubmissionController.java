@@ -615,6 +615,47 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
+    @ApiMapping("/{submissionId}/update-advisor-approval")
+    @Transactional
+    public ApiResponse updateAdvisorApproval(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+
+        Submission submission = submissionRepo.findOne(submissionId);
+
+        JsonNode approveApplicationNode = dataNode.get("approveApplication");
+        JsonNode approveEmbargoNode = dataNode.get("approveEmbargo");
+        JsonNode messageNode = dataNode.get("message");
+        JsonNode clearApproveEmbargoNode = dataNode.get("clearApproveEmbargo");
+        JsonNode clearApproveApplicationNode = dataNode.get("clearApproveApplication");
+
+        if (approveApplicationNode != null) {
+            submission.setApproveApplication(approveApplicationNode.asBoolean());
+            String approveApplicationMessage = approveApplicationNode.asBoolean() ? "The committee approved the application" : "The committee rejected the Application";
+            actionLogRepo.createPublicLog(submission, credentials, approveApplicationMessage);
+        }
+
+        if (approveEmbargoNode != null) {
+            submission.setApproveEmbargo(approveEmbargoNode.asBoolean());
+            String approveEmbargoMessage = approveEmbargoNode.asBoolean() ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
+            actionLogRepo.createPublicLog(submission, credentials, approveEmbargoMessage);
+        }
+
+        if (clearApproveEmbargoNode != null && clearApproveEmbargoNode.asBoolean()) {
+            submission.clearApproveEmbargo();
+            actionLogRepo.createPublicLog(submission, credentials, "The committee has withdrawn its Embargo Approval.");
+        }
+
+        if (clearApproveApplicationNode != null && clearApproveApplicationNode.asBoolean()) {
+            submission.clearApproveApplication();
+            actionLogRepo.createPublicLog(submission, credentials, "The committee has withdrawn its Application Approval.");
+        }
+
+        if (messageNode != null)
+            actionLogRepo.createPublicLog(submission, credentials, "Advisor comments : " + messageNode.asText());
+
+        return new ApiResponse(SUCCESS, submission);
+
+    }
+
     private void processEmailWorkflowRules(Submission submission) {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();

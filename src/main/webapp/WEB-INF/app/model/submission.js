@@ -153,7 +153,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
             return promise;
         };
-        
+
         submission.sendEmail = function(data) {
             angular.extend(apiMapping.Submission.sendEmail, {
                 'method': submission.id + "/send-email",
@@ -530,6 +530,18 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
 
             var promise = WsApi.fetch(this.getMapping().assignTo);
+
+            return promise;
+        };
+
+        submission.updateAdvisorApproval = function(approval) {
+
+            angular.extend(this.getMapping().updateAdvisorApproval, {
+                method: submission.id + "/update-advisor-approval",
+                data: approval
+            });
+
+            var promise = WsApi.fetch(this.getMapping().updateAdvisorApproval);
 
             return promise;
         };

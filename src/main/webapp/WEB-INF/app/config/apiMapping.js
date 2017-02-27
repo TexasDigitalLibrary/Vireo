@@ -661,6 +661,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'needs-correction'
         },
+        updateAdvisorApproval: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'update-advisor-approval'
+        },
         updateCustomActionValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -757,6 +762,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file'
+        },
+        updateAdvisorApproval: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'update-advisor-approval'
         },
         fileInfo: {
             'endpoint': '/private/queue',

@@ -1,6 +1,7 @@
 submissiondialog div.dialog {
   position: fixed;
-  width: 300px;
+  font-size: 13px;
+  width: 325px;
   bottom: 6%;
   padding: 10px 20px;
   margin-bottom: 18px;
@@ -122,5 +123,5 @@ ul.dialog-actions-list {
 
 .dialog-open {
   opacity: 1;
-  max-height: 400px;
+  max-height: 5000px;
 }

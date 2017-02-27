@@ -61,7 +61,21 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
+    private Calendar approveEmbargoDate;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar approveApplicationDate;
+    
+    @Column(nullable = true)
+    private boolean approveEmbargo;
+    
+    @Column(nullable = true)
+    private boolean approveApplication;
 
     @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
     private Set<Embargo> embargoTypes;
@@ -85,6 +99,8 @@ public class Submission extends BaseEntity {
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLogs(new ArrayList<ActionLog>());
         setEmbargoTypes(new HashSet<Embargo>());
+        setApproveApplication(false);
+        setApproveEmbargo(false);
         setCustomActionValues(new ArrayList<CustomActionValue>());
     }
 
@@ -154,7 +170,7 @@ public class Submission extends BaseEntity {
     public void setSubmissionState(SubmissionState submissionState) {
 
         if (submissionState.getName().equals("Submitted")) {
-            setSubmissionDate(getTime());
+            setSubmissionDate(getDay());
         }
 
         if (this.submissionState != null) {
@@ -166,14 +182,20 @@ public class Submission extends BaseEntity {
         this.submissionState = submissionState;
 
     }
-
+    
     private Calendar getTime() {
-        Calendar time = Calendar.getInstance();
-        time.clear(Calendar.HOUR);
-        time.clear(Calendar.MINUTE);
-        time.clear(Calendar.SECOND);
-        return time;
+        return Calendar.getInstance();
     }
+
+    private Calendar getDay() {
+        Calendar day = getTime();
+        day.clear(Calendar.HOUR);
+        day.clear(Calendar.MINUTE);
+        day.clear(Calendar.SECOND);
+        return day;
+    }
+    
+    
 
     /**
      * @return the organization
@@ -312,7 +334,59 @@ public class Submission extends BaseEntity {
         this.submissionDate = submissionDate;
     }
 
-    /**
+    public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
+    	this.approveEmbargoDate = approveEmbargoDate;
+    }
+    
+    public Calendar getApproveEmbargoDate() {
+		return approveEmbargoDate;
+	}
+    
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+    	this.approveApplicationDate = approveApplicationDate;
+    }
+
+	public Calendar getApproveApplicationDate() {
+		return approveApplicationDate;
+	}
+
+	public boolean getApproveEmbargo() {
+		return approveEmbargo;
+	}
+
+	public void setApproveEmbargo(boolean approveEmbargo) {
+		if(approveEmbargo) {
+			this.approveEmbargoDate = getTime();
+		} else {
+			this.approveEmbargoDate = null;
+		}
+		this.approveEmbargo = approveEmbargo;
+	}
+	
+	public void clearApproveEmbargo() {
+		this.approveEmbargoDate = null;
+		this.approveEmbargo = false;
+	}
+
+	public boolean getApproveApplication() {
+		return approveApplication;
+	}
+
+	public void setApproveApplication(boolean approveApplication) {
+		if(approveApplication) {
+			this.approveApplicationDate = getTime();
+		} else {
+			this.approveApplicationDate = null;
+		}
+		this.approveApplication = approveApplication;
+	}
+	
+	public void clearApproveApplication() {
+		this.approveApplicationDate = null;
+		this.approveApplication = false;
+	}
+
+	/**
      * @return the actionLog
      */
     public List<ActionLog> getActionLogs() {

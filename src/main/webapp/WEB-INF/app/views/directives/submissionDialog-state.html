@@ -3,9 +3,13 @@
   <h4 class="dialog-header">Current Submission State:</h4>
   <span class="submission-state">{{submission.submissionState.name}}</span>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
-    <span ng-if="submission.submissionState.name != 'Needs Correction'">Your Submission cannot be changed at this time.</span>
+    <span ng-if="submission.submissionState.name != 'Needs Correction'">
+      <strong>Your Submission cannot be changed at this time.</strong>
+    </span>
     <div ng-if="submission.submissionState.name == 'Needs Correction'">
-      <p>The application requires you to make corrections. Please make the indicated corrections and upload the new manuscript. After clicking the "Corrections Completed" button you will no longer be able to edit the application.</p>
+      <p>
+        <strong>The application requires you to make corrections.</strong>
+        Please make the indicated corrections and upload the new manuscript. After clicking the "Corrections Completed" button you will no longer be able to edit the application.</p>
       <span class="needs-correction-link toggle-href" ng-click="jumpToUploadFiles()">Click here to jump down to replace manuscript</span>
       <div class="needs-correction-action row center">
         <p class="dialog-confirm" ng-class="{'dialog-open': submitGloss[0] === 'Are you sure?', 'dialog-closed': submitGloss[0] === 'Submit Corrections'}">After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?</p>
