@@ -17,12 +17,9 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
             });
             var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
             fetchPromise.then(function(res) {
-
                 if (angular.fromJson(res.body).meta.type !== "ERROR") {
-                    // angular.extend(submissionRepo.list, angular.fromJson(res.body).payload);
-                    submission = new Submission(angular.fromJson(res.body).payload.Submission);
-                    submissionRepo.add(submission);
-                    defer.resolve(submission);
+                    submissionRepo.add(angular.fromJson(res.body).payload.Submission);
+                    defer.resolve(submissionRepo.findById(id));
                 }
             });
         } else {
@@ -48,8 +45,6 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
 
     submissionRepo.batchUpdateStatus = function(submissionState) {
 
-        console.log(submissionState);
-
         angular.extend(submissionRepo.mapping.batchUpdateSubmissionState, {'data': submissionState});
         var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionState);
 
@@ -58,8 +53,6 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
     };
 
     submissionRepo.batchAssignTo = function(assignee) {
-
-        console.log(assignee);
 
         angular.extend(submissionRepo.mapping.batchAssignTo, {'data': assignee});
         var promise = WsApi.fetch(submissionRepo.mapping.batchAssignTo);

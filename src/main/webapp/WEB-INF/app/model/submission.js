@@ -2,6 +2,8 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
     return function Submission() {
 
+        console.log(this);
+
         var submission = this;
 
         submission.isValid = false;
@@ -153,7 +155,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
             return promise;
         };
-        
+
         submission.sendEmail = function(data) {
             angular.extend(apiMapping.Submission.sendEmail, {
                 'method': submission.id + "/send-email",

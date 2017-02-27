@@ -3,10 +3,9 @@ vireo.directive("actionlog", function() {
         templateUrl: "views/directives/actionLog.html",
         restrict: 'E',
         scope: {
-            'submission': '='
+            'submission': '=',
+            'public': '='
         },
-        link: function($scope, element, attr) {
-
-        }
+        link: function($scope, element, attr) {}
     }
 });
