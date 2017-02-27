@@ -1,4 +1,19 @@
-vireo.directive('displayname', function($controller, UserService, UserSettings) {
+vireo.service("UserSettingsService", function(UserSettings) {
+
+	var UserSettingsService = this;
+
+	var userSettings = new UserSettings();
+
+	userSettings.fetch();
+
+	UserSettingsService.getUserSettings = function() {
+		return userSettings;
+	}
+
+	return UserSettingsService;
+});
+
+vireo.directive('displayname', function($controller, UserSettingsService) {
   return {
     template: '<span>{{userSettings.displayName}}</span>',
     restrict: 'E',
@@ -8,14 +23,13 @@ vireo.directive('displayname', function($controller, UserService, UserSettings) 
         $scope: $scope
       }));
       if (!$scope.isAnonymous()) {
-        $scope.userSettings = new UserSettings();
-        $scope.userSettings.fetch();
+        $scope.userSettings = UserSettingsService.getUserSettings();
       }
     }
   };
 });
 
-vireo.directive('usersettings', function($controller, UserSettings) {
+vireo.directive('usersettings', function($controller, UserSettingsService) {
   return {
     template: '<span>{{displayValue}}</span>',
     restrict: 'E',
@@ -26,8 +40,7 @@ vireo.directive('usersettings', function($controller, UserSettings) {
       }));
 
       if (!$scope.isAnonymous()) {
-        $scope.userSettings = new UserSettings();
-        $scope.userSettings.fetch();
+        $scope.userSettings = UserSettingsService.getUserSettings();
 
         $scope.displayValue = "";
 
