@@ -407,7 +407,7 @@
         <script src="controllers/submission/submissionViewController.js"></script>
         <script src="controllers/submission/submissionHistoryController.js"></script>
         <script src="controllers/submission/submissionCompleteController.js"></script>
-        <script src="controllers/submission/itemViewController.js"></script>
+        <script src="controllers/submission/adminSubmissionViewController.js"></script>
 
         <!-- endbuild -->
 
