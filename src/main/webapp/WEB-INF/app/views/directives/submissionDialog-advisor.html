@@ -12,7 +12,7 @@
 
     <div class="dialog-messages">
       <div class="alert alert-success alert-dismissable" ng-repeat="message in messages track by $index">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a ng-click="messages.pop()" class="close toggle-href" aria-label="close">&times;</a>
         <strong>Your input has been recorded.</strong>
         {{message}}
       </div>
