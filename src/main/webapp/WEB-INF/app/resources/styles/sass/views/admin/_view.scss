@@ -149,7 +149,7 @@
 }
 
 .action-log-more-less:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .comment-body textarea {
@@ -157,9 +157,9 @@
 }
 
 .email-element {
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
-  margin: 0px;
+  margin: 0;
   transition: max-height 0.35s linear, margin 0.35s linear;
 }
 
@@ -167,12 +167,12 @@
   margin-left: 25px;
 }
 
+.email-cc.email-active,
 .email-element.email-active,
-.email-to.email-active,
-.email-cc.email-active {
+.email-to.email-active {
   max-height: 100px;
   overflow: hidden;
-  margin: 18px 0 18px 0;
+  margin: 18px 0;
   transition: max-height 0.35s linear, margin 0.35s linear;
 }
 
@@ -180,6 +180,12 @@ div .item-view div.row h1 span.spinning {
   font-size: 32px;
 }
 
-button.btn.btn-default.add-comment-btn {
-  margin-bottom: 10px;
+.view-section-header {
+  position: relative;
+}
+
+.view-action-button {
+  position: absolute;
+  right: 10px;
+  top: 5px;
 }
