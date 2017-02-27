@@ -3,10 +3,14 @@ vireo.service("UserSettingsService", function(UserSettings) {
 	var UserSettingsService = this;
 
 	var userSettings = new UserSettings();
-
-	userSettings.fetch();
+	
+	var fetch = true;
 
 	UserSettingsService.getUserSettings = function() {
+		if(fetch) {
+			userSettings.fetch();
+			fetch = false;
+		}
 		return userSettings;
 	}
 

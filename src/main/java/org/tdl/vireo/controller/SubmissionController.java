@@ -147,9 +147,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/advisor-review/{submissionHash}")
     public ApiResponse getOne(@ApiVariable String submissionHash) {
-
         Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
-
         return new ApiResponse(SUCCESS, submission);
     }
 
@@ -180,46 +178,62 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/add-comment/{submissionId}")
+    @ApiMapping("/{submissionId}/add-comment")
     @Auth(role = "STUDENT")
-    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode, @ApiVariable Long submissionId) {
+    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
         String commentVisibility = dataNode.get("commentVisiblity").asText();
-        String subject = dataNode.get("subject").asText();
-        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
 
         if (commentVisibility.equals("public")) {
-
-            boolean emailTo = dataNode.get("emailTo").asBoolean();
-
-            actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
-
-            if (emailTo) {
-
-                boolean emailCc = dataNode.get("emailCc").asBoolean();
-
-                SimpleMailMessage smm = new SimpleMailMessage();
-
-                smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
-
-                if (emailCc) {
-                    smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
-                }
-
-                smm.setSubject(subject);
-                smm.setText(templatedMessage);
-
-                emailSender.send(smm);
-
-            }
-
+            sendEmail(credentials, submission, dataNode);
         } else {
+            String subject = dataNode.get("subject").asText();
+            String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
             actionLogRepo.createPrivateLog(submission, credentials, subject + ": " + templatedMessage);
         }
 
         return new ApiResponse(SUCCESS);
+    }
+
+    @Transactional
+    @ApiMapping("/{submissionId}/send-email")
+    @Auth(role = "STUDENT")
+    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+        sendEmail(credentials, submissionRepo.findOne(submissionId), dataNode);
+        return new ApiResponse(SUCCESS);
+    }
+
+    private void sendEmail(Credentials credentials, Submission submission, JsonNode dataNode) {
+
+        String subject = dataNode.get("subject").asText();
+
+        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+
+        boolean emailTo = dataNode.get("emailTo").asBoolean();
+
+        if (emailTo) {
+
+            boolean emailCc = dataNode.get("emailCc").asBoolean();
+
+            SimpleMailMessage smm = new SimpleMailMessage();
+
+            smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+
+            if (emailCc) {
+                smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+            }
+
+            smm.setSubject(subject);
+            smm.setText(templatedMessage);
+
+            emailSender.send(smm);
+
+        }
+
+        actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
+
     }
 
     @Transactional

@@ -555,6 +555,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'add-comment'
         },
+        sendEmail: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'send-email'
+        },
         assignTo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
