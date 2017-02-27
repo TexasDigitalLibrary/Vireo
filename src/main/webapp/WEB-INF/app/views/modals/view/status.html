@@ -22,20 +22,24 @@
         <a href ng-click="box.advanced = !box.advanced">Advanced</a>
       </div>
 
-      <div class="field-profile-section" ng-class="{'field-profile-open': box.advanced, 'field-profile-closed': !box.advanced}">
+      <div class="field-profile-section" ng-class="{'section-closed': box.advanced, 'section-closed': !box.advanced}">
 
-        <div ng-if="!inputFile" class="form-group row">
+        <div class="form-group row">
 
-          <form class="form-inline" name="">
+          <form class="form-inline" role="form">
             <div class="form-group">
-              <label class="control-title" for="newStatus">
+              <label for="newStatus">
                 <strong>New Status</strong>:</label>
               <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStates"></select>
               <button type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus)" ng-disabled="box.newStatus.updating || box.updating">Save
                 <span ng-if="box.newStatus.updating" class=" glyphicon glyphicon-refresh spinning"></span>
               </button>
             </div>
-            <div>
+
+          </form>
+
+          <form class="form-inline" role="form">
+            <div class="form-group">
               <button ng-if="box.submission.submissionState.id !== box.cancelStatus.id" ng-click="box.changeStatus(box.cancelStatus)" class="btn btn-default" ng-disabled="box.cancelStatus.updating || box.updating">Cancel Submission
                 <span ng-if="box.cancelStatus.updating" class="glyphicon glyphicon-refresh spinning"></span>
               </button>
@@ -52,7 +56,6 @@
                 </button>
               </div>
             </div>
-
           </form>
 
         </div>
