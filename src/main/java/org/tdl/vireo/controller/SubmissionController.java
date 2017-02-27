@@ -177,7 +177,6 @@ public class SubmissionController {
         return response;
     }
 
-    // TODO: follow single responsibility and remove redundency between the following two methods
     @Transactional
     @ApiMapping("/{submissionId}/add-comment")
     @Auth(role = "STUDENT")
@@ -186,55 +185,33 @@ public class SubmissionController {
         Submission submission = submissionRepo.findOne(submissionId);
 
         String commentVisibility = dataNode.get("commentVisiblity").asText();
-        String subject = dataNode.get("subject").asText();
-        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
 
         if (commentVisibility.equals("public")) {
-
-            boolean emailTo = dataNode.get("emailTo").asBoolean();
-
-            actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
-
-            if (emailTo) {
-
-                boolean emailCc = dataNode.get("emailCc").asBoolean();
-
-                SimpleMailMessage smm = new SimpleMailMessage();
-
-                smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
-
-                if (emailCc) {
-                    smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
-                }
-
-                smm.setSubject(subject);
-                smm.setText(templatedMessage);
-
-                emailSender.send(smm);
-
-            }
-
+            sendEmail(credentials, submission, dataNode);
         } else {
+            String subject = dataNode.get("subject").asText();
+            String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
             actionLogRepo.createPrivateLog(submission, credentials, subject + ": " + templatedMessage);
         }
 
         return new ApiResponse(SUCCESS);
     }
-    
+
     @Transactional
     @ApiMapping("/{submissionId}/send-email")
     @Auth(role = "STUDENT")
     public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+        sendEmail(credentials, submissionRepo.findOne(submissionId), dataNode);
+        return new ApiResponse(SUCCESS);
+    }
 
-        Submission submission = submissionRepo.findOne(submissionId);
+    private void sendEmail(Credentials credentials, Submission submission, JsonNode dataNode) {
 
         String subject = dataNode.get("subject").asText();
 
         String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
 
         boolean emailTo = dataNode.get("emailTo").asBoolean();
-
-        actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
 
         if (emailTo) {
 
@@ -255,9 +232,9 @@ public class SubmissionController {
 
         }
 
-        return new ApiResponse(SUCCESS);
-    }
+        actionLogRepo.createPublicLog(submission, credentials, subject + ": " + templatedMessage);
 
+    }
 
     @Transactional
     @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
