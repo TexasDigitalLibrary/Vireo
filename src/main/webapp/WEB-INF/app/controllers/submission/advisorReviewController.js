@@ -40,25 +40,25 @@ vireo.controller("AdvisorReviewController", function($controller, $scope, $route
     };
 
     $scope.disableCheck = function(approval) {
-        var dissabled = true;
+        var disabled = true;
 
         if (approval.approveEmbargo && (approval.approveApplication === undefined || approval.approveApplication)) {
-            dissabled = false;
+            disabled = false;
         }
 
         if (approval.approveApplication && (approval.approveEmbargo === undefined || approval.approveEmbargo)) {
-            dissabled = false;
+            disabled = false;
         }
 
         if (approval.message) {
-            dissabled = false;
+            disabled = false;
         }
 
         if (approval.updating) {
-            dissabled = true;
+            disabled = true;
         }
 
-        return dissabled;
+        return disabled;
 
     }
 
