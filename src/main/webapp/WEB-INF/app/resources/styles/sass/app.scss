@@ -832,6 +832,10 @@ footer p {
   text-rendering: optimizelegibility;
 }
 
+.admin-page {
+  width: 100%;
+}
+
 .admin-page h1 + hr,
 .my-profile h1 + hr,
 .review-page h3 + hr {
@@ -846,9 +850,23 @@ footer p {
   text-transform: uppercase;
 }
 
-.admin-page .admin-controls {}
+.admin-page .admin-content {
+  margin-left: 10px;
+}
+@media (min-width:768px) {
+  .admin-page .admin-controls {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    z-index: 1;
+  }
 
-.admin-page .admin-content {}
+  .admin-page .admin-content {
+    width: 100%;
+    padding-left: 250px;
+    z-index: 0;
+  }
+}
 
 .review-page .review-label {
   font-weight: bold;
