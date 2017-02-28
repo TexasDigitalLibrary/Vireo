@@ -16,16 +16,18 @@ import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.enums.EmbargoGuarantor;
+import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
+import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.AddressRepo;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -121,7 +123,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_DEPOSIT_USERNAME = "Test Deposit Username";
     protected static final String TEST_DEPOSIT_PASSWORD = "Test Deposit Password";
     protected static final String TEST_DEPOSIT_ONBEHALFOF = "Test Deposit OnBehalfOf";
-    protected static final String TEST_DEPOSIT_PACKAGER = "Test Deposit Packager";
     protected static final String TEST_DEPOSIT_DEPOSITOR = "Test Deposit Depositor";
 
     // DocumentType test
@@ -404,6 +405,9 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;
+    
+    @Autowired
+    protected AbstractPackagerRepo abstractPackagerRepo;
 
     protected InputType inputType;
 
@@ -455,6 +459,8 @@ public abstract class AbstractEntityTest {
     protected ControlledVocabulary controlledVocabulary;
 
     protected FieldProfile fieldProfile;
+    
+    protected Packager packager;
 
     private Credentials credentials;
 

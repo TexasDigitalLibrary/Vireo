@@ -334,6 +334,7 @@
         <script src="repo/managerSubmissionListColumnRepo.js"></script>
         <script src="repo/managerFilterColumnRepo.js"></script>
         <script src="repo/customActionValueRepo.js"></script>
+        <script src="repo/packagerRepo.js"></script>
 
         <!-- Models -->
         <script src="model/abstractAppModel.js"></script>
@@ -363,6 +364,7 @@
         <script src="model/note.js"></script>
         <script src="model/submissionListColumn.js"></script>
         <script src="model/customActionValue.js"></script>
+        <script src="model/packager.js"></script>
 
         <!-- Constants -->
         <script src="constants/emailRecipientType.js"></script>

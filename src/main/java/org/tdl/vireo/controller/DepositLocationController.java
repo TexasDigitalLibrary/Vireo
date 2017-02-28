@@ -14,8 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.service.DepositorService;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
@@ -35,6 +40,9 @@ public class DepositLocationController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private DepositorService depositorService;
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allDepositLocations() {
@@ -44,9 +52,8 @@ public class DepositLocationController {
     @ApiMapping("/create")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
-        logger.info("Creating deposit location with name " + depositLocation.getName());
-        depositLocation = depositLocationRepo.create(depositLocation.getName(), depositLocation.getRepository(), depositLocation.getCollection(), depositLocation.getUsername(), depositLocation.getPassword(), depositLocation.getOnBehalfOf(), depositLocation.getPackager(), depositLocation.getDepositor());
+    public ApiResponse createDepositLocation(@ApiData JsonNode depositLocationJson) {
+        DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, depositLocation);
     }
@@ -78,6 +85,20 @@ public class DepositLocationController {
         logger.info("Reordering custom action definitions");
         depositLocationRepo.reorder(src, dest);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
+        return new ApiResponse(SUCCESS);
+    }
+
+    @ApiMapping("/test-connection")
+    @Auth(role = "MANAGER")
+    public ApiResponse testConnection(@ApiData JsonNode depositLocationJson) {
+        DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
+        Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+        return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));
+    }
+
+    @ApiMapping("/find-collections")
+    public ApiResponse findCollection(@ApiValidatedModel DepositLocation depositLocation) {
+        System.out.println(depositLocation);
         return new ApiResponse(SUCCESS);
     }
 

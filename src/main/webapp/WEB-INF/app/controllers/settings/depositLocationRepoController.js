@@ -1,4 +1,4 @@
-vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DragAndDropListenerFactory) {
+vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DepositLocation, PackagerRepo, DragAndDropListenerFactory) {
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.depositLocationRepo = DepositLocationRepo;
@@ -10,22 +10,23 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 	});
 
 	$scope.protocols = { 
-		"Sword1Deposit": "SWORD Version 1",
+		"SWORDv1Depositor": "SWORD Version 1",
 		"FileDeposit": "File Deposit" 
 	};
 
+	$scope.collections = [];
 
-	$scope.packagers = { 
-		"VireoExport": "Vireo Export"
-	};
-	
-	$scope.ready = $q.all([DepositLocationRepo.ready()]);
+	$scope.packagers = PackagerRepo.getAll();
+
+	$scope.ready = $q.all([DepositLocationRepo.ready(),PackagerRepo.ready()]);
 
 	$scope.dragging = false;
 	
 	$scope.trashCanId = 'deposit-location-trash';
 
 	$scope.forms = {};
+
+	var isTestDepositing = false;
 		
 	$scope.ready.then(function() {
 
@@ -39,10 +40,34 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
     			$scope.modalData.refresh();
     		}
-			$scope.modalData = {
-				depositor: 'Sword1Deposit',
-				packager: 'VireoExport'
+			$scope.modalData = {};
+			
+			$scope.modalData.depositor = 'SWORDv1Depositor';
+			$scope.modalData.timeout = 240;
+			
+			$scope.modalData.testDepositLocation = function() {
+				isTestDepositing = true;
+				var testData = angular.copy($scope.modalData);
+				delete testData.packager;
+				var testableDepositLocation = new DepositLocation(testData);
+				testableDepositLocation.testConnection().then(function(response) {
+					var data = angular.fromJson(response.body);
+					var collections = data.payload.HashMap;
+					angular.forEach(collections, function(uri,name) {
+						$scope.collections.push({"name":name,"uri":uri});
+					});
+					isTestDepositing = false;
+				});
 			};
+
+			$scope.modalData.isTestDepositing = function() {
+				return isTestDepositing;
+			}
+
+			$scope.modalData.isTestable = function() {
+				return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositor && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
+			}
+
 			$scope.closeModal();
 		};
 

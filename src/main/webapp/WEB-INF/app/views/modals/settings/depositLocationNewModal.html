@@ -32,6 +32,7 @@
 
         <validatedselect
             options="packagers"
+            optionproperty="name"
             model="modalData"
             property="packager"
             label="Format"
@@ -50,15 +51,13 @@
             results="depositLocationRepo.getValidationResults()">
         </validatedinput>
 
-        <validatedinput
-            model="modalData"
-            property="collection"
-            label="Collection"
-            placeholder="Collection"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+        <label for="collection">
+            Collection
+            <span ng-if="modalData.isTestDepositing()"> (Getting collections)</span>
+            <span ng-if="!modalData.isTestDepositing() && collections.length==0"> (Please get collections)</span>
+
+        </label>
+        <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
         <validatedinput
             model="modalData"
@@ -100,7 +99,10 @@
         </validatedinput>
 
     	<div class="form-group">
-        	<button id="depositLocation-test" type="button" class="btn btn-default">Test connection &amp; find available collections</button>
+        	<button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
+                <span ng-show="modalData.isTestDepositing()">Testing...</span>
+                <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
+            </button>
     	</div>
     </div>
 
@@ -108,7 +110,7 @@
     	<button 
             type="button" 
             class="btn btn-warning" 
-            ng-click="resetDepositLocation()">Cancel</button>
+            ng-click="modalData.resetDepositLocation()">Cancel</button>
     	<button 
             id="depositLocation-save" 
             type="submit" 
