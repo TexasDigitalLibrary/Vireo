@@ -7,12 +7,13 @@ import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.custom.AbstractPackagerRepoCustom;
 
 public class AbstractPackagerRepoImpl implements AbstractPackagerRepoCustom {
-	@Autowired
-	private AbstractPackagerRepo abstractPackagerRepo; 
 
-	
-	@Override
+    @Autowired
+    private AbstractPackagerRepo abstractPackagerRepo;
+
+    @Override
     public Packager createDSpaceMetsPackager() {
-        return abstractPackagerRepo.save(new DSpaceMetsPackager());              
+        return abstractPackagerRepo.save(new DSpaceMetsPackager());
     }
+
 }
