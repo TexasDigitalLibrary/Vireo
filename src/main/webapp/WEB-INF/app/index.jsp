@@ -8,11 +8,13 @@
     <!--<![endif]-->
     <head>
 
-        <script type="text/javascript">
-            window.location.base = "${base}";
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+                window.location.base = [[${base}]];
+            /*]]>*/
         </script>
 
-        <base href="${base}/"/>
+        <base th:href="${ base + '/'}"/>
 
         <title>Vireo :: Texas Digital Library</title>
 

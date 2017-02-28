@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("AdminSubmissionViewController", function(WsApi, PackagerRepo, $anchorScroll, $controller, $location, $q, $routeParams, $scope, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -17,7 +17,9 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         UserRepo.getAll(),
         SubmissionStateRepo.getAll(),
         EmailTemplateRepo.getAll(),
-        FieldPredicateRepo.getAll()
+        FieldPredicateRepo.getAll(),
+        // TODO: remove packager repo from here
+        PackagerRepo.getAll()
     ]);
 
     ready.then(function(resolved) {
@@ -27,6 +29,16 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         var submissionStates = resolved[2];
         var emailTemplates = resolved[3];
         var fieldPredicates = resolved[4];
+        // TODO: remove packagerss
+        var packagers = resolved[5];
+        // TODO: remove test method
+        $scope.test = function() {
+            WsApi.fetch({
+                'endpoint': '/private/queue',
+                'controller': 'packager',
+                'method': 'test/' + packagers[0].id + "/" + submission.id
+            });
+        }
 
         $scope.loaded = true;
 

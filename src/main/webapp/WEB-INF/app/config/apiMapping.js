@@ -543,6 +543,17 @@ var apiMapping = {
             'controller': 'settings/organization-category'
         }
     },
+    Packager: {
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'packager',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'packager'
+        }
+    },
     Submission: {
         lazy: true,
         all: {

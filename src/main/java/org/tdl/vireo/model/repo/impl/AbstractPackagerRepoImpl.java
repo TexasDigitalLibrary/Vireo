@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.model.formatter.AbstractFormatter;
 import org.tdl.vireo.model.packager.DSpaceMetsPackager;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
@@ -12,8 +13,8 @@ public class AbstractPackagerRepoImpl implements AbstractPackagerRepoCustom {
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Override
-    public Packager createDSpaceMetsPackager() {
-        return abstractPackagerRepo.save(new DSpaceMetsPackager());
+    public Packager createDSpaceMetsPackager(AbstractFormatter formatter) {
+        return abstractPackagerRepo.save(new DSpaceMetsPackager(formatter));
     }
 
 }

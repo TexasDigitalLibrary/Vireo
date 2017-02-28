@@ -12,7 +12,7 @@ public class ViewController {
 
     @RequestMapping(value = { "", "/", "/home", "/register" })
     public ModelAndView view(HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView view = new ModelAndView("WEB-INF/app/index.jsp");
+        ModelAndView view = new ModelAndView("index");
         view.addObject("base", request.getServletContext().getContextPath());
         return view;
     }

@@ -5,12 +5,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 
 public class DepositLocationTest extends AbstractEntityTest {
 
     @Before
     public void setup() {
-        packager = abstractPackagerRepo.createDSpaceMetsPackager();
+        packager = abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
     }
 
     @Override

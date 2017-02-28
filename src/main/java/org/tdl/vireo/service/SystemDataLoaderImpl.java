@@ -45,6 +45,7 @@ import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
+import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -878,7 +879,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     }
 
     public void loadPackagers() {
-        abstractPackagerRepo.createDSpaceMetsPackager();
+        abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
     }
 
     public void loadDepositors() {
