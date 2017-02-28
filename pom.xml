@@ -131,7 +131,18 @@
     		<artifactId>tika-core</artifactId>
     		<version>1.14</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.swordapp</groupId>
+			<artifactId>sword-common</artifactId>
+			<version>1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+        </dependency>
 	</dependencies>
 
 	<build>

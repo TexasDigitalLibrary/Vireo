@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+*{
+    This is the DSpace METS SIP format. This is the best format to use when
+    ingesting content into a DSpace based repository. It does rely on a few
+    schemas to be present, naturally there are several fields in the dc schema.
+    However in addition to the dc schema, this export expects that there be
+    fields in the "thesis", and "local" schemas. Your may need to modify those
+    values for your particular repository's configuration. The "thesis" schema
+    handles metadata relating the the nature of being a thesis or dissertation
+    such as major, department, degree level, etc. The "local" schema is used
+    exclusively for handling embargo related controlls. If the submission is
+    under a non-indefinate embargo then the embargo terms and lift fields will
+    be supplied appropriately so that DSpace will know to release the ETD
+    automatically when the embargo has expired.
+
+    https://wiki.duraspace.org/display/DSPACE/DSpaceMETSSIPProfile
+    
+    It is recommended that if you are modifying this format for your local
+    institution that instead of changing this file directly instead create a
+    copy of it and modify the copy. Then in the application-context.xml add a
+    separate entry for your locally modify DSpace METS format.
+}*
+<mets ID="vireo-mets-1" OBJID="vireo-submission-${ sub.getId() }" LABEL="DSpace Item"
+    PROFILE="DSpace METS SIP Profile 1.0" xmlns="http://www.loc.gov/METS/"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+
+    <metsHdr CREATEDATE="${ new java.util.Date().format("yyyy-MM-dd'T'HH:mm:ssz") }">
+        <agent ROLE="CREATOR" TYPE="OTHER">
+            <name>${ agent }</name>
+        </agent>
+    </metsHdr>
+    
+    <dmdSec ID="vireo-mets-dmd-1" GROUPID="vireo-mets-dmd-1">
+        <mdWrap LABEL="DIM Metadata" MDTYPE="OTHER" OTHERMDTYPE="DIM" MIMETYPE="text/xml">
+            <xmlData>
+                <dim:dim xmlns:dim="http://www.dspace.org/xmlns/dspace/dim">
+
+                    <!-- dc.creator = Student -->
+                    <dim:field mdschema="dc" element="creator">
+                        ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
+                    </dim:field>
+                    
+                    <!--  dc.creator.orcid = Student ORCID -->
+                    #{if sub.getOrcid() != null }
+                    <dim:field mdschema="dc" element="creator" qualifier="orcid">
+                      ${ sub.getOrcid()?.raw() }
+                    </dim:field>
+                    #{/if}
+
+                    <!-- dc.title = Document Title -->
+                    #{if sub.getDocumentTitle() != null } 
+                    <dim:field mdschema="dc" element="title">
+                        ${ sub.getDocumentTitle()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.description.abstract = Document Abstract -->
+                    #{if sub.getDocumentAbstract() != null } 
+                    <dim:field mdschema="dc" element="description" qualifier="abstract">
+                        ${ sub.getDocumentAbstract()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.subject = Document Keywords, split on ";" (multiple) -->
+                    #{if sub.getDocumentKeywords() != null } 
+                    #{list items:sub.getDocumentKeywords().split(";"), as:'keyword'} 
+                    <dim:field mdschema="dc" element="subject">
+                        ${ keyword.trim()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/list}
+                    #{/if}
+
+                    <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
+                    #{list items:sub.getCommitteeMembers(), as:'member'} 
+                    #{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }
+                    <dim:field mdschema="dc" element="contributor" qualifier="advisor">
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    #{/list}
+                    
+                    
+                    <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
+                    #{list items:sub.getCommitteeMembers(), as:'member'}
+                    #{if member.hasNoRole() } 
+                    <dim:field mdschema="dc" element="contributor" qualifier="committeeMember">
+                        ${ member.getFormattedName(org.tdl.vireo.model.NameFormat.LAST_FIRST_MIDDLE_BIRTH)?.escapeXml()?.raw() } 
+                    </dim:field>
+                    #{/if}
+                    #{/list}
+                    
+                    
+                    <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
+                    <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
+                    #{if sub.getGraduationYear() != null } 
+                    <dim:field mdschema="dc" element="date" qualifier="created">
+                        %{
+                            out.print(sub.getGraduationYear());
+                            if (sub.getGraduationMonth() != null) {
+                                out.print("-");
+                                // Jaunary=0, December=11
+                                out.print(String.format("%02d",sub.getGraduationMonth()+1));
+                            }
+                        }% 
+                    </dim:field>
+                    <dim:field mdschema="dc" element="date" qualifier="submitted">
+                        %{
+                             if (sub.getGraduationMonth() != null && sub.getGraduationMonth() >= 0 && sub.getGraduationMonth() <= 11) {
+                                String monthName = new java.text.DateFormatSymbols().getMonths()[sub.getGraduationMonth()]; 
+                                out.print(monthName+" ");
+                             }
+                             out.print(sub.getGraduationYear());
+                         }% 
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
+                    #{if sub.getApprovalDate() != null } 
+                    <dim:field mdschema="dc" element="date" qualifier="issued">
+                        ${ sub.getApprovalDate().format("yyyy-MM-dd") }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
+                    #{if sub.getPrimaryDocument() != null } 
+                    <dim:field mdschema="dc" element="format" qualifier="mimetype">
+                        ${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- dc.language.iso = Document Language -->
+                    #{if sub.getDocumentLanguage() != null }
+                    <dim:field mdschema="dc" element="language" qualifier="iso">${sub.getDocumentLanguage()}</dim:field>
+                    #{/if}
+                    
+                    <!-- dc.type.material = "text" // constant -->
+                    <dim:field mdschema="dc" element="type" qualifier="material">text</dim:field>
+                    
+                    <!-- dc.type = "Thesis" // constant -->
+                    <dim:field mdschema="dc" element="type">Thesis</dim:field>
+                    
+                    <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
+                    #{if sub.getDepositId() != null } 
+                    <dim:field mdschema="dc" element="identifier" qualifier="uri">
+                        ${ sub.getDepositId()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- thesis.degree.name == Degree -->
+                    #{if sub.getDegree() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="name">
+                        ${ sub.getDegree()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
+                    #{if sub.getDegreeLevel() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="level">
+                        ${ sub.getDegreeLevel().name().toLowerCase().capitalizeWords()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.discipline = Major -->
+                    #{if sub.getMajor() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="discipline">
+                        ${ sub.getMajor()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
+                    #{ if settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="grantor">
+                        ${ settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR) }
+                    </dim:field>
+                    #{/if}
+                    
+                    <!-- thesis.degree.department = Department -->
+                    #{if sub.getDepartment() != null } 
+                    <dim:field mdschema="thesis" element="degree" qualifier="department">
+                        ${ sub.getDepartment()?.escapeXml()?.raw() }
+                    </dim:field>
+                    #{/if}
+                    
+                    
+                    <!-- local.embargo.terms, lift, and embargo provenance-->
+                    #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT) != null } 
+                    
+                    #{if sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() == null } 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission original under an indefinite embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'. The submission was deposited into a repository on ${ new java.util.Date().format("yyyy-MM-dd") } without embargo terms
+                    </dim:field>
+                    #{/if} 
+                    #{elseif sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() != 0 } 
+                    %{
+                        // Calculate the embargo lift date.
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        
+                        if (sub.getGraduationYear() != null) {
+                            cal.clear();
+                            cal.set(java.util.Calendar.YEAR, sub.getGraduationYear());
+                            if (sub.getGraduationMonth() != null)
+                                cal.set(java.util.Calendar.MONTH,sub.getGraduationMonth());
+                        }
+                        
+                        cal.add(java.util.Calendar.MONTH, sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration());
+                        java.util.Date liftDate = cal.getTime();
+                    }%
+                      #{if liftDate.after(new Date())} 
+                      <dim:field mdschema="local" element="embargo" qualifier="terms">
+                          ${ liftDate.format("yyyy-MM-dd") }
+                      </dim:field>
+                      <dim:field mdschema="local" element="embargo" qualifier="lift">
+                          ${ liftDate.format("yyyy-MM-dd") }
+                      </dim:field>
+                      #{/if}
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission published under a ${sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getDuration() } month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }', the embargo will last until ${ liftDate.format("yyyy-MM-dd") }
+                    </dim:field>
+                    #{/elseif} 
+                    #{else} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        Submission original under the a zero month embargo labeled '${ sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT).getName()?.escapeXml()?.raw() }'.
+                    </dim:field>
+                    #{/else}
+
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = License Agreement Date -->
+                    #{if sub.getLicenseAgreementDate() != null} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, accepted the attached license on ${ sub.getLicenseAgreementDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                    </dim:field>
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = Submission Date -->
+                    #{if sub.getSubmissionDate() != null} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        The student, ${ sub.getStudentFormattedName(org.tdl.vireo.model.NameFormat.FIRST_LAST)?.escapeXml()?.raw() }, submitted this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } for approval on ${ sub.getSubmissionDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                    </dim:field>
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = Committee Approval Date -->
+                    #{if sub.getCommitteeApprovalDate() != null} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        The committee advisor approved this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                    </dim:field>
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = Committee Embargo Approval Date -->
+                    #{if sub.getCommitteeEmbargoApprovalDate() != null} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        The committee advisor approved the embargo selection for this ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } on ${ sub.getCommitteeEmbargoApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                    </dim:field>
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = Approval Date -->
+                    #{if sub.getApprovalDate() != null} 
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        This ${ sub.getDocumentType() == null ? "document" : sub.getDocumentType()?.escapeXml()?.raw() } was approved for publication on ${ sub.getApprovalDate().format("yyyy-MM-dd 'at' HH:mm") }. 
+                    </dim:field>
+                    #{/if} 
+                    
+                    <!-- dc.description.provenance = Statement about when this package was generated. -->
+                    <dim:field mdschema="dc" element="description" qualifier="provenance">
+                        DSpace METS Submission Ingestion Package generated from Vireo submission #${ sub.getId() } on ${ new java.util.Date().format("yyyy-MM-dd 'at' HH:mm:ss") }
+                    </dim:field>                  
+                    
+                    <!-- dc.date.accessioned (No longer included in Vireo 2) -->
+                    <!-- dc.date.available (No longer included in Vireo 2) -->
+                </dim:dim>
+            </xmlData>
+        </mdWrap>
+    </dmdSec>
+
+    <fileSec>
+        <fileGrp ID="vireo-mets-fgrp-1" USE="CONTENT">
+        
+            <!-- Primary Document -->
+        
+            #{if sub.getPrimaryDocument() != null } 
+            <file GROUPID="piper-mets-file-group-${ sub.getPrimaryDocument().getType().ordinal() }" 
+                  ID="piper-mets-file-${ sub.getPrimaryDocument().getId() }" 
+                  MIMETYPE="${ sub.getPrimaryDocument().getMimeType()?.escapeXml()?.raw() }"
+                  SEQ="1">
+                  <FLocat LOCTYPE="URL" xlink:href="${ sub.getPrimaryDocument().getName()?.escapeXml()?.raw() }"/>
+            </file>
+            #{/if}
+            
+            <!-- Supplemental and Source Documents -->
+            
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'} 
+            <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
+                  ID="piper-mets-file-${ attachment.getId() }" 
+                  MIMETYPE="${ attachment.getMimeType()?.escapeXml()?.raw() }"
+                  SEQ="${ sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE).indexOf(attachment) + 2 }">
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName()?.escapeXml()?.raw() }"/>
+            </file>
+            #{/list}
+ 
+        </fileGrp>
+        
+        <fileGrp ID="vireo-mets-fgrp-2" USE="LICENSE">
+        
+            <!-- Licence Documents -->
+            
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.LICENSE), as:'attachment'}             
+            <file GROUPID="piper-mets-file-group-${ attachment.getType().ordinal() }" 
+                  ID="piper-mets-file-${ attachment.getId() }" 
+                  MIMETYPE="${ attachment.getMimeType()?.escapeXml()?.raw() }">
+                  <FLocat LOCTYPE="URL" xlink:href="${ attachment.getName()?.escapeXml()?.raw() }"/>
+            </file>
+            #{/list}
+        
+        </fileGrp>
+        
+    </fileSec>
+    
+    <structMap ID="vireo-mets-struct-1" LABEL="structure" TYPE="LOGICAL">
+        <div ID="vireo-mets-div-1" DMDID="vireo-mets-dmd-1" TYPE="DSpace Item">
+        
+            <!-- Set the primary bitstream to the primary document -->
+            #{if sub.getPrimaryDocument() != null } 
+            <fptr FILEID="piper-mets-file-${ sub.getPrimaryDocument().getId() }"/>
+            #{/if} 
+            
+            <!-- Bitstream div for the primary document -->
+            
+            #{if sub.getPrimaryDocument() != null } 
+            <div ID="piper-mets-div-${ sub.getPrimaryDocument().getId() }" 
+                 TYPE="DSpace Content Bitstream">
+                 <ftpr FILEID="piper-mets-file-${ sub.getPrimaryDocument().getId() }"/>
+            </div>
+            #{/if}
+            
+            <!-- Bitstream divs for each supplemental and source document -->
+            
+            #{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL,org.tdl.vireo.model.AttachmentType.SOURCE), as:'attachment'} 
+            <div ID="piper-mets-div-${ attachment.getId() }" 
+                 TYPE="DSpace Content Bitstream">
+                 <ftpr FILEID="piper-mets-file-${ attachment.getId() }"/>
+            </div>
+            #{/list}
+              
+        </div>
+    </structMap>
+
+</mets>
