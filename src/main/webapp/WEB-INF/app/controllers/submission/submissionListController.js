@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -36,6 +36,8 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     var organizations = OrganizationRepo.getAll();
     var organizationCategories = OrganizationCategoryRepo.getAll();
     var submissionStates = SubmissionStateRepo.getAll();
+    var depositLocations = DepositLocationRepo.getAll();
+    console.log(depositLocations)
 
     var findFirstAssignable = function() {
         var firstAssignable;

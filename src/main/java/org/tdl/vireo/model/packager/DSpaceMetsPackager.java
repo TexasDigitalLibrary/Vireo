@@ -23,6 +23,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
     @Override
     public ExportPackage packageExport(String manifest, Submission submission) {
+        System.out.println("\nPACKAGE ME\n");
         // TODO: build package properties
         return new TemplateExportPackage(submission, "TODO", "TODO", new File("TODO"), "TODO");
     }

@@ -28,6 +28,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
@@ -63,6 +64,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
+    
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -98,6 +102,18 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         });
 
         return submissionRepo.save(submission);
+    }
+    
+    @Override
+    public Submission updateStatus(Submission submission, SubmissionState submissionState, Credentials credentials) {
+        SubmissionState oldSubmissionState = submission.getSubmissionState();
+        String oldSubmissionStateName = oldSubmissionState.getName();
+
+        submission.setSubmissionState(submissionState);
+        submission = submissionRepo.saveAndFlush(submission);
+        
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
+        return submission;
     }
 
     @Override

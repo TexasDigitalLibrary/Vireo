@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
@@ -39,8 +40,11 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.depositor.Depositor;
+import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
@@ -50,8 +54,10 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
+import org.tdl.vireo.service.DepositorService;
 import org.tdl.vireo.util.FileIOUtility;
 import org.tdl.vireo.util.OrcidUtility;
+import org.tdl.vireo.util.PackagerUtility;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -121,6 +127,15 @@ public class SubmissionController {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
+    
+    @Autowired
+    private DepositLocationRepo depositLocationRepo;
+    
+    @Autowired
+    private DepositorService depositorService;
+    
+    @Autowired
+    private PackagerUtility packagerUtility;
 
     @Transactional
     @ApiMapping("/all")
@@ -328,15 +343,7 @@ public class SubmissionController {
 
             SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
             if (submissionState != null) {
-
-                SubmissionState oldSubmissionState = submission.getSubmissionState();
-                String oldSubmissionStateName = oldSubmissionState.getName();
-
-                submission.setSubmissionState(submissionState);
-                submission = submissionRepo.saveAndFlush(submission);
-
-                actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionStateName);
-
+                submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
@@ -348,6 +355,102 @@ public class SubmissionController {
         processEmailWorkflowRules(submission);
 
         return response;
+    }
+    
+    @Transactional
+    @ApiMapping("/batch-update-state")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
+            submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+            processEmailWorkflowRules(submission);
+        });
+        return new ApiResponse(SUCCESS);
+    }
+
+    @Transactional
+    @ApiMapping("/{submissionId}/publish/{depositLocationName}")
+    @Auth(role = "STUDENT")
+    public ApiResponse publish(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String depositLocationName) throws Exception {
+        Submission submission = submissionRepo.findOne(submissionId);
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+        if (submission != null) {
+
+            SubmissionState submissionState = submissionStateRepo.findByName("PUBLISH");
+            if (submissionState != null) {
+                
+                DepositLocation depositLocation = depositLocationRepo.findByName(depositLocationName);
+                
+                if (depositLocation != null) {
+                
+                    Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+                    
+                    if (depositor != null) {
+                        
+                        ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
+                        
+                        String result = depositor.deposit(depositLocation, exportPackage);
+                
+                        if(result != null) {
+                            submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
+                            simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+                        }
+                        else {
+                            response = new ApiResponse(ERROR, "Could not deposit submission");
+                        }
+                    }
+                    else {
+                        response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
+                    }                
+                }
+                else {
+                    response = new ApiResponse(ERROR, "Could not find a deposite location name " + depositLocationName);
+                }
+            } else {
+                response = new ApiResponse(ERROR, "Could not find a submission state name PUBLISH");
+            }
+        } else {
+            response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+        }
+
+        processEmailWorkflowRules(submission);
+
+        return response;
+    }
+    
+    @Transactional
+    @ApiMapping("/batch-publish/{depositLocationName}")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchPublish(@ApiCredentials Credentials credentials, @ApiVariable String depositLocationName) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        SubmissionState submissionState = submissionStateRepo.findByName("PUBLISH");
+        DepositLocation depositLocation = depositLocationRepo.findByName(depositLocationName);
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
+            Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+            
+            if (depositor != null) {
+                
+                try {
+                    ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
+                    
+                    String result = depositor.deposit(depositLocation, exportPackage);
+                    
+                    if(result != null) {
+                        submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
+                        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId(), new ApiResponse(SUCCESS, submission));
+                    }
+                    else {
+                        throw new RuntimeException("Failed batch publish on submission " + submission.getId());
+                    }
+                    
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed package export on submission " + submission.getId());
+                }
+            }   
+        });
+        return new ApiResponse(SUCCESS);
     }
 
     @Transactional
@@ -470,25 +573,7 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
-    @Transactional
-    @ApiMapping("/batch-update-state")
-    @Auth(role = "MANAGER")
-    public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
-        User user = userRepo.findByEmail(credentials.getEmail());
-        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-
-            String oldSubmissionStateName = sub.getSubmissionState().getName();
-
-            sub.setSubmissionState(submissionState);
-            submissionRepo.saveAndFlush(sub);
-
-            actionLogRepo.createPublicLog(sub, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
-
-            processEmailWorkflowRules(sub);
-        });
-        return new ApiResponse(SUCCESS);
-    }
-
+    
     @Transactional
     @ApiMapping("/batch-assign-to")
     @Auth(role = "MANAGER")

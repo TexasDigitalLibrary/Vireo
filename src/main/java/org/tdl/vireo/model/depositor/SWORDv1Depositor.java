@@ -54,7 +54,8 @@ public class SWORDv1Depositor implements Depositor {
                 client.setCredentials(depLocation.getUsername(), depLocation.getPassword());
 
             // Obtaining the service document
-            // If the credentials contain an onbehalfof user, retrieve the service document on behalf of that user. Otherwise, simply retrieve the service document.
+            // If the credentials contain an onbehalfof user, retrieve the service document on
+            // behalf of that user. Otherwise, simply retrieve the service document.
             ServiceDocument serviceDocument = null;
             try {
                 if (depLocation.getOnBehalfOf() != null) {
@@ -100,12 +101,9 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
+        System.out.println("\nDEPOSIT PACKAGE\n");
         // TODO deposit the package
-        
-        
-        
-        
-        return null;
+        return "SUCCESS";
     }
 
     public String getName() {

@@ -581,6 +581,16 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'change-status'
         },
+        publish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'publish'
+        },
+        batchPublish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-publish'
+        },
         submitDate: {
             'endpoint': '/private/queue',
             'controller': 'submission',

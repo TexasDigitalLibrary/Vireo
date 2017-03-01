@@ -16,6 +16,8 @@ import edu.tamu.framework.model.Credentials;
 public interface SubmissionRepoCustom {
 
     public Submission create(User submitter, Organization organization, SubmissionState submissionState, Credentials credentials);
+    
+    public Submission updateStatus(Submission submission, SubmissionState state, Credentials credentials);
 
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable);
 
