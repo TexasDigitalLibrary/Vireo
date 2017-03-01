@@ -175,6 +175,11 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/deposit-location'
+        },
+        testConnection: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/deposit-location',
+            'method': 'test-connection'
         }
     },
     DocumentType: {
