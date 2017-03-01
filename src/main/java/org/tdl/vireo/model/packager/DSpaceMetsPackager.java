@@ -104,7 +104,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new TemplateExportPackage(submission, mimeType, format, pkg, "");
+        return new TemplateExportPackage(submission, mimeType, format, pkg, null);
     }
 
     public Path getAbsolutePath(String relativePath) {
