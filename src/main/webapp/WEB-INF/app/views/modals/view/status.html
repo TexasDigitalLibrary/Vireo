@@ -12,7 +12,10 @@
       <h2>Current Transitions</h2>
       <ul class="list-inline">
         <li ng-init="state=box.SubmissionStateRepo.findById(stateId)" ng-repeat="stateId in box.submission.submissionState.transitionSubmissionStates">
-          <button class="btn btn-default" ng-click="box.changeStatus(state)" ng-disabled="state.updating || box.updating">{{state.name}}
+          <button ng-if="state.name!='Published'" class="btn btn-default" ng-click="box.changeStatus(state)" ng-disabled="state.updating || box.updating">{{state.name}}
+            <span ng-if="state.updating" class="glyphicon glyphicon-refresh spinning"></span>
+          </button>
+          <button ng-if="state.name=='Published'" class="btn btn-default" ng-click="box.publish(state)" ng-disabled="state.updating || box.updating || !box.depositLocation">{{state.name}}
             <span ng-if="state.updating" class="glyphicon glyphicon-refresh spinning"></span>
           </button>
         </li>
@@ -31,11 +34,19 @@
               <label for="newStatus">
                 <strong>New Status</strong>:</label>
               <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStates"></select>
-              <button type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus)" ng-disabled="box.newStatus.updating || box.updating">Save
+              <button ng-if="box.newStatus.name!='Published'" type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus)" ng-disabled="box.newStatus.updating || box.updating">Save
+                <span ng-if="box.newStatus.updating" class=" glyphicon glyphicon-refresh spinning"></span>
+              </button>
+              <button ng-if="box.newStatus.name=='Published'" type="button" class="btn btn-primary" ng-click="box.publish(box.newStatus)" ng-disabled="box.newStatus.updating || box.updating || !box.depositLocation">Save
                 <span ng-if="box.newStatus.updating" class=" glyphicon glyphicon-refresh spinning"></span>
               </button>
             </div>
 
+            <div ng-if="box.newStatus.name=='Published'" class="form-group">
+              <label for="Deposit Location">
+                <strong>Deposit Location</strong>:</label>
+              <select class="form-control" id="depositLocation" name="depositLocation" ng-model="box.depositLocation" ng-options="dl.name for dl in box.depositLocations"></select>
+            </div>
           </form>
 
           <form class="form-inline" role="form">
@@ -65,5 +76,5 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="closeModal(); box.resetStatus()">Close</button>
+    <button type="button" class="btn btn-default" ng-click="box.resetStatus()">Close</button>
   </div>

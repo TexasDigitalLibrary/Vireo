@@ -52,10 +52,10 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
 
     };
 
-    submissionRepo.batchPublish = function(depositLocationName) {
+    submissionRepo.batchPublish = function(depositLocation) {
 
         angular.extend(submissionRepo.mapping.batchPublish, {
-            method: "batch-publish/" + depositLocationName
+            method: "batch-publish/" + depositLocation.id
         });
 
         var promise = WsApi.fetch(submissionRepo.mapping.batchPublish);

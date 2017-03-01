@@ -1,27 +1,21 @@
 vireo.model("DepositLocation", function DepositLocation(WsApi) {
 
-	return function DepositLocation() {
-		
-		// additional model methods and variables
-		
-		var depositLocation = this;
+    return function DepositLocation() {
 
-		depositLocation.testConnection = function() {
-			angular.extend(depositLocation.getMapping().testConnection, {
-				'data': depositLocation
-			});
+        // additional model methods and variables
 
-			var promise = WsApi.fetch(depositLocation.getMapping().testConnection);
-			
-			promise.then(function(response) {
-				console.log(response);
-			});
-			
-			return promise;
+        var depositLocation = this;
 
-		};
+        depositLocation.testConnection = function() {
+            angular.extend(depositLocation.getMapping().testConnection, {'data': depositLocation});
 
-		return this;
-	};
+            var promise = WsApi.fetch(depositLocation.getMapping().testConnection);
+
+            return promise;
+
+        };
+
+        return this;
+    };
 
 });

@@ -127,13 +127,13 @@ public class SubmissionController {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
-    
+
     @Autowired
     private DepositLocationRepo depositLocationRepo;
-    
+
     @Autowired
     private DepositorService depositorService;
-    
+
     @Autowired
     private PackagerUtility packagerUtility;
 
@@ -343,7 +343,7 @@ public class SubmissionController {
 
             SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
             if (submissionState != null) {
-                submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
+                submission = submissionRepo.updateStatus(submission, submissionState, credentials);
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
@@ -356,7 +356,7 @@ public class SubmissionController {
 
         return response;
     }
-    
+
     @Transactional
     @ApiMapping("/batch-update-state")
     @Auth(role = "MANAGER")
@@ -370,46 +370,43 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/publish/{depositLocationName}")
+    @ApiMapping("/{submissionId}/publish/{depositLocationId}")
     @Auth(role = "STUDENT")
-    public ApiResponse publish(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String depositLocationName) throws Exception {
+    public ApiResponse publish(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable Long depositLocationId) throws Exception {
         Submission submission = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
 
-            SubmissionState submissionState = submissionStateRepo.findByName("PUBLISH");
+            SubmissionState submissionState = submissionStateRepo.findByName("Published");
             if (submissionState != null) {
-                
-                DepositLocation depositLocation = depositLocationRepo.findByName(depositLocationName);
-                
+
+                DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
+
                 if (depositLocation != null) {
-                
+
                     Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
-                    
+
                     if (depositor != null) {
-                        
+
                         ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-                        
+
                         String result = depositor.deposit(depositLocation, exportPackage);
-                
-                        if(result != null) {
-                            submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
+
+                        if (result != null) {
+                            submission = submissionRepo.updateStatus(submission, submissionState, credentials);
                             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
-                        }
-                        else {
+                        } else {
                             response = new ApiResponse(ERROR, "Could not deposit submission");
                         }
-                    }
-                    else {
+                    } else {
                         response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
-                    }                
-                }
-                else {
-                    response = new ApiResponse(ERROR, "Could not find a deposite location name " + depositLocationName);
+                    }
+                } else {
+                    response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
                 }
             } else {
-                response = new ApiResponse(ERROR, "Could not find a submission state name PUBLISH");
+                response = new ApiResponse(ERROR, "Could not find a submission state name Published");
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -419,38 +416,46 @@ public class SubmissionController {
 
         return response;
     }
-    
+
     @Transactional
     @ApiMapping("/batch-publish/{depositLocationName}")
     @Auth(role = "MANAGER")
-    public ApiResponse batchPublish(@ApiCredentials Credentials credentials, @ApiVariable String depositLocationName) {
+    public ApiResponse batchPublish(@ApiCredentials Credentials credentials, @ApiVariable Long depositLocationId) {
+        ApiResponse response = new ApiResponse(SUCCESS);
         User user = userRepo.findByEmail(credentials.getEmail());
-        SubmissionState submissionState = submissionStateRepo.findByName("PUBLISH");
-        DepositLocation depositLocation = depositLocationRepo.findByName(depositLocationName);
-        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
-            Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
-            
-            if (depositor != null) {
-                
-                try {
-                    ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-                    
-                    String result = depositor.deposit(depositLocation, exportPackage);
-                    
-                    if(result != null) {
-                        submission = submissionRepo.updateStatus(submission, submissionState, credentials);                
-                        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId(), new ApiResponse(SUCCESS, submission));
+        SubmissionState submissionState = submissionStateRepo.findByName("Published");
+        if (submissionState != null) {
+            DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
+            if (depositLocation != null) {
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
+                    Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+                    if (depositor != null) {
+                        try {
+                            ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
+
+                            String result = depositor.deposit(depositLocation, exportPackage);
+
+                            if (result != null) {
+                                submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+                                simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId(), new ApiResponse(SUCCESS, submission));
+                            } else {
+                                throw new RuntimeException("Failed batch publish on submission " + submission.getId());
+                            }
+
+                        } catch (Exception e) {
+                            throw new RuntimeException("Failed package export on submission " + submission.getId());
+                        }
+                    } else {
+                        response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                     }
-                    else {
-                        throw new RuntimeException("Failed batch publish on submission " + submission.getId());
-                    }
-                    
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed package export on submission " + submission.getId());
                 }
-            }   
-        });
-        return new ApiResponse(SUCCESS);
+            } else {
+                response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
+            }
+        } else {
+            response = new ApiResponse(ERROR, "Could not find a submission state name Published");
+        }
+        return response;
     }
 
     @Transactional
@@ -573,7 +578,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
-    
     @Transactional
     @ApiMapping("/batch-assign-to")
     @Auth(role = "MANAGER")

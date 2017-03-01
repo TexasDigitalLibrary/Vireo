@@ -29,7 +29,6 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         var emailTemplates = resolved[3];
         var fieldPredicates = resolved[4];
         var depositLocations = resolved[5];
-        console.log(depositLocations)
 
         $scope.loaded = true;
 
@@ -39,7 +38,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         $scope.fieldPredicates = fieldPredicates;
 
-        $scope.depositLocations = depositLocations;
+        //$scope.depositLocations = depositLocations;
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
@@ -291,6 +290,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         $scope.submissionStatusBox = {
             "newStatus": submissionStates[0],
+            "depositLocations": depositLocations,
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
             "submission": $scope.submission,
@@ -312,6 +312,15 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
                 $scope.submission.changeStatus(state.name).then(function() {
+                    delete state.updating;
+                    delete $scope.submissionStatusBox.updating;
+                    $scope.submissionStatusBox.resetStatus();
+                });
+            },
+            "publish": function(state) {
+                $scope.submissionStatusBox.updating = true;
+                state.updating = true;
+                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function() {
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
