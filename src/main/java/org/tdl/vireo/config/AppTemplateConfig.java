@@ -33,7 +33,7 @@ public class AppTemplateConfig {
     @Bean
     public SpringResourceTemplateResolver xmlTemplateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("classpath:/export_formats/");
+        templateResolver.setPrefix("classpath:/formats/");
         templateResolver.setSuffix(".xml");
         templateResolver.setTemplateMode("XML");
         return templateResolver;

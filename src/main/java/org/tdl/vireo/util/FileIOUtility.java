@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.Application;
@@ -30,7 +29,7 @@ public class FileIOUtility {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Tika tika = new Tika();
+    private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
 
     public void write(byte[] data, String relativePath) throws IOException {
         Files.write(processRelativePath(relativePath), data);
@@ -82,7 +81,7 @@ public class FileIOUtility {
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
         fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
-        fileInfo.put("type", tika.detect(path.toString()));
+        fileInfo.put("type", fileHelperUtility.getMimeType(relativePath));
         fileInfo.put("time", attr.creationTime().toMillis());
         fileInfo.put("size", attr.size());
         fileInfo.put("uploaded", true);

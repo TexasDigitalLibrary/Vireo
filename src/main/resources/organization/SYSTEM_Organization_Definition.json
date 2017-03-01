@@ -142,7 +142,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "orcid",
+            "value": "dc.creator.orcid",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -178,7 +178,7 @@
           },
           "repeatable": false,
           "overrideable": true,
-          "enabled": false,
+          "enabled": true,
           "optional": true,
           "usage": "",
           "help": "Enter the full year in which you were born. For example 1985.",
@@ -269,7 +269,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "department",
+            "value": "thesis.degree.department",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -296,7 +296,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "degree",
+            "value": "thesis.degree.name",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -323,7 +323,34 @@
         },
         {
           "fieldPredicate": {
-            "value": "major",
+            "value": "thesis.degree.level",
+            "documentTypePredicate": false
+          },
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
+          },
+          "inputType": {
+            "name": "INPUT_SELECT"
+          },
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Choose the level of degree you are seeking.",
+          "fieldGlosses": [{
+            "value": "Degree Level",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "thesis.degree.discipline",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -587,7 +614,7 @@
       ],
       "originalFieldProfiles": [{
           "fieldPredicate": {
-            "value": "title",
+            "value": "dc.title",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -614,7 +641,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "degree_date",
+            "value": "dc.date.created",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -641,7 +668,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "defense_date",
+            "value": "dc.date.issued",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -699,7 +726,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "abstract",
+            "value": "dc.description.abstract",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -753,7 +780,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "subjects",
+            "value": "dc.subject",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -780,7 +807,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "language",
+            "value": "dc.language.iso",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -805,7 +832,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "committee_member",
+            "value": "dc.contributor.committeeMember",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
@@ -832,7 +859,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "comittee_chair",
+            "value": "dc.contributor.advisor",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {

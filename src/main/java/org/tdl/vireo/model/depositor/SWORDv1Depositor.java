@@ -101,6 +101,10 @@ public class SWORDv1Depositor implements Depositor {
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
         // TODO deposit the package
+        
+        
+        
+        
         return null;
     }
 

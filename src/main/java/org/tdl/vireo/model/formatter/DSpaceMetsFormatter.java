@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.persistence.Entity;
 
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.util.FileHelperUtility;
 import org.thymeleaf.context.Context;
 
 @Entity
@@ -19,6 +20,8 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
     @Override
     public Context craftContext(Submission submission) {
         Context ctx = new Context(Locale.getDefault());
+        
+        ctx.setVariable("fileHelper", new FileHelperUtility());
 
         ctx.setVariable("submission", submission);
 
