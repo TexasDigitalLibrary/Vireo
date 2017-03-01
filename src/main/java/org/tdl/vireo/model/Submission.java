@@ -516,6 +516,16 @@ public class Submission extends BaseEntity {
         return fieldValues;
     }
     
+    public List<FieldValue> getAllDocumentFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getDocumentTypePredicate()) {
+                fielsValues.add(fieldValue);
+            }
+        }
+        return fielsValues;
+    }
+    
     //TODO: devise way to eliminate hardcoded predicate values!!!!
 
     public FieldValue getPrimaryDocumentFieldValue() {
@@ -547,30 +557,6 @@ public class Submission extends BaseEntity {
             }
         }
         return fielsValues;
-    }
-    
-    // TODO: bring in NameFormat from Vireo 3
-    public String getStudentFormattedName() {
-        StringBuilder name = new StringBuilder();
-        
-        List<FieldValue> potentialLastNames = getFieldValuesByPredicateValue("last_name");
-        if(potentialLastNames.size() > 0) {
-            name.append(potentialLastNames.get(0).getValue() + ", ");
-        }
-        List<FieldValue> potentialFirstNames = getFieldValuesByPredicateValue("first_name");
-        if(potentialFirstNames.size() > 0) {
-            name.append(potentialFirstNames.get(0).getValue() + " ");
-        }
-        List<FieldValue> potentialMiddleNames = getFieldValuesByPredicateValue("middle_name");
-        if(potentialMiddleNames.size() > 0) {
-            name.append(potentialMiddleNames.get(0).getValue() + " ");
-        }
-        List<FieldValue> potentialBirthYears = getFieldValuesByPredicateValue("birth_year");
-        if(potentialBirthYears.size() > 0) {
-            name.append(potentialBirthYears.get(0).getValue() + "-");
-        }
-        
-        return name.toString();
     }
 
 }

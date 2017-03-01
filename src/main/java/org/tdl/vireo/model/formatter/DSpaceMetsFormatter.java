@@ -27,6 +27,8 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
         ctx.setVariable("time", format.format(new Date()));
+        
+        ctx.setVariable("agent", "Vireo DSpace METS packager");
 
         return ctx;
     }

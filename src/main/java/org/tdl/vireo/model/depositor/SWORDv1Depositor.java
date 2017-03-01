@@ -1,15 +1,18 @@
 package org.tdl.vireo.model.depositor;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.purl.sword.base.Collection;
+import org.purl.sword.base.DepositResponse;
 import org.purl.sword.base.Service;
 import org.purl.sword.base.ServiceDocument;
 import org.purl.sword.base.Workspace;
 import org.purl.sword.client.Client;
+import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,9 +104,61 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
-        System.out.println("\nDEPOSIT PACKAGE\n");
-        // TODO deposit the package
-        return "SUCCESS";
+
+        String depositId = null;
+
+        try {
+            URL repositoryURL = new URL(depLocation.getRepository());
+
+            File exportFile = exportPackage.getFile();
+
+            String exportMimeType = exportPackage.getMimeType();
+
+            // Building the client
+            Client client = new Client();
+            // get the timeout from the location, or default it to the default
+            client.setSocketTimeout(depLocation.getTimeout() == null ? DepositLocation.DEFAULT_TIMEOUT : (depLocation.getTimeout() * 1000));
+            client.setServer(repositoryURL.getHost(), repositoryURL.getPort());
+            client.setUserAgent(USER_AGENT);
+
+            // If the credentials include a username and password, set those on the client.
+            if (depLocation.getUsername() != null && depLocation.getPassword() != null) {
+                client.setCredentials(depLocation.getUsername(), depLocation.getPassword());
+            }
+
+            PostMessage message = new PostMessage();
+
+            message.setFilepath(exportFile.getAbsolutePath());
+            message.setDestination(depLocation.getCollection());
+            message.setFiletype(exportMimeType);
+            message.setUseMD5(false);
+            message.setVerbose(false);
+            message.setNoOp(false);
+            message.setFormatNamespace(exportPackage.getFormat());
+            message.setSlug("");
+            message.setChecksumError(false);
+            message.setUserAgent(USER_AGENT);
+            if (depLocation.getOnBehalfOf() != null) {
+                message.setOnBehalfOf(depLocation.getOnBehalfOf());
+            }
+
+            DepositResponse response = client.postFile(message);
+
+            if (response.getHttpResponse() < 200 || response.getHttpResponse() > 204) {
+                throw new RuntimeException("Sword server responed with a non success HTTP status code: " + response.getHttpResponse());
+            }
+
+            depositId = response.getEntry().getId();
+
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SWORDClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return depositId;
     }
 
     public String getName() {

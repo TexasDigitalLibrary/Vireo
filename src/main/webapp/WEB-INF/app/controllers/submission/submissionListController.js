@@ -113,6 +113,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.advancedfeaturesBox = {
         "title": "Advanced Features:",
+        "processing": false,
         "depositLocations": depositLocations,
         "viewUrl": "views/sideboxes/advancedFeatures.html",
         "resetBatchUpdateStatus": resetBatchUpdateStatus,

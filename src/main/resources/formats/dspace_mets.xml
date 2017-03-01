@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-*{
+<!-- 
     This is the DSpace METS SIP format. This is the best format to use when
     ingesting content into a DSpace based repository. It does rely on a few
     schemas to be present, naturally there are several fields in the dc schema.
@@ -19,8 +19,7 @@
     institution that instead of changing this file directly instead create a
     copy of it and modify the copy. Then in the application-context.xml add a
     separate entry for your locally modify DSpace METS format.
-}*
-
+ -->
 <mets
   ID="vireo-mets-1"
   th:attr="OBJID=${ 'vireo-submission-' + submission.id }"
@@ -43,7 +42,12 @@
                     <!-- Metadata -->
                 
                     <!-- dc.creator = Student -->
-                    <dim:field mdschema="dc" element="creator" th:text="${ submission.getStudentFormattedName() }"></dim:field>
+                    <dim:field mdschema="dc" element="creator" th:text="
+                      ${submission.getFieldValuesByPredicateValue('last_name').size() > 0 ? submission.getFieldValuesByPredicateValue('last_name').get(0).value + ', ' : '' } +
+                      ${submission.getFieldValuesByPredicateValue('first_name').size() > 0 ? submission.getFieldValuesByPredicateValue('first_name').get(0).value + ' ' : ''} +
+                      ${submission.getFieldValuesByPredicateValue('middle_name').size() > 0 ? submission.getFieldValuesByPredicateValue('middle_name').get(0).value + ' ' : ''} +
+                      ${submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('birth_year').get(0).value + '-' : ''}">
+                    </dim:field>
                     
                     <!-- dc, thesis, and local schema -->
                     <dim:field
@@ -71,7 +75,7 @@
                     
                     
                     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
-                    <dim:field mdschema="dc" element="format" qualifier="mimetype" th:text="${ fileHelper.getMimeType(submission.getPrimaryDocumentFieldValue().value) }"></dim:field>
+                    <dim:field mdschema="dc" element="format" qualifier="mimetype" th:text="${ submission.getPrimaryDocumentFieldValue() != null ? fileHelper.getMimeType(submission.getPrimaryDocumentFieldValue().value) : 'application/pdf' }"></dim:field>
                 
 
                     <!-- TODO: complete the following with adding accessor methods to submission -->
@@ -148,7 +152,7 @@
             
             <!-- Primary Document -->
             <file 
-              th:if="${ submission.getPrimaryDocumentFieldValue() }"
+              th:if="${ submission.getPrimaryDocumentFieldValue() != null }"
               SEQ="1"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + submission.getPrimaryDocumentFieldValue().fieldPredicate.id }, 
                        ID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id },
@@ -182,12 +186,13 @@
         <div ID="vireo-mets-div-1" DMDID="vireo-mets-dmd-1" TYPE="DSpace Item">
             
             <!-- Set the primary bitstream to the primary document -->
-            <fptr th:attr="FILEID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id }"/>
+            <fptr th:if="${ submission.getPrimaryDocumentFieldValue() != null }" th:attr="FILEID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id }"/>
             
             <!-- Bitstream div for the primary document -->
             <div
-                th:attr="ID=${ 'piper-mets-div-' + submission.getPrimaryDocumentFieldValue().id }" 
-                TYPE="DSpace Content Bitstream">
+              th:if="${ submission.getPrimaryDocumentFieldValue() != null }"
+              th:attr="ID=${ 'piper-mets-div-' + submission.getPrimaryDocumentFieldValue().id }" 
+              TYPE="DSpace Content Bitstream">
                 <ftpr th:attr="FILEID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id }"/>
             </div>
             
