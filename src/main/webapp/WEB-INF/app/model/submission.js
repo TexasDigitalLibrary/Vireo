@@ -507,7 +507,6 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         };
 
         submission.publish = function(depositLocation) {
-            console.log(depositLocation)
             angular.extend(this.getMapping().publish, {
                 method: submission.id + "/publish/" + depositLocation.id
             });

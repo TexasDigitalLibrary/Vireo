@@ -418,7 +418,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/batch-publish/{depositLocationName}")
+    @ApiMapping("/batch-publish/{depositLocationId}")
     @Auth(role = "MANAGER")
     public ApiResponse batchPublish(@ApiCredentials Credentials credentials, @ApiVariable Long depositLocationId) {
         ApiResponse response = new ApiResponse(SUCCESS);
