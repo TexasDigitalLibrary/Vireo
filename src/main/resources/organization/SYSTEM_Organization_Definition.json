@@ -142,7 +142,7 @@
         },
         {
           "fieldPredicate": {
-            "value": "dc.creator.orcid",
+            "value": "local.etdauthor.orcid",
             "documentTypePredicate": false
           },
           "originatingWorkflowStep": {
