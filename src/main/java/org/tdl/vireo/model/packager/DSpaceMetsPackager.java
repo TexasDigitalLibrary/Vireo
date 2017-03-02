@@ -76,13 +76,11 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
                 // TODO: add file whitelist for publish
 
-                String value = documentFieldValue.getValue();
-
-                String fileName = value.substring(value.lastIndexOf("-") + 1, value.length());
+                String fileName = documentFieldValue.getFileName();
 
                 File exportFile = File.createTempFile(fileName, null);
 
-                FileUtils.copyFile(getAbsolutePath(value).toFile(), exportFile);
+                FileUtils.copyFile(getAbsolutePath(documentFieldValue.getValue()).toFile(), exportFile);
 
                 ze = new ZipEntry(fileName);
                 zos.putNextEntry(ze);

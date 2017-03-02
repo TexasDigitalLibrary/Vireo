@@ -242,7 +242,7 @@ public class Submission extends BaseEntity {
         });
         return fielsValues;
     }
-    
+
     public List<FieldValue> getFieldValuesByPredicateValue(String predicateValue) {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         getFieldValues().forEach(fieldValue -> {
@@ -515,7 +515,7 @@ public class Submission extends BaseEntity {
 
         return fieldValues;
     }
-    
+
     public List<FieldValue> getAllDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
@@ -525,8 +525,6 @@ public class Submission extends BaseEntity {
         }
         return fielsValues;
     }
-    
-    //TODO: devise way to eliminate hardcoded predicate values!!!!
 
     public FieldValue getPrimaryDocumentFieldValue() {
         FieldValue primaryDocumentFieldValue = null;
@@ -548,7 +546,7 @@ public class Submission extends BaseEntity {
         }
         return fielsValues;
     }
-    
+
     public List<FieldValue> getLicenseAgreementFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {

@@ -20,14 +20,14 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
     @Override
     public Context craftContext(Submission submission) {
         Context ctx = new Context(Locale.getDefault());
-        
+
         ctx.setVariable("fileHelper", new FileHelperUtility());
 
         ctx.setVariable("submission", submission);
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
         ctx.setVariable("time", format.format(new Date()));
-        
+
         ctx.setVariable("agent", "Vireo DSpace METS packager");
 
         return ctx;

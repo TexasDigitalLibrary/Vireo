@@ -45,7 +45,7 @@
                     <dim:field mdschema="dc" element="creator" th:text="
                       ${submission.getFieldValuesByPredicateValue('last_name').size() > 0 ? submission.getFieldValuesByPredicateValue('last_name').get(0).value + ', ' : '' } +
                       ${submission.getFieldValuesByPredicateValue('first_name').size() > 0 ? submission.getFieldValuesByPredicateValue('first_name').get(0).value + ' ' : ''} +
-                      ${submission.getFieldValuesByPredicateValue('middle_name').size() > 0 ? submission.getFieldValuesByPredicateValue('middle_name').get(0).value + ' ' : ''} +
+                      ${submission.getFieldValuesByPredicateValue('middle_name').size() > 0 ? (submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('middle_name').get(0).value + ' ' : submission.getFieldValuesByPredicateValue('middle_name').get(0).value) : ''} +
                       ${submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('birth_year').get(0).value + '-' : ''}">
                     </dim:field>
                     
@@ -159,7 +159,7 @@
                        MIMETYPE=${ fileHelper.getMimeType(submission.getPrimaryDocumentFieldValue().value) }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ submission.getPrimaryDocumentFieldValue().value }"/>
+                    th:attr="'xlink:href'=${ submission.getPrimaryDocumentFieldValue().getFileName() }"/>
             </file>
             
             <!-- Supplemental And Source Documents -->
@@ -171,7 +171,7 @@
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ fv.value }"/>
+                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
             </file>
             
         </fileGrp>

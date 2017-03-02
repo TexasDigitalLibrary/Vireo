@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -70,6 +72,13 @@ public class FieldValue extends BaseEntity {
      */
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;
+    }
+
+    @JsonIgnore
+    public String getFileName() {
+        String fullFileName = value.substring(value.lastIndexOf("/") + 1, value.length());
+        String fileName = fullFileName.substring(fullFileName.indexOf("-") + 1, fullFileName.length());
+        return fileName;
     }
 
 }
