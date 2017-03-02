@@ -1,7 +1,7 @@
 vireo.config(function($locationProvider, $routeProvider) {
-	
+
 	$locationProvider.html5Mode(true);
-	
+
 	$routeProvider.
 		when('/myprofile', {
 			templateUrl: 'views/myprofile.html',
@@ -19,7 +19,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 		}).
 		when('/submission/complete', {
 			templateUrl: 'views/submission/submissionComplete.html',
-			controller: 'SubmissionCompleteController',
+			controller: 'CompleteSubmissionController',
 			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/:submissionId', {
@@ -39,7 +39,7 @@ vireo.config(function($locationProvider, $routeProvider) {
 		}).
 		when('/review/:advisorAccessHash', {
 			templateUrl: 'views/submission/advisorReview.html',
-			controller: 'AdvisorReviewController'
+			controller: 'AdvisorSubmissionReviewController'
 		}).
 		when('/users', {
 			templateUrl: 'views/users.html'

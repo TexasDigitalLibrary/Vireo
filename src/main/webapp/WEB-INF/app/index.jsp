@@ -10,7 +10,7 @@
 
         <script type="text/javascript" th:inline="javascript">
             /*<![CDATA[*/
-                window.location.base = [[${base}]];
+            window.location.base = [[${base}]];
             /*]]>*/
         </script>
 
@@ -383,7 +383,6 @@
         <!-- Controllers -->
         <script src="controllers/abstractController.js"></script>
         <script src="controllers/adminController.js"></script>
-        <script src="controllers/submission/advisorReviewController.js"></script>
         <script src="controllers/applicationSettingsController.js"></script>
         <script src="controllers/settings/emailWorkflowRulesController.js"></script>
         <script src="controllers/headerController.js"></script>
@@ -405,12 +404,13 @@
         <script src="controllers/settings/organizationCategoriesController.js"></script>
         <script src="controllers/settings/fieldProfileManagementController.js"></script>
         <script src="controllers/settings/noteManagementController.js"></script>
+        <script src="controllers/submission/advisorSubmissionReviewController.js"></script>
         <script src="controllers/submission/newSubmissionController.js"></script>
         <script src="controllers/submission/studentSubmissionController.js"></script>
         <script src="controllers/submission/submissionListController.js"></script>
         <script src="controllers/submission/submissionViewController.js"></script>
         <script src="controllers/submission/submissionHistoryController.js"></script>
-        <script src="controllers/submission/submissionCompleteController.js"></script>
+        <script src="controllers/submission/completeSubmissionController.js"></script>
         <script src="controllers/submission/adminSubmissionViewController.js"></script>
 
         <!-- endbuild -->

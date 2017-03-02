@@ -10,7 +10,7 @@
     "angular-messages": "1.4.9",
     "angular-sanitize": "1.4.9",
     "angular-ui-tinymce": "0.0.14",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#pending-request-alerts",
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#abstract-model-merge-extend",
     "FileSaver": "1.3.3",
     "ng-csv": "0.3.2",
     "ng-file-upload": "12.0.1",

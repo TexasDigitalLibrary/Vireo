@@ -8,10 +8,10 @@ vireo.directive("actionlog", function(NgTableParams) {
         },
         link: function($scope) {
 
-            console.log(ngIfDirective);
-
             $scope.tableParams = new NgTableParams({
-                sorting: {id: "desc"},
+                sorting: {
+                    id: "desc"
+                }
             }, {
                 counts: [],
                 dataset: $scope.submission.actionLogs

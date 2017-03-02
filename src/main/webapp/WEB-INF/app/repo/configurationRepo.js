@@ -1,60 +1,56 @@
 vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
 
-	var configurations = {};
+    var configurations = {};
 
-	// additional repo methods and variables
+    // additional repo methods and variables
 
-	this.reset = function(model) {
-		return model.reset();
-	};
+    this.reset = function(model) {
+        return model.reset();
+    };
 
-	this.getAllMapByType = function() {
+    this.getAllMapByType = function() {
 
-		var configurationRepo = this;
-		
-		
-		var allConfigurations = configurationRepo.getAll();
+        var configurationRepo = this;
 
-		var mapByType = function(configurations) {
-			angular.forEach(allConfigurations, function(config) {
-				if(configurations[config.type] === undefined) {
-					configurations[config.type] = {};
-				}
-				if(configurations[config.type][config.name] === undefined || config.isSystemRequired == false) {
-					configurations[config.type][config.name] = config;
-				}
-			});
-		}
-		
-		this.ready().then(function() {
-			mapByType(configurations);
-		});
+        var allConfigurations = configurationRepo.getAll();
 
-		this.listen(function() {
-			mapByType(configurations);
-		});
-		
-		return configurations;
-	}
+        var mapByType = function(configurations) {
+            angular.forEach(allConfigurations, function(config) {
+                if (configurations[config.type] === undefined) {
+                    configurations[config.type] = {};
+                }
+                configurations[config.type][config.name] = config;
+            });
+        }
 
-	this.findByTypeAndName = function(type, name) {
+        this.ready().then(function() {
+            mapByType(configurations);
+        });
 
-		var configuration;
+        this.listen(function() {
+            mapByType(configurations);
+        });
 
-		var list = this.getAll();
-			
-		for(var i in list) {
-			var config = list[i];
-			if(config.type == type && config.name == name) {
-				configuration = config;
-				break;
-			}
-		}
+        return configurations;
+    };
 
-		return configuration;
-	}
+    this.findByTypeAndName = function(type, name) {
 
+        var configuration;
 
-	return this;
+        var list = this.getAll();
+
+        for (var i in list) {
+            var config = list[i];
+            if (config.type == type && config.name == name) {
+                configuration = config;
+                break;
+            }
+        }
+
+        return configuration;
+    };
+
+    return this;
 
 });

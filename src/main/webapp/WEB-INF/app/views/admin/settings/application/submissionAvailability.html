@@ -1,17 +1,17 @@
 <div class="row">
-	
+
 	<div class="col-md-6">
 
 		<div class="col-md-10 col-md-offset-1">
 
-			<toggleButton 
+			<toggleButton
 				ng-click="updateConfiguration('application', 'submissions_open')"
 				label="Submissions are currently:"
 				scope-value="settings.configurable.application.submissions_open.value"
 				toggle-options="{{submissionsOpenOptions}}">
 			</toggleButton>
 
-			<toggleButton 
+			<toggleButton
 				ng-click="updateConfiguration('application', 'allow_multiple_submissions')"
 				label="Multiple Submissions:"
 				scope-value="settings.configurable.application.allow_multiple_submissions.value"
@@ -25,7 +25,7 @@
 	<div class="col-md-6">
 
 		<div class="col-md-10 col-md-offset-1">
-		
+
 			<validatedinput
 	            type="text"
 	            label="Current submission semester"
@@ -52,5 +52,5 @@
 	    </div>
 
 	</div>
-	
+
 </div>
