@@ -18,13 +18,14 @@
             <strong>New Status</strong>:</label>
           <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStates"></select>
         </div>
+      </form>
+      <form class="form-inline">
         <div ng-if="box.newStatus.name=='Published'" class="form-group">
           <label for="Deposit Location">
             <strong>Deposit Location</strong>:</label>
           <select class="form-control" id="depositLocation" name="depositLocation" ng-model="box.depositLocation" ng-options="dl.name for dl in box.depositLocations"></select>
         </div>
       </form>
-
     </div>
   </div>
 </div>
