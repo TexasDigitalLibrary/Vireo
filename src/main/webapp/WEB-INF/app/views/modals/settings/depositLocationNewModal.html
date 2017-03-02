@@ -1,121 +1,52 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-	<button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
-		<span class="modal-close" aria-hidden="true">&times;</span>
-	</button>
-	<h3 class="modal-title">Add Deposit Location</h3>
+  <button type="button" class="close" ng-click="resetDepositLocation()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Deposit Location</h3>
 </div>
 
 <form ng-submit="createDepositLocation()" name="forms.create" novalidate>
 
-    <validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
+  <validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
-    <div class="modal-body">
-        <validatedinput
-            model="modalData"
-            property="name"
-            label="Location Name"
-            placeholder="Location Name"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+  <div class="modal-body">
+    <validatedinput model="modalData" property="name" label="Location Name" placeholder="Location Name" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-        <validatedselect
-            options="protocols"
-            model="modalData"
-            property="depositor"
-            label="Protocol"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedselect>
+    <validatedselect options="protocols" model="modalData" property="depositor" label="Protocol" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 
-        <validatedselect
-            options="packagers"
-            optionproperty="name"
-            model="modalData"
-            property="packager"
-            label="Format"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedselect>
+    <validatedselect options="packagers" optionproperty="name" model="modalData" property="packager" label="Format" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 
-        <validatedinput
-            model="modalData"
-            property="repository"
-            label="Repository Location"
-            placeholder="Repository Location"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+    <validatedinput model="modalData" property="repository" label="Repository Location" placeholder="Repository Location" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-        <label for="collection">
-            Collection
-            <span ng-if="modalData.isTestDepositing()"> (Getting collections)</span>
-            <span ng-if="!modalData.isTestDepositing() && collections.length==0"> (Please get collections)</span>
+    <label for="collection">
+      Collection
+      <span ng-if="modalData.isTestDepositing()">
+        (Getting collections)</span>
+      <span ng-if="!modalData.isTestDepositing() && collections.length==0">
+        (Please get collections)</span>
 
-        </label>
-        <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
+    </label>
+    <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
-        <validatedinput
-            model="modalData"
-            property="timeout"
-            label="Repository Timeout"
-            placeholder="Repository Timeout (seconds)"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+    <validatedinput model="modalData" property="timeout" label="Repository Timeout" placeholder="Repository Timeout (seconds)" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-        <validatedinput
-            model="modalData"
-            property="username"
-            label="Username"
-            placeholder="Username"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+    <validatedinput model="modalData" property="username" label="Username" placeholder="Username" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-        <validatedinput
-            type="password"
-            model="modalData"
-            property="password"
-            label="Password"
-            placeholder="Password"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+    <validatedinput type="password" model="modalData" property="password" label="Password" placeholder="Password" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-        <validatedinput
-            model="modalData"
-            property="onBehalfOf"
-            label="On Behalf Of"
-            placeholder="On Behalf Of"
-            form="forms.create"
-            validations="depositLocationRepo.getValidations()"
-            results="depositLocationRepo.getValidationResults()">
-        </validatedinput>
+    <validatedinput model="modalData" property="onBehalfOf" label="On Behalf Of" placeholder="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    	<div class="form-group">
-        	<button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
-                <span ng-show="modalData.isTestDepositing()">Testing...</span>
-                <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
-            </button>
-    	</div>
+    <div class="form-group">
+      <button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
+        <span ng-show="modalData.isTestDepositing()">Testing...</span>
+        <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
+      </button>
     </div>
+  </div>
 
-    <div class="modal-footer">
-    	<button
-            type="button"
-            class="btn btn-warning"
-            ng-click="resetDepositLocation()">Cancel</button>
-    	<button
-            id="depositLocation-save"
-            type="submit"
-            class="btn btn-primary"
-            ng-disabled="forms.create.$invalid">Create</button>
-    </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-warning" ng-click="resetDepositLocation()">Cancel</button>
+    <button id="depositLocation-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
+  </div>
 
 </form>

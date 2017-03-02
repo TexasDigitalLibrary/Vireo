@@ -33,7 +33,6 @@ public class DepositLocationValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Deposit Location password cannot be more than 255 characters", passwordProperty, 255));
 
         String onBehalfOfProperty = "onBehalfOf";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Deposit Location requires a onBehalfOf", onBehalfOfProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Deposit Location onBehalfOf must be at least 2 characters", onBehalfOfProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Deposit Location onBehalfOf cannot be more than 255 characters", onBehalfOfProperty, 255));
 

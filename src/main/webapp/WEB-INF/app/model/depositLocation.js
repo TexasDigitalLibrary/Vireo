@@ -12,10 +12,9 @@ vireo.model("DepositLocation", function DepositLocation(WsApi) {
             var promise = WsApi.fetch(depositLocation.getMapping().testConnection);
 
             return promise;
-
         };
 
-        return this;
+        return depositLocation;
     };
 
 });

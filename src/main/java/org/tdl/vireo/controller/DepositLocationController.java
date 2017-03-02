@@ -58,6 +58,7 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS, depositLocation);
     }
 
+    // This endpoint is broken. Unable to deserialize Packager interface!!
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
@@ -68,6 +69,7 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS, depositLocation);
     }
 
+    // This endpoint is broken. Unable to deserialize Packager interface!!
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
