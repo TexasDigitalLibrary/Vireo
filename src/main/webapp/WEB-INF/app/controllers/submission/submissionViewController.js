@@ -18,10 +18,6 @@ vireo.controller("SubmissionViewController", function($controller, $filter, $q, 
         });
     };
 
-    $scope.actionLogLimit = 10;
-
-    $scope.actionLogCurrentLimit = $scope.actionLogLimit;
-
     $scope.updateActionLogLimit = function() {
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit
             ? $scope.submission.actionLogs.length

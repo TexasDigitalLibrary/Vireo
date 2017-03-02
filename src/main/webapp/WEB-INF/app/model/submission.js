@@ -6,6 +6,8 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
         submission.isValid = false;
 
+        submission.actionLogListenPromise = null;
+
         submission.enableBeforeMethods();
 
         //populate fieldValues with models for existing values
@@ -30,7 +32,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 submission.actionLogs.length = 0;
             }
             angular.forEach(actionLogs, function(actionLog) {
-                var actionLog = new ActionLog(actionLog);
+                actionLog = new ActionLog(actionLog);
                 submission.actionLogs.push(actionLog);
             });
         };
@@ -76,7 +78,9 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 'method': submission.id + '/action-logs'
             });
 
-            WsApi.listen(apiMapping.Submission.actionLogListen).then(null, null, function(response) {
+            submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+
+            submission.actionLogListenPromise.then(null, null, function(response) {
                 var newActionLog = angular.fromJson(response.body).payload.ActionLog;
                 submission.actionLogs.push(new ActionLog(newActionLog));
             });
