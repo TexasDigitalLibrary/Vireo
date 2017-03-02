@@ -1,11 +1,13 @@
 package org.tdl.vireo.model.depositor;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.purl.sword.base.Collection;
 import org.purl.sword.base.DepositResponse;
 import org.purl.sword.base.Service;
@@ -53,8 +55,9 @@ public class SWORDv1Depositor implements Depositor {
             client.setUserAgent(USER_AGENT);
 
             // If the credentials include a username and password, set those on the client.
-            if (depLocation.getUsername() != null && depLocation.getPassword() != null)
-                client.setCredentials(depLocation.getUsername(), depLocation.getPassword());
+            if (depLocation.getUsername() != null && depLocation.getPassword() != null) {
+                setAuthentication(client, depLocation);
+            }
 
             // Obtaining the service document
             // If the credentials contain an onbehalfof user, retrieve the service document on
@@ -123,7 +126,7 @@ public class SWORDv1Depositor implements Depositor {
 
             // If the credentials include a username and password, set those on the client.
             if (depLocation.getUsername() != null && depLocation.getPassword() != null) {
-                client.setCredentials(depLocation.getUsername(), depLocation.getPassword());
+                setAuthentication(client, depLocation);
             }
 
             PostMessage message = new PostMessage();
@@ -159,6 +162,24 @@ public class SWORDv1Depositor implements Depositor {
         }
 
         return depositId;
+    }
+
+    private void setAuthentication(Client client, DepositLocation depLocation) {
+        client.setCredentials(depLocation.getUsername(), depLocation.getPassword());
+        try {
+            Field httpClientField = client.getClass().getDeclaredField("client");
+            httpClientField.setAccessible(true);
+            HttpClient httpClient = (HttpClient) httpClientField.get(client);
+            httpClient.getParams().setAuthenticationPreemptive(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getName() {

@@ -37,7 +37,6 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     var organizationCategories = OrganizationCategoryRepo.getAll();
     var submissionStates = SubmissionStateRepo.getAll();
     var depositLocations = DepositLocationRepo.getAll();
-    console.log(depositLocations)
 
     var findFirstAssignable = function() {
         var firstAssignable;
