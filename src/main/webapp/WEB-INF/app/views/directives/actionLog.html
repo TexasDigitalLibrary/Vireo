@@ -1,28 +1,11 @@
-<table class="table table-bordered table-striped table-hover action-log-table">
-  <thead>
-    <tr>
-      <th>Action By</th>
-      <th>Action / Comment</th>
-      <th>Time</th>
-    </tr>
-  </thead>
+<table  ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover action-log-table">
   <tbody>
-    <tr ng-repeat="actionLog in submission.actionLogs | orderBy:'-' | limitTo:actionLogCurrentLimit | filter: (public || '') && {privateFlag: 'false'}" ng-class="{'danger': actionLog.privateFlag}">
-      <td>{{actionLog.user.settings.displayName}}</td>
-      <td class="message-cell">{{actionLog.entry}}
+    <tr ng-repeat="actionLog in $data | filter: (public || '') && {privateFlag: 'false'}" ng-class="{'danger': actionLog.privateFlag}">
+      <td title="'Action By'">{{actionLog.user.settings.displayName}}</td>
+      <td title="'Action / Comment'" class="message-cell">{{actionLog.entry}}
         <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
       </td>
-      <td>{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
+      <td title="'Time'" >{{actionLog.actionDate | date:'MMM dd, yyyy HH:mm'}}</td>
     </tr>
   </tbody>
-  <tfoot ng-if="submission.actionLogs.length>actionLogLimit">
-    <tr>
-      <td ng-click="updateActionLogLimit()">
-        <span class="action-log-more-less" ng-if="actionLogCurrentLimit===actionLogLimit">[more]</span>
-        <span class="action-log-more-less" ng-if="actionLogCurrentLimit!==actionLogLimit">[less]</span>
-      </td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tfoot>
 </table>
