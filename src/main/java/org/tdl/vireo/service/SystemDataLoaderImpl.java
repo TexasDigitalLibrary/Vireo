@@ -26,9 +26,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
@@ -44,9 +44,12 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
+import org.tdl.vireo.model.depositor.SWORDv1Depositor;
+import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -121,12 +124,16 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private VocabularyWordRepo vocabularyWordRepo;
 
+    private AbstractPackagerRepo abstractPackagerRepo;
+
     private ProquestLanguageCodesService proquestLanguageCodesService;
+
+    private DepositorService depositorService;
 
     // TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo) {
-
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo,
+            AbstractPackagerRepo abstractPackagerRepo, DepositorService depositorService) {
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
         this.configurationRepo = configurationRepo;
@@ -150,6 +157,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.submissionListColumnRepo = submissionListColumnRepo;
         this.defaultSubmissionListColumnService = defaultSubmissionListColumnService;
         this.vocabularyWordRepo = vocabularyWordRepo;
+        this.abstractPackagerRepo = abstractPackagerRepo;
+        this.depositorService = depositorService;
 
         logger.info("Generating all system input types");
         loadSystemInputTypes();
@@ -186,6 +195,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         logger.info("Loading pre-defined controlled vocabularies");
         loadDefaultControlledVocabularies();
+
+        logger.info("Loading Packagers");
+        loadPackagers();
+
+        logger.info("Loading Depositors");
+        loadDepositors();
     }
 
     @Override
@@ -673,7 +688,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 }
             }
 
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException |
+
+                IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default submission list column titles. ", e);
         }
@@ -859,6 +876,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
         }
+    }
+
+    public void loadPackagers() {
+        abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
+    }
+
+    public void loadDepositors() {
+        depositorService.addDepositor(new SWORDv1Depositor());
     }
 
     /**

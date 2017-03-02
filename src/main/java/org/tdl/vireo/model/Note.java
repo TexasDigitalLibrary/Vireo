@@ -9,7 +9,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.tdl.vireo.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.Heritable;
 import org.tdl.vireo.model.validation.NoteValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

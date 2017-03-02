@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -36,6 +36,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     var organizations = OrganizationRepo.getAll();
     var organizationCategories = OrganizationCategoryRepo.getAll();
     var submissionStates = SubmissionStateRepo.getAll();
+    var depositLocations = DepositLocationRepo.getAll();
 
     var findFirstAssignable = function() {
         var firstAssignable;
@@ -55,12 +56,22 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     var allUsers = UserRepo.getAll();
 
     var resetBatchUpdateStatus = function() {
+        $scope.advancedfeaturesBox.processing = false;
         $scope.advancedfeaturesBox.assignee = findFirstAssignable();
         $scope.closeModal();
     };
 
     var batchUpdateStatus = function(newStatus) {
+        $scope.advancedfeaturesBox.processing = true;
         SubmissionRepo.batchUpdateStatus(newStatus).then(function() {
+            resetBatchUpdateStatus();
+            query();
+        });
+    };
+
+    var batchPublish = function(newStatus) {
+        $scope.advancedfeaturesBox.processing = true;
+        SubmissionRepo.batchPublish($scope.advancedfeaturesBox.depositLocation).then(function() {
             resetBatchUpdateStatus();
             query();
         });
@@ -72,6 +83,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     };
 
     var batchAssignTo = function(assignee) {
+        $scope.advancedfeaturesBox.processing = true;
         SubmissionRepo.batchAssignTo(assignee).then(function() {
             resetBatchUpdateStatus();
             query();
@@ -100,6 +112,8 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.advancedfeaturesBox = {
         "title": "Advanced Features:",
+        "processing": false,
+        "depositLocations": depositLocations,
         "viewUrl": "views/sideboxes/advancedFeatures.html",
         "resetBatchUpdateStatus": resetBatchUpdateStatus,
         "batchUpdateStatus": batchUpdateStatus,
@@ -108,6 +122,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         "resetBatchAssignTo": resetBatchAssignTo,
         "assignable": assignable,
         "batchAssignTo": batchAssignTo,
+        "batchPublish": batchPublish,
         "resetBatchCommentEmail": resetBatchCommentEmail,
         "batchCommentEmail": batchCommentEmail,
         "resetBatchDownloadExport": resetBatchDownloadExport,

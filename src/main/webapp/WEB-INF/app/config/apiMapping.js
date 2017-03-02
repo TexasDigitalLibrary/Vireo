@@ -175,6 +175,11 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/deposit-location'
+        },
+        testConnection: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/deposit-location',
+            'method': 'test-connection'
         }
     },
     DocumentType: {
@@ -543,6 +548,17 @@ var apiMapping = {
             'controller': 'settings/organization-category'
         }
     },
+    Packager: {
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'packager',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'packager'
+        }
+    },
     Submission: {
         lazy: true,
         all: {
@@ -569,6 +585,16 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'change-status'
+        },
+        publish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'publish'
+        },
+        batchPublish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-publish'
         },
         submitDate: {
             'endpoint': '/private/queue',

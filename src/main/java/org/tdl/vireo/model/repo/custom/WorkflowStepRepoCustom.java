@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
-import org.tdl.vireo.inheritence.Heritable;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.inheritence.Heritable;
 
 public interface WorkflowStepRepoCustom {
 

@@ -510,6 +510,16 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
+        submission.publish = function(depositLocation) {
+            angular.extend(this.getMapping().publish, {
+                method: submission.id + "/publish/" + depositLocation.id
+            });
+
+            var promise = WsApi.fetch(this.getMapping().publish);
+
+            return promise;
+        };
+
         submission.submit = function() {
             return submission.changeStatus('Submitted');
         };

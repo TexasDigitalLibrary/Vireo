@@ -62,18 +62,18 @@ public class Submission extends BaseEntity {
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveEmbargoDate;
-    
+
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
-    
+
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveApplicationDate;
-    
+
     @Column(nullable = true)
     private boolean approveEmbargo;
-    
+
     @Column(nullable = true)
     private boolean approveApplication;
 
@@ -182,7 +182,7 @@ public class Submission extends BaseEntity {
         this.submissionState = submissionState;
 
     }
-    
+
     private Calendar getTime() {
         return Calendar.getInstance();
     }
@@ -194,8 +194,6 @@ public class Submission extends BaseEntity {
         day.clear(Calendar.SECOND);
         return day;
     }
-    
-    
 
     /**
      * @return the organization
@@ -235,16 +233,23 @@ public class Submission extends BaseEntity {
         getFieldValues().add(fieldValue);
     }
 
-    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate predicate) {
-
+    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate fieldPredicate) {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
-
-        this.getFieldValues().forEach(fv -> {
-            if (predicate.equals(fv.getFieldPredicate())) {
-                fielsValues.add(fv);
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                fielsValues.add(fieldValue);
             }
         });
+        return fielsValues;
+    }
 
+    public List<FieldValue> getFieldValuesByPredicateValue(String predicateValue) {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().getValue().equals(predicateValue)) {
+                fielsValues.add(fieldValue);
+            }
+        });
         return fielsValues;
     }
 
@@ -253,31 +258,14 @@ public class Submission extends BaseEntity {
      * @param fieldValue
      */
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
-
         FieldValue foundFieldValue = null;
-
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
                 foundFieldValue = fieldValue;
                 break;
             }
         }
-
         return foundFieldValue;
-    }
-
-    public List<FieldValue> getFieldValueByPredicate(FieldPredicate fieldPredicate) {
-
-        List<FieldValue> foundFieldValues = new ArrayList<FieldValue>();
-
-        for (FieldValue fieldValue : getFieldValues()) {
-            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
-                foundFieldValues.add(fieldValue);
-            }
-        }
-
-        return foundFieldValues;
-
     }
 
     /**
@@ -335,58 +323,58 @@ public class Submission extends BaseEntity {
     }
 
     public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
-    	this.approveEmbargoDate = approveEmbargoDate;
+        this.approveEmbargoDate = approveEmbargoDate;
     }
-    
+
     public Calendar getApproveEmbargoDate() {
-		return approveEmbargoDate;
-	}
-    
-    public void setApproveApplicationDate(Calendar approveApplicationDate) {
-    	this.approveApplicationDate = approveApplicationDate;
+        return approveEmbargoDate;
     }
 
-	public Calendar getApproveApplicationDate() {
-		return approveApplicationDate;
-	}
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+        this.approveApplicationDate = approveApplicationDate;
+    }
 
-	public boolean getApproveEmbargo() {
-		return approveEmbargo;
-	}
+    public Calendar getApproveApplicationDate() {
+        return approveApplicationDate;
+    }
 
-	public void setApproveEmbargo(boolean approveEmbargo) {
-		if(approveEmbargo) {
-			this.approveEmbargoDate = getTime();
-		} else {
-			this.approveEmbargoDate = null;
-		}
-		this.approveEmbargo = approveEmbargo;
-	}
-	
-	public void clearApproveEmbargo() {
-		this.approveEmbargoDate = null;
-		this.approveEmbargo = false;
-	}
+    public boolean getApproveEmbargo() {
+        return approveEmbargo;
+    }
 
-	public boolean getApproveApplication() {
-		return approveApplication;
-	}
+    public void setApproveEmbargo(boolean approveEmbargo) {
+        if (approveEmbargo) {
+            this.approveEmbargoDate = getTime();
+        } else {
+            this.approveEmbargoDate = null;
+        }
+        this.approveEmbargo = approveEmbargo;
+    }
 
-	public void setApproveApplication(boolean approveApplication) {
-		if(approveApplication) {
-			this.approveApplicationDate = getTime();
-		} else {
-			this.approveApplicationDate = null;
-		}
-		this.approveApplication = approveApplication;
-	}
-	
-	public void clearApproveApplication() {
-		this.approveApplicationDate = null;
-		this.approveApplication = false;
-	}
+    public void clearApproveEmbargo() {
+        this.approveEmbargoDate = null;
+        this.approveEmbargo = false;
+    }
 
-	/**
+    public boolean getApproveApplication() {
+        return approveApplication;
+    }
+
+    public void setApproveApplication(boolean approveApplication) {
+        if (approveApplication) {
+            this.approveApplicationDate = getTime();
+        } else {
+            this.approveApplicationDate = null;
+        }
+        this.approveApplication = approveApplication;
+    }
+
+    public void clearApproveApplication() {
+        this.approveApplicationDate = null;
+        this.approveApplication = false;
+    }
+
+    /**
      * @return the actionLog
      */
     public List<ActionLog> getActionLogs() {
@@ -516,10 +504,10 @@ public class Submission extends BaseEntity {
 
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
-        this.submissionWorkflowSteps.forEach(submissionWorkflowSteps -> {
+        getSubmissionWorkflowSteps().forEach(submissionWorkflowSteps -> {
             submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
                 if (afp.getInputType().equals(inputType)) {
-                    List<FieldValue> foundFieldValues = this.getFieldValuesByPredicate(afp.getFieldPredicate());
+                    List<FieldValue> foundFieldValues = getFieldValuesByPredicate(afp.getFieldPredicate());
                     fieldValues.addAll(foundFieldValues);
                 }
             });
@@ -527,4 +515,46 @@ public class Submission extends BaseEntity {
 
         return fieldValues;
     }
+
+    public List<FieldValue> getAllDocumentFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getDocumentTypePredicate()) {
+                fielsValues.add(fieldValue);
+            }
+        }
+        return fielsValues;
+    }
+
+    public FieldValue getPrimaryDocumentFieldValue() {
+        FieldValue primaryDocumentFieldValue = null;
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_primary")) {
+                primaryDocumentFieldValue = fieldValue;
+                break;
+            }
+        }
+        return primaryDocumentFieldValue;
+    }
+
+    public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental") || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
+                fielsValues.add(fieldValue);
+            }
+        }
+        return fielsValues;
+    }
+
+    public List<FieldValue> getLicenseAgreementFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getValue().equals("license_agreement")) {
+                fielsValues.add(fieldValue);
+            }
+        }
+        return fielsValues;
+    }
+
 }
