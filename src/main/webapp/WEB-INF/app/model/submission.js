@@ -8,7 +8,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
         submission.actionLogListenPromise = null;
 
-        submission.enableBeforeMethods();
+        submission.enableMergeCombinationOperation();
 
         //populate fieldValues with models for existing values
         var instantiateFieldValues = function() {

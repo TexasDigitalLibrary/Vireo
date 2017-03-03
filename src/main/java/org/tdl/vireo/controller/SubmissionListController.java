@@ -174,9 +174,9 @@ public class SubmissionListController {
     public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.getSavedFilters().remove(savedFilter);
-        userRepo.save(user);
+        user = userRepo.save(user);
         namedSearchFilterGroupRepo.delete(savedFilter.getId());
-        return getSavedFilters(credentials);
+        return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
     @ApiMapping("/add-filter-criterion")
