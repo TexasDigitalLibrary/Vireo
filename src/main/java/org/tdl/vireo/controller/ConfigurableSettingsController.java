@@ -40,7 +40,7 @@ public class ConfigurableSettingsController {
     public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.save(configuration);
-        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
         return new ApiResponse(SUCCESS, configuration);
     }
 
@@ -49,7 +49,7 @@ public class ConfigurableSettingsController {
     public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.reset(configuration);
-        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
         return new ApiResponse(SUCCESS, configuration);
     }
 

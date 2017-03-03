@@ -25,7 +25,7 @@ public class AppTemplateConfig {
     public ServletContextTemplateResolver jspTemplateResolver() {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
         templateResolver.setPrefix("/WEB-INF/app/");
-        templateResolver.setSuffix(".jsp");
+        templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("LEGACYHTML5");
         return templateResolver;
     }

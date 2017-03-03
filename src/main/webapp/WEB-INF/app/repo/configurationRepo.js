@@ -1,20 +1,17 @@
-vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
+vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi) {
+
+    var configurationRepo = this;
 
     var configurations = {};
 
+    var listening = false;
+
     // additional repo methods and variables
 
-    this.reset = function(model) {
-        return model.reset();
-    };
-
-    this.getAllMapByType = function() {
-
-        var configurationRepo = this;
-
+    var getAndListen = function() {
         var allConfigurations = configurationRepo.getAll();
 
-        var mapByType = function(configurations) {
+        var mapByType = function() {
             angular.forEach(allConfigurations, function(config) {
                 if (configurations[config.type] === undefined) {
                     configurations[config.type] = {};
@@ -23,14 +20,29 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
             });
         }
 
-        this.ready().then(function() {
-            mapByType(configurations);
+        configurationRepo.ready().then(function() {
+            mapByType();
+            WsApi.listen(configurationRepo.mapping.selectiveListen).then(null, null, function(response) {
+                var config = new Configuration(angular.fromJson(response.body).payload.Configuration);
+                configurations[config.type][config.name] = config;
+            });
         });
 
-        this.listen(function() {
-            mapByType(configurations);
+        configurationRepo.listen(function() {
+            mapByType();
         });
 
+        listening = true;
+    };
+
+    this.reset = function(model) {
+        return model.reset();
+    };
+
+    this.getAllMapByType = function() {
+        if (!listening) {
+            getAndListen();
+        }
         return configurations;
     };
 

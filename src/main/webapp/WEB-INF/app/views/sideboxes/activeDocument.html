@@ -1,21 +1,32 @@
 <div class="active-documents">
 
-	<div class="col-sm-6" ng-if="box.hasPrimaryDocument()">
-		<img class="select-toggle" src="resources/images/pdf-logo.gif" ng-click="box.downloadPrimaryDocument()">
-	</div>
-	<div class="col-sm-6 primary-file-title" ng-if="box.hasPrimaryDocument()">
-		<div><span>{{box.getPrimaryDocumentFileName()}}</span></div>
-		<div><a href ng-click="box.downloadPrimaryDocument()">Download</a></div>
-	</div>
-	<div class="col-sm-12 primary-file-title" ng-if="!box.hasPrimaryDocument()">
-		<div><span>None</span></div>
-	</div>
-	<div class="clearfix"></div>
-	
-	<sideboxsub>FILE OPTIONS</sideboxsub>
-	<ul>
-		<li><a href ng-click="box.gotoAllFiles()">View All Files</a></li>
-		<li><a href ng-click="box.uploadNewFile()">Upload New File</a></li>
-	</ul>
-	
+  <div class="col-sm-4" ng-if="box.hasPrimaryDocument()">
+    <img class="select-toggle" src="resources/images/pdf-logo.gif" ng-click="box.downloadPrimaryDocument()">
+  </div>
+  <div class="col-sm-8 primary-file-title" ng-if="box.hasPrimaryDocument()">
+    <div>
+      <span>{{ box.getPrimaryDocumentFileName() | limitTo: 14 }}<span ng-if="box.getPrimaryDocumentFileName().length > 14">...</span>
+      </span>
+    </div>
+    <div>
+      <a href ng-click="box.downloadPrimaryDocument()">Download</a>
+    </div>
+  </div>
+  <div class="col-sm-12 primary-file-title" ng-if="!box.hasPrimaryDocument()">
+    <div>
+      <span>None</span>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+
+  <sideboxsub>FILE OPTIONS</sideboxsub>
+  <ul>
+    <li>
+      <a href ng-click="box.gotoAllFiles()">View All Files</a>
+    </li>
+    <li>
+      <a href ng-click="box.uploadNewFile()">Upload New File</a>
+    </li>
+  </ul>
+
 </div>
