@@ -120,6 +120,10 @@ var apiMapping = {
         },
         listen: {
             'endpoint': '/channel',
+            'controller': 'settings/configurables'
+        },
+        selectiveListen: {
+            'endpoint': '/channel',
             'controller': 'settings/configurable'
         },
         create: {

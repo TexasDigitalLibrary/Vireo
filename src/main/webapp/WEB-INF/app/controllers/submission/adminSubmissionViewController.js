@@ -34,8 +34,6 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         $scope.fieldPredicates = fieldPredicates;
 
-        //$scope.depositLocations = depositLocations;
-
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
         var organization = $scope.submission.organization.name;

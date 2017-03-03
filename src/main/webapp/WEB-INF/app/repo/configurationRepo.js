@@ -1,60 +1,68 @@
-vireo.repo("ConfigurationRepo", function ConfigurationRepo() {
+vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi) {
 
-	var configurations = {};
+    var configurationRepo = this;
 
-	// additional repo methods and variables
+    var configurations = {};
 
-	this.reset = function(model) {
-		return model.reset();
-	};
+    var listening = false;
 
-	this.getAllMapByType = function() {
+    // additional repo methods and variables
 
-		var configurationRepo = this;
-		
-		
-		var allConfigurations = configurationRepo.getAll();
+    var getAndListen = function() {
+        var allConfigurations = configurationRepo.getAll();
 
-		var mapByType = function(configurations) {
-			angular.forEach(allConfigurations, function(config) {
-				if(configurations[config.type] === undefined) {
-					configurations[config.type] = {};
-				}
-				if(configurations[config.type][config.name] === undefined || config.isSystemRequired == false) {
-					configurations[config.type][config.name] = config;
-				}
-			});
-		}
-		
-		this.ready().then(function() {
-			mapByType(configurations);
-		});
+        var mapByType = function() {
+            angular.forEach(allConfigurations, function(config) {
+                if (configurations[config.type] === undefined) {
+                    configurations[config.type] = {};
+                }
+                configurations[config.type][config.name] = config;
+            });
+        }
 
-		this.listen(function() {
-			mapByType(configurations);
-		});
-		
-		return configurations;
-	}
+        configurationRepo.ready().then(function() {
+            mapByType();
+            WsApi.listen(configurationRepo.mapping.selectiveListen).then(null, null, function(response) {
+                var config = new Configuration(angular.fromJson(response.body).payload.Configuration);
+                configurations[config.type][config.name] = config;
+            });
+        });
 
-	this.findByTypeAndName = function(type, name) {
+        configurationRepo.listen(function() {
+            mapByType();
+        });
 
-		var configuration;
+        listening = true;
+    };
 
-		var list = this.getAll();
-			
-		for(var i in list) {
-			var config = list[i];
-			if(config.type == type && config.name == name) {
-				configuration = config;
-				break;
-			}
-		}
+    this.reset = function(model) {
+        return model.reset();
+    };
 
-		return configuration;
-	}
+    this.getAllMapByType = function() {
+        if (!listening) {
+            getAndListen();
+        }
+        return configurations;
+    };
 
+    this.findByTypeAndName = function(type, name) {
 
-	return this;
+        var configuration;
+
+        var list = this.getAll();
+
+        for (var i in list) {
+            var config = list[i];
+            if (config.type == type && config.name == name) {
+                configuration = config;
+                break;
+            }
+        }
+
+        return configuration;
+    };
+
+    return this;
 
 });
