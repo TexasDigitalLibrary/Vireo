@@ -672,7 +672,6 @@ public class SubmissionController {
     }
 
     @ApiMapping(value = "/file-info")
-    @Auth(role = "STUDENT")
     public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestData) throws IOException {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
