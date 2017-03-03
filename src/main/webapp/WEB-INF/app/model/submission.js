@@ -145,11 +145,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         });
 
         submission.addComment = function(data) {
-            angular.extend(apiMapping.Submission.addComment, {
-                'method': submission.id + "/add-comment",
-                'data': data
+            var promise = WsApi.fetch(apiMapping.Submission.addComment, {
+                pathValues: {
+                    id: submission.id
+                },
+                data: data
             });
-            var promise = WsApi.fetch(apiMapping.Submission.addComment);
             promise.then(function(res) {
                 if (res.meta && res.meta.type == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);

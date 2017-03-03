@@ -573,7 +573,7 @@ var apiMapping = {
         addComment: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            'method': 'add-comment'
+            'method': ':id/add-comment'
         },
         sendEmail: {
             'endpoint': '/private/queue',
