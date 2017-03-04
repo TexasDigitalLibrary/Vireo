@@ -5,6 +5,14 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
     $scope.settings = {};
 
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
+    
+    $scope.submissionsOpen = function() {
+        return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
+    };
+
+    $scope.multipleSubmissions = function() {
+        return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
+    };
 
     if (!$scope.isAnonymous()) {
 
@@ -75,14 +83,6 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
         var submissions = StudentSubmissionRepo.getAll();
 
         ConfigurationRepo.ready().then(function() {
-
-            $scope.submissionsOpen = function() {
-                return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
-            };
-
-            $scope.multipleSubmissions = function() {
-                return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
-            };
 
             $scope.hasSubmissions = function() {
                 return submissions.length > 0;

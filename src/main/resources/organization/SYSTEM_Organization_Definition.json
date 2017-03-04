@@ -308,7 +308,7 @@
           "repeatable": false,
           "overrideable": true,
           "enabled": true,
-          "optional": false,
+          "optional": true,
           "flagged": false,
           "logged": false,
           "usage": "",
@@ -335,7 +335,7 @@
           "repeatable": false,
           "overrideable": true,
           "enabled": true,
-          "optional": false,
+          "optional": true,
           "flagged": false,
           "logged": false,
           "usage": "",
@@ -839,7 +839,7 @@
             "name": "Document Information"
           },
           "inputType": {
-            "name": "INPUT_CONTACT"
+            "name": "INPUT_TEXT"
           },
           "repeatable": true,
           "overrideable": true,
@@ -923,7 +923,7 @@
           "repeatable": false,
           "overrideable": true,
           "enabled": true,
-          "optional": false,
+          "optional": true,
           "flagged": false,
           "logged": false,
           "usage": "",

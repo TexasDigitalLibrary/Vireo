@@ -1,7 +1,10 @@
 <table  ng-table="tableParams" show-filter="false" class="table table-bordered table-striped table-hover action-log-table">
   <tbody>
     <tr ng-repeat="actionLog in $data | filter: (public || '') && {privateFlag: 'false'}" ng-class="{'danger': actionLog.privateFlag}">
-      <td title="'Action By'">{{actionLog.user.settings.displayName}}</td>
+      <td title="'Action By'">
+      	<span ng-if="actionLog.user">{{actionLog.user.settings.displayName}}</span>
+      	<span ng-if="!actionLog.user">Advisor</span>
+      </td>
       <td title="'Action / Comment'" class="message-cell">{{actionLog.entry}}
         <spam class="private-flag" ng-if="actionLog.privateFlag">[private]</spam>
       </td>

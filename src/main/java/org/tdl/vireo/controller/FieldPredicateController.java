@@ -33,7 +33,7 @@ public class FieldPredicateController {
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @Auth(role = "STUDENT")
     public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
     }
@@ -44,7 +44,7 @@ public class FieldPredicateController {
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/{value}")
-    @Auth(role = "MANAGER")
+    @Auth(role = "STUDENT")
     public ApiResponse getFieldPredicateByValue(@ApiVariable String value) {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findByValue(value));
     }
