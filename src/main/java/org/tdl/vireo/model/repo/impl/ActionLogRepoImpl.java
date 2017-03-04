@@ -39,11 +39,25 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
         return log;
     }
+    
+    @Override
+    public ActionLog create(Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
+        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionState(), actionDate, entry, privateFlag));
+        submission.addActionLog(log);
+        submissionRepo.save(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
+        return log;
+    }
 
     @Override
     public ActionLog createPublicLog(Submission submission, Credentials credentials, String entry) {
         User user = userRepo.findByEmail(credentials.getEmail());
         return create(submission, user, Calendar.getInstance(), entry, false);
+    }
+    
+    @Override
+    public ActionLog createAdvisorPublicLog(Submission submission, String entry) {
+        return create(submission, Calendar.getInstance(), entry, false);
     }
 
     @Override

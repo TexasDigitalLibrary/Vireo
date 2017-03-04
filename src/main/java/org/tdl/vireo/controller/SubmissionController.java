@@ -183,7 +183,7 @@ public class SubmissionController {
         Submission submissionToDelete = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || AppRole.valueOf(credentials.getRole()).ordinal() < AppRole.MANAGER.ordinal()) {
+        if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail())) {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
         } else {
             submissionRepo.delete(submissionId);
@@ -592,13 +592,17 @@ public class SubmissionController {
     }
 
     @ApiMapping(value = "/file")
-    @Auth(role = "STUDENT")
-    public void submissionFile(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiData Map<String, String> requestData) throws IOException {
+    public void submissionFile(HttpServletResponse response, @ApiData Map<String, String> requestData) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
         String uri = requestData.get("uri");
         Path path = fileIOUtility.getAbsolutePath(uri);
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
+    }
+    
+    @ApiMapping(value = "/file-info")
+    public ApiResponse submissionFileInfo(@ApiData Map<String, String> requestData) throws IOException {
+        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
 
     @Transactional
@@ -669,12 +673,7 @@ public class SubmissionController {
 
         actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return apiResponse;
-    }
-
-    @ApiMapping(value = "/file-info")
-    public ApiResponse submissionFileInfo(@ApiCredentials Credentials credentials, @ApiData Map<String, String> requestData) throws IOException {
-        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
-    }
+    }    
 
     @ApiMapping("/{submissionId}/send-advisor-email")
     @Auth(role = "MANAGER")
@@ -703,9 +702,10 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
+    // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
     @ApiMapping("/{submissionId}/update-advisor-approval")
     @Transactional
-    public ApiResponse updateAdvisorApproval(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+    public ApiResponse updateAdvisorApproval(@ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -718,27 +718,27 @@ public class SubmissionController {
         if (approveApplicationNode != null) {
             submission.setApproveApplication(approveApplicationNode.asBoolean());
             String approveApplicationMessage = approveApplicationNode.asBoolean() ? "The committee approved the application" : "The committee rejected the Application";
-            actionLogRepo.createPublicLog(submission, credentials, approveApplicationMessage);
+            actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
         }
 
         if (approveEmbargoNode != null) {
             submission.setApproveEmbargo(approveEmbargoNode.asBoolean());
             String approveEmbargoMessage = approveEmbargoNode.asBoolean() ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
-            actionLogRepo.createPublicLog(submission, credentials, approveEmbargoMessage);
+            actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
         }
 
         if (clearApproveEmbargoNode != null && clearApproveEmbargoNode.asBoolean()) {
             submission.clearApproveEmbargo();
-            actionLogRepo.createPublicLog(submission, credentials, "The committee has withdrawn its Embargo Approval.");
+            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
         }
 
         if (clearApproveApplicationNode != null && clearApproveApplicationNode.asBoolean()) {
             submission.clearApproveApplication();
-            actionLogRepo.createPublicLog(submission, credentials, "The committee has withdrawn its Application Approval.");
+            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 
         if (messageNode != null)
-            actionLogRepo.createPublicLog(submission, credentials, "Advisor comments : " + messageNode.asText());
+            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + messageNode.asText());
 
         return new ApiResponse(SUCCESS, submission);
 

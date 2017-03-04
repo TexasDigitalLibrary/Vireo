@@ -55,6 +55,8 @@ public class AppRestInterceptor extends CoreRestInterceptor {
         String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
         String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
 
+        // TODO: check to see if credentials is from basic login or shibboleth
+        // do not create new user from basic login credentials that have no user!
         if (user == null) {
 
             AppRole role = AppRole.STUDENT;

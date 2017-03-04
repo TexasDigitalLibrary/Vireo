@@ -3,7 +3,7 @@
 	 
 	<!-- TODO: select by appropriate language -->
 	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({fieldProfile: item})}">	
-		<span ng-if="property == 'fieldGlosses'">{{ item[property][0].value }}</span>
+		<span ng-if="property == 'fieldGlosses'">{{ item[property][0].value }}<span ng-if="!item.optional">*</span></span>
 	</span>
 	<span ng-if="isEditable({fieldProfile: item})" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
 	<span ng-if="!isEditable({fieldProfile: item})" class="glyphicon glyphicon-info-sign text-warning" tooltip="This field profile is not overrideable."></span>

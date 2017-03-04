@@ -25,7 +25,7 @@ public class ActionLog extends BaseEntity {
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionState submissionState;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
     private User user;
 
     @Column(nullable = true)
@@ -46,6 +46,14 @@ public class ActionLog extends BaseEntity {
         this();
         this.submissionState = submissionState;
         this.user = user;
+        this.actionDate = actionDate;
+        this.entry = entry;
+        this.privateFlag = privateFlag;
+    }
+    
+    public ActionLog(SubmissionState submissionState, Calendar actionDate, String entry, boolean privateFlag) {
+        this();
+        this.submissionState = submissionState;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
