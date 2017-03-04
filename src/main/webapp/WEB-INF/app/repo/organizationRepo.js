@@ -57,9 +57,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		WsApi.listen(this.mapping.selectiveListen).then(null, null, function(rawApiResponse) {
 			var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
 			if (broadcastedOrg.id == selectedOrganization.id) {
-				organizationRepo.lazyFetch(broadcastedOrg.id, true, true).then(function(fullBroadcastedOrg) {
-					organizationRepo.setSelectedOrganization(fullBroadcastedOrg);
-				});
+				organizationRepo.setSelectedOrganization(broadcastedOrg, true, true);
 				angular.forEach(selectiveListenCallbacks, function(cb) {
 					cb(broadcastedOrg);
 				});
@@ -90,16 +88,18 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		return selectedOrganization;
 	};
 
-	this.setSelectedOrganization = function(organization, fetchWorkflow) {
-		this.lazyFetch(organization.id, fetchWorkflow).then(function(fetchedOrg) {
+	// TODO: simplify
+	this.setSelectedOrganization = function(organization, fetchWorkflow, ignoreOrgCache) {
+		this.lazyFetch(organization.id, fetchWorkflow, false, ignoreOrgCache).then(function(fetchedOrg) {
 			extendWithOverwrite(selectedOrganization, fetchedOrg);
 		});
 		return selectedOrganization;
 	};
 
-	this.lazyFetch = function(orgId, fetchWorkflow, ignoreWorkflowCache) {
+	// TODO: simplify
+	this.lazyFetch = function(orgId, fetchWorkflow, ignoreWorkflowCache, ignoreOrgCache) {
 		var orgDefer = $q.defer();
-		var cachedOrg = organizationRepo.findById(orgId);
+		var cachedOrg = ignoreOrgCache ? undefined : organizationRepo.findById(orgId);
 		if(cachedOrg !== undefined) {
 			if(fetchWorkflow) {
 				if(ignoreWorkflowCache || (cachedOrg.aggregateWorkflowSteps.length > 0 && typeof cachedOrg.aggregateWorkflowSteps[0] === 'number')) {
