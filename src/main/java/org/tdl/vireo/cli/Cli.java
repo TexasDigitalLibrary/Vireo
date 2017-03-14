@@ -3,8 +3,6 @@ import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.FieldPredicate;
@@ -43,34 +41,64 @@ public class Cli implements CommandLineRunner {
 	
 	@Override
 	public void run(String... arg0) throws Exception {
+		boolean runConsole = false;
+		for(String s : arg0) {
+			if(s.equals("console")) {
+					runConsole = true;
+					break;
+			}
+		}
+		
+		if(!runConsole) return;
+		
 		final String PROMPT = "\n"+(char)27 + "[36mvireo>"+(char)27 + "[37m ";
 		
 		Scanner reader = new Scanner(System.in);  // Reading from System.in
 		Boolean running = true;
 
+		
+		
 		System.out.print(PROMPT);
+		
+		int itemsGenerated = 0;
 
 		while(reader.hasNextLine() && running) {			
 			
 			String n = reader.nextLine();			
 			
-			int num = 10350;
-			
 			n=n.trim();
 			
-			switch (n) {
+			String[] commandTokens = n.split("\\s+");
+			
+			String command = null;
+			String argument = null;
+			int num = 0;
+			
+			if(commandTokens.length > 0)
+				command = commandTokens[0];
+			if(commandTokens.length > 1) {
+				argument = commandTokens[1];
+				try {
+					num = Integer.parseInt(argument);
+				} catch (Exception e) {
+					System.err.println("unable to parse int " + argument);
+				}
+			}
+					
+			
+			switch (command) {
 				case "exit":
 					System.out.println("\nGoodbye.");
 					running=false;
 					break;
 				
-				case "generate items":
+				case "generate":
 					
 					Organization org = organizationRepo.findAll().get(0);
 					SubmissionState state = submissionStateRepo.findAll().get(0);
 					
-					for(int i = 1; i <= num; i++) {
-						User submitter = userRepo.create("bob" + i + "@boring.bob", "bob", "boring", AppRole.STUDENT);
+					for(int i = itemsGenerated; i < num + itemsGenerated; i++) {
+						User submitter = userRepo.create("bob" + (i+1) + "@boring.bob", "bob", "boring", AppRole.STUDENT);
 						Credentials credentials = new Credentials();
 						credentials.setFirstName("Bob");
 						credentials.setLastName("Boring");
@@ -86,15 +114,15 @@ public class Cli implements CommandLineRunner {
 									val.setValue("test value " + i);
 									sub.addFieldValue(val);
 								}
-							}
-							
+							}							
 						}
-						submissionRepo.save(sub);
+						submissionRepo.saveAndFlush(sub);
 						System.out.print(".");
 						
 					}
 					
 					System.out.println("\nGenerated " + num + " submissions.");
+					itemsGenerated += num;
 					break;
 					
 				case "": 
@@ -106,5 +134,6 @@ public class Cli implements CommandLineRunner {
 				}
 			System.out.print(PROMPT);
 		}
+		reader.close();
 	}
 }
