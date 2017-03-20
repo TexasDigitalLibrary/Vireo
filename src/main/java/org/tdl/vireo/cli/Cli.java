@@ -117,7 +117,8 @@ public class Cli implements CommandLineRunner {
 							}							
 						}
 						submissionRepo.saveAndFlush(sub);
-						System.out.print(".");
+						
+						System.out.print("\r" + i + " of " + num + " generated...");
 						
 					}
 					
@@ -132,7 +133,10 @@ public class Cli implements CommandLineRunner {
 					System.out.println("Unknown command " + n);
 							
 				}
-			System.out.print(PROMPT);
+			
+			if(running) 
+				System.out.print(PROMPT);
+			
 		}
 		reader.close();
 	}
