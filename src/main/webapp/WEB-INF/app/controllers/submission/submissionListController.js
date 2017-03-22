@@ -4,7 +4,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.page = {
         number: 1,
-        numberOfElements: 10
+        count: 10
     };
 
     $scope.columns = [];
@@ -243,7 +243,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
         $scope.tableParams = new NgTableParams({
             page: $scope.page.number,
-            count: $scope.page.numberOfElements
+            count: $scope.page.count
         }, {
             counts: [
                 5,
@@ -265,6 +265,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
                     angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
                     SubmissionRepo.addAll($scope.page.content);
                     params.total($scope.page.totalElements);
+                    $scope.page.count = params.count();
                     return $scope.page.content;
                 });
             }
