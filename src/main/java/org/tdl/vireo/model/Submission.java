@@ -174,9 +174,9 @@ public class Submission extends BaseEntity {
         }
 
         if (this.submissionState != null) {
-            logger.info("Changing status from " + this.submissionState.getName() + " to " + submissionState.getName());
+            logger.debug("Changing status of submission " + getId() + " from " + this.submissionState.getName() + " to " + submissionState.getName());
         } else {
-            logger.info("Changing status to " + submissionState.getName());
+            logger.debug("Changing status of submission "  + getId() + "to " + submissionState.getName());
         }
 
         this.submissionState = submissionState;
