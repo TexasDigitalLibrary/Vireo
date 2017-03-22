@@ -259,7 +259,9 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
             total: $scope.page.totalElements,
             filterDelay: 0,
             getData: function(params) {
-                return SubmissionRepo.query($scope.userColumns, params.page() - 1, params.count()).then(function(data) {
+                return SubmissionRepo.query($scope.userColumns, params.page() > 0
+                    ? params.page() - 1
+                    : params.page(), params.count()).then(function(data) {
                     angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
                     SubmissionRepo.addAll($scope.page.content);
                     params.total($scope.page.totalElements);
