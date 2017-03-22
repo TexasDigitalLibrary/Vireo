@@ -2,23 +2,10 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-    $scope.page = {};
-
-    $scope.pageSize = 10;
-
-    $scope.pageNumber = 0;
-
-    $scope.pageSizeOptions = [
-        5,
-        10,
-        20,
-        40,
-        60,
-        100,
-        200,
-        400,
-        500
-    ];
+    $scope.page = {
+        number: 1,
+        count: 10
+    };
 
     $scope.columns = [];
 
@@ -253,20 +240,37 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     };
 
     var query = function() {
-        SubmissionRepo.query($scope.userColumns, $scope.pageNumber, $scope.pageSize).then(function(data) {
 
-            angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
-
-            SubmissionRepo.addAll($scope.page.content);
-
-            $scope.tableParams = new NgTableParams({
-                count: $scope.page.totalElements
-            }, {
-                counts: [],
-                filterDelay: 0,
-                dataset: $scope.page.content
-            });
+        $scope.tableParams = new NgTableParams({
+            page: $scope.page.number,
+            count: $scope.page.count
+        }, {
+            counts: [
+                5,
+                10,
+                20,
+                40,
+                60,
+                100,
+                200,
+                400,
+                500
+            ],
+            total: $scope.page.totalElements,
+            filterDelay: 0,
+            getData: function(params) {
+                return SubmissionRepo.query($scope.userColumns, params.page() > 0
+                    ? params.page() - 1
+                    : params.page(), params.count()).then(function(data) {
+                    angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
+                    SubmissionRepo.addAll($scope.page.content);
+                    params.total($scope.page.totalElements);
+                    $scope.page.count = params.count();
+                    return $scope.page.content;
+                });
+            }
         });
+
     };
 
     var update = function() {
