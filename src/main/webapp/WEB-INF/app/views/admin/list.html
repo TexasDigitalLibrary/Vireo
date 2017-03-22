@@ -37,25 +37,11 @@
           {{page.totalElements || 0}}
           matching records displayed on
           {{page.totalPages || 0}}
-          pages ({{pageSize || 0}}
+          pages ({{page.numberOfElements || 0}}
           per page).
         </th>
       </tr>
     </tfoot>
   </table>
-
-  <form class="form-inline pull-right">
-    <div class="btn-group" ng-if="page.totalPages > 1">
-      <button ng-if="pageNumber !== 0" class="btn btn-default" ng-click="selectPage(pageNumber-1)">
-        Prev
-      </button>
-      <button class="btn btn-default" ng-repeat="i in [] | range:page.totalPages" ng-class="{'active': pageNumber===i}" ng-click="selectPage(i)">
-        {{i*pageSize}}
-      </button>
-      <button ng-if="pageNumber !== page.totalPages-1" class="btn btn-default" ng-click="selectPage(pageNumber+1)">
-        Next
-      </button>
-    </div>
-  </form>
 
 </div>
