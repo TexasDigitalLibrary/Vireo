@@ -76,7 +76,9 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <version>1.4.194</version>
     </dependency>
+    
     <!-- PostgreSQL SQL DB - brought in through the tamu core framework -->
     <dependency>
       <groupId>org.postgresql</groupId>
