@@ -118,11 +118,11 @@ public class Cli implements CommandLineRunner {
 						}
 						submissionRepo.saveAndFlush(sub);
 						
-						System.out.print("\r" + i + " of " + num + " generated...");
+						System.out.print("\r" + (i-itemsGenerated) + " of " + num + " generated...");
 						
 					}
 					
-					System.out.println("\nGenerated " + num + " submissions.");
+					System.out.println("\rGenerated " + num + " submissions.");
 					itemsGenerated += num;
 					break;
 					
