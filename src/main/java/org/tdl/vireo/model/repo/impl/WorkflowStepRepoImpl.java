@@ -10,7 +10,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.HeritableComponent;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -364,7 +364,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
 
     @Override
-    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") Heritable persistedHeritableModel) {
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableComponent persistedHeritableModel) {
         if (persistedHeritableModel instanceof FieldProfile) {
             return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
         } else if (persistedHeritableModel instanceof Note) {

@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.inheritence.HeratibleWorkflowStep;
-import org.tdl.vireo.model.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.HeritableComponent;
 import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -209,7 +209,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void removeAggregateHeritableModel(Heritable heritableModel) {
+    public void removeAggregateHeritableModel(HeritableComponent heritableModel) {
         if (heritableModel.getClass().equals(Note.class)) {
             removeAggregateNote((Note) heritableModel);
         }
@@ -219,7 +219,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void addOriginalHeritableModel(Heritable heritableModel) {
+    public void addOriginalHeritableModel(HeritableComponent heritableModel) {
         if (heritableModel.getClass().equals(Note.class)) {
             addOriginalNote((Note) heritableModel);
         }
@@ -229,7 +229,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void addAggregateHeritableModel(Heritable heritableModel) {
+    public void addAggregateHeritableModel(HeritableComponent heritableModel) {
         if (heritableModel.getClass().equals(Note.class)) {
             addAggregateNote((Note) heritableModel);
         }
@@ -239,7 +239,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public void removeOriginalHeritableModel(Heritable heritableModel) {
+    public void removeOriginalHeritableModel(HeritableComponent heritableModel) {
         if (heritableModel.getClass().equals(Note.class)) {
             removeOriginalNote((Note) heritableModel);
         }
@@ -249,31 +249,31 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     @Override
-    public List getOriginalHeritableModels(Heritable heritableModel) {
+    public List getOriginalHeritableModels(Class HeritableComponent) {
         List results = new ArrayList();
-        if (heritableModel.getClass().equals(Note.class)) {
+        if (HeritableComponent.equals(Note.class)) {
             results = getOriginalNotes();
         }
-        if (heritableModel.getClass().equals(FieldProfile.class)) {
+        if (HeritableComponent.equals(FieldProfile.class)) {
             results = getOriginalFieldProfiles();
         }
         return results;
     }
 
     @Override
-    public List getAggregateHeritableModels(Heritable heritableModel) {
+    public List getAggregateHeritableModels(Class HeritableComponent) {
         List results = new ArrayList();
-        if (heritableModel.getClass().equals(Note.class)) {
+        if (HeritableComponent.equals(Note.class)) {
             results = getAggregateNotes();
         }
-        if (heritableModel.getClass().equals(FieldProfile.class)) {
+        if (HeritableComponent.equals(FieldProfile.class)) {
             results = getAggregateFieldProfiles();
         }
         return results;
     }
 
     @Override
-    public boolean replaceAggregateHeritableModel(Heritable newHeritableModel, Heritable oldHeritableModel) {
+    public boolean replaceAggregateHeritableModel(HeritableComponent newHeritableModel, HeritableComponent oldHeritableModel) {
         boolean results = false;
         if (newHeritableModel.getClass().equals(Note.class)) {
             results = replaceAggregateNote((Note) newHeritableModel, (Note) oldHeritableModel);

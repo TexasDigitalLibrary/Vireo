@@ -13,7 +13,7 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 @SuppressWarnings("rawtypes")
-public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
+public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaRepo<M>> {
 
     @Autowired
     private R heritableRepo;
@@ -103,7 +103,7 @@ public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
         boolean workflowStepOriginatesHeritableModel = false;
 
         for (WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
-            if (workflowStep.getAggregateHeritableModels(persistedHeritableModel).contains(persistedHeritableModel)) {
+            if (workflowStep.getAggregateHeritableModels(persistedHeritableModel.getClass()).contains(persistedHeritableModel)) {
                 workflowStepWithHeritableModelOnRequestingOrganization = workflowStep;
                 requestingOrganizationOriginatedWorkflowStep = workflowStepWithHeritableModelOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
             }
@@ -181,7 +181,7 @@ public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
 
             newOriginatingWorkflowStep = workflowStepRepo.findOne(newOriginatingWorkflowStep.getId());
 
-            newOriginatingWorkflowStep.getOriginalHeritableModels(newHeritableModel).add(newHeritableModel);
+            newOriginatingWorkflowStep.getOriginalHeritableModels(newHeritableModel.getClass()).add(newHeritableModel);
 
             newOriginatingWorkflowStep.replaceAggregateHeritableModel(persistedHeritableModel, newHeritableModel);
 
@@ -257,7 +257,7 @@ public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
     private List<WorkflowStep> getContainingDescendantWorkflowStep(Organization organization, M heritableModel) {
         List<WorkflowStep> descendantWorkflowStepsContainingHeritableModel = new ArrayList<WorkflowStep>();
         organization.getAggregateWorkflowSteps().forEach(ws -> {
-            if (ws.getAggregateHeritableModels(heritableModel).contains(heritableModel)) {
+            if (ws.getAggregateHeritableModels(heritableModel.getClass()).contains(heritableModel)) {
                 descendantWorkflowStepsContainingHeritableModel.add(ws);
             }
         });
@@ -296,12 +296,12 @@ public class HeritableRepo<M extends Heritable, R extends HeritableJpaRepo<M>> {
 
         for (WorkflowStep ws : workflowStepRepo.getDescendantsOfStepUnderOrganization(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization)) {
 
-            boolean aggregatesHeritableModelOrDescendant = ws.getAggregateHeritableModels(replacementHeritableModel).contains(replacementHeritableModel);
+            boolean aggregatesHeritableModelOrDescendant = ws.getAggregateHeritableModels(replacementHeritableModel.getClass()).contains(replacementHeritableModel);
 
             // For every heritableModel on that step (the aggregates will include the originals)
             List<M> copyOfAggregatedHeritableModels = new ArrayList<M>();
 
-            copyOfAggregatedHeritableModels.addAll(ws.getAggregateHeritableModels(replacementHeritableModel));
+            copyOfAggregatedHeritableModels.addAll(ws.getAggregateHeritableModels(replacementHeritableModel.getClass()));
 
             for (M n : copyOfAggregatedHeritableModels) {
 
