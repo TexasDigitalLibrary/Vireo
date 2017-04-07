@@ -293,7 +293,7 @@
 		        #{if attachment.getPerson().getRole() != null} 
 		        <role>${ attachment.getPerson().getRole().name()?.escapeXml()?.raw() }</role>
 		        #{/if} 
-		    </submitter>
+		    </person>
 		    #{/if} 
         </attachment>
         #{/list} 
