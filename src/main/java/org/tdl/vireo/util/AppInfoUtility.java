@@ -12,8 +12,8 @@ public class AppInfoUtility {
     @Value(value = "${server.port:#{null}}")
     private String serverPort;
 
-    @Value(value = "${app.root:#{null}}")
-    private String appRoot;
+    @Value(value = "${server.contextPath:#{null}}")
+    private String contextPath;
 
     public AppInfoUtility() {
     };
@@ -29,9 +29,8 @@ public class AppInfoUtility {
             runningAddress.append(serverPort);
         }
 
-        if (appRoot != null) {
-            runningAddress.append("/");
-            runningAddress.append(appRoot);
+        if (contextPath != null) {
+            runningAddress.append(contextPath);
         }
 
         return runningAddress.toString();
