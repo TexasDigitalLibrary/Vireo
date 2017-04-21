@@ -31,6 +31,7 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import org.tdl.vireo.util.TemplateUtility;
+import org.tdl.vireo.util.AppInfoUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -69,7 +70,10 @@ public class AppAuthController extends CoreAuthController {
 
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
-
+    
+    @Autowired
+    private AppInfoUtility appInfoUtil;
+    
     @ApiMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@ApiData Map<String, String> dataMap, @ApiParameters Map<String, String[]> parameters) {
 
@@ -89,7 +93,7 @@ public class AppAuthController extends CoreAuthController {
             String content = "";
 
             try {
-                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", host + ":" + port + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
+                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", appInfoUtil.getRunningAddress() + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
             } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
