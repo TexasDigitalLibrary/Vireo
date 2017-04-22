@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         build: build,
 
         useminPrepare: {
-            html: '<%= build.app %>/index.jsp',
+            html: '<%= build.app %>/index.html',
             options: {
                 dest: '<%= build.app %>'
             }
