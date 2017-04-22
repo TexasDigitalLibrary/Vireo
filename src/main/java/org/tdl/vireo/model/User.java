@@ -40,7 +40,7 @@ import edu.tamu.framework.model.AbstractCoreUser;
 import edu.tamu.framework.model.IRole;
 
 @Entity
-@Table(name = "users") // "user" is a keyword in sql
+@Table
 public class User extends AbstractCoreUser {
 
     private static final long serialVersionUID = 3346475543238946319L;
