@@ -5,6 +5,6 @@ vireo.model("EmailTemplate", function EmailTemplate() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

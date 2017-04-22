@@ -9,7 +9,7 @@ vireo.repo("SubmissionListColumnRepo", function SubmissionListColumnRepo() {
 				return slc;
 			}
 		}
-	}
+	};
 	
 	return this;
 

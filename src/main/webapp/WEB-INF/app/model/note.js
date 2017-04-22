@@ -5,6 +5,6 @@ vireo.model("Note", function Note() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

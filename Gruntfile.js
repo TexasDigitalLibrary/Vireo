@@ -39,6 +39,31 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             },
+            vendor: {
+                src: [
+                    '<%= build.app %>/bower_components/sockjs-client/dist/sockjs.min.js',
+                    '<%= build.app %>/bower_components/stomp-websocket/lib/stomp.min.js',
+                    '<%= build.app %>/bower_components/jquery/dist/jquery.min.js',
+                    '<%= build.app %>/bower_components/bootstrap/dist/js/bootstrap.min.js',
+                    '<%= build.app %>/bower_components/FileSaver/FileSaver.min.js',
+                    '<%= build.app %>/bower_components/angular/angular.min.js',
+                    '<%= build.app %>/bower_components/angular-sanitize/angular-sanitize.min.js',
+                    '<%= build.app %>/bower_components/angular-route/angular-route.min.js',
+                    '<%= build.app %>/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                    '<%= build.app %>/bower_components/angular-loader/angular-loader.min.js',
+                    '<%= build.app %>/bower_components/angular-mocks/angular-mocks.js',
+                    '<%= build.app %>/bower_components/angular-messages/angular-messages.js',                    
+                    '<%= build.app %>/bower_components/tinymce/tinymce.min.js',
+                    '<%= build.app %>/bower_components/angular-ui-tinymce/dist/tinymce.min.js',            	    
+                    '<%= build.app %>/bower_components/ng-csv/build/ng-csv.min.js',            	    
+                    '<%= build.app %>/bower_components/ng-sortable/dist/ng-sortable.min.js',            	    
+                    '<%= build.app %>/bower_components/ng-table/dist/ng-table.min.js',                    
+                    '<%= build.app %>/bower_components/ng-file-upload/ng-file-upload-shim.min.js',
+                    '<%= build.app %>/bower_components/ng-file-upload/ng-file-upload.min.js'
+                ],
+                dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
+
+            },
             core: {
                 src: [
                     '<%= build.app %>/bower_components/core/**/*.js',
@@ -64,8 +89,15 @@ module.exports = function (grunt) {
         },
 
         uglify: {
-            options: {
-                mangle: false
+        	options: {
+                mangle: false,
+                compress: {
+                    unused: false
+                }
+            },
+            vendor: {
+                src: '<%= build.app %>/resources/scripts/vendor_concat.js',
+                dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
             core: {
                 src: '<%= build.app %>/resources/scripts/core_concat.js',
@@ -110,12 +142,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['jshint', 'watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat',
-        'usemin', 'watch'
-    ]);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat',
-        'uglify', 'usemin', 'compass'
-    ]);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'uglify', 'usemin', 'compass']);
 
 };

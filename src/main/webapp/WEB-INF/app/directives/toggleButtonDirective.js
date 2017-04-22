@@ -11,11 +11,11 @@ vireo.directive("togglebutton", function() {
 		controller: function($scope) {
 			$scope.setActive = function(scopeValue) {
 				$scope.scopeValue = scopeValue;
-			}
+			};
 		},
 		link: function($scope, element, attr) {
 
-			var optionsObj = angular.fromJson($scope.toggleOptions)
+			var optionsObj = angular.fromJson($scope.toggleOptions);
 			$scope.options = {};
 
 			for(var index in optionsObj) {
@@ -23,7 +23,7 @@ vireo.directive("togglebutton", function() {
 				$scope.options["option"+ index] = {
 					gloss: option[Object.keys(option)[0]],
 					evaluation: Object.keys(option)[0]
-				}
+				};
 			}
 		}
 	};

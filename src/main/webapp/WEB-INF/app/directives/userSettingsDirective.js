@@ -12,7 +12,7 @@ vireo.service("UserSettingsService", function(UserSettings) {
 			fetch = false;
 		}
 		return userSettings;
-	}
+	};
 
 	return UserSettingsService;
 });

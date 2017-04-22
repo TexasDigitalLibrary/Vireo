@@ -36,7 +36,7 @@ vireo.controller('AbstractController', function($scope, $window, ModalService, S
     }).then(function() {
       angular.element("#reportModal").modal('show');
     }, function(response) {
-      if (response.data == null || response.data.message != "EXPIRED_JWT") {
+      if (response.data === null || response.data.message != "EXPIRED_JWT") {
         var subject = 'Error Report';
         var body = 'Error Report\n\nchannel: ' + alert.channel +
           '\ntime: ' + new Date(alert.time) +

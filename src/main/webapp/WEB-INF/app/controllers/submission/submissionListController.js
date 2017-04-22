@@ -195,12 +195,8 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
         var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, "MM/dd/yyyy");
 
-        dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2
-            ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString()
-            : "";
-        dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2
-            ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy")
-            : "";
+        dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
+        dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
 
         $scope.activeFilters.addFilter(column.title, dateValue, dateGloss).then(function() {
             $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
@@ -259,9 +255,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
             total: $scope.page.totalElements,
             filterDelay: 0,
             getData: function(params) {
-                return SubmissionRepo.query($scope.userColumns, params.page() > 0
-                    ? params.page() - 1
-                    : params.page(), params.count()).then(function(data) {
+                return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function(data) {
                     angular.extend($scope.page, angular.fromJson(data.body).payload.PageImpl);
                     SubmissionRepo.addAll($scope.page.content);
                     params.total($scope.page.totalElements);
@@ -402,9 +396,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
             if (member.fieldPredicate !== undefined) {
                 if (member.fieldPredicate.value == col.predicate) {
-                    value += value.length > 0
-                        ? ", " + member.value
-                        : member.value;
+                    value += value.length > 0 ? ", " + member.value : member.value;
                 }
             } else {
                 var path = col.valuePath;
@@ -415,9 +407,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
                     curr = curr[path[p]];
                 }
 
-                value += value.length > 0
-                    ? ", " + curr
-                    : curr;
+                value += value.length > 0 ? ", " + curr : curr;
             }
         }
         return value;
@@ -486,13 +476,9 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         },
         itemMoved: function(event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                event.source.itemScope.column.status = !event.source.itemScope.column.status
-                    ? 'previouslyDisplayed'
-                    : null;
+                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
             } else {
-                event.source.itemScope.column.status = !event.source.itemScope.column.status
-                    ? 'pervisoulyDisabled'
-                    : null;
+                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : null;
             }
             $scope.change = true;
         },
@@ -509,13 +495,9 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         },
         itemMoved: function(event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                event.source.itemScope.column.status = !event.source.itemScope.column.status
-                    ? 'previouslyDisplayed'
-                    : null;
+                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
             } else {
-                event.source.itemScope.column.status = !event.source.itemScope.column.status
-                    ? 'prreviouslyDisabled'
-                    : null;
+                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'prreviouslyDisabled' : null;
             }
             $scope.filterChange = true;
         },
@@ -545,9 +527,7 @@ vireo.filter('exclude', function() {
             });
         }
         return input.filter(function byExclude(item) {
-            return exclude.indexOf(prop
-                ? item[prop]
-                : item) === -1;
+            return exclude.indexOf(prop ? item[prop] : item) === -1;
         });
     };
 });

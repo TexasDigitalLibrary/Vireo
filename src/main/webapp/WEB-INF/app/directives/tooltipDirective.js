@@ -29,7 +29,7 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 				$scope.showTimer = $timeout(function() {
 					$scope.tipVisible = true;
 				}, 500);
-			}
+			};
 
 			$scope.hideTip = function() {
 				$timeout.cancel($scope.showTimer);
@@ -39,7 +39,7 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 					$scope.hidden = true;
 				}, 500);
 
-			}
+			};
 
 			$scope.toggleVisible = function() {
 				$timeout.cancel($scope.showTimer);
@@ -51,12 +51,12 @@ vireo.directive('tooltip', function ($timeout, $compile) {
 					}, 500);
 				} 
 
-			}
+			};
 
 			$scope.positionTip = function($event) {
-				$scope.tipStyles["top"] = $event.clientY + 20;
-				$scope.tipStyles["left"] = $event.clientX -	25;
-			}
+				$scope.tipStyles.top = $event.clientY + 20;
+				$scope.tipStyles.left = $event.clientX -	25;
+			};
 		}
 	};
 });

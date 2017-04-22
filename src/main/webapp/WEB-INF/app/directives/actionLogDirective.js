@@ -21,5 +21,5 @@ vireo.directive("actionlog", function(NgTableParams) {
                 $scope.tableParams.reload();
             });
         }
-    }
+    };
 });

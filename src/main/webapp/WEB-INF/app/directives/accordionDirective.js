@@ -51,7 +51,12 @@ vireo.directive("pane", function($location, $timeout, $routeParams, AccordionSer
 			$scope.expanded = false;
 
 			$scope.toggleExpanded = function() {
-				$scope.expanded ? $scope.close() : $scope.open();
+				if($scope.expanded) {
+					$scope.close();
+				}
+				else {
+					$scope.open();
+				}
 			};
 
 			$scope.open = function() {
@@ -71,7 +76,7 @@ vireo.directive("pane", function($location, $timeout, $routeParams, AccordionSer
 					$scope.html = attr.html;
 				}
 				$scope.expanded = true;
-			}
+			};
 
 			$scope.close = function() {
 				var panes = getPanes();
@@ -80,20 +85,25 @@ vireo.directive("pane", function($location, $timeout, $routeParams, AccordionSer
 				}
 				$location.search('pane', panes);
 				$scope.expanded = false;
-			}
+			};
 
 			$scope.loaded = function() {
 				$timeout(function(){
 					$scope.loading = false;	
 				}, 500);
-			}
+			};
 			
 			AccordionService.add($scope.query, {
 				'open': $scope.open,
 				'close': $scope.close
 			});
 			
-			getPanes().indexOf($scope.query) >= 0 ? $scope.open() : $scope.close();
+			if(getPanes().indexOf($scope.query) >= 0) {
+				$scope.open();
+			}
+			else {
+				$scope.close();
+			}
 	    }
 	};
 });
@@ -109,15 +119,30 @@ vireo.service("AccordionService", function() {
 	};
 
 	AccordionService.remove = function(id) {
-		panes[id] !== undefined ? deletepanes[id] : console.log('No pane with id:', id);
+		if(panes[id] !== undefined) {
+			// ???? deletepanes[id];
+		}
+		else {
+			console.log('No pane with id:', id);
+		}
 	};
 	
 	AccordionService.open = function(id) {
-		panes[id] !== undefined ? panes[id].open() : console.log('No pane with id:', id);
+		if(panes[id] !== undefined) {
+			panes[id].open();
+		}
+		else {
+			console.log('No pane with id:', id);
+		}
 	};
 	
 	AccordionService.close = function(id) {
-		panes[id] !== undefined ? panes[id].close() : console.log('No pane with id:', id);
+		if(panes[id] !== undefined) {
+			panes[id].close();
+		}
+		else {
+			console.log('No pane with id:', id);
+		}
 	};
 	
 	AccordionService.closeAll = function() {

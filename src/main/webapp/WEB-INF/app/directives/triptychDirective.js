@@ -122,33 +122,33 @@ vireo.directive("triptych", function () {
 				if(organization.id != selectedOrganization.id || selectedOrganization.id == $scope.organizations[0].id) {
 					var parent;
 					for(var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
-						var panel = $scope.navigation.panels[i];
+						var panel1 = $scope.navigation.panels[i];
 						if(parent === undefined) {
-							if(panel.organization.id == organization.parentOrganizations[0]) {
-								parent = panel;
+							if(panel1.organization.id == organization.parentOrganizations[0]) {
+								parent = panel1;
 							}
 							else {
 								clear(panel);
-								panel.active = false;
-								panel.previouslyActive = false;
+								panel1.active = false;
+								panel1.previouslyActive = false;
 							}
 						}
 						else {
-							panel.active = false;
-							panel.previouslyActive = true;
+							panel1.active = false;
+							panel1.previouslyActive = true;
 						}
 					}
-					var panel = getPanel(organization);
+					var panel2 = getPanel(organization);
 					if(parent !== undefined) {
 						if(parent.previouslyActive) {
 							$scope.navigation.backward = true;
 						}
 						parent.active = true;
 						parent.previouslyActive = false;
-						parent.selected = panel;
-						panel.parent = parent;
+						parent.selected = panel2;
+						panel2.parent = parent;
 					}
-					setVisibility(panel);
+					setVisibility(panel2);
 				}
 				$scope.setSelectedOrganization(organization);
 			};
@@ -181,10 +181,10 @@ vireo.directive("triptych", function () {
 						remove(panel);
 					}
 				}
-				if(newVisiblePanel != undefined) {
+				if(newVisiblePanel !== undefined) {
 					setVisibility(newVisiblePanel);
 				}
-				if(selectedOrganization != undefined) {
+				if(selectedOrganization !== undefined) {
 					$scope.selectOrganization(selectedOrganization);
 				}
 			};
@@ -195,9 +195,9 @@ vireo.directive("triptych", function () {
 				if(panel.visible && !visible) {
 					closingPromise = close(panel);
 				}
-				if(panel.parent != undefined) {
-					if(panel.parent.parent != undefined) {
-						if(panel.parent.parent.parent != undefined) {
+				if(panel.parent !== undefined) {
+					if(panel.parent.parent !== undefined) {
+						if(panel.parent.parent.parent !== undefined) {
 							if(panel.parent.parent.parent.visible) {
 								if(visible) {
 									closingPromise = close(panel.parent.parent.parent);

@@ -33,8 +33,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		for(var i in months) {
 			$scope.monthOptions[i] = months[i];
 		}
-		for(var i in $scope.graduationMonths) {
-			delete $scope.monthOptions[$scope.graduationMonths[i].month];
+		for(var j in $scope.graduationMonths) {
+			delete $scope.monthOptions[$scope.graduationMonths[j].month];
 		}
 	};
 

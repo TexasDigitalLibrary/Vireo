@@ -5,6 +5,6 @@ vireo.model("CustomActionDefinition", function CustomActionDefinition() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

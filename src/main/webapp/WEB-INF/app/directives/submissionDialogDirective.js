@@ -1,7 +1,7 @@
 vireo.directive("submissiondialog", function($anchorScroll, $location) {
     return {
         templateUrl: function(element, attr) {
-            return "views/directives/submissionDialog-" + attr.type + ".html"
+            return "views/directives/submissionDialog-" + attr.type + ".html";
         },
         scope: {
             submission: '=',
@@ -34,5 +34,5 @@ vireo.directive("submissiondialog", function($anchorScroll, $location) {
                 $anchorScroll();
             };
         }
-    }
+    };
 });

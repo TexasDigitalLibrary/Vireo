@@ -52,7 +52,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 
 		$scope.selectUser = function (selectedUser) {
             $scope.modalData = selectedUser;
-        }
+        };
 		
 		UserRepo.listen(function() {
 	    	$scope.user = new User();

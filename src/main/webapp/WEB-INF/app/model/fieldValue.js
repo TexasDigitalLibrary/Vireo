@@ -29,6 +29,6 @@ vireo.model("FieldValue", function FieldValue(WsApi) {
         };
 
         return fieldValue;
-    }
+    };
 
 });
