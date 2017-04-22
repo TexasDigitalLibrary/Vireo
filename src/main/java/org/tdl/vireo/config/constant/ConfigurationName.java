@@ -2,11 +2,11 @@ package org.tdl.vireo.config.constant;
 
 /**
  * Common Application Configuration Names.
- * 
+ *
  * Stored in the ConfigurationRepository there are global configuration objects consisting of name / value pairs. Different parts of the application are coded to look up specific configuration parameters to determine how the application should respond in specific circumstances. The static values defined here are the common definitions for those configuration parameters. This allows these names to be defined in one location while being statically linked throughout the application.
- * 
+ *
  * Future developers, feel free to add additional configuration parameters to this class as needed.
- * 
+ *
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public class ConfigurationName {

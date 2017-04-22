@@ -26,7 +26,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private FieldProfile originatingFieldProfile;
+    private FieldProfile originating;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
@@ -115,21 +115,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     * @return the originatingFieldProfile
-     */
-    public FieldProfile getOriginatingFieldProfile() {
-        return originatingFieldProfile;
-    }
-
-    /**
-     * @param originatingFieldProfile
-     *            the originatingFieldProfile to set
-     */
-    public void setOriginatingFieldProfile(FieldProfile originatingFieldProfile) {
-        this.originatingFieldProfile = originatingFieldProfile;
-    }
-
-    /**
      * @return the originatingWorkflowStep
      */
     public WorkflowStep getOriginatingWorkflowStep() {
@@ -175,13 +160,13 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     @Override
-    public void setOriginating(FieldProfile originatingHeritableModel) {
-        setOriginatingFieldProfile(originatingHeritableModel);
+    public void setOriginating(FieldProfile originating) {
+    	this.originating = originating;
     }
 
     @Override
     public FieldProfile getOriginating() {
-        return getOriginatingFieldProfile();
+    	return originating;
     }
 
     @Override
@@ -211,7 +196,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         clone.setInputType(getInputType());
         clone.setFieldPredicate(getFieldPredicate());
 
-        clone.setOriginatingFieldProfile(getOriginatingFieldProfile());
+        clone.setOriginating(getOriginating());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
 
         clone.setControlledVocabularies(controlledVocabularies);

@@ -19,7 +19,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage controlled vocabulary.
- * 
+ *
  */
 @RestController
 @ApiMapping("/settings/field-gloss")
@@ -33,7 +33,7 @@ public class FieldGlossController {
 
     /**
      * Endpoint to request all field glosses.
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/all")
@@ -44,7 +44,7 @@ public class FieldGlossController {
 
     /**
      * Endpoint to create a field gloss
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/create")

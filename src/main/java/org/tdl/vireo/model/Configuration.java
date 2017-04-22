@@ -14,7 +14,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 /**
  * Jpa specific implementation of Vireo's Configuration interface
- * 
+ *
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
@@ -35,7 +35,7 @@ public class Configuration extends BaseEntity {
 
     /**
      * Construct a new JpaConfigurationImpl
-     * 
+     *
      * By default new ones are not system required.
      */
     public Configuration() {
@@ -45,7 +45,7 @@ public class Configuration extends BaseEntity {
 
     /**
      * Construct a new JpaConfigurationImpl
-     * 
+     *
      * @param name
      *            The name of the configuration parameter.
      * @param value

@@ -18,7 +18,7 @@ public class Language extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      */
     public Language(String name) {
@@ -26,7 +26,7 @@ public class Language extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getName() {
@@ -34,7 +34,7 @@ public class Language extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      */
     public void setName(String name) {

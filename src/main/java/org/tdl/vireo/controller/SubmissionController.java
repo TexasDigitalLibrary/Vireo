@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
@@ -599,7 +598,7 @@ public class SubmissionController {
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
     }
-    
+
     @ApiMapping(value = "/file-info")
     public ApiResponse submissionFileInfo(@ApiData Map<String, String> requestData) throws IOException {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
@@ -673,7 +672,7 @@ public class SubmissionController {
 
         actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return apiResponse;
-    }    
+    }
 
     @ApiMapping("/{submissionId}/send-advisor-email")
     @Auth(role = "MANAGER")

@@ -23,7 +23,7 @@ public class Note extends AbstractNote<Note> implements Heritable<Note> {
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Note originatingNote;
+    private Note originating;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
@@ -52,21 +52,6 @@ public class Note extends AbstractNote<Note> implements Heritable<Note> {
     public Note(WorkflowStep originatingWorkflowStep, String name, String text, Boolean overrideable) {
         this(originatingWorkflowStep, name, text);
         setOverrideable(overrideable);
-    }
-
-    /**
-     * @return the originatingNote
-     */
-    public Note getOriginatingNote() {
-        return originatingNote;
-    }
-
-    /**
-     * @param originatingNote
-     *            the originatingNote to set
-     */
-    public void setOriginatingNote(Note originatingNote) {
-        this.originatingNote = originatingNote;
     }
 
     /**
@@ -100,13 +85,13 @@ public class Note extends AbstractNote<Note> implements Heritable<Note> {
     }
 
     @Override
-    public void setOriginating(Note originatingHeritableModel) {
-        setOriginatingNote(originatingHeritableModel);
+    public void setOriginating(Note originating) {
+    	this.originating = originating;
     }
 
     @Override
     public Note getOriginating() {
-        return getOriginatingNote();
+    	return originating;
     }
 
     @Override
@@ -116,7 +101,7 @@ public class Note extends AbstractNote<Note> implements Heritable<Note> {
         clone.setName(getName());
         clone.setText(getText());
         clone.setOverrideable(getOverrideable());
-        clone.setOriginatingNote(getOriginatingNote());
+        clone.setOriginating(getOriginating());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
 
         return clone;

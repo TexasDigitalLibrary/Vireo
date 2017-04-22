@@ -102,7 +102,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<FieldProfile> getOriginalFieldProfiles() {
@@ -110,7 +110,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @param param
      */
     public void setOriginalFieldProfiles(List<FieldProfile> originalFieldProfiles) {
@@ -118,7 +118,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @param fieldProfile
      */
     public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
@@ -129,7 +129,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @param fieldProfile
      */
     public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
@@ -138,7 +138,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @param fp1
      * @param fp2
      * @return
@@ -160,7 +160,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * 
+     *
      * @param fieldPredicate
      * @return
      */

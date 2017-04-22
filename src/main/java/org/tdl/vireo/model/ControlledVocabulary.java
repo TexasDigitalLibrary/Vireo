@@ -54,7 +54,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param language
      * @param order
@@ -66,7 +66,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param entityName
      * @param language
@@ -94,7 +94,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getEntityName() {
@@ -102,7 +102,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param entityName
      */
     public void setEntityName(String entityName) {
@@ -111,7 +111,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
 
     /**
      * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
-     * 
+     *
      * @return the values
      */
     public List<VocabularyWord> getDictionary() {
@@ -134,7 +134,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @return Language language
      */
     public Language getLanguage() {
@@ -142,7 +142,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param language
      */
     public void setLanguage(Language language) {
@@ -160,7 +160,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param value
      */
     public void addValue(VocabularyWord value) {
@@ -170,7 +170,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * 
+     *
      * @param value
      */
     public void removeValue(VocabularyWord value) {

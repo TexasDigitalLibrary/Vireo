@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -49,7 +48,6 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(value = 1)
     public void testGetAllLanguages() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         String responseJson = StompRequest("/settings/language/all", "");
 

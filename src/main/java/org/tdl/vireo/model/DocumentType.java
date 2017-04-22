@@ -28,7 +28,7 @@ public class DocumentType extends BaseOrderedEntity {
 
     /**
      * Create a new JpaDocumentTypeImpl
-     * 
+     *
      * @param name
      *            The name of the new document type.
      */

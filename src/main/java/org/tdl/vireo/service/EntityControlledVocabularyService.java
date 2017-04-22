@@ -31,7 +31,7 @@ import org.tdl.vireo.model.repo.LanguageRepo;
 
 /**
  * Service in which provides management and selection of controlled vocabulary from any class managed by the entity manager. Allows for enable/disabling the ability to select controlled vocabulary from any given entity using a whitelist. The controlled vocabulary is returned as a unique list of the datatype of the entity property.
- * 
+ *
  */
 @Service
 public class EntityControlledVocabularyService {
@@ -123,7 +123,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to add all properties of an entity to be selectable as controlled vocabulary. Validates that the entityName is an actual entity. Puts the entity with all its properties in the whitelist. Persists the entity and properties in the EntityCVWhitelistRepo.
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which whitelist
      * @throws ClassNotFoundException
@@ -148,7 +148,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to remove an entity and all its properties from being able to be selected as a controlled vocabulary. Removes entity and properties from the whitelist and the persistance in the EntityCVWhitelistRepo.
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which to remove
      */
@@ -159,7 +159,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to add a property of an entity to be selectable as controlled vocabulary. Validates that the entityName is an actual entity. Validates the propertyName from the given properties of an entity from the entity manager. Creates an EntityCVWhitelist if none exist for entityName. Otherwise adds property to EntityCVWhitelist and saves to the EntityCVWhitelistRepo. Updates whitelist.
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which to add one of its properties
      * @param propertyName
@@ -190,7 +190,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to remove a property of an entity from being selectable as controlled vocabulary. Removes property from EntityCVWhitelist and updates whitelist.
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which to remove one of its properties
      * @param propertyName
@@ -215,7 +215,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to retrieve a controlled vocabulary from a property of an entity. The entity must be managed by the entity manager and both the entity and property must be whitelisted.
-     * 
+     *
      * @param entity
      *            Class<?> generic class of the entity in which to get a controlled vocabulary of one of its property
      * @param property
@@ -262,13 +262,13 @@ public class EntityControlledVocabularyService {
 
     /**
      * Convenience method for the above method to retrieve the controlled vocabulary of a property of an entity.
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which to retrieve a controlled vocabulary of one of its proprties
      * @param property
      *            String which matches a property of the entity in which to get a controlled vocabulary of
      * @return List<Object> generic list of objects that is castable to the properties datatype
-     * 
+     *
      * @throws ClassNotFoundException
      *             thrown when an entityType does not match a class
      */
@@ -294,7 +294,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method in which returns all entities managed and all their properties.
-     * 
+     *
      * @return Map<String, List<String>> entity names as key and list of entities properties as values
      */
     public Map<String, List<String>> getAllEntityPropertyNames() {
@@ -311,7 +311,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to get the property names of an entity.
-     * 
+     *
      * @param entity
      *            Class<?> generic class of the entity in which to get a list its property names
      * @return List<String> list of entities property names
@@ -326,7 +326,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Convinience method for the above method to return property names of an entity
-     * 
+     *
      * @param entityName
      *            String which matches the class name of an entity in which to retrieve its property names
      * @return List<String list of entities property names
@@ -339,7 +339,7 @@ public class EntityControlledVocabularyService {
 
     /**
      * Method to get the current whitelist. A map of the enabled properties of entities that can be selected a controlled vocabulary.
-     * 
+     *
      * @return Map<String, List<String>> entity names as key and list of entities properties as values
      */
     public Map<String, List<String>> getWhitelist() {

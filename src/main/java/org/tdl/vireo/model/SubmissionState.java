@@ -202,7 +202,7 @@ public class SubmissionState extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param transitionSubmissionState
      */
     public void addTransitionSubmissionState(SubmissionState transitionSubmissionState) {
@@ -210,7 +210,7 @@ public class SubmissionState extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param transitionSubmissionState
      */
     public void removeTransitionSubmissionState(SubmissionState transitionSubmissionState) {

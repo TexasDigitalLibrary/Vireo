@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
@@ -58,13 +57,11 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(value = 1)
     public void testRegisterEmail() throws Exception {
         mockMvc.perform(get("/auth/register").param("email", TEST_USER_EMAIL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.type").value("SUCCESS")).andExpect(jsonPath("$.payload.UnmodifiableMap.email").value(TEST_USER_EMAIL)).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    @Order(value = 2)
     public void testRegister() throws Exception {
         String token = authUtility.generateToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);
         Map<String, String> data = new HashMap<String, String>();
@@ -78,7 +75,6 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(value = 3)
     public void testLogin() throws Exception {
 
         testRegister();

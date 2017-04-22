@@ -7,6 +7,7 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
@@ -33,26 +36,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import edu.tamu.framework.model.BaseEntity;
-import edu.tamu.framework.model.CoreUser;
+import edu.tamu.framework.model.AbstractCoreUser;
 import edu.tamu.framework.model.IRole;
 
 @Entity
 @Table(name = "users") // "user" is a keyword in sql
-public class User extends BaseEntity implements CoreUser {
+public class User extends AbstractCoreUser {
 
-    // institutional identifier, brought in with framework
-    @Column(nullable = true)
-    private Long uin;
+    private static final long serialVersionUID = 3346475543238946319L;
 
-    // brought in with framework
     @Column(nullable = true)
     private String netid;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    // encoded password
     @Column
     @JsonIgnore
     private String password;
@@ -69,7 +67,7 @@ public class User extends BaseEntity implements CoreUser {
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "setting")
     @Column(name = "value")
-    Map<String, String> settings;
+    private Map<String, String> settings;
 
     @Column
     private Integer birthYear;
@@ -119,7 +117,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param email
      * @param firstName
      * @param lastName
@@ -134,7 +132,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param email
      * @param firstName
      * @param lastName
@@ -177,15 +175,8 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * @return the encoded password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
      * Stores an encoded password
-     * 
+     *
      * @param password
      *            the password to set
      */
@@ -299,7 +290,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param shibbolethAffiliation
      */
     public void addShibbolethAffiliation(String shibbolethAffiliation) {
@@ -307,7 +298,7 @@ public class User extends BaseEntity implements CoreUser {
     }
 
     /**
-     * 
+     *
      * @param shibbolethAffiliation
      */
     public void removeShibbolethAffiliation(String shibbolethAffiliation) {
@@ -357,22 +348,6 @@ public class User extends BaseEntity implements CoreUser {
      */
     public void setOrcid(String orcid) {
         this.orcid = orcid;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void setUin(Long uin) {
-        this.uin = uin;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public Long getUin() {
-        return uin;
     }
 
     @Override
@@ -483,4 +458,50 @@ public class User extends BaseEntity implements CoreUser {
     public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
         this.filterColumns = filterColumns;
     }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(this.getRole().toString());
+        authorities.add(authority);
+        return authorities;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

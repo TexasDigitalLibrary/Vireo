@@ -14,7 +14,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 public class FieldPredicate extends BaseEntity {
-    
+
     @Transient
     private static String period = Pattern.quote(".");
 
@@ -29,7 +29,7 @@ public class FieldPredicate extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param value
      */
     public FieldPredicate(String value, Boolean documentTypePredicate) {
@@ -54,7 +54,7 @@ public class FieldPredicate extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return documentTypePredicate
      */
     public Boolean getDocumentTypePredicate() {
@@ -62,7 +62,7 @@ public class FieldPredicate extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param documentTypePredicate
      */
     public void setDocumentTypePredicate(Boolean documentTypePredicate) {

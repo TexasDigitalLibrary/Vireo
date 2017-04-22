@@ -10,7 +10,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
@@ -74,7 +73,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 1)
     public void testGetAllControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         String responseJson = StompRequest("/settings/controlled-vocabulary/all", "");
 
@@ -93,7 +91,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 2)
     public void testGetControlledVocabularyByName() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         String responseJson = StompRequest("/settings/controlled-vocabulary/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
 
@@ -110,7 +107,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 3)
     public void testCreateControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         String TEST_CONTROLLED_VOCABULARY_NAME4 = "TestCV4";
@@ -136,7 +132,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 4)
     public void testUpdateControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         String TEST_CONTROLLED_VOCABULARY_NAME4 = "TestCV4";
@@ -161,7 +156,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 5)
     public void testRemoveControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
@@ -180,7 +174,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 6)
     public void testReorderControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
         ControlledVocabulary controlledVocabulary1 = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
@@ -204,7 +197,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 7)
     public void testSortControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         String responseJson = StompRequest("/settings/controlled-vocabulary/sort/name", "");
 
@@ -222,7 +214,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 8)
     @SuppressWarnings("unchecked")
     public void testExportControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
@@ -261,31 +252,26 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Test
-    @Order(value = 9)
     public void testImportControlledVocabularyStatus() {
 
     }
 
     @Test
-    @Order(value = 10)
     public void testCancelImportControlledVocabulary() {
 
     }
 
     @Test
-    @Order(value = 11)
     public void testCompareControlledVocabulary() {
 
     }
 
     @Test
-    @Order(value = 12)
     public void testImportControlledVocabulary() {
 
     }
 
     @Test
-    @Order(value = 13)
     public void testInputStreamToRows() {
 
     }

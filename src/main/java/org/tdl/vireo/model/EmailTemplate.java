@@ -35,7 +35,7 @@ public class EmailTemplate extends BaseOrderedEntity {
 
     /**
      * Create a new EmailTemplate
-     * 
+     *
      * @param name
      *            The new template's name.
      * @param subject

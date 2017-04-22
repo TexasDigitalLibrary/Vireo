@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.tdl.vireo.config.VireoSpringBanner;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo" })
@@ -21,26 +20,24 @@ public class Application extends SpringBootServletInitializer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This configuration is for when running inside of Tomcat/Jetty
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         init(false);
-        application.banner(new VireoSpringBanner());
         return application.sources(Application.class);
     }
 
     /**
      * Main method for when running as a stand-alone Spring Boot Application
-     * 
+     *
      * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         init(true);
         SpringApplication application = new SpringApplication(Application.class);
-        application.setBanner(new VireoSpringBanner());
         application.run(args);
     }
 
