@@ -724,7 +724,6 @@ var apiMapping = {
     },
     StudentSubmission: {
         lazy: true,
-        validations: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -799,7 +798,6 @@ var apiMapping = {
     },
     AdvisorSubmission: {
         lazy: true,
-        validations: true,
         getByHash: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -918,7 +916,6 @@ var apiMapping = {
     },
     UserSettings: {
         lazy: true,
-        validations: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
