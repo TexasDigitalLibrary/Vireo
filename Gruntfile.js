@@ -52,12 +52,12 @@ module.exports = function (grunt) {
                     '<%= build.app %>/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
                     '<%= build.app %>/bower_components/angular-loader/angular-loader.min.js',
                     '<%= build.app %>/bower_components/angular-mocks/angular-mocks.js',
-                    '<%= build.app %>/bower_components/angular-messages/angular-messages.js',                    
+                    '<%= build.app %>/bower_components/angular-messages/angular-messages.js',
                     '<%= build.app %>/bower_components/tinymce/tinymce.min.js',
-                    '<%= build.app %>/bower_components/angular-ui-tinymce/dist/tinymce.min.js',            	    
-                    '<%= build.app %>/bower_components/ng-csv/build/ng-csv.min.js',            	    
-                    '<%= build.app %>/bower_components/ng-sortable/dist/ng-sortable.min.js',            	    
-                    '<%= build.app %>/bower_components/ng-table/dist/ng-table.min.js',                    
+                    '<%= build.app %>/bower_components/angular-ui-tinymce/dist/tinymce.min.js',
+                    '<%= build.app %>/bower_components/ng-csv/build/ng-csv.min.js',
+                    '<%= build.app %>/bower_components/ng-sortable/dist/ng-sortable.min.js',
+                    '<%= build.app %>/bower_components/ng-table/dist/ng-table.min.js',
                     '<%= build.app %>/bower_components/ng-file-upload/ng-file-upload-shim.min.js',
                     '<%= build.app %>/bower_components/ng-file-upload/ng-file-upload.min.js'
                 ],
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
         },
 
         uglify: {
-        	options: {
+            options: {
                 mangle: false,
                 compress: {
                     unused: false
