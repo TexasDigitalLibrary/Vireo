@@ -46,7 +46,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Boolean getOverrideable() {
@@ -54,7 +54,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param overrideable
      */
     public void setOverrideable(Boolean overrideable) {
@@ -62,7 +62,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @return
      */
     public List<FP> getAggregateFieldProfiles() {
@@ -70,7 +70,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param param
      */
     public void setAggregateFieldProfiles(List<FP> aggregateFieldProfiles) {
@@ -82,7 +82,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param aggregateFieldProfile
      */
     public void addAggregateFieldProfile(FP aggregateFieldProfile) {
@@ -92,7 +92,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param aggregateFieldProfile
      */
     public void removeAggregateFieldProfile(FP aggregateFieldProfile) {
@@ -100,7 +100,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param fp1
      * @param fp2
      * @return
@@ -121,7 +121,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param fp1
      * @param fp2
      * @return
@@ -140,7 +140,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
+     *
      * @param fp1
      * @param fp2
      * @return

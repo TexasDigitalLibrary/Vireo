@@ -5,6 +5,6 @@ vireo.model("DocumentType", function DocumentType() {
         // additional model methods and variables
 
         return this;
-    }
+    };
 
 });

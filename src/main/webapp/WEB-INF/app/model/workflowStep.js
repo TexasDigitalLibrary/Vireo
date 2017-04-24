@@ -5,6 +5,6 @@ vireo.model("WorkflowStep", function WorkflowStep() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

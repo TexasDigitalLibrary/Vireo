@@ -80,7 +80,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      */
     public Organization(String name) {
@@ -90,7 +90,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param name
      * @param category
      */
@@ -115,7 +115,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public OrganizationCategory getCategory() {
@@ -123,7 +123,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param catagory
      */
     public void setCategory(OrganizationCategory category) {
@@ -146,7 +146,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param originalWorkflowStep
      */
     public void addOriginalWorkflowStep(WorkflowStep originalWorkflowStep) {
@@ -157,7 +157,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param originalWorkflowStep
      */
     public void removeOriginalWorkflowStep(WorkflowStep originalWorkflowStep) {
@@ -166,7 +166,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param ws1
      * @param ws2
      * @return
@@ -203,7 +203,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param aggregateWorkflowStep
      */
     public void addAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep) {
@@ -211,7 +211,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param aggregateWorkflowStep
      * @param indexOf
      */
@@ -226,7 +226,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param aggregateWorkflowStep
      */
     public void removeAggregateWorkflowStep(WorkflowStep aggregateWorkflowStep) {
@@ -237,7 +237,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param ws1
      * @param ws2
      * @return
@@ -262,7 +262,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param ws1
      * @param ws2
      * @return
@@ -297,7 +297,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param parentOrganization
      */
     private void addParentOrganization(Organization parentOrganization) {
@@ -305,7 +305,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param parentOrganization
      */
     public void removeParentOrganization(Organization parentOrganization) {
@@ -328,7 +328,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param childOrganization
      */
     public void addChildOrganization(Organization childOrganization) {
@@ -337,7 +337,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param childOrganization
      */
     public void removeChildOrganization(Organization childOrganization) {
@@ -361,7 +361,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param email
      */
     public void addEmail(String email) {
@@ -369,7 +369,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param email
      */
     public void removeEmail(String email) {
@@ -392,7 +392,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param emailWorkflowRule
      */
     public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
@@ -400,7 +400,7 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param emailWorkflowRules
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {

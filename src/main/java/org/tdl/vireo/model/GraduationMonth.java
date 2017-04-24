@@ -8,7 +8,7 @@ import org.tdl.vireo.model.validation.GraduationMonthValidator;
 import edu.tamu.framework.model.BaseOrderedEntity;
 
 /**
- * 
+ *
  * @author gad
  */
 @Entity
@@ -18,7 +18,7 @@ public class GraduationMonth extends BaseOrderedEntity {
     private int month;
 
     /**
-     * 
+     *
      */
     public GraduationMonth() {
         setModelValidator(new GraduationMonthValidator());
@@ -26,7 +26,7 @@ public class GraduationMonth extends BaseOrderedEntity {
 
     /**
      * Create a new JpaGraduationMonthImpl
-     * 
+     *
      * @param month
      *            The integer of the month, starting with 0 = january.
      */

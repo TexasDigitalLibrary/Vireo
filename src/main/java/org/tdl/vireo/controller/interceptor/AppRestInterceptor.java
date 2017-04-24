@@ -14,7 +14,7 @@ import edu.tamu.framework.interceptor.CoreRestInterceptor;
 import edu.tamu.framework.model.Credentials;
 
 @Component
-public class AppRestInterceptor extends CoreRestInterceptor {
+public class AppRestInterceptor extends CoreRestInterceptor<User> {
 
     @Autowired
     private UserRepo userRepo;
@@ -28,7 +28,6 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     @Value("${app.authority.admins}")
     private String[] admins;
 
-    // TODO: move static values into config
     @Override
     public Credentials getAnonymousCredentials() {
         Credentials anonymousCredentials = new Credentials();
@@ -44,7 +43,7 @@ public class AppRestInterceptor extends CoreRestInterceptor {
     }
 
     @Override
-    public Credentials confirmCreateUser(Credentials credentials) {
+    public User confirmCreateUser(Credentials credentials) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -64,7 +63,9 @@ public class AppRestInterceptor extends CoreRestInterceptor {
             if (credentials.getRole() == null) {
                 credentials.setRole(role.toString());
             }
+
             String shibEmail = credentials.getEmail();
+
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
                     role = AppRole.ADMINISTRATOR;
@@ -72,45 +73,38 @@ public class AppRestInterceptor extends CoreRestInterceptor {
                 }
             }
 
-            // User newUser =
             user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
+
             user.setNetid(credentials.getAllCredentials().get(netIdHeader));
             if (credentials.getAllCredentials().get(birthYearHeader) != null) {
                 user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
             user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
             user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
-            if (credentials.getAllCredentials().get(institutionalIdentifierHeader) != null) {
-                user.setUin(Long.parseLong(credentials.getAllCredentials().get(institutionalIdentifierHeader)));
-            }
+            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
 
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
             user = userRepo.save(user);
         } else {
 
-            if (user.getNetid() != null && !user.getNetid().equals(credentials.getAllCredentials().get(netIdHeader))) {
-                user.setNetid(credentials.getAllCredentials().get(netIdHeader));
-            }
-            if (user.getBirthYear() != null && !user.getBirthYear().equals(credentials.getAllCredentials().get(birthYearHeader))) {
+            // TODO: update only if user properties does not match current credentials
+
+            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
+            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
                 user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
-            if (user.getMiddleName() != null && !user.getMiddleName().equals(credentials.getAllCredentials().get(middleNameHeader))) {
-                user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
-            }
-            if (user.getOrcid() != null && !user.getOrcid().equals(credentials.getAllCredentials().get(orcidHeader))) {
-                user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
-            }
-            if (user.getUin() != null && !user.getUin().equals(credentials.getAllCredentials().get(institutionalIdentifierHeader))) {
-                user.setUin(Long.parseLong(credentials.getAllCredentials().get(institutionalIdentifierHeader)));
-            }
+            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
+            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
 
             user = userRepo.save(user);
-
-            credentials.setRole(user.getRole().toString());
         }
 
-        return credentials;
+        credentials.setRole(user.getRole().toString());
+        credentials.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+
+        return user;
     }
 
 }

@@ -11,12 +11,12 @@ public class PackagerUtility {
 
     @Autowired
     private FormatterUtility formatterUtility;
-    
+
     public ExportPackage packageExport(Packager packager, Submission submission) throws Exception {
         String manifest = formatterUtility.renderManifest(packager.getFormatter(), submission);
 
         System.out.println("\n\n" + manifest + "\n\n");
-        
+
         return packager.packageExport(manifest, submission);
     }
 }

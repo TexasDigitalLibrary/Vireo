@@ -8,11 +8,10 @@ import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
-import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.enums.EmbargoGuarantor;
@@ -49,15 +48,13 @@ import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 import edu.tamu.framework.model.Credentials;
 
-@WebAppConfiguration
-@RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles({ "test" })
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { Application.class })
 public abstract class AbstractEntityTest {
 
     protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
@@ -405,7 +402,7 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected EntityCVWhitelistRepo entityCVWhitelistRepo;
-    
+
     @Autowired
     protected AbstractPackagerRepo abstractPackagerRepo;
 
@@ -459,25 +456,21 @@ public abstract class AbstractEntityTest {
     protected ControlledVocabulary controlledVocabulary;
 
     protected FieldProfile fieldProfile;
-    
+
     protected Packager packager;
 
     private Credentials credentials;
 
     @Test
-    @Order(value = 1)
     public abstract void testCreate();
 
     @Test
-    @Order(value = 2)
     public abstract void testDuplication();
 
     @Test
-    @Order(value = 3)
     public abstract void testDelete();
 
     @Test
-    @Order(value = 4)
     public abstract void testCascade();
 
     protected Credentials getCredentials() {

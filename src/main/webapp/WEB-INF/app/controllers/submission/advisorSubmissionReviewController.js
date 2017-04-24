@@ -31,7 +31,7 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
             angular.extend($scope.submission, angular.fromJson(res.body).payload.Submission);
             $scope.approval.message = "";
             $scope.approval.clearApproveApplication = false;
-            $scope.approval.clearApproveEmbargo = false
+            $scope.approval.clearApproveEmbargo = false;
             $scope.approval.approveEmbargo = undefined;
             $scope.approval.approveApplication = undefined;
             $scope.approval.updating = false;
@@ -60,6 +60,6 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
 
         return disabled;
 
-    }
+    };
 
 });

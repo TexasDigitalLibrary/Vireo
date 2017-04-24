@@ -12,9 +12,7 @@ vireo.directive("info", function(FieldValue) {
             stacked: '=?'
         },
         link: function($scope, element, attr) {
-            var edit = attr.edit !== undefined
-                ? attr.edit
-                : 'text';
+            var edit = attr.edit !== undefined ? attr.edit : 'text';
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
         controller: function($scope) {

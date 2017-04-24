@@ -70,9 +70,4 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
 
-    @Override
-    public List<FieldProfile> findByOriginating(FieldProfile originatingFieldProfile) {
-        return fieldProfileRepo.findByOriginatingFieldProfile(originatingFieldProfile);
-    }
-
 }

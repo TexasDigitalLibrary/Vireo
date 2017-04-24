@@ -18,7 +18,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage controlled vocabulary.
- * 
+ *
  */
 @RestController
 @ApiMapping("/settings/field-predicates")
@@ -29,7 +29,7 @@ public class FieldPredicateController {
 
     /**
      * Endpoint to request all field predicates.
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/all")
@@ -40,7 +40,7 @@ public class FieldPredicateController {
 
     /**
      * Endpoint to request all field predicates.
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/{value}")
@@ -51,7 +51,7 @@ public class FieldPredicateController {
 
     /**
      * Endpoint to create a field predicate
-     * 
+     *
      * @return ApiResponse with all input types.
      */
     @ApiMapping("/create")

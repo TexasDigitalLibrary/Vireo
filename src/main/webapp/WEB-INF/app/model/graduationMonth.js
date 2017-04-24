@@ -5,6 +5,6 @@ vireo.model("GraduationMonth", function GraduationMonth() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

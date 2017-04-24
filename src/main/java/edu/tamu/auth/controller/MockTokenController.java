@@ -24,12 +24,12 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.SkipAop;
-import edu.tamu.framework.model.jwt.JWT;
+import edu.tamu.framework.model.jwt.Jwt;
 import edu.tamu.framework.util.JwtUtility;
 
 /**
- * 
- * 
+ *
+ *
  * @author
  *
  */
@@ -75,7 +75,7 @@ public class MockTokenController {
      * @throws BadPaddingException
      * @throws IllegalBlockSizeException
      * @throws NoSuchPaddingException
-     * 
+     *
      */
     @RequestMapping("/token")
     @SkipAop
@@ -104,18 +104,18 @@ public class MockTokenController {
      * @param headers
      * @RequestHeader() Map<String,String>
      *
-     * @return JWT
+     * @return Jwt
      *
      * @exception InvalidKeyException
      * @exception NoSuchAlgorithmException
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
     @RequestMapping("/refresh")
     @SkipAop
-    public JWT refresh(@RequestParam() Map<String, String> params, @RequestHeader() Map<String, String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
+    public Jwt refresh(@RequestParam() Map<String, String> params, @RequestHeader() Map<String, String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
         return makeToken(params, headers);
     }
 
@@ -125,17 +125,17 @@ public class MockTokenController {
      * @param headers
      *            Map<String, String>
      *
-     * @return JWT
+     * @return Jwt
      *
      * @exception InvalidKeyException
      * @exception NoSuchAlgorithmException
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
-    private synchronized JWT makeToken(Map<String, String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
-        JWT newToken = null;
+    private synchronized Jwt makeToken(Map<String, String> params, Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+        Jwt newToken = null;
 
         String token = params.get("token");
 
@@ -172,7 +172,7 @@ public class MockTokenController {
                     for (String k : shibKeys) {
                         String p = headers.get(env.getProperty("shib." + k, ""));
                         newToken.makeClaim(k, p);
-                        logger.info("Adding " + k + ": " + p + " to JWT.");
+                        logger.info("Adding " + k + ": " + p + " to jwt.");
                     }
                 } else if (mockUser.equals("admin")) {
                     newToken.makeClaim(netIdHeader, "aggieJack");

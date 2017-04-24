@@ -7,5 +7,5 @@ vireo.filter('documentFieldValuePerProfile', function() {
             }
         });
         return documentFieldValuePerProfileValues;
-    }
+    };
 });

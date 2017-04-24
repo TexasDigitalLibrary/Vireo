@@ -5,6 +5,6 @@ vireo.model("Packager", function Packager() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

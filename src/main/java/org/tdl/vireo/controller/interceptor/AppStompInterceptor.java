@@ -14,7 +14,7 @@ import edu.tamu.framework.interceptor.CoreStompInterceptor;
 import edu.tamu.framework.model.Credentials;
 
 @Component
-public class AppStompInterceptor extends CoreStompInterceptor {
+public class AppStompInterceptor extends CoreStompInterceptor<User> {
 
     @Autowired
     private UserRepo userRepo;
@@ -28,7 +28,6 @@ public class AppStompInterceptor extends CoreStompInterceptor {
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
-    // TODO: move static values into config
     @Override
     public Credentials getAnonymousCredentials() {
         Credentials anonymousCredentials = new Credentials();
@@ -44,8 +43,8 @@ public class AppStompInterceptor extends CoreStompInterceptor {
     }
 
     @Override
-    public Credentials confirmCreateUser(Credentials creadentials) {
-        User user = userRepo.findByEmail(creadentials.getEmail());
+    public User confirmCreateUser(Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
 
         // get shib headers out of DB
         String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
@@ -60,56 +59,51 @@ public class AppStompInterceptor extends CoreStompInterceptor {
 
             AppRole role = AppRole.STUDENT;
 
-            if (creadentials.getRole() == null) {
-                creadentials.setRole(role.toString());
+            if (credentials.getRole() == null) {
+                credentials.setRole(role.toString());
             }
-            String shibEmail = creadentials.getEmail();
+
+            String shibEmail = credentials.getEmail();
+
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
                     role = AppRole.ADMINISTRATOR;
-                    creadentials.setRole(role.toString());
+                    credentials.setRole(role.toString());
                 }
             }
 
-            user = userRepo.create(creadentials.getEmail(), creadentials.getFirstName(), creadentials.getLastName(), role);
-            user.setNetid(creadentials.getAllCredentials().get(netIdHeader));
-            if (creadentials.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(creadentials.getAllCredentials().get(birthYearHeader)));
+            user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
+
+            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
+            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
-            user.setMiddleName(creadentials.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(creadentials.getAllCredentials().get(orcidHeader));
-            if (creadentials.getAllCredentials().get(institutionalIdentifierHeader) != null) {
-                user.setUin(Long.parseLong(creadentials.getAllCredentials().get(institutionalIdentifierHeader)));
-            }
+            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
+            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
 
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
-            userRepo.save(user);
-
+            user = userRepo.save(user);
         } else {
 
-            if (user.getNetid() != null && !user.getNetid().equals(creadentials.getAllCredentials().get(netIdHeader))) {
-                user.setNetid(creadentials.getAllCredentials().get(netIdHeader));
+            // TODO: update only if user properties does not match current credentials
+
+            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
+            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
             }
-            if (user.getBirthYear() != null && !user.getBirthYear().equals(creadentials.getAllCredentials().get(birthYearHeader))) {
-                user.setBirthYear(Integer.parseInt(creadentials.getAllCredentials().get(birthYearHeader)));
-            }
-            if (user.getMiddleName() != null && !user.getMiddleName().equals(creadentials.getAllCredentials().get(middleNameHeader))) {
-                user.setMiddleName(creadentials.getAllCredentials().get(middleNameHeader));
-            }
-            if (user.getOrcid() != null && !user.getOrcid().equals(creadentials.getAllCredentials().get(orcidHeader))) {
-                user.setOrcid(creadentials.getAllCredentials().get(orcidHeader));
-            }
-            if (user.getUin() != null && !user.getUin().equals(creadentials.getAllCredentials().get(institutionalIdentifierHeader))) {
-                user.setUin(Long.parseLong(creadentials.getAllCredentials().get(institutionalIdentifierHeader)));
-            }
+            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
+            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+
             user = userRepo.save(user);
-
-            creadentials.setRole(user.getRole().toString());
-
         }
 
-        return creadentials;
+        credentials.setRole(user.getRole().toString());
+        credentials.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+
+        return user;
 
     }
 

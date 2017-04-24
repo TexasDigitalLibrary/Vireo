@@ -17,7 +17,7 @@ import org.tdl.vireo.model.validation.ActionLogValidator;
 import edu.tamu.framework.model.BaseEntity;
 
 /**
- * 
+ *
  */
 @Entity
 public class ActionLog extends BaseEntity {
@@ -50,7 +50,7 @@ public class ActionLog extends BaseEntity {
         this.entry = entry;
         this.privateFlag = privateFlag;
     }
-    
+
     public ActionLog(SubmissionState submissionState, Calendar actionDate, String entry, boolean privateFlag) {
         this();
         this.submissionState = submissionState;

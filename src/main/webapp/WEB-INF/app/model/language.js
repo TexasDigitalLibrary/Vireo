@@ -5,6 +5,6 @@ vireo.model("Language", function Language() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

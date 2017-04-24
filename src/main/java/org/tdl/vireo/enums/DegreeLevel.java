@@ -2,7 +2,7 @@ package org.tdl.vireo.enums;
 
 /**
  * The possible degree levels supported by vireo.
- * 
+ *
  * @author <a href="http://www.scottphillips.com">Scott Phillips</a>
  */
 public enum DegreeLevel {
@@ -18,7 +18,7 @@ public enum DegreeLevel {
 
     /**
      * Private constructor for the defined degree levels listed above.
-     * 
+     *
      * @param id
      *            The id of the degree level.
      */

@@ -1,10 +1,14 @@
 {
   "name": "vireo",
-  "private": true,
+  "private": false,
   "version": "4.0.0",
   "description": "Vireo 4",
   "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
-  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TexasDigitalLibrary/Vireo"
+  },
+  "license": "BSD-2-Clause",
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
@@ -24,19 +28,19 @@
     "grunt-contrib-compass": "1.1.1",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-jshint": "1.1.0",
-    "grunt-contrib-uglify": "2.0.0",
+    "grunt-contrib-uglify": "2.3.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-usemin": "3.1.1",
     "http-server": "0.9.0",
     "jasmine-core": "2.5.2",
     "jshint-stylish": "2.2.1",
-    "karma": "1.4.0",
+    "karma": "1.6.0",
     "karma-chrome-launcher": "2.0.0",
-    "karma-firefox-launcher": "1.0.0",
+    "karma-firefox-launcher": "1.0.1",
     "karma-jasmine": "1.1.0",
     "karma-junit-reporter": "1.2.0",
     "load-grunt-tasks": "3.5.2",
-    "protractor": "5.0.0",
+    "protractor": "5.1.1",
     "time-grunt": "1.4.0"
   }
 }

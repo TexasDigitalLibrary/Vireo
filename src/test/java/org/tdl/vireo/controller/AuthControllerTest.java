@@ -19,7 +19,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.tdl.vireo.annotations.Order;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -31,7 +30,7 @@ import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
 
-@ActiveProfiles({ "test" })
+@ActiveProfiles("test")
 public class AuthControllerTest extends AbstractControllerTest {
 
     public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
@@ -80,6 +79,8 @@ public class AuthControllerTest extends AbstractControllerTest {
         MockitoAnnotations.initMocks(this);
 
         mockUsers = Arrays.asList(new User[] { TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4 });
+
+        ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
 
         ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
 
@@ -136,7 +137,6 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(value = 1)
     @SuppressWarnings("unchecked")
     public void testRegisterEmail() {
         Map<String, String[]> parameters = new HashMap<String, String[]>();
@@ -151,7 +151,6 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(value = 2)
     public void testRegister() throws Exception {
         String token = authUtility.generateToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);
         Map<String, String> data = new HashMap<String, String>();
@@ -175,7 +174,6 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Order(value = 3)
     public void testLogin() throws Exception {
 
         testRegister();

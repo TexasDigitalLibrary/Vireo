@@ -7,9 +7,9 @@ import org.tdl.vireo.model.formatter.AbstractFormatter;
 public interface Packager {
 
     public String getName();
-    
+
     public AbstractFormatter getFormatter();
-    
+
     public ExportPackage packageExport(String manifest, Submission submission);
 
 }

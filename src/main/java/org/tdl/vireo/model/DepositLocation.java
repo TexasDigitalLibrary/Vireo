@@ -56,7 +56,7 @@ public class DepositLocation extends BaseOrderedEntity {
 
     /**
      * Construct a new DepositLocation
-     * 
+     *
      * @param name
      *            The name of the new deposit location.
      */

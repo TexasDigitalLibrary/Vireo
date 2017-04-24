@@ -249,7 +249,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
     /**
      * Gets a list of WorkflowSteps on the org and its descendants that contain a given heritableModel
-     * 
+     *
      * @param organization
      * @param heritableModel
      * @return
@@ -280,7 +280,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
     /**
      * Have all the heritableModels (in workflow steps descended from a given step) that are derived from a particular ancestor heritableModel be replaced with a replacement heritableModel (which could also be just that ancestor heritableModel)
-     * 
+     *
      */
 
     @SuppressWarnings("unchecked")

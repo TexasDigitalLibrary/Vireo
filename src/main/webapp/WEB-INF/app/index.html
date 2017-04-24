@@ -24,16 +24,9 @@
 
     <meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool"/>
 
-    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css"/>
-    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css"/>
-
     <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css"/>
 
     <link rel="stylesheet" href="resources/styles/app.css"/>
-
-    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
-
-    <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 
   </head>
   <body>
@@ -147,271 +140,275 @@
 
     <footer class="footer">
       <div class="container">
-        <p class="text-muted">
-          <ul class="inline-list">
-            <li>&copy; Vireo
-              <span app-version></span>
-            </li>
-            <li>
-              <a href="#">Webmaster</a>
-            </li>
-            <li>
-              <a href="#">Legal</a>
-            </li>
-            <li>
-              <a href="#">Comments</a>
-            </li>
-            <li>
-              <a href="#">Accessibility</a>
-            </li>
-          </ul>
-        </p>
+         <ul class="inline-list">
+           <li>&copy; Vireo
+             <span app-version></span>
+           </li>
+           <li>
+             <a href="#">Webmaster</a>
+           </li>
+           <li>
+             <a href="#">Legal</a>
+           </li>
+           <li>
+             <a href="#">Comments</a>
+           </li>
+           <li>
+             <a href="#">Accessibility</a>
+           </li>
+         </ul>
       </div>
-
     </footer>
 
-    <!-- In production use: <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
-
     <!-- Bower component -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/FileSaver/FileSaver.min.js"></script>
+	    <!-- build:js resources/scripts/vendor_concat.js -->
+	    <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
+	    <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
 
-    <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
-    <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+	    <script src="bower_components/jquery/dist/jquery.js"></script>
+	    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script src="bower_components/angular-loader/angular-loader.js"></script>
-    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
+	    <script src="bower_components/FileSaver/FileSaver.min.js"></script>
 
-    <script src="bower_components/tinymce-dist/tinymce.min.js"></script>
-    <script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
-    <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
-    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+	    <script src="bower_components/angular/angular.min.js"></script>
+	    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	    <script src="bower_components/angular-route/angular-route.min.js"></script>
+	    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	    <script src="bower_components/angular-loader/angular-loader.min.js"></script>
+	    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+	    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 
-    <script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
-    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
-    <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+	    <script src="bower_components/tinymce/tinymce.min.js"></script>
+	    <script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
 
-    <!--  Core libraries -->
+	    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
 
-    <!-- build:js src/main/resources/static/ui/app/resources/scripts/core_concat.js -->
+	    <script src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
 
-    <!-- TODO: concat core js -->
+	    <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
 
-    <!-- endbuild -->
+	    <script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+	    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    	<!-- endbuild -->
 
-    <!-- Core Configuration -->
-    <script src="bower_components/core/app/config/coreConfig.js"></script>
 
-    <!-- Core Modules -->
-    <script src="bower_components/core/app/components/version/version.js"></script>
-    <script src="bower_components/core/app/components/version/version-directive.js"></script>
-    <script src="bower_components/core/app/components/version/interpolate-filter.js"></script>
+    <!-- Core libraries -->
+      <!-- build:js resources/scripts/core_concat.js -->
+	    <!-- Core Configuration -->
+	    <script src="bower_components/core/app/config/coreConfig.js"></script>
 
-    <!-- App Configuration -->
-    <script src="config/appConfig.js"></script>
-    <script src="config/apiMapping.js"></script>
+	    <!-- Core Modules -->
+	    <script src="bower_components/core/app/components/version/version.js"></script>
+	    <script src="bower_components/core/app/components/version/version-directive.js"></script>
+	    <script src="bower_components/core/app/components/version/interpolate-filter.js"></script>
 
-    <!-- App Modules -->
-    <script src="components/version/version.js"></script>
-    <script src="components/version/version-directive.js"></script>
-    <script src="components/version/interpolate-filter.js"></script>
+	    <!-- App Configuration -->
+	    <script src="config/appConfig.js"></script>
+	    <script src="config/apiMapping.js"></script>
 
-    <!-- Application Start -->
-    <script src="bower_components/core/app/core.js"></script>
-    <script src="bower_components/core/app/config/coreRuntime.js"></script>
-    <script src="bower_components/core/app/setup.js"></script>
-    <script src="bower_components/core/app/config/logging.js"></script>
+	    <!-- App Modules -->
+	    <script src="components/version/version.js"></script>
+	    <script src="components/version/version-directive.js"></script>
+	    <script src="components/version/interpolate-filter.js"></script>
 
-    <!-- Directives -->
-    <script src="bower_components/core/app/directives/headerDirective.js"></script>
-    <script src="bower_components/core/app/directives/footerDirective.js"></script>
-    <script src="bower_components/core/app/directives/userDirective.js"></script>
-    <script src="bower_components/core/app/directives/modalDirective.js"></script>
-    <script src="bower_components/core/app/directives/alertDirective.js"></script>
-    <script src="bower_components/core/app/directives/validationMessageDirective.js"></script>
-    <script src="bower_components/core/app/directives/validatedInputDirective.js"></script>
-    <script src="bower_components/core/app/directives/validatedSelectDirective.js"></script>
-    <script src="bower_components/core/app/directives/validatedTextAreaDirective.js"></script>
+	    <!-- Application Start -->
+	    <script src="bower_components/core/app/core.js"></script>
+	    <script src="bower_components/core/app/setup.js"></script>
+	    <script src="bower_components/core/app/config/coreRuntime.js"></script>
+	    <script src="bower_components/core/app/config/coreAngularConfig.js"></script>
+	    <script src="bower_components/core/app/config/logging.js"></script>
 
-    <!-- Services -->
-    <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
-    <script src="bower_components/core/app/services/wsservice.js"></script>
-    <script src="bower_components/core/app/services/wsapi.js"></script>
-    <script src="bower_components/core/app/services/restapi.js"></script>
-    <script src="bower_components/core/app/services/fileapi.js"></script>
-    <script src="bower_components/core/app/services/authserviceapi.js"></script>
-    <script src="bower_components/core/app/services/modalservice.js"></script>
-    <script src="bower_components/core/app/services/storageservice.js"></script>
-    <script src="bower_components/core/app/services/utilityservice.js"></script>
-    <script src="bower_components/core/app/services/alertservice.js"></script>
-    <script src="bower_components/core/app/services/validationstore.js"></script>
-    <script src="bower_components/core/app/services/userservice.js"></script>
+	    <!-- Directives -->
+	    <script src="bower_components/core/app/directives/headerDirective.js"></script>
+	    <script src="bower_components/core/app/directives/footerDirective.js"></script>
+	    <script src="bower_components/core/app/directives/userDirective.js"></script>
+	    <script src="bower_components/core/app/directives/modalDirective.js"></script>
+	    <script src="bower_components/core/app/directives/alertDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validationMessageDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedInputDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedSelectDirective.js"></script>
+	    <script src="bower_components/core/app/directives/validatedTextAreaDirective.js"></script>
 
-    <!-- Repo -->
-    <script src="bower_components/core/app/repo/abstractRepo.js"></script>
+	    <!-- Services -->
+	    <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
+	    <script src="bower_components/core/app/services/wsservice.js"></script>
+	    <script src="bower_components/core/app/services/wsapi.js"></script>
+	    <script src="bower_components/core/app/services/restapi.js"></script>
+      <script src="bower_components/core/app/services/fileapi.js"></script>
+	    <script src="bower_components/core/app/services/authserviceapi.js"></script>
+	    <script src="bower_components/core/app/services/storageservice.js"></script>
+	    <script src="bower_components/core/app/services/utilityservice.js"></script>
+	    <script src="bower_components/core/app/services/alertservice.js"></script>
+	    <script src="bower_components/core/app/services/validationstore.js"></script>
+	    <script src="bower_components/core/app/services/userservice.js"></script>
+	    <script src="bower_components/core/app/services/modalservice.js"></script>
+	    <script src="bower_components/core/app/services/modelcache.js"></script>
+	    <script src="bower_components/core/app/services/modelupdateservice.js"></script>
 
-    <!-- Models -->
-    <script src="bower_components/core/app/model/abstractModel.js"></script>
-    <script src="bower_components/core/app/model/assumedControl.js"></script>
-    <script src="bower_components/core/app/model/user.js"></script>
+	    <!-- Factories -->
 
-    <!-- Controllers -->
-    <script src="bower_components/core/app/controllers/authenticationController.js"></script>
-    <script src="bower_components/core/app/controllers/registrationController.js"></script>
-    <script src="bower_components/core/app/controllers/loginController.js"></script>
-    <script src="bower_components/core/app/controllers/userController.js"></script>
-    <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
+	    <!-- Repo -->
+	    <script src="bower_components/core/app/repo/abstractRepo.js"></script>
 
-    <!-- build:js src/main/resources/static/ui/app/resources/scripts/app_concat.js -->
+	    <!-- Models -->
+	    <script src="bower_components/core/app/model/abstractModel.js"></script>
+	    <script src="bower_components/core/app/model/assumedControl.js"></script>
+	    <script src="bower_components/core/app/model/user.js"></script>
 
-    <!-- Application Start -->
-    <script src="app.js"></script>
-    <script src="config/runTime.js"></script>
-    <script src="config/routes.js"></script>
+	    <!-- Controllers -->
+	    <script src="bower_components/core/app/controllers/abstractController.js"></script>
+	    <script src="bower_components/core/app/controllers/coreAdminController.js"></script>
+	    <script src="bower_components/core/app/controllers/authenticationController.js"></script>
+	    <script src="bower_components/core/app/controllers/loginController.js"></script>
+	    <script src="bower_components/core/app/controllers/registrationController.js"></script>
+	    <script src="bower_components/core/app/controllers/userController.js"></script>
+	    <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
+	    <!-- endbuild -->
 
-    <!-- Directives -->
-    <script src="directives/accordionDirective.js"></script>
-    <script src="directives/actionLogDirective.js"></script>
-    <script src="directives/deHashColorDirective.js"></script>
-    <script src="directives/tabsDirective.js"></script>
-    <script src="directives/sideBoxDirective.js"></script>
-    <script src="directives/toggleButtonDirective.js"></script>
-    <script src="directives/userSettingsDirective.js"></script>
-    <script src="directives/legendDirective.js"></script>
-    <script src="directives/checkBoxDirective.js"></script>
-    <script src="directives/tamuFocusDirective.js"></script>
-    <script src="directives/tooltipDirective.js"></script>
-    <script src="directives/dragAndDropListDirective.js"></script>
-    <script src="directives/lockingTextAreaDirective.js"></script>
-    <script src="directives/trashCanDirective.js"></script>
-    <script src="directives/selectedDirective.js"></script>
-    <script src="directives/dropZoneDirective.js"></script>
-    <script src="directives/fieldProfileDirective.js"></script>
-    <script src="directives/fieldProfileDisplayDirective.js"></script>
-    <script src="directives/reviewSubmissionFieldsDirective.js"></script>
-    <script src="directives/submissionDialogDirective.js"></script>
-    <script src="directives/submissionNoteDirective.js"></script>
-    <script src="directives/stringToDateDirective.js"></script>
-    <script src="directives/triptychDirective.js"></script>
-    <script src="directives/infoDirective.js"></script>
 
-    <!-- Services -->
-    <script src="services/sidebarService.js"></script>
-    <script src="services/fileUploadService.js"></script>
+    <!-- App libraries -->
+      <!-- build:js resources/scripts/app_concat.js -->
+	    <!-- Application Start -->
+	    <script src="app.js"></script>
+	    <script src="config/runTime.js"></script>
+	    <script src="config/routes.js"></script>
 
-    <!-- Repos -->
-    <script src="repo/abstractAppRepo.js"></script>
-    <script src="repo/advisorSubmissionRepo.js"></script>
-    <script src="repo/documentTypeRepo.js"></script>
-    <script src="repo/languageRepo.js"></script>
-    <script src="repo/customActionDefinitionRepo.js"></script>
-    <script src="repo/depositLocationRepo.js"></script>
-    <script src="repo/emailTemplateRepo.js"></script>
-    <script src="repo/graduationMonthRepo.js"></script>
-    <script src="repo/configurationRepo.js"></script>
-    <script src="repo/controlledVocabularyRepo.js"></script>
-    <script src="repo/workflowStepRepo.js"></script>
-    <script src="repo/embargoRepo.js"></script>
-    <script src="repo/userRepo.js"></script>
-    <script src="repo/organizationRepo.js"></script>
-    <script src="repo/organizationCategoryRepo.js"></script>
-    <script src="repo/inputTypeRepo.js"></script>
-    <script src="repo/fieldPredicateRepo.js"></script>
-    <script src="repo/fieldGlossRepo.js"></script>
-    <script src="repo/studentSubmissionRepo.js"></script>
-    <script src="repo/savedFilterRepo.js"></script>
-    <script src="repo/submissionRepo.js"></script>
-    <script src="repo/submissionStateRepo.js"></script>
-    <script src="repo/noteRepo.js"></script>
-    <script src="repo/fieldProfileRepo.js"></script>
-    <script src="repo/submissionListColumnRepo.js"></script>
-    <script src="repo/managerSubmissionListColumnRepo.js"></script>
-    <script src="repo/managerFilterColumnRepo.js"></script>
-    <script src="repo/customActionValueRepo.js"></script>
-    <script src="repo/packagerRepo.js"></script>
+	    <!-- Directives -->
+	    <script src="directives/accordionDirective.js"></script>
+	    <script src="directives/actionLogDirective.js"></script>
+	    <script src="directives/deHashColorDirective.js"></script>
+	    <script src="directives/tabsDirective.js"></script>
+	    <script src="directives/sideBoxDirective.js"></script>
+	    <script src="directives/toggleButtonDirective.js"></script>
+	    <script src="directives/userSettingsDirective.js"></script>
+	    <script src="directives/legendDirective.js"></script>
+	    <script src="directives/checkBoxDirective.js"></script>
+	    <script src="directives/tamuFocusDirective.js"></script>
+	    <script src="directives/tooltipDirective.js"></script>
+	    <script src="directives/dragAndDropListDirective.js"></script>
+	    <script src="directives/lockingTextAreaDirective.js"></script>
+	    <script src="directives/trashCanDirective.js"></script>
+	    <script src="directives/selectedDirective.js"></script>
+	    <script src="directives/dropZoneDirective.js"></script>
+	    <script src="directives/fieldProfileDirective.js"></script>
+	    <script src="directives/fieldProfileDisplayDirective.js"></script>
+	    <script src="directives/reviewSubmissionFieldsDirective.js"></script>
+	    <script src="directives/submissionDialogDirective.js"></script>
+	    <script src="directives/submissionNoteDirective.js"></script>
+	    <script src="directives/stringToDateDirective.js"></script>
+	    <script src="directives/triptychDirective.js"></script>
+	    <script src="directives/infoDirective.js"></script>
 
-    <!-- Models -->
-    <script src="model/abstractAppModel.js"></script>
-    <script src="model/actionLog.js"></script>
-    <script src="model/namedSearchFilterGroup.js"></script>
-    <script src="model/language.js"></script>
-    <script src="model/documentType.js"></script>
-    <script src="model/customActionDefinition.js"></script>
-    <script src="model/depositLocation.js"></script>
-    <script src="model/emailTemplate.js"></script>
-    <script src="model/graduationMonth.js"></script>
-    <script src="model/userSettings.js"></script>
-    <script src="model/configuration.js"></script>
-    <script src="model/controlledVocabulary.js"></script>
-    <script src="model/workflowStep.js"></script>
-    <script src="model/embargo.js"></script>
-    <script src="model/organization.js"></script>
-    <script src="model/organizationCategory.js"></script>
-    <script src="model/inputType.js"></script>
-    <script src="model/fieldPredicate.js"></script>
-    <script src="model/fieldGloss.js"></script>
-    <script src="model/savedFilter.js"></script>
-    <script src="model/submission.js"></script>
-    <script src="model/submissionState.js"></script>
-    <script src="model/fieldProfile.js"></script>
-    <script src="model/fieldValue.js"></script>
-    <script src="model/note.js"></script>
-    <script src="model/submissionListColumn.js"></script>
-    <script src="model/customActionValue.js"></script>
-    <script src="model/packager.js"></script>
+	    <!-- Services -->
+	    <script src="services/sidebarService.js"></script>
+	    <script src="services/fileUploadService.js"></script>
 
-    <!-- Constants -->
-    <script src="constants/emailRecipientType.js"></script>
-    <script src="constants/inputType.js"></script>
-    <script src="constants/submissionStatuses.js"></script>
+	    <!-- Repos -->
+	    <script src="repo/abstractAppRepo.js"></script>
+	    <script src="repo/advisorSubmissionRepo.js"></script>
+	    <script src="repo/documentTypeRepo.js"></script>
+	    <script src="repo/languageRepo.js"></script>
+	    <script src="repo/customActionDefinitionRepo.js"></script>
+	    <script src="repo/depositLocationRepo.js"></script>
+	    <script src="repo/emailTemplateRepo.js"></script>
+	    <script src="repo/graduationMonthRepo.js"></script>
+	    <script src="repo/configurationRepo.js"></script>
+	    <script src="repo/controlledVocabularyRepo.js"></script>
+	    <script src="repo/workflowStepRepo.js"></script>
+	    <script src="repo/embargoRepo.js"></script>
+	    <script src="repo/userRepo.js"></script>
+	    <script src="repo/organizationRepo.js"></script>
+	    <script src="repo/organizationCategoryRepo.js"></script>
+	    <script src="repo/inputTypeRepo.js"></script>
+	    <script src="repo/fieldPredicateRepo.js"></script>
+	    <script src="repo/fieldGlossRepo.js"></script>
+	    <script src="repo/studentSubmissionRepo.js"></script>
+	    <script src="repo/savedFilterRepo.js"></script>
+	    <script src="repo/submissionRepo.js"></script>
+	    <script src="repo/submissionStateRepo.js"></script>
+	    <script src="repo/noteRepo.js"></script>
+	    <script src="repo/fieldProfileRepo.js"></script>
+	    <script src="repo/submissionListColumnRepo.js"></script>
+	    <script src="repo/managerSubmissionListColumnRepo.js"></script>
+	    <script src="repo/managerFilterColumnRepo.js"></script>
+	    <script src="repo/customActionValueRepo.js"></script>
+	    <script src="repo/packagerRepo.js"></script>
 
-    <!-- Factories -->
-    <script src="factories/dragAndDropListenerFactory.js"></script>
+	    <!-- Models -->
+	    <script src="model/abstractAppModel.js"></script>
+	    <script src="model/actionLog.js"></script>
+	    <script src="model/namedSearchFilterGroup.js"></script>
+	    <script src="model/language.js"></script>
+	    <script src="model/documentType.js"></script>
+	    <script src="model/customActionDefinition.js"></script>
+	    <script src="model/depositLocation.js"></script>
+	    <script src="model/emailTemplate.js"></script>
+	    <script src="model/graduationMonth.js"></script>
+	    <script src="model/userSettings.js"></script>
+	    <script src="model/configuration.js"></script>
+	    <script src="model/controlledVocabulary.js"></script>
+	    <script src="model/workflowStep.js"></script>
+	    <script src="model/embargo.js"></script>
+	    <script src="model/organization.js"></script>
+	    <script src="model/organizationCategory.js"></script>
+	    <script src="model/inputType.js"></script>
+	    <script src="model/fieldPredicate.js"></script>
+	    <script src="model/fieldGloss.js"></script>
+	    <script src="model/savedFilter.js"></script>
+	    <script src="model/submission.js"></script>
+	    <script src="model/submissionState.js"></script>
+	    <script src="model/fieldProfile.js"></script>
+	    <script src="model/fieldValue.js"></script>
+	    <script src="model/note.js"></script>
+	    <script src="model/submissionListColumn.js"></script>
+	    <script src="model/customActionValue.js"></script>
+	    <script src="model/packager.js"></script>
 
-    <!-- filters -->
-    <script src="filters/fieldValuePerProfile.js"></script>
-    <script src="filters/documentFieldValuePerProfile.js"></script>
+	    <!-- Constants -->
+	    <script src="constants/emailRecipientType.js"></script>
+	    <script src="constants/inputType.js"></script>
+	    <script src="constants/submissionStatuses.js"></script>
 
-    <!-- Controllers -->
-    <script src="controllers/abstractController.js"></script>
-    <script src="controllers/adminController.js"></script>
-    <script src="controllers/applicationSettingsController.js"></script>
-    <script src="controllers/settings/emailWorkflowRulesController.js"></script>
-    <script src="controllers/headerController.js"></script>
-    <script src="controllers/settings/lookAndFeelController.js"></script>
-    <script src="controllers/organizationSettingsController.js"></script>
-    <script src="controllers/settings/organizationManagementController.js"></script>
-    <script src="controllers/settingsController.js"></script>
-    <script src="controllers/sidebarController.js"></script>
-    <script src="controllers/userRepoController.js"></script>
-    <script src="controllers/settings/customActionSettingsController.js"></script>
-    <script src="controllers/settings/depositLocationRepoController.js"></script>
-    <script src="controllers/settings/embargoRepoController.js"></script>
-    <script src="controllers/settings/graduationMonthRepoController.js"></script>
-    <script src="controllers/settings/emailTemplateRepoController.js"></script>
-    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
-    <script src="controllers/settings/languagesController.js"></script>
-    <script src="controllers/settings/documentTypesController.js"></script>
-    <script src="controllers/sideBars/organizationSideBarController.js"></script>
-    <script src="controllers/settings/organizationCategoriesController.js"></script>
-    <script src="controllers/settings/fieldProfileManagementController.js"></script>
-    <script src="controllers/settings/noteManagementController.js"></script>
-    <script src="controllers/submission/advisorSubmissionReviewController.js"></script>
-    <script src="controllers/submission/newSubmissionController.js"></script>
-    <script src="controllers/submission/studentSubmissionController.js"></script>
-    <script src="controllers/submission/submissionListController.js"></script>
-    <script src="controllers/submission/submissionViewController.js"></script>
-    <script src="controllers/submission/submissionHistoryController.js"></script>
-    <script src="controllers/submission/completeSubmissionController.js"></script>
-    <script src="controllers/submission/adminSubmissionViewController.js"></script>
+	    <!-- Factories -->
+	    <script src="factories/dragAndDropListenerFactory.js"></script>
 
-    <!-- endbuild -->
+	    <!-- filters -->
+	    <script src="filters/fieldValuePerProfile.js"></script>
+	    <script src="filters/documentFieldValuePerProfile.js"></script>
+
+	    <!-- Controllers -->
+	    <script src="controllers/abstractController.js"></script>
+	    <script src="controllers/adminController.js"></script>
+	    <script src="controllers/applicationSettingsController.js"></script>
+	    <script src="controllers/settings/emailWorkflowRulesController.js"></script>
+	    <script src="controllers/headerController.js"></script>
+	    <script src="controllers/settings/lookAndFeelController.js"></script>
+	    <script src="controllers/organizationSettingsController.js"></script>
+	    <script src="controllers/settings/organizationManagementController.js"></script>
+	    <script src="controllers/settingsController.js"></script>
+	    <script src="controllers/sidebarController.js"></script>
+	    <script src="controllers/userRepoController.js"></script>
+	    <script src="controllers/settings/customActionSettingsController.js"></script>
+	    <script src="controllers/settings/depositLocationRepoController.js"></script>
+	    <script src="controllers/settings/embargoRepoController.js"></script>
+	    <script src="controllers/settings/graduationMonthRepoController.js"></script>
+	    <script src="controllers/settings/emailTemplateRepoController.js"></script>
+	    <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
+	    <script src="controllers/settings/languagesController.js"></script>
+	    <script src="controllers/settings/documentTypesController.js"></script>
+	    <script src="controllers/sideBars/organizationSideBarController.js"></script>
+	    <script src="controllers/settings/organizationCategoriesController.js"></script>
+	    <script src="controllers/settings/fieldProfileManagementController.js"></script>
+	    <script src="controllers/settings/noteManagementController.js"></script>
+	    <script src="controllers/submission/advisorSubmissionReviewController.js"></script>
+	    <script src="controllers/submission/newSubmissionController.js"></script>
+	    <script src="controllers/submission/studentSubmissionController.js"></script>
+	    <script src="controllers/submission/submissionListController.js"></script>
+	    <script src="controllers/submission/submissionViewController.js"></script>
+	    <script src="controllers/submission/submissionHistoryController.js"></script>
+	    <script src="controllers/submission/completeSubmissionController.js"></script>
+	    <script src="controllers/submission/adminSubmissionViewController.js"></script>
+	    <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>

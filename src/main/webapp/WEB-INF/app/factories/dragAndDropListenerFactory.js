@@ -32,7 +32,7 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 			listener.reorder = drag.reorder;
 		}
 		else {
-			console.log('ensure configured')
+			console.log('ensure configured');
 		}
 		
 		var startingObj;
@@ -103,7 +103,7 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 		};
 		
 		return dragControls;
-	}
+	};
 	
 	return this;
 });

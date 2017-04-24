@@ -13,7 +13,7 @@ import org.tdl.vireo.model.ControlledVocabularyCache;
 
 /**
  * Service to cache and synchronize cache of controlled vocabulary.
- * 
+ *
  */
 @Service
 public class ControlledVocabularyCachingService {
@@ -24,7 +24,7 @@ public class ControlledVocabularyCachingService {
     private Map<String, ControlledVocabularyCache> cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
 
     /**
-     * 
+     *
      * @param cvCache
      */
     public void addControlledVocabularyCache(ControlledVocabularyCache cvCache) {
@@ -32,7 +32,7 @@ public class ControlledVocabularyCachingService {
     }
 
     /**
-     * 
+     *
      * @param controlledVocabularyName
      */
     public void removeControlledVocabularyCache(String controlledVocabularyName) {
@@ -40,7 +40,7 @@ public class ControlledVocabularyCachingService {
     }
 
     /**
-     * 
+     *
      * @param controlledVocabularyName
      * @return
      */
@@ -49,7 +49,7 @@ public class ControlledVocabularyCachingService {
     }
 
     /**
-     * 
+     *
      * @param controlledVocabularyName
      * @return
      */
@@ -58,14 +58,14 @@ public class ControlledVocabularyCachingService {
     }
 
     /**
-     * 
+     *
      */
     public void clearCache() {
         cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
     }
 
     /**
-     * 
+     *
      */
     @Scheduled(fixedDelay = 1800000)
     public void cleanCache() {

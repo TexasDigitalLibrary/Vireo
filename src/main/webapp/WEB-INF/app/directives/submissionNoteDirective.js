@@ -4,5 +4,5 @@ vireo.directive("submissionnote", function() {
         scope: {
             note: "="
         }
-    }
+    };
 });

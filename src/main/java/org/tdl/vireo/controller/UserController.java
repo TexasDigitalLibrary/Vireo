@@ -4,10 +4,13 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
+import static org.springframework.beans.BeanUtils.copyProperties;
+
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -73,22 +76,19 @@ public class UserController {
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateRole(@ApiValidatedModel User user) {
+    public ApiResponse updateRole(@ApiValidatedModel User updatedUser) {
 
-        // get the persisted user for its encoded password
-        User persistedUser = userRepo.findOne(user.getId());
-        if (persistedUser != null) {
-            user.setPassword(persistedUser.getPassword());
-            // TODO: figure out why this has to happen!!
-            user.setActiveFilter(persistedUser.getActiveFilter());
-        }
+    	User persistedUser = userRepo.findOne(updatedUser.getId());
+    	// Awesome BeanUtils from Apache commons, included with Spring
+    	// copy properties from source, arg1, to destination, arg2, excluding ..., arg3
+    	copyProperties(updatedUser, persistedUser, "password", "activeFilter");
 
-        logger.info("Updating role for " + user.getEmail());
-        user = userRepo.save(user);
+        logger.info("Updating role for " + persistedUser.getEmail());
+        persistedUser = userRepo.save(persistedUser);
 
         simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
 
-        return new ApiResponse(SUCCESS, user);
+        return new ApiResponse(SUCCESS, persistedUser);
     }
 
     @ApiMapping("/settings")
