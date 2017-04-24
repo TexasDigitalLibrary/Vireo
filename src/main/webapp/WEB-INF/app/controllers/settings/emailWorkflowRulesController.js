@@ -40,7 +40,7 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 				}
 			});
 		});
-	}
+	};
 
 	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
 		$scope.openAddEmailWorkflowRuleModal = function(id) {

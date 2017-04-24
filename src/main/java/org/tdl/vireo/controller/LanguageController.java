@@ -30,7 +30,7 @@ import edu.tamu.framework.model.ApiResponse;
 
 /**
  * Controller in which to manage langauges.
- * 
+ *
  */
 @Controller
 @ApiMapping("/settings/language")
@@ -48,7 +48,7 @@ public class LanguageController {
     private ProquestLanguageCodesService proquestLanguageCodes;
 
     /**
-     * 
+     *
      * @return
      */
     @Transactional
@@ -59,7 +59,7 @@ public class LanguageController {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/create")
@@ -73,7 +73,7 @@ public class LanguageController {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/update")
@@ -87,7 +87,7 @@ public class LanguageController {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/remove")
@@ -102,7 +102,7 @@ public class LanguageController {
 
     /**
      * Endpoint to reorder languages.
-     * 
+     *
      * @param src
      *            source position
      * @param dest
@@ -121,7 +121,7 @@ public class LanguageController {
 
     /**
      * Endpoint to sort languages.
-     * 
+     *
      * @param column
      *            column to sort by
      * @return ApiResponse indicating success
@@ -137,7 +137,7 @@ public class LanguageController {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @ApiMapping("/proquest")

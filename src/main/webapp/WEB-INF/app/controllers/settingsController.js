@@ -7,11 +7,11 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
     
     $scope.submissionsOpen = function() {
-        return stringToBoolean($scope.settings.configurable.application.submissions_open.value);
+        return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
     };
 
     $scope.multipleSubmissions = function() {
-        return stringToBoolean($scope.settings.configurable.application.allow_multiple_submissions.value);
+        return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.allow_multiple_submissions ? $scope.settings.configurable.application.allow_multiple_submissions.value : 'false' : 'false');
     };
 
     if (!$scope.isAnonymous()) {

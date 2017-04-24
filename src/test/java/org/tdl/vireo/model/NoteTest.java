@@ -740,7 +740,7 @@ public class NoteTest extends AbstractEntityTest {
 
     /**
      * Test that when a note is overridden at a child org, the override is removed and the original is reattached when the note is made non-overrideable at a parent org.
-     * 
+     *
      * @throws WorkflowStepNonOverrideableException
      * @throws HeritableModelNonOverrideableException
      * @throws ComponentNotPresentOnOrgException

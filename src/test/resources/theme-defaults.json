@@ -1,0 +1,31 @@
+{
+  "propertyNames": ["primary", "secondary", "baseFontSize", "linkColor"],
+  "themes": {
+    "Default": [{
+        "primary": "#500000"
+      },
+      {
+        "secondary": "#3c0000"
+      },
+      {
+        "baseFontSize": "14pt"
+      },
+      {
+        "linkColor": "#337ab7"
+      }
+    ],
+    "Another Theme": [{
+        "primary": "green"
+      },
+      {
+        "secondary": "#026002"
+      },
+      {
+        "baseFontSize": "14pt"
+      },
+      {
+        "linkColor": "#026002"
+      }
+    ]
+  }
+}

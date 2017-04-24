@@ -38,7 +38,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 		$scope.showOrganizationManagement = function() {
 			return $scope.getSelectedOrganization().id !== undefined;
-		}
+		};
 
 		$scope.updateOrganization = function(organization) {
 			organization.save().then(function() {
@@ -61,7 +61,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 		$scope.cancelDeleteOrganization = function() {
 			$scope.closeModal();
 			$scope.getSelectedOrganization().clearValidationResults();
-		}
+		};
 
 		$scope.addWorkflowStep = function() {
 			OrganizationRepo.addWorkflowStep($scope.modalData);

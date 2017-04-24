@@ -19,7 +19,7 @@ vireo.directive("checkbox", function ($controller) {
 	    		if(attr.checkboxNgClickFunction) {
 	    			$scope[attr.checkboxNgClickFunction]($scope.name);
 	    		}
-	    	}
+	    	};
 
 	    }
 	};

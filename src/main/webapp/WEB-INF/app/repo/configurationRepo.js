@@ -18,7 +18,7 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi)
                 }
                 configurations[config.type][config.name] = config;
             });
-        }
+        };
 
         configurationRepo.ready().then(function() {
             mapByType();

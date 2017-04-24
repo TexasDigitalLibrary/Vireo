@@ -14,7 +14,7 @@ import edu.tamu.framework.model.BaseEntity;
 
 /**
  * The value of a custom action associated with a particular submission.
- * 
+ *
  */
 @Entity
 public class CustomActionValue extends BaseEntity {

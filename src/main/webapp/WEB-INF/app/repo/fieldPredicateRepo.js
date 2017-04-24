@@ -9,7 +9,7 @@ vireo.repo("FieldPredicateRepo", function FieldPredicateRepo(WsApi) {
 			'method': value
 		});
 		return WsApi.fetch(this.mapping.one);
-	}
+	};
 
 	return fieldPredicateRepo;
 

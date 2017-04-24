@@ -25,9 +25,7 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
             return currentStepIndex === -1;
         };
 
-        var currentStep = $routeParams.stepNum
-            ? $scope.submission.submissionWorkflowSteps[$routeParams.stepNum - 1]
-            : $scope.submission.submissionWorkflowSteps[0];
+        var currentStep = $routeParams.stepNum ? $scope.submission.submissionWorkflowSteps[$routeParams.stepNum - 1] : $scope.submission.submissionWorkflowSteps[0];
 
         $scope.setActiveStep(currentStep);
 
@@ -80,6 +78,6 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
 
     $scope.reviewSubmission = function() {
         $scope.setActiveStep({name: 'review'});
-    }
+    };
 
 });

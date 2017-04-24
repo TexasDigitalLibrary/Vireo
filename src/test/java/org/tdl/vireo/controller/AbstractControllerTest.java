@@ -4,30 +4,25 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.tdl.vireo.Application;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.mock.MockData;
-import org.tdl.vireo.runner.OrderedRunner;
 import org.tdl.vireo.util.TemplateUtility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.util.AuthUtility;
+import edu.tamu.framework.util.HttpUtility;
 import edu.tamu.framework.util.JwtUtility;
 import edu.tamu.framework.util.MockEmailUtility;
 
-@WebAppConfiguration
-@RunWith(OrderedRunner.class)
-@SpringApplicationConfiguration(classes = { Application.class })
-@ActiveProfiles({ "test" })
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
 public abstract class AbstractControllerTest extends MockData {
 
     protected static final String SECRET_PROPERTY_NAME = "secret";
@@ -45,6 +40,9 @@ public abstract class AbstractControllerTest extends MockData {
     protected static final String EMAIL_HOST_PROPERTY_NAME = "host";
     protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";
 
+    protected static final String HTTP_DEFAULT_TIMEOUT_NAME = "DEFAULT_TIMEOUT";
+    protected static final int HTTP_DEFAULT_TIMEOUT_VALUE = 10000;
+
     @Spy
     protected ObjectMapper objectMapper;
 
@@ -57,6 +55,14 @@ public abstract class AbstractControllerTest extends MockData {
     @Mock
     private Environment env;
 
+    @Mock
+    @Qualifier("mockEmailUtility")
+    protected MockEmailUtility emailUtility;
+
+    @Spy
+    @InjectMocks
+    protected HttpUtility httpUtility;
+
     @Spy
     @InjectMocks
     protected AuthUtility authUtility;
@@ -64,11 +70,6 @@ public abstract class AbstractControllerTest extends MockData {
     @Spy
     @InjectMocks
     protected JwtUtility jwtUtility;
-
-    @Autowired
-    @Spy
-    @Qualifier("mockEmailUtility")
-    protected MockEmailUtility emailUtility;
 
     @Spy
     @InjectMocks

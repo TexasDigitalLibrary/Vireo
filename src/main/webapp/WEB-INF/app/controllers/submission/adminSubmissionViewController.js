@@ -3,9 +3,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
     $scope.updateActionLogLimit = function() {
-        $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit
-            ? $scope.submission.actionLogs.length
-            : $scope.actionLogLimit;
+        $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
     var ready = $q.all([
@@ -177,7 +175,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0]
             };
-        }
+        };
 
         resetFileData();
 
@@ -193,9 +191,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection == 'replace'
-                ? $scope.primaryDocumentFieldValue
-                : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+            var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
 
             fieldValue.file = $scope.addFileData.files[0];
 
@@ -261,11 +257,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
             "getPrimaryDocumentFileName": function() {
-                return $scope.submission.primaryDocumentFieldValue !== undefined
-                    ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined
-                        ? $scope.submission.primaryDocumentFieldValue.fileInfo.name
-                        : ''
-                    : '';
+                return $scope.submission.primaryDocumentFieldValue !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
             },
             "downloadPrimaryDocument": function() {
                 $scope.getFile($scope.submission.primaryDocumentFieldValue);

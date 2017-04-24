@@ -28,7 +28,7 @@ public class FieldValue extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param predicate
      */
     public FieldValue(FieldPredicate fieldPredicate) {

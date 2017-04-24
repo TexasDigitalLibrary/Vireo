@@ -24,14 +24,14 @@ vireo.directive("lockingtextarea", function($timeout) {
 				$scope.locked = !$scope.locked;
 			};
 			
-			if($scope.timer == undefined) {
+			if($scope.timer === undefined) {
 				$scope.timer = 100;
 			}
 
 			var timer;
 
 			var reset = function() {
-				if(timer != undefined) {
+				if(timer !== undefined) {
             		$timeout.cancel(timer);
             	}
         		timer = $timeout(function() {
@@ -67,11 +67,11 @@ vireo.directive("lockingtextarea", function($timeout) {
 
 			$scope.nonWysiwygTyping = function($event) {
 				reset();
-			}
+			};
 
 			$scope.nonWysiwygBlur = function($event) {
 				save();
-			}
+			};
 
 		}
 	};

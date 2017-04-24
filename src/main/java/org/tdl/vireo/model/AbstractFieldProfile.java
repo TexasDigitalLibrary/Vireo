@@ -109,7 +109,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Boolean getOptional() {
@@ -117,7 +117,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param optional
      */
     public void setOptional(Boolean optional) {
@@ -133,7 +133,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUsage() {
@@ -141,7 +141,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param usage
      */
     public void setUsage(String usage) {
@@ -149,7 +149,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getHelp() {
@@ -157,7 +157,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param help
      */
     public void setHelp(String help) {
@@ -172,7 +172,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param Language
      *            language
      * @return The field gloss that matches the language, or null if not found
@@ -186,7 +186,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param String
      *            value
      * @param Language
@@ -212,7 +212,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     // TODO : Restrict multiple field gloss with the same language
 
     /**
-     * 
+     *
      * @param fieldGloss
      */
     public void addFieldGloss(FieldGloss fieldGloss) {
@@ -220,7 +220,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param fieldGloss
      */
     public void removeFieldGloss(FieldGloss fieldGloss) {
@@ -235,7 +235,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return The controlled vocabulary that matches the id, or null if not found
      */
@@ -248,7 +248,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param id
      * @return The controlled vocabulary that matches the name, or null if not found
      */
@@ -290,7 +290,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     // TODO : Restrict multiple controlled vocabulary with the same language
 
     /**
-     * 
+     *
      * @param controlledVocabularies
      */
     public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
@@ -298,7 +298,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param controlledVocabularies
      */
     public void addControlledVocabulary(int index, ControlledVocabulary controlledVocabulary) {
@@ -306,7 +306,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param controlledVocabulary
      */
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {

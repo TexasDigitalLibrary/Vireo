@@ -11,7 +11,7 @@ vireo.directive("sidebox", function() {
 
 			$scope.changeSymbol = function() {
 				$scope.clicked = $scope.clicked=='-'? '+':'-';
-			}
+			};
 
 	    }
 	};

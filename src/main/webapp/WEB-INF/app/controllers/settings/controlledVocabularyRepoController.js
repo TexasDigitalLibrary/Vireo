@@ -32,13 +32,13 @@ vireo.controller("ControlledVocabularyRepoController", function($controller, $q,
             var defaultIndex = 0;
             for (var i in $scope.controlledVocabulary) {
                 var cv = $scope.controlledVocabulary[i];
-                if (cv.isEntityProperty == false) {
+                if (cv.isEntityProperty === false) {
                     defaultIndex = i;
                     break;
                 }
             }
             return defaultIndex;
-        }
+        };
 
         $scope.resetControlledVocabulary = function(closeModal) {
             $scope.controlledVocabularyRepo.clearValidationResults();
@@ -91,7 +91,7 @@ vireo.controller("ControlledVocabularyRepoController", function($controller, $q,
         $scope.uploadStatus = function() {
             if ($scope.uploadModalData.cv !== undefined) {
                 ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function(data) {
-                    $scope.uploadModalData.cv.inProgress = angular.fromJson(data.body).payload['Boolean'];
+                    $scope.uploadModalData.cv.inProgress = angular.fromJson(data.body).payload.Boolean;
                 });
             }
         };
@@ -174,7 +174,7 @@ vireo.controller("ControlledVocabularyRepoController", function($controller, $q,
             }
 
             if (definition.length > 0 && words[1].definition.length > 0) {
-                definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>'
+                definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>';
             }
 
             var identifier = "";
@@ -184,7 +184,7 @@ vireo.controller("ControlledVocabularyRepoController", function($controller, $q,
             }
 
             if (identifier.length > 0 && words[1].identifier.length > 0) {
-                identifier += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].identifier + '</span>'
+                identifier += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].identifier + '</span>';
             }
 
             return {

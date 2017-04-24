@@ -109,11 +109,11 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 		if(newLogoConfiguration !== undefined) {
 			if(newLogoConfiguration.name == "left_logo") {
 				$scope.modalData.logoLeft = newLogoConfiguration.value;
-				$scope.settings.configurable.lookAndFeel.left_logo = newLogoConfiguration.value
+				$scope.settings.configurable.lookAndFeel.left_logo = newLogoConfiguration.value;
 			}
 			if(newLogoConfiguration.name == "right_logo") {
 				$scope.modalData.logoRight = newLogoConfiguration.value;
-				$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value
+				$scope.settings.configurable.lookAndFeel.right_logo = newLogoConfiguration.value;
 			}
 
 			$scope.resetModalData();

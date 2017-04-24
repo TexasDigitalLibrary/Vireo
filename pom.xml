@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaverframework</groupId>
     <artifactId>weaver-webservice-parent</artifactId>
-    <version>1.1.0-RC5-SNAPSHOT</version>
+    <version>1.2.1-RC1-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -69,14 +69,13 @@
     <dependency>
       <groupId>edu.tamu.weaverframework</groupId>
       <artifactId>weaver-webservice-core</artifactId>
-      <version>1.1.0-RC5-SNAPSHOT</version>
+      <version>1.2.1-RC1-SNAPSHOT</version>
     </dependency>
 
     <!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.194</version>
     </dependency>
     
     <!-- PostgreSQL SQL DB - brought in through the tamu core framework -->
@@ -90,11 +89,6 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
     </dependency>
 
     <dependency>
@@ -341,9 +335,21 @@
           </execution>
 
           <!-- Grunt Deploy -->
-          <!-- <execution> <id>exec-grunt-deploy</id> <phase>generate-sources</phase> 
-            <configuration> <executable>grunt</executable> <arguments> <argument>deploy</argument> 
-            </arguments> </configuration> <goals> <goal>exec</goal> </goals> </execution> -->
+          <!--
+          <execution>
+            <id>exec-grunt-deploy</id>
+            <phase>generate-sources</phase> 
+            <configuration>
+              <executable>grunt</executable>
+              <arguments>
+                <argument>deploy</argument>
+              </arguments>
+            </configuration>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+          -->
 
         </executions>
       </plugin>

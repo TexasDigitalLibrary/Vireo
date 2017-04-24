@@ -23,7 +23,7 @@ public enum EmbargoGuarantor {
 
     /**
      * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
-     * 
+     *
      * @param from
      * @return
      */

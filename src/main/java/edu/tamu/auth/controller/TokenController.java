@@ -22,11 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.framework.aspect.annotation.SkipAop;
-import edu.tamu.framework.model.jwt.JWT;
+import edu.tamu.framework.model.jwt.Jwt;
 
 /**
  * Authorization Service Application Controller.
- * 
+ *
  * @author
  *
  */
@@ -80,7 +80,7 @@ public class TokenController {
      * @throws IllegalBlockSizeException
      * @throws NoSuchPaddingException
      * @throws InvalidKeySpecException
-     * 
+     *
      */
     @RequestMapping("/token")
     @SkipAop
@@ -107,18 +107,18 @@ public class TokenController {
      * @param headers
      *            @RequestHeader() Map<String,String>
      *
-     * @return JWT
+     * @return Jwt
      *
      * @exception InvalidKeyException
      * @exception NoSuchAlgorithmException
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
     @RequestMapping("/refresh")
     @SkipAop
-    public JWT refresh(@RequestParam() Map<String, String> params, @RequestHeader() Map<String, String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
+    public Jwt refresh(@RequestParam() Map<String, String> params, @RequestHeader() Map<String, String> headers) throws InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, JsonProcessingException {
         return makeToken(headers);
     }
 
@@ -128,17 +128,17 @@ public class TokenController {
      * @param headers
      *            Map<String, String>
      *
-     * @return JWT
+     * @return Jwt
      *
      * @exception InvalidKeyException
      * @exception NoSuchAlgorithmException
      * @exception IllegalStateException
      * @exception UnsupportedEncodingException
      * @exception JsonProcessingException
-     * 
+     *
      */
-    private JWT makeToken(Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
-        JWT token = new JWT(secret_key, expiration);
+    private Jwt makeToken(Map<String, String> headers) throws InvalidKeyException, JsonProcessingException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+        Jwt token = new Jwt(secret_key, expiration);
         for (String k : shibKeys) {
             String p = headers.get(env.getProperty("shib." + k, ""));
             token.makeClaim(k, p);

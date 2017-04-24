@@ -357,7 +357,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                 case "assignee.email":
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN users a ON a.id=s.assignee_id");
+                    sqlJoinsBuilder.append("\nLEFT JOIN core_users a ON a.id=s.assignee_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");

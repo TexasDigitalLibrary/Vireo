@@ -5,6 +5,6 @@ vireo.model("ControlledVocabulary", function ControlledVocabulary() {
 		// additional model methods and variables
 
 		return this;
-	}
+	};
 
 });

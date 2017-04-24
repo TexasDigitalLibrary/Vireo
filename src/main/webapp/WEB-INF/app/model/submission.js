@@ -17,7 +17,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 submission.fieldValues.length = 0;
             }
             angular.forEach(fieldValues, function(fieldValue) {
-                var fieldValue = new FieldValue(fieldValue);
+            	fieldValue = new FieldValue(fieldValue);
                 if (fieldValue.fieldPredicate.documentTypePredicate) {
                     enrichDocumentTypeFieldValue(fieldValue);
                 }
@@ -94,7 +94,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
                 var emptyFieldValues = [];
-                var fieldValue
+                var fieldValue;
                 for (var i in submission.fieldValues) {
                     fieldValue = submission.fieldValues[i];
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
@@ -334,12 +334,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                         }
                     }
                     var updated = false;
-                    for (var i in matchingFieldValues) {
+                    for (var k in matchingFieldValues) {
                         if (!updated) {
                             updated = true;
-                            angular.extend(matchingFieldValues[i], updatedFieldValue);
+                            angular.extend(matchingFieldValues[k], updatedFieldValue);
                         } else {
-                            submission.fieldValues.splice(i, 1);
+                            submission.fieldValues.splice(k, 1);
                         }
                     }
                 }

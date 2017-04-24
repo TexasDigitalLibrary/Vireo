@@ -28,7 +28,7 @@ public class FieldGloss extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param value
      * @param language
      */
@@ -54,7 +54,7 @@ public class FieldGloss extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @return the language
      */
     public Language getLanguage() {
@@ -62,7 +62,7 @@ public class FieldGloss extends BaseEntity {
     }
 
     /**
-     * 
+     *
      * @param language
      */
     public void setLanguage(Language language) {

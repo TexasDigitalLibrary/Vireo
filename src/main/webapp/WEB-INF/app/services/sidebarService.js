@@ -26,7 +26,7 @@ vireo.service("SidebarService", function($rootScope) {
 
 	SidebarService.clear = function() {
 		SidebarService.boxes.length = 0;
-	}
+	};
 
 	$rootScope.$on("$routeChangeSuccess",function() {
 		SidebarService.clear();

@@ -26,5 +26,5 @@ vireo.directive('dehashcolor', function() {
 
             });
         }
-    }
+    };
 });
