@@ -221,11 +221,22 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
 
+                //in descendant organizations, replace this overriden workflow step with the override
                 for (Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
                     organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
                     organizationRepo.save(organization);
                 }
+                
+                //in descendant organizations, have WSs that originated from the step being overridden now origintate from the override
+                for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+                    for(WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
+                        if(ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
+                            ws.setOriginatingWorkflowStep(newWorkflowStep);
+                        }
+                    }
+                }
 
+                //if change was to make it non-overrideable
                 if (!pendingWorkflowStep.getOverrideable()) {
 
                     List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);

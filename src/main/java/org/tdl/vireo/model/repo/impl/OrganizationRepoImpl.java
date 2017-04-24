@@ -1,7 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +129,18 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         }
 
         organizationRepo.delete(organization.getId());
+    }
+    
+    @Override
+    public Set<Organization> getDescendantOrganizations(Organization org) {
+        Set<Organization> descendants = new HashSet<Organization>();
+        
+        descendants = org.getChildrenOrganizations();
+        for(Organization child : org.getChildrenOrganizations()) {
+            descendants.addAll(getDescendantOrganizations(child));
+        }
+        
+        return descendants;
     }
 
 }
