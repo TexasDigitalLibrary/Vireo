@@ -23,7 +23,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -40,7 +39,6 @@ import edu.tamu.framework.model.AbstractCoreUser;
 import edu.tamu.framework.model.IRole;
 
 @Entity
-@Table
 public class User extends AbstractCoreUser {
 
     private static final long serialVersionUID = 3346475543238946319L;
