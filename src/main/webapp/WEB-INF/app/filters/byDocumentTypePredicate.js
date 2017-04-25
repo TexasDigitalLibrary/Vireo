@@ -1,11 +1,8 @@
-vireo.filter('protectedMembers', function() {
-    return function(initialValues, property) {
+vireo.filter('byDocumentTypePredicate', function() {
+    return function(initialValues, options) {
         var newValues = [];
         angular.forEach(initialValues, function(value) {
-
-            console.log(value, property);
-
-            if (value[property][0] !== "_") {
+            if (!value[options[0]]) {
                 newValues.push(value);
             }
         });
