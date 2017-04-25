@@ -70,6 +70,8 @@ vireo.controller('FieldPredicatesController', function ($controller, $scope, $q,
             return false;
         };
 
+
+
         $scope.dragControlListeners.orderChanged = function (event) {};
 
     });

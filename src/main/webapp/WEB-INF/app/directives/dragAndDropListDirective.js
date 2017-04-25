@@ -1,4 +1,4 @@
-vireo.directive("draganddroplist", function() {
+vireo.directive("draganddroplist", function($filter) {
 	return {
 		templateUrl: function(elem, attr) {
 			if(attr.listView !== undefined) {
@@ -20,13 +20,12 @@ vireo.directive("draganddroplist", function() {
 			'sortAction': '=',
 			'sortActionSort': '=',
 			'sortMethod': '&',
-            'filter': '&',
-            'activeFilter': '=?',
+            'textFilter': '=?',
 			'isEditable': '&'
 		},
 		controller: function($scope) {
 
-            $scope.activeFilterText = {};
+            $scope.textFilterValue = {};
 
             $scope.setSelectedFilter = function(filter) {
                 $scope.selectedFilter = filter;
@@ -37,6 +36,13 @@ vireo.directive("draganddroplist", function() {
 			}
 		},
 		link: function($scope, elem, attr) {
+
+            $scope.activeFilter = attr.filter?$filter(attr.filter):null;
+
+            if($scope.activeFilter) {
+                $scope.scopeValue = $scope.activeFilter($scope.scopeValue, "value");
+            }
+
 			$scope.properties = angular.fromJson(attr.properties);
             $scope.selectedFilter = $scope.properties.length==1?$scope.properties[0]:"";
 		}
