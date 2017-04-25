@@ -5,7 +5,8 @@ vireo.config(function($locationProvider, $routeProvider) {
 	$routeProvider.
 		when('/myprofile', {
 			templateUrl: 'views/myprofile.html',
-			controller: 'SettingsController'
+			controller: 'SettingsController',
+			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
 		}).
 		when('/submission/history', {
 			templateUrl: 'views/submission/submissionHistory.html',
@@ -42,7 +43,8 @@ vireo.config(function($locationProvider, $routeProvider) {
 			controller: 'AdvisorSubmissionReviewController'
 		}).
 		when('/users', {
-			templateUrl: 'views/users.html'
+			templateUrl: 'views/users.html',
+			access: ["ADMINISTRATOR", "MANAGER"]
 		}).
 		when('/register', {
 			templateUrl: 'views/register.html'
