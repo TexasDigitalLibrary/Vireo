@@ -15,12 +15,12 @@
             <draganddroplist
                 dragging="dragging"
                 scope-value="fieldPredicates"
-                properties='["value", "id"]'
+                properties='["value"]'
                 item-view='views/directives/dragAndDropFieldPredicate.html'
                 listeners='dragControlListeners'
                 edit='launchEditModal(index)'
                 text-filter='true'
-                passive-filter="'byDocumentTypePredicate', 'documentTypePredicate'">
+                passive-filter="predicateFilter">
             </draganddroplist>
         </div>
     </div>

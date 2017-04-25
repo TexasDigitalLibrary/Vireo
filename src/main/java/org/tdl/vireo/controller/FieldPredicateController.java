@@ -5,6 +5,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
@@ -26,6 +27,9 @@ public class FieldPredicateController {
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * Endpoint to request all field predicates.
@@ -58,7 +62,11 @@ public class FieldPredicateController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
-        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false)));
+    	FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
+        simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
+        return new ApiResponse(SUCCESS, fp);
     }
+    
+    
 
 }

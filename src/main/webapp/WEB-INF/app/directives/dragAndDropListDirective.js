@@ -21,6 +21,7 @@ vireo.directive("draganddroplist", function($filter) {
 			'sortActionSort': '=',
 			'sortMethod': '&',
             'textFilter': '=?',
+            'passiveFilter': '=?',
 			'isEditable': '&'
 		},
 		controller: function($scope) {
@@ -36,23 +37,8 @@ vireo.directive("draganddroplist", function($filter) {
 			}
 		},
 		link: function($scope, elem, attr) {
-
-            var passiveFilterOptions = attr.passiveFilter?attr.passiveFilter.replace(/\s/g,'').split(","):null;
-            $scope.activeFilter = attr.passiveFilter?$filter($scope.$eval(passiveFilterOptions.shift())):null;
-
-            var evaluatedOptions = [];
-
-            angular.forEach(passiveFilterOptions, function(options) {
-                evaluatedOptions.push($scope.$eval(options));
-            });
-
-            if($scope.activeFilter) {
-                $scope.scopeValue = $scope.activeFilter($scope.scopeValue, evaluatedOptions);
-            }
-
 			$scope.properties = angular.fromJson(attr.properties);
             $scope.selectedFilter = $scope.properties.length==1?$scope.properties[0]:"";
-
 		}
 	};
 });
