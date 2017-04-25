@@ -432,24 +432,41 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        organization = organizationRepo.findOne(organization.getId());
-
-        Long workflowStepId = workflowStep.getId();
-
-        String updatedName = "Updated Name";
-
-        workflowStep.setName(updatedName);
-
-        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, organization);
-
+        //refresh everybody after the create
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         organization = organizationRepo.findOne(organization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
         anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
 
-        // get old workflow step back. pointer changed!
+
+        Long workflowStepId = workflowStep.getId();
+         
+        
+        //Update the workflow step at the great grandchild (which didn't originate it, obviously.)  (We'll need this later to see that the newly generated step inherits properly from a new step that overrides what it previously inherited)
+        String updatedName = "This step Will get the step it derives from changed.";
+        workflowStep.setName(updatedName);
+        WorkflowStep newWorkflowStepAtGreatGrandChild = workflowStepRepo.update(workflowStep, greatGrandChildOrganization);
+        Long workflowStepAtGreatGrandchildId = newWorkflowStepAtGreatGrandChild.getId();
+        
+        //Update the workflow step at a the org (which doesn't originate it)
+        updatedName = "Updated Name";
+        workflowStep.setName(updatedName);
+        WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, organization);
+        
+        //refresh everybody after the updates
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        organization = organizationRepo.findOne(organization.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findOne(greatGrandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findOne(anotherGreatGrandChildOrganization.getId());
+
+
+        
+        // get persisted workflow steps back.  They're stale.
         workflowStep = workflowStepRepo.findOne(workflowStepId);
+        newWorkflowStepAtGreatGrandChild = workflowStepRepo.findOne(workflowStepAtGreatGrandchildId);
+        
 
         // when updating the workflow step at organization, test that
         // a new workflow step is made at the organization
@@ -460,15 +477,18 @@ public class WorkflowStepTest extends AbstractEntityTest {
         // the new workflow step remembers from whence it was derived (the parent's workflow step)
         assertEquals("The child's new workflow step knew not from whence it came", workflowStep.getId(), newWorkflowStep.getOriginatingWorkflowStep().getId());
 
-        // and furthermore, the organization's descendants point to the new WorkflowStep
+        // and furthermore, the organization's descendants point to the new WorkflowStep (except the one that got its own new one)
         Long grandchildWorkflowStepId = grandChildOrganization.getAggregateWorkflowSteps().get(0).getId();
         assertEquals("The grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", grandchildWorkflowStepId, newWorkflowStep.getId());
 
-        Long greatGrandChildWorkflowStepId = greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getId();
-        assertEquals("The great grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", greatGrandChildWorkflowStepId, newWorkflowStep.getId());
-
         Long anotherGreatGrandChildWorkflowStepId = anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getId();
         assertEquals("Another great grandchild organization didn't start pointing at the new workflow step it was supposed to inherit!", anotherGreatGrandChildWorkflowStepId, newWorkflowStep.getId());
+        
+        // and furthermore yet, the workflow steps in descendant organizations that used to inherit from the old step now inherit from the new step
+        System.out.println("Question is, is first override's orignator of " + newWorkflowStepAtGreatGrandChild.getOriginatingWorkflowStep().getName() + " now the same as the new override " + newWorkflowStep.getName() + "?");
+        assertEquals("The great grandchild org's workflow step didn't start originating from the new workflow step!", newWorkflowStepAtGreatGrandChild.getOriginatingWorkflowStep().getId(), newWorkflowStep.getId() );
+        
+        
 
     }
 
@@ -1028,6 +1048,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         organization = organizationRepo.findOne(organization.getId());
 
+        //Create s1, originating at top-level org
         WorkflowStep s1 = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         assertEquals("Incorrect number of workflow steps!", 1, workflowStepRepo.count());
@@ -1039,8 +1060,10 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         s1.setName(updatedName);
 
-        // should change originating organization
+        // modify s1 at middle org, which will create a new s2
+        // s2 should have originating organization at the middle org
         WorkflowStep s2 = workflowStepRepo.update(s1, organization);
+        organization = organizationRepo.findOne(organization.getId());
 
         assertEquals("Incorrect number of workflow steps!", 2, workflowStepRepo.count());
 
