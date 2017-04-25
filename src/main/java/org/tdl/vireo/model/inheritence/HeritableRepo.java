@@ -151,6 +151,18 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
                 requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
 
+                //TODO:  test
+                //in component aggregations at descendants of the WS, make components derived from pendingHeritableModel now originate from the clone
+                for (WorkflowStep workflowStep : workflowStepRepo.getDescendantsOfStepUnderOrganization(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization)) {
+                    List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(pendingHeritableModel.getClass());
+                            
+                    for(M model : aggregatedComponents) {
+                        if(model.getOriginating().equals(pendingHeritableModel)) {
+                            model.setOriginating(cloneHeritableModel);
+                        }                        
+                    }                        
+                }
+                
                 // replace descendants of the persisted (original) M with our new M at subordinate organizations
                 // replace the heritableModel on all descendant orgs aggregate workflows
                 for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedHeritableModel)) {
@@ -192,6 +204,22 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             requestingOrganization.replaceAggregateWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization, newOriginatingWorkflowStep);
 
             requestingOrganization = organizationRepo.save(requestingOrganization);
+            
+            //TODO:  test
+            // in component aggregations at descendants of new WS under descendants of requesting org, make components derived from the pending now inherit from the clone
+//            for(Organization descendantOrg : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+//                for(WorkflowStep descendantStep : descendantOrg.getAggregateWorkflowSteps()) {
+//                    List<M> components = descendantStep.getAggregateHeritableModels(pendingHeritableModel.getClass());
+//                    for( M component : components) {
+//                        M originating = (M) component.getOriginating();
+//                        
+//                        if(originating != null && originating.equals(pendingHeritableModel)) {
+//                            component.setOriginating(cloneHeritableModel);
+//                            heritableRepo.save(component);
+//                        }
+//                    }
+//                }
+//            }
 
             // replace the heritableModel on all descendant orgs aggregate workflows
             for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedHeritableModel)) {
@@ -243,6 +271,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
     private void deleteDescendantsOfHeritableModel(M heritableModel) {
         heritableRepo.findByOriginating(heritableModel).forEach(desendantHeritableModel -> {
+            System.out.println("Deleting component " + desendantHeritableModel.getId() + " off step  " + desendantHeritableModel.getOriginatingWorkflowStep().getName());
             delete(desendantHeritableModel);
         });
     }
