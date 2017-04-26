@@ -21,7 +21,7 @@ public class FieldValueValidator extends BaseModelValidator {
             String validationMessage = inputType.getValidationMessage() != null ? inputType.getValidationMessage() : "Field is not a valid format";
             this.addInputValidator(new InputValidator(InputValidationType.pattern, validationMessage, valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
         }
-        if (!submissionFieldProfile.getOptional()) {
+        if (!submissionFieldProfile.getOptional() && !inputType.getName().equals("INPUT_CHECKBOX")) {
             this.addInputValidator(new InputValidator(InputValidationType.minlength, "Required fields cannot be empty", valueProperty, 1));
         }
 
