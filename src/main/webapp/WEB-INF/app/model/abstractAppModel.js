@@ -1,4 +1,4 @@
-vireo.factory("AbstractAppModel", function AbstractAppModel($q, $timeout) {
+vireo.factory("AbstractAppModel", function AbstractAppModel() {
 
     return function AbstractAppModel() {
 

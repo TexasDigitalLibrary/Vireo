@@ -1,6 +1,6 @@
 <div id="field-predicates" class="row" ng-controller="FieldPredicatesController">
 
-    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+    <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 
     <div class="col-md-6">
         <div class="col-md-10 col-md-offset-1">
@@ -19,9 +19,9 @@
                 item-view='views/directives/dragAndDropFieldPredicate.html'
                 listeners='dragControlListeners'
                 edit='launchEditModal(index)'
-                text-filter='true'
-                passive-filter="predicateFilter">
+                text-filter='true'>
             </draganddroplist>
+
         </div>
     </div>
 
@@ -37,25 +37,25 @@
 
     <modal
         modal-id="fieldPredicateNewModal"
-        modal-view="views/modals/settings/fieldPredicateNewModal.html"
-        modal-header-class="modal-header-primary"
-        modal-backdrop="static"
-        modal-fullscreen="true">
-    </modal>
-
-   <!--  <modal
-        modal-id="fieldPredicatesEditModal"
-        modal-view="views/modals/settings/fieldPredicatesEditModal.html"
+        modal-view="views/modals/workflow/fieldPredicateNewModal.html"
         modal-header-class="modal-header-primary"
         modal-backdrop="static"
         modal-fullscreen="true">
     </modal>
 
     <modal
-        modal-id="fieldPredicatesConfirmRemoveModal"
-        modal-view="views/modals/settings/fieldPredicatesConfirmRemoveModal.html"
+        modal-id="fieldPredicateEditModal"
+        modal-view="views/modals/workflow/fieldPredicatesEditModal.html"
         modal-header-class="modal-header-primary"
+        modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="fieldPredicateConfirmRemoveModal"
+        modal-view="views/modals/workflow/fieldPredicateConfirmRemoveModal.html"
+        modal-header-class="modal-header-danger"
         modal-backdrop="static">
-    </modal> -->
+    </modal>
 
 </div>

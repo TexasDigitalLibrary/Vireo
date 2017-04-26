@@ -1,1 +1,8 @@
-<span ng-repeat="property in properties" class="repeated-span">{{item[property]}}</span>
+
+<div class="document-type" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
+  <span>{{ $index + 1 }}.</span>
+  <span ng-repeat="property in properties" class="repeated-span">
+    <span>{{item[property]}}</span>
+  </span>
+  <span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item})"></span>
+</div>

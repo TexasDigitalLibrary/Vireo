@@ -5,10 +5,13 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
     SidebarService.addBoxes([]);
 
     $scope.fieldPredicateRepo = FieldPredicateRepo;
-    $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-    FieldPredicateRepo.listen(function() {
+    FieldPredicateRepo.listen(function(res) {
         $scope.resetFieldPredicates();
+    });
+
+    $scope.fieldPredicates = FieldPredicateRepo.getAllFiltered(function(fp) {
+        return !fp.documentTypePredicate;
     });
 
     $scope.ready = $q.all([FieldPredicateRepo.ready()]);
@@ -39,7 +42,7 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
 
         $scope.selectFieldPredicate = function(index) {
             $scope.resetFieldPredicates();
-            $scope.modalData = $scope.resetFieldPredicates[index];
+            $scope.modalData = $scope.fieldPredicates[index];
         };
 
         $scope.createNewFieldPredicate = function() {
@@ -47,12 +50,27 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
             FieldPredicateRepo.create($scope.modalData);
         };
 
+        $scope.removeFieldPredicate = function() {
+            $scope.modalData.delete();
+        };
+
+        $scope.updateFieldPredicate = function() {
+            $scope.modalData.save();
+        };
+
+        $scope.launchEditModal = function(fieldPredicate) {
+            console.log(fieldPredicate);
+            $scope.resetFieldPredicates();
+            $scope.modalData = fieldPredicate;
+            $scope.openModal('#fieldPredicateEditModal');
+        };
+
         $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
             trashId: $scope.trashCanId,
             dragging: $scope.dragging,
             select: $scope.selectFieldPredicate,
             model: $scope.fieldPredicates,
-            confirm: '#fieldPredicatesConfirmRemoveModal',
+            confirm: '#fieldPredicateConfirmRemoveModal',
             reorder: null,
             container: '#field-predicates'
         });

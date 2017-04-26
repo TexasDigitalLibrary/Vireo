@@ -7,7 +7,7 @@
 
 <form ng-submit="createNewFieldPredicate()" name="forms.create" novalidate>
 
-  <!--<validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>-->
+  <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
 
   <div class="modal-body">
     <validatedinput model="modalData" property="value" label="Metadata Key Name" placeholder="Name of the new metadata key" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
