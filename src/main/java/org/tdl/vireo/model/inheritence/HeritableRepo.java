@@ -80,72 +80,79 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
         }
     }
 
+    //Make change to component componentC at step stepS at org requestingOrganization
     @SuppressWarnings("unchecked")
-    public M update(M pendingHeritableModel, Organization requestingOrganization) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public M update(M componentCWithChanges, Organization requestingOrganization) throws ComponentNotPresentOnOrgException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException {
 
         M resultingHeritableModel = null;
 
-        Long phmId = pendingHeritableModel.getId();
+        Long phmId = componentCWithChanges.getId();
 
-        M persistedHeritableModel = heritableRepo.findOne(phmId);
+        M componentC = heritableRepo.findOne(phmId);
 
-        boolean overridabilityOfPersistedHeritableModel = persistedHeritableModel.getOverrideable();
+        boolean componentIsOverrideable = componentC.getOverrideable();
 
-        boolean overridabilityOfOriginatingWorkflowStep = persistedHeritableModel.getOriginatingWorkflowStep().getOverrideable();
+        boolean originalStepIsOverrideable = componentC.getOriginatingWorkflowStep().getOverrideable();
+        
+        boolean stepSIsOverrideable = false;
 
         // The ws that has the heritableModel on the requesting org
-        WorkflowStep workflowStepWithHeritableModelOnRequestingOrganization = null;
+        WorkflowStep stepS= null;
 
         // Did the requesting organization originate the workflow step that the heritableModel is on?
         boolean requestingOrganizationOriginatedWorkflowStep = false;
 
         // Is the workflow step on which the heritableModel is found on the requesting organization the workflow step that originates the heritableModel?
-        boolean workflowStepOriginatesHeritableModel = false;
+        boolean workflowStepOriginatesComponent = false;
 
         for (WorkflowStep workflowStep : requestingOrganization.getAggregateWorkflowSteps()) {
-            if (workflowStep.getAggregateHeritableModels(persistedHeritableModel.getClass()).contains(persistedHeritableModel)) {
-                workflowStepWithHeritableModelOnRequestingOrganization = workflowStep;
-                requestingOrganizationOriginatedWorkflowStep = workflowStepWithHeritableModelOnRequestingOrganization.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
+            if (workflowStep.getAggregateHeritableModels(componentC.getClass()).contains(componentC)) {
+                stepS = workflowStep;
+                requestingOrganizationOriginatedWorkflowStep = stepS.getOriginatingOrganization().getId().equals(requestingOrganization.getId());
+                stepSIsOverrideable = stepS.getOverrideable();
             }
         }
+        
+        if(stepSIsOverrideable != originalStepIsOverrideable)
+            System.err.println("Inheritance problem - a non-overrideable step appears to have been overridden!");
 
         // A workflow step that has the heritableModel on it was found on the requesting organization
-        if (workflowStepWithHeritableModelOnRequestingOrganization != null) {
-            workflowStepOriginatesHeritableModel = persistedHeritableModel.getOriginatingWorkflowStep().getId().equals(workflowStepWithHeritableModelOnRequestingOrganization.getId());
+        if (stepS != null) {
+            workflowStepOriginatesComponent = componentC.getOriginatingWorkflowStep().getId().equals(stepS.getId());
         } else {
             // The requesting org doesn't even have this heritableModel anywhere!
             throw new ComponentNotPresentOnOrgException();
         }
 
-        if (!overridabilityOfOriginatingWorkflowStep && !requestingOrganizationOriginatedWorkflowStep) {
+        if (!originalStepIsOverrideable && !requestingOrganizationOriginatedWorkflowStep) {
             throw new WorkflowStepNonOverrideableException();
         }
 
-        if (!overridabilityOfPersistedHeritableModel && !(workflowStepOriginatesHeritableModel && requestingOrganizationOriginatedWorkflowStep)) {
+        if (!componentIsOverrideable && !(workflowStepOriginatesComponent && requestingOrganizationOriginatedWorkflowStep)) {
             throw new HeritableModelNonOverrideableException();
         }
 
         // If the requesting org originates the WS, then we don't need to make a new one
         if (requestingOrganizationOriginatedWorkflowStep) {
 
-            // If the WS originates the M, we don't need a new one
-            if (workflowStepOriginatesHeritableModel) {
+            // If the WS originates component C, we don't need a new one
+            if (workflowStepOriginatesComponent) {
 
                 // update heritableModel directly
-                resultingHeritableModel = heritableRepo.save(pendingHeritableModel);
+                resultingHeritableModel = heritableRepo.save(componentCWithChanges);
 
                 // if change to non-overrideable, replace descendants of this heritableModel in subordinate orgs and put it back on ones that deleted it
-                if (overridabilityOfPersistedHeritableModel && !resultingHeritableModel.getOverrideable()) {
-                    reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(persistedHeritableModel, resultingHeritableModel, workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);
+                if (componentIsOverrideable && !resultingHeritableModel.getOverrideable()) {
+                    reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(componentC, resultingHeritableModel, stepS, requestingOrganization);
                 }
             }
             // If the WS didn't originate the M, we need a new M to replace it
             else {
 
-                M cloneHeritableModel = (M) pendingHeritableModel.clone();
+                M cloneHeritableModel = (M) componentCWithChanges.clone();
 
-                cloneHeritableModel.setOriginating(persistedHeritableModel);
-                cloneHeritableModel.setOriginatingWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization);
+                cloneHeritableModel.setOriginating(componentC);
+                cloneHeritableModel.setOriginatingWorkflowStep(stepS);
 
                 M newHeritableModel = heritableRepo.save(cloneHeritableModel);
 
@@ -153,11 +160,11 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
                 //TODO:  test
                 //in component aggregations at descendants of the WS, make components derived from pendingHeritableModel now originate from the clone
-                for (WorkflowStep workflowStep : workflowStepRepo.getDescendantsOfStepUnderOrganization(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization)) {
-                    List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(pendingHeritableModel.getClass());
+                for (WorkflowStep workflowStep : workflowStepRepo.getDescendantsOfStepUnderOrganization(stepS, requestingOrganization)) {
+                    List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(componentCWithChanges.getClass());
                             
                     for(M model : aggregatedComponents) {
-                        if(model.getOriginating().equals(pendingHeritableModel)) {
+                        if(model.getOriginating().equals(componentCWithChanges)) {
                             model.setOriginating(cloneHeritableModel);
                         }                        
                     }                        
@@ -165,14 +172,14 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                 
                 // replace descendants of the persisted (original) M with our new M at subordinate organizations
                 // replace the heritableModel on all descendant orgs aggregate workflows
-                for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedHeritableModel)) {
-                    workflowStep.replaceAggregateHeritableModel(persistedHeritableModel, newHeritableModel);
+                for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, componentC)) {
+                    workflowStep.replaceAggregateHeritableModel(componentC, newHeritableModel);
                     workflowStepRepo.save(workflowStep);
                 }
 
                 // if change to non-overrideable, replace descendants of originating heritableModel in subordinate orgs
-                if (overridabilityOfPersistedHeritableModel && !newHeritableModel.getOverrideable()) {
-                    reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(persistedHeritableModel, newHeritableModel, workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);
+                if (componentIsOverrideable && !newHeritableModel.getOverrideable()) {
+                    reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(componentC, newHeritableModel, stepS, requestingOrganization);
                 }
 
                 resultingHeritableModel = newHeritableModel;
@@ -182,54 +189,63 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
         // workflowStepWithHeritableModelOnRequestingOrganization does not originate on the requesting org
         else {
 
-            WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);
+            WorkflowStep newOriginatingWorkflowStep = workflowStepRepo.update(stepS, requestingOrganization);
+            Long newOriginatingWorkflowStepId = newOriginatingWorkflowStep.getId();
 
-            M cloneHeritableModel = (M) pendingHeritableModel.clone();
+            M cloneHeritableModel = (M) componentCWithChanges.clone();
 
-            cloneHeritableModel.setOriginating(persistedHeritableModel);
+            cloneHeritableModel.setOriginating(componentC);
             cloneHeritableModel.setOriginatingWorkflowStep(newOriginatingWorkflowStep);
 
+            
             M newHeritableModel = heritableRepo.save(cloneHeritableModel);
+            System.out.println("Created new component " + newHeritableModel.getId());
 
             newOriginatingWorkflowStep = workflowStepRepo.findOne(newOriginatingWorkflowStep.getId());
 
             newOriginatingWorkflowStep.getOriginalHeritableModels(newHeritableModel.getClass()).add(newHeritableModel);
 
-            newOriginatingWorkflowStep.replaceAggregateHeritableModel(persistedHeritableModel, newHeritableModel);
+            newOriginatingWorkflowStep.replaceAggregateHeritableModel(componentC, newHeritableModel);
 
             newOriginatingWorkflowStep = workflowStepRepo.save(newOriginatingWorkflowStep);
 
-            workflowStepWithHeritableModelOnRequestingOrganization = workflowStepRepo.findOne(workflowStepWithHeritableModelOnRequestingOrganization.getId());
+            stepS = workflowStepRepo.findOne(stepS.getId());
 
-            requestingOrganization.replaceAggregateWorkflowStep(workflowStepWithHeritableModelOnRequestingOrganization, newOriginatingWorkflowStep);
+            requestingOrganization.replaceAggregateWorkflowStep(stepS, newOriginatingWorkflowStep);
 
             requestingOrganization = organizationRepo.save(requestingOrganization);
+            newOriginatingWorkflowStep = workflowStepRepo.findOne(newOriginatingWorkflowStepId);
             
             //TODO:  test
             // in component aggregations at descendants of new WS under descendants of requesting org, make components derived from the pending now inherit from the clone
-//            for(Organization descendantOrg : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
-//                for(WorkflowStep descendantStep : descendantOrg.getAggregateWorkflowSteps()) {
-//                    List<M> components = descendantStep.getAggregateHeritableModels(pendingHeritableModel.getClass());
-//                    for( M component : components) {
-//                        M originating = (M) component.getOriginating();
-//                        
-//                        if(originating != null && originating.equals(pendingHeritableModel)) {
-//                            component.setOriginating(cloneHeritableModel);
-//                            heritableRepo.save(component);
-//                        }
-//                    }
-//                }
-//            }
+            for(Organization descendantOrg : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+                System.out.println("\tProcessing descendants of Org " + requestingOrganization.getName());
+                for(WorkflowStep descendantStep : descendantOrg.getAggregateWorkflowSteps()) {
+                    System.out.println("\t\tProcessing descendant org's  WS " + descendantStep.getName());
+                    List<M> components = descendantStep.getAggregateHeritableModels(componentCWithChanges.getClass());
+                    for( M component : components) {
+                        
+                        M originating = (M) component.getOriginating();
+                        System.out.println("\t\t\tProcessing components of type " + component.getClass().getName() + " id " + component.getId() + " originated by " + ( originating != null ? originating.getId() : "none")  );
+                        if(originating != null && originating.equals(componentC) && component.getId() != newHeritableModel.getId() ) {
+                            System.out.println("\t\t\t\tComponent " + component.getId() + " originated at the overridden heritable model, make it's new orignator the new heritable model with id " + newHeritableModel.getId());
+                            component.setOriginating(newHeritableModel);
+                            descendantStep = workflowStepRepo.save(descendantStep);
+                            heritableRepo.save(component);
+                        }
+                    }
+                }
+            }
 
             // replace the heritableModel on all descendant orgs aggregate workflows
-            for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, persistedHeritableModel)) {
-                workflowStep.replaceAggregateHeritableModel(persistedHeritableModel, newHeritableModel);
+            for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, componentC)) {
+                workflowStep.replaceAggregateHeritableModel(componentC, newHeritableModel);
                 workflowStepRepo.save(workflowStep);
             }
 
             // if change to non-overrideable, replace descendants of originating heritableModel in subordinate orgs
-            if (overridabilityOfPersistedHeritableModel && !newHeritableModel.getOverrideable()) {
-                reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(persistedHeritableModel, newHeritableModel, workflowStepWithHeritableModelOnRequestingOrganization, requestingOrganization);
+            if (componentIsOverrideable && !newHeritableModel.getOverrideable()) {
+                reInheritDescendantsOfHeritableModelWithAnotherHeritableModelUnderWS(componentC, newHeritableModel, stepS, requestingOrganization);
             }
 
             resultingHeritableModel = newHeritableModel;
