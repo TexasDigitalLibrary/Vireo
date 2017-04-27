@@ -150,6 +150,8 @@ public class AppAuthController extends CoreAuthController {
         }
 
         User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
+        
+        user.setUin(email);
 
         user.setPassword(authUtility.encodePassword(password));
 
@@ -187,7 +189,7 @@ public class AppAuthController extends CoreAuthController {
             userMap.put("lastName", user.getLastName());
             userMap.put("firstName", user.getFirstName());
             userMap.put("netid", user.getNetid());
-            userMap.put("uin", String.valueOf(user.getUin()));
+            userMap.put("uin", user.getEmail());
             userMap.put("email", user.getEmail());
             return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
         } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
