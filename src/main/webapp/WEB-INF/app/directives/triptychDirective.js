@@ -128,7 +128,7 @@ vireo.directive("triptych", function () {
 								parent = panel1;
 							}
 							else {
-								clear(panel);
+								clear(panel1);
 								panel1.active = false;
 								panel1.previouslyActive = false;
 							}
