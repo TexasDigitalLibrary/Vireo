@@ -556,5 +556,20 @@ public class Submission extends BaseEntity {
         }
         return fielsValues;
     }
+    
+    public List<SubmissionFieldProfile> getSubmissionFieldProfilesByInputTypeName(String inputType) {
+
+        List<SubmissionFieldProfile> submissionFieldProfiles = new ArrayList<SubmissionFieldProfile>();
+
+        getSubmissionWorkflowSteps().forEach(submissionWorkflowSteps -> {
+            submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
+                if (afp.getInputType().getName().equals(inputType)) {
+                    submissionFieldProfiles.add(afp);
+                }
+            });
+        });
+
+        return submissionFieldProfiles;
+    }
 
 }
