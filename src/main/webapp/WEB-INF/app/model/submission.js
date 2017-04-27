@@ -263,7 +263,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
-            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional && fieldProfile.inputType.name !== 'INPUT_CHECKBOX') {
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
                 return $q(function(resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");

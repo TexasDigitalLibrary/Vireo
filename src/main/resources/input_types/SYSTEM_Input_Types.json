@@ -20,8 +20,8 @@
   },
   {
     "name": "INPUT_CHECKBOX",
-    "validationPatern": null,
-    "validationMessage": null
+    "validationPatern": "^(true|false)$",
+    "validationMessage": "Checkboxes must be true or false"
   },
   {
     "name": "INPUT_DATETIME",
