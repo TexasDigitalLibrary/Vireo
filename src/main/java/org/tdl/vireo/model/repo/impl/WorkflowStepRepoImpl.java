@@ -256,7 +256,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 }
 
                 // in descendant organizations, have WSs that originated from
-                // the step being overridden now origintate from the override
+                // the step being overridden now originate from the override
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
                         if (ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
