@@ -164,11 +164,15 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                 //TODO:  test
                 //in component aggregations at descendants of the WS, make components derived from pendingHeritableModel now originate from the clone
                 for (WorkflowStep workflowStep : workflowStepRepo.getDescendantsOfStepUnderOrganization(stepS, requestingOrganization)) {
-                    List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(componentCWithChanges.getClass());
+                    System.out.println("\tWS " + workflowStep.getName() + "(" + workflowStep.getId() + ") descends from stepS " + stepS.getName() + "(" + stepS.getId() + " under requesting org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")");
+                    List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(componentC.getClass());
                             
                     for(M model : aggregatedComponents) {
-                        if(model.getOriginating() != null && model.getOriginating().equals(componentCWithChanges)) {
-                            model.setOriginating(cloneHeritableModel);
+                        System.out.println("\t\tComponent " + model.getId() + " is aggregated there.");
+                        if(model.getOriginating() != null && model.getOriginating().equals(componentC)) {
+                            System.out.println("It originated at the component being overridden, so setting it's new originator to the override.");
+                            model.setOriginating(newHeritableModel);
+                            heritableRepo.save(model);
                         }                        
                     }                        
                 }
@@ -226,9 +230,9 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             // in component aggregations at descendants of new WS under descendants of requesting org, make components derived from the pending now inherit from the clone
             for(Organization descendantOrg : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                 System.out.println("\tProcessing descendants of Org " + requestingOrganization.getName());
-                for(WorkflowStep descendantStep : descendantOrg.getAggregateWorkflowSteps()) {
+                for(WorkflowStep descendantStep : descendantOrg.getOriginalWorkflowSteps()) { //TODO:  was getAggregate
                     System.out.println("\t\tProcessing descendant org's  WS " + descendantStep.getName());
-                    List<M> components = descendantStep.getAggregateHeritableModels(componentCWithChanges.getClass());
+                    List<M> components = descendantStep.getOriginalHeritableModels(componentCWithChanges.getClass()); //TODO:  was getAggregate
                     for( M component : components) {
                         
                         M originating = (M) component.getOriginating();
