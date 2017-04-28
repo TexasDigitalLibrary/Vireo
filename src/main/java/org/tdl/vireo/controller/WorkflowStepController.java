@@ -8,7 +8,6 @@ import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.LIST_REORDER;
-import static org.springframework.beans.BeanUtils.copyProperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,12 +18,10 @@ import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
-import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
@@ -50,9 +47,6 @@ public class WorkflowStepController {
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
-
-    @Autowired
-    private InputTypeRepo inputTypeRepo;
 
     @Autowired
     private NoteRepo noteRepo;
