@@ -1,7 +1,9 @@
 package org.tdl.vireo.model.inheritence;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,6 +230,8 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             
             //TODO:  test
             // in component aggregations at descendants of new WS under descendants of requesting org, make components derived from the pending now inherit from the clone
+            Set<M> componentsToSave = new HashSet<M>(); 
+            Set<WorkflowStep> stepsToSave = new HashSet<WorkflowStep>();
             for(Organization descendantOrg : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                 System.out.println("\tProcessing descendants of Org " + requestingOrganization.getName());
                 for(WorkflowStep descendantStep : descendantOrg.getOriginalWorkflowSteps()) { //TODO:  was getAggregate
@@ -240,17 +244,26 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                         if(originating != null && originating.equals(componentC) && component.getId() != newHeritableModel.getId() ) {
                             System.out.println("\t\t\t\tComponent " + component.getId() + " originated at the overridden heritable model, make it's new orignator the new heritable model with id " + newHeritableModel.getId());
                             component.setOriginating(newHeritableModel);
-                            descendantStep = workflowStepRepo.save(descendantStep);
-                            heritableRepo.save(component);
+                            stepsToSave.add(descendantStep);
+                            componentsToSave.add(component);
                         }
                     }
                 }
             }
+            for(M component : componentsToSave) {
+                heritableRepo.save(component);
+            }
+            for(WorkflowStep descendantStep : stepsToSave) {
+                //TODO:
+                workflowStepRepo.save(descendantStep);
+            }
 
             // replace the heritableModel on all descendant orgs aggregate workflows
+            
             for (WorkflowStep workflowStep : getContainingDescendantWorkflowStep(requestingOrganization, componentC)) {
                 System.out.println("Replacing component " + componentC.getId() + " with new component " + newHeritableModel.getId() + " on WS " + workflowStep.getId());
                 workflowStep.replaceAggregateHeritableModel(componentC, newHeritableModel);
+                //TODO:
                 workflowStepRepo.save(workflowStep);
             }
 
