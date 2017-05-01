@@ -28,6 +28,7 @@ import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.framework.model.BaseEntity;
@@ -406,5 +407,50 @@ public class Organization extends BaseEntity {
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);
     }
+
+	@JsonIgnore
+	public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+		
+		List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+		
+		aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
+		
+		getAncestorOrganizations().forEach(parent->{
+			parent.getEmailWorkflowRules().forEach(ewfr->{
+				
+				boolean add = true;
+				
+				for(EmailWorkflowRule aewfr : aggregateEmailWorkflowRules) {
+					
+					if(aewfr.getEmailRecipient() == ewfr.getEmailRecipient() && aewfr.getEmailTemplate() == ewfr.getEmailTemplate()) {
+						add = false;
+						break;
+					}
+					
+				}
+				
+				if(add) aggregateEmailWorkflowRules.add(ewfr);
+				
+			});
+		});
+		
+		return aggregateEmailWorkflowRules;
+	}
+	
+	@JsonIgnore
+	public List<Organization> getAncestorOrganizations() {
+		
+		List<Organization> parentOrganizationHiarchy = new ArrayList<Organization>();
+		
+		getParentOrganizations().forEach(parent->{
+			if(!parent.equals(this)) {
+				parentOrganizationHiarchy.add(parent);
+				parentOrganizationHiarchy.addAll(parent.getAncestorOrganizations());
+			}
+		});
+			
+		
+		return parentOrganizationHiarchy;
+	}
 
 }

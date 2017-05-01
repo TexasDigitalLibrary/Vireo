@@ -745,7 +745,11 @@ public class SubmissionController {
 
     private void processEmailWorkflowRules(Submission submission) {
 
-        List<EmailWorkflowRule> rules = submission.getOrganization().getEmailWorkflowRules();
+        List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
+        
+        System.out.println(rules.size());
+        
+        System.out.println(rules);
 
         rules.forEach(rule -> {
 
