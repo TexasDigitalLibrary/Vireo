@@ -1,7 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
@@ -257,13 +259,24 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 // in descendant organizations, have WSs that originated from
                 // the step being overridden now originate from the override
+                System.out.println("Going to attempt to loop through these Orgs and court a concurrent modification exception: ");
+                for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+                    System.out.println("\t" + organization.getName() + "(" + organization.getId() + ").  Therein orginate WSs: ");
+                    for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
+                        System.out.println("\t\t" + ws.getName() + "(" + ws.getId() + ")");
+                    }
+                }
+                Set<WorkflowStep> workflowStepsToSave = new HashSet<WorkflowStep>();
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
                         if (ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
                             ws.setOriginatingWorkflowStep(newWorkflowStep);
-                            workflowStepRepo.save(ws);
+                            workflowStepsToSave.add(ws);
                         }
                     }
+                }
+                for(WorkflowStep workflowStepToSave : workflowStepsToSave) {
+                    workflowStepRepo.save(workflowStepToSave);
                 }
 
                 // if change was to make it non-overrideable
