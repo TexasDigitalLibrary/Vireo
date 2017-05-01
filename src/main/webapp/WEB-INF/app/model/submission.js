@@ -72,8 +72,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         });
 
         submission.before(function() {
-            instantiateActionLogs();
-
+            // instantiateActionLogs();
             angular.extend(apiMapping.Submission.actionLogListen, {
                 'method': submission.id + '/action-logs'
             });
@@ -82,7 +81,15 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
             submission.actionLogListenPromise.then(null, null, function(response) {
                 var newActionLog = angular.fromJson(response.body).payload.ActionLog;
-                submission.actionLogs.push(new ActionLog(newActionLog));
+                var alreadyAdded = false;
+                for (var i in submission.actionLogs) {
+                    if (submission.actionLogs[i].id === newActionLog.id) {
+                        alreadyAdded = true;
+                    }
+                }
+                if (!alreadyAdded) {
+                    submission.actionLogs.push(new ActionLog(newActionLog));
+                }
             });
         });
 
