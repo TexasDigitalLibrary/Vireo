@@ -453,7 +453,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertTrue("The hierarchy was not maintained!",
                 parentOrganization.getChildrenOrganizations().contains(grandChildOrganization));
         assertTrue("The hierarchy was not maintained!",
-                grandChildOrganization.getParentOrganizations().contains(parentOrganization));
+                grandChildOrganization.getParentOrganization().equals(parentOrganization));
 
         // Check that removal of middle organization does not disturb the
         // grandchild's and Parent's workflow.

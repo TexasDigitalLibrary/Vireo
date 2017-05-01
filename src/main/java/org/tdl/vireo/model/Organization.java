@@ -55,10 +55,10 @@ public class Organization extends BaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToMany(cascade = REFRESH, fetch = EAGER)
+    @ManyToOne(cascade = REFRESH, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<Organization> parentOrganizations;
+    private Organization parentOrganization;
 
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private Set<Organization> childrenOrganizations;
@@ -73,7 +73,7 @@ public class Organization extends BaseEntity {
         setModelValidator(new OrganizationValidator());
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
-        setParentOrganizations(new TreeSet<Organization>());
+        setParentOrganization(null);
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
@@ -284,34 +284,19 @@ public class Organization extends BaseEntity {
     /**
      * @return the parentOrganizations
      */
-    public Set<Organization> getParentOrganizations() {
-        return parentOrganizations;
+    public Organization getParentOrganization() {
+        return parentOrganization;
     }
 
     /**
      * @param parentOrganizations
      *            the parentOrganizations to set
      */
-    private void setParentOrganizations(Set<Organization> parentOrganizations) {
-        this.parentOrganizations = parentOrganizations;
+    private void setParentOrganization(Organization parentOrganization) {
+        this.parentOrganization = parentOrganization;
     }
 
-    /**
-     *
-     * @param parentOrganization
-     */
-    private void addParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().add(parentOrganization);
-    }
-
-    /**
-     *
-     * @param parentOrganization
-     */
-    public void removeParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().remove(parentOrganization);
-    }
-
+    
     /**
      * @return the childrenOrganizations
      */
@@ -332,7 +317,9 @@ public class Organization extends BaseEntity {
      * @param childOrganization
      */
     public void addChildOrganization(Organization childOrganization) {
-        childOrganization.addParentOrganization(this);
+        //TODO:
+        System.out.println("Adding child organization " + childOrganization.getName() + "(" + childOrganization.getId() + ") to organization " + this.getName() + "(" + this.getId() + ")");
+        childOrganization.setParentOrganization(this);
         getChildrenOrganizations().add(childOrganization);
     }
 
@@ -341,7 +328,7 @@ public class Organization extends BaseEntity {
      * @param childOrganization
      */
     public void removeChildOrganization(Organization childOrganization) {
-        childOrganization.removeParentOrganization(this);
+        childOrganization.setParentOrganization(null);
         getChildrenOrganizations().remove(childOrganization);
     }
 
