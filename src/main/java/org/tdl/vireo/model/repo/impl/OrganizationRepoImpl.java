@@ -64,6 +64,8 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     @Override
     public void delete(Organization organization) {
         Long id = organization.getId();
+        System.out.println("1.  Organization! " + id + " is still an organization in this session: " + organization.getName());
+        
         
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
@@ -72,34 +74,49 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization parentOrganization = organization.getParentOrganization();
         Long parentId = null;
 
+        System.out.println("2.  Organization! " + id + " is still an organization in this session: " + organization.getName());
         // Have all the parent organizations not have this one as their child anymore
         if(parentOrganization != null) {
             parentId = parentOrganization.getId();
             parentOrganization.removeChildOrganization(organization);
-            organizationRepo.save(parentOrganization);
-            organizationRepo.save(organization);
-            parentOrganization = organizationRepo.getOne(parentId);
-            organization = organizationRepo.getOne(id);
+            parentOrganization = organizationRepo.save(parentOrganization);
+            organization = organizationRepo.save(organization);
+            //parentOrganization = organizationRepo.getOne(parentId);
+            //organization = organizationRepo.getOne(id);
+            System.out.println("3.  Organization! " + id + " is still an organization in this session: " + organization.getName());
         }
         
-        TreeSet<Organization> childrenOrganizations = new TreeSet<Organization>(organization.getChildrenOrganizations());
-
+        System.out.println("4.  Organization! " + id + " is still an organization in this session: " + organization.getName());
+        
+        TreeSet<Organization> childrenOrganizationsToSave = new TreeSet<Organization>();
+        
         // Have all the child organizations get this one's parent as their parent
-        for (Organization childOrganization : childrenOrganizations) {
-//            childOrganization.setParentOrganization(null);
-//            
+        for (Organization childOrganization : organization.getChildrenOrganizations()) {
 
             if(parentOrganization != null) {
                 System.out.println("Deleted org " + organization.getName() + " so adding moving its child " + childOrganization.getName() + " up to " + parentOrganization.getName());
                 parentOrganization.addChildOrganization(childOrganization);
-                organizationRepo.save(childOrganization);
-                organizationRepo.save(parentOrganization);
+                childOrganization.setParentOrganization(parentOrganization);
             }
+            else {
+                childOrganization.setParentOrganization(null);
+            }
+            childrenOrganizationsToSave.add(childOrganization);
                 
             organization.removeChildOrganization(childOrganization);            
-            organization = organizationRepo.save(organization);
-            organization = organizationRepo.getOne(id);
+            
         }
+        
+        //organization = organizationRepo.getOne(id);
+        organization = organizationRepo.save(organization);
+        if(parentOrganization!=null) {
+            parentOrganization = organizationRepo.findOne(parentId);
+            parentOrganization = organizationRepo.save(parentOrganization);
+        }
+        for(Organization child : childrenOrganizationsToSave) {
+            organizationRepo.save(child);
+        }
+        
 
         // Have all the submissions on this organization get this one's parent (one of them, anyway) as their new organization
         // TODO: for now, have to delete them if there is no parent org to attach them to.
@@ -136,9 +153,11 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         for (WorkflowStep ws : workflowStepsToDelete) {
             workflowStepRepo.delete(ws);
         }
+        
+        organization = organizationRepo.save(organization);
 
-        organization = organizationRepo.getOne(id);
-        System.out.println("Org still has parent " + organization.getParentOrganization().getName());
+        // organization = organizationRepo.getOne(id);
+        //System.out.println("Org still has parent " + organization.getParentOrganization().getName());
         organizationRepo.delete(id);
     }
     
