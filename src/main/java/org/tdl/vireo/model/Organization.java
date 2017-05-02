@@ -292,7 +292,7 @@ public class Organization extends BaseEntity {
      * @param parentOrganizations
      *            the parentOrganizations to set
      */
-    private void setParentOrganization(Organization parentOrganization) {
+    public void setParentOrganization(Organization parentOrganization) {
         this.parentOrganization = parentOrganization;
     }
 
