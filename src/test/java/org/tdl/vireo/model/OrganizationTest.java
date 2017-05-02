@@ -60,6 +60,12 @@ public class OrganizationTest extends AbstractEntityTest {
             organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
+        
+        for(Organization o : organizationRepo.findAll())
+        {
+            System.out.println("Have org " + o.getName() + " with category "+ o.getCategory() + " with parent " + o.getParentOrganization());
+        }
+        
         assertEquals("The repository duplicated entity!", 1, organizationRepo.count());
     }
 
@@ -92,7 +98,7 @@ public class OrganizationTest extends AbstractEntityTest {
         Organization severableParentOrganization = organizationRepo.create(TEST_SEVERABLE_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
-        Organization severableChildOrganization = organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
+        Organization childOrganizationToDisinherit = organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
         childCategory = organizationCategoryRepo.findOne(childCategory.getId());
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
 
@@ -122,7 +128,7 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization.addEmail(TEST_CHILD_EMAIL);
         grandChildOrganization.addEmail(TEST_GRAND_CHILD_EMAIL);
         severableParentOrganization.addEmail(TEST_SEVERABLE_PARENT_EMAIL);
-        severableChildOrganization.addEmail(TEST_SEVERABLE_CHILD_EMAIL);
+        childOrganizationToDisinherit.addEmail(TEST_SEVERABLE_CHILD_EMAIL);
 
         // add emailworkflow rule to organizations
         parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
@@ -133,7 +139,7 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         severableParentOrganization = organizationRepo.findOne(severableParentOrganization.getId());
-        severableChildOrganization = organizationRepo.findOne(severableChildOrganization.getId());
+        childOrganizationToDisinherit = organizationRepo.findOne(childOrganizationToDisinherit.getId());
 
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
         assertEquals("The emailWorkflowRule does not exist on parent organization!", emailWorkflowRule.getId(), ((EmailWorkflowRule) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId());
@@ -166,7 +172,7 @@ public class OrganizationTest extends AbstractEntityTest {
 
         // verify child organization
         assertTrue("The parent did not have the child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganization));
-        assertTrue("The parent did not have the severable child organization!", parentOrganization.getChildrenOrganizations().contains(severableChildOrganization));
+        assertTrue("The parent did not have the severable child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganizationToDisinherit));
         assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
 
         // check number of child(grand child) organizations of child organization
@@ -219,11 +225,11 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The child organization had incorrect number of workflow steps!", 4, childOrganization.getAggregateWorkflowSteps().size());
 
         // test remove severable child organization
-        parentOrganization.removeChildOrganization(severableChildOrganization);
+        parentOrganization.removeChildOrganization(childOrganizationToDisinherit);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        severableChildOrganization = organizationRepo.findOne(severableChildOrganization.getId());
-        assertNotEquals("The severable child organization was deleted!", null, severableChildOrganization);
+        childOrganizationToDisinherit = organizationRepo.findOne(childOrganizationToDisinherit.getId());
+        assertNotEquals("The severable child organization was deleted!", null, childOrganizationToDisinherit);
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         assertEquals("The parent organization had incorrect number of children!", 1, parentOrganization.getChildrenOrganizations().size());
@@ -235,7 +241,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The email workflow rule was not removed from the parent organization", 0, parentOrganization.getEmailWorkflowRules().size());
 
         // reattach severable child organization
-        parentOrganization.addChildOrganization(severableChildOrganization);
+        parentOrganization.addChildOrganization(childOrganizationToDisinherit);
         parentOrganization = organizationRepo.save(parentOrganization);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
 
@@ -243,13 +249,13 @@ public class OrganizationTest extends AbstractEntityTest {
 
         
         // test delete severable child organization
-        assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(severableChildOrganization.getId()));
+        assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(childOrganizationToDisinherit.getId()));
 
-        severableChildOrganization = organizationRepo.findOne(severableChildOrganization.getId());
+        childOrganizationToDisinherit = organizationRepo.findOne(childOrganizationToDisinherit.getId());
 
-        organizationRepo.delete(severableChildOrganization);
+        organizationRepo.delete(childOrganizationToDisinherit);
 
-        assertEquals("The organization was not deleted!", null, organizationRepo.findOne(severableChildOrganization.getId()));
+        assertEquals("The organization was not deleted!", null, organizationRepo.findOne(childOrganizationToDisinherit.getId()));
         assertNotEquals("The parent organization was deleted!", null, parentOrganization);
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
