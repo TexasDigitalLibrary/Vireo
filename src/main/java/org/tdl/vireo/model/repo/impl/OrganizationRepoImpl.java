@@ -45,13 +45,15 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     public Organization create(String name, Organization parent, OrganizationCategory category) {
         Organization organization = create(name, category);
         //TODO:
-        System.out.println("Creating organization " + name + " and adding it as a child of its parent " + parent.getName());
-        parent.addChildOrganization(organization);
-        parent = organizationRepo.save(parent);
-        parent.getAggregateWorkflowSteps().forEach(ws -> {
+        if( parent != null ) {
+            System.out.println("Creating organization " + name + " and adding it as a child of its parent " + (parent == null? null : parent.getName()));
+            parent.addChildOrganization(organization);
+            parent = organizationRepo.save(parent);
+            parent.getAggregateWorkflowSteps().forEach(ws -> {
             organization.addAggregateWorkflowStep(ws);
-        });
-        return organizationRepo.save(organization);
+            });
+       }
+       return organizationRepo.save(organization);
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
@@ -62,17 +64,21 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     @Override
     public void delete(Organization organization) {
         Long id = organization.getId();
+        
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
 
         Organization parentOrganization = organization.getParentOrganization();
+        Long parentId = null;
 
         // Have all the parent organizations not have this one as their child anymore
         if(parentOrganization != null) {
+            parentId = parentOrganization.getId();
             parentOrganization.removeChildOrganization(organization);
             organizationRepo.save(parentOrganization);
             organizationRepo.save(organization);
+            parentOrganization = organizationRepo.getOne(parentId);
             organization = organizationRepo.getOne(id);
         }
         
