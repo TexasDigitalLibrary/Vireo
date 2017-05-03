@@ -41,19 +41,20 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     }
 
     @Override
-    @Transactional // this transactional is required to persist parent child relationship within
+    @Transactional // this transactional is required to persist parent child
+                   // relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
         Organization organization = create(name, category);
-        //TODO:
-        if( parent != null ) {
-            System.out.println("Creating organization " + name + " and adding it as a child of its parent " + (parent == null? null : parent.getName()));
+        if (parent != null) {
+            System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent "
+                    + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
             parent = organizationRepo.save(parent);
             parent.getAggregateWorkflowSteps().forEach(ws -> {
-            organization.addAggregateWorkflowStep(ws);
+                organization.addAggregateWorkflowStep(ws);
             });
-       }
-       return organizationRepo.save(organization);
+        }
+        return organizationRepo.save(organization);
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
@@ -63,8 +64,8 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Override
     public void delete(Organization organization) {
-        Long id = organization.getId();        
-        
+        Long id = organization.getId();
+
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
@@ -72,61 +73,54 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization parentOrganization = organization.getParentOrganization();
         Long parentId = null;
 
-        // Have all the parent organizations not have this one as their child anymore
-        if(parentOrganization != null) {
+        // Have all the parent organizations not have this one as their child
+        // anymore
+        if (parentOrganization != null) {
             parentId = parentOrganization.getId();
             parentOrganization.removeChildOrganization(organization);
             parentOrganization = organizationRepo.save(parentOrganization);
             organization = organizationRepo.save(organization);
         }
-        
-        TreeSet<Organization> childrenOrganizationsToSave = new TreeSet<Organization>();
-        
-        // Have all the child organizations get this one's parent as their parent
+
+        // Have all the child organizations get this one's parent as their
+        // parent
         for (Organization childOrganization : organization.getChildrenOrganizations()) {
 
-            if(parentOrganization != null) {
-                System.out.println("Deleted org " + organization.getName() + " so adding moving its child " + childOrganization.getName() + " up to parent org " + parentOrganization.getName() + ".");
+            organization.removeChildOrganization(childOrganization);
+            organizationRepo.save(childOrganization);
 
+            if (parentOrganization != null) {
                 parentOrganization.addChildOrganization(childOrganization);
-                childOrganization.setParentOrganization(parentOrganization);
-            }
-            else {
-                System.out.println("Deleted org " + organization.getName() + " so giving its child " + childOrganization.getName() + " a null parent org.");
+                childOrganization = organizationRepo.save(childOrganization);
+                parentOrganization = organizationRepo.save(parentOrganization);
 
+            } else {
                 childOrganization.setParentOrganization(null);
             }
-            childrenOrganizationsToSave.add(childOrganization);
-                
-            organization.removeChildOrganization(childOrganization);            
-            
         }
-        
+
         organization = organizationRepo.save(organization);
-        if(parentOrganization!=null) {
+        if (parentOrganization != null) {
             parentOrganization = organizationRepo.findOne(parentId);
             parentOrganization = organizationRepo.save(parentOrganization);
         }
-        for(Organization child : childrenOrganizationsToSave) {
-            organizationRepo.save(child);
-        }
-        
 
-        // Have all the submissions on this organization get this one's parent (one of them, anyway) as their new organization
-        // TODO: for now, have to delete them if there is no parent org to attach them to.
+        // Have all the submissions on this organization get this one's parent
+        // (one of them, anyway) as their new organization
+        // TODO: for now, have to delete them if there is no parent org to
+        // attach them to.
         Organization parentOrg = organization.getParentOrganization();
         for (Submission sub : submissionRepo.findByOrganization(organization)) {
-            if(parentOrg != null )
+            if (parentOrg != null)
                 sub.setOrganization(parentOrg);
             else
-                submissionRepo.delete(sub);           
+                submissionRepo.delete(sub);
         }
 
         List<WorkflowStep> workflowStepsToDelete = new ArrayList<WorkflowStep>();
         List<WorkflowStep> workflowStepsToRemove = new ArrayList<WorkflowStep>();
 
         for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
-            System.out.println("We will delete original WS " + ws.getName() + "(" + ws.getId() + ") and remove it from originals and aggregates at " + organization.getName());
             workflowStepsToDelete.add(ws);
             workflowStepsToRemove.add(ws);
         }
@@ -146,22 +140,21 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         }
 
         for (WorkflowStep ws : workflowStepsToDelete) {
-            System.out.println("Deleting ws " + ws.getId());
             workflowStepRepo.delete(ws);
         }
 
         organizationRepo.delete(id);
     }
-    
+
     @Override
     public Set<Organization> getDescendantOrganizations(Organization org) {
         Set<Organization> descendants = new HashSet<Organization>();
-        
+
         descendants = org.getChildrenOrganizations();
-        for(Organization child : org.getChildrenOrganizations()) {
+        for (Organization child : org.getChildrenOrganizations()) {
             descendants.addAll(getDescendantOrganizations(child));
         }
-        
+
         return descendants;
     }
 

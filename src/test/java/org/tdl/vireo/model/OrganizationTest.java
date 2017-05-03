@@ -334,12 +334,14 @@ public class OrganizationTest extends AbstractEntityTest {
     public void testDeleteInterior() {
 
         Organization topOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Long topOrganizationId = topOrganization.getId();
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
         Organization middleOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, topOrganization, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
         Organization leafOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, middleOrganization, parentCategory);
+        Long leafOrgId = leafOrganization.getId();
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
 
         topOrganization = organizationRepo.findOne(topOrganization.getId());
@@ -347,14 +349,14 @@ public class OrganizationTest extends AbstractEntityTest {
 
         organizationRepo.delete(middleOrganization);
         
-        Long leafOrgId = leafOrganization.getId();
+        
 
-        topOrganization = organizationRepo.findOne(topOrganization.getId());
+        topOrganization = organizationRepo.findOne(topOrganizationId);
         leafOrganization = organizationRepo.findOne(leafOrgId);
 
         assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
-
-        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node didn't get it's grandparent as new parent.", topOrganization, leafOrganization.getParentOrganization());
+        
+        assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node " + leafOrganization.getName() + " (" + leafOrganization.getId() + ") didn't get it's grandparent " + topOrganization.getName() + " (" + topOrganization.getId() + ") as new parent.", topOrganization, leafOrganization.getParentOrganization());
     }
 
     @Test
