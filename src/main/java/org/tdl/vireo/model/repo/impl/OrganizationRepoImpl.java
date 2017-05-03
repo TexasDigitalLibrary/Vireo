@@ -63,9 +63,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Override
     public void delete(Organization organization) {
-        Long id = organization.getId();
-        System.out.println("1.  Organization! " + id + " is still an organization in this session: " + organization.getName());
-        
+        Long id = organization.getId();        
         
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
@@ -74,19 +72,13 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         Organization parentOrganization = organization.getParentOrganization();
         Long parentId = null;
 
-        System.out.println("2.  Organization! " + id + " is still an organization in this session: " + organization.getName());
         // Have all the parent organizations not have this one as their child anymore
         if(parentOrganization != null) {
             parentId = parentOrganization.getId();
             parentOrganization.removeChildOrganization(organization);
             parentOrganization = organizationRepo.save(parentOrganization);
             organization = organizationRepo.save(organization);
-            //parentOrganization = organizationRepo.getOne(parentId);
-            //organization = organizationRepo.getOne(id);
-            System.out.println("3.  Organization! " + id + " is still an organization in this session: " + organization.getName());
         }
-        
-        System.out.println("4.  Organization! " + id + " is still an organization in this session: " + organization.getName());
         
         TreeSet<Organization> childrenOrganizationsToSave = new TreeSet<Organization>();
         
@@ -94,11 +86,14 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         for (Organization childOrganization : organization.getChildrenOrganizations()) {
 
             if(parentOrganization != null) {
-                System.out.println("Deleted org " + organization.getName() + " so adding moving its child " + childOrganization.getName() + " up to " + parentOrganization.getName());
+                System.out.println("Deleted org " + organization.getName() + " so adding moving its child " + childOrganization.getName() + " up to parent org " + parentOrganization.getName() + ".");
+
                 parentOrganization.addChildOrganization(childOrganization);
                 childOrganization.setParentOrganization(parentOrganization);
             }
             else {
+                System.out.println("Deleted org " + organization.getName() + " so giving its child " + childOrganization.getName() + " a null parent org.");
+
                 childOrganization.setParentOrganization(null);
             }
             childrenOrganizationsToSave.add(childOrganization);
@@ -107,7 +102,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             
         }
         
-        //organization = organizationRepo.getOne(id);
         organization = organizationRepo.save(organization);
         if(parentOrganization!=null) {
             parentOrganization = organizationRepo.findOne(parentId);
@@ -132,32 +126,30 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         List<WorkflowStep> workflowStepsToRemove = new ArrayList<WorkflowStep>();
 
         for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
+            System.out.println("We will delete original WS " + ws.getName() + "(" + ws.getId() + ") and remove it from originals and aggregates at " + organization.getName());
             workflowStepsToDelete.add(ws);
             workflowStepsToRemove.add(ws);
         }
 
         for (WorkflowStep ws : workflowStepsToRemove) {
             organization.removeOriginalWorkflowStep(ws);
+            organization.removeAggregateWorkflowStep(ws);
         }
 
-        List<WorkflowStep> workflow = new ArrayList<WorkflowStep>();
-
+        List<WorkflowStep> aggregateWorkflow = new ArrayList<WorkflowStep>();
         for (WorkflowStep ws : organization.getAggregateWorkflowSteps()) {
-            workflow.add(ws);
+            aggregateWorkflow.add(ws);
         }
 
-        for (WorkflowStep ws : workflow) {
+        for (WorkflowStep ws : aggregateWorkflow) {
             organization.removeAggregateWorkflowStep(ws);
         }
 
         for (WorkflowStep ws : workflowStepsToDelete) {
+            System.out.println("Deleting ws " + ws.getId());
             workflowStepRepo.delete(ws);
         }
-        
-        organization = organizationRepo.save(organization);
 
-        // organization = organizationRepo.getOne(id);
-        //System.out.println("Org still has parent " + organization.getParentOrganization().getName());
         organizationRepo.delete(id);
     }
     
