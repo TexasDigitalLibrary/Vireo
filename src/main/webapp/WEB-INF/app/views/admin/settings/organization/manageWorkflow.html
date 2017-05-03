@@ -1,7 +1,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h3 class="panel-title">
-		Manage {{getSelectedOrganization().name}} Workflow - id: {{ getSelectedOrganization().id }} <span ng-if="getSelectedOrganization().parentOrganizations.length > 0">- parent: {{getSelectedOrganization().parentOrganizations}}</span></h3>
+		Manage {{getSelectedOrganization().name}} Workflow - id: {{ getSelectedOrganization().id }} <span ng-if="getSelectedOrganization().parentOrganization">- parent: {{getSelectedOrganization().parentOrganization}}</span></h3>
 	</div>
 	<div class="panel-body">
 

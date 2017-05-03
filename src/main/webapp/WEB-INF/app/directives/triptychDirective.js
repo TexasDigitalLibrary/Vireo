@@ -125,7 +125,7 @@ vireo.directive("triptych", function () {
                     for (var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
                         var panel1 = $scope.navigation.panels[i];
                         if (parent === undefined) {
-                            if (panel1.organization.id == organization.parentOrganizations[0]) {
+                            if (panel1.organization.id == organization.parentOrganization) {
                                 parent = panel1;
                             } else {
                                 clear(panel1);
