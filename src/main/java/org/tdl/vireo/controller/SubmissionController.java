@@ -193,7 +193,6 @@ public class SubmissionController {
 
     @Transactional
     @ApiMapping("/{submissionId}/add-comment")
-    @Auth(role = "STUDENT")
     public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
