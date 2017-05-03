@@ -168,15 +168,20 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                 for (WorkflowStep workflowStep : workflowStepRepo.getDescendantsOfStepUnderOrganization(stepS, requestingOrganization)) {
                     System.out.println("\tWS " + workflowStep.getName() + "(" + workflowStep.getId() + ") descends from stepS " + stepS.getName() + "(" + stepS.getId() + " under requesting org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")");
                     List<M> aggregatedComponents = workflowStep.getAggregateHeritableModels(componentC.getClass());
+                    
+                    List<M> modelsToChangeInheritance = new ArrayList<M>();
                             
                     for(M model : aggregatedComponents) {
                         System.out.println("\t\tComponent " + model.getId() + " is aggregated there.");
                         if(model.getOriginating() != null && model.getOriginating().equals(componentC)) {
                             System.out.println("It originated at the component being overridden, so setting it's new originator to the override.");
-                            model.setOriginating(newHeritableModel);
-                            heritableRepo.save(model);
+                            modelsToChangeInheritance.add(model);                     
                         }                        
-                    }                        
+                    }
+                    for(M model : modelsToChangeInheritance) {
+                        model.setOriginating(newHeritableModel);
+                        heritableRepo.save(model);
+                    }
                 }
                 
                 // replace descendants of the persisted (original) M with our new M at subordinate organizations
