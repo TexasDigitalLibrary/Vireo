@@ -100,6 +100,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             });
         });
+        
+        submission.getSubmissionFieldProfilesByInputTypeName("INPUT_CHECKBOX").forEach(sfp -> {
+            FieldValue fieldValue = fieldValueRepo.create(sfp.getFieldPredicate());
+            
+            fieldValue.setValue("false");
+            submission.addFieldValue(fieldValue);
+        });
 
         return submissionRepo.save(submission);
     }
