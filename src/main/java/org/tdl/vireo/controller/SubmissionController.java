@@ -747,10 +747,6 @@ public class SubmissionController {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         
-        System.out.println(rules.size());
-        
-        System.out.println(rules);
-
         rules.forEach(rule -> {
 
             if (rule.getSubmissionState().equals(submission.getSubmissionState()) && !rule.isDisabled()) {
