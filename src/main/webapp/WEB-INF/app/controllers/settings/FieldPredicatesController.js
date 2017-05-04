@@ -59,7 +59,6 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
         };
 
         $scope.launchEditModal = function(fieldPredicate) {
-            console.log(fieldPredicate);
             $scope.resetFieldPredicates();
             $scope.modalData = fieldPredicate;
             $scope.openModal('#fieldPredicateEditModal');
