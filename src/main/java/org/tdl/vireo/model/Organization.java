@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -28,8 +29,10 @@ import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -406,5 +409,53 @@ public class Organization extends BaseEntity {
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);
     }
+
+	@JsonIgnore
+	public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+		
+		List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+		
+		aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
+		
+		getAncestorOrganizations().forEach(parentOrg -> {
+			
+			parentOrg.getEmailWorkflowRules()
+				.stream()
+				.filter(potentialEmailWorkflowRule -> {
+					return aggregateEmailWorkflowRules.stream()
+							.anyMatch(currentEmailWorkflowRule->{
+						
+								String currentEmailRecipientName = ((AbstractEmailRecipient)currentEmailWorkflowRule.getEmailRecipient()).getName();
+								String potentialEmailRecipientName = ((AbstractEmailRecipient)potentialEmailWorkflowRule.getEmailRecipient()).getName();
+								
+								String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+								String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+								
+								return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
+							});
+				})
+				.collect(Collectors.toList())
+				.forEach(aggregateEmailWorkflowRules::add);
+			
+		});
+						
+		return aggregateEmailWorkflowRules;
+	}
+	
+	@JsonIgnore
+	public List<Organization> getAncestorOrganizations() {
+		
+		List<Organization> parentOrganizationHiarchy = new ArrayList<Organization>();
+		
+		getParentOrganizations().forEach(parent->{
+			if(!parent.equals(this)) {
+				parentOrganizationHiarchy.add(parent);
+				parentOrganizationHiarchy.addAll(parent.getAncestorOrganizations());
+			}
+		});
+			
+		
+		return parentOrganizationHiarchy;
+	}
 
 }
