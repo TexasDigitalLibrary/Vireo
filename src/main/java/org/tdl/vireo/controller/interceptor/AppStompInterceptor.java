@@ -53,6 +53,13 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
         String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
         String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
 
+        
+        String uin = credentials.getAllCredentials().get(institutionalIdentifierHeader);
+        
+        if(uin == null) {
+            uin = credentials.getEmail();
+        }
+        
         // TODO: check to see if credentials is from basic login or shibboleth
         // do not create new user from basic login credentials that have no user!
         if (user == null) {
@@ -80,7 +87,7 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
             }
             user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
             user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
-            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+            user.setUin(uin);
 
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
@@ -95,13 +102,13 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
             }
             user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
             user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
-            user.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+            user.setUin(uin);
 
             user = userRepo.save(user);
         }
 
         credentials.setRole(user.getRole().toString());
-        credentials.setUin(credentials.getAllCredentials().get(institutionalIdentifierHeader));
+        credentials.setUin(user.getUin());
 
         return user;
 
