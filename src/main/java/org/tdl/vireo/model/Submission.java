@@ -92,6 +92,9 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     private String advisorAccessHash;
+    
+    @Column(nullable = true)
+    private String depositUri;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -464,7 +467,15 @@ public class Submission extends BaseEntity {
         return advisorAccessHash;
     }
 
-    /**
+    public String getDepositUri() {
+		return depositUri;
+	}
+
+	public void setDepositUri(String depositUri) {
+		this.depositUri = depositUri;
+	}
+
+	/**
      * @return the customActionValues
      */
     public List<CustomActionValue> getCustomActionValues() {

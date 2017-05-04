@@ -4,15 +4,15 @@
 
     <div class="col-md-6">
         <div class="col-md-10 col-md-offset-1">
-            <button 
-                class="btn btn-default modal-add-btn" 
+            <button
+                class="btn btn-default modal-add-btn"
                 ng-click="openModal('#emailTemplatesNewModal')">
                 Add New Email Template
             </button>
 
             <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new email template."></div>
 
-            <draganddroplist 
+            <draganddroplist
                 dragging="dragging"
                 scope-value="emailTemplates"
                 properties='["name"]'
@@ -29,7 +29,7 @@
 
     <div class="col-md-6">
         <div class="col-md-10 col-md-offset-1">
-            <trashcan 
+            <trashcan
                 id="{{trashCanId}}"
                 dragging="dragging"
                 listeners='dragControlListeners'>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <modal 
+    <modal
         modal-id="emailTemplatesNewModal"
         modal-view="views/modals/settings/emailTemplatesNewModal.html"
         modal-header-class="modal-header-primary"
@@ -45,7 +45,7 @@
         modal-fullscreen="true">
     </modal>
 
-    <modal 
+    <modal
         modal-id="emailTemplatesEditModal"
         modal-view="views/modals/settings/emailTemplatesEditModal.html"
         modal-header-class="modal-header-primary"
@@ -53,10 +53,10 @@
         modal-fullscreen="true">
     </modal>
 
-    <modal 
+    <modal
         modal-id="emailTemplatesConfirmRemoveModal"
         modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html"
-        modal-header-class="modal-header-primary"
+        modal-header-class="modal-header-danger"
         modal-backdrop="static">
     </modal>
 
