@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaverframework</groupId>
     <artifactId>weaver-webservice-parent</artifactId>
-    <version>1.2.1-RC1-SNAPSHOT</version>
+    <version>1.2.x-metamodel-merging-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -30,6 +30,33 @@
   </properties>
 
   <packaging>war</packaging>
+
+  <profiles>
+    <profile>
+      <id>windows-profile</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <npm-extension>.cmd</npm-extension>
+        <compass-extension>.bat</compass-extension>
+      </properties>
+    </profile>
+    <profile>
+      <id>non-windows-profile</id>
+      <activation>
+        <os>
+          <family>!Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <npm-extension></npm-extension>
+        <compass-extension></compass-extension>
+      </properties>
+    </profile>
+  </profiles>
 
   <reporting>
     <plugins>
@@ -69,7 +96,7 @@
     <dependency>
       <groupId>edu.tamu.weaverframework</groupId>
       <artifactId>weaver-webservice-core</artifactId>
-      <version>1.2.1-RC1-SNAPSHOT</version>
+      <version>1.2.x-metamodel-merging-SNAPSHOT</version>
     </dependency>
 
     <!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
@@ -292,7 +319,7 @@
             <id>exec-npm-install</id>
             <phase>generate-sources</phase>
             <configuration>
-              <executable>npm</executable>
+              <executable>npm${npm-extension}</executable>
               <arguments>
                 <argument>install</argument>
               </arguments>
@@ -324,7 +351,7 @@
             <id>exec-compass-compile</id>
             <phase>generate-sources</phase>
             <configuration>
-              <executable>compass</executable>
+              <executable>compass${compass-extension}</executable>
               <arguments>
                 <argument>compile</argument>
               </arguments>
