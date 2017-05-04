@@ -18,22 +18,42 @@ public class AbstractEmailRecipientRepoImpl implements AbstractEmailRecipientRep
 
     @Override
     public EmailRecipient createOrganizationRecipient(Organization organization) {
-        return abstractEmailRecipientRepo.save(new EmailRecipientOrganization(organization));
+    	EmailRecipient organizationRecipient = findOneByName(organization.getName());
+        return organizationRecipient!=null?organizationRecipient:abstractEmailRecipientRepo.save(new EmailRecipientOrganization(organization));
     }
 
     @Override
     public EmailRecipient createSubmitterRecipient() {
-        return abstractEmailRecipientRepo.save(new EmailRecipientSubmitter());
+    	EmailRecipient submitterRecipient = findOneByName("Submitter");
+        return submitterRecipient!=null?submitterRecipient:abstractEmailRecipientRepo.save(new EmailRecipientSubmitter());
     }
 
     @Override
     public EmailRecipient createAssigneeRecipient() {
-        return abstractEmailRecipientRepo.save(new EmailRecipientAssignee());
+    	EmailRecipient assigneeRecipient = findOneByName("Assignee");
+        return assigneeRecipient!=null?assigneeRecipient:abstractEmailRecipientRepo.save(new EmailRecipientAssignee());
     }
 
     @Override
     public EmailRecipient createContactRecipient(String label, FieldPredicate fieldPredicate) {
-        return abstractEmailRecipientRepo.save(new EmailRecipientContact(label, fieldPredicate));
+    	EmailRecipient contactRecipient = findOneByName(label);
+        return contactRecipient!=null?contactRecipient:abstractEmailRecipientRepo.save(new EmailRecipientContact(label, fieldPredicate));
+    }
+    
+    private EmailRecipient findOneByName(String name) {    	
+    	
+    	// Because this repo is a repository of abstract members, 
+    	// Named Method Queries fail. This solution is naive and less performant
+    	// then using the database to look this up, but it is expedient,
+    	// and functional. Another option would be to implement a custom
+    	// query using jpql
+    	return (EmailRecipient) abstractEmailRecipientRepo
+    		.findAll()
+    		.stream()
+    		.filter(r->r.getName().equals(name))
+    		.findFirst()
+    		.orElse(null);
+    	
     }
 
 }
