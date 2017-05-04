@@ -15,9 +15,14 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     };
 
     $scope.insertText = function(text) {
+        if(!$scope.modalData.message) $scope.modalData.message = "";
         var firstPartOfMessage = $scope.modalData.message.substr(0,$scope.cursorLocation);
         var secondPartOfMessage = $scope.modalData.message.substr($scope.cursorLocation, $scope.modalData.message.length);
-        $scope.modalData.message = firstPartOfMessage +" {"+text+"} "+secondPartOfMessage;
+        var insertText = " {"+text+"} ";
+        $scope.modalData.message = firstPartOfMessage +insertText+secondPartOfMessage;
+
+        $scope.cursorLocation += insertText.length;
+
     };
 
 	EmailTemplateRepo.listen(function(data) {
