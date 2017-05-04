@@ -1,0 +1,21 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="resetFieldPredicates()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Add Metadata Key</h3>
+</div>
+
+<form ng-submit="createNewFieldPredicate()" name="forms.create" novalidate>
+
+  <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+
+  <div class="modal-body">
+    <validatedinput model="modalData" property="value" label="Metadata Key Name" placeholder="Name of the new metadata key" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="resetFieldPredicates()">Cancel</button>
+    <button id="fieldPredicate-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
+  </div>
+
+</form>

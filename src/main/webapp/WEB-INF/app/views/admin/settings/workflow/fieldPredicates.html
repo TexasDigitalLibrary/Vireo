@@ -1,0 +1,61 @@
+<div id="field-predicates" class="row" ng-controller="FieldPredicatesController">
+
+    <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <button
+                class="btn btn-default modal-add-btn"
+                ng-click="openModal('#fieldPredicateNewModal')">
+                Add New Metadata Key
+            </button>
+
+            <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new email template."></div>
+
+            <draganddroplist
+                dragging="dragging"
+                scope-value="fieldPredicates"
+                properties='["value"]'
+                item-view='views/directives/dragAndDropFieldPredicate.html'
+                listeners='dragControlListeners'
+                edit='launchEditModal(index)'
+                text-filter='true'>
+            </draganddroplist>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <trashcan
+                id="{{trashCanId}}"
+                dragging="dragging"
+                listeners='dragControlListeners'>
+            </trashcan>
+        </div>
+    </div>
+
+    <modal
+        modal-id="fieldPredicateNewModal"
+        modal-view="views/modals/workflow/fieldPredicateNewModal.html"
+        modal-header-class="modal-header-primary"
+        modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="fieldPredicateEditModal"
+        modal-view="views/modals/workflow/fieldPredicatesEditModal.html"
+        modal-header-class="modal-header-primary"
+        modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="fieldPredicateConfirmRemoveModal"
+        modal-view="views/modals/workflow/fieldPredicateConfirmRemoveModal.html"
+        modal-header-class="modal-header-danger"
+        modal-backdrop="static">
+    </modal>
+
+</div>
