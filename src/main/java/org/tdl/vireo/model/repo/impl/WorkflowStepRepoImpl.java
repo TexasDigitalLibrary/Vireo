@@ -259,7 +259,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 // in descendant organizations, have WSs that originated from
                 // the step being overridden now originate from the override
-                System.out.println("Going to attempt to loop through these Orgs and court a concurrent modification exception: ");
+                System.out.println("In descendant orgs, have WSs that originated from the step being overridden now originate from the override:");
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                     System.out.println("\t" + organization.getName() + "(" + organization.getId() + ").  Therein orginate WSs: ");
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
