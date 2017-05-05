@@ -6,7 +6,9 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
 	$scope.emailTemplates = EmailTemplateRepo.getAll();
 
-    $scope.fieldPredicates = FieldPredicateRepo.getAll();
+    $scope.fieldPredicates = FieldPredicateRepo.getAllFiltered(function(fp) {
+        return !fp.documentTypePredicate;
+    });
 
     $scope.cursorLocation = 0;
 

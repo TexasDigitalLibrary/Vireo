@@ -1,4 +1,4 @@
-vireo.controller('FieldPredicatesController', function ($controller, $timeout, $scope, $q, SidebarService, DragAndDropListenerFactory, FieldPredicateRepo) {
+vireo.controller('FieldPredicatesController', function ($controller, $timeout, $scope, $q, $filter, SidebarService, DragAndDropListenerFactory, FieldPredicateRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -42,7 +42,8 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
 
         $scope.selectFieldPredicate = function(index) {
             $scope.resetFieldPredicates();
-            $scope.modalData = $scope.fieldPredicates[index];
+            var filtereFieldPredicates = $filter('filter')($scope.fieldPredicates, $scope.dragAndDropTextFilterValue[$scope.dragAndDropSelectedFilter]);
+            $scope.modalData = filtereFieldPredicates[index];
         };
 
         $scope.createNewFieldPredicate = function() {
@@ -89,11 +90,7 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
             return false;
         };
 
-        $scope.predicateFilter = function(predicate) {
-            return !predicate.documentTypePredicate;
-        };
-
-        $scope.dragControlListeners.orderChanged = function (event) {};
+        $scope.dragControlListeners.orderChanged = function () {};
 
     });
 
