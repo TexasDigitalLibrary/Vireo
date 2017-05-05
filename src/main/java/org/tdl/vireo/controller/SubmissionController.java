@@ -197,7 +197,7 @@ public class SubmissionController {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
-        String commentVisibility = dataNode.get("commentVisiblity").asText();
+        String commentVisibility = dataNode.get("commentVisiblity")!=null?dataNode.get("commentVisiblity").asText():"public";
 
         if (commentVisibility.equals("public")) {
             sendEmail(credentials, submission, dataNode);
