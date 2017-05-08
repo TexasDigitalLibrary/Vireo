@@ -409,7 +409,7 @@ jQuery(document).ready(function(){
 										def guarantor = embargo.getGuarantor().toString() != "DEFAULT" ? ["(",embargo.getGuarantor(),")"].join(""): "";
 									}%
 
-									<li class="embargo" data-id="${embargo.getId()}">${embargo.getName()} ${guarantor}</li>
+                                                                       <li class="embargo" data-id="${embargo.getId()}">${embargo.getName()} ${guarantor} #{if embargo.isSystemRequired()}<em class="icon-globe"></em>#{/if}#{else}<em class="icon-user"></em>#{/else}</li>
 								#{/list}
 								#{/if}
 								<li id="addEmbargoSelect"></li>

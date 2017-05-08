@@ -8,7 +8,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.HeritableComponent;
 
 public interface WorkflowStepRepoCustom {
 
@@ -35,6 +35,6 @@ public interface WorkflowStepRepoCustom {
     public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization);
 
     @SuppressWarnings("rawtypes")
-    public List<WorkflowStep> findByAggregateHeritableModel(Heritable persistedHeritableModel);
+    public List<WorkflowStep> findByAggregateHeritableModel(HeritableComponent persistedHeritableModel);
 
 }

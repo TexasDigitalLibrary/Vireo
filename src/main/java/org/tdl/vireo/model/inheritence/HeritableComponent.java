@@ -2,7 +2,7 @@ package org.tdl.vireo.model.inheritence;
 
 import org.tdl.vireo.model.WorkflowStep;
 
-public interface Heritable<M> {
+public interface HeritableComponent<M> {
 
     public Long getId();
 
