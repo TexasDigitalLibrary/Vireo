@@ -1,8 +1,10 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -310,6 +312,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
 
         }
+        
+        
+        //TODO:  cleanup: should not have to do this
+        organizationRepo.cleanHierarchy();
+        
 
         return resultingWorkflowStep;
     }

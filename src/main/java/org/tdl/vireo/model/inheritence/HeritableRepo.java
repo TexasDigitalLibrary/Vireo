@@ -284,46 +284,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
         
         //TODO:  cleanup.  should not have to do this.
-        for(Organization org : organizationRepo.findAll()) {
-            for(Organization child : org.getChildrenOrganizations()) {
-                child.setParentOrganization(org);
-                organizationRepo.save(child);
-                System.out.println(org.getName() + " gets child " + child.getName());
-            }
-        }
-        
-        Map<Organization, List<Organization>> childrenToParents = new HashMap<Organization, List<Organization>>();
-        for(Organization org : organizationRepo.findAll()) {
-            for(Organization child : org.getChildrenOrganizations() ) {
-                if(!org.equals(child.getParentOrganization())) {
-                    System.out.println(child.getName() + " is not a child of " + org.getName() + "!");
-                    if( childrenToParents.containsKey(child) ) {
-                        childrenToParents.get(child).add(org);
-                    }
-                    else {
-                        List list = new ArrayList<Organization>();
-                        list.add(org);
-                        childrenToParents.put(child, list);
-                    }
-                }
-                    
-            }
-        }
-        
-        for(Organization child : childrenToParents.keySet()) {
-            List<Organization> parents = childrenToParents.get(child);
-            for(Organization parent : parents) {
-                parent.removeChildOrganization(child);
-            }
-        }
-        
-        for(Organization org : organizationRepo.findAll()) {
-            for(Organization child : org.getChildrenOrganizations()) {
-                child.setParentOrganization(org);
-                organizationRepo.save(child);
-                System.out.println(org.getName() + " again gets child " + child.getName());
-            }
-        }
+        organizationRepo.cleanHierarchy();
         
         return resultingHeritableModel;
 
