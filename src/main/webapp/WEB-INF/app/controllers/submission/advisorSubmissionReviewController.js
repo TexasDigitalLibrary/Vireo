@@ -35,7 +35,6 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
             $scope.submission.approveApplicationDate = responseSubmission.approveApplicationDate;
             $scope.submission.approveEmbargoDate = responseSubmission.approveEmbargoDate;
 
-            $scope.submission.addComment(approval);
             $scope.approval.message = "";
             $scope.approval.clearApproveApplication = false;
             $scope.approval.clearApproveEmbargo = false;
