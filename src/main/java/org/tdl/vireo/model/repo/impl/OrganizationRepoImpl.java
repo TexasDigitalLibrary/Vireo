@@ -1,8 +1,10 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,14 +148,85 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     @Override
     public Set<Organization> getDescendantOrganizations(Organization org) {
 
+        cleanHierarchy();
+
         Set<Organization> descendants = new HashSet<Organization>();
 
         descendants = org.getChildrenOrganizations();
+
+        for (Organization child : org.getChildrenOrganizations()) {
+            descendants.addAll(getDescendantOrganizations(descendants, child));
+        }
+
+        return descendants;
+    }
+
+    private Set<Organization> getDescendantOrganizations(Set<Organization> descendants, Organization org) {
+
         for (Organization child : org.getChildrenOrganizations()) {
             descendants.addAll(getDescendantOrganizations(child));
         }
 
         return descendants;
+    }
+
+    // TODO: should not have to do this, remove when JPA merge issues resolved
+    public void cleanHierarchy() {
+        for (Organization org : organizationRepo.findAll()) {
+            
+            Set<Organization> childrenToSave = new HashSet<Organization>();
+            
+            for (Organization child : org.getChildrenOrganizations()) {
+                child.setParentOrganization(org);
+                childrenToSave.add(child);                
+                System.out.println(org.getName() + " gets child " + child.getName());
+            }
+            
+            for(Organization child : childrenToSave) {
+                organizationRepo.save(child);
+            }
+            
+        }
+
+        Map<Organization, List<Organization>> childrenToParents = new HashMap<Organization, List<Organization>>();
+        for (Organization org : organizationRepo.findAll()) {
+            for (Organization child : org.getChildrenOrganizations()) {
+                if (!org.equals(child.getParentOrganization())) {
+                    System.out.println(child.getName() + " is not a child of " + org.getName() + "!");
+                    if (childrenToParents.containsKey(child)) {
+                        childrenToParents.get(child).add(org);
+                    } else {
+                        List<Organization> list = new ArrayList<Organization>();
+                        list.add(org);
+                        childrenToParents.put(child, list);
+                    }
+                }
+
+            }
+        }
+
+        for (Organization child : childrenToParents.keySet()) {
+            List<Organization> parents = childrenToParents.get(child);
+            for (Organization parent : parents) {
+                parent.removeChildOrganization(child);
+            }
+        }
+
+        for (Organization org : organizationRepo.findAll()) {
+            
+            Set<Organization> childrenToSave = new HashSet<Organization>();
+            
+            for (Organization child : org.getChildrenOrganizations()) {
+                child.setParentOrganization(org);
+                childrenToSave.add(child);      
+                System.out.println(org.getName() + " again gets child " + child.getName());
+            }
+            
+            for(Organization child : childrenToSave) {
+                organizationRepo.save(child);
+            }
+        }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
@@ -57,18 +58,20 @@ public class Organization extends BaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToOne(cascade = REFRESH, fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH, DETACH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, DETACH, MERGE }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
     private List<String> emails;
 
-    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, DETACH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
@@ -76,7 +79,7 @@ public class Organization extends BaseEntity {
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
         setParentOrganization(null);
-        this.childrenOrganizations = new TreeSet<Organization>();
+        setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
     }
@@ -306,6 +309,14 @@ public class Organization extends BaseEntity {
     }
 
     /**
+     * 
+     * @param childrenOrganizations
+     */
+    public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
+        this.childrenOrganizations = childrenOrganizations;
+    }
+
+    /**
      *
      * @param childOrganization
      */
@@ -398,12 +409,19 @@ public class Organization extends BaseEntity {
 
             parentOrg.getEmailWorkflowRules().stream().filter(potentialEmailWorkflowRule -> {
                 return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
+                    
+                    
 
                     String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                     String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
 
                     String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
                     String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+                    
+                    System.out.println(currentEmailRecipientName);
+                    System.out.println(potentialEmailRecipientName);
+                    System.out.println(currentEmailTemplateName);
+                    System.out.println(potentialEmailTemplateName);
 
                     return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
                 });
