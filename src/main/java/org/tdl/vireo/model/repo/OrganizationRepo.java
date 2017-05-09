@@ -19,6 +19,4 @@ public interface OrganizationRepo extends JpaRepository<Organization, Long>, Org
 
     public void delete(Organization organization);
 
-    public void cleanHierarchy();
-
 }

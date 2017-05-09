@@ -1,10 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +41,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         return workflowStepRepo.findOne(workflowStep.getId());
     }
 
-    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src,
-            int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
-        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())
-                || workflowStep.getOverrideable()) {
+        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating
             // organization
             if (!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
@@ -65,12 +61,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
 
-    public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep,
-            FieldProfile fp1, FieldProfile fp2)
-            throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public WorkflowStep swapFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, FieldProfile fp1, FieldProfile fp2) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
-        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())
-                || workflowStep.getOverrideable()) {
+        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating
             // organization
             if (!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
@@ -88,11 +81,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
 
-    public WorkflowStep reorderNotes(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest)
-            throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public WorkflowStep reorderNotes(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
-        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())
-                || workflowStep.getOverrideable()) {
+        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating
             // organization
             if (!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
@@ -110,11 +101,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
 
-    public WorkflowStep swapNotes(Organization requestingOrganization, WorkflowStep workflowStep, Note n1, Note n2)
-            throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public WorkflowStep swapNotes(Organization requestingOrganization, WorkflowStep workflowStep, Note n1, Note n2) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
-        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())
-                || workflowStep.getOverrideable()) {
+        if (workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || workflowStep.getOverrideable()) {
             // if requesting organization is not the workflow step's orignating
             // organization
             if (!workflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId())) {
@@ -148,8 +137,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         }
     }
 
-    public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization)
-            throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep resultingWorkflowStep = null;
 
@@ -176,8 +164,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);
 
                 for (WorkflowStep descendentWorkflowStep : descendentWorkflowSteps) {
-                    for (Organization organization : organizationRepo
-                            .findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())) {
+                    for (Organization organization : organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())) {
                         organization.replaceAggregateWorkflowStep(descendentWorkflowStep, savedWorkflowStep);
                         organizationRepo.save(organization);
                     }
@@ -185,8 +172,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
 
-                requestingOrganization.addAggregateWorkflowStep(savedWorkflowStep,
-                        requestingOrganization.getAggregateWorkflowSteps().indexOf(savedWorkflowStep));
+                requestingOrganization.addAggregateWorkflowStep(savedWorkflowStep, requestingOrganization.getAggregateWorkflowSteps().indexOf(savedWorkflowStep));
                 organizationRepo.save(requestingOrganization);
 
                 descendentWorkflowSteps.forEach(descendentWorkflowStep -> {
@@ -253,8 +239,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 // in descendant organizations, replace this overriden workflow
                 // step with the override
-                for (Organization organization : getContainingDescendantOrganization(requestingOrganization,
-                        persistedWorkflowStep)) {
+                for (Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
                     organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
                     organizationRepo.save(organization);
                 }
@@ -277,7 +262,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                         }
                     }
                 }
-                for(WorkflowStep workflowStepToSave : workflowStepsToSave) {
+                for (WorkflowStep workflowStepToSave : workflowStepsToSave) {
                     workflowStepRepo.save(workflowStepToSave);
                 }
 
@@ -288,15 +273,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                     for (WorkflowStep descendentWorkflowStep : descendentWorkflowSteps) {
 
-                        for (Organization organization : organizationRepo
-                                .findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())) {
+                        for (Organization organization : organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())) {
                             organization.replaceAggregateWorkflowStep(descendentWorkflowStep, newWorkflowStep);
                             organizationRepo.save(organization);
                         }
 
                         // delete if not belonging to any aggregate
-                        if (organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId())
-                                .size() == 0) {
+                        if (organizationRepo.findByAggregateWorkflowStepsId(descendentWorkflowStep.getId()).size() == 0) {
                             workflowStepRepo.delete(descendentWorkflowStep);
                         }
                     }
@@ -312,11 +295,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
 
         }
-        
-        
-        //TODO:  cleanup: should not have to do this
-        organizationRepo.cleanHierarchy();
-        
 
         return resultingWorkflowStep;
     }
@@ -381,8 +359,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     @Override
     public List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep) {
         List<WorkflowStep> descendantWorkflowSteps = new ArrayList<WorkflowStep>();
-        List<WorkflowStep> currentDescendentsWorkflowSteps = workflowStepRepo
-                .findByOriginatingWorkflowStep(workflowStep);
+        List<WorkflowStep> currentDescendentsWorkflowSteps = workflowStepRepo.findByOriginatingWorkflowStep(workflowStep);
         descendantWorkflowSteps.addAll(currentDescendentsWorkflowSteps);
         currentDescendentsWorkflowSteps.forEach(desendantWorflowStep -> {
             descendantWorkflowSteps.addAll(getDescendantsOfStep(desendantWorflowStep));
@@ -391,12 +368,10 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
 
     /**
-     * Get a list of WorkflowSteps that are descendants of a given WorkflowStep
-     * and are on an Organization that descends from given Organization
+     * Get a list of WorkflowSteps that are descendants of a given WorkflowStep and are on an Organization that descends from given Organization
      */
     @Override
-    public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep,
-            Organization organization) {
+    public List<WorkflowStep> getDescendantsOfStepUnderOrganization(WorkflowStep workflowStep, Organization organization) {
 
         List<WorkflowStep> allDescendants = getDescendantsOfStep(workflowStep);
 
@@ -420,22 +395,19 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
 
     @Override
-    public List<Organization> getContainingDescendantOrganization(Organization organization,
-            WorkflowStep workflowStep) {
+    public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep) {
         List<Organization> descendantOrganizationsContainingWorkflowStep = new ArrayList<Organization>();
         if (organization.getAggregateWorkflowSteps().contains(workflowStep)) {
             descendantOrganizationsContainingWorkflowStep.add(organization);
         }
         organization.getChildrenOrganizations().forEach(descendantOrganization -> {
-            descendantOrganizationsContainingWorkflowStep
-                    .addAll(getContainingDescendantOrganization(descendantOrganization, workflowStep));
+            descendantOrganizationsContainingWorkflowStep.addAll(getContainingDescendantOrganization(descendantOrganization, workflowStep));
         });
         return descendantOrganizationsContainingWorkflowStep;
     }
 
     @Override
-    public List<WorkflowStep> findByAggregateHeritableModel(
-            @SuppressWarnings("rawtypes") HeritableComponent persistedHeritableModel) {
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableComponent persistedHeritableModel) {
         if (persistedHeritableModel instanceof FieldProfile) {
             return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
         } else if (persistedHeritableModel instanceof Note) {
