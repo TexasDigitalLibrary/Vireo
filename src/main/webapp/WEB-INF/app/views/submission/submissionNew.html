@@ -1,0 +1,16 @@
+<div class="row">
+  <triptych header="Choose your Organization">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+        <form name="newSubmission" ng-if="selectedOrganization.id">
+          <button ng-if="!hasSubmission(selectedOrganization)" class="btn btn-primary form-control" ng-click="createSubmission()">
+            <span>Start {{selectedOrganization.name}} Submission</span>
+          </button>
+          <button ng-if="hasSubmission(selectedOrganization)" class="btn btn-primary form-control" ng-click="gotoSubmission(selectedOrganization)">
+            <span>Continue {{selectedOrganization.name}} Submission</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </triptych>
+</div>

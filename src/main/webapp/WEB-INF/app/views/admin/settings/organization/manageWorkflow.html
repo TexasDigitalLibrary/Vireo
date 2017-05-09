@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<!-- <h3 class="panel-title">Manage {{getSelectedOrganization().name}} Workflow - id: {{ getSelectedOrganization().id }} <span ng-if="getSelectedOrganization().parentOrganization">- parent: {{getSelectedOrganization().parentOrganization}}</span></h3> -->
+    <h3 class="panel-title">Manage {{getSelectedOrganization().name}} Workflow</h3>
+	</div>
+	<div class="panel-body">
+
+		<button class="btn btn-default modal-add-btn" ng-click="openModal('#addWorkflowStepModal')">
+		  Add Workflow Step
+		</button>
+		<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create workflow step."></div>
+		<modal  modal-id="addWorkflowStepModal"
+				modal-view="views/modals/organization/workflowStepCreateModal.html"
+				modal-header-class="modal-header-primary"
+				modal-backdrop="static">
+		</modal>
+		<accordion single-expand="false">
+			<!-- <pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{$index+1}}. {{step.name}} - id: {{step.id}} - originating orginization id: {{step.originatingOrganization}}<span ng-if="step.originatingWorkflowStep"> - originating workflow step id: {{step.originatingWorkflowStep}}</span></pane> -->
+      <pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/directives/workflowStep.html" query="{{step.name}}" html="views/directives/workflowStepContent.html">{{$index+1}}. {{step.name}}</pane>
+		</accordion>
+	</div>
+</div>

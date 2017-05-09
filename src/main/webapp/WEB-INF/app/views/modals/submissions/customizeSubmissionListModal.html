@@ -1,0 +1,54 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="resetColumns()" aria-title="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Customize Results Table</h3>
+</div>
+
+<div class="modal-body column-modal">
+	<div class="row">
+		<div class="col-sm-12">
+    		<p>Please select which columns should be displayed by dragging into or out of the list of displayed columns.</p>
+        	<div class="col-sm-6">
+        		<h4>Displayed Columns</h4>
+        		<div class="column-background">
+		    		<ul class="displayed-column-container" as-sortable="columnOptions" ng-model="userColumns">
+		    			<li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status == 'pervisoulyDisabled'}"ng-repeat="column in userColumns" as-sortable-item>
+		    				<div as-sortable-item-handle>{{column.title}}</div>
+		    			</li>
+		    		</ul>
+		    	</div>
+	    	</div>
+	    	<div class="col-sm-6">
+	    		<h4>Disabled Columns</h4>
+	    		<div class="column-background">
+		    		<ul class="disabled-column-container" as-sortable="columnOptions" ng-model="columns">
+		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns" as-sortable-item>
+		    				<div as-sortable-item-handle>{{column.title}}</div>
+		    			</li>
+		    		</ul>
+		    	</div>
+	    	</div>
+	    </div>
+	</div>
+    <div class="row results-per-page-container">
+	    <div class="col-sm-8 col-sm-offset-2">
+		    <form class="form-inline">
+                <label class="control-title" for="resultsPerPageOptions"><strong>Results per page</strong>:</label>	                
+                <select 
+                	class="form-control results-per-page-select" 
+                	name="resultsPerPageOptions" 
+                	ng-model="$parent.$parent.pageSize" 
+                	ng-options="ps for ps in pageSizeOptions" 
+                	ng-change="updatePagination()">
+                </select>
+	        </form>
+	    </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn btn-warning" ng-click="resetColumns()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="resetColumnsToDefault()">Default Columns</button>
+    <button type="button" class="btn btn-primary" ng-disabled="!change" ng-click="saveColumns()">Save</button>        
+</div>

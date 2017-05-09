@@ -1,0 +1,14 @@
+# Email sent to new Vireo users when they are registering their account.
+#
+# Parameters: {REGISTRATION_URL} is expanded to a special URL
+#
+Subject: Vireo Account Registration
+To complete registration of your Vireo account, please click the link
+below:
+
+  {REGISTRATION_URL}
+
+If you need assistance with your account, please email
+vireo@myuniversity.edu or call us at xxx-555-xxxx.
+
+The Vireo Team

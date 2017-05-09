@@ -1,0 +1,31 @@
+.submission-view-container {
+  display: table;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.submission-view-top {
+  display: table-row;
+  table-layout: fixed;
+  height: 100%;
+  padding-top: 15px;
+}
+
+.submission-view-bottom {
+  margin-top: 5px;
+  display: table-row;
+  width: 100%;
+}
+
+.submission-view-message-textarea {
+  width: 100%;
+}
+
+.submission-view-message-button {
+  margin-top: 8px;
+}
+
+.submission-view-upload-files-hr {
+  border-color: #a94442;
+}

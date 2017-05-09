@@ -1,0 +1,8 @@
+<div class="row submission-review-item">
+  <div class="col-xs-6">
+	<b>{{profile.fieldGlosses[0].value}}:</b>
+  </div>
+  <div class="col-xs-6">
+	<span ng-repeat="value in submission.getFieldValuesByFieldPredicate(profile.fieldPredicate)">{{value}}</span>
+  </div>
+</div>
