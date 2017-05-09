@@ -62,7 +62,8 @@ public class Organization extends BaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
