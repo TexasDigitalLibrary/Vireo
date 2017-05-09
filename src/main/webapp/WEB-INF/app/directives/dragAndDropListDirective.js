@@ -21,12 +21,14 @@ vireo.directive("draganddroplist", function($filter) {
 			'sortActionSort': '=',
 			'sortMethod': '&',
             'textFilter': '=?',
+            'selectedFilter': '=?',
+            'textFilterValue': '=?',
             'passiveFilter': '=?',
-			'isEditable': '&'
+			'isEditable': '&',
 		},
 		controller: function($scope) {
 
-            $scope.textFilterValue = {};
+            if(!$scope.textFilterValue) $scope.textFilterValue = {};
 
             $scope.setSelectedFilter = function(filter) {
                 $scope.selectedFilter = filter;

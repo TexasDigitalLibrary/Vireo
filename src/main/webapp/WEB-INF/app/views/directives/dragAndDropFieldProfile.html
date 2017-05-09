@@ -1,6 +1,5 @@
 <div class="field-profiles" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.position }}. </span>
-
 	<!-- TODO: select by appropriate language -->
 	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({fieldProfile: item})}">
 		<span ng-if="property == 'fieldGlosses'">{{ item[property][0].value }}<span ng-if="!item.optional">*</span></span>

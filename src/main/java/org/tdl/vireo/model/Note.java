@@ -9,7 +9,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.tdl.vireo.model.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.HeritableComponent;
 import org.tdl.vireo.model.validation.NoteValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
-public class Note extends AbstractNote<Note> implements Heritable<Note> {
+public class Note extends AbstractNote<Note> implements HeritableComponent<Note> {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")

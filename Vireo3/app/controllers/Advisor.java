@@ -32,15 +32,14 @@ public class Advisor extends AbstractVireoController {
 	 * @param subId
 	 *            The submission id.
 	 */
-	@Security(RoleType.NONE)
 	public static void reviewJSON(String token) {
 		Person person = context.getPerson();
 
 		notFoundIfNull(token);
 		Submission sub = subRepo.findSubmissionByEmailHash(token);
 		notFoundIfNull(sub);
-
-		Logger.info("%s (%d: %s) has viewed submission #%d.", person.getFormattedName(NameFormat.FIRST_LAST), person.getId(), person.getEmail(), sub.getId());
+		if (person != null)
+			Logger.info("%s (%d: %s) has viewed submission #%d.", person.getFormattedName(NameFormat.FIRST_LAST), person.getId(), person.getEmail(), sub.getId());
 		boolean inputRecieved = false;
 		String error = "";
 		try {
@@ -92,7 +91,6 @@ public class Advisor extends AbstractVireoController {
 	 * @param token
 	 *            The advisor's sort-of-security token.
 	 */
-	@Security(RoleType.NONE)
 	public static void review(String token) {
 
 		// Security check:
@@ -120,8 +118,8 @@ public class Advisor extends AbstractVireoController {
 		notFoundIfNull(token);
 		Submission sub = subRepo.findSubmissionByEmailHash(token);
 		notFoundIfNull(sub);
-
-		Logger.info("%s (%d: %s) has viewed submission #%d.", person.getFormattedName(NameFormat.FIRST_LAST), person.getId(), person.getEmail(), sub.getId());
+		if (person != null)
+			Logger.info("%s (%d: %s) has viewed submission #%d.", person.getFormattedName(NameFormat.FIRST_LAST), person.getId(), person.getEmail(), sub.getId());
 
 		String grantor = settingRepo.getConfigValue(AppConfig.GRANTOR, "Unknown Institution");
 		List<EmbargoType> allEmbargos = settingRepo.findAllEmbargoTypes();

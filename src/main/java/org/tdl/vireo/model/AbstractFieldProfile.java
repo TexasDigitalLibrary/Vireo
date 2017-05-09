@@ -31,7 +31,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(nullable = false)

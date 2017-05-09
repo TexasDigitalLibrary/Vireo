@@ -1,10 +1,9 @@
 <div class="notes" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.position }}. </span>
-	 
+
 	<!-- TODO: select by appropriate language -->
-	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({note: item})}">
-		{{ item[property] }}
-	</span>
+	<!-- <span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({note: item})}">{{ item[property] }} - id: {{item.id}} - originating workflowstep id: {{item.originatingWorkflowStep}} <span ng-if="item.originating"> - originating id: {{item.originating}}</span></span> -->
+  <span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({note: item})}">{{ item[property] }}</span>
 	<span ng-if="isEditable({note: item})" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
 	<span ng-if="!isEditable({note: item})" class="glyphicon glyphicon-info-sign text-warning" tooltip="This note is not overrideable."></span>
 </div>

@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.AbstractFieldProfile;
-import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldPredicate;
-import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 

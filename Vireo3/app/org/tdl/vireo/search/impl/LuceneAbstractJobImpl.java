@@ -233,7 +233,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		String embargos = "";
 		if (sub.getEmbargoTypes().size() > 0) {
 			for(EmbargoType embargo : sub.getEmbargoTypes())
-			embargos += embargo.getName() + " ";			
+			embargos += embargo.getName() + " " + embargo.getGuarantor().name() + " ";
 		}
 		searchText.append(embargos).append(" ");
 		
@@ -379,7 +379,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 		
 		if (embargos != null) {
 			for (EmbargoType embargo : sub.getEmbargoTypes()) {
-				doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+				doc.add(new Field("embargo",embargo.getName() + " " + embargo.getGuarantor().name(), Field.Store.NO,Index.NOT_ANALYZED));
 			}
 		}
 		
@@ -525,7 +525,7 @@ public abstract class LuceneAbstractJobImpl extends Job {
 			
 			if (embargos != null) {
 				for (EmbargoType embargo : sub.getEmbargoTypes()) {
-					doc.add(new Field("embargo",embargo.getName(), Field.Store.NO,Index.NOT_ANALYZED));
+					doc.add(new Field("embargo",embargo.getName() + " " + embargo.getGuarantor().name(), Field.Store.NO,Index.NOT_ANALYZED));
 				}
 			}
 			
