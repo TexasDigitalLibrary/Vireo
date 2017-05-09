@@ -154,7 +154,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     
     private Set<Organization> getDescendantOrganizations(Set<Organization> descendants, Organization org) {
         
-        descendants.addAll(org.getChildrenOrganizations());
+        // descendants.addAll(org.getChildrenOrganizations());
         
         for (Organization child : org.getChildrenOrganizations()) {
             descendants.addAll(getDescendantOrganizations(descendants, child));
