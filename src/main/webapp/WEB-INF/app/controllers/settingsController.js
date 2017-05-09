@@ -88,6 +88,10 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
                 return submissions.length > 0;
             };
 
+            $scope.getFirstSubmissionId = function() {
+                return submissions[0].id;
+            }
+
             $scope.submissionInProgress = function() {
                 var isInProgress = false;
                 for (var i in submissions) {
