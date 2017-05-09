@@ -179,9 +179,12 @@
 	<div ng-if="!step.overrideable && step.originatingOrganization != selectedOrganization.id">
 		<h3>Read only. Workflow step is non overrideable.</h3>
 		<ul class="list-unstyled">
-		   <li ng-repeat="note in step.aggregateNotes">
+			<li ng-repeat="note in step.aggregateNotes">
+					 {{note.position}}. {{note.name}}
+			</li>
+		   <!-- <li ng-repeat="note in step.aggregateNotes">
 		      	{{note.position}}. {{note.name}} - id: {{note.id}} - originating workflowstep id: {{note.originatingWorkflowStep}} <span ng-if="note.originating"> - originating id: {{note.originating}}</span>
-		   </li>
+		   </li> -->
 		</ul>
 	</div>
 

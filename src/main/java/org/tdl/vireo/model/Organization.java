@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -299,7 +298,6 @@ public class Organization extends BaseEntity {
         this.parentOrganization = parentOrganization;
     }
 
-    
     /**
      * @return the childrenOrganizations
      */
@@ -308,19 +306,11 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * @param childrenOrganizations
-     *            the childrenOrganizations to set
-     */
-//    public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
-//        this.childrenOrganizations = childrenOrganizations;
-//    }
-
-    /**
      *
      * @param childOrganization
      */
     public void addChildOrganization(Organization childOrganization) {
-        //TODO:
+        // TODO:
         System.out.println("Organization.addChildOrganization(): Adding child organization " + childOrganization.getName() + "(" + childOrganization.getId() + ") to organization " + this.getName() + "(" + this.getId() + ")");
         childOrganization.setParentOrganization(this);
         getChildrenOrganizations().add(childOrganization);
@@ -397,51 +387,46 @@ public class Organization extends BaseEntity {
         getEmailWorkflowRules().remove(emailWorkflowRule);
     }
 
-	@JsonIgnore
-	public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
-		
-		List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
-		
-		aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
-		
-		getAncestorOrganizations().forEach(parentOrg -> {
-			
-			parentOrg.getEmailWorkflowRules()
-				.stream()
-				.filter(potentialEmailWorkflowRule -> {
-					return aggregateEmailWorkflowRules.stream()
-							.anyMatch(currentEmailWorkflowRule->{
-						
-								String currentEmailRecipientName = ((AbstractEmailRecipient)currentEmailWorkflowRule.getEmailRecipient()).getName();
-								String potentialEmailRecipientName = ((AbstractEmailRecipient)potentialEmailWorkflowRule.getEmailRecipient()).getName();
-								
-								String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
-								String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
-								
-								return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
-							});
-				})
-				.collect(Collectors.toList())
-				.forEach(aggregateEmailWorkflowRules::add);
-			
-		});
-						
-		return aggregateEmailWorkflowRules;
-	}
-	
-	@JsonIgnore
-	public List<Organization> getAncestorOrganizations() {
-		
-		List<Organization> parentOrganizationHiarchy = new ArrayList<Organization>();
-		
-		Organization parent = getParentOrganization();
-		
-		if(parent!=null && !parent.equals(this)) {
-			parentOrganizationHiarchy.add(parent);
-			parentOrganizationHiarchy.addAll(parent.getAncestorOrganizations());
-		}
-		 
-		return parentOrganizationHiarchy;
-	}
+    @JsonIgnore
+    public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+
+        List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+
+        aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
+
+        getAncestorOrganizations().forEach(parentOrg -> {
+
+            parentOrg.getEmailWorkflowRules().stream().filter(potentialEmailWorkflowRule -> {
+                return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
+
+                    String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
+                    String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
+
+                    String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+                    String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+
+                    return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
+                });
+            }).collect(Collectors.toList()).forEach(aggregateEmailWorkflowRules::add);
+
+        });
+
+        return aggregateEmailWorkflowRules;
+    }
+
+    @JsonIgnore
+    public List<Organization> getAncestorOrganizations() {
+
+        List<Organization> parentOrganizationHiarchy = new ArrayList<Organization>();
+
+        Organization parent = getParentOrganization();
+
+        if (parent != null && !parent.equals(this)) {
+            parentOrganizationHiarchy.add(parent);
+            parentOrganizationHiarchy.addAll(parent.getAncestorOrganizations());
+        }
+
+        return parentOrganizationHiarchy;
+    }
 
 }
