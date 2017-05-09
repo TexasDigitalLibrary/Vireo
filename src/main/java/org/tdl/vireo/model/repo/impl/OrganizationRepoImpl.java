@@ -76,26 +76,27 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             parentOrganization = organizationRepo.save(parentOrganization);
             organization = organizationRepo.findOne(orgId);
         }
+        
+        Set<Organization> childrenToRemove = new HashSet<Organization>();
 
         // Have all the child organizations get this one's parent as their parent
         for (Organization childOrganization : organization.getChildrenOrganizations()) {
-
+            childrenToRemove.add(childOrganization);
+        }
+        
+        for(Organization childOrganization : childrenToRemove) {
             organization.removeChildOrganization(childOrganization);
             organization = organizationRepo.save(organization);
-
             if (parentOrganization != null) {
                 childOrganization = organizationRepo.save(childOrganization);
                 parentOrganization.addChildOrganization(childOrganization);
                 parentOrganization = organizationRepo.save(parentOrganization);
-
             } else {
                 childOrganization.setParentOrganization(null);
                 childOrganization = organizationRepo.save(childOrganization);
             }
         }
-
-        organization = organizationRepo.findOne(orgId);
-
+         
         // Have all the submissions on this organization get the parent as their new organization
         // TODO: for now, have to delete them if there is no parent org to attach them to.
         for (Submission submission : submissionRepo.findByOrganization(organization)) {
