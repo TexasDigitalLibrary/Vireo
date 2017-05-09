@@ -306,14 +306,6 @@ public class Organization extends BaseEntity {
     }
 
     /**
-     * @param childrenOrganizations
-     *            the childrenOrganizations to set
-     */
-    // public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
-    // this.childrenOrganizations = childrenOrganizations;
-    // }
-
-    /**
      *
      * @param childOrganization
      */

@@ -309,7 +309,6 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             deleteDescendantsOfHeritableModel(heritableModel);
 
             heritableRepo.delete(heritableModel.getId());
-
         }
     }
 
