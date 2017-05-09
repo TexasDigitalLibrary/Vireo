@@ -61,20 +61,19 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Override
     public void delete(Organization organization) {
-        
+
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
-        
+
         Long orgId = organization.getId();
 
         Organization parentOrganization = organization.getParentOrganization();
-       
 
         // Have all the parent organizations not have this one as their child anymore
         if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
-            parentOrganization = organizationRepo.save(parentOrganization);            
+            parentOrganization = organizationRepo.save(parentOrganization);
             organization = organizationRepo.findOne(orgId);
         }
 
@@ -86,7 +85,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
             if (parentOrganization != null) {
                 childOrganization = organizationRepo.save(childOrganization);
-                parentOrganization.addChildOrganization(childOrganization);   
+                parentOrganization.addChildOrganization(childOrganization);
                 parentOrganization = organizationRepo.save(parentOrganization);
 
             } else {
@@ -94,7 +93,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
                 childOrganization = organizationRepo.save(childOrganization);
             }
         }
-        
+
         organization = organizationRepo.findOne(orgId);
 
         // Have all the submissions on this organization get the parent as their new organization
@@ -103,8 +102,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             if (parentOrganization != null) {
                 submission.setOrganization(parentOrganization);
                 submissionRepo.save(submission);
-            }
-            else {
+            } else {
                 submissionRepo.delete(submission);
             }
         }
@@ -143,20 +141,18 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
         Set<Organization> descendants = new HashSet<Organization>();
 
-        descendants = org.getChildrenOrganizations();
-        
         for (Organization child : org.getChildrenOrganizations()) {
+            descendants.add(child);
             descendants.addAll(getDescendantOrganizations(descendants, child));
         }
 
         return descendants;
     }
-    
+
     private Set<Organization> getDescendantOrganizations(Set<Organization> descendants, Organization org) {
-        
-        // descendants.addAll(org.getChildrenOrganizations());
-        
+
         for (Organization child : org.getChildrenOrganizations()) {
+            descendants.add(child);
             descendants.addAll(getDescendantOrganizations(descendants, child));
         }
 
