@@ -1,4 +1,4 @@
-<div class="row clearfix" ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+<div class="row clearfix" ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
 
 	<div class="col-md-4">
 		<validatedinput
@@ -35,7 +35,7 @@
 
 <div ng-controller="FieldProfileManagementController">
 
-	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+  <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
 
 		<div id="fieldProfiles" class="row">
 
@@ -97,7 +97,7 @@
 		</div>
 	</div>
 
-	<div ng-if="!step.overrideable && step.originatingOrganization != selectedOrganization.id">
+	<div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganization().id">
 		<h3>Read only. Workflow step is non overrideable.</h3>
 		<ul class="list-unstyled">
 		   <li ng-repeat="fieldProfile in step.aggregateFieldProfiles">
@@ -112,7 +112,7 @@
 
 <div ng-controller="NoteManagementController">
 
-	<div ng-if="step.overrideable || step.originatingOrganization == selectedOrganization.id">
+	<div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
 
 		<div id="notes" class="row">
 
@@ -176,7 +176,7 @@
 		</div>
 	</div>
 
-	<div ng-if="!step.overrideable && step.originatingOrganization != selectedOrganization.id">
+	<div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganization().id">
 		<h3>Read only. Workflow step is non overrideable.</h3>
 		<ul class="list-unstyled">
 			<li ng-repeat="note in step.aggregateNotes">
