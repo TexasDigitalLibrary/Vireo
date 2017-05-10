@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
@@ -58,20 +57,19 @@ public class Organization extends BaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToOne(cascade = { REFRESH, DETACH, MERGE }, fetch = EAGER)
+    @ManyToOne(cascade = REFRESH, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @OneToMany(cascade = { REFRESH, DETACH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
     private List<String> emails;
 
-    @OneToMany(cascade = { REFRESH, DETACH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
-    @Fetch(FetchMode.SELECT)
+    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {
@@ -409,19 +407,18 @@ public class Organization extends BaseEntity {
 
             parentOrg.getEmailWorkflowRules().stream().filter(potentialEmailWorkflowRule -> {
                 return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
-                    
-                    
 
                     String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                     String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
 
                     String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
                     String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
-                    
-                    System.out.println(currentEmailRecipientName);
-                    System.out.println(potentialEmailRecipientName);
-                    System.out.println(currentEmailTemplateName);
-                    System.out.println(potentialEmailTemplateName);
+
+                    System.out.println("Current email recepient name: " + currentEmailRecipientName);
+                    System.out.println("Potential email recepient name: " + potentialEmailRecipientName);
+
+                    System.out.println("Current email template name: " + currentEmailTemplateName);
+                    System.out.println("Potential email template name: " + potentialEmailTemplateName);
 
                     return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
                 });
