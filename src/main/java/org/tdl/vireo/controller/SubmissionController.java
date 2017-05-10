@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
@@ -69,6 +70,7 @@ import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.framework.service.RoleService;
 import edu.tamu.framework.util.EmailSender;
 import edu.tamu.framework.validation.ValidationResults;
 
@@ -136,6 +138,9 @@ public class SubmissionController {
     @Autowired
     private PackagerUtility packagerUtility;
 
+    @Autowired
+    private RoleService roleService;
+
     @Transactional
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
@@ -182,10 +187,10 @@ public class SubmissionController {
         Submission submissionToDelete = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (!submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail())) {
-            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
-        } else {
+        if (submissionToDelete.getSubmitter().getEmail().equals(credentials.getEmail()) || roleService.valueOf(credentials.getRole()).ordinal() >= AppRole.MANAGER.ordinal()) {
             submissionRepo.delete(submissionId);
+        } else {
+            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
         }
 
         return response;
@@ -193,11 +198,12 @@ public class SubmissionController {
 
     @Transactional
     @ApiMapping("/{submissionId}/add-comment")
+    @Auth(role = "STUDENT")
     public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
 
-        String commentVisibility = dataNode.get("commentVisiblity")!=null?dataNode.get("commentVisiblity").asText():"public";
+        String commentVisibility = dataNode.get("commentVisiblity") != null ? dataNode.get("commentVisiblity").asText() : "public";
 
         if (commentVisibility.equals("public")) {
             sendEmail(credentials, submission, dataNode);
@@ -745,7 +751,7 @@ public class SubmissionController {
     private void processEmailWorkflowRules(Submission submission) {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
-        
+
         rules.forEach(rule -> {
 
             if (rule.getSubmissionState().equals(submission.getSubmissionState()) && !rule.isDisabled()) {
