@@ -243,7 +243,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                         System.out.println("\t\t" + ws.getName() + "(" + ws.getId() + ")");
                     }
                 }
-                
+
                 Set<WorkflowStep> workflowStepsToSave = new HashSet<WorkflowStep>();
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
@@ -286,9 +286,6 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
 
         }
-
-        // TODO: cleanup. should not have to do this.
-        organizationRepo.cleanHierarchy();
 
         return resultingWorkflowStep;
     }

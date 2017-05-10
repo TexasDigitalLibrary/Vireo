@@ -18,7 +18,5 @@ public interface OrganizationRepo extends JpaRepository<Organization, Long>, Org
     public Organization findByNameAndCategory(String name, OrganizationCategory category);
 
     public void delete(Organization organization);
-    
-    public void cleanHierarchy();
 
 }
