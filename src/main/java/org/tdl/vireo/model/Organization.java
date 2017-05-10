@@ -25,6 +25,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -37,6 +39,8 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }))
 public class Organization extends BaseEntity {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Column(nullable = false)
     private String name;
@@ -413,7 +417,13 @@ public class Organization extends BaseEntity {
 
                     String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
                     String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
-
+                    
+                    logger.info("Current email recepient name: " + currentEmailRecipientName);
+                    logger.info("Potential email recepient name: " + potentialEmailRecipientName);
+                    
+                    logger.info("Current email template name: " + currentEmailTemplateName);
+                    logger.info("Potential email template name: " + potentialEmailTemplateName);
+                    
                     return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
                 });
             }).collect(Collectors.toList()).forEach(aggregateEmailWorkflowRules::add);
