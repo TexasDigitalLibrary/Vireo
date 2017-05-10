@@ -55,18 +55,18 @@ public class OrganizationTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
         try {
-            organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+            organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
-        
-        for(Organization o : organizationRepo.findAll())
-        {
-            System.out.println("Have org " + o.getName() + " with category "+ o.getCategory() + " with parent " + o.getParentOrganization());
+
+        for (Organization o : organizationRepo.findAll()) {
+            System.out.println("Have org " + o.getName() + " with category " + o.getCategory() + " with parent " + o.getParentOrganization());
         }
-        
-        assertEquals("The repository duplicated entity!", 1, organizationRepo.count());
+
+        assertEquals("The repository duplicated entity!", 2, organizationRepo.count());
     }
 
     @Override
@@ -247,7 +247,6 @@ public class OrganizationTest extends AbstractEntityTest {
 
         assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
 
-        
         // test delete severable child organization
         assertNotEquals("The organization does not exist!", null, organizationRepo.findOne(childOrganizationToDisinherit.getId()));
 
@@ -348,14 +347,12 @@ public class OrganizationTest extends AbstractEntityTest {
         middleOrganization = organizationRepo.findOne(middleOrganization.getId());
 
         organizationRepo.delete(middleOrganization);
-        
-        
 
         topOrganization = organizationRepo.findOne(topOrganizationId);
         leafOrganization = organizationRepo.findOne(leafOrgId);
 
         assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
-        
+
         assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node " + leafOrganization.getName() + " (" + leafOrganization.getId() + ") didn't get it's grandparent " + topOrganization.getName() + " (" + topOrganization.getId() + ") as new parent.", topOrganization, leafOrganization.getParentOrganization());
     }
 
