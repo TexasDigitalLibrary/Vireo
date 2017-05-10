@@ -77,7 +77,7 @@ public class Organization extends BaseEntity {
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
         setParentOrganization(null);
-        this.childrenOrganizations = new TreeSet<Organization>();
+        setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
     }
@@ -304,6 +304,14 @@ public class Organization extends BaseEntity {
      */
     public Set<Organization> getChildrenOrganizations() {
         return childrenOrganizations;
+    }
+
+    /**
+     * 
+     * @param childrenOrganizations
+     */
+    public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
+        this.childrenOrganizations = childrenOrganizations;
     }
 
     /**
