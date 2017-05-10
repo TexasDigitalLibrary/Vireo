@@ -1099,7 +1099,7 @@
       ]
     }
   ],
-  "parentOrganizations": null,
+  "parentOrganization": null,
   "childrenOrganizations": null,
   "emails": null,
   "emailWorkflowRules": [{
