@@ -3,21 +3,15 @@
   "description": "Vireo 4",
   "version": "4.0.0",
   "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
-  "license": "BSD",
-  "private": true,
+  "license": "BSD-2-Clause",
+  "private": false,
   "dependencies": {
-    "angular": "1.4.9",
-    "angular-messages": "1.4.9",
-    "angular-sanitize": "1.4.9",
-    "angular-ui-tinymce": "0.0.14",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#abstract-model-merge-extend",
+    "angular-ui-tinymce": "0.0.18",
     "FileSaver": "1.3.3",
-    "ng-csv": "0.3.2",
-    "ng-file-upload": "12.0.1",
-    "ng-sortable": "1.3.2",
-    "ng-table": "1.0.0"
-  },
-  "resolutions": {
-    "angular": "1.4.9"
+    "ng-csv": "0.3.6",
+    "ng-file-upload": "12.2.13",
+    "ng-sortable": "1.3.8",
+    "ng-table": "1.0.0",
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#90260d587f8d3d01acf5cc234cf35e014093e5b3"
   }
 }
