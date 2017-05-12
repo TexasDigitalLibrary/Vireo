@@ -66,8 +66,9 @@ public class FieldGlossController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
+        FieldGloss fg = fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
-        return new ApiResponse(SUCCESS, fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage));
+        return new ApiResponse(SUCCESS, fg);
     }
     
     /**
