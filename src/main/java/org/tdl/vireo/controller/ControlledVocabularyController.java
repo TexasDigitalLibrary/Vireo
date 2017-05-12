@@ -32,6 +32,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.model.AbstractFieldProfile;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.ControlledVocabularyCache;
 import org.tdl.vireo.model.VocabularyWord;
@@ -139,7 +140,7 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
