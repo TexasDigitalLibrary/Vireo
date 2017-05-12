@@ -1,0 +1,21 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="resetFieldGlosses()" data-dismiss="modal" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<form ng-submit="removeFieldGloss()" novalidate>
+
+  <validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
+
+  <div class="modal-body">
+    <h4><b>Click confirm to remove the Metadata Key:</b></h4>
+    <h4>Name: {{modalData.value}}</h4>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="resetFieldGlosses()">Cancel</button>
+    <button id="embargo-confirm" type="submit" class="btn btn-danger">Confirm</button>
+  </div>
+</form>

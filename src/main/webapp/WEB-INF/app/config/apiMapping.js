@@ -311,6 +311,16 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/field-gloss',
             'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-gloss',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-gloss',
+            'method': 'remove'
         }
     },
     FieldPredicate: {
