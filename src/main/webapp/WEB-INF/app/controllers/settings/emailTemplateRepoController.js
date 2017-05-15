@@ -1,10 +1,31 @@
-vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, EmailTemplateRepo, DragAndDropListenerFactory) {
-	
+vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, EmailTemplateRepo, DragAndDropListenerFactory, FieldPredicateRepo) {
+
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.emailTemplateRepo = EmailTemplateRepo;
 
 	$scope.emailTemplates = EmailTemplateRepo.getAll();
+
+    $scope.fieldPredicates = FieldPredicateRepo.getAllFiltered(function(fp) {
+        return !fp.documentTypePredicate;
+    });
+
+    $scope.cursorLocation = 0;
+
+    $scope.setCursorLocation = function($event) {
+        $scope.cursorLocation = angular.element($event.target).prop("selectionStart");
+    };
+
+    $scope.insertText = function(text) {
+        if(!$scope.modalData.message) $scope.modalData.message = "";
+        var firstPartOfMessage = $scope.modalData.message.substr(0,$scope.cursorLocation);
+        var secondPartOfMessage = $scope.modalData.message.substr($scope.cursorLocation, $scope.modalData.message.length);
+        var insertText = " {"+text+"} ";
+        $scope.modalData.message = firstPartOfMessage +insertText+secondPartOfMessage;
+
+        $scope.cursorLocation += insertText.length;
+
+    };
 
 	EmailTemplateRepo.listen(function(data) {
         $scope.resetEmailTemplates();
@@ -25,7 +46,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 	$scope.forms = {};
 
 	$scope.ready.then(function() {
-		
+
 		$scope.resetEmailTemplates = function() {
 			$scope.emailTemplateRepo.clearValidationResults();
 			for(var key in $scope.forms) {
@@ -37,15 +58,15 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
     			$scope.modalData.refresh();
     		}
 		  	$scope.modalData = {
-	  			'name': '', 
-	  			'subject': '', 
+	  			'name': '',
+	  			'subject': '',
 	  			'message':''
 			};
 			$scope.closeModal();
 		};
-		
+
 		$scope.resetEmailTemplates();
-		
+
 		$scope.selectEmailTemplate = function(index){
 			$scope.modalData = $scope.emailTemplates[index];
 		};
@@ -82,11 +103,11 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 				$scope.sortAction = 'confirm';
 			}
 		};
-		
+
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 		  	trashId: $scope.trashCanId,
 		  	dragging: $scope.dragging,
-		  	select: $scope.selectEmailTemplate,     
+		  	select: $scope.selectEmailTemplate,
 		  	model: $scope.emailTemplates,
 		  	confirm: '#emailTemplatesConfirmRemoveModal',
 		  	reorder: $scope.reorderEmailTemplates,

@@ -101,7 +101,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testInheritFieldProfileViaPointer() {
+    public void testInheritFieldProfileViaPointer() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -154,13 +154,20 @@ public class FieldProfileTest extends AbstractEntityTest {
         String updatedFieldPredicateValue = "Updated Value";
         parentFieldProfile.getFieldPredicate().setValue(updatedFieldPredicateValue);
 
-        fieldProfileRepo.save(parentFieldProfile);
+        fieldProfileRepo.update(parentFieldProfile, parentOrganization);
 
         childFieldProfile = fieldProfileRepo.findOne(childFieldProfile.getId());
         grandchildFieldProfile = fieldProfileRepo.findOne(grandchildFieldProfile.getId());
 
+        // *********************************************************************************************************************************************************//
+        // *********************************************************************************************************************************************************//
+        // *********************************************************************************************************************************************************//
         assertEquals("The child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, childFieldProfile.getFieldPredicate().getValue());
         assertEquals("The grand child fieldProfile's value did not recieve updated value", updatedFieldPredicateValue, grandchildFieldProfile.getFieldPredicate().getValue());
+        // *********************************************************************************************************************************************************//
+        // *********************************************************************************************************************************************************//
+        // *********************************************************************************************************************************************************//
+
     }
 
     @Test(expected = HeritableModelNonOverrideableException.class)

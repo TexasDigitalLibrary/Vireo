@@ -55,15 +55,15 @@ public class UserController {
 
     @ApiMapping("/credentials")
     @Auth(role = "NONE")
-    public ApiResponse credentials(@ApiCredentials Credentials shib) {
-        User user = userRepo.findByEmail(shib.getEmail());
+    public ApiResponse credentials(@ApiCredentials Credentials credentials) {
+        User user = userRepo.findByEmail(credentials.getEmail());
         if (user == null) {
             logger.debug("User not registered! Responding with anonymous credentials!");
             return new ApiResponse(SUCCESS, getAnonymousCredentials());
         }
-        shib.setRole(user.getRole().toString());
-        shib.setModelValidator(user.getModelValidator());
-        return new ApiResponse(SUCCESS, shib);
+        credentials.setRole(user.getRole().toString());
+        credentials.setModelValidator(user.getModelValidator());
+        return new ApiResponse(SUCCESS, credentials);
     }
 
     @Transactional

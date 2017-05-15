@@ -6,9 +6,28 @@
 			<span ng-if="sortAction=='sort'"> Are you sure you want to sort all {{sortLabel}} by {{sortColumn}}?</span>
 		</a>
 	</div>
-	
+
+  <div ng-if="(filter || textFilter) && scopeValue.length > 0" class="filter-div">
+    <div ng-if="textFilter">
+      <a href="" ng-click="!expanded?expanded=true:expanded=false" >
+        <span class="glyphicon glyphicon-filter"></span>
+        {{expanded?'close':'open'}}
+        filters
+      </a>
+      <div ng-class="{'input-group': properties.length>1}" ng-if="expanded">
+        <div ng-if="properties.length>1" class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{selectedFilter}} <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="property in properties" ng-click="setSelectedFilter(property)"><a href="#">{{property}}</a></li>
+          </ul>
+        </div>
+        <input type="text" class="form-control" placeholder="{{properties.length===1?'Filter by '+selectedFilter:''}}" ng-model="textFilterValue[selectedFilter]" ng-class="{expanded: expanded}" ng-disabled="!selectedFilter">
+      </div>
+    </div>
+  </div>
+
 	<ol data-as-sortable="listeners" data-ng-model="scopeValue">
-	   <li data-ng-repeat="item in scopeValue" data-as-sortable-item>
+	   <li data-ng-repeat="item in scopeValue | filter:textFilterValue | filter:passiveFilter" data-as-sortable-item>
 	      	<div data-as-sortable-item-handle>
 	      		<span ng-include src="itemView" draggable="true"></span>
 	      	</div>

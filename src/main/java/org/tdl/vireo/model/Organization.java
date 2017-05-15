@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -28,12 +29,13 @@ import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
 public class Organization extends BaseEntity {
 
     @Column(nullable = false)
@@ -55,12 +57,13 @@ public class Organization extends BaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToMany(cascade = REFRESH, fetch = EAGER)
+    @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<Organization> parentOrganizations;
+    private Organization parentOrganization;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
 
     @ElementCollection(fetch = EAGER)
@@ -73,7 +76,7 @@ public class Organization extends BaseEntity {
         setModelValidator(new OrganizationValidator());
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
         setAggregateWorkflowSteps(new ArrayList<WorkflowStep>());
-        setParentOrganizations(new TreeSet<Organization>());
+        setParentOrganization(null);
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
@@ -284,32 +287,16 @@ public class Organization extends BaseEntity {
     /**
      * @return the parentOrganizations
      */
-    public Set<Organization> getParentOrganizations() {
-        return parentOrganizations;
+    public Organization getParentOrganization() {
+        return parentOrganization;
     }
 
     /**
      * @param parentOrganizations
      *            the parentOrganizations to set
      */
-    private void setParentOrganizations(Set<Organization> parentOrganizations) {
-        this.parentOrganizations = parentOrganizations;
-    }
-
-    /**
-     *
-     * @param parentOrganization
-     */
-    private void addParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().add(parentOrganization);
-    }
-
-    /**
-     *
-     * @param parentOrganization
-     */
-    public void removeParentOrganization(Organization parentOrganization) {
-        getParentOrganizations().remove(parentOrganization);
+    public void setParentOrganization(Organization parentOrganization) {
+        this.parentOrganization = parentOrganization;
     }
 
     /**
@@ -320,8 +307,8 @@ public class Organization extends BaseEntity {
     }
 
     /**
+     * 
      * @param childrenOrganizations
-     *            the childrenOrganizations to set
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
         this.childrenOrganizations = childrenOrganizations;
@@ -332,7 +319,9 @@ public class Organization extends BaseEntity {
      * @param childOrganization
      */
     public void addChildOrganization(Organization childOrganization) {
-        childOrganization.addParentOrganization(this);
+        // TODO:
+        System.out.println("Organization.addChildOrganization(): Adding child organization " + childOrganization.getName() + "(" + childOrganization.getId() + ") to organization " + this.getName() + "(" + this.getId() + ")");
+        childOrganization.setParentOrganization(this);
         getChildrenOrganizations().add(childOrganization);
     }
 
@@ -341,7 +330,7 @@ public class Organization extends BaseEntity {
      * @param childOrganization
      */
     public void removeChildOrganization(Organization childOrganization) {
-        childOrganization.removeParentOrganization(this);
+        childOrganization.setParentOrganization(null);
         getChildrenOrganizations().remove(childOrganization);
     }
 
@@ -405,6 +394,54 @@ public class Organization extends BaseEntity {
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);
+    }
+
+    @JsonIgnore
+    public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+
+        List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+
+        aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
+
+        getAncestorOrganizations().forEach(parentOrg -> {
+
+            parentOrg.getEmailWorkflowRules().stream().filter(potentialEmailWorkflowRule -> {
+                return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
+
+                    String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
+                    String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
+
+                    String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+                    String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+
+                    System.out.println("Current email recepient name: " + currentEmailRecipientName);
+                    System.out.println("Potential email recepient name: " + potentialEmailRecipientName);
+
+                    System.out.println("Current email template name: " + currentEmailTemplateName);
+                    System.out.println("Potential email template name: " + potentialEmailTemplateName);
+
+                    return !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName));
+                });
+            }).collect(Collectors.toList()).forEach(aggregateEmailWorkflowRules::add);
+
+        });
+
+        return aggregateEmailWorkflowRules;
+    }
+
+    @JsonIgnore
+    public List<Organization> getAncestorOrganizations() {
+
+        List<Organization> parentOrganizationHiarchy = new ArrayList<Organization>();
+
+        Organization parent = getParentOrganization();
+
+        if (parent != null && !parent.equals(this)) {
+            parentOrganizationHiarchy.add(parent);
+            parentOrganizationHiarchy.addAll(parent.getAncestorOrganizations());
+        }
+
+        return parentOrganizationHiarchy;
     }
 
 }

@@ -1,7 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
@@ -10,7 +12,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.Heritable;
+import org.tdl.vireo.model.inheritence.HeritableComponent;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -209,23 +211,53 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
 
         }
-        // if the requestingOrganization is not originator of workflowStep, make a new workflow step to override the original
+        // if the requestingOrganization is not originator of workflowStep, make
+        // a new workflow step to override the original
         else {
 
             if (overridabilityOfPersistedWorkflowStep) {
 
                 WorkflowStep clonedWorkflowStep = pendingWorkflowStep.clone();
 
+                Long requestingOrganizationId = requestingOrganization.getId();
+
                 clonedWorkflowStep.setOriginatingWorkflowStep(persistedWorkflowStep);
                 clonedWorkflowStep.setOriginatingOrganization(requestingOrganization);
 
                 WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
 
+                requestingOrganization = organizationRepo.findOne(requestingOrganizationId);
+
+                // in descendant organizations, replace this overriden workflow step with the override
                 for (Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
                     organization.replaceAggregateWorkflowStep(persistedWorkflowStep, newWorkflowStep);
                     organizationRepo.save(organization);
                 }
 
+                // in descendant organizations, have WSs that originated from
+                // the step being overridden now originate from the override
+                System.out.println("In descendant orgs, have WSs that originated from the step being overridden now originate from the override:");
+                for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+                    System.out.println("\t" + organization.getName() + "(" + organization.getId() + ").  Therein orginate WSs: ");
+                    for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
+                        System.out.println("\t\t" + ws.getName() + "(" + ws.getId() + ")");
+                    }
+                }
+
+                Set<WorkflowStep> workflowStepsToSave = new HashSet<WorkflowStep>();
+                for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
+                    for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
+                        if (ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
+                            ws.setOriginatingWorkflowStep(newWorkflowStep);
+                            workflowStepsToSave.add(ws);
+                        }
+                    }
+                }
+                for (WorkflowStep workflowStepToSave : workflowStepsToSave) {
+                    workflowStepRepo.save(workflowStepToSave);
+                }
+
+                // if change was to make it non-overrideable
                 if (!pendingWorkflowStep.getOverrideable()) {
 
                     List<WorkflowStep> descendentWorkflowSteps = getDescendantsOfStep(persistedWorkflowStep);
@@ -247,7 +279,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 resultingWorkflowStep = newWorkflowStep;
             }
-            // if the workflow step to be updated was not overrideable, then this non-originating organization can't make the change
+            // if the workflow step to be updated was not overrideable, then
+            // this non-originating organization can't make the change
             else {
                 throw new WorkflowStepNonOverrideableException();
             }
@@ -364,7 +397,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
     }
 
     @Override
-    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") Heritable persistedHeritableModel) {
+    public List<WorkflowStep> findByAggregateHeritableModel(@SuppressWarnings("rawtypes") HeritableComponent persistedHeritableModel) {
         if (persistedHeritableModel instanceof FieldProfile) {
             return workflowStepRepo.findByAggregateFieldProfilesId(persistedHeritableModel.getId());
         } else if (persistedHeritableModel instanceof Note) {

@@ -20,8 +20,8 @@ public class FieldPredicate extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String value;
-
-    @Column(nullable = false, unique = false)
+    
+	@Column(nullable = false, unique = false)
     private Boolean documentTypePredicate;
 
     public FieldPredicate() {

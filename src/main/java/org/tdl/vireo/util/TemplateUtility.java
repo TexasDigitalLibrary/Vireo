@@ -1,11 +1,16 @@
 package org.tdl.vireo.util;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
+import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 
 @Service
@@ -56,16 +61,17 @@ public class TemplateUtility {
                 .replaceAll("\\{" + LAST_NAME + "\\}", submitter.getLastName())
 
                 // TODO: We should use a url builder service to create/retrieve these.
-                .replaceAll("\\{" + STUDENT_URL + "\\}", STUDENT_URL)
-                .replaceAll("\\{" + SUBMISSION_URL + "\\}", SUBMISSION_URL)
+                .replaceAll("\\{" + STUDENT_URL + "\\}", appInfoUtil.getRunningAddress() + "/submission/" + submission.getId() + "/view")
+                .replaceAll("\\{" + SUBMISSION_URL + "\\}", appInfoUtil.getRunningAddress() + "/submission/" + submission.getId())
                 .replaceAll("\\{" + ADVISOR_URL + "\\}", appInfoUtil.getRunningAddress() + "/review/" + submission.getAdvisorAccessHash())
-                .replaceAll("\\{" + DEPOSIT_URI + "\\}", DEPOSIT_URI)
-                .replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL)
-
-                // TODO: these are field predicate and we will need a strategy to obtain this reliably.
-                .replaceAll("\\{" + DOCUMENT_TITLE + "\\}", DOCUMENT_TITLE)
-                .replaceAll("\\{" + SUBMISSION_TYPE + "\\}", SUBMISSION_TYPE)
-                .replaceAll("\\{" + GRAD_SEMESTER + "\\}", GRAD_SEMESTER);
+                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri());
+                
+                // This is being handled elswhere and may not be useful, since 
+        		// sending this uri from an email workflow rule seems illogical.
+        		// This is because these rule trigger from submission state changes
+        		// and a user must be registered already to have a submission.
+                //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
+        
 
         if (submission.getSubmissionState() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionState().getName());
@@ -74,8 +80,35 @@ public class TemplateUtility {
         if (submission.getAssignee() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_ASSIGNED_TO + "\\}", submission.getAssignee().getSetting("displayName"));
         }
+        
+        compiled = replacePredicates(compiled, submission);
+        
 
         return compiled;
     }
+
+	private String replacePredicates(String compiled, Submission submission) {
+				
+		for(SubmissionWorkflowStep sws : submission.getSubmissionWorkflowSteps()) {
+			
+			for(SubmissionFieldProfile afp : sws.getAggregateFieldProfiles()) {
+				
+				String predicateKey = afp.getFieldPredicate().getValue();				
+				String fieldValue = submission.getFieldValuesByPredicateValue(predicateKey)
+					.stream()
+					.map(v-> {
+						return v.getValue();
+					})
+					.collect(Collectors.joining(", "));
+				
+				compiled = compiled.replaceAll("\\{" + predicateKey + "\\}", fieldValue);
+				
+			};
+			
+		};
+		
+		
+		return compiled;
+	}
 
 }

@@ -332,6 +332,16 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/field-predicates',
             'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-predicates',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-predicates',
+            'method': 'remove'
         }
     },
     FieldValue: {

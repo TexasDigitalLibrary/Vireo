@@ -7,8 +7,8 @@
 			<p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please <span ng-if="isAnonymous()"><button class="btn btn-primary" ng-click="openModal('#loginModal')">Login</button> and</span> click on <a href="submission/history">Submission History</a>.</p>
 			<a href ng-click="openModal('#loginModal')" class="btn btn-primary" ng-if="submissionsOpen() && isAnonymous()">Login</a>
 			<a href="submission/history" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && multipleSubmissions() && (hasSubmissions() || submissionInProgress() || submissionNeedsCorrections()) && hasSubmissions()">Manage/View your submission(s)</a>
-			<a href="submission/1" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && submissionInProgress()">Continue your submission</a>
-			<a href="submission/1" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
+			<a href="{{'submission/' + getFirstSubmissionId()}}" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && submissionInProgress()">Continue your submission</a>
+			<a href="submission/history" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
 			<p class="alert alert-danger" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && !submissionNeedsCorrections() && hasSubmissions()">You've already submitted an ETD <a href="submission/history" class="btn btn-primary">Submission History</a></p>
 			<a href="submission/new" class="btn btn-primary" ng-if="submissionsOpen() && !isAnonymous() && (!submissionInProgress() || !submissionNeedsCorrections() || !hasSubmissions()) && !hasSubmissions()">Start your submission</a>
 		</div>

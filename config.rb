@@ -10,6 +10,8 @@ javascripts_dir = "src/main/webapp/WEB-INF/app/resources/scripts"
 add_import_path "src/main/webapp/WEB-INF/app/bower_components/core/app/resources/styles/"
 add_import_path "src/main/webapp/WEB-INF/app/bower_components/"
 
+Sass::Script::Number.precision = 10
+
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
 

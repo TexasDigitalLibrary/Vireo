@@ -1,8 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +43,14 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     @Transactional // this transactional is required to persist parent child relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
         Organization organization = create(name, category);
-        parent.addChildOrganization(organization);
-        parent = organizationRepo.save(parent);
-        parent.getAggregateWorkflowSteps().forEach(ws -> {
-            organization.addAggregateWorkflowStep(ws);
-        });
+        if (parent != null) {
+            System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
+            parent.addChildOrganization(organization);
+            parent = organizationRepo.save(parent);
+            parent.getAggregateWorkflowSteps().forEach(ws -> {
+                organization.addAggregateWorkflowStep(ws);
+            });
+        }
         return organizationRepo.save(organization);
     }
 
@@ -57,46 +61,50 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Override
     public void delete(Organization organization) {
+
         OrganizationCategory category = organization.getCategory();
         category.removeOrganization(organization);
         organizationCategoryRepo.save(category);
 
-        TreeSet<Organization> parentOrganizations = new TreeSet<Organization>(organization.getParentOrganizations());
+        Long orgId = organization.getId();
+
+        Organization parentOrganization = organization.getParentOrganization();
 
         // Have all the parent organizations not have this one as their child anymore
-        for (Organization parentOrganization : parentOrganizations) {
+        if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
-            organizationRepo.save(parentOrganization);
+            parentOrganization = organizationRepo.save(parentOrganization);
+            organization = organizationRepo.findOne(orgId);
         }
+        
+        Set<Organization> childrenToRemove = new HashSet<Organization>();
 
-        TreeSet<Organization> childrenOrganizations = new TreeSet<Organization>(organization.getChildrenOrganizations());
-
-        // Have all the child organizations get this one's parents as their parent
-        for (Organization childOrganization : childrenOrganizations) {
-            childOrganization.removeParentOrganization(organization);
-            organizationRepo.save(childOrganization);
-
-            parentOrganizations.parallelStream().forEach(parentOrganization -> {
-                parentOrganization.addChildOrganization(childOrganization);
-                organizationRepo.save(parentOrganization);
-            });
-
+        // Have all the child organizations get this one's parent as their parent
+        for (Organization childOrganization : organization.getChildrenOrganizations()) {
+            childrenToRemove.add(childOrganization);
+        }
+        
+        for(Organization childOrganization : childrenToRemove) {
             organization.removeChildOrganization(childOrganization);
-
             organization = organizationRepo.save(organization);
-        }
-
-        // Have all the submissions on this organization get this one's parent (one of them, anyway) as their new organization
-        // TODO: for now, have to delete them if there is no parent org to attach them to.
-        if (organization.getParentOrganizations().iterator().hasNext()) {
-
-            Organization parentOrg = organization.getParentOrganizations().iterator().next();
-            for (Submission sub : submissionRepo.findByOrganization(organization)) {
-                sub.setOrganization(parentOrg);
+            if (parentOrganization != null) {
+                childOrganization = organizationRepo.save(childOrganization);
+                parentOrganization.addChildOrganization(childOrganization);
+                parentOrganization = organizationRepo.save(parentOrganization);
+            } else {
+                childOrganization.setParentOrganization(null);
+                childOrganization = organizationRepo.save(childOrganization);
             }
-        } else {
-            for (Submission sub : submissionRepo.findByOrganization(organization)) {
-                submissionRepo.delete(sub);
+        }
+         
+        // Have all the submissions on this organization get the parent as their new organization
+        // TODO: for now, have to delete them if there is no parent org to attach them to.
+        for (Submission submission : submissionRepo.findByOrganization(organization)) {
+            if (parentOrganization != null) {
+                submission.setOrganization(parentOrganization);
+                submissionRepo.save(submission);
+            } else {
+                submissionRepo.delete(submission);
             }
         }
 
@@ -110,15 +118,15 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
         for (WorkflowStep ws : workflowStepsToRemove) {
             organization.removeOriginalWorkflowStep(ws);
+            organization.removeAggregateWorkflowStep(ws);
         }
 
-        List<WorkflowStep> workflow = new ArrayList<WorkflowStep>();
-
+        List<WorkflowStep> aggregateWorkflow = new ArrayList<WorkflowStep>();
         for (WorkflowStep ws : organization.getAggregateWorkflowSteps()) {
-            workflow.add(ws);
+            aggregateWorkflow.add(ws);
         }
 
-        for (WorkflowStep ws : workflow) {
+        for (WorkflowStep ws : aggregateWorkflow) {
             organization.removeAggregateWorkflowStep(ws);
         }
 
@@ -126,7 +134,30 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             workflowStepRepo.delete(ws);
         }
 
-        organizationRepo.delete(organization.getId());
+        organizationRepo.delete(orgId);
+    }
+
+    @Override
+    public Set<Organization> getDescendantOrganizations(Organization org) {
+
+        Set<Organization> descendants = new HashSet<Organization>();
+
+        for (Organization child : org.getChildrenOrganizations()) {
+            descendants.add(child);
+            descendants.addAll(getDescendantOrganizations(descendants, child));
+        }
+
+        return descendants;
+    }
+
+    private Set<Organization> getDescendantOrganizations(Set<Organization> descendants, Organization org) {
+
+        for (Organization child : org.getChildrenOrganizations()) {
+            descendants.add(child);
+            descendants.addAll(getDescendantOrganizations(descendants, child));
+        }
+
+        return descendants;
     }
 
 }
