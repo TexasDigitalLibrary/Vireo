@@ -26,6 +26,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
+import org.tdl.vireo.util.AppInfoUtility;
 
 import edu.tamu.framework.enums.ApiResponseType;
 import edu.tamu.framework.model.ApiResponse;
@@ -45,6 +46,9 @@ public class AuthControllerTest extends AbstractControllerTest {
 
     @Mock
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
+    
+    @Mock
+    private AppInfoUtility appInfoUtil;
 
     @InjectMocks
     private AppAuthController authController;
@@ -96,6 +100,8 @@ public class AuthControllerTest extends AbstractControllerTest {
         TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
 
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
+        
+        Mockito.when(appInfoUtil.getRunningAddress()).thenReturn("localhost:9000");
 
         Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(AppRole.class))).then(new Answer<Object>() {
             @Override
