@@ -85,8 +85,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
 
         $scope.createControlledVocabulary = function () {
-            ControlledVocabularyRepo.create($scope.modalData).then(function () {
-                $scope.resetControlledVocabulary(true);
+            ControlledVocabularyRepo.create($scope.modalData).then(function (res) {
+                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                    $scope.resetControlledVocabulary(true);
+                }
             });
         };
 
@@ -112,8 +114,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.removeControlledVocabulary = function () {
-            $scope.modalData.delete().then(function () {
-                $scope.resetControlledVocabulary(true);
+            $scope.modalData.delete().then(function (res) {
+                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                    $scope.resetControlledVocabulary(true);
+                }
             });
         };
 
