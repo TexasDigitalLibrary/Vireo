@@ -10,75 +10,79 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class OrganizationTest extends AbstractEntityTest {
+    private Organization parentOrganization;
 
     @Before
     public void setUp() {
-        assertEquals("The organization repository was not empty!", 0, organizationRepo.count());
-
         parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
-
+    }
+    
+    @Test
+    public void testEmailWorkflowRuleCreation() {
+        assertEquals("The organization repository was not empty!", 0, organizationRepo.count());
+        createEmailWorkflowRule();
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
-
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-
         assertEquals("The submissionState does not exist!", 1, submissionStateRepo.count());
-
-        emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
-
         assertEquals("The emailTemplate does not exist!", 1, emailTemplateRepo.count());
-
-        emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
-
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
+    }
+    
+    private void createEmailWorkflowRule() {
+        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
+        emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
+        emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
     }
 
     @Override
     public void testCreate() {
-        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentOrganization.addEmail(TEST_PARENT_EMAIL);
-        parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
-        parentOrganization = organizationRepo.save(parentOrganization);
+        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        Organization testOrganization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
 
         assertEquals("The repository did not save the entity!", 1, organizationRepo.count());
-        assertEquals("Saved entity did not contain the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
-        assertEquals("Saved entity did not contain the correct category name!", parentCategory.getName(), parentOrganization.getCategory().getName());
-        assertEquals("Saved entity did not have the emailWorkflow rule!", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
-
+        assertEquals("Saved entity did not contain the correct name!", TEST_ORGANIZATION_NAME, testOrganization.getName());
+        assertEquals("Saved entity did not contain the correct category name!", organizationCategory.getName(), testOrganization.getCategory().getName());
+    }
+    
+    @Test
+    public void testChildCreation() {
+        createParentOrganization();
         childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
-
+        
         assertEquals("The parent organization was not atached to the child!", parentOrganization, childOrganization.getParentOrganization());
         assertEquals("The child organization was not atached to the parent!", 1, parentOrganization.getChildrenOrganizations().size());
         assertEquals("The child organization's id was incorrect!", childOrganization.getId(), ((Organization) parentOrganization.getChildrenOrganizations().toArray()[0]).getId());
         assertEquals("The parent's organization's id was incorrect!", parentOrganization.getId(), childOrganization.getParentOrganization().getId());
     }
 
+    private void createParentOrganization() {
+        parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        parentOrganization.addEmail(TEST_PARENT_EMAIL);
+        parentOrganization.addEmailWorkflowRule(emailWorkflowRule);
+        parentOrganization = organizationRepo.save(parentOrganization);
+    }
+
     @Override
+    @Test(expected = DataIntegrityViolationException.class)
     public void testDuplication() {
-        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
+        createParentOrganization();
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
-        try {
-            organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
-
-        for (Organization o : organizationRepo.findAll()) {
-            System.out.println("Have org " + o.getName() + " with category " + o.getCategory() + " with parent " + o.getParentOrganization());
-        }
-
-        assertEquals("The repository duplicated entity!", 2, organizationRepo.count());
+        organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
     }
 
     @Override
     public void testDelete() {
-        Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        organizationRepo.delete(organization);
-        assertEquals("Entity did not delete!", 0, organizationRepo.count());
+        organizationCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
+        Organization testOrganization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategory);
+        long testOrganizationId = testOrganization.getId();
+        assertEquals("Organization not found", true, organizationRepo.exists(testOrganizationId));
+        organizationRepo.delete(testOrganization);
+        assertEquals("Organization not deleted", false, organizationRepo.exists(testOrganizationId));
     }
 
     @Override
     public void testCascade() {
-
+        createEmailWorkflowRule();
         // create categories
         OrganizationCategory childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
         OrganizationCategory grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME);
@@ -357,19 +361,14 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testSanity() {
-
-        Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-
+    public void testWorkflowStepAddition() {
+        createParentOrganization();
         workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-
         workflowStepRepo.create("Step 2", parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-
         workflowStepRepo.create("Step 3", parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-
         workflowStepRepo.create("Step 4", parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
 
