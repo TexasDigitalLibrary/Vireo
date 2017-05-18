@@ -363,17 +363,18 @@ public class OrganizationTest extends AbstractEntityTest {
     @Test
     public void testWorkflowStepAddition() {
         createParentOrganization();
-        workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        workflowStepRepo.create("Step 2", parentOrganization);
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        workflowStepRepo.create("Step 3", parentOrganization);
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        workflowStepRepo.create("Step 4", parentOrganization);
-        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        parentOrganization = addWorkflowStepToParentOrganization(TEST_WORKFLOW_STEP_NAME);
+        parentOrganization = addWorkflowStepToParentOrganization("Step 2");
+        parentOrganization = addWorkflowStepToParentOrganization("Step 3");
+        parentOrganization = addWorkflowStepToParentOrganization("Step 4");
 
         assertEquals("The number of original workflowsteps was off!", 4, parentOrganization.getOriginalWorkflowSteps().size());
         assertEquals("The number of aggregate workflowsteps was off!", 4, parentOrganization.getAggregateWorkflowSteps().size());
+    }
+    
+    private Organization addWorkflowStepToParentOrganization(String setName) {
+        workflowStepRepo.create(setName, parentOrganization);
+        return organizationRepo.findOne(parentOrganization.getId());
     }
 
     @After
