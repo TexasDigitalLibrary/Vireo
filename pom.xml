@@ -322,7 +322,8 @@
               <executable>npm${npm-extension}</executable>
               <arguments>
                 <argument>install</argument>
-                <argument>--no-bin-links</argument>
+                <!-- need this to work with Vagrant sync directories -->
+                <!-- <argument>--no-bin-links</argument> -->
               </arguments>
             </configuration>
             <goals>
