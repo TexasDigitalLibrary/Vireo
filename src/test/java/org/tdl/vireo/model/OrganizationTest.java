@@ -43,23 +43,30 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The repository did not save the entity!", 1, organizationRepo.count());
         assertEquals("Saved entity did not contain the correct name!", TEST_ORGANIZATION_NAME, testOrganization.getName());
         assertEquals("Saved entity did not contain the correct category name!", organizationCategory.getName(), testOrganization.getCategory().getName());
+        assertEquals("The organization category did not have the correct Name!", TEST_ORGANIZATION_CATEGORY_NAME, testOrganization.getCategory().getName());
     }
     
     @Test
     public void testChildCreation() {
-        createParentOrganization();
-        childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
-        Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
+        createChildOrganization();
         
         assertEquals("The parent organization was not atached to the child!", parentOrganization, childOrganization.getParentOrganization());
-        assertEquals("The child organization was not atached to the parent!", 1, parentOrganization.getChildrenOrganizations().size());
+        assertEquals("The parent organization has no children!", 1, parentOrganization.getChildrenOrganizations().size());
         assertEquals("The child organization's id was incorrect!", childOrganization.getId(), ((Organization) parentOrganization.getChildrenOrganizations().toArray()[0]).getId());
         assertEquals("The parent's organization's id was incorrect!", parentOrganization.getId(), childOrganization.getParentOrganization().getId());
+        assertEquals("The child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
     }
     
     @Test
     public void testGrandChildCreation() {
-        assertEquals("not implemented", true, false);
+        createGrandChildOrganization();
+        
+        assertEquals("The grand child organization was not attached to the child!", childOrganization, grandChildOrganization.getParentOrganization());
+        assertEquals("The child organization has no grand children", 1, childOrganization.getChildrenOrganizations().size());
+        assertEquals("The grand child's id was incorrect", grandChildOrganization.getId(), ((Organization) childOrganization.getChildrenOrganizations().toArray()[0]).getId());
+        assertEquals("The child organization's id was inccorect!", childOrganization.getId(), grandChildOrganization.getParentOrganization().getId());
+        assertEquals("The grand child's organization category did not have the correct name", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
+        
     }
 
     private void createParentOrganization() {
@@ -163,44 +170,44 @@ public class OrganizationTest extends AbstractEntityTest {
         // check workflow
 //        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
 //        assertEquals("The child organization did not add the workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
-        assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildWorkflowStep));
+        // assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableParentWorkflowStep));
+        // assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(severableChildWorkflowStep));
+        // assertEquals("The grand child organization did not add the workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildWorkflowStep));
 
         // check workflow inheritance
-        assertEquals("The child organization did not inherit parent workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
-        assertEquals("The grand child organization did not inherit parent workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
-        assertEquals("The grand child organization did not inherit child workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
+        // assertEquals("The child organization did not inherit parent workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        // assertEquals("The grand child organization did not inherit parent workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        // assertEquals("The grand child organization did not inherit child workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
 
         // verify parent organization
-        parentOrganization = (Organization) childOrganization.getParentOrganization();
-
-        assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
-        assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
-        assertEquals("The parent organization has the wrong email workflow rule", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
+//        parentOrganization = (Organization) childOrganization.getParentOrganization();
+//
+//        assertEquals("The parent organization did not have the correct name!", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
+//        assertEquals("The parent organization category dit not have the correct name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
+//        assertEquals("The parent organization has the wrong email workflow rule", true, parentOrganization.getEmailWorkflowRules().contains(emailWorkflowRule));
 
         // check number of child organizations of parent organization
-        assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
+        // assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
 
         // verify child organization
-        assertTrue("The parent did not have the child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganization));
-        assertTrue("The parent did not have the severable child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganizationToDisinherit));
-        assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
+        // assertTrue("The parent did not have the child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganization));
+        // assertTrue("The parent did not have the severable child organization!", parentOrganization.getChildrenOrganizations().contains(childOrganizationToDisinherit));
+        // assertEquals("The parent's child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
 
         // check number of child(grand child) organizations of child organization
-        assertEquals("The child organization had incorrect number of grand children!", 1, childOrganization.getChildrenOrganizations().size());
+        // assertEquals("The child organization had incorrect number of grand children!", 1, childOrganization.getChildrenOrganizations().size());
 
         // verify grand child organization
-        assertTrue("The parent did not have the severable child organization!", childOrganization.getChildrenOrganizations().contains(grandChildOrganization));
-        assertEquals("The grand child organization category dit not have the correct Name!", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
+        // assertTrue("The parent did not have the severable child organization!", childOrganization.getChildrenOrganizations().contains(grandChildOrganization));
+        // assertEquals("The grand child organization category dit not have the correct Name!", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
 
         // test remove severable workflow steps
-        parentOrganization.removeOriginalWorkflowStep(severableParentWorkflowStep);
-        parentOrganization = organizationRepo.save(parentOrganization);
-        childOrganization = organizationRepo.findOne(childOrganization.getId());
+         parentOrganization.removeOriginalWorkflowStep(severableParentWorkflowStep);
+         parentOrganization = organizationRepo.save(parentOrganization);
+         childOrganization = organizationRepo.findOne(childOrganization.getId());
 
-        assertEquals("The severable workflow step was not removed!", 1, parentOrganization.getOriginalWorkflowSteps().size());
-        assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableParentWorkflowStep.getName()));
+        // assertEquals("The severable workflow step was not removed!", 1, parentOrganization.getOriginalWorkflowSteps().size());
+        // assertNotEquals("The sererable workflow step was not deleted!", null, workflowStepRepo.findByName(severableParentWorkflowStep.getName()));
 
         childOrganization.removeOriginalWorkflowStep(severableChildWorkflowStep);
         childOrganization = organizationRepo.save(childOrganization);
@@ -362,13 +369,47 @@ public class OrganizationTest extends AbstractEntityTest {
         
         assertEquals("The child organization did not have its parent's workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertEquals("The child organization did add its workflow step", true, childOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
-
-        
     }
     
     @Test
     public void testGrandChildOrganizationInheritsWorkflowSteps() {
+        createParentOrganization();
+        WorkflowStep parentWorkflowStep = addWorkflowStepToParentOrganization(TEST_WORKFLOW_STEP_NAME);
+        createChildOrganization();
+        WorkflowStep childWorkflowStep = addWorkflowStepToChildOrganization(TEST_WORKFLOW_STEP_NAME);
+        createGrandChildOrganization();
+        WorkflowStep grandChildWorkflowStep = addWorkflowStepToGrandChildOrganization(TEST_WORKFLOW_STEP_NAME);
         
+        assertEquals("The grand child organization did not have the parent's workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
+        assertEquals("The grand child organization did not have the child's workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
+        assertEquals("The grand child organization did not have the its workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildWorkflowStep));
+    }
+    
+    @Test
+    public void testParentChildRelationship() {
+        createChildOrganization();
+        parentOrganization = (Organization) childOrganization.getParentOrganization();
+        assertEquals("The parent organization did not have the correct name", TEST_PARENT_ORGANIZATION_NAME, parentOrganization.getName());
+        childOrganization = (Organization) parentOrganization.getChildrenOrganizations().toArray()[0];
+        assertEquals("The child organization did not have the correct name", TEST_CHILD_ORGANIZATION_NAME, childOrganization.getName());
+        assertTrue("The parent did not have the child organization", parentOrganization.getChildrenOrganizations().contains(childOrganization));
+    }
+    
+    @Test
+    public void testParentHasCorrectNumberOfChildren() {
+        createChildOrganization();
+        organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
+        assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
+    }
+    
+    @Test
+    public void testWorkflowStepRemoval() {
+        createParentOrganization();
+        WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_WORKFLOW_NAME, parentOrganization);
+        assertEquals("Workflow step not created!", 1, parentOrganization.getAggregateWorkflowSteps().size());
+        parentOrganization.removeAggregateWorkflowStep(parentWorkflowStep);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        assertEquals("Workflow step not deleted!", null, workflowStepRepo.findByName(parentWorkflowStep.getName()));
     }
     
     @Test
@@ -396,9 +437,11 @@ public class OrganizationTest extends AbstractEntityTest {
         if (childOrganization == null) {
             createChildOrganization();
         }
+        grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME);
         grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, childOrganization, grandChildCategory);
-        grandChildCategory = organizationCategoryRepo.findOne(grandChildCategory.getId());
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         childOrganization = organizationRepo.findOne(childOrganization.getId());
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
     }
 
     @Test
@@ -446,6 +489,21 @@ public class OrganizationTest extends AbstractEntityTest {
     
     private WorkflowStep addWorkflowStepToParentOrganization(String stepName) {
         WorkflowStep workflowStep = workflowStepRepo.create(stepName, parentOrganization);
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        return workflowStep;
+    }
+    
+    private WorkflowStep addWorkflowStepToChildOrganization(String stepName) {
+        WorkflowStep workflowStep = workflowStepRepo.create(stepName, childOrganization);
+        childOrganization = organizationRepo.findOne(childOrganization.getId());
+        parentOrganization = organizationRepo.findOne(parentOrganization.getId());
+        return workflowStep;
+    }
+    
+    private WorkflowStep addWorkflowStepToGrandChildOrganization(String stepName) {
+        WorkflowStep workflowStep = workflowStepRepo.create(stepName, grandChildOrganization);
+        grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
+        childOrganization = organizationRepo.findOne(childOrganization.getId());
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         return workflowStep;
     }
