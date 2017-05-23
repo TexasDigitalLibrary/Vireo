@@ -47,7 +47,7 @@ public class NamedSearchFilterGroup extends BaseEntity {
     @Column(nullable = false)
     private Boolean umiRelease;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> savedColumns;
 
