@@ -19,7 +19,6 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.export.TemplateExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
-import org.tdl.vireo.util.FileHelperUtility;
 
 @Entity
 public class DSpaceMetsPackager extends AbstractPackager {
@@ -45,9 +44,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
             pkg = File.createTempFile("template-export-", ".zip");
 
-            FileHelperUtility fileHelper = new FileHelperUtility();
-
-            mimeType = fileHelper.getMimeType(pkg.getPath());
+            mimeType = "application/zip";
 
             FileOutputStream fos = new FileOutputStream(pkg);
             ZipOutputStream zos = new ZipOutputStream(fos);
