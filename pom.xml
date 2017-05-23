@@ -322,7 +322,6 @@
               <executable>npm${npm-extension}</executable>
               <arguments>
                 <argument>install</argument>
-                <argument>--no-bin-links</argument>
               </arguments>
             </configuration>
             <goals>
