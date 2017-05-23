@@ -28,7 +28,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
