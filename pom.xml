@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaverframework</groupId>
     <artifactId>weaver-webservice-parent</artifactId>
-    <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+    <version>1.2.0-RC2-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -96,7 +96,7 @@
     <dependency>
       <groupId>edu.tamu.weaverframework</groupId>
       <artifactId>weaver-webservice-core</artifactId>
-      <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+      <version>1.2.0-RC2-SNAPSHOT</version>
     </dependency>
 
     <!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
@@ -322,7 +322,8 @@
               <executable>npm${npm-extension}</executable>
               <arguments>
                 <argument>install</argument>
-                <argument>--no-bin-links</argument>
+                <!-- need this to work with Vagrant sync directories, also had to make a space inside the double dash to avoid a parse error -->
+                <!-- <argument>- -no-bin-links</argument> -->
               </arguments>
             </configuration>
             <goals>
