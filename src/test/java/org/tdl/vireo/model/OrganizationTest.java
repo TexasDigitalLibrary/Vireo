@@ -382,9 +382,10 @@ public class OrganizationTest extends AbstractEntityTest {
     
     @Test
     public void testDeleteChildOrganization() {
-        organizationRepo.delete(childOrganization);
-        assertEquals("The child organization was not deleted!", null, organizationRepo.findOne(childOrganization.getId()));
-        assertNotEquals("The parent organization was deleted!", null, organizationRepo.findOne(parentOrganization.getId()));
+        organizationRepo.delete(grandChildOrganization);
+        assertEquals("The grand child organization was not deleted!", null, organizationRepo.findOne(grandChildOrganization.getId()));
+        assertNotEquals("The child organization was deleted!", null, organizationRepo.findOne(childOrganization.getId()));
+        assertEquals("The child organization does not have the correct number of children", 0, organizationRepo.findOne(childOrganization.getId()).getChildrenOrganizations().size());
     }
 
     @Test
