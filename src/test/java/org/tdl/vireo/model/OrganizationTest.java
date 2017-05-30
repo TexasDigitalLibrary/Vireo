@@ -21,14 +21,14 @@ public class OrganizationTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.save(parentOrganization);
         parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        
+
         childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
         childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
         childOrganization = organizationRepo.save(childOrganization);
         childWorkflowStep = workflowStepRepo.create(TEST_CHILD_WORKFLOW_NAME, childOrganization);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        
+
         grandChildCategory = organizationCategoryRepo.create(TEST_GRAND_CHILD_CATEGORY_NAME);
         grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, childOrganization, grandChildCategory);
         grandChildOrganization = organizationRepo.save(grandChildOrganization);
@@ -36,9 +36,9 @@ public class OrganizationTest extends AbstractEntityTest {
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
         childOrganization = organizationRepo.findOne(childOrganization.getId());
     }
-    
+
     // Creation/addition Tests
-    
+
     @Override
     public void testCreate() {
         assertEquals("The repository did not save the entity!", 3, organizationRepo.count());
@@ -46,7 +46,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Saved entity did not contain the correct category name!", parentCategory.getName(), parentOrganization.getCategory().getName());
         assertEquals("The organization category did not have the correct Name!", TEST_PARENT_CATEGORY_NAME, parentOrganization.getCategory().getName());
     }
-    
+
     @Test
     public void testChildCreation() {
         assertEquals("The parent organization was not atached to the child!", parentOrganization, childOrganization.getParentOrganization());
@@ -55,7 +55,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The parent's organization's id was incorrect!", parentOrganization.getId(), childOrganization.getParentOrganization().getId());
         assertEquals("The child organization category did not have the correct Name!", TEST_CHILD_CATEGORY_NAME, childOrganization.getCategory().getName());
     }
-    
+
     @Test
     public void testGrandChildCreation() {
         assertEquals("The grand child organization was not attached to the child!", childOrganization, grandChildOrganization.getParentOrganization());
@@ -64,7 +64,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The child organization's id was inccorect!", childOrganization.getId(), grandChildOrganization.getParentOrganization().getId());
         assertEquals("The grand child's organization category did not have the correct name", TEST_GRAND_CHILD_CATEGORY_NAME, grandChildOrganization.getCategory().getName());
     }
-    
+
     @Test
     public void testEmailWorkflowRuleCreation() {
         createEmailWorkflowRule();
@@ -73,13 +73,13 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The emailTemplate does not exist!", 1, emailTemplateRepo.count());
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
     }
-    
+
     private void createEmailWorkflowRule() {
         submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
         emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
     }
-    
+
     @Test
     public void testAddEmailWorkflowRule() {
         createEmailWorkflowRule();
@@ -87,7 +87,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
         assertEquals("The emailWorkflowRule does not exist on parent organization!", emailWorkflowRule.getId(), ((EmailWorkflowRule) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId());
     }
-    
+
     @Test
     public void testWorkflowStepAddition() {
         WorkflowStep workflowStep2 = addWorkflowStepToParentOrganization("Step 2");
@@ -101,29 +101,29 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The expected step was not found", true, parentOrganization.getAggregateWorkflowSteps().contains(workflowStep3));
         assertEquals("The expected step was not found", true, parentOrganization.getAggregateWorkflowSteps().contains(workflowStep4));
     }
-    
+
     private WorkflowStep addWorkflowStepToParentOrganization(String stepName) {
         WorkflowStep workflowStep = workflowStepRepo.create(stepName, parentOrganization);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         return workflowStep;
     }
-    
+
     @Override
     @Test(expected = DataIntegrityViolationException.class)
     public void testDuplication() {
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
     }
-    
+
     // Organization inheritance tests
-    
+
     @Test
     public void testGrandChildOrganizationInheritsWorkflowSteps() {
         assertEquals("The grand child organization did not have the parent's workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertEquals("The grand child organization did not have the child's workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
         assertEquals("The grand child organization did not have the its workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildWorkflowStep));
     }
-    
+
     @Test
     public void testParentChildRelationship() {
         parentOrganization = (Organization) childOrganization.getParentOrganization();
@@ -132,13 +132,13 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The child organization did not have the correct name", TEST_CHILD_ORGANIZATION_NAME, childOrganization.getName());
         assertTrue("The parent did not have the child organization", parentOrganization.getChildrenOrganizations().contains(childOrganization));
     }
-    
+
     @Test
     public void testParentHasCorrectNumberOfChildren() {
         organizationRepo.create(TEST_SEVERABLE_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
         assertEquals("The parent organization had incorrect number of children!", 2, parentOrganization.getChildrenOrganizations().size());
     }
-    
+
     @Test
     public void testDetachChildOrganization() {
         childOrganization.removeChildOrganization(grandChildOrganization);
@@ -147,7 +147,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The detached grand child organization was deleted!", null, grandChildOrganization);
         assertEquals("The parent organzation has the wrong number of children!", 1, parentOrganization.getChildrenOrganizations().size());
     }
-    
+
     @Test
     public void testReattachChildOrganization() {
         childOrganization.removeChildOrganization(grandChildOrganization);
@@ -157,9 +157,9 @@ public class OrganizationTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         assertEquals("The parent organzation has the wrong number of children!", 1, childOrganization.getChildrenOrganizations().size());
     }
-    
+
     // Deletion/removal tests
-    
+
     @Override
     public void testDelete() {
         long organizationId = parentOrganization.getId();
@@ -167,7 +167,7 @@ public class OrganizationTest extends AbstractEntityTest {
         organizationRepo.delete(parentOrganization);
         assertEquals("Organization not deleted", false, organizationRepo.exists(organizationId));
     }
-    
+
     @Test
     public void testDeleteChildOrganization() {
         organizationRepo.delete(grandChildOrganization);
@@ -175,7 +175,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertNotEquals("The child organization was deleted!", null, organizationRepo.findOne(childOrganization.getId()));
         assertEquals("The child organization does not have the correct number of children", 0, organizationRepo.findOne(childOrganization.getId()).getChildrenOrganizations().size());
     }
-    
+
     @Test
     public void testParentDeletionDoesNotDeleteChildren() {
         organizationRepo.delete(parentOrganization);
@@ -194,14 +194,14 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Middle organization did not delete!", 2, organizationRepo.count());
         assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node " + grandChildOrganization.getName() + " (" + grandChildOrganization.getId() + ") didn't get it's grandparent " + parentOrganization.getName() + " (" + parentOrganization.getId() + ") as new parent.", parentOrganization, grandChildOrganization.getParentOrganization());
     }
-    
+
     @Test
     public void testDeletingParentDoesNotDeleteParentWorkflowStep() {
         organizationRepo.delete(parentOrganization);
         assertEquals("The parent workflowstep was not deleted!", null, workflowStepRepo.findOne(parentWorkflowStep.getId()));
         assertEquals("The child contained workflowsteps with a detached originatingOrganization!", false, childOrganization.getOriginalWorkflowSteps().contains(parentWorkflowStep));
     }
-    
+
     @Test
     public void testDeleteHierarchy() {
         organizationRepo.delete(parentOrganization);
@@ -216,7 +216,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("The workflow steps were orphaned!", 0, workflowStepRepo.count());
         assertEquals("An organization category was deleted!", 3, organizationCategoryRepo.count());
     }
-    
+
     @Test
     public void testEmailWorkflowRuleCascades() {
         createEmailWorkflowRule();
@@ -235,20 +235,20 @@ public class OrganizationTest extends AbstractEntityTest {
     public void testCascade() {
         // This test was too generic and was refactored into several different tests.
     }
-    
+
     // Workflow steps tests
-    
+
     @Test
     public void testChildOrganizationInheritsWorkflowStep() {
         assertEquals("The child organization did not have its parent's workflow step!", true, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertEquals("The child organization did add its workflow step", true, childOrganization.getAggregateWorkflowSteps().contains(childWorkflowStep));
     }
-    
+
     @Test
     public void testGrandChildInheritsWorkflowStepFromParent() {
         assertEquals("Grand child did not have parent's workflow step!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
     }
-    
+
     @Test
     public void testGrandChildOrganizationInheritsOverwrittenWorkflowSetpFromChild() {
         parentWorkflowStep.setOverrideable(false);
@@ -257,7 +257,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Child organization did not remove the workflow steps", false, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertEquals("Grand child organization is missing parentWorkflowStep!", true, grandChildOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
     }
-    
+
     @Test
     public void testWorkflowStepRemoval() {
         assertEquals("Workflow step not created!", 1, parentOrganization.getAggregateWorkflowSteps().size());
@@ -265,7 +265,7 @@ public class OrganizationTest extends AbstractEntityTest {
         parentOrganization = organizationRepo.save(parentOrganization);
         assertEquals("Workflow step was not removed", 0, parentOrganization.getAggregateWorkflowSteps().toArray().length);
     }
-    
+
     @Test
     public void testReattachWorkflowStep() {
         parentOrganization.removeOriginalWorkflowStep(parentWorkflowStep);
@@ -276,7 +276,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Parent organzation has the wrong number of workflow steps", 1, parentOrganization.getAggregateWorkflowSteps().size());
         assertEquals("Grand child organzation has the wrong number of workflow steps", 3, grandChildOrganization.getAggregateWorkflowSteps().size());
     }
-    
+
     @Test
     public void testWorkflowStepRemovalIsInherited() {
         parentOrganization.removeOriginalWorkflowStep(parentWorkflowStep);
@@ -284,7 +284,7 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         assertEquals("Child did not have parent workflow step removed", false, childOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
     }
-    
+
     @Test
     public void testWorkflowStepRetainedIfNotOrphaned() {
         parentOrganization.removeOriginalWorkflowStep(parentWorkflowStep);
@@ -292,7 +292,7 @@ public class OrganizationTest extends AbstractEntityTest {
         assertEquals("Parent did not have the workflow step removed", false, parentOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertNotEquals("Inherited workflow step was deleted!", null, workflowStepRepo.findByName(parentWorkflowStep.getName()));
     }
-    
+
     @After
     public void cleanUp() {
 
@@ -311,4 +311,4 @@ public class OrganizationTest extends AbstractEntityTest {
         emailTemplateRepo.deleteAll();
     }
 
-}    
+}
