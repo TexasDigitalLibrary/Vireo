@@ -423,11 +423,19 @@ public abstract class AbstractEntityTest {
     protected Embargo embargoType;
     protected FieldValue fieldValue;
     protected Organization organization;
+    protected Organization parentOrganization;
+    protected Organization childOrganization;
+    protected Organization grandChildOrganization;
     protected Language language;
     protected OrganizationCategory parentCategory;
     protected OrganizationCategory childCategory;
     protected OrganizationCategory grandChildCategory;
     protected OrganizationCategory organizationCategory;
+    
+    protected WorkflowStep parentWorkflowStep;
+    protected WorkflowStep childWorkflowStep;
+    protected WorkflowStep grandChildWorkflowStep;
+    
 
     protected SubmissionState submissionState;
     protected SubmissionState includedSubmissionState;
