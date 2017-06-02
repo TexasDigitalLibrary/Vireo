@@ -97,7 +97,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
 
-        ReflectionTestUtils.setField(authUtility, "url", "localhost:9000");
+        ReflectionTestUtils.setField(authController, "url", "localhost:9000");
 
         Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(AppRole.class))).then(new Answer<Object>() {
             @Override
