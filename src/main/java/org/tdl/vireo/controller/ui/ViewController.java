@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ViewController {
 
-    @RequestMapping("/")
+    @RequestMapping(value = { "/", "/home", "/register" })
     public ModelAndView view(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView("index");
         view.addObject("base", request.getServletContext().getContextPath());
