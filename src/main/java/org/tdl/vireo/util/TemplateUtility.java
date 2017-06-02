@@ -1,13 +1,11 @@
 package org.tdl.vireo.util;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
@@ -16,8 +14,8 @@ import org.tdl.vireo.model.User;
 @Service
 public class TemplateUtility {
 
-    @Autowired
-    private AppInfoUtility appInfoUtil;
+    @Value("${app.url}")
+    private String url;
 
     private static final String FULL_NAME = "FULL_NAME";
     private static final String FIRST_NAME = "FIRST_NAME";
@@ -61,9 +59,9 @@ public class TemplateUtility {
                 .replaceAll("\\{" + LAST_NAME + "\\}", submitter.getLastName())
 
                 // TODO: We should use a url builder service to create/retrieve these.
-                .replaceAll("\\{" + STUDENT_URL + "\\}", appInfoUtil.getRunningAddress() + "/submission/" + submission.getId() + "/view")
-                .replaceAll("\\{" + SUBMISSION_URL + "\\}", appInfoUtil.getRunningAddress() + "/submission/" + submission.getId())
-                .replaceAll("\\{" + ADVISOR_URL + "\\}", appInfoUtil.getRunningAddress() + "/review/" + submission.getAdvisorAccessHash())
+                .replaceAll("\\{" + STUDENT_URL + "\\}", url + "/submission/" + submission.getId() + "/view")
+                .replaceAll("\\{" + SUBMISSION_URL + "\\}", url + "/submission/" + submission.getId())
+                .replaceAll("\\{" + ADVISOR_URL + "\\}", url + "/review/" + submission.getAdvisorAccessHash())
                 .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri());
                 
                 // This is being handled elswhere and may not be useful, since 
