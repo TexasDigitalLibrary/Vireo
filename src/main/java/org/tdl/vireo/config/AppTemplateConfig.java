@@ -15,8 +15,8 @@ public class AppTemplateConfig {
     @Bean
     public SpringTemplateEngine templateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.addTemplateResolver(jspTemplateResolver());
         templateEngine.addTemplateResolver(xmlTemplateResolver());
+        templateEngine.addTemplateResolver(jspTemplateResolver());
         templateEngine.setTemplateEngineMessageSource(messageSource());
         return templateEngine;
     }

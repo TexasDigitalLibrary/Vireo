@@ -4,7 +4,18 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.page = {
         number: 1,
-        count: 10
+        count: 10,
+        options: [
+            5,
+            10,
+            20,
+            40,
+            60,
+            100,
+            200,
+            400,
+            500
+        ]
     };
 
     $scope.columns = [];
@@ -241,17 +252,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
             page: $scope.page.number,
             count: $scope.page.count
         }, {
-            counts: [
-                5,
-                10,
-                20,
-                40,
-                60,
-                100,
-                200,
-                400,
-                500
-            ],
+            counts: $scope.page.options,
             total: $scope.page.totalElements,
             filterDelay: 0,
             getData: function(params) {
@@ -275,8 +276,6 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), ManagerFilterColumnRepo.ready()]).then(function() {
 
             ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(data) {
-
-                $scope.pageSize = angular.fromJson(data.body).payload.Integer;
 
                 $scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
 
@@ -374,7 +373,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     };
 
     $scope.saveColumns = function() {
-        ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.pageSize).then(function() {
+        ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.page.count).then(function() {
             $scope.resetColumns();
         });
     };

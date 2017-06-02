@@ -10,6 +10,7 @@ public class FileHelperUtility {
 
     private final Tika tika = new Tika();
 
+    // TODO: fix problems on Windows!!!
     public String getMimeType(String relativePath) {
         String safePath = Application.BASE_PATH + relativePath;
         if (safePath.contains(":") && safePath.charAt(0) == '/') {

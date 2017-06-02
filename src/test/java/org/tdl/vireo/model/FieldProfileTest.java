@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
@@ -101,6 +102,7 @@ public class FieldProfileTest extends AbstractEntityTest {
     }
 
     @Test
+    @Transactional
     public void testInheritFieldProfileViaPointer() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
@@ -151,7 +153,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The child organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getFieldPredicate().getId(), childFieldProfile.getFieldPredicate().getId());
         assertEquals("The grandchild organization's workflow did not contain the fieldProfile's predicate", fieldProfile.getFieldPredicate().getId(), childFieldProfile.getFieldPredicate().getId());
 
-        String updatedFieldPredicateValue = "Updated Value";
+        String updatedFieldPredicateValue = "updated.value";
         parentFieldProfile.getFieldPredicate().setValue(updatedFieldPredicateValue);
 
         fieldProfileRepo.update(parentFieldProfile, parentOrganization);
