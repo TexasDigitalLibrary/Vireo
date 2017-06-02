@@ -20,12 +20,15 @@ import edu.tamu.framework.config.CoreWebMvcConfig;
 public class AppWebMvcConfig extends CoreWebMvcConfig {
 
     @Value("${app.ui.path}")
-    private String path;
+    private String uiPath;
+
+    @Value("${app.context.path}")
+    private String contextPath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
+        registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + uiPath + "/");
 
         // TODO: investigate and implement dynamic resource locations at runtime via symlinks
         // paths: "/data/documents/**", "/conf/theme/**"
@@ -40,10 +43,10 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
         return new html5Forwarder();
     }
 
-    private static class html5Forwarder implements EmbeddedServletContainerCustomizer {
+    private class html5Forwarder implements EmbeddedServletContainerCustomizer {
         @Override
         public void customize(ConfigurableEmbeddedServletContainer container) {
-            container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/"));
+            container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, contextPath));
         }
     }
 
