@@ -10,7 +10,7 @@ public class EmbargoTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
-        assertEquals("Ebargo repo was not empty!", 0, embargoRepo.count());
+        assertEquals("Embargo repo was not empty!", 0, embargoRepo.count());
     }
 
     @Override
