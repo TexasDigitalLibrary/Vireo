@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,6 @@ import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
-import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
@@ -211,27 +211,34 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
 	@Override
     public void loadDefaultControlledVocabularies() {
-        ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
-
-        List<VocabularyWord> vocabularyWords = null;
-        try {
-            vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to load default controlled vocabularies.");
-        }
-
-        for (VocabularyWord vw : vocabularyWords) {
-            if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
-                vw.setControlledVocabulary(submissionTypesCV);
-                vw = vocabularyWordRepo.save(vw);
-                submissionTypesCV.addValue(vw);
+        List<String> defaultControlledVocabularies = Arrays.asList("Submission Type", "College", "Program", "Department", "Major", "Degree", "Administrative Group");
+        for (String cv : defaultControlledVocabularies) {
+            List<VocabularyWord> vocabularyWords = null;
+            ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(cv);
+            Language language = languageRepo.findByName("English");
+            if (controlledVocabulary == null) {
+                controlledVocabulary = controlledVocabularyRepo.create(cv, language);
             }
+            try {
+                vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/" + cv.replaceAll("\\s", "") +  "_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
+                });
+            } catch (IOException e){
+                e.printStackTrace();
+                logger.debug("Unable to load default controlled vocabularies.");
+            }
+            if (vocabularyWords != null) {
+                for (VocabularyWord vw : vocabularyWords) {
+                    if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), controlledVocabulary) == null) {
+                        vw.setControlledVocabulary(controlledVocabulary);
+                        vw = vocabularyWordRepo.save(vw);
+                        controlledVocabulary.addValue(vw);
+                    }
+                }
+            } else {
+                logger.debug("Unable to load controlled vocabulary file");
+            }
+            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         }
-
-        submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
-
     }
 
     @Override
