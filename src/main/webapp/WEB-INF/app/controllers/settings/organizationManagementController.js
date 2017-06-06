@@ -16,6 +16,10 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 	$scope.forms = {};
 
+	$scope.addEmailContact = function() {
+		$scope.getSelectedOrganization().emails.push("");
+	}
+
 	$scope.ready.then(function() {
 
 		$scope.resetWorkflowSteps = function() {
