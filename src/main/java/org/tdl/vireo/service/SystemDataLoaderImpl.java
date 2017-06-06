@@ -239,9 +239,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
             controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         }
-
-        
-
     }
 
     @Override
