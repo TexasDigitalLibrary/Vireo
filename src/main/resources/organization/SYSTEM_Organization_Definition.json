@@ -554,7 +554,7 @@
             "name": "UMI Publication"
           },
           "inputType": {
-            "name": "INPUT_CHECKBOX"
+            "name": "INPUT_PROQUEST"
           },
           "repeatable": false,
           "overrideable": true,
