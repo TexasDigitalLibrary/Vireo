@@ -29,7 +29,7 @@
       <ul class="list-unstyled">
         <li ng-repeat="fp in activeStep.aggregateFieldProfiles">
           <field-profile-display profile="fp" ng-if="fp.mappedShibAttribute"></field-profile-display>
-          <field profile="fp" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute"></field>
+          <field configuration="configuration" profile="fp" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute"></field>
         </li>
       </ul>
     </div>

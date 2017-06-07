@@ -1,13 +1,13 @@
-vireo.directive("field", function($controller, $filter, $q, $timeout, FileUploadService) {
+vireo.directive("field", function($controller, $filter, $q, $timeout, $sce, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
         replace: 'false',
         scope: {
-            profile: "="
+            profile: "=",
+            configuration: "="
         },
         link: function($scope) {
-
             angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
             $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";
@@ -213,6 +213,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                     });
                 });
             };
+
+            $scope.renderHtml = function(html) {
+                return $sce.trustAsHtml(html);
+            }
 
             var refreshFieldValues = function() {
                 $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
