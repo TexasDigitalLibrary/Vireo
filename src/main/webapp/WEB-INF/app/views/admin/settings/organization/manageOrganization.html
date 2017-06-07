@@ -32,6 +32,12 @@
 					results="getSelectedOrganization().getValidationResults()">
 				</validatedselect>
 
+				<toggleButton
+					label="Organization accepts Submissions?"
+					scope-value="organizationRepo.getSelectedOrganization().acceptsSubmissions"
+					toggle-options="{{acceptsSubmissions}}">
+				</toggleButton>
+
 				<div class="pull-right">
 					<button
 						type="button"
