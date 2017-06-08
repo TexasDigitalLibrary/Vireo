@@ -4,10 +4,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
         restrict: 'E',
         replace: 'false',
         scope: {
-            profile: "="
+            profile: "=",
+            configuration: "="
         },
         link: function($scope) {
-
             angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
             $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";

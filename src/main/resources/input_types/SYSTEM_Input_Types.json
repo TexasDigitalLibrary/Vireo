@@ -62,5 +62,10 @@
     "name": "INPUT_ORCID",
     "validationPatern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
     "validationMessage": "Field must be in a valid ORCID format nnnn-nnnn-nnnn-nnnn"
+  },
+  {
+    "name": "INPUT_PROQUEST",
+    "validationPatern": "^(true|false)$",
+    "validationMessage": "License agreement must be checked, or unchecked"
   }
 ]

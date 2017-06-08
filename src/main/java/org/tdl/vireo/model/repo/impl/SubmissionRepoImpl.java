@@ -108,14 +108,19 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             });
         });
         
-        submission.getSubmissionFieldProfilesByInputTypeName("INPUT_CHECKBOX").forEach(sfp -> {
+        setCheckboxDefaultValue(submission, "INPUT_CHECKBOX");
+        setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
+
+        return submissionRepo.save(submission);
+    }
+    
+    private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
+        submission.getSubmissionFieldProfilesByInputTypeName(inputTypeName).forEach(sfp -> {
             FieldValue fieldValue = fieldValueRepo.create(sfp.getFieldPredicate());
             
             fieldValue.setValue("false");
             submission.addFieldValue(fieldValue);
         });
-
-        return submissionRepo.save(submission);
     }
     
     @Override
