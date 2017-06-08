@@ -26,7 +26,6 @@
     <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
     <tomcat.version>7.0.59</tomcat.version>
     <java.version>1.8</java.version>
-    <postgresql.version>9.4-1202-jdbc42</postgresql.version>
   </properties>
 
   <packaging>war</packaging>
@@ -109,7 +108,6 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>${postgresql.version}</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <!-- MySQL SQL DB -->
