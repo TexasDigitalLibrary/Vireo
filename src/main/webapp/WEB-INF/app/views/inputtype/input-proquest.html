@@ -1,5 +1,5 @@
 <div>
-  <div ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value"></div>
+  <div class="well" ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value"></div>
   <div>
     <input  type="checkbox" 
         ng-model="fieldValue.value" 
@@ -8,6 +8,7 @@
         ng-disabled="fieldValue.updating"
         ng-click="save(fieldValue)"
     >
+    <span>By checking here you agree to the above license in its entirety.</span>
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
   </div>
