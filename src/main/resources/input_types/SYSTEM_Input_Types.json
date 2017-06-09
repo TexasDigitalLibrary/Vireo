@@ -65,7 +65,7 @@
   },
   {
     "name": "INPUT_PROQUEST",
-    "validationPatern": "^(true|false)$",
-    "validationMessage": "License agreement must be checked, or unchecked"
+    "validationPatern": "^true$",
+    "validationMessage": "You must accept the license agreement to continue"
   }
 ]
