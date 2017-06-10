@@ -43,6 +43,8 @@ public class Organization extends BaseEntity {
 
     @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = false)
     private OrganizationCategory category;
+    
+    private Boolean acceptsSubmissions = true;
 
     @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
@@ -131,6 +133,20 @@ public class Organization extends BaseEntity {
      */
     public void setCategory(OrganizationCategory category) {
         this.category = category;
+    }
+
+    /**
+     * @return true if this Organization accepts submissions, false otherwise
+     */
+    public Boolean getAcceptsSubmissions() {
+        return acceptsSubmissions;
+    }
+
+    /**
+     * @param acceptsSubmissions whether or not this Organization can accept submissions
+     */
+    public void setAcceptsSubmissions(Boolean acceptsSubmissions) {
+        this.acceptsSubmissions = acceptsSubmissions;
     }
 
     /**

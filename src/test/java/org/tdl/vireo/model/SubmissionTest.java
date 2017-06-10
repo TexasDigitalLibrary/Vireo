@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 
 public class SubmissionTest extends AbstractEntityTest {
 
@@ -65,7 +66,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
-    public void testCreate() {
+    public void testCreate() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
@@ -89,22 +90,27 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
 
     }
+    
+    @Test(expected = OrganizationDoesNotAcceptSubmissionsExcception.class)
+    public void testAcceptsSubmissions() throws OrganizationDoesNotAcceptSubmissionsExcception {
+        organization.setAcceptsSubmissions(false);
+        
+        //expect an exception when creating Submission on the Organization that doesn't accept them
+        Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
+    }
 
-    @Override
-    public void testDuplication() {
+    @Override 
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
         submissionRepo.create(submitter, organization, submissionState, getCredentials());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
-        try {
-            submissionRepo.create(submitter, organization, submissionState, getCredentials());
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
-
+        submissionRepo.create(submitter, organization, submissionState, getCredentials());
         assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
     }
 
     @Override
-    public void testDelete() {
+    public void testDelete() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 
@@ -114,7 +120,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     @Transactional
-    public void testCascade() {
+    public void testCascade() throws OrganizationDoesNotAcceptSubmissionsExcception{
         organization = organizationRepo.findOne(organization.getId());
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
 
@@ -198,7 +204,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testUniqueConstraint() {
+    public void testUniqueConstraint() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionState, getCredentials());
 

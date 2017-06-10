@@ -9,7 +9,7 @@ import org.junit.Before;
 public class CustomActionValueTest extends AbstractEntityTest {
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         assertEquals("The CustomActionValue repository is not empty!", 0, customActionValueRepo.count());
         userRepo.deleteAll();
 
