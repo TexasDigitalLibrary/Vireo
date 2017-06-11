@@ -527,7 +527,7 @@
             "name": "License Agreement"
           },
           "inputType": {
-            "name": "INPUT_TEXT"
+            "name": "INPUT_LICENSE"
           },
           "repeatable": false,
           "overrideable": true,
