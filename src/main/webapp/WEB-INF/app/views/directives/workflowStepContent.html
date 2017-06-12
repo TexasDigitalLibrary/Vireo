@@ -33,6 +33,16 @@
 
 <hr>
 
+	<lockingtextarea
+		label="Workflow Step Instructions"
+		hint="These instructions are shown at the begining of this workflow step during the student submission process."
+		scope-value="step.instructions"
+		on-blur="updateWorkflowStep(step)"
+		key-down="confirmEdit(event, prop)">
+	</lockingtextarea>
+
+<hr>
+
 <div ng-controller="FieldProfileManagementController">
 
   <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
