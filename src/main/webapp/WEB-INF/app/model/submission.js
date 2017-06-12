@@ -159,6 +159,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         };
 
         submission.sendEmail = function(data) {
+            console.log(data);
             angular.extend(apiMapping.Submission.sendEmail, {
                 'method': submission.id + "/send-email",
                 'data': data
