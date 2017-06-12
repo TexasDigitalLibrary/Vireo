@@ -93,7 +93,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
 		this.lazyFetch(organization.id, fetchWorkflow, false, ignoreOrgCache).then(function(fetchedOrg) {
 			extendWithOverwrite(selectedOrganization, fetchedOrg);
 		});
-		console.log(selectedOrganization);
 		return selectedOrganization;
 	};
 
