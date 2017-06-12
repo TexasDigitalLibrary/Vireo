@@ -42,6 +42,24 @@
 		</div>
 	</div>
 
+	<hr/>
+
+	<div class="row">
+
+		<h2>Edit Controlled Vocabularies</h2>
+
+		<div class="col-md-12">
+
+			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv"></select>
+
+		</div>
+
+		<div class="col-md-12">
+			{{selectedCv}}
+		</div>
+
+	</div>
+
 	<modal modal-id="controlledVocabularyNewModal" modal-view="views/modals/settings/controlledVocabularyNewModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static">
 	</modal>
 

@@ -26,6 +26,20 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.forms = {};
 
+    var firstEditableCv = function() {
+
+        var cv = null
+
+        $scope.controlledVocabulary.some(function(pcv) {
+            var check = !pcv.isEntityProperty;
+            if(check) cv = pcv;
+            return check;
+        });
+
+        return cv;
+
+    }
+
     $scope.ready.then(function () {
 
         var getDefaultIndex = function () {
@@ -41,6 +55,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.resetControlledVocabulary = function (closeModal) {
+
+            $scope.selectedCv = firstEditableCv();
+
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
