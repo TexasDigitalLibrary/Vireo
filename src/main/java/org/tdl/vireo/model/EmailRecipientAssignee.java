@@ -5,15 +5,11 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 @Entity
-@JsonTypeName("EmailRecipientAssignee")
 public class EmailRecipientAssignee extends AbstractEmailRecipient implements EmailRecipient {
 
     public EmailRecipientAssignee() {
         setName("Assignee");
-        setType("EmailRecipientAssignee");
     }
 
     @Override

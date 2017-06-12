@@ -6,23 +6,18 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 @Entity
-@JsonTypeName("EmailRecipientContact")
 public class EmailRecipientContact extends AbstractEmailRecipient implements EmailRecipient {
 
     @ManyToOne
     private FieldPredicate fieldPredicate;
 
     public EmailRecipientContact() {
-        setType("EmailRecipientContact");
     }
 
     public EmailRecipientContact(String label, FieldPredicate fieldPredicate) {
         setName(label);
         this.fieldPredicate = fieldPredicate;
-        setType("EmailRecipientContact");
     }
 
     @Override

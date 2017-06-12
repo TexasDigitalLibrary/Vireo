@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 @JsonTypeInfo(
-use = JsonTypeInfo.Id.NAME,
+use = JsonTypeInfo.Id.MINIMAL_CLASS,
 include = JsonTypeInfo.As.PROPERTY,
-property = "type")
+property = "_class")
 @JsonSubTypes({
-    @Type(value=EmailRecipientAssignee.class, name="EmailRecipientAssignee"), 
-    @Type(value=EmailRecipientContact.class, name="EmailRecipientContact"),
-    @Type(value=EmailRecipientOrganization.class, name="EmailRecipientOrganization"),
-    @Type(value=EmailRecipientSubmitter.class, name="EmailRecipientSubmitter")})
+    @Type(value=EmailRecipientAssignee.class), 
+    @Type(value=EmailRecipientContact.class),
+    @Type(value=EmailRecipientOrganization.class),
+    @Type(value=EmailRecipientSubmitter.class)})
 public interface EmailRecipient {
 
     public List<String> getEmails(Submission submission);
