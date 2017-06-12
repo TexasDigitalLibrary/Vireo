@@ -7,9 +7,11 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@JsonTypeName("EmailRecipientOrganization")
 public class EmailRecipientOrganization extends AbstractEmailRecipient implements EmailRecipient {
 
     @ManyToOne
@@ -18,11 +20,13 @@ public class EmailRecipientOrganization extends AbstractEmailRecipient implement
     private Organization organization;
 
     public EmailRecipientOrganization() {
+        setType("EmailRecipientOrganization");
     }
 
     public EmailRecipientOrganization(Organization organization) {
         setName(organization.getName());
         this.organization = organization;
+        setType("EmailRecipientOrganization");
     }
 
     @Override

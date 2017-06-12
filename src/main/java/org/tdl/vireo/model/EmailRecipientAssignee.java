@@ -10,6 +10,7 @@ public class EmailRecipientAssignee extends AbstractEmailRecipient implements Em
 
     public EmailRecipientAssignee() {
         setName("Assignee");
+        setType("EmailRecipientAssignee");
     }
 
     @Override
