@@ -46,6 +46,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
         originatingOrganization.addOriginalWorkflowStep(workflowStep);
         organizationRepo.save(originatingOrganization);
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return workflowStepRepo.findOne(workflowStep.getId());
     }
 
@@ -344,8 +345,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             deleteDescendantsOfStep(workflowStep);
 
             workflowStepRepo.delete(workflowStep.getId());
+            simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         }
-
+        
     }
 
     private void deleteDescendantsOfStep(WorkflowStep workflowStep) {
