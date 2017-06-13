@@ -64,8 +64,13 @@
     "validationMessage": "Field must be in a valid ORCID format nnnn-nnnn-nnnn-nnnn"
   },
   {
+    "name": "INPUT_LICENSE",
+    "validationPatern": "^true$",
+    "validationMessage": "You must accept the license agreement to continue"
+  },
+  {
     "name": "INPUT_PROQUEST",
-    "validationPatern": "^(true|false)$",
-    "validationMessage": "License agreement must be checked, or unchecked"
+    "validationPatern": "^true$",
+    "validationMessage": "You must accept the license agreement to continue"
   }
 ]
