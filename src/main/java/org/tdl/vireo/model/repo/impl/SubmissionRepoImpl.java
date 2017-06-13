@@ -64,7 +64,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
-    
+
     @Autowired
     private ActionLogRepo actionLogRepo;
 
@@ -100,22 +100,23 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             });
         });
-        
+
         setCheckboxDefaultValue(submission, "INPUT_CHECKBOX");
+        setCheckboxDefaultValue(submission, "INPUT_LICENSE");
         setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
 
         return submissionRepo.save(submission);
     }
-    
+
     private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
         submission.getSubmissionFieldProfilesByInputTypeName(inputTypeName).forEach(sfp -> {
             FieldValue fieldValue = fieldValueRepo.create(sfp.getFieldPredicate());
-            
+
             fieldValue.setValue("false");
             submission.addFieldValue(fieldValue);
         });
     }
-    
+
     @Override
     public Submission updateStatus(Submission submission, SubmissionState submissionState, Credentials credentials) {
         SubmissionState oldSubmissionState = submission.getSubmissionState();
@@ -123,7 +124,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         submission.setSubmissionState(submissionState);
         submission = submissionRepo.saveAndFlush(submission);
-        
+
         actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
         return submission;
     }
