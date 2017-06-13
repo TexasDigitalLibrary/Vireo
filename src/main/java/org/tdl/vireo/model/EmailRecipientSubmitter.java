@@ -8,19 +8,19 @@ import javax.persistence.Entity;
 @Entity
 public class EmailRecipientSubmitter extends AbstractEmailRecipient implements EmailRecipient {
 
-    public EmailRecipientSubmitter() {
-        setName("Submitter");
-    }
+	public EmailRecipientSubmitter() {
+		setName("Submitter");
+	}
 
-    @Override
-    public List<String> getEmails(Submission submission) {
+	@Override
+	public List<String> getEmails(Submission submission) {
 
-        List<String> emails = new ArrayList<String>();
+		List<String> emails = new ArrayList<String>();
 
-        emails.add(submission.getSubmitter().getSetting("preferedEmail"));
+		emails.add(submission.getSubmitter().getSetting("preferedEmail"));
 
-        return emails;
+		return emails;
 
-    }
+	}
 
 }
