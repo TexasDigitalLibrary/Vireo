@@ -40,7 +40,13 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     }
 
-     $scope.setSelectedCv = function()  {
+    $scope.addDefinition = function() {
+        ControlledVocabularyRepo.addDefinition($scope.selectedCv).then(function(res) {
+            $scope.initCvTable();
+        });
+    }
+
+     $scope.initCvTable = function()  {
         $scope.cvTableParams = new NgTableParams({
             sorting: {
                 name: "asc"
@@ -50,6 +56,15 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             dataset: $scope.selectedCv.dictionary
         });
     }
+
+    $scope.cancelCvEdits = function(editableDef,definition) {
+
+        Object.keys(definition).forEach(function(key) {
+            editableDef[key] = definition[key];
+        }); 
+
+        editableDef.editing = false;
+    };
 
     $scope.ready.then(function () {
 
@@ -68,7 +83,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         $scope.resetControlledVocabulary = function (closeModal) {
 
             $scope.selectedCv =  firstEditableCv();
-            $scope.setSelectedCv();
+            $scope.initCvTable();
 
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {

@@ -65,6 +65,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
             'method': 'status'
+        },
+        addDefinition: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/controlled-vocabulary',
+            'method': 'add-definition'
         }
     },
     CustomActionDefinition: {

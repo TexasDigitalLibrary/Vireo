@@ -46,7 +46,6 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         promise.then(function(res) {
             if (res.meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
-                console.log(controlledVocabularyRepo);
             }
         });
         return promise;
@@ -61,11 +60,28 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         promise.then(function(res) {
             if (angular.fromJson(res.body).meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
-                console.log(controlledVocabularyRepo);
             }
         });
         return promise;
     };
+
+    this.addDefinition = function(cv) {
+        
+        angular.extend(this.mapping.addDefinition, {
+            'method': 'add-definition/' + cv.id
+        });
+
+        console.log(this.mapping.addDefinition);
+
+        var promise = WsApi.fetch(this.mapping.addDefinition);
+        promise.then(function(res) {
+            if (angular.fromJson(res.body).meta.type == "INVALID") {
+                angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
+            }
+        });
+
+        return promise;
+    }
 
     this.status = function(controlledVocabulary) {
         controlledVocabularyRepo.clearValidationResults();

@@ -44,29 +44,67 @@
 
 	<hr/>
 
-	<div class="row">
+	<div class="row cv-editing-selection">
 
 		<h2>Edit Controlled Vocabularies</h2>
 
 		<div class="col-md-4">
-			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv()"></select>
+			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="initCvTable()"></select>
 		</div>
 
 	</div>
 
 
-	<div class="row">
+	<div class="row cv-editing-table">
 		<div class="col-md-12">
 			<table  ng-table="cvTableParams" show-filter="false" class="table table-bordered table-striped table-hover cv-table">
 				<tbody>
-					<tr ng-repeat="cv in $data">
-					<td title="'Name'">
-						{{cv.name}}
-					</td>
-					<td title="'Definition'">
-						{{cv.definition}}
-					</td>
-					<td title="'Identifier'" >{{cv.identifier}}</td>
+					<tr>
+						<td title="'Name'">
+
+						</td>
+						<td title="'Definition'">
+
+						</td>
+						<td title="'Identifier'">
+
+						</td>
+						<td title="'Actions'">
+							<button class="btn btn-primary" ng-click="addDefinition()"><span class="glyphicon glyphicon-plus"></span></button>
+						</td>
+					</tr>
+
+
+					<tr ng-repeat="definition in $data" ng-init="editableDef=copy(definition)">	
+						<td title="'Name'" ng-dblclick="editableDef.editing=true;">
+							<span ng-if="!editableDef.editing">{{definition.name}}</span>
+							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.name" />
+						</td>
+						<td title="'Definition'" ng-dblclick="editableDef.editing=true;">
+							<span ng-if="!editableDef.editing">{{definition.definition}}</span>
+							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.definition" />
+						</td>
+						<td title="'Identifier'" ng-dblclick="editableDef.editing=true;">
+							<span ng-if="!editableDef.editing">{{definition.identifier}}</span>
+							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.identifier" />
+						</td>
+						<td title="'Actions'" >
+							<span ng-hide="editableDef.editing">
+								<button class="btn btn-default" ng-click="editableDef.editing=true;"><span class="glyphicon glyphicon-pencil"></span></button>
+								<button class="btn btn-danger" ng-hide="deleting" ng-click="deleting=true"><span class="glyphicon glyphicon-trash"></span></button>
+								<div class="btn-group" role="group" ng-show="deleting">
+									<button class="btn btn-danger disabled" disabled><span class="glyphicon glyphicon-trash"></span></button>
+									<button type="button" class="btn btn-danger" ng-click="deleteCvDefinition(definition)"><span class="glyphicon glyphicon-ok"></span></button>
+									<button type="button" class="btn btn-default" ng-click="deleting=false"><span class="glyphicon glyphicon-remove"></span></button>
+								</div>
+							</span>
+							<span ng-show="editableDef.editing">
+								<div class="btn-group" role="group">
+									<button type="button" class="btn btn-primary" ng-click="acceptCvDefinitionEdit(editableDef, definition)"><span class="glyphicon glyphicon-ok"></span></button>
+									<button type="button" class="btn btn-default" ng-click="cancelCvEdits(editableDef, definition)"><span class="glyphicon glyphicon-remove"></span></button>
+								</div>
+							</span>
+						</td>
 					</tr>
 				</tbody>
 			</table>

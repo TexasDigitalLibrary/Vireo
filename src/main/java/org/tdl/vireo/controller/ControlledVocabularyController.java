@@ -42,6 +42,7 @@ import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
 import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
@@ -297,6 +298,23 @@ public class ControlledVocabularyController {
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
+    }
+    
+    /**
+     * Endpoint to add a blank definition to a controlled vocabulary.
+     *
+     * @param name
+     *            controlled vocabulary name
+     * @return ApiReponse indicating success
+     */
+    @Transactional
+    @ApiMapping(value="/add-definition/{cvId}")
+    @Auth(role = "MANAGER")
+    public ApiResponse addDefinition(@ApiVariable Long cvId) {
+    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+    	cv.addValue(new VocabularyWord(""));
+        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+    	return new ApiResponse(SUCCESS, controlledVocabularyRepo.save(cv));
     }
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
