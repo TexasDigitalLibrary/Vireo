@@ -71,9 +71,23 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
             'method': 'add-vocabulary-word/' + cv.id
         });
 
-        console.log(this.mapping.addVocabularyWord);
-
         var promise = WsApi.fetch(this.mapping.addVocabularyWord);
+        promise.then(function(res) {
+            if (angular.fromJson(res.body).meta.type == "INVALID") {
+                angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
+            }
+        });
+
+        return promise;
+    }
+
+    this.removeVocabularyWord = function(cv, vw) {
+        
+        angular.extend(this.mapping.removeVocabularyWord, {
+            'method': 'remove-vocabulary-word/' + cv.id +"/"+ vw.id
+        });
+
+        var promise = WsApi.fetch(this.mapping.removeVocabularyWord);
         promise.then(function(res) {
             if (angular.fromJson(res.body).meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);

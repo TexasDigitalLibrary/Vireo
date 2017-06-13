@@ -46,6 +46,13 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     }
 
+    $scope.removeVocabularyWord = function(vw) {
+        console.log(vw);
+        ControlledVocabularyRepo.removeVocabularyWord($scope.selectedCv, vw).then(function(res) {
+            $scope.initCvTable();
+        });
+    }
+
      $scope.initCvTable = function()  {
         $scope.cvTableParams = new NgTableParams({
             sorting: {

@@ -69,7 +69,7 @@ var apiMapping = {
         addVocabularyWord: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
-            'method': 'add-add-vocabulary-word'
+            'method': 'add-vocabulary-word'
         },
         removeVocabularyWord: {
             'endpoint': '/private/queue',

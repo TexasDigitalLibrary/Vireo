@@ -308,13 +308,14 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value="/add-add-vocabulary-word/{cvId}")
+    @ApiMapping(value="/add-vocabulary-word/{cvId}")
     @Auth(role = "MANAGER")
     public ApiResponse addaddVocabularyWord(@ApiVariable Long cvId) {
     	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
     	cv.addValue(new VocabularyWord(""));
+    	cv = controlledVocabularyRepo.save(cv);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-    	return new ApiResponse(SUCCESS, controlledVocabularyRepo.save(cv));
+    	return new ApiResponse(SUCCESS, cv);
     }
     
     /**
@@ -325,17 +326,17 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value="/removed-vocabulary-word/{cvId}/{vwId}")
+    @ApiMapping(value="/remove-vocabulary-word/{cvId}/{vwId}")
     @Auth(role = "MANAGER")
     public ApiResponse removesDefinition(@ApiVariable Long cvId, @ApiVariable Long vwId) {
-//    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
-//    	VocabularyWord vw = 
-//    	cv.removeValue(vw);
     	
-    	vocabularyWordRepo.delete(vwId);
+    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+    	VocabularyWord vw = vocabularyWordRepo.findOne(vwId); 
+    	cv.removeValue(vw);
+    	cv = controlledVocabularyRepo.save(cv);
     	
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
-    	return new ApiResponse(SUCCESS);
+    	return new ApiResponse(SUCCESS, cv);
     }
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
