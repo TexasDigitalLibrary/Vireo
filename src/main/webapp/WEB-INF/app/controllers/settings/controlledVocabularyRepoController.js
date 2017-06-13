@@ -40,8 +40,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     }
 
-    $scope.addDefinition = function() {
-        ControlledVocabularyRepo.addDefinition($scope.selectedCv).then(function(res) {
+    $scope.addVocabularyWord = function() {
+        ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv).then(function(res) {
             $scope.initCvTable();
         });
     }
@@ -57,13 +57,13 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     }
 
-    $scope.cancelCvEdits = function(editableDef,definition) {
+    $scope.cancelCvEdits = function(editableVW,definition) {
 
         Object.keys(definition).forEach(function(key) {
-            editableDef[key] = definition[key];
+            editableVW[key] = definition[key];
         }); 
 
-        editableDef.editing = false;
+        editableVW.editing = false;
     };
 
     $scope.ready.then(function () {

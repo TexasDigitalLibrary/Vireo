@@ -65,15 +65,15 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         return promise;
     };
 
-    this.addDefinition = function(cv) {
+    this.addVocabularyWord = function(cv) {
         
-        angular.extend(this.mapping.addDefinition, {
-            'method': 'add-definition/' + cv.id
+        angular.extend(this.mapping.addVocabularyWord, {
+            'method': 'add-vocabulary-word/' + cv.id
         });
 
-        console.log(this.mapping.addDefinition);
+        console.log(this.mapping.addVocabularyWord);
 
-        var promise = WsApi.fetch(this.mapping.addDefinition);
+        var promise = WsApi.fetch(this.mapping.addVocabularyWord);
         promise.then(function(res) {
             if (angular.fromJson(res.body).meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);

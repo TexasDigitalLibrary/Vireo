@@ -66,11 +66,17 @@ var apiMapping = {
             'controller': 'settings/controlled-vocabulary',
             'method': 'status'
         },
-        addDefinition: {
+        addVocabularyWord: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
-            'method': 'add-definition'
+            'method': 'add-add-vocabulary-word'
+        },
+        removeVocabularyWord: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/controlled-vocabulary',
+            'method': 'remove-vocabulary-word'
         }
+
     },
     CustomActionDefinition: {
         validations: true,

@@ -70,38 +70,38 @@
 
 						</td>
 						<td title="'Actions'">
-							<button class="btn btn-primary" ng-click="addDefinition()"><span class="glyphicon glyphicon-plus"></span></button>
+							<button class="btn btn-primary" ng-click="addVocabularyWord()"><span class="glyphicon glyphicon-plus"></span></button>
 						</td>
 					</tr>
 
 
-					<tr ng-repeat="definition in $data" ng-init="editableDef=copy(definition)">	
-						<td title="'Name'" ng-dblclick="editableDef.editing=true;">
-							<span ng-if="!editableDef.editing">{{definition.name}}</span>
-							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.name" />
+					<tr ng-repeat="vocabularyWord in $data" ng-init="editableVW=copy(vocabularyWord)">	
+						<td title="'Name'" ng-dblclick="editableVW.editing=true;">
+							<span ng-if="!editableVW.editing">{{vocabularyWord.name}}</span>
+							<input class="form-control" ng-if="editableVW.editing" ng-model="editableVW.name" />
 						</td>
-						<td title="'Definition'" ng-dblclick="editableDef.editing=true;">
-							<span ng-if="!editableDef.editing">{{definition.definition}}</span>
-							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.definition" />
+						<td title="'Definition'" ng-dblclick="editableVW.editing=true;">
+							<span ng-if="!editableVW.editing">{{vocabularyWord.definition}}</span>
+							<input class="form-control" ng-if="editableVW.editing" ng-model="editableVW.definition" />
 						</td>
-						<td title="'Identifier'" ng-dblclick="editableDef.editing=true;">
-							<span ng-if="!editableDef.editing">{{definition.identifier}}</span>
-							<input class="form-control" ng-if="editableDef.editing" ng-model="editableDef.identifier" />
+						<td title="'Identifier'" ng-dblclick="editableVW.editing=true;">
+							<span ng-if="!editableVW.editing">{{vocabularyWord.identifier}}</span>
+							<input class="form-control" ng-if="editableVW.editing" ng-model="editableVW.identifier" />
 						</td>
 						<td title="'Actions'" >
-							<span ng-hide="editableDef.editing">
-								<button class="btn btn-default" ng-click="editableDef.editing=true;"><span class="glyphicon glyphicon-pencil"></span></button>
+							<span ng-hide="editableVW.editing">
+								<button class="btn btn-default" ng-click="editableVW.editing=true;"><span class="glyphicon glyphicon-pencil"></span></button>
 								<button class="btn btn-danger" ng-hide="deleting" ng-click="deleting=true"><span class="glyphicon glyphicon-trash"></span></button>
 								<div class="btn-group" role="group" ng-show="deleting">
 									<button class="btn btn-danger disabled" disabled><span class="glyphicon glyphicon-trash"></span></button>
-									<button type="button" class="btn btn-danger" ng-click="deleteCvDefinition(definition)"><span class="glyphicon glyphicon-ok"></span></button>
+									<button type="button" class="btn btn-danger" ng-click="deleteCvVocabularyWord(vocabularyWord)"><span class="glyphicon glyphicon-ok"></span></button>
 									<button type="button" class="btn btn-default" ng-click="deleting=false"><span class="glyphicon glyphicon-remove"></span></button>
 								</div>
 							</span>
-							<span ng-show="editableDef.editing">
+							<span ng-show="editableVW.editing">
 								<div class="btn-group" role="group">
-									<button type="button" class="btn btn-primary" ng-click="acceptCvDefinitionEdit(editableDef, definition)"><span class="glyphicon glyphicon-ok"></span></button>
-									<button type="button" class="btn btn-default" ng-click="cancelCvEdits(editableDef, definition)"><span class="glyphicon glyphicon-remove"></span></button>
+									<button type="button" class="btn btn-primary" ng-click="acceptCvDefinitionEdit(editableVW, vocabularyWord)"><span class="glyphicon glyphicon-ok"></span></button>
+									<button type="button" class="btn btn-default" ng-click="cancelCvEdits(editableVW, vocabularyWord)"><span class="glyphicon glyphicon-remove"></span></button>
 								</div>
 							</span>
 						</td>
