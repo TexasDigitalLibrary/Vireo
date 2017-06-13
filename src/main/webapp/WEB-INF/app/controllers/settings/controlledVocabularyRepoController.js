@@ -1,4 +1,4 @@
-vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, ControlledVocabularyRepo, DragAndDropListenerFactory, LanguageRepo) {
+vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, ControlledVocabularyRepo, DragAndDropListenerFactory, LanguageRepo, NgTableParams) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -40,6 +40,17 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     }
 
+     $scope.setSelectedCv = function()  {
+        $scope.cvTableParams = new NgTableParams({
+            sorting: {
+                name: "asc"
+            }
+        }, {
+            counts: [],
+            dataset: $scope.selectedCv.dictionary
+        });
+    }
+
     $scope.ready.then(function () {
 
         var getDefaultIndex = function () {
@@ -56,7 +67,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
         $scope.resetControlledVocabulary = function (closeModal) {
 
-            $scope.selectedCv = firstEditableCv();
+            $scope.selectedCv =  firstEditableCv();
+            $scope.setSelectedCv();
 
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {

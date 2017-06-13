@@ -48,17 +48,31 @@
 
 		<h2>Edit Controlled Vocabularies</h2>
 
-		<div class="col-md-12">
-
-			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv"></select>
-
-		</div>
-
-		<div class="col-md-12">
-			{{selectedCv}}
+		<div class="col-md-4">
+			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv()"></select>
 		</div>
 
 	</div>
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<table  ng-table="cvTableParams" show-filter="false" class="table table-bordered table-striped table-hover cv-table">
+				<tbody>
+					<tr ng-repeat="cv in $data">
+					<td title="'Name'">
+						{{cv.name}}
+					</td>
+					<td title="'Definition'">
+						{{cv.definition}}
+					</td>
+					<td title="'Identifier'" >{{cv.identifier}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
 
 	<modal modal-id="controlledVocabularyNewModal" modal-view="views/modals/settings/controlledVocabularyNewModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static">
 	</modal>
