@@ -221,6 +221,7 @@ public class SubmissionController {
     @ApiMapping("/{submissionId}/send-email")
     @Auth(role = "STUDENT")
     public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+        System.out.println("\n\n\n" + dataNode + "\n\n\n");
         sendEmail(credentials, submissionRepo.findOne(submissionId), dataNode);
         return new ApiResponse(SUCCESS);
     }
@@ -231,18 +232,18 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
 
-        boolean emailTo = dataNode.get("emailTo").asBoolean();
+        boolean sendRecipientEmail = dataNode.get("sendEmailToRecipient").asBoolean();
 
-        if (emailTo) {
+        if (sendRecipientEmail) {
 
-            boolean emailCc = dataNode.get("emailCc").asBoolean();
+            boolean sendCCRecipientEmail = dataNode.get("sendEmailToCCRecipient").asBoolean();
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+            smm.setTo(dataNode.get("recipientEmail").asText().split(";"));
 
-            if (emailCc) {
-                smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+            if (sendCCRecipientEmail) {
+                smm.setCc(dataNode.get("ccRecipientEmail").asText().split(";"));
             }
 
             smm.setSubject(subject);
