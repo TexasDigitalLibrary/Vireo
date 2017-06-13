@@ -33,7 +33,7 @@ import org.springframework.util.PathMatcher;
  */
 public class MockChannelInterceptor extends ChannelInterceptorAdapter {
 
-    private final BlockingQueue<Message<?>> messages = new ArrayBlockingQueue<>(100);
+    private final BlockingQueue<Message<?>> messages = new ArrayBlockingQueue<>(500);
 
     private final List<String> destinationPatterns = new ArrayList<>();
 
