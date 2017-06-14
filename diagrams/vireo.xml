@@ -113,8 +113,8 @@
 		<entity-name>org.tdl.vireo.model.Submission</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>408</entity-height>
-		<entity-X-Coordinate>1177</entity-X-Coordinate>
-		<entity-Y-Coordinate>993</entity-Y-Coordinate>
+		<entity-X-Coordinate>1169</entity-X-Coordinate>
+		<entity-Y-Coordinate>780</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -135,8 +135,8 @@
 		<entity-name>org.tdl.vireo.model.EmailTemplate</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>130</entity-height>
-		<entity-X-Coordinate>1371</entity-X-Coordinate>
-		<entity-Y-Coordinate>555</entity-Y-Coordinate>
+		<entity-X-Coordinate>1420</entity-X-Coordinate>
+		<entity-Y-Coordinate>504</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -179,8 +179,8 @@
 		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>128</entity-height>
-		<entity-X-Coordinate>1020</entity-X-Coordinate>
-		<entity-Y-Coordinate>767</entity-Y-Coordinate>
+		<entity-X-Coordinate>1002</entity-X-Coordinate>
+		<entity-Y-Coordinate>1018</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -223,8 +223,8 @@
 		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>248</entity-height>
-		<entity-X-Coordinate>685</entity-X-Coordinate>
-		<entity-Y-Coordinate>647</entity-Y-Coordinate>
+		<entity-X-Coordinate>780</entity-X-Coordinate>
+		<entity-Y-Coordinate>621</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -377,8 +377,8 @@
 		<entity-name>org.tdl.vireo.model.ActionLog</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>168</entity-height>
-		<entity-X-Coordinate>1520</entity-X-Coordinate>
-		<entity-Y-Coordinate>1020</entity-Y-Coordinate>
+		<entity-X-Coordinate>1654</entity-X-Coordinate>
+		<entity-Y-Coordinate>935</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -399,8 +399,8 @@
 		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>110</entity-height>
-		<entity-X-Coordinate>808</entity-X-Coordinate>
-		<entity-Y-Coordinate>1030</entity-Y-Coordinate>
+		<entity-X-Coordinate>845</entity-X-Coordinate>
+		<entity-Y-Coordinate>1015</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -454,8 +454,8 @@
 		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>228</entity-height>
-		<entity-X-Coordinate>1355</entity-X-Coordinate>
-		<entity-Y-Coordinate>840</entity-Y-Coordinate>
+		<entity-X-Coordinate>1385</entity-X-Coordinate>
+		<entity-Y-Coordinate>743</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -487,8 +487,8 @@
 		<entity-name>org.tdl.vireo.model.EmailWorkflowRule</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>168</entity-height>
-		<entity-X-Coordinate>1177</entity-X-Coordinate>
-		<entity-Y-Coordinate>465</entity-Y-Coordinate>
+		<entity-X-Coordinate>1218</entity-X-Coordinate>
+		<entity-Y-Coordinate>391</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
