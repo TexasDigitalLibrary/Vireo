@@ -1,395 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><entities>
 	<entity>
-		<entity-name>org.tdl.vireo.model.packager.AbstractPackager</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>108</entity-height>
-		<entity-X-Coordinate>1775</entity-X-Coordinate>
-		<entity-Y-Coordinate>468</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.EmailTemplate</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>130</entity-height>
-		<entity-X-Coordinate>1095</entity-X-Coordinate>
-		<entity-Y-Coordinate>573</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.AbstractEmailRecipient</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>100</entity-X-Coordinate>
-		<entity-Y-Coordinate>304</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.GraduationMonth</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>1725</entity-X-Coordinate>
-		<entity-Y-Coordinate>94</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.DocumentType</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>108</entity-height>
-		<entity-X-Coordinate>828</entity-X-Coordinate>
-		<entity-Y-Coordinate>429</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.AbstractFieldProfile</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>288</entity-height>
-		<entity-X-Coordinate>294</entity-X-Coordinate>
-		<entity-Y-Coordinate>714</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Configuration</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>130</entity-height>
-		<entity-X-Coordinate>213</entity-X-Coordinate>
-		<entity-Y-Coordinate>118</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.formatter.DSpaceMetsFormatter</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>1907</entity-X-Coordinate>
-		<entity-Y-Coordinate>570</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.InputType</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>110</entity-height>
-		<entity-X-Coordinate>586</entity-X-Coordinate>
-		<entity-Y-Coordinate>1052</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.formatter.AbstractFormatter</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>1825</entity-X-Coordinate>
-		<entity-Y-Coordinate>652</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Embargo</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>170</entity-height>
-		<entity-X-Coordinate>1508</entity-X-Coordinate>
-		<entity-Y-Coordinate>-3</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.VocabularyWord</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>148</entity-height>
-		<entity-X-Coordinate>854</entity-X-Coordinate>
-		<entity-Y-Coordinate>1220</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Address</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>170</entity-height>
-		<entity-X-Coordinate>2125</entity-X-Coordinate>
-		<entity-Y-Coordinate>386</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.DepositLocation</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>268</entity-height>
-		<entity-X-Coordinate>2125</entity-X-Coordinate>
-		<entity-Y-Coordinate>67</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>108</entity-height>
-		<entity-X-Coordinate>342</entity-X-Coordinate>
-		<entity-Y-Coordinate>1185</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>108</entity-height>
-		<entity-X-Coordinate>477</entity-X-Coordinate>
-		<entity-Y-Coordinate>26</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.CustomActionDefinition</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>799</entity-X-Coordinate>
-		<entity-Y-Coordinate>1088</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>912</entity-X-Coordinate>
-		<entity-Y-Coordinate>681</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
 		<entity-name>org.tdl.vireo.model.User</entity-name>
-		<entity-width>244</entity-width>
+		<entity-width>142</entity-width>
 		<entity-height>428</entity-height>
-		<entity-X-Coordinate>890</entity-X-Coordinate>
-		<entity-Y-Coordinate>-15</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.AbstractWorkflowStep</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
-		<entity-X-Coordinate>439</entity-X-Coordinate>
-		<entity-Y-Coordinate>352</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.SubmissionFieldProfile</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>120</entity-X-Coordinate>
-		<entity-Y-Coordinate>779</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.SubmissionListColumn</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>288</entity-height>
-		<entity-X-Coordinate>1578</entity-X-Coordinate>
-		<entity-Y-Coordinate>494</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.EmailRecipientOrganization</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>469</entity-X-Coordinate>
-		<entity-Y-Coordinate>201</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.FieldProfile</entity-name>
-		<entity-width>137</entity-width>
-		<entity-height>148</entity-height>
-		<entity-X-Coordinate>547</entity-X-Coordinate>
-		<entity-Y-Coordinate>784</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Language</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>70</entity-height>
-		<entity-X-Coordinate>331</entity-X-Coordinate>
-		<entity-Y-Coordinate>1385</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Note</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>752</entity-X-Coordinate>
-		<entity-Y-Coordinate>784</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.NamedSearchFilterGroup</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>208</entity-height>
-		<entity-X-Coordinate>1680</entity-X-Coordinate>
-		<entity-Y-Coordinate>203</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.EmailRecipientSubmitter</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>302</entity-X-Coordinate>
-		<entity-Y-Coordinate>278</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Organization</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>248</entity-height>
-		<entity-X-Coordinate>631</entity-X-Coordinate>
-		<entity-Y-Coordinate>26</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.packager.DSpaceMetsPackager</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>1944</entity-X-Coordinate>
-		<entity-Y-Coordinate>469</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.Submission</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>408</entity-height>
-		<entity-X-Coordinate>1155</entity-X-Coordinate>
-		<entity-Y-Coordinate>1044</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.EntityCVWhitelist</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>1823</entity-X-Coordinate>
-		<entity-Y-Coordinate>1521</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>188</entity-height>
-		<entity-X-Coordinate>585</entity-X-Coordinate>
-		<entity-Y-Coordinate>1211</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>228</entity-height>
-		<entity-X-Coordinate>1040</entity-X-Coordinate>
-		<entity-Y-Coordinate>810</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.SubmissionNote</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>130</entity-X-Coordinate>
-		<entity-Y-Coordinate>598</entity-Y-Coordinate>
-		<primary-collapsed>false</primary-collapsed>
-		<relation-collapsed>false</relation-collapsed>
-		<basic-collapsed>false</basic-collapsed>
-	</entity>
-
-	<entity>
-		<entity-name>org.tdl.vireo.model.AbstractNote</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>90</entity-height>
-		<entity-X-Coordinate>439</entity-X-Coordinate>
-		<entity-Y-Coordinate>660</entity-Y-Coordinate>
+		<entity-X-Coordinate>969</entity-X-Coordinate>
+		<entity-Y-Coordinate>-23</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -407,22 +22,44 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
+		<entity-name>org.tdl.vireo.model.AbstractEmailRecipient</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>110</entity-height>
-		<entity-X-Coordinate>721</entity-X-Coordinate>
-		<entity-Y-Coordinate>570</entity-Y-Coordinate>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>110</entity-X-Coordinate>
+		<entity-Y-Coordinate>133</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.EmailRecipientAssignee</entity-name>
+		<entity-name>org.tdl.vireo.model.WorkflowStep</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>32</entity-height>
-		<entity-X-Coordinate>249</entity-X-Coordinate>
-		<entity-Y-Coordinate>353</entity-Y-Coordinate>
+		<entity-height>130</entity-height>
+		<entity-X-Coordinate>555</entity-X-Coordinate>
+		<entity-Y-Coordinate>465</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.ControlledVocabulary</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>188</entity-height>
+		<entity-X-Coordinate>552</entity-X-Coordinate>
+		<entity-Y-Coordinate>1432</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.CustomActionDefinition</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>90</entity-height>
+		<entity-X-Coordinate>1459</entity-X-Coordinate>
+		<entity-Y-Coordinate>1223</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -440,33 +77,121 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.CustomActionValue</entity-name>
+		<entity-name>org.tdl.vireo.model.EntityCVWhitelist</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>90</entity-height>
+		<entity-X-Coordinate>1823</entity-X-Coordinate>
+		<entity-Y-Coordinate>1521</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.AbstractWorkflowStep</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>316</entity-X-Coordinate>
+		<entity-Y-Coordinate>419</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldGloss</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
-		<entity-X-Coordinate>963</entity-X-Coordinate>
-		<entity-Y-Coordinate>1079</entity-Y-Coordinate>
+		<entity-X-Coordinate>177</entity-X-Coordinate>
+		<entity-Y-Coordinate>1500</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.NamedSearchFilter</entity-name>
+		<entity-name>org.tdl.vireo.model.Submission</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
-		<entity-X-Coordinate>1971</entity-X-Coordinate>
-		<entity-Y-Coordinate>287</entity-Y-Coordinate>
+		<entity-height>408</entity-height>
+		<entity-X-Coordinate>1056</entity-X-Coordinate>
+		<entity-Y-Coordinate>1104</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.ActionLog</entity-name>
+		<entity-name>org.tdl.vireo.model.DocumentType</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
-		<entity-X-Coordinate>1286</entity-X-Coordinate>
-		<entity-Y-Coordinate>840</entity-Y-Coordinate>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>828</entity-X-Coordinate>
+		<entity-Y-Coordinate>429</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.EmailTemplate</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>130</entity-height>
+		<entity-X-Coordinate>1070</entity-X-Coordinate>
+		<entity-Y-Coordinate>465</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.formatter.DSpaceMetsFormatter</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>1907</entity-X-Coordinate>
+		<entity-Y-Coordinate>570</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Embargo</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>170</entity-height>
+		<entity-X-Coordinate>1244</entity-X-Coordinate>
+		<entity-Y-Coordinate>1282</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.SubmissionListColumn</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>288</entity-height>
+		<entity-X-Coordinate>1581</entity-X-Coordinate>
+		<entity-Y-Coordinate>693</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldValue</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>783</entity-X-Coordinate>
+		<entity-Y-Coordinate>724</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.DepositLocation</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>268</entity-height>
+		<entity-X-Coordinate>2125</entity-X-Coordinate>
+		<entity-Y-Coordinate>67</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -476,30 +201,41 @@
 		<entity-name>org.tdl.vireo.model.SubmissionWorkflowStep</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>32</entity-height>
-		<entity-X-Coordinate>1142</entity-X-Coordinate>
-		<entity-Y-Coordinate>492</entity-Y-Coordinate>
+		<entity-X-Coordinate>20</entity-X-Coordinate>
+		<entity-Y-Coordinate>714</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.EmailWorkflowRule</entity-name>
-		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
-		<entity-X-Coordinate>938</entity-X-Coordinate>
-		<entity-Y-Coordinate>477</entity-Y-Coordinate>
+		<entity-name>org.tdl.vireo.model.FieldProfile</entity-name>
+		<entity-width>137</entity-width>
+		<entity-height>148</entity-height>
+		<entity-X-Coordinate>669</entity-X-Coordinate>
+		<entity-Y-Coordinate>896</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.ContactInfo</entity-name>
+		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>2090</entity-X-Coordinate>
-		<entity-Y-Coordinate>699</entity-Y-Coordinate>
+		<entity-height>248</entity-height>
+		<entity-X-Coordinate>631</entity-X-Coordinate>
+		<entity-Y-Coordinate>26</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.EmailRecipientAssignee</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>249</entity-X-Coordinate>
+		<entity-Y-Coordinate>353</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -517,11 +253,275 @@
 	</entity>
 
 	<entity>
-		<entity-name>org.tdl.vireo.model.WorkflowStep</entity-name>
+		<entity-name>org.tdl.vireo.model.NamedSearchFilter</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>1971</entity-X-Coordinate>
+		<entity-Y-Coordinate>287</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Language</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>356</entity-X-Coordinate>
+		<entity-Y-Coordinate>1531</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.AbstractFieldProfile</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>288</entity-height>
+		<entity-X-Coordinate>314</entity-X-Coordinate>
+		<entity-Y-Coordinate>871</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.SubmissionNote</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>207</entity-X-Coordinate>
+		<entity-Y-Coordinate>624</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.VocabularyWord</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>148</entity-height>
+		<entity-X-Coordinate>813</entity-X-Coordinate>
+		<entity-Y-Coordinate>1452</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.InputType</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>110</entity-height>
+		<entity-X-Coordinate>812</entity-X-Coordinate>
+		<entity-Y-Coordinate>1317</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.NamedSearchFilterGroup</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>208</entity-height>
+		<entity-X-Coordinate>1680</entity-X-Coordinate>
+		<entity-Y-Coordinate>203</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.packager.AbstractPackager</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>1775</entity-X-Coordinate>
+		<entity-Y-Coordinate>468</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Address</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>170</entity-height>
+		<entity-X-Coordinate>2125</entity-X-Coordinate>
+		<entity-Y-Coordinate>386</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.EmailRecipientOrganization</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>467</entity-X-Coordinate>
+		<entity-Y-Coordinate>239</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.CustomActionValue</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>1581</entity-X-Coordinate>
+		<entity-Y-Coordinate>1019</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.ActionLog</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>1286</entity-X-Coordinate>
+		<entity-Y-Coordinate>840</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.GraduationMonth</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>1725</entity-X-Coordinate>
+		<entity-Y-Coordinate>94</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.FieldPredicate</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>110</entity-height>
+		<entity-X-Coordinate>762</entity-X-Coordinate>
+		<entity-Y-Coordinate>570</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Configuration</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>130</entity-height>
-		<entity-X-Coordinate>631</entity-X-Coordinate>
-		<entity-Y-Coordinate>418</entity-Y-Coordinate>
+		<entity-X-Coordinate>150</entity-X-Coordinate>
+		<entity-Y-Coordinate>974</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.SubmissionFieldProfile</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>150</entity-X-Coordinate>
+		<entity-Y-Coordinate>803</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.EmailRecipientSubmitter</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>302</entity-X-Coordinate>
+		<entity-Y-Coordinate>278</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.ContactInfo</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>2090</entity-X-Coordinate>
+		<entity-Y-Coordinate>699</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.SubmissionState</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>228</entity-height>
+		<entity-X-Coordinate>1213</entity-X-Coordinate>
+		<entity-Y-Coordinate>408</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.Note</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>478</entity-X-Coordinate>
+		<entity-Y-Coordinate>741</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.packager.DSpaceMetsPackager</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>32</entity-height>
+		<entity-X-Coordinate>1944</entity-X-Coordinate>
+		<entity-Y-Coordinate>469</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.EmailWorkflowRule</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>1070</entity-X-Coordinate>
+		<entity-Y-Coordinate>661</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.formatter.AbstractFormatter</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>70</entity-height>
+		<entity-X-Coordinate>1825</entity-X-Coordinate>
+		<entity-Y-Coordinate>652</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.AbstractNote</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>90</entity-height>
+		<entity-X-Coordinate>322</entity-X-Coordinate>
+		<entity-Y-Coordinate>677</entity-Y-Coordinate>
+		<primary-collapsed>false</primary-collapsed>
+		<relation-collapsed>false</relation-collapsed>
+		<basic-collapsed>false</basic-collapsed>
+	</entity>
+
+	<entity>
+		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
+		<entity-width>120</entity-width>
+		<entity-height>108</entity-height>
+		<entity-X-Coordinate>477</entity-X-Coordinate>
+		<entity-Y-Coordinate>26</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
