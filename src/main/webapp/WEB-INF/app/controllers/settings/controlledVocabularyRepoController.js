@@ -28,6 +28,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.newVW = {};
 
+    $scope.editableVW = {};
+
     var firstEditableCv = function() {
 
         var cv = null
@@ -71,17 +73,17 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         $scope.selectedCv.updating = true;
         ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function(res) {
             $scope.selectedCv.updating = false;
+            $scope.editableVW.editing = false;
         });
     }
 
-    $scope.cancelCvEdits = function(editableVW,definition) {
+    $scope.cancelCvEdits = function(vocabularyWord) {
 
-        Object.keys(definition).forEach(function(key) {
-            editableVW[key] = definition[key];
+        Object.keys(vocabularyWord).forEach(function(key) {
+            $scope.editableVW[key] = vocabularyWord[key];
         }); 
 
-        $scope.editFirst = false;
-        editableVW.editing = false;
+        $scope.editableVW.editing = false;
     };
 
     var reloadTable = function() {
@@ -93,6 +95,18 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             counts: [],
             dataset: $scope.selectedCv.dictionary
         });
+    }
+
+    $scope.startEditVWMode = function(vocabularyWord, editing) {
+
+        $scope.editableVW = angular.copy(vocabularyWord);
+
+        $scope.editableVW.editing=true;
+        $scope.editableVW.clickedCell=editing;
+    }
+
+    $scope.editMode = function(vocabularyWord) {
+        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing
     }
 
     $scope.setSelectedCv = function(cv) {
