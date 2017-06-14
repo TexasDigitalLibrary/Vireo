@@ -5,7 +5,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
     // additional repo methods and variables
 
     this.change = WsApi.listen(this.mapping.change);
-
+    
     this.downloadCSV = function(controlledVocabulary) {
         controlledVocabularyRepo.clearValidationResults();
         angular.extend(this.mapping.downloadCSV, {
@@ -65,17 +65,18 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         return promise;
     };
 
-    this.addVocabularyWord = function(cv) {
+    this.addVocabularyWord = function(cv, vw) {
         
         angular.extend(this.mapping.addVocabularyWord, {
-            'method': 'add-vocabulary-word/' + cv.id
+            'method': 'add-vocabulary-word/' + cv.id,
+            'data': vw
         });
 
         var promise = WsApi.fetch(this.mapping.addVocabularyWord);
         promise.then(function(res) {
             if (angular.fromJson(res.body).meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
-            }
+            } 
         });
 
         return promise;
@@ -88,6 +89,23 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
 
         var promise = WsApi.fetch(this.mapping.removeVocabularyWord);
+        promise.then(function(res) {
+            if (angular.fromJson(res.body).meta.type == "INVALID") {
+                angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
+            }
+        });
+
+        return promise;
+    }
+
+    this.updateVocabularyWord = function(cv, vw) {
+        
+        angular.extend(this.mapping.updateVocabularyWord, {
+            'method': 'update-vocabulary-word/' + cv.id,
+            'data': vw
+        });
+
+        var promise = WsApi.fetch(this.mapping.updateVocabularyWord);
         promise.then(function(res) {
             if (angular.fromJson(res.body).meta.type == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);

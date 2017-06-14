@@ -75,6 +75,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
             'method': 'remove-vocabulary-word'
+        },
+        updateVocabularyWord: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/controlled-vocabulary',
+            'method': 'update-vocabulary-word'
         }
 
     },

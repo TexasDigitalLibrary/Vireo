@@ -1,4 +1,4 @@
-vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, ControlledVocabularyRepo, DragAndDropListenerFactory, LanguageRepo, NgTableParams) {
+vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, $timeout, ControlledVocabularyRepo, DragAndDropListenerFactory, LanguageRepo, NgTableParams) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -26,6 +26,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.forms = {};
 
+    $scope.newVW = {};
+
     var firstEditableCv = function() {
 
         var cv = null
@@ -40,20 +42,49 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     }
 
-    $scope.addVocabularyWord = function() {
-        ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv).then(function(res) {
-            $scope.initCvTable();
+    $scope.addVocabularyWord = function(newVW) {
+        newVW.adding = true;
+        ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function(res) {
+            $scope.cancelAdding(newVW)
         });
+    }
+
+    $scope.cancelAdding = function(newVW) {
+        Object.keys(newVW).forEach(function(key) {
+            delete newVW[key];
+        });
+        newVW.adding = false;
+    }
+
+    $scope.isEditing = function(editableVW, $first) {
+        return editableVW.editing || ($first && $scope.editFirst)
     }
 
     $scope.removeVocabularyWord = function(vw) {
-        console.log(vw);
+        $scope.selectedCv.deleting = true;
         ControlledVocabularyRepo.removeVocabularyWord($scope.selectedCv, vw).then(function(res) {
-            $scope.initCvTable();
+            $scope.selectedCv.deleting = true;
         });
     }
 
-     $scope.initCvTable = function()  {
+    $scope.updateCv = function(vw) {
+        $scope.selectedCv.updating = true;
+        ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function(res) {
+            $scope.selectedCv.updating = false;
+        });
+    }
+
+    $scope.cancelCvEdits = function(editableVW,definition) {
+
+        Object.keys(definition).forEach(function(key) {
+            editableVW[key] = definition[key];
+        }); 
+
+        $scope.editFirst = false;
+        editableVW.editing = false;
+    };
+
+    var reloadTable = function() {
         $scope.cvTableParams = new NgTableParams({
             sorting: {
                 name: "asc"
@@ -64,14 +95,18 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     }
 
-    $scope.cancelCvEdits = function(editableVW,definition) {
+    $scope.setSelectedCv = function(cv) {
+        
+        if($scope.selectedCv) $scope.selectedCv.clearListens();
+        
+        $scope.selectedCv = cv;
 
-        Object.keys(definition).forEach(function(key) {
-            editableVW[key] = definition[key];
-        }); 
+        reloadTable();
 
-        editableVW.editing = false;
-    };
+        $scope.selectedCv.listen(function() {
+            reloadTable();
+        });
+    }
 
     $scope.ready.then(function () {
 
@@ -87,10 +122,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             return defaultIndex;
         };
 
-        $scope.resetControlledVocabulary = function (closeModal) {
+        $scope.setSelectedCv(firstEditableCv());
+        
+        reloadTable();
 
-            $scope.selectedCv =  firstEditableCv();
-            $scope.initCvTable();
+        $scope.resetControlledVocabulary = function (closeModal) {
 
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {
