@@ -124,6 +124,12 @@
           "inputType": {
             "name": "INPUT_EMAIL"
           },
+          "mappedShibAttribute": {
+            "isSystemRequired": true,
+            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL",
+            "type": "shibboleth",
+            "value": "email"
+          },
           "repeatable": false,
           "overrideable": true,
           "enabled": true,
