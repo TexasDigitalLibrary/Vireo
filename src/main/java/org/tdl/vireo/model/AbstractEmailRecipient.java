@@ -7,10 +7,10 @@ import edu.tamu.framework.model.BaseEntity;
 
 @Entity
 @Inheritance
-public class AbstractEmailRecipient extends BaseEntity {
+public abstract class AbstractEmailRecipient extends BaseEntity {
 
     private String name;
-
+    
     public String getName() {
         return name;
     }

@@ -462,16 +462,16 @@ public abstract class AbstractEntityTest {
     private Credentials credentials;
 
     @Test
-    public abstract void testCreate();
+    public abstract void testCreate() throws Exception;
 
     @Test
-    public abstract void testDuplication();
+    public abstract void testDuplication() throws Exception;
 
     @Test
-    public abstract void testDelete();
+    public abstract void testDelete() throws Exception;
 
     @Test
-    public abstract void testCascade();
+    public abstract void testCascade() throws Exception;
 
     protected Credentials getCredentials() {
         if (credentials == null) {

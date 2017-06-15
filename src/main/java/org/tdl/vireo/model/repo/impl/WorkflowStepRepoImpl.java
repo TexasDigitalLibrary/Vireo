@@ -205,6 +205,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 persistedWorkflowStep.setOriginalFieldProfiles(originalFieldProfiles);
                 persistedWorkflowStep.setAggregateFieldProfiles(aggregateFieldProfiles);
 
+                persistedWorkflowStep.setInstructions(pendingWorkflowStep.getInstructions());
+
                 // TODO: handle additional properties to the workflow step
 
                 resultingWorkflowStep = workflowStepRepo.save(persistedWorkflowStep);

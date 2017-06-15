@@ -1,8 +1,10 @@
-vireo.controller("StudentSubmissionController", function($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission) {
+vireo.controller("StudentSubmissionController", function($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission, ConfigurationRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
     $scope.studentSubmissionRepoReady = false;
+
+    $scope.configuration = ConfigurationRepo.getAllMapByType();
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
 
