@@ -61,17 +61,17 @@
 					<tr>
 						<td title="'Name'">
 							<div class="form-group" class="has-feedback" ng-class="{'has-error': nameFlasher}">
-								<input name="name" ng-if="newVW.beginAdd" class="form-control" ng-model="newVW.name"  vireo-autofocus required>
+								<input name="name" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.name" ng-keyup="createHotKeys($event, newVW)"  vireo-autofocus="newVW.clickedCell==='name'" required>
 							</div>
 						</td>
 						<td title="'Definition'">
 							<div class="form-group">
-								<input name="definition" ng-if="newVW.beginAdd" class="form-control" ng-model="newVW.definition">
+								<input name="definition" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.definition" ng-keyup="createHotKeys($event, newVW)" vireo-autofocus="newVW.clickedCell==='definition'">
 							</div>
 						</td>
 						<td title="'Identifier'">
 							<div class="form-group">
-								<input name="identifier" ng-if="newVW.beginAdd" class="form-control" ng-model="newVW.identifier">
+								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" vireo-autofocus="newVW.clickedCell==='identifier'">
 							</div>
 						</td>
 						<td title="'Actions'" class="actions">
@@ -89,7 +89,7 @@
 								</div>
 							</span>
 							<span ng-hide="newVW.beginAdd">
-								<button type="button" class="btn btn-primary" ng-click="newVW.beginAdd=true">
+								<button type="button" class="btn btn-primary" ng-click="newVW.beginAdd=true;newVW.clickedCell='name'">
 									<span class="glyphicon glyphicon-plus" ng-hide="newVW.adding"></span>
 								</button>
 							</span>
@@ -100,19 +100,19 @@
 						<td title="'Name'" ng-dblclick="startEditVWMode(vocabularyWord, 'name')">
 							<span ng-if="!editMode(vocabularyWord)">{{vocabularyWord.name}}</span>
 							<div class="form-group">
-								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.name" vireo-autofocus="editableVW.clickedCell==='name'" />
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.name" vireo-autofocus="editableVW.clickedCell==='name'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
 						<td title="'Definition'" ng-dblclick="startEditVWMode(vocabularyWord, 'definition')">
 							<span ng-if="!editMode(vocabularyWord)">{{vocabularyWord.definition}}</span>
 							<div class="form-group">
-								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.definition" vireo-autofocus="editableVW.clickedCell==='definition'" />
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.definition" vireo-autofocus="editableVW.clickedCell==='definition'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
 						<td title="'Identifier'" ng-dblclick="startEditVWMode(vocabularyWord, 'identifier')">
 							<span ng-if="!editMode(vocabularyWord)">{{vocabularyWord.identifier}}</span>
 							<div class="form-group">
-								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" vireo-autofocus="editableVW.clickedCell==='identifier'" />
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
 						<td title="'Actions'" >
@@ -131,7 +131,7 @@
 							<span ng-show="editMode(vocabularyWord)">
 								<div class="form-group">
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-primary" ng-click="updateCv(editableVW, vocabularyWord)">
+										<button type="button" class="btn btn-primary" ng-click="updateCv(editableVW)">
 											<span class="glyphicon glyphicon-ok" ng-hide="selectedCv.updating"></span>
 											<span ng-if="selectedCv.updating" class="glyphicon glyphicon-refresh spinning">
 										</button>

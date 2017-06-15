@@ -51,6 +51,114 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     }
 
+    $scope.createHotKeys = function(e, newVW) {
+
+        console.log(e.keyCode);
+
+        e.preventDefault();
+
+        if(e.keyCode === 40) {
+            newVW.beginAdd = false;
+            var nextRow = $scope.cvTableParams.data[0];
+            $scope.startEditVWMode(nextRow, 'name');
+        }
+
+        if(e.keyCode === 39) {
+            newVW.moving = true;
+            if(newVW.clickedCell==="name") {
+                 newVW.clickedCell = "definition";
+            } else if(newVW.clickedCell==="definition") {
+                newVW.clickedCell = "identifier";
+            }
+            $timeout(function() {
+                newVW.moving = false;
+            });
+        }
+
+        if(e.keyCode === 37) {
+            newVW.moving = true;
+            if(newVW.clickedCell==="definition") {
+                newVW.clickedCell = "name";
+            } else if(newVW.clickedCell==="identifier") {
+                newVW.clickedCell = "definition";
+            }
+            $timeout(function() {  
+                newVW.moving = false;
+            });
+        }
+
+        if(e.keyCode === 27) {
+            $scope.cancelAdding(newVW)
+        }
+
+        if(e.keyCode === 13) {
+            $scope.addVocabularyWord(newVW)
+        }
+
+    }
+
+    $scope.updateHotKeys = function(e, vw) {
+
+        console.log(e.keyCode);
+
+        e.preventDefault();
+
+        if(e.keyCode === 38) {
+            $scope.editableVW.editing = false;
+            var nextVWIndex = -1;
+            $scope.cvTableParams.data.some(function(pvw, i) {
+                nextVWIndex = pvw.id===vw.id ? i-1 : nextVWIndex;
+                return pvw.id===vw.id;
+            });
+            var nextVW = $scope.cvTableParams.data[nextVWIndex];
+             if(nextVW) $scope.startEditVWMode(nextVW, 'name');
+        }
+
+        if(e.keyCode === 40) {
+            $scope.editableVW.editing = false;
+            var nextVWIndex = -1;
+            $scope.cvTableParams.data.some(function(pvw, i) {
+                nextVWIndex = pvw.id===vw.id ? i+1 : nextVWIndex;
+                return pvw.id===vw.id;
+            });
+            var nextVW = $scope.cvTableParams.data[nextVWIndex];
+            if(nextVW) $scope.startEditVWMode(nextVW, 'name');
+        }
+
+         if(e.keyCode === 39) {
+            $scope.editableVW.moving = true;
+            if($scope.editableVW.clickedCell==="name") {
+                 $scope.editableVW.clickedCell = "definition";
+            } else if($scope.editableVW.clickedCell==="definition") {
+                $scope.editableVW.clickedCell = "identifier";
+            }
+            $timeout(function() {
+                $scope.editableVW.moving = false;
+            });
+        }
+
+        if(e.keyCode === 37) {
+            $scope.editableVW.moving = true;
+            if($scope.editableVW.clickedCell==="definition") {
+                $scope.editableVW.clickedCell = "name";
+            } else if($scope.editableVW.clickedCell==="identifier") {
+                $scope.editableVW.clickedCell = "definition";
+            }
+            $timeout(function() {  
+                $scope.editableVW.moving = false;
+            });
+        }
+
+        if(e.keyCode === 13) {
+            $scope.updateCv($scope.editableVW)
+        }
+
+        if(e.keyCode === 27) {
+            $scope.cancelCvEdits(vw)
+        }
+
+    }
+
     $scope.cancelAdding = function(newVW) {
         Object.keys(newVW).forEach(function(key) {
             delete newVW[key];
@@ -58,14 +166,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         newVW.adding = false;
     }
 
-    $scope.isEditing = function(editableVW, $first) {
-        return editableVW.editing || ($first && $scope.editFirst)
-    }
-
     $scope.removeVocabularyWord = function(vw) {
         $scope.selectedCv.deleting = true;
         ControlledVocabularyRepo.removeVocabularyWord($scope.selectedCv, vw).then(function(res) {
-            $scope.selectedCv.deleting = true;
+            $scope.selectedCv.deleting = false;
         });
     }
 
@@ -106,7 +210,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     }
 
     $scope.editMode = function(vocabularyWord) {
-        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing
+        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing && !$scope.editableVW.moving
     }
 
     $scope.setSelectedCv = function(cv) {
