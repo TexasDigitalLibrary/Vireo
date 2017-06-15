@@ -318,8 +318,15 @@ public class ControlledVocabularyController {
     	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
     	cv.addValue(vocabularyWord);
     	cv = controlledVocabularyRepo.save(cv);
+    	    	
+    	for(VocabularyWord vw : cv.getDictionary()) {    		
+    		if(vocabularyWord.getName().equals(vw.getName())) {
+    			vocabularyWord = vw;
+    		}
+    	}
+    	
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
-    	return new ApiResponse(SUCCESS, cv);
+    	return new ApiResponse(SUCCESS, vocabularyWord);
     }
     
     /**

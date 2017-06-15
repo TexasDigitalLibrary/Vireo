@@ -96,7 +96,7 @@
 						</td>
 					</tr>
 
-					<tr ng-repeat="vocabularyWord in $data">	
+					<tr ng-repeat="vocabularyWord in $data" ng-class="{'success': vocabularyWord.id===lastCreatedVocabularyWordId}">	
 						<td title="'Name'" ng-dblclick="startEditVWMode(vocabularyWord, 'name')">
 							<span ng-if="!editMode(vocabularyWord)">{{vocabularyWord.name}}</span>
 							<div class="form-group">

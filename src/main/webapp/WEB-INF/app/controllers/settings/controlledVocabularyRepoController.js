@@ -47,6 +47,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     $scope.addVocabularyWord = function(newVW) {
         newVW.adding = true;
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function(res) {
+            console.log(angular.fromJson(res.body).payload.VocabularyWord);
+            $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
+            reloadTable()
             $scope.cancelAdding(newVW)
         });
     }
@@ -74,7 +77,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     }
 
     $scope.cancelCvEdits = function(vocabularyWord) {
-
         Object.keys(vocabularyWord).forEach(function(key) {
             $scope.editableVW[key] = vocabularyWord[key];
         }); 
@@ -91,6 +93,39 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             counts: [],
             dataset: $scope.selectedCv.dictionary
         });
+
+        if($scope.lastCreatedVocabularyWordId) {
+        
+            var rowsPerPage = $scope.cvTableParams.count();
+            var alphabatizedVWs = $scope.selectedCv.dictionary.sort(function(a, b) {
+                var nameA = a.name.toUpperCase(); 
+                var nameB = b.name.toUpperCase(); 
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+            var indexOfLastCreated = -1;
+
+            alphabatizedVWs.some(function(pvw, i) {
+                var check = pvw.id === $scope.lastCreatedVocabularyWordId;
+                if(check) indexOfLastCreated = i;
+                return check;   
+             });
+
+            var pageOfOccurence = Math.ceil((indexOfLastCreated/rowsPerPage));
+            
+            $scope.cvTableParams.page(pageOfOccurence);
+
+            $timeout(function() {
+                $scope.lastCreatedVocabularyWordId = null;
+            }, 5000);
+
+        }
+
     }
 
     $scope.startEditVWMode = function(vocabularyWord, editing) {
@@ -119,8 +154,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     }
 
     $scope.createHotKeys = function(e, newVW) {
-
-        console.log(e.keyCode);
 
         e.preventDefault();
 
@@ -165,8 +198,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     }
 
     $scope.updateHotKeys = function(e, vw) {
-
-        console.log(e.keyCode);
 
         e.preventDefault();
 
