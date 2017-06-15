@@ -1,0 +1,83 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetEmbargo()" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">New {{modalData.guarantor}} Embargo</h3>
+</div>
+
+<form ng-submit="createEmbargo()" name="forms.create" novalidate>
+
+    <validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+
+        <validatedinput
+            model="modalData"
+            property="name"
+            label="Name"
+            placeholder="Name of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+    	
+        <validatedinput
+            model="modalData"
+            property="description"
+            label="Description"
+            placeholder="Description of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+        
+        <validatedinput
+            model="modalData"
+            property="duration"
+            label="Duration"
+            placeholder="Duration of the new embargo"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="duration"
+            label="Indefinite"
+            placeholder="This embargo duration will be indefinite."
+            truevalue="null"
+            falsevalue="12"
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+        
+        <validatedinput
+            type="checkbox"
+            model="modalData"
+            property="isActive"
+            label="Display:"
+            truevalue="true"
+            falsevalue="false"
+            placeholder="This embargo option will be available for new submissions."
+            form="forms.create"
+            validations="embargoRepo.getValidations()"
+            results="embargoRepo.getValidationResults()">
+        </validatedinput>
+
+    </div>
+
+    <div class="modal-footer">
+    	<button 
+            type="button" 
+            class="btn btn-warning" 
+            ng-click="resetEmbargo()">Cancel</button>
+    	<button 
+            id="embargo-save" 
+            type="submit" 
+            class="btn btn-primary"
+            ng-disabled="forms.create.$invalid">Create</button>
+    </div>
+</form>

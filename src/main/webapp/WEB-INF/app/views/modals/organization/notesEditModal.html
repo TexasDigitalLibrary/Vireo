@@ -1,0 +1,58 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button 
+		type="button" 
+		class="close" 
+		ng-click="resetNotes()"
+		aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Edit Note</h3>
+</div>
+
+<form ng-submit="updateNote()" name="forms.update" novalidate>
+
+	<validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Name"
+			placeholder="Name of the new note"
+			form="forms.update"
+			validations="modalData.getValidations()"
+			results="modalData.ValidationResults">
+		</validatedinput>
+		
+		<validatedtextarea
+            model="modalData"
+            property="text"
+            label="Text"
+            rows="5"
+			form="forms.update"
+			validations="modalData.getValidations()"
+            results="modalData.ValidationResults">
+        </validatedtextarea>
+
+		<!-- TODO: move togglebutton into framework and use in validatedinput -->
+    	<toggleButton 
+			label="Note is Overridable:"
+			scope-value="modalData.overrideable"
+			toggle-options='[{"true": "Yes"},{"false": "No"}]'>
+		</toggleButton>
+		
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-warning" 
+			ng-click="resetNotes()">Cancel</button>
+		<button 
+			id="notes-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.update.$invalid">Update</button>
+	</div>
+</form>

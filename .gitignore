@@ -1,29 +1,19 @@
-# Extracted from https://github.com/ulrich/macaron-factory/blob/master/.gitignore
-# Ignore all dotfiles...
-.*
-# except for .gitignore
-!.gitignore
-
-# Ignore Play! working directory #
-db
-eclipse
-log
-logs
-precompiled
-tmp
-test-result
-eclipse
-server.pid
-nbproject
-
-lib
-modules
-data
-
-# Ignore dynamic plugins
-conf/db-1.1.1
-conf/qunit-1.0
-conf/spring-1.0.3
-public/qunit-1.0
-qunit-1.0/
-/bin
+bin/
+public/
+private/
+target/
+attachments/
+node_modules/
+.apt_generated/
+h2/
+src/main/resources/static/angular/app/
+src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
+.sass-cache
+.factorypath
+.tmp
+.externalToolBuilders
+.classpath
+.settings
+.project
+.tern-project
+*.log*

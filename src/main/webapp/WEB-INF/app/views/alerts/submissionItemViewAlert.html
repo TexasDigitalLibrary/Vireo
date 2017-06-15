@@ -1,0 +1,6 @@
+<modal modal-id="reportModal" modal-view="bower_components/core/app/views/modals/errorReportModal.html" modal-header-class="modal-header-primary"></modal>
+
+<div class="alert alert-wrapper alert-{{alert.class}}" ng-class="{fade: alert.fade}" role="alert">
+	<button ng-click="remove(alert)" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>	
+	{{alert.message}}
+</div>

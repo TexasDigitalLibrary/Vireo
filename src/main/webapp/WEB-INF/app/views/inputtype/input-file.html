@@ -1,0 +1,89 @@
+<div ng-if="!profile.repeatable">
+  <div class="col-md-5 col-sm-12">
+    <div class="input-group file-input-group">
+      <span class="pull-right file-info-tip">
+        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
+        <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
+      </span>
+      <dropzone file-model="files" text="Drop a file here to begin upload" , patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
+    </div>
+  </div>
+  <div class="col-md-7 col-sm-12 file-preview-container">
+    <modal ng-if="hasFile(fieldValue) || previewing" modal-id="{{'confirmDeleteFileModal' + getUriHash(fieldValue) }}" modal-view="views/modals/submissions/confirmDeleteFile.html" modal-header-class="modal-header-danger"></modal>
+    <div class="file-preview">
+      <img ng-if="(hasFile(fieldValue) || previewing) && getPreview(fieldValue)" class="select-toggle" ngf-src="getPreview(fieldValue)" ng-click="getFile(fieldValue)">
+      <span ng-if="(hasFile(fieldValue) || previewing) && !getPreview(fieldValue)" class="glyphicon glyphicon-file select-toggle" ng-click="getFile(fieldValue)"></span>
+      <div ng-if="hasFile(fieldValue) || previewing">
+        <span class="file-upload-icon glyphicon glyphicon-ok"></span>
+        <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
+      </div>
+    </div>
+    <div class="file-info" ng-if="hasFile(fieldValue) || previewing">
+      <p class="file-name">{{fieldValue.fileInfo.name}}</p>
+      <p class="file-type">{{fieldValue.fileInfo.type}}</p>
+      <p class="file-size">{{fieldValue.fileInfo.size + " bytes"}}</p>
+    </div>
+    <div class="file-info" ng-if="previewing && !uploading">
+      <button class="btn btn-success" ng-click="beginUpload(fieldValue)">
+        <span ng-if="!hasFile(fieldValue)">Upload</span>
+        <span ng-if="hasFile(fieldValue)">Replace</span>
+      </button>
+      <button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
+    </div>
+    <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="progress" max="100">{{progress + '%'}}</uib-progressbar>
+  </div>
+</div>
+
+<div ng-if="profile.repeatable">
+  <div class="col-md-5 col-sm-12">
+    <div class="input-group file-input-group">
+      <span class="pull-right file-info-tip">
+        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
+        <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
+      </span>
+      <dropzone file-model="files" text="Drop a file here to begin upload" , allow-multiple="true" patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
+    </div>
+  </div>
+  <div class="col-md-7 col-sm-12 file-preview-container" ng-if="previewing || hasFiles">
+    <table class="table table-condensed table-hover multiple-file-upload-table">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Status</th>
+          <th>
+            <span ng-if="previewing">Cancel</span>
+            <span ng-if="!previewing">Delete</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate" ng-if="fieldValue.fileInfo">
+          <td ng-if="!fieldValue.uploading" class="file-info">
+            <p class="file-name select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.fileInfo.name}}</p>
+          </td>
+          <td ng-if="!fieldValue.uploading">{{fieldValue.fileInfo.type}}</td>
+          <td ng-if="!fieldValue.uploading">{{fieldValue.fileInfo.size}}</td>
+          <td ng-if="!fieldValue.uploading">
+            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-ok"></span>
+          </td>
+          <td ng-if="!fieldValue.uploading">
+            <modal modal-id="{{'confirmDeleteFileModal' + getUriHash(fieldValue) }}" modal-view="views/modals/submissions/confirmDeleteFile.html" modal-header-class="modal-header-danger"></modal>
+            <span ng-if="!hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-remove text-danger select-toggle" ng-click="cancel(fieldValue)"></span>
+            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
+          </td>
+          <td ng-if="fieldValue.uploading" colspan="5">
+            <uib-progressbar class="progress-striped active file-upload-progress" type="success" value="fieldValue.progress" max="100">{{fieldValue.progress + '%'}}</uib-progressbar>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="file-info" ng-if="previewing && !uploading">
+      <button class="btn btn-success" ng-click="beginUpload()">
+        <span>Upload</span>
+      </button>
+      <button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Manage {{getSelectedOrganization().name}}</h3>
+	</div>
+
+	<div class="panel-body">
+		<form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
+
+				<validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-xs-6">
+
+							<validatedinput
+								label="Name"
+								model="getSelectedOrganization()"
+								property="name"
+								placeholder="Name of the organization"
+								form="forms.update"
+								validations="getSelectedOrganization().getValidations()"
+								results="getSelectedOrganization().getValidationResults()">
+							</validatedinput>
+
+							<validatedselect
+								label="Category"
+								options="organizationCategories"
+								optionproperty="name"
+								model="getSelectedOrganization()"
+								property="category"
+								form="forms.update"
+								validations="getSelectedOrganization().getValidations()"
+								results="getSelectedOrganization().getValidationResults()">
+							</validatedselect>
+
+						</div>
+
+						<div class="col-xs-6">
+
+							<validatedinput
+								label="Email Contact"
+								model="getSelectedOrganization()"
+								property="emails"
+								placeholder="Email Address"
+								form="forms.update"
+								validations="getSelectedOrganization().getValidations()"
+								results="getSelectedOrganization().getValidationResults()"
+								repeatable="true">
+							</validatedinput>
+
+						</div>
+					</div>
+
+					<hr />
+
+					<div class="row">
+						<div class="pull-right">
+							<button
+								type="button"
+								class="btn btn-danger"
+								ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+							<button
+								type="button"
+								class="btn btn-default"
+								ng-click="resetManageOrganization()">Cancel</button>
+							<button
+								type="submit"
+								class="btn btn-primary"
+								ng-disabled="forms.update.$invalid">Save</button>
+						</div>
+					</div>
+				</div>
+
+				<modal modal-id="organizationConfirmDeleteModal"
+					modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
+					modal-header-class="modal-header-danger"
+					modal-backdrop="static">
+				</modal>
+
+		</form>
+
+	</div>
+
+</div>
