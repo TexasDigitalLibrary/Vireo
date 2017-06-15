@@ -211,27 +211,30 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
 	@Override
     public void loadDefaultControlledVocabularies() {
-        ControlledVocabulary submissionTypesCV = controlledVocabularyRepo.findByName("SubmissionType");
-
-        List<VocabularyWord> vocabularyWords = null;
-        try {
-            vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/Submission_Types_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to load default controlled vocabularies.");
-        }
-
-        for (VocabularyWord vw : vocabularyWords) {
-            if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), submissionTypesCV) == null) {
-                vw.setControlledVocabulary(submissionTypesCV);
-                vw = vocabularyWordRepo.save(vw);
-                submissionTypesCV.addValue(vw);
-            }
-        }
-
-        submissionTypesCV = controlledVocabularyRepo.save(submissionTypesCV);
-
+		List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
+		
+		controlledVocabularies.forEach(cv->{
+			
+			List<VocabularyWord> vocabularyWords = null;
+			try {
+				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName()+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
+	            });
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            logger.debug("Unable to load default controlled vocabulary "+cv.getName()+".");
+	        }
+			
+			vocabularyWords.forEach(vw->{
+				if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), cv) == null) {
+	                vw.setControlledVocabulary(cv);
+	                vw = vocabularyWordRepo.save(vw);
+	                cv.addValue(vw);
+	            }
+			});
+			
+			controlledVocabularyRepo.save(cv);
+			
+		});
     }
 
     @Override
