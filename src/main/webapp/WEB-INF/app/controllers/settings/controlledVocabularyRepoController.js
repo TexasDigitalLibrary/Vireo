@@ -51,6 +51,73 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     }
 
+    $scope.cancelAdding = function(newVW) {
+        Object.keys(newVW).forEach(function(key) {
+            delete newVW[key];
+        });
+        newVW.adding = false;
+    }
+
+    $scope.removeVocabularyWord = function(vw) {
+        $scope.selectedCv.deleting = true;
+        ControlledVocabularyRepo.removeVocabularyWord($scope.selectedCv, vw).then(function(res) {
+            $scope.selectedCv.deleting = false;
+        });
+    }
+
+    $scope.updateCv = function(vw) {
+        $scope.selectedCv.updating = true;
+        ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function(res) {
+            $scope.selectedCv.updating = false;
+            $scope.editableVW.editing = false;
+        });
+    }
+
+    $scope.cancelCvEdits = function(vocabularyWord) {
+
+        Object.keys(vocabularyWord).forEach(function(key) {
+            $scope.editableVW[key] = vocabularyWord[key];
+        }); 
+
+        $scope.editableVW.editing = false;
+    };
+
+    var reloadTable = function() {
+        $scope.cvTableParams = new NgTableParams({
+            sorting: {
+                name: "asc"
+            }
+        }, {
+            counts: [],
+            dataset: $scope.selectedCv.dictionary
+        });
+    }
+
+    $scope.startEditVWMode = function(vocabularyWord, editing) {
+
+        $scope.editableVW = angular.copy(vocabularyWord);
+
+        $scope.editableVW.editing=true;
+        $scope.editableVW.clickedCell=editing;
+    }
+
+    $scope.editMode = function(vocabularyWord) {
+        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing && !$scope.editableVW.moving
+    }
+
+    $scope.setSelectedCv = function(cv) {
+        
+        if($scope.selectedCv) $scope.selectedCv.clearListens();
+        
+        $scope.selectedCv = cv;
+
+        reloadTable();
+
+        $scope.selectedCv.listen(function() {
+            reloadTable();
+        });
+    }
+
     $scope.createHotKeys = function(e, newVW) {
 
         console.log(e.keyCode);
@@ -157,73 +224,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             $scope.cancelCvEdits(vw)
         }
 
-    }
-
-    $scope.cancelAdding = function(newVW) {
-        Object.keys(newVW).forEach(function(key) {
-            delete newVW[key];
-        });
-        newVW.adding = false;
-    }
-
-    $scope.removeVocabularyWord = function(vw) {
-        $scope.selectedCv.deleting = true;
-        ControlledVocabularyRepo.removeVocabularyWord($scope.selectedCv, vw).then(function(res) {
-            $scope.selectedCv.deleting = false;
-        });
-    }
-
-    $scope.updateCv = function(vw) {
-        $scope.selectedCv.updating = true;
-        ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function(res) {
-            $scope.selectedCv.updating = false;
-            $scope.editableVW.editing = false;
-        });
-    }
-
-    $scope.cancelCvEdits = function(vocabularyWord) {
-
-        Object.keys(vocabularyWord).forEach(function(key) {
-            $scope.editableVW[key] = vocabularyWord[key];
-        }); 
-
-        $scope.editableVW.editing = false;
-    };
-
-    var reloadTable = function() {
-        $scope.cvTableParams = new NgTableParams({
-            sorting: {
-                name: "asc"
-            }
-        }, {
-            counts: [],
-            dataset: $scope.selectedCv.dictionary
-        });
-    }
-
-    $scope.startEditVWMode = function(vocabularyWord, editing) {
-
-        $scope.editableVW = angular.copy(vocabularyWord);
-
-        $scope.editableVW.editing=true;
-        $scope.editableVW.clickedCell=editing;
-    }
-
-    $scope.editMode = function(vocabularyWord) {
-        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing && !$scope.editableVW.moving
-    }
-
-    $scope.setSelectedCv = function(cv) {
-        
-        if($scope.selectedCv) $scope.selectedCv.clearListens();
-        
-        $scope.selectedCv = cv;
-
-        reloadTable();
-
-        $scope.selectedCv.listen(function() {
-            reloadTable();
-        });
     }
 
     $scope.ready.then(function () {
