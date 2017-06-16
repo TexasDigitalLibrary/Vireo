@@ -65,12 +65,12 @@
   },
   {
     "name": "INPUT_LICENSE",
-    "validationPatern": "^true$",
+    "validationPatern": "^(true|false)$",
     "validationMessage": "You must accept the license agreement to continue"
   },
   {
     "name": "INPUT_PROQUEST",
-    "validationPatern": "^true$",
+    "validationPatern": "^(true|false)$",
     "validationMessage": "You must accept the license agreement to continue"
   }
 ]
