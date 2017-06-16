@@ -54,6 +54,11 @@
     "validationMessage": null
   },
   {
+    "name": "INPUT_CONDITIONAL_TEXTAREA",
+    "validationPatern": null,
+    "validationMessage": null
+  },
+  {
     "name": "INPUT_SELECT",
     "validationPatern": null,
     "validationMessage": null
