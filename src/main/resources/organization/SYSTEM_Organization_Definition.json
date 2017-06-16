@@ -954,7 +954,7 @@
             "name": "Document Information"
           },
           "inputType": {
-            "name": "INPUT_TEXT"
+            "name": "INPUT_CONDITIONAL_TEXTAREA"
           },
           "repeatable": false,
           "overrideable": true,
