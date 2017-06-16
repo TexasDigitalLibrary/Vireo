@@ -214,6 +214,12 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 });
             };
 
+            $scope.setConditionalTextArea = function(fieldValue, checked) {
+                fieldValue.value = checked ? fieldValue.value : null;
+                //Only save if checked == true and value is a non-empty string OR if checked == false and value is not a string (which it won't have been anyway given the line above)
+                if(!checked == !fieldValue.value)  $scope.save(fieldValue);
+            } 
+
             var refreshFieldValues = function() {
                 $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
                 $scope.fieldValue = $scope.fieldValues[0];

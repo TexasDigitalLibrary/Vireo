@@ -4,6 +4,7 @@
 		ng-false-value="'false'"
 		ng-disabled="fieldValue.updating"
 		ng-click="save(fieldValue)"
+		ng-hide="fieldValue.updating"
 >
-<span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-<span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+<span ng-show="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+<span>{{profile.help}}</span>

@@ -48,7 +48,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         newVW.adding = true;
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function(res) {
             $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
-            console.log($scope.lastCreatedVocabularyWordId);
             reloadTable()
             $scope.cancelAdding(newVW)
         });
@@ -93,8 +92,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             counts: [],
             dataset: $scope.selectedCv.dictionary
         });
-
-        console.log();
 
         if($scope.lastCreatedVocabularyWordId) {
         
