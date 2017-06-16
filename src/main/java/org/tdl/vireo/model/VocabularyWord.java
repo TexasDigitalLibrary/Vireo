@@ -33,7 +33,7 @@ public class VocabularyWord extends BaseEntity {
     @Column(nullable = true)
     private String identifier;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE })
+    @ManyToOne(cascade = { DETACH, REFRESH })
     @Fetch(FetchMode.SELECT)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = VocabularyWord.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)

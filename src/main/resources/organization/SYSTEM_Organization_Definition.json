@@ -277,7 +277,13 @@
               "name": "English"
             }
           }],
-          "controlledVocabularies": []
+          "controlledVocabularies": [{
+            "name": "Colleges",
+            "isEntityProperty": false,
+            "language": {
+              "name": "English"
+            }
+          }]
         },
         {
           "fieldPredicate": {
@@ -302,7 +308,13 @@
               "name": "English"
             }
           }],
-          "controlledVocabularies": []
+          "controlledVocabularies": [{
+            "name": "Programs",
+            "isEntityProperty": false,
+            "language": {
+              "name": "English"
+            }
+          }]
         },
         {
           "fieldPredicate": {
@@ -329,7 +341,13 @@
               "name": "English"
             }
           }],
-          "controlledVocabularies": []
+          "controlledVocabularies": [{
+            "name": "Departments",
+            "isEntityProperty": false,
+            "language": {
+              "name": "English"
+            }
+          }]
         },
         {
           "fieldPredicate": {
@@ -356,7 +374,13 @@
               "name": "English"
             }
           }],
-          "controlledVocabularies": []
+          "controlledVocabularies": [{
+            "name": "Degrees",
+            "isEntityProperty": false,
+            "language": {
+              "name": "English"
+            }
+          }]
         },
         {
           "fieldPredicate": {
@@ -754,7 +778,7 @@
             }
           }],
           "controlledVocabularies": [{
-            "name": "SubmissionType",
+            "name": "SubmissionTypes",
             "isEntityProperty": false,
             "language": {
               "name": "English"

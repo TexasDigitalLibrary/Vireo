@@ -28,6 +28,10 @@ vireo.controller('AbstractController', function($scope, $window, ModalService, S
     return sessionStorage.role === "ADMINISTRATOR";
   };
 
+  $scope.copy = function(item) {
+    return angular.copy(item);
+  }
+
   $scope.reportError = function(alert) {
     RestApi.post({
       controller: 'report',
