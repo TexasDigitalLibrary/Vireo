@@ -124,8 +124,8 @@
 		<entity-name>org.tdl.vireo.model.DocumentType</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
-		<entity-X-Coordinate>873</entity-X-Coordinate>
-		<entity-Y-Coordinate>1219</entity-Y-Coordinate>
+		<entity-X-Coordinate>903</entity-X-Coordinate>
+		<entity-Y-Coordinate>1239</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -201,8 +201,8 @@
 		<entity-name>org.tdl.vireo.model.SubmissionWorkflowStep</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>32</entity-height>
-		<entity-X-Coordinate>-100</entity-X-Coordinate>
-		<entity-Y-Coordinate>755</entity-Y-Coordinate>
+		<entity-X-Coordinate>215</entity-X-Coordinate>
+		<entity-Y-Coordinate>909</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -213,7 +213,7 @@
 		<entity-width>137</entity-width>
 		<entity-height>148</entity-height>
 		<entity-X-Coordinate>441</entity-X-Coordinate>
-		<entity-Y-Coordinate>841</entity-Y-Coordinate>
+		<entity-Y-Coordinate>758</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -223,8 +223,8 @@
 		<entity-name>org.tdl.vireo.model.Organization</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>248</entity-height>
-		<entity-X-Coordinate>780</entity-X-Coordinate>
-		<entity-Y-Coordinate>621</entity-Y-Coordinate>
+		<entity-X-Coordinate>781</entity-X-Coordinate>
+		<entity-Y-Coordinate>554</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -377,8 +377,8 @@
 		<entity-name>org.tdl.vireo.model.ActionLog</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>168</entity-height>
-		<entity-X-Coordinate>1654</entity-X-Coordinate>
-		<entity-Y-Coordinate>935</entity-Y-Coordinate>
+		<entity-X-Coordinate>1600</entity-X-Coordinate>
+		<entity-Y-Coordinate>900</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -422,7 +422,7 @@
 		<entity-width>120</entity-width>
 		<entity-height>32</entity-height>
 		<entity-X-Coordinate>281</entity-X-Coordinate>
-		<entity-Y-Coordinate>922</entity-Y-Coordinate>
+		<entity-Y-Coordinate>968</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
@@ -520,8 +520,8 @@
 		<entity-name>org.tdl.vireo.model.OrganizationCategory</entity-name>
 		<entity-width>120</entity-width>
 		<entity-height>108</entity-height>
-		<entity-X-Coordinate>685</entity-X-Coordinate>
-		<entity-Y-Coordinate>456</entity-Y-Coordinate>
+		<entity-X-Coordinate>686</entity-X-Coordinate>
+		<entity-Y-Coordinate>389</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
