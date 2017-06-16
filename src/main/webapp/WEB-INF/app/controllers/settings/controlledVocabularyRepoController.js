@@ -48,6 +48,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         newVW.adding = true;
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function(res) {
             $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
+            console.log($scope.lastCreatedVocabularyWordId);
             reloadTable()
             $scope.cancelAdding(newVW)
         });
@@ -93,6 +94,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             dataset: $scope.selectedCv.dictionary
         });
 
+        console.log();
+
         if($scope.lastCreatedVocabularyWordId) {
         
             var rowsPerPage = $scope.cvTableParams.count();
@@ -107,8 +110,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                 }
                 return 0;
             });
-            var indexOfLastCreated = -1;
 
+            var indexOfLastCreated = -1;
             alphabatizedVWs.some(function(pvw, i) {
                 var check = pvw.id === $scope.lastCreatedVocabularyWordId;
                 if(check) indexOfLastCreated = i;
@@ -116,8 +119,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
              });
 
             var pageOfOccurence = Math.ceil((indexOfLastCreated/rowsPerPage));
-            
-            $scope.cvTableParams.page(pageOfOccurence);
+
+            $scope.cvTableParams.page(pageOfOccurence===0?1:pageOfOccurence);
 
             $timeout(function() {
                 $scope.lastCreatedVocabularyWordId = null;
