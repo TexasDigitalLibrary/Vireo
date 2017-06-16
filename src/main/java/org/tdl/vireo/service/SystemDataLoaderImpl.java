@@ -215,7 +215,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
 		controlledVocabularies.forEach(cv->{
 
-			List<VocabularyWord> vocabularyWords = null;
+			List<VocabularyWord> vocabularyWords = new ArrayList<VocabularyWord>();
 			try {
 				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName().replaceAll("\\s", "")+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
 	            });

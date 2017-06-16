@@ -12,3 +12,7 @@
     -o-transition: background 1s ease-in-out;
     transition: background 1s ease-in-out;
 }
+
+.cv-editing-display .table > tbody > tr > td {
+    vertical-align: middle;
+}
