@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
@@ -49,29 +50,35 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, null, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>());
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, null, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>());
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>());
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, null);
     }
 
-    private FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
-        FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses));
+    @Override
+    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
+    public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute);
+    }
+
+    private FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute));
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
 
@@ -81,5 +88,4 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
-
 }
