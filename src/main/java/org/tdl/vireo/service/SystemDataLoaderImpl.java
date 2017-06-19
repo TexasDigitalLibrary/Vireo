@@ -91,7 +91,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private InputTypeRepo inputTypeRepo;
 
     private EmailTemplateRepo emailTemplateRepo;
-    
+
     private AbstractEmailRecipientRepo abstractEmailRecipientRepo;
 
     private EmbargoRepo embargoRepo;
@@ -185,7 +185,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         logger.info("Generating system organization");
         loadSystemOrganization();
-      
+
         logger.info("Generating system defaults");
         generateSystemDefaults();
 
@@ -210,20 +210,19 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
 	@Override
     public void loadDefaultControlledVocabularies() {
-
 		List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
-		
+
 		controlledVocabularies.forEach(cv->{
-			
-			List<VocabularyWord> vocabularyWords = null;
+
+			List<VocabularyWord> vocabularyWords = new ArrayList<VocabularyWord>();
 			try {
-				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName()+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
+				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName().replaceAll("\\s", "")+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
 	            });
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            logger.debug("Unable to load default controlled vocabulary "+cv.getName()+".");
 	        }
-			
+
 			vocabularyWords.forEach(vw->{
 				if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), cv) == null) {
 	                vw.setControlledVocabulary(cv);
@@ -231,9 +230,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 	                cv.addValue(vw);
 	            }
 			});
-			
+
 			controlledVocabularyRepo.save(cv);
-			
+
 		});
     }
 
@@ -260,11 +259,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     /**
      * Loads default system organization.
-     * @return 
-     * @return 
+     * @return
+     * @return
      */
     public void loadSystemOrganization() {
-    	
+
     	Organization organization = null;
 
         try {
@@ -294,7 +293,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
 
             organization = organizationRepo.save(organization);
-            
+
             processEmailWorflowRules();
 
             category.addOrganization(organization);
@@ -304,7 +303,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
-        
+
     }
 
     private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
@@ -437,14 +436,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         }
         return workflowSteps;
     }
-    
+
     private void processEmailWorflowRules() {
-    	
+
     	Organization organization = organizationRepo.findOne(1L);
 
 		try {
 			Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
-			
+
 			 // temporary set of EmailWorkflowRule
 	        List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
 
@@ -466,10 +465,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 	            if (newEmailTemplate == null) {
 	                newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
 	            }
-	            
-	            
+
+
 	            if(emailWorkflowRule.getEmailRecipient() == null) {
-	            	
+
 	            	if(newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
 	            		organization.getAggregateWorkflowSteps().forEach(awfs->{
 	            			awfs.getAggregateFieldProfiles().forEach(afp->{
@@ -479,14 +478,14 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 	            				}
 	            			});
 	            		});
-	            		
+
 	            	}
-	            	
+
 	            	if(newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
 	            		EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
 	            		emailWorkflowRule.setEmailRecipient(recipient);
 	            	}
-	            	
+
 	            }
 
 	            // check to see if the EmailWorkflowRule exists
@@ -501,13 +500,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 	        });
 
 	        organization.setEmailWorkflowRules(emailWorkflowRules);
-	        
+
 	        organizationRepo.save(organization);
-	        
+
 		} catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
-    	
+
 	}
 
     /**

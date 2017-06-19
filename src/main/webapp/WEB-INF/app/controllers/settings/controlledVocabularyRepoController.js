@@ -47,7 +47,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     $scope.addVocabularyWord = function(newVW) {
         newVW.adding = true;
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function(res) {
-            console.log(angular.fromJson(res.body).payload.VocabularyWord);
             $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
             reloadTable()
             $scope.cancelAdding(newVW)
@@ -108,8 +107,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                 }
                 return 0;
             });
-            var indexOfLastCreated = -1;
 
+            var indexOfLastCreated = -1;
             alphabatizedVWs.some(function(pvw, i) {
                 var check = pvw.id === $scope.lastCreatedVocabularyWordId;
                 if(check) indexOfLastCreated = i;
@@ -117,8 +116,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
              });
 
             var pageOfOccurence = Math.ceil((indexOfLastCreated/rowsPerPage));
-            
-            $scope.cvTableParams.page(pageOfOccurence);
+
+            $scope.cvTableParams.page(pageOfOccurence===0?1:pageOfOccurence);
 
             $timeout(function() {
                 $scope.lastCreatedVocabularyWordId = null;
@@ -137,7 +136,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     }
 
     $scope.editMode = function(vocabularyWord) {
-        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing && !$scope.editableVW.moving
+        return $scope.editableVW.id===vocabularyWord.id && $scope.editableVW.editing
     }
 
     $scope.setSelectedCv = function(cv) {
@@ -164,27 +163,39 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         }
 
         if(e.keyCode === 39) {
-            newVW.moving = true;
-            if(newVW.clickedCell==="name") {
-                 newVW.clickedCell = "definition";
-            } else if(newVW.clickedCell==="definition") {
-                newVW.clickedCell = "identifier";
+
+            var caretLocation = e.currentTarget.selectionStart;
+            var valueLength = newVW[newVW.clickedCell]===undefined ? 0 : newVW[newVW.clickedCell].length;
+
+            if(caretLocation===valueLength) {
+                newVW.moving = true;
+                if(newVW.clickedCell==="name") {
+                    newVW.clickedCell = "definition";
+                } else if(newVW.clickedCell==="definition") {
+                    newVW.clickedCell = "identifier";
+                }
+                $timeout(function() {
+                    newVW.moving = false;
+                });
             }
-            $timeout(function() {
-                newVW.moving = false;
-            });
+
         }
 
         if(e.keyCode === 37) {
-            newVW.moving = true;
-            if(newVW.clickedCell==="definition") {
-                newVW.clickedCell = "name";
-            } else if(newVW.clickedCell==="identifier") {
-                newVW.clickedCell = "definition";
-            }
-            $timeout(function() {  
-                newVW.moving = false;
-            });
+
+            var caretLocation = e.currentTarget.selectionStart;
+
+            if(caretLocation===0) {
+                newVW.moving = true;
+                if(newVW.clickedCell==="definition") {
+                    newVW.clickedCell = "name";
+                } else if(newVW.clickedCell==="identifier") {
+                    newVW.clickedCell = "definition";
+                }
+                $timeout(function() {  
+                    newVW.moving = false;
+                });
+            }            
         }
 
         if(e.keyCode === 27) {
@@ -224,27 +235,41 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         }
 
          if(e.keyCode === 39) {
-            $scope.editableVW.moving = true;
-            if($scope.editableVW.clickedCell==="name") {
-                 $scope.editableVW.clickedCell = "definition";
-            } else if($scope.editableVW.clickedCell==="definition") {
-                $scope.editableVW.clickedCell = "identifier";
+
+            var caretLocation = e.currentTarget.selectionStart;
+            var valueLength = !$scope.editableVW[$scope.editableVW.clickedCell] ? 0 : $scope.editableVW[$scope.editableVW.clickedCell].length;
+
+            if(caretLocation===valueLength) {
+
+                $scope.editableVW.moving = true;
+                if($scope.editableVW.clickedCell==="name") {
+                    $scope.editableVW.clickedCell = "definition";
+                } else if($scope.editableVW.clickedCell==="definition") {
+                    $scope.editableVW.clickedCell = "identifier";
+                }
+                $timeout(function() {
+                    $scope.editableVW.moving = false;
+                });
+                
             }
-            $timeout(function() {
-                $scope.editableVW.moving = false;
-            });
         }
 
         if(e.keyCode === 37) {
-            $scope.editableVW.moving = true;
-            if($scope.editableVW.clickedCell==="definition") {
-                $scope.editableVW.clickedCell = "name";
-            } else if($scope.editableVW.clickedCell==="identifier") {
-                $scope.editableVW.clickedCell = "definition";
+
+            var caretLocation = e.currentTarget.selectionStart;
+
+            if(caretLocation===0) {
+
+                $scope.editableVW.moving = true;
+                if($scope.editableVW.clickedCell==="definition") {
+                    $scope.editableVW.clickedCell = "name";
+                } else if($scope.editableVW.clickedCell==="identifier") {
+                    $scope.editableVW.clickedCell = "definition";
+                }
+                $timeout(function() {  
+                    $scope.editableVW.moving = false;
+                });
             }
-            $timeout(function() {  
-                $scope.editableVW.moving = false;
-            });
         }
 
         if(e.keyCode === 13) {
