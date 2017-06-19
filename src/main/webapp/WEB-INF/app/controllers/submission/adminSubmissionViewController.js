@@ -66,10 +66,10 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             $scope.closeModal();
             addCommentModal.adding = false;
             addCommentModal.commentVisiblity = "public";
-            addCommentModal.emailToRecipient = "";
-            addCommentModal.emailCcRecipient = "";
-            addCommentModal.emailTo = false;
-            addCommentModal.emailCc = false;
+            addCommentModal.recipientEmail = "";
+            addCommentModal.ccRecipientEmail = "";
+            addCommentModal.sendEmailToRecipient = false;
+            addCommentModal.sendEmailToCCRecipient = false;
             addCommentModal.subject = "";
             addCommentModal.message = "";
             addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
@@ -173,7 +173,9 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         var resetFileData = function() {
             $scope.addFileData = {
-                selectedTemplate: emailTemplates[0]
+                selectedTemplate: emailTemplates[0],
+                sendEmailToRecipient: false,
+                sendEmailToCCRecipient: false
             };
         };
 
@@ -191,13 +193,13 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection == 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
 
             fieldValue.file = $scope.addFileData.files[0];
 
             FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
 
-                if ($scope.addFileData.addFileSelection == 'replace') {
+                if ($scope.addFileData.addFileSelection === 'replace') {
                     $scope.submission.removeFile($scope.primaryDocumentFieldValue);
                 }
 
@@ -209,16 +211,22 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
-                        $scope.submission.sendEmail({
-                            subject: $scope.addFileData.emailSubject,
-                            message: $scope.addFileData.emailBody,
-                            emailTo: $scope.addFileData.addEmailRecipeints,
-                            emailCc: $scope.addFileData.addCCRecipeints,
-                            emailToRecipient: $scope.addFileData.emailTo,
-                            emailCcRecipient: $scope.addFileData.emailCC
-                        }).then(function() {
-                            $scope.resetAddFile();
-                        });
+                        console.log($scope.addFileData);
+                        if ($scope.addFileData.sendEmailToRecipient) {
+                             $scope.submission.sendEmail({
+                                subject: $scope.addFileData.subject,
+                                message: $scope.addFileData.message,
+                                recipientEmail: $scope.addFileData.recipientEmail,
+                                ccRecipientEmail: $scope.addFileData.ccRecipientEmail,
+                                sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
+                                sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
+                            }).then(function() {
+                                $scope.resetAddFile();
+                            });
+                        }
+                        else {
+                             $scope.resetAddFile();
+                        }
                     }
                 });
 
