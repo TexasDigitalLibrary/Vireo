@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldValue;
@@ -76,7 +77,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) {
+    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
+        
+        
+        if(organization.getAcceptsSubmissions().equals(false)) {
+            throw new OrganizationDoesNotAcceptSubmissionsExcception();            
+        }
+        
         Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
 
         for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {

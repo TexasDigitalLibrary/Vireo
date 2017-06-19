@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -15,7 +16,7 @@ import edu.tamu.framework.model.Credentials;
 
 public interface SubmissionRepoCustom {
 
-    public Submission create(User submitter, Organization organization, SubmissionState submissionState, Credentials credentials);
+    public Submission create(User submitter, Organization organization, SubmissionState submissionState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception;
     
     public Submission updateStatus(Submission submission, SubmissionState state, Credentials credentials);
 

@@ -91,6 +91,16 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 	    	$scope.getSelectedOrganization().clearValidationResults();
 	    };
 
+	    $scope.testBoolean = true;
+
 	});
+
+	$scope.acceptsSubmissions = [
+        {
+            "true": "Yes"
+        }, {
+            "false": "No"
+        }
+    ];
 
 });
