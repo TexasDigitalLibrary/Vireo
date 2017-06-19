@@ -23,6 +23,13 @@
     </div>
   </div>
 
+  <div class="row" ng-if="activeStep.name != 'review' && activeStep.instructions !== null && activeStep.instructions !== ''">
+    <div class="col-xs-12" ng-bind-html="activeStep.instructions">
+    </div>
+  </div>
+
+  <hr>
+
   <div class="row" ng-if="activeStep.name != 'review'">
 
     <div class="col-xs-12 col-sm-9 submission-workflow-steps">

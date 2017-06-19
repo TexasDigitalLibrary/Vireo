@@ -88,7 +88,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 	    };
 
 	    $scope.resetManageOrganization = function() {
-	    	$scope.getSelectedOrganization().clearValidationResults();
+			$scope.getSelectedOrganization().clearValidationResults();
+			$scope.setSelectedOrganization($scope.getSelectedOrganization());
 	    };
 
 	    $scope.testBoolean = true;

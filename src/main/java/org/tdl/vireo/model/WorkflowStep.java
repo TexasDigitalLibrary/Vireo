@@ -51,7 +51,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     @JsonIdentityReference(alwaysAsId = true)
     @Fetch(FetchMode.SELECT)
     private List<Note> originalNotes;
-
+    
     public WorkflowStep() {
         setModelValidator(new WorkflowStepValidator());
         setAggregateFieldProfiles(new ArrayList<FieldProfile>());
@@ -180,7 +180,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         this.originalNotes = originalNotes;
     }
 
-    public void addOriginalNote(Note originalNote) {
+	public void addOriginalNote(Note originalNote) {
         if (!getOriginalNotes().contains(originalNote)) {
             getOriginalNotes().add(originalNote);
         }
@@ -309,6 +309,8 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         clone.setAggregateNotes(aggregateNotes);
 
         clone.setAggregateFieldProfiles(aggregateFieldProfiles);
+        
+        clone.setInstructions(this.getInstructions());
 
         return clone;
     }
