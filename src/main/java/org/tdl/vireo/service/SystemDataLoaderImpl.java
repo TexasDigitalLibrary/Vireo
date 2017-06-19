@@ -325,7 +325,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             }
 
             for (FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
-
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
 
@@ -403,7 +402,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses);
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses, fieldProfile.getMappedShibAttribute());
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
@@ -442,7 +441,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     private void processEmailWorflowRules() {
     	
     	Organization organization = organizationRepo.findOne(1L);
-    	
+
 		try {
 			Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
 			

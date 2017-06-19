@@ -124,6 +124,12 @@
           "inputType": {
             "name": "INPUT_EMAIL"
           },
+          "mappedShibAttribute": {
+            "isSystemRequired": true,
+            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL",
+            "type": "shibboleth",
+            "value": "email"
+          },
           "repeatable": false,
           "overrideable": true,
           "enabled": true,
@@ -159,6 +165,37 @@
           "help": "Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
           "fieldGlosses": [{
             "value": "ORCID",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "institutional_id",
+            "documentTypePredicate": false
+          },
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
+          },
+          "inputType": {
+            "name": "INPUT_TEXT"
+          },
+          "mappedShibAttribute": {
+            "isSystemRequired": true,
+            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
+            "type": "shibboleth",
+            "value": "uin"
+          },
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "",
+          "fieldGlosses": [{
+            "value": "Institutional ID",
             "language": {
               "name": "English"
             }
