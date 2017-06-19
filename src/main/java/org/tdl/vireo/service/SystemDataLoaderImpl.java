@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -211,34 +210,31 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
 	@Override
     public void loadDefaultControlledVocabularies() {
-        List<String> defaultControlledVocabularies = Arrays.asList("Submission Type", "College", "Program", "Department", "Major", "Degree", "Administrative Group");
-        for (String cv : defaultControlledVocabularies) {
-            List<VocabularyWord> vocabularyWords = null;
-            ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(cv);
-            Language language = languageRepo.findByName("English");
-            if (controlledVocabulary == null) {
-                controlledVocabulary = controlledVocabularyRepo.create(cv, language);
-            }
-            try {
-                vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/" + cv.replaceAll("\\s", "") +  "_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
-                });
-            } catch (IOException e){
-                e.printStackTrace();
-                logger.debug("Unable to load default controlled vocabularies.");
-            }
-            if (vocabularyWords != null) {
-                for (VocabularyWord vw : vocabularyWords) {
-                    if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), controlledVocabulary) == null) {
-                        vw.setControlledVocabulary(controlledVocabulary);
-                        vw = vocabularyWordRepo.save(vw);
-                        controlledVocabulary.addValue(vw);
-                    }
-                }
-            } else {
-                logger.debug("Unable to load controlled vocabulary file");
-            }
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        }
+
+		List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
+		
+		controlledVocabularies.forEach(cv->{
+			
+			List<VocabularyWord> vocabularyWords = null;
+			try {
+				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName()+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
+	            });
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            logger.debug("Unable to load default controlled vocabulary "+cv.getName()+".");
+	        }
+			
+			vocabularyWords.forEach(vw->{
+				if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), cv) == null) {
+	                vw.setControlledVocabulary(cv);
+	                vw = vocabularyWordRepo.save(vw);
+	                cv.addValue(vw);
+	            }
+			});
+			
+			controlledVocabularyRepo.save(cv);
+			
+		});
     }
 
     @Override
