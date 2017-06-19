@@ -33,6 +33,12 @@
 								results="getSelectedOrganization().getValidationResults()">
 							</validatedselect>
 
+							<toggleButton
+								label="Organization accepts Submissions?"
+								scope-value="organizationRepo.getSelectedOrganization().acceptsSubmissions"
+								toggle-options="{{acceptsSubmissions}}">
+							</toggleButton>
+
 						</div>
 
 						<div class="col-xs-6">
@@ -69,6 +75,7 @@
 								ng-disabled="forms.update.$invalid">Save</button>
 						</div>
 					</div>
+
 				</div>
 
 				<modal modal-id="organizationConfirmDeleteModal"
