@@ -16,8 +16,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.model.inheritence.HeratibleWorkflowStep;
-import org.tdl.vireo.model.inheritence.HeritableComponent;
+import org.tdl.vireo.model.inheritance.HeratibleWorkflowStep;
+import org.tdl.vireo.model.inheritance.HeritableComponent;
 import org.tdl.vireo.model.validation.WorkflowStepValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

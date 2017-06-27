@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.inheritence.HeritableComponent;
+import org.tdl.vireo.model.inheritance.HeritableComponent;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
