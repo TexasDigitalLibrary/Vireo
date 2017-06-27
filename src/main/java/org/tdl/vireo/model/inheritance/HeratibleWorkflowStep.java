@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.inheritence;
+package org.tdl.vireo.model.inheritance;
 
 import java.util.List;
 

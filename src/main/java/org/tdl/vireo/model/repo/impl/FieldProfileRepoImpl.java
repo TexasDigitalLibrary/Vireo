@@ -17,7 +17,7 @@ import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.HeritableRepo;
+import org.tdl.vireo.model.inheritance.HeritableRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.HeritableRepo;
+import org.tdl.vireo.model.inheritance.HeritableRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;

@@ -8,7 +8,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.HeritableComponent;
+import org.tdl.vireo.model.inheritance.HeritableComponent;
 
 public interface WorkflowStepRepoCustom {
 
