@@ -1,1 +1,8 @@
-[]
+{
+	"name": "Administrative Groups",
+	"isEntityProperty": false,
+	"language": {
+		"name": "English"
+	},
+	"dictionary": []
+}

@@ -136,8 +136,21 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     // TODO: decompose service with orderable/dependent loading
     @Autowired
-    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver, ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo, AbstractEmailRecipientRepo abstractEmailRecipientRepo, EmbargoRepo embargoRepo, OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo, WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo, FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo, ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo, DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo, SubmissionStateRepo submissionStateRepo, EntityControlledVocabularyService entityControlledVocabularyService, ProquestLanguageCodesService proquestLanguageCodesService, SubmissionListColumnRepo submissionListColumnRepo, DefaultSubmissionListColumnService defaultSubmissionListColumnService, VocabularyWordRepo vocabularyWordRepo,
-            AbstractPackagerRepo abstractPackagerRepo, DepositorService depositorService) {
+    public SystemDataLoaderImpl(ObjectMapper objectMapper, ResourcePatternResolver resourcePatternResolver,
+            ConfigurationRepo configurationRepo, InputTypeRepo inputTypeRepo, EmailTemplateRepo emailTemplateRepo,
+            AbstractEmailRecipientRepo abstractEmailRecipientRepo, EmbargoRepo embargoRepo,
+            OrganizationRepo organizationRepo, OrganizationCategoryRepo organizationCategoryRepo,
+            WorkflowStepRepo workflowStepRepo, NoteRepo noteRepo, FieldProfileRepo fieldProfileRepo,
+            FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo,
+            ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo,
+            DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo,
+            SubmissionStateRepo submissionStateRepo,
+            EntityControlledVocabularyService entityControlledVocabularyService,
+            ProquestLanguageCodesService proquestLanguageCodesService,
+            SubmissionListColumnRepo submissionListColumnRepo,
+            DefaultSubmissionListColumnService defaultSubmissionListColumnService,
+            VocabularyWordRepo vocabularyWordRepo, AbstractPackagerRepo abstractPackagerRepo,
+            DepositorService depositorService) {
         this.objectMapper = objectMapper;
         this.resourcePatternResolver = resourcePatternResolver;
         this.configurationRepo = configurationRepo;
@@ -182,9 +195,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         logger.info("Load default document types");
         loadDefaultDocumentTypes();
-
+        
         logger.info("Generating system organization");
         loadSystemOrganization();
+        
+        logger.info("Loading pre-defined controlled vocabularies");
+        loadDefaultControlledVocabularies();
 
         logger.info("Generating system defaults");
         generateSystemDefaults();
@@ -198,9 +214,6 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         logger.info("Initializing default entity controlled vocabulary");
         this.entityControlledVocabularyService.init();
 
-        logger.info("Loading pre-defined controlled vocabularies");
-        loadDefaultControlledVocabularies();
-
         logger.info("Loading Packagers");
         loadPackagers();
 
@@ -208,43 +221,107 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         loadDepositors();
     }
 
-	@Override
+    @Override
     public void loadDefaultControlledVocabularies() {
-		List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
+        
+        File controlledVocabularyDirectory = null;
+        try {
+            controlledVocabularyDirectory = getFileFromResource("classpath:/controlled_vocabularies/");
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        
+        for(File vocabularyJson : controlledVocabularyDirectory.listFiles()) {
+            try {
+                ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
+                
+                //check to see if the Language exists
+                Language language = languageRepo.findByName(cv.getLanguage().getName());
 
-		controlledVocabularies.forEach(cv->{
-
-			List<VocabularyWord> vocabularyWords = new ArrayList<VocabularyWord>();
-			try {
-				vocabularyWords = objectMapper.readValue(getFileFromResource("classpath:/controlled_vocabularies/"+cv.getName().replaceAll("\\s", "")+"_Dictionary.json"), new TypeReference<List<VocabularyWord>>() {
-	            });
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            logger.debug("Unable to load default controlled vocabulary "+cv.getName()+".");
-	        }
-
-			vocabularyWords.forEach(vw->{
-				if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), cv) == null) {
-	                vw.setControlledVocabulary(cv);
-	                vw = vocabularyWordRepo.save(vw);
-	                cv.addValue(vw);
-	            }
-			});
-
-			controlledVocabularyRepo.save(cv);
-
-		});
+                // create new Language if not already exists
+                if (language == null) {
+                    language = languageRepo.create(cv.getLanguage().getName());
+                }
+                
+                cv.setLanguage(language);
+                
+                
+                //check to see if Controlled Vocabulary exists, and if so, merge up with it
+                ControlledVocabulary cvPreexisting = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                
+                if(cvPreexisting != null) {
+                    cv.setId(cvPreexisting.getId());
+                    
+                }
+                else {
+                    ControlledVocabulary cvBrandNew = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
+                    cv.setId(cvBrandNew.getId());
+                }
+                controlledVocabularyRepo.save(cv);
+                
+                System.out.println("\tLoaded Controlled Vocabulary " + cv.getName());
+                
+                
+                
+            } catch (JsonParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }            
+            
+        }
+        
+        
+//        List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
+//        
+//        
+//
+//        controlledVocabularies.forEach(cv -> {
+//
+//            List<VocabularyWord> vocabularyWords = new ArrayList<VocabularyWord>();
+//            try {
+//                vocabularyWords = objectMapper
+//                        .readValue(
+//                                getFileFromResource("classpath:/controlled_vocabularies/"
+//                                        + cv.getName().replaceAll("\\s", "") + "_Dictionary.json"),
+//                                new TypeReference<List<VocabularyWord>>() {
+//                                });
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                logger.debug("Unable to load default controlled vocabulary " + cv.getName() + ".");
+//            }
+//
+//            vocabularyWords.forEach(vw -> {
+//                if (vocabularyWordRepo.findByNameAndControlledVocabulary(vw.getName(), cv) == null) {
+//                    vw.setControlledVocabulary(cv);
+//                    vw = vocabularyWordRepo.save(vw);
+//                    cv.addValue(vw);
+//                }
+//            });
+//
+//            controlledVocabularyRepo.save(cv);
+//
+//        });
     }
 
     @Override
     public void generateAllOrganizationCategories() {
         try {
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
-            });
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(
+                    getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"),
+                    new TypeReference<List<OrganizationCategory>>() {
+                    });
 
             for (OrganizationCategory organizationCategory : organizationCategories) {
-                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
+                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo
+                        .findByName(organizationCategory.getName());
 
                 if (dbOrganizationCategory == null) {
                     dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
@@ -259,19 +336,23 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     /**
      * Loads default system organization.
+     * 
      * @return
      * @return
      */
     public void loadSystemOrganization() {
 
-    	Organization organization = null;
+        Organization organization = null;
 
         try {
             // read and map json to Organization
-            Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
+            Organization systemOrganization = objectMapper.readValue(
+                    getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"),
+                    Organization.class);
 
             // check to see if organization category exists
-            OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
+            OrganizationCategory category = organizationCategoryRepo
+                    .findByName(systemOrganization.getCategory().getName());
 
             // create organization category if does not already exists
             if (category == null) {
@@ -290,7 +371,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 systemOrganization = organization;
             }
 
-            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
+            organization.setAggregateWorkflowSteps(
+                    processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
 
             organization = organizationRepo.save(organization);
 
@@ -306,14 +388,16 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     }
 
-    private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
+    private List<WorkflowStep> processWorkflowSteps(Organization organization,
+            List<WorkflowStep> systemOrganizationWorkflowSteps) {
 
         List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
 
         for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
 
             // check to see if the WorkflowStep exists
-            WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
+            WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(),
+                    organization);
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
@@ -325,11 +409,13 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             for (FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
                 // check to see if the FieldPredicate exists
-                FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
+                FieldPredicate fieldPredicate = fieldPredicateRepo
+                        .findByValue(fieldProfile.getFieldPredicate().getValue());
 
                 // create new FieldPredicate if not already exists
                 if (fieldPredicate == null) {
-                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(), fieldProfile.getFieldPredicate().getDocumentTypePredicate());
+                    fieldPredicate = fieldPredicateRepo.create(fieldProfile.getFieldPredicate().getValue(),
+                            fieldProfile.getFieldPredicate().getDocumentTypePredicate());
                 }
 
                 // check to see if the InputType exists
@@ -353,14 +439,17 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     }
 
                     // check to see if the ControlledVocabulary exists
-                    ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(controlledVocabulary.getName(), language);
+                    ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo
+                            .findByNameAndLanguage(controlledVocabulary.getName(), language);
 
                     // create new ControlledVocabulary if not already exists
                     if (newControlledVocabulary == null) {
                         if (controlledVocabulary.getEntityName() != null) {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getEntityName(), language);
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(),
+                                    controlledVocabulary.getEntityName(), language);
                         } else {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(),
+                                    language);
                         }
                     }
 
@@ -394,14 +483,19 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 });
 
                 // check to see if the FieldProfile exists
-                FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
+                FieldProfile newFieldProfile = fieldProfileRepo
+                        .findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
 
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses, fieldProfile.getMappedShibAttribute());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType,
+                            fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(),
+                            fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(),
+                            fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses,
+                            fieldProfile.getMappedShibAttribute());
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
@@ -439,75 +533,92 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private void processEmailWorflowRules() {
 
-    	Organization organization = organizationRepo.findOne(1L);
+        Organization organization = organizationRepo.findOne(1L);
 
-		try {
-			Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
+        try {
+            Organization systemOrganization = objectMapper.readValue(
+                    getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"),
+                    Organization.class);
 
-			 // temporary set of EmailWorkflowRule
-	        List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+            // temporary set of EmailWorkflowRule
+            List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
 
-	        systemOrganization.getEmailWorkflowRules().forEach(emailWorkflowRule -> {
+            systemOrganization.getEmailWorkflowRules().forEach(emailWorkflowRule -> {
 
-	            // check to see if the SubmissionState exists
-	            SubmissionState newSubmissionState = submissionStateRepo.findByName(emailWorkflowRule.getSubmissionState().getName());
+                // check to see if the SubmissionState exists
+                SubmissionState newSubmissionState = submissionStateRepo
+                        .findByName(emailWorkflowRule.getSubmissionState().getName());
 
-	            // create new SubmissionState if not already exists
-	            if (newSubmissionState == null) {
-	                newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(), emailWorkflowRule.getSubmissionState().isArchived(), emailWorkflowRule.getSubmissionState().isPublishable(), emailWorkflowRule.getSubmissionState().isDeletable(), emailWorkflowRule.getSubmissionState().isEditableByReviewer(), emailWorkflowRule.getSubmissionState().isEditableByStudent(), emailWorkflowRule.getSubmissionState().isActive());
-	                newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
-	            }
+                // create new SubmissionState if not already exists
+                if (newSubmissionState == null) {
+                    newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(),
+                            emailWorkflowRule.getSubmissionState().isArchived(),
+                            emailWorkflowRule.getSubmissionState().isPublishable(),
+                            emailWorkflowRule.getSubmissionState().isDeletable(),
+                            emailWorkflowRule.getSubmissionState().isEditableByReviewer(),
+                            emailWorkflowRule.getSubmissionState().isEditableByStudent(),
+                            emailWorkflowRule.getSubmissionState().isActive());
+                    newSubmissionState = submissionStateRepo
+                            .save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
+                }
 
-	            // check to see if the EmailTemplate exists
-	            EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().isSystemRequired());
+                // check to see if the EmailTemplate exists
+                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(
+                        emailWorkflowRule.getEmailTemplate().getName(),
+                        emailWorkflowRule.getEmailTemplate().isSystemRequired());
 
-	            // create new EmailTemplate if not already exists
-	            if (newEmailTemplate == null) {
-	                newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
-	            }
+                // create new EmailTemplate if not already exists
+                if (newEmailTemplate == null) {
+                    newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(),
+                            emailWorkflowRule.getEmailTemplate().getSubject(),
+                            emailWorkflowRule.getEmailTemplate().getMessage());
+                }
 
+                if (emailWorkflowRule.getEmailRecipient() == null) {
 
-	            if(emailWorkflowRule.getEmailRecipient() == null) {
+                    if (newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
+                        organization.getAggregateWorkflowSteps().forEach(awfs -> {
+                            awfs.getAggregateFieldProfiles().forEach(afp -> {
+                                if (afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
+                                    EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(
+                                            afp.getFieldGlosses().get(0).getValue(), afp.getFieldPredicate());
+                                    emailWorkflowRule.setEmailRecipient(recipient);
+                                }
+                            });
+                        });
 
-	            	if(newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
-	            		organization.getAggregateWorkflowSteps().forEach(awfs->{
-	            			awfs.getAggregateFieldProfiles().forEach(afp->{
-	            				if(afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
-									EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getFieldGlosses().get(0).getValue(), afp.getFieldPredicate());
-	        	            		emailWorkflowRule.setEmailRecipient(recipient);
-	            				}
-	            			});
-	            		});
+                    }
 
-	            	}
+                    if (newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
+                        EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
+                        emailWorkflowRule.setEmailRecipient(recipient);
+                    }
 
-	            	if(newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
-	            		EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
-	            		emailWorkflowRule.setEmailRecipient(recipient);
-	            	}
+                }
 
-	            }
+                // check to see if the EmailWorkflowRule exists
+                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo
+                        .findBySubmissionStateAndEmailRecipientAndEmailTemplate(newSubmissionState,
+                                emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
-	            // check to see if the EmailWorkflowRule exists
-	            EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStateAndEmailRecipientAndEmailTemplate(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
+                if (newEmailWorkflowRule == null) {
+                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState,
+                            emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
+                }
 
-	            if (newEmailWorkflowRule == null) {
-	                newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
-	            }
+                emailWorkflowRules.add(newEmailWorkflowRule);
 
-	            emailWorkflowRules.add(newEmailWorkflowRule);
+            });
 
-	        });
+            organization.setEmailWorkflowRules(emailWorkflowRules);
 
-	        organization.setEmailWorkflowRules(emailWorkflowRules);
+            organizationRepo.save(organization);
 
-	        organizationRepo.save(organization);
-
-		} catch (IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
 
-	}
+    }
 
     /**
      * Loads default system submission states.
@@ -516,16 +627,22 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
             // read and map json to SubmissionState
-            SubmissionState systemSubmissionState = objectMapper.readValue(getFileFromResource("classpath:/submission_states/SYSTEM_Submission_States.json"), SubmissionState.class);
+            SubmissionState systemSubmissionState = objectMapper.readValue(
+                    getFileFromResource("classpath:/submission_states/SYSTEM_Submission_States.json"),
+                    SubmissionState.class);
 
             // check to see if the SubmissionState exists
             SubmissionState newSubmissionState = submissionStateRepo.findByName(systemSubmissionState.getName());
 
             // create new SubmissionState if not already exists
             if (newSubmissionState == null) {
-                newSubmissionState = submissionStateRepo.create(systemSubmissionState.getName(), systemSubmissionState.isArchived(), systemSubmissionState.isPublishable(), systemSubmissionState.isDeletable(), systemSubmissionState.isEditableByReviewer(), systemSubmissionState.isEditableByStudent(), systemSubmissionState.isActive());
+                newSubmissionState = submissionStateRepo.create(systemSubmissionState.getName(),
+                        systemSubmissionState.isArchived(), systemSubmissionState.isPublishable(),
+                        systemSubmissionState.isDeletable(), systemSubmissionState.isEditableByReviewer(),
+                        systemSubmissionState.isEditableByStudent(), systemSubmissionState.isActive());
 
-                newSubmissionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(systemSubmissionState));
+                newSubmissionState = submissionStateRepo
+                        .save(recursivelyFindOrCreateSubmissionState(systemSubmissionState));
             }
 
         } catch (IOException e) {
@@ -543,7 +660,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         // create new SubmissionState if not already exists
         if (newSubmissionState == null) {
-            newSubmissionState = submissionStateRepo.create(submissionState.getName(), submissionState.isArchived(), submissionState.isPublishable(), submissionState.isDeletable(), submissionState.isEditableByReviewer(), submissionState.isEditableByStudent(), submissionState.isActive());
+            newSubmissionState = submissionStateRepo.create(submissionState.getName(), submissionState.isArchived(),
+                    submissionState.isPublishable(), submissionState.isDeletable(),
+                    submissionState.isEditableByReviewer(), submissionState.isEditableByStudent(),
+                    submissionState.isActive());
         }
 
         // temporary list of SubmissionState
@@ -556,7 +676,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
             // create new Transistion SubmissionState if not already exists
             if (newTransitionState == null) {
-                newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(), transitionState.isPublishable(), transitionState.isDeletable(), transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(), transitionState.isActive());
+                newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(),
+                        transitionState.isPublishable(), transitionState.isDeletable(),
+                        transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(),
+                        transitionState.isActive());
                 newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(transitionState));
             }
 
@@ -620,8 +743,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     public void loadSystemInputTypes() {
         try {
-            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {
-            });
+            List<InputType> inputTypes = objectMapper.readValue(
+                    getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"),
+                    new TypeReference<List<InputType>>() {
+                    });
 
             for (InputType inputType : inputTypes) {
                 InputType newInputType = inputTypeRepo.findByName(inputType.getName());
@@ -653,15 +778,21 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             } else {
                 EmailTemplate loadedTemplate = loadSystemEmailTemplate(name);
 
-                // if the template in the DB doesn't match in content with the one loaded from .email file
-                if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
+                // if the template in the DB doesn't match in content with the
+                // one loaded from .email file
+                if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage()))
+                        || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
 
                     EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
 
-                    // if this System template already has a custom template (meaning one named the same but that is !isSystemRequired)
+                    // if this System template already has a custom template
+                    // (meaning one named the same but that is
+                    // !isSystemRequired)
                     if (possibleCustomTemplate != null) {
 
-                        // a custom version of this System email template already exists, it's safe to override dbTemplate's data and save
+                        // a custom version of this System email template
+                        // already exists, it's safe to override dbTemplate's
+                        // data and save
                         dbTemplate.isSystemRequired(false);
                         dbTemplate.setMessage(loadedTemplate.getMessage());
                         dbTemplate.setSubject(loadedTemplate.getSubject());
@@ -671,9 +802,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                         emailTemplateRepo.save(dbTemplate);
                     }
-                    // there is no custom one yet, we need to make the dbTemplate !isSystemRequired and the save loadedTemplate
+                    // there is no custom one yet, we need to make the
+                    // dbTemplate !isSystemRequired and the save loadedTemplate
                     else {
-                        logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
+                        logger.info("Upgrading Old System Email Template and creating custom version for ["
+                                + dbTemplate.getName() + "]");
                         dbTemplate.isSystemRequired(false);
                         emailTemplateRepo.save(dbTemplate);
                         emailTemplateRepo.save(loadedTemplate);
@@ -687,11 +820,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {
-            });
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(
+                    getFileFromResource(
+                            "classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"),
+                    new TypeReference<List<SubmissionListColumn>>() {
+                    });
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
-                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
+                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo
+                        .findByTitle(submissionListColumn.getTitle());
 
                 // check to see if the InputType exists
                 InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
@@ -705,9 +842,12 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 if (dbSubmissionListColumn == null) {
                     if (submissionListColumn.getPredicate() != null) {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath(), inputType);
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(),
+                                submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(),
+                                submissionListColumn.getValuePath(), inputType);
                     } else {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(),
+                                submissionListColumn.getValuePath(), inputType);
                     }
                 } else {
                     dbSubmissionListColumn.setSort(submissionListColumn.getSort());
@@ -726,14 +866,18 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {
-            });
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(
+                    getFileFromResource(
+                            "classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"),
+                    new TypeReference<String[]>() {
+                    });
             int count = 0;
             for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
                 if (dbSubmissionListColumn.getSort() != Sort.NONE) {
                     dbSubmissionListColumn.setSortOrder(++count);
-                    defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
+                    defaultSubmissionListColumnService
+                            .addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
                 } else {
                     defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
                 }
@@ -769,14 +913,19 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {
-            });
+            List<Embargo> embargoDefinitions = objectMapper.readValue(
+                    getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"),
+                    new TypeReference<List<Embargo>>() {
+                    });
 
             for (Embargo embargoDefinition : embargoDefinitions) {
-                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
+                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(),
+                        embargoDefinition.getGuarantor(), true);
 
                 if (dbEmbargo == null) {
-                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
+                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(),
+                            embargoDefinition.getDuration(), embargoDefinition.getGuarantor(),
+                            embargoDefinition.isActive());
                     dbEmbargo.isSystemRequired(true);
                     embargoRepo.save(dbEmbargo);
                 } else {
@@ -796,7 +945,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     public void generateSystemDefaults() {
         try {
-            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
+            JsonNode systemDefaults = objectMapper
+                    .readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
@@ -810,7 +960,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                             Configuration configuration = configurationRepo.findByNameAndIsSystemRequired(name, true);
                             // if one didn't already exist, create it
                             if (configuration == null) {
-                                configuration = configurationRepo.create(name, objNode.get(name).asText(), entry.getKey());
+                                configuration = configurationRepo.create(name, objNode.get(name).asText(),
+                                        entry.getKey());
                                 configuration.isSystemRequired(true);
                             } else {
                                 configuration.setType(entry.getKey());
@@ -837,8 +988,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         try {
 
-            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {
-            });
+            List<DocumentType> documentTypes = objectMapper.readValue(
+                    getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"),
+                    new TypeReference<List<DocumentType>>() {
+                    });
 
             for (DocumentType documentType : documentTypes) {
 
@@ -853,7 +1006,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                     dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
                 }
 
-                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
+                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(),
+                        dbFieldPredicate);
 
                 if (dbDocumentType == null) {
                     dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);

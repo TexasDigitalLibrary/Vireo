@@ -1,1 +1,8 @@
-[]
+{
+	"name": "Departments",
+	"isEntityProperty": false,
+	"language": {
+		"name": "English"
+	},
+	"dictionary": []
+}
