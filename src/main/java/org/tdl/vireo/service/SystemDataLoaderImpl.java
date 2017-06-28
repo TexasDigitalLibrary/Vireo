@@ -246,21 +246,22 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 
                 cv.setLanguage(language);
                 
-                
                 //check to see if Controlled Vocabulary exists, and if so, merge up with it
                 ControlledVocabulary cvPreexisting = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
                 
                 if(cvPreexisting != null) {
-                    cv.setId(cvPreexisting.getId());
-                    
+                    cv.setPosition(cvPreexisting.getPosition());
+                    cv.setId(cvPreexisting.getId());                    
                 }
                 else {
                     ControlledVocabulary cvBrandNew = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
+                    cv.setPosition(controlledVocabularyRepo.count());
                     cv.setId(cvBrandNew.getId());
                 }
-                controlledVocabularyRepo.save(cv);
                 
-                System.out.println("\tLoaded Controlled Vocabulary " + cv.getName());
+                controlledVocabularyRepo.saveAndFlush(cv);
+                
+                System.out.println("\tLoaded Controlled Vocabulary " + cv.getName() + ".  There are now a total of " + controlledVocabularyRepo.count() + " excellent vocabularies in your Vireo instance.");
                 
                 
                 
@@ -273,7 +274,9 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }            
+            }
+            
+            
             
         }
         
