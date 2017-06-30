@@ -51,6 +51,9 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
         for (Note note : workflowStep.getAggregateNotes()) {
             submissionWorkflowStep.addAggregateNote(submissionNoteStepRepo.create(note));
         }
+        
+        submissionWorkflowStep.setInstructions(workflowStep.getInstructions());
+        
         return submissionWorkflowStepRepo.save(submissionWorkflowStep);
     }
 

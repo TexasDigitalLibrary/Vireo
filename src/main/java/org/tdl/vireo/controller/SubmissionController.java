@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
@@ -173,7 +174,7 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
-    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) {
+    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) throws OrganizationDoesNotAcceptSubmissionsExcception {
         Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         actionLogRepo.createPublicLog(submission, credentials, "Submission created.");
@@ -220,6 +221,7 @@ public class SubmissionController {
     @ApiMapping("/{submissionId}/send-email")
     @Auth(role = "STUDENT")
     public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+        System.out.println("\n\n\n" + dataNode + "\n\n\n");
         sendEmail(credentials, submissionRepo.findOne(submissionId), dataNode);
         return new ApiResponse(SUCCESS);
     }
@@ -230,18 +232,18 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
 
-        boolean emailTo = dataNode.get("emailTo").asBoolean();
+        boolean sendRecipientEmail = dataNode.get("sendEmailToRecipient").asBoolean();
 
-        if (emailTo) {
+        if (sendRecipientEmail) {
 
-            boolean emailCc = dataNode.get("emailCc").asBoolean();
+            boolean sendCCRecipientEmail = dataNode.get("sendEmailToCCRecipient").asBoolean();
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(dataNode.get("emailToRecipient").asText().split(";"));
+            smm.setTo(dataNode.get("recipientEmail").asText().split(";"));
 
-            if (emailCc) {
-                smm.setCc(dataNode.get("emailCcRecipient").asText().split(";"));
+            if (sendCCRecipientEmail) {
+                smm.setCc(dataNode.get("ccRecipientEmail").asText().split(";"));
             }
 
             smm.setSubject(subject);

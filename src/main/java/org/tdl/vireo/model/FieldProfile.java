@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.inheritence.HeritableComponent;
+import org.tdl.vireo.model.inheritance.HeritableComponent;
 import org.tdl.vireo.model.validation.FieldProfileValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -115,6 +115,11 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged);
         setControlledVocabularies(controlledVocabularies);
         setFieldGlosses(fieldGlosses);
+    }
+    
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses);
+        setMappedShibAttribute(mappedShibAttribute);
     }
 
     /**

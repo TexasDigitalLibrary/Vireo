@@ -1,4 +1,6 @@
-package org.tdl.vireo.model.inheritence;
+package org.tdl.vireo.model.inheritance;
+
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
@@ -16,6 +19,8 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+
+import edu.tamu.framework.model.ApiResponse;
 
 @SuppressWarnings("rawtypes")
 public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaRepo<M>> {
@@ -30,6 +35,9 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
     @Autowired
     private OrganizationRepo organizationRepo;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     public void removeFromWorkflowStep(Organization requestingOrganization, WorkflowStep pendingWorkflowStep, M heritableModelToRemove) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
@@ -77,6 +85,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                         heritableRepo.delete(heritableModelToRemove);
                     }
                 }
+                simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
             } // workflow step doesn't originate the heritableModel and it is non-overrideable
             else {
                 throw new HeritableModelNonOverrideableException();
@@ -277,7 +286,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
             resultingHeritableModel = newHeritableModel;
         }
-
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return resultingHeritableModel;
     }
 
@@ -307,6 +316,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             deleteDescendantsOfHeritableModel(heritableModel);
 
             heritableRepo.delete(heritableModel.getId());
+            simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         }
     }
 

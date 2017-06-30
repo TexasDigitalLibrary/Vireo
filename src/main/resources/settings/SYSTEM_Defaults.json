@@ -35,67 +35,67 @@
       "proquest_license": "This is default proquest licence text."
     },
     {
-      "proquest_institution_code": "8303"
+      "proquest_institution_code": ""
     },
     {
       "proquest_indexing": false
     },
     {
-      "doctor_of_philosophy": "Ph.D."
+      "doctor_of_philosophy": ""
     },
     {
-      "doctor_of_education": "Ed.D."
+      "doctor_of_education": ""
     },
     {
-      "doctor_of_engineering": "D.Eng."
+      "doctor_of_engineering": ""
     },
     {
-      "doctor_of_public_health": "D.P.H."
+      "doctor_of_public_health": ""
     },
     {
-      "doctor_of_musical_arts": "D.M.A."
+      "doctor_of_musical_arts": ""
     },
     {
-      "master_of_science": "M.Sc."
+      "master_of_science": ""
     },
     {
-      "master_of_arts": "M.A."
+      "master_of_arts": ""
     },
     {
-      "master_of_landscape_architecture": "MLA"
+      "master_of_landscape_architecture": ""
     },
     {
-      "master_of_marine_resources_management": "MMRM"
+      "master_of_marine_resources_management": ""
     },
     {
-      "master_of_maritime_administration_and_logistics": "FIXME"
+      "master_of_maritime_administration_and_logistics": ""
     },
     {
-      "master_of_public_affairs": "M.P.Aff."
+      "master_of_public_affairs": ""
     },
     {
-      "master_of_science_public_health": "M.S.P.H."
+      "master_of_science_public_health": ""
     },
     {
-      "master_of_urban_planning": "MUP"
+      "master_of_urban_planning": ""
     },
     {
-      "biology": "FIXME"
+      "biology": ""
     },
     {
-      "biomedical_engineering": "FIXME"
+      "biomedical_engineering": ""
     },
     {
-      "computer_science": "FIXME"
+      "computer_science": ""
     },
     {
-      "master_of_public_health": "M.P.H."
+      "master_of_public_health": ""
     },
     {
-      "psychology": "FIXME"
+      "psychology": ""
     },
     {
-      "transportation": "FIXME"
+      "transportation": ""
     }
   ],
   "lookAndFeel": [{
@@ -142,7 +142,31 @@
     }
   ],
   "submission": [{
-    "submit_license": "This is default submission license text."
+    "submit_license": "<p>I grant the Texas Digital Library (hereafter called \"TDL\"), my home institution (hereafter called \"Institution\"), and my academic department (hereafter called \"Department\") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called \"Work\") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.</p>
+<p></p>
+<p>I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.</p>
+<p></p>
+<p>I understand that the Work's copyright owner(s) will continue to own copyright outside these non-exclusive granted rights.</p>
+<p></p>
+<p>I warrant that:</p>
+<p></p>
+<ol>
+  <li>I am the copyright owner of the Work, or</li>
+  <li>I am one of the copyright owners and have permission from the other owners to submit the Work, or</li>
+  <li>My Institution or Department is the copyright owner and I have permission to submit the Work, or</li>
+  <li>Another party is the copyright owner and I have permission to submit the Work.</li>
+</ol>
+<p></p>
+<p>Based on this, I further warrant to my knowledge:</p>
+<p></p>
+<ol>
+  <li>The Work does not infringe any copyright, patent, or trade secrets of any third party,</li>
+  <li>The Work does not contain any libelous matter, nor invade the privacy of any person or third party, and</li>
+  <li>That no right in the Work has been sold, mortgaged, or otherwise disposed of, and is free from all claims.</li>
+</ol>
+<p></p>
+<p>I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.</p>
+<p></p>"
   }],
   "shibboleth": [{
       "APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID": "netid"

@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldValue;
@@ -64,7 +65,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
-    
+
     @Autowired
     private ActionLogRepo actionLogRepo;
 
@@ -76,7 +77,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) {
+    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
+        
+        
+        if(organization.getAcceptsSubmissions().equals(false)) {
+            throw new OrganizationDoesNotAcceptSubmissionsExcception();            
+        }
+        
         Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
 
         for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
@@ -100,17 +107,23 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             });
         });
-        
-        submission.getSubmissionFieldProfilesByInputTypeName("INPUT_CHECKBOX").forEach(sfp -> {
-            FieldValue fieldValue = fieldValueRepo.create(sfp.getFieldPredicate());
-            
-            fieldValue.setValue("false");
-            submission.addFieldValue(fieldValue);
-        });
+
+        setCheckboxDefaultValue(submission, "INPUT_CHECKBOX");
+        setCheckboxDefaultValue(submission, "INPUT_LICENSE");
+        setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
 
         return submissionRepo.save(submission);
     }
-    
+
+    private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
+        submission.getSubmissionFieldProfilesByInputTypeName(inputTypeName).forEach(sfp -> {
+            FieldValue fieldValue = fieldValueRepo.create(sfp.getFieldPredicate());
+
+            fieldValue.setValue("false");
+            submission.addFieldValue(fieldValue);
+        });
+    }
+
     @Override
     public Submission updateStatus(Submission submission, SubmissionState submissionState, Credentials credentials) {
         SubmissionState oldSubmissionState = submission.getSubmissionState();
@@ -118,7 +131,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         submission.setSubmissionState(submissionState);
         submission = submissionRepo.saveAndFlush(submission);
-        
+
         actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
         return submission;
     }

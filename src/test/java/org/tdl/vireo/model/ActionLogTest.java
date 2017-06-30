@@ -5,11 +5,12 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 
 public class ActionLogTest extends AbstractEntityTest {
 
     @Before
-    public void setUp() {
+    public void setUp() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);

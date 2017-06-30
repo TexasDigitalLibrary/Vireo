@@ -5,7 +5,7 @@ import java.util.List;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritence.HeritableJpaRepo;
+import org.tdl.vireo.model.inheritance.HeritableJpaRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
 public interface FieldProfileRepo extends HeritableJpaRepo<FieldProfile>, FieldProfileRepoCustom {

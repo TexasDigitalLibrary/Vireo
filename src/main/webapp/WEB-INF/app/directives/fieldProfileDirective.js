@@ -4,10 +4,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
         restrict: 'E',
         replace: 'false',
         scope: {
-            profile: "="
+            profile: "=",
+            configuration: "="
         },
         link: function($scope) {
-
             angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
             $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";
@@ -213,6 +213,12 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                     });
                 });
             };
+
+            $scope.setConditionalTextArea = function(fieldValue, checked) {
+                fieldValue.value = checked ? fieldValue.value : null;
+                //Only save if checked == true and value is a non-empty string OR if checked == false and value is not a string (which it won't have been anyway given the line above)
+                if(!checked == !fieldValue.value)  $scope.save(fieldValue);
+            } 
 
             var refreshFieldValues = function() {
                 $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
