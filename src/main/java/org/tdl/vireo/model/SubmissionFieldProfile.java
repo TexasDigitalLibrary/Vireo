@@ -14,6 +14,7 @@ public class SubmissionFieldProfile extends AbstractFieldProfile<SubmissionField
     public SubmissionFieldProfile() {
         setModelValidator(new SubmissionFieldProfileValidator());
         setOptional(true);
+        setHidden(false);
         setFlagged(false);
         setLogged(false);
         setFieldGlosses(new ArrayList<FieldGloss>());

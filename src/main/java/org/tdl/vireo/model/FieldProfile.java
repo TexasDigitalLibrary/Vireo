@@ -47,6 +47,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setRepeatable(false);
         setEnabled(true);
         setOptional(true);
+        setHidden(false);
         setFlagged(false);
         setLogged(false);
         setFieldGlosses(new ArrayList<FieldGloss>());
