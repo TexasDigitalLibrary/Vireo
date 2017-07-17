@@ -34,7 +34,7 @@
 
     <div class="col-xs-12 col-sm-9 submission-workflow-steps">
       <ul class="list-unstyled">
-        <li ng-repeat="fp in activeStep.aggregateFieldProfiles">
+        <li ng-repeat="fp in activeStep.aggregateFieldProfiles | filter:{hidden: false}">
           <field-profile-display profile="fp" ng-if="fp.mappedShibAttribute"></field-profile-display>
           <field configuration="configuration" profile="fp" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute"></field>
         </li>
