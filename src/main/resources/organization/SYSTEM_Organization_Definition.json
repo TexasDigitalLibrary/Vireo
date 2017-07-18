@@ -725,7 +725,16 @@
               "name": "English"
             }
           }],
-          "controlledVocabularies": []
+          "controlledVocabularies": [
+          	{
+	            "name": "GraduationMonth.month",
+	            "entityName": "GraduationMonth",
+	            "isEntityProperty": true,
+	            "language": {
+	              "name": "English"
+	            }
+	          }
+          ]
         },
         {
           "fieldPredicate": {
