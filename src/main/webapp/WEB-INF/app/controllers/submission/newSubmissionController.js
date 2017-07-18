@@ -7,7 +7,7 @@ vireo.controller('NewSubmissionController', function($controller, $location, $q,
     $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
     ConfigurationRepo.ready().then(function() {
-        $scope.newSubmissionTextHeader = ConfigurationRepo.findByTypeAndNamePreferOverride("application", "new_submission_header_text").value;
+        $scope.configuration = ConfigurationRepo.getAllMapByType();
     });
 
     var studentSubmissions = StudentSubmissionRepo.getAll();
