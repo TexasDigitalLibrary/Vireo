@@ -36,6 +36,33 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 }
             };
 
+            $scope.datepickerOptions = {}
+            $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            var checkDissabled = function(dateAndMode) {
+              var dissabled = true;
+              
+              for(var i in $scope.profile.controlledVocabularies[0].dictionary) {
+                var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
+                if(cvw.name == dateAndMode.date.getMonth()) {
+                  dissabled = false;
+                  break;
+                }
+              }
+              return dissabled;
+            }
+
+            if($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].entityName === "GraduationMonth") {
+
+              $scope.datepickerOptions.customClass = function(dateAndMode) {
+                if(checkDissabled(dateAndMode)) return "dissabled";
+              }
+              $scope.datepickerOptions.dateDisabled = checkDissabled;
+
+              $scope.datepickerOptions.minViewMode = "month";
+              $scope.datepickerOptions.minMode = "month";
+
+            }
+
             $scope.hasFile = function(fieldValue) {
                 return fieldValue !== undefined && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.value && fieldValue.value.length > 0;
             };
