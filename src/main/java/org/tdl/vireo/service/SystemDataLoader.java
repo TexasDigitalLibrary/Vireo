@@ -142,9 +142,6 @@ public class SystemDataLoader {
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
 
     @Autowired
-    private EntityControlledVocabularyService entityControlledVocabularyService;
-
-    @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
@@ -154,46 +151,44 @@ public class SystemDataLoader {
     private DepositorService depositorService;
 
     public void loadSystemDefaults() {
-        logger.info("Initializing default entity controlled vocabulary");
-        entityControlledVocabularyService.init();
 
-        logger.info("Load system input types");
+        logger.info("Loading default input types");
         loadSystemInputTypes();
 
-        logger.info("Load system email templates");
+        logger.info("Loading default email templates");
         loadSystemEmailTemplates();
 
-        logger.info("Load system embargos");
+        logger.info("Loading default embargos");
         loadSystemEmbargos();
 
-        logger.info("Load system submission states");
+        logger.info("Loading default submission states");
         loadSystemSubmissionStates();
 
-        logger.info("Load system organization catagories");
+        logger.info("Loading default organization catagories");
         loadOrganizationCategories();
 
-        logger.info("Load default document types");
+        logger.info("Loading default document types");
         loadDefaultDocumentTypes();
 
-        logger.info("Generating system organization");
+        logger.info("Loading default organization");
         loadSystemOrganization();
 
-        logger.info("Loading pre-defined controlled vocabularies");
+        logger.info("Loading default controlled vocabularies");
         loadDefaultControlledVocabularies();
 
-        logger.info("Generating system defaults");
+        logger.info("Loading default defaults");
         generateSystemDefaults();
 
-        logger.info("Loading Proquest language codes");
+        logger.info("Loading default Proquest language codes");
         loadProquestLanguageCodes();
 
-        logger.info("Loading Submission List Columns");
+        logger.info("Loading default Submission List Columns");
         loadDefaultSubmissionListColumns();
 
-        logger.info("Loading Packagers");
+        logger.info("Loading default Packagers");
         loadPackagers();
 
-        logger.info("Loading Depositors");
+        logger.info("Loading default Depositors");
         loadDepositors();
     }
 

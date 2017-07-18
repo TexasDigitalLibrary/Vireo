@@ -30,7 +30,6 @@ import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
@@ -110,7 +109,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER = "Test Severable Vocabulary Identifier";
 
     // must be the name of the property on the entity
-    protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO = "Embargo";
 
     // DepositLocation test
@@ -401,9 +399,6 @@ public abstract class AbstractEntityTest {
     protected NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
-    protected EntityCVWhitelistRepo entityCVWhitelistRepo;
-
-    @Autowired
     protected AbstractPackagerRepo abstractPackagerRepo;
 
     protected InputType inputType;
@@ -450,8 +445,6 @@ public abstract class AbstractEntityTest {
     protected SubmissionWorkflowStep submissionWorkflowStep;
 
     protected VocabularyWord vocabularyWord;
-
-    protected EntityCVWhitelist entityCVWhitelist;
 
     protected ControlledVocabulary controlledVocabulary;
 

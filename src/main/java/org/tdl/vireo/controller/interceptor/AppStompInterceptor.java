@@ -22,11 +22,11 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
     @Autowired
     private ConfigurationRepo configurationRepo;
 
-    @Value("${app.authority.admins}")
-    private String[] admins;
-
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
+
+    @Value("${app.authority.admins}")
+    private String[] admins;
 
     @Override
     public Credentials getAnonymousCredentials() {
@@ -53,13 +53,12 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
         String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
         String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
 
-        
         String uin = credentials.getAllCredentials().get(institutionalIdentifierHeader);
-        
-        if(uin == null) {
+
+        if (uin == null) {
             uin = credentials.getEmail();
         }
-        
+
         // TODO: check to see if credentials is from basic login or shibboleth
         // do not create new user from basic login credentials that have no user!
         if (user == null) {

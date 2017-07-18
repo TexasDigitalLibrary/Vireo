@@ -825,7 +825,7 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"GraduationMonth.month",
+              "name":"GraduationMonth",
               "entityName":"GraduationMonth",
               "isEntityProperty":true,
               "language":{
