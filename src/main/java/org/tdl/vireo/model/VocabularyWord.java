@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 
 import javax.persistence.Column;

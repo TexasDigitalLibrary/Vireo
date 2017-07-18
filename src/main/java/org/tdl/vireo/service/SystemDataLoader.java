@@ -154,6 +154,9 @@ public class SystemDataLoader {
     private DepositorService depositorService;
 
     public void loadSystemDefaults() {
+        logger.info("Initializing default entity controlled vocabulary");
+        entityControlledVocabularyService.init();
+
         logger.info("Load system input types");
         loadSystemInputTypes();
 
@@ -192,9 +195,6 @@ public class SystemDataLoader {
 
         logger.info("Loading Depositors");
         loadDepositors();
-
-        logger.info("Initializing default entity controlled vocabulary");
-        entityControlledVocabularyService.init();
     }
 
     private void loadDefaultControlledVocabularies() {
@@ -252,7 +252,8 @@ public class SystemDataLoader {
     private void loadOrganizationCategories() {
         try {
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
+            });
 
             for (OrganizationCategory organizationCategory : organizationCategories) {
                 OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
