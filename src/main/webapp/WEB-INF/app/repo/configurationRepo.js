@@ -63,6 +63,26 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi)
         return configuration;
     };
 
+    this.findByTypeAndNamePreferOverride = function(type, name) {
+
+        var configuration;
+
+        var list = this.getAll();
+
+        for (var i in list) {
+            var config = list[i];
+            if (config.type == type && config.name == name) {
+                if (config.isSystemRequired == true && typeof configuration === 'undefined') {
+                    configuration = config;
+                } else if (config.isSystemRequired == false) {
+                    configuration = config;
+                }
+            }
+        }
+
+        return configuration;
+    };
+
     return this;
 
 });
