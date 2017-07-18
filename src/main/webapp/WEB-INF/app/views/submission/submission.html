@@ -69,7 +69,7 @@
           <button class="btn btn-default" ng-click="setActiveStep({name:'review'})" ng-if="onLastStep() && activeStep.name != 'review' && studentSubmissionRepoReady">Continue to Review</button>
         </li>
         <li>
-          <button class="btn btn-primary" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()" ng-disabled="!submission.isValid || submitting">Submit
+          <button class="btn btn-primary" ng-if="activeStep.name === 'review' && studentSubmissionRepoReady" ng-click="submit()" ng-disabled="!submission.isValid || submitting">Confirm & Submit
             <span ng-if="submitting" class="glyphicon glyphicon-refresh spinning"></span>
           </button>
         </li>
