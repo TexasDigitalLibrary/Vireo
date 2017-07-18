@@ -53,8 +53,6 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
 
             if($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].entityName === "GraduationMonth") {
 
-                console.log($scope.profile.controlledVocabularies[0])
-
               $scope.datepickerOptions.customClass = function(dateAndMode) {
                 if(checkDissabled(dateAndMode)) return "dissabled";
               }
