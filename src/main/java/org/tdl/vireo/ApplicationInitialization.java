@@ -1,8 +1,7 @@
 package org.tdl.vireo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ import org.tdl.vireo.service.SystemDataLoader;
 
 @Component
 @Profile("!test")
-public class ApplicationInitialization implements ApplicationListener<ApplicationReadyEvent> {
+public class ApplicationInitialization implements CommandLineRunner {
 
     @Lazy
     @Autowired
@@ -22,11 +21,11 @@ public class ApplicationInitialization implements ApplicationListener<Applicatio
     private EntityControlledVocabularyService entityControlledVocabularyService;
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void run(String... arg0) throws Exception {
         // load defaults first
         systemDataLoader.loadSystemDefaults();
         // assumes one language defined in defaults
-        entityControlledVocabularyService.scanForEntityControlledVocabularies(event);
+        entityControlledVocabularyService.scanForEntityControlledVocabularies();
     }
 
 }
