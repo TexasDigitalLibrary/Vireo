@@ -115,7 +115,12 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
 
         $scope.resetFieldProfiles();
 
-        $scope.createFieldGloss = function(glossValue) {
+        $scope.updateFieldGloss = function(glossValue) {
+            $scope.createFieldGloss(glossValue,true);
+        };
+
+        $scope.createFieldGloss = function(glossValue, preservePredicate) {
+            var preservePredicate = (typeof preservePredicate !== 'undefined') ?  preservePredicate : false;
             // TODO set the language dynamically.
             // For now, the language must be 'English' so that's in name will match that existing on the server.
             $scope.modalData.fieldGlosses[0] = {
@@ -126,7 +131,7 @@ vireo.controller("FieldProfileManagementController", function($q, $controller, $
                 var body = angular.fromJson(response.body);
                 if (body.meta.type == 'SUCCESS') {
                     angular.extend($scope.modalData.fieldGlosses[0], body.payload.FieldGloss);
-                    if (!$scope.advanced) {
+                    if (!$scope.advanced && !preservePredicate) {
                         $scope.modalData.fieldPredicate = body.payload.FieldGloss.value.toLowerCase();
                         $scope.createFieldPredicate();
                     }
