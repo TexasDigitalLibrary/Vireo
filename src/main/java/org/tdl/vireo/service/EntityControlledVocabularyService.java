@@ -13,7 +13,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EntityControlledVocabulary;
@@ -29,6 +28,9 @@ public class EntityControlledVocabularyService {
     private final static Logger logger = LoggerFactory.getLogger(EntityControlledVocabularyService.class);
 
     @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
     private LanguageRepo langaugeRepo;
 
     @Autowired
@@ -41,11 +43,10 @@ public class EntityControlledVocabularyService {
     }
 
     @SuppressWarnings("unchecked")
-    public void scanForEntityControlledVocabularies(ApplicationReadyEvent event) {
-        ApplicationContext context = event.getApplicationContext();
+    public void scanForEntityControlledVocabularies() {
         Language language = langaugeRepo.findAll().get(0);
-        Arrays.asList(context.getBeanDefinitionNames()).forEach(name -> {
-            Object bean = context.getBean(name);
+        Arrays.asList(applicationContext.getBeanDefinitionNames()).forEach(name -> {
+            Object bean = applicationContext.getBean(name);
             if (bean instanceof EntityControlledVocabularyRepo) {
                 EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = (EntityControlledVocabularyRepo<EntityControlledVocabulary>) bean;
                 String entityName = getEntity(entityControlledVoabularyRepo).getSimpleName();
