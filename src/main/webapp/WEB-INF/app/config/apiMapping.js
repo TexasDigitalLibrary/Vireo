@@ -629,7 +629,7 @@ var apiMapping = {
     Submission: {
         lazy: true,
         validations: true,
-        modelListeners: false,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -769,7 +769,7 @@ var apiMapping = {
     },
     StudentSubmission: {
         lazy: true,
-        modelListeners: false,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -844,7 +844,7 @@ var apiMapping = {
     },
     AdvisorSubmission: {
         lazy: true,
-        modelListeners: false,
+        modelListeners: true,
         getByHash: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -968,7 +968,7 @@ var apiMapping = {
     },
     UserSettings: {
         lazy: true,
-        modelListeners: false,
+        modelListeners: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
@@ -1054,7 +1054,7 @@ var apiMapping = {
     },
     NamedSearchFilterGroup: {
         validations: true,
-        modelListeners: false,
+        modelListeners: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
