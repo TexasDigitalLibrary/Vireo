@@ -207,9 +207,44 @@
           },
           "mappedShibAttribute":{
             "isSystemRequired":true,
-            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER",
+            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
             "type":"shibboleth",
             "value":"uin"
+          },
+          "repeatable":false,
+          "overrideable":true,
+          "enabled":true,
+          "optional":true,
+          "usage":"",
+          "help":"",
+          "fieldGlosses":[
+            {
+              "value":"Institution ID",
+              "language":{
+                "name":"English"
+              }
+            }
+          ],
+          "controlledVocabularies":[
+
+          ]
+        },
+        {
+          "fieldPredicate":{
+            "value":"institution_id",
+            "documentTypePredicate":false
+          },
+          "originatingWorkflowStep":{
+            "name":"Verify Personal Information"
+          },
+          "inputType":{
+            "name":"INPUT_TEXT"
+          },
+          "mappedShibAttribute":{
+            "isSystemRequired":true,
+            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER",
+            "type":"shibboleth",
+            "value":"institutionid"
           },
           "repeatable":false,
           "overrideable":true,
