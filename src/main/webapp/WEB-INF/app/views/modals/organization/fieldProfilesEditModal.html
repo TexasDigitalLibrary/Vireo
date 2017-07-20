@@ -18,7 +18,7 @@
     <div class="form-group row">
       <label for="field-profiles-gloss">Label</label>
       <input id="field-profiles-gloss" ng-model="modalData.fieldGlosses[0]" autocomplete="off" uib-typeahead="gloss as gloss.value for gloss in fieldGlosses | filter:$viewValue" type="text" class="form-control" placeholder="Display label for the new field" required/>
-      <button type="button" class="btn btn-default fp-button pull-right" ng-click="createFieldGloss(modalData.fieldGlosses[0])" ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
+      <button type="button" class="btn btn-default fp-button pull-right" ng-click="updateFieldGloss(modalData.fieldGlosses[0])" ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
     </div>
 
     <toggleButton label="Repeatable:" scope-value="modalData.repeatable" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
