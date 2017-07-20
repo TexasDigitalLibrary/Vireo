@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaverframework</groupId>
     <artifactId>weaver-webservice-parent</artifactId>
-    <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+    <version>1.2.x-request-marshelling-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>edu.tamu.weaverframework</groupId>
       <artifactId>weaver-webservice-core</artifactId>
-      <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+      <version>1.2.x-request-marshelling-SNAPSHOT</version>
     </dependency>
 
     <!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
