@@ -22,6 +22,9 @@
     },
     {
       "hierarchical": "false"
+    },
+    {
+      "new_submission_header_text": "Choose Your Organization"
     }
   ],
   "orcid": [{
