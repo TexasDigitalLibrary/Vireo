@@ -207,7 +207,7 @@
           },
           "mappedShibAttribute":{
             "isSystemRequired":true,
-            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
+            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER",
             "type":"shibboleth",
             "value":"uin"
           },
@@ -219,7 +219,7 @@
           "help":"",
           "fieldGlosses":[
             {
-              "value":"Institutional ID",
+              "value":"Institution ID",
               "language":{
                 "name":"English"
               }

@@ -6,7 +6,6 @@
         <div class="col-md-6">
 
             <div class="col-md-10 col-md-offset-1">
-
                 <toggleButton 
                     ng-click="updateConfiguration('application', 'hierarchical')"
                     label="Hierarchical Organization Management:"
@@ -14,7 +13,16 @@
                     toggle-options="{{organizationHierarchicalOptions}}"
                     tool-tip="Allow/disallow hierarchical organization management.">
                 </toggleButton>
-
+                <validatedinput
+                    type="text"
+                    label="New Submission Organization Selector Header"
+                    model="settings.configurable.application.new_submission_header_text"
+                    property="value"
+                    confirm="updateConfiguration('application', 'new_submission_header_text')"
+                    form-view="true"
+                    tool-tip="This text will appear as a header if an organization needs to be selected before starting a new submission.">
+                </validatedinput>
+                
             </div>
 
         </div>
