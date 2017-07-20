@@ -147,6 +147,7 @@ public class MockTokenController {
         String lastNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME, "lastName");
         String emailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL, "email");
         String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
+        String institutionIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER, "institutionid");
         String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
         String permEmailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS, "permanentEmailAddress");
         String permPhoneHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER, "permanentPhoneNumber");
@@ -176,6 +177,7 @@ public class MockTokenController {
                     }
                 } else if (mockUser.equals("admin")) {
                     newToken.makeClaim(netIdHeader, "aggieJack");
+                    newToken.makeClaim(institutionIdentifierHeader, "inst-id-123");
                     newToken.makeClaim(institutionalIdentifierHeader, "123456789");
                     newToken.makeClaim(lastNameHeader, "Daniels");
                     newToken.makeClaim(firstNameHeader, "Jack");
@@ -189,6 +191,7 @@ public class MockTokenController {
                     newToken.makeClaim(permAddressHeader, "5000 TAMU");
                 } else {
                     newToken.makeClaim(netIdHeader, "bobBoring");
+                    newToken.makeClaim(institutionIdentifierHeader, "inst-id-123");
                     newToken.makeClaim(institutionalIdentifierHeader, "987654321");
                     newToken.makeClaim(lastNameHeader, "Boring");
                     newToken.makeClaim(firstNameHeader, "Bob");
