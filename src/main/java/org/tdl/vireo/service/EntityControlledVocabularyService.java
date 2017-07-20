@@ -38,8 +38,11 @@ public class EntityControlledVocabularyService {
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
-    // default whitelist consists only of Embargo guarantor
-    private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] { new EntityCVWhitelist("Embargo", Arrays.asList(new String[] { "guarantor" })), };
+    // default whitelist consists only of Embargo guarantor and GraduationMonth month
+    private static final EntityCVWhitelist[] defaultWhitelistedCV = new EntityCVWhitelist[] { 
+    		new EntityCVWhitelist("Embargo", Arrays.asList(new String[] { "guarantor" })),
+    		new EntityCVWhitelist("GraduationMonth", Arrays.asList(new String[] { "month" })),
+    };
 
     @PersistenceContext
     private EntityManager entityManager;
