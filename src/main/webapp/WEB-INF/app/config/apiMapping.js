@@ -170,6 +170,42 @@ var apiMapping = {
             'method': 'remove'
         }
     },
+    Degree: {
+        validations: true,
+        modelListeners: false,
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'settings/degree'
+        },
+        create: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'remove'
+        },
+        reorder: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree'
+        },
+        sort: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree'
+        }
+    },
     DepositLocation: {
         validations: true,
         modelListeners: false,

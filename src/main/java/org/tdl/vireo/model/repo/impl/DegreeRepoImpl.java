@@ -37,7 +37,7 @@ public class DegreeRepoImpl implements DegreeRepoCustom {
 
     @Override
     public void remove(Degree degree) {
-        orderedEntityService.remove(degree, Degree.class, degree.getPosition());
+        orderedEntityService.remove(degreeRepo, Degree.class, degree.getPosition());
     }
 
 }
