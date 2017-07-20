@@ -1,4 +1,4 @@
-vireo.directive("field", function($controller, $filter, $q, $timeout, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -7,8 +7,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
             profile: "=",
             configuration: "="
         },
-        link: function($scope) {
-            angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+        link: function ($scope) {
+            angular.extend(this, $controller('AbstractController', {
+                $scope: $scope
+            }));
 
             $scope.includeTemplateUrl = "views/inputtype/" + $scope.profile.inputType.name.toLowerCase().replace("_", "-") + ".html";
 
@@ -18,13 +20,13 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
 
             $scope.image = undefined;
 
-            $scope.save = function(fieldValue) {
+            $scope.save = function (fieldValue) {
                 if ($scope.fieldProfileForm.$dirty) {
                     fieldValue.updating = true;
-                    return $q(function(resolve) {
+                    return $q(function (resolve) {
                         // give typeahead time to set the value
-                        $timeout(function() {
-                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function(res) {
+                        $timeout(function () {
+                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
                                 delete fieldValue.updating;
                                 if ($scope.fieldProfileForm !== undefined) {
                                     $scope.fieldProfileForm.$setPristine();
@@ -36,61 +38,61 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 }
             };
 
-            $scope.datepickerOptions = {}
+            $scope.datepickerOptions = {};
             $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
-            var checkDissabled = function(dateAndMode) {
-              var dissabled = true;
-              
-              for(var i in $scope.profile.controlledVocabularies[0].dictionary) {
-                var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
-                if(cvw.name == dateAndMode.date.getMonth()) {
-                  dissabled = false;
-                  break;
+            var checkDissabled = function (dateAndMode) {
+                var dissabled = true;
+
+                for (var i in $scope.profile.controlledVocabularies[0].dictionary) {
+                    var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
+                    if (cvw.name == dateAndMode.date.getMonth()) {
+                        dissabled = false;
+                        break;
+                    }
                 }
-              }
-              return dissabled;
+                return dissabled;
+            };
+
+            if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].entityName === "GraduationMonth") {
+
+                $scope.datepickerOptions.customClass = function (dateAndMode) {
+                    if (checkDissabled(dateAndMode)) return "dissabled";
+                };
+                $scope.datepickerOptions.dateDisabled = checkDissabled;
+
+                $scope.datepickerOptions.minViewMode = "month";
+                $scope.datepickerOptions.minMode = "month";
+
             }
 
-            if($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].entityName === "GraduationMonth") {
-
-              $scope.datepickerOptions.customClass = function(dateAndMode) {
-                if(checkDissabled(dateAndMode)) return "dissabled";
-              }
-              $scope.datepickerOptions.dateDisabled = checkDissabled;
-
-              $scope.datepickerOptions.minViewMode = "month";
-              $scope.datepickerOptions.minMode = "month";
-
-            }
-
-            $scope.hasFile = function(fieldValue) {
+            $scope.hasFile = function (fieldValue) {
                 return fieldValue !== undefined && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.value && fieldValue.value.length > 0;
             };
 
-            $scope.addFieldValue = function() {
+            $scope.addFieldValue = function () {
                 return $scope.submission.addFieldValue($scope.profile.fieldPredicate);
             };
 
-            $scope.removeFieldValue = function(fieldValue) {
+            $scope.removeFieldValue = function (fieldValue) {
                 if (fieldValue.id === null) {
                     $scope.submission.removeUnsavedFieldValue(fieldValue);
                 } else {
                     fieldValue.updating = true;
-                    $scope.submission.removeFieldValue(fieldValue).then(function() {
+                    $scope.submission.removeFieldValue(fieldValue).then(function () {
                         fieldValue.updating = false;
                     });
                 }
             };
 
-            $scope.showAdd = function(isFirst) {
+            $scope.showAdd = function (isFirst) {
                 return $scope.profile.repeatable && isFirst;
             };
 
-            $scope.showRemove = function(isFirst) {
+            $scope.showRemove = function (isFirst) {
                 return $scope.profile.repeatable && !isFirst;
             };
 
-            $scope.getPattern = function() {
+            $scope.getPattern = function () {
                 var pattern = "*";
                 var cv = $scope.profile.controlledVocabularies[0];
                 if (typeof cv !== "undefined") {
@@ -103,7 +105,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 return pattern;
             };
 
-            $scope.queueUpload = function(files) {
+            $scope.queueUpload = function (files) {
                 if (files.length > 0) {
                     $scope.previewing = true;
                     var i = 1;
@@ -128,7 +130,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 }
             };
 
-            $scope.beginUpload = function() {
+            $scope.beginUpload = function () {
                 $scope.progress = 0;
                 $scope.uploading = true;
                 var promises = [];
@@ -141,41 +143,41 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                         promises.push(upload(fieldValue));
                     }
                 }
-                $q.all(promises).then(function() {
+                $q.all(promises).then(function () {
                     $scope.previewing = false;
                     $scope.uploading = false;
                     refreshFieldValues();
                 });
             };
 
-            var upload = function(fieldValue) {
-                return $q(function(resolve) {
-                    FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
+            var upload = function (fieldValue) {
+                return $q(function (resolve) {
+                    FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
                         if ($scope.hasFile(fieldValue)) {
                             $scope.submission.removeFile(fieldValue);
                         }
                         fieldValue.value = response.data.meta.message;
                         fieldValue.fileInfo.uploaded = true;
-                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function() {
+                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function () {
                             fieldValue.uploading = false;
                             resolve();
                         });
-                    }, function(response) {
+                    }, function (response) {
                         console.log('Error status: ' + response.status);
-                    }, function(progress) {
+                    }, function (progress) {
                         $scope.progress = progress;
                         fieldValue.progress = progress;
                     });
                 });
             };
 
-            $scope.cancelUpload = function() {
+            $scope.cancelUpload = function () {
                 $scope.submission.removeAllUnsavedFieldValuesByPredicate($scope.profile.fieldPredicate);
                 $scope.previewing = false;
                 refreshFieldValues();
             };
 
-            $scope.cancel = function(fieldValue) {
+            $scope.cancel = function (fieldValue) {
                 $scope.submission.removeUnsavedFieldValue(fieldValue);
                 refreshFieldValues();
                 if ($scope.fieldValues.length === 0) {
@@ -185,7 +187,7 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 }
             };
 
-            $scope.getPreview = function(fieldValue) {
+            $scope.getPreview = function (fieldValue) {
                 var preview;
                 if (fieldValue !== undefined && fieldValue.fileInfo !== undefined && fieldValue.fileInfo.type !== null) {
                     if (fieldValue.fileInfo.type.includes("image/png")) {
@@ -199,17 +201,19 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 return preview;
             };
 
-            $scope.getFile = function(fieldValue) {
+            $scope.getFile = function (fieldValue) {
                 if ($scope.hasFile(fieldValue)) {
-                    $scope.submission.file(fieldValue.value).then(function(data) {
-                        saveAs(new Blob([data], {type: fieldValue.fileInfo.type}), fieldValue.fileInfo.name);
+                    $scope.submission.file(fieldValue.value).then(function (data) {
+                        saveAs(new Blob([data], {
+                            type: fieldValue.fileInfo.type
+                        }), fieldValue.fileInfo.name);
                     });
                 } else {
                     saveAs(fieldValue.fileInfo);
                 }
             };
 
-            $scope.getUriHash = function(fieldValue) {
+            $scope.getUriHash = function (fieldValue) {
                 var hash = 0;
                 if (fieldValue !== undefined) {
                     var uri = fieldValue.value;
@@ -224,10 +228,10 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 return hash;
             };
 
-            $scope.removeFile = function(fieldValue) {
+            $scope.removeFile = function (fieldValue) {
                 $scope.deleting = true;
-                $scope.submission.removeFile(fieldValue).then(function(res) {
-                    $scope.submission.removeFieldValue(fieldValue).then(function() {
+                $scope.submission.removeFile(fieldValue).then(function (res) {
+                    $scope.submission.removeFieldValue(fieldValue).then(function () {
                         $scope.deleting = false;
                         $scope.previewing = false;
                         delete fieldValue.file;
@@ -241,13 +245,13 @@ vireo.directive("field", function($controller, $filter, $q, $timeout, FileUpload
                 });
             };
 
-            $scope.setConditionalTextArea = function(fieldValue, checked) {
+            $scope.setConditionalTextArea = function (fieldValue, checked) {
                 fieldValue.value = checked ? fieldValue.value : null;
                 //Only save if checked == true and value is a non-empty string OR if checked == false and value is not a string (which it won't have been anyway given the line above)
-                if(!checked == !fieldValue.value)  $scope.save(fieldValue);
-            } 
+                if (!checked && !fieldValue.value) $scope.save(fieldValue);
+            };
 
-            var refreshFieldValues = function() {
+            var refreshFieldValues = function () {
                 $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
                 $scope.fieldValue = $scope.fieldValues[0];
 

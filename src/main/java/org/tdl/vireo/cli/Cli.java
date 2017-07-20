@@ -1,4 +1,5 @@
 package org.tdl.vireo.cli;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,132 +23,128 @@ import org.tdl.vireo.model.repo.SubmissionStateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.framework.model.Credentials;
+
 @Component
 public class Cli implements CommandLineRunner {
 
-	@Autowired
-	SubmissionRepo submissionRepo;
+    @Autowired
+    private SubmissionRepo submissionRepo;
 
-	@Autowired
-	UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-	@Autowired
-	OrganizationRepo organizationRepo;
+    @Autowired
+    private OrganizationRepo organizationRepo;
 
-	@Autowired
-	SubmissionStateRepo submissionStateRepo;
+    @Autowired
+    private SubmissionStateRepo submissionStateRepo;
 
-	@Autowired
-	FieldValueRepo fieldValueRepo;
+    @Autowired
+    private FieldValueRepo fieldValueRepo;
 
+    @Override
+    public void run(String... arg0) throws Exception {
+        boolean runConsole = false;
+        for (String s : arg0) {
+            if (s.equals("console")) {
+                runConsole = true;
+                break;
+            }
+        }
 
-	@Override
-	public void run(String... arg0) throws Exception {
-		boolean runConsole = false;
-		for(String s : arg0) {
-			if(s.equals("console")) {
-					runConsole = true;
-					break;
-			}
-		}
+        Boolean running = runConsole ? true : false;
 
-		Boolean running = runConsole ? true : false ;
+        if (running) {
+            final String PROMPT = "\n" + (char) 27 + "[36mvireo>" + (char) 27 + "[37m ";
 
-		if(running)
-		{
-			final String PROMPT = "\n"+(char)27 + "[36mvireo>"+(char)27 + "[37m ";
+            Scanner reader = new Scanner(System.in); // Reading from System.in
 
-			Scanner reader = new Scanner(System.in);  // Reading from System.in
+            System.out.print(PROMPT);
 
-			System.out.print(PROMPT);
+            int itemsGenerated = 0;
 
-			int itemsGenerated = 0;
+            while (running && reader.hasNextLine()) {
 
-			while(running && reader.hasNextLine()) {
+                String n = reader.nextLine();
 
-				String n = reader.nextLine();
+                n = n.trim();
 
-				n=n.trim();
+                String[] commandTokens = n.split("\\s+");
+                List<String> commandArgs = new ArrayList<String>();
 
-				String[] commandTokens = n.split("\\s+");
-				List<String> commandArgs = new ArrayList<String>();
+                String command = null;
+                int num = 0;
 
-				String command = null;
-				int num = 0;
+                if (commandTokens.length > 0)
+                    command = commandTokens[0];
+                if (commandTokens.length > 1) {
+                    for (int i = 1; i < commandTokens.length; i++) {
+                        commandArgs.add(commandTokens[i]);
+                    }
 
-				if(commandTokens.length > 0)
-					command = commandTokens[0];
-				if(commandTokens.length > 1) {
-					for(int i = 1; i < commandTokens.length; i++) {
-						commandArgs.add(commandTokens[i]);
-					}
+                }
 
-				}
+                switch (command) {
+                case "exit":
+                    System.out.println("\nGoodbye.");
+                    running = false;
+                    break;
 
+                case "generate":
 
-				switch (command) {
-					case "exit":
-						System.out.println("\nGoodbye.");
-						running=false;
-						break;
+                    Organization org = organizationRepo.findAll().get(0);
+                    SubmissionState state = submissionStateRepo.findAll().get(0);
 
-					case "generate":
+                    if (commandArgs.size() > 0) {
+                        try {
+                            num = Integer.parseInt(commandArgs.get(0));
+                        } catch (Exception e) {
+                            System.err.println("unable to parse as a number of items: " + commandArgs.get(0));
+                        }
+                    }
 
-						Organization org = organizationRepo.findAll().get(0);
-						SubmissionState state = submissionStateRepo.findAll().get(0);
+                    for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
+                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", AppRole.STUDENT);
+                        Credentials credentials = new Credentials();
+                        credentials.setFirstName("Bob");
+                        credentials.setLastName("Boring");
+                        credentials.setEmail("bob@boring.bob");
+                        credentials.setRole("bore");
 
-						if(commandArgs.size() > 0 ) {
-							try {
-								num = Integer.parseInt(commandArgs.get(0));
-							} catch (Exception e) {
-								System.err.println("unable to parse as a number of items: " + commandArgs.get(0));
-							}
-						}
+                        Submission sub = submissionRepo.create(submitter, org, state, credentials);
+                        for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
+                            for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
+                                FieldPredicate pred = fp.getFieldPredicate();
+                                if (!pred.getDocumentTypePredicate()) {
+                                    FieldValue val = fieldValueRepo.create(pred);
+                                    val.setValue("test value " + i);
+                                    sub.addFieldValue(val);
+                                }
+                            }
+                        }
+                        submissionRepo.saveAndFlush(sub);
 
+                        System.out.print("\r" + (i - itemsGenerated) + " of " + num + " generated...");
 
-						for(int i = itemsGenerated; i < num + itemsGenerated; i++) {
-							User submitter = userRepo.create("bob" + (i+1) + "@boring.bob", "bob", "boring", AppRole.STUDENT);
-							Credentials credentials = new Credentials();
-							credentials.setFirstName("Bob");
-							credentials.setLastName("Boring");
-							credentials.setEmail("bob@boring.bob");
-							credentials.setRole("bore");
+                    }
 
-							Submission sub = submissionRepo.create(submitter, org, state, credentials);
-							for(SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps() ) {
-								for(SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
-									FieldPredicate pred = fp.getFieldPredicate();
-									if(! pred.getDocumentTypePredicate()) {
-										FieldValue val = fieldValueRepo.create(pred);
-										val.setValue("test value " + i);
-										sub.addFieldValue(val);
-									}
-								}
-							}
-							submissionRepo.saveAndFlush(sub);
+                    System.out.println("\rGenerated " + num + " submissions.");
+                    itemsGenerated += num;
+                    break;
 
-							System.out.print("\r" + (i-itemsGenerated) + " of " + num + " generated...");
+                case "":
+                    break;
 
-						}
+                default:
+                    System.out.println("Unknown command " + n);
+                }
 
-						System.out.println("\rGenerated " + num + " submissions.");
-						itemsGenerated += num;
-						break;
+                if (running)
+                    System.out.print(PROMPT);
 
+            }
+            reader.close();
 
-					case "":
-						break;
-
-					default:
-						System.out.println("Unknown command " + n);
-					}
-
-				if(running)
-					System.out.print(PROMPT);
-
-			}
-			reader.close();
-
-		}
-	}
+        }
+    }
 }

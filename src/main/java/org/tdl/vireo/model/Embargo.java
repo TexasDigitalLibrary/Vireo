@@ -1,5 +1,8 @@
 package org.tdl.vireo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,7 +18,7 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
-public class Embargo extends BaseOrderedEntity {
+public class Embargo extends BaseOrderedEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
     private String name;
@@ -183,4 +186,25 @@ public class Embargo extends BaseOrderedEntity {
         }
         return false;
     }
+
+    @Override
+    public String getControlledName() {
+        return guarantor.name();
+    }
+
+    @Override
+    public String getControlledDefinition() {
+        return "";
+    }
+
+    @Override
+    public String getControlledIdentifier() {
+        return "";
+    }
+
+    @Override
+    public List<String> getControlledContacts() {
+        return new ArrayList<String>();
+    }
+
 }

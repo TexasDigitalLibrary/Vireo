@@ -18,16 +18,24 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 
     @Override
     public ControlledVocabulary create(String name, Language language) {
-        ControlledVocabulary controlledVocabulary = new ControlledVocabulary(name, language);
-        controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-        return controlledVocabularyRepo.save(controlledVocabulary);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(name, language);
+        if (controlledVocabulary == null) {
+            controlledVocabulary = new ControlledVocabulary(name, language);
+            controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
+            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+        }
+        return controlledVocabulary;
     }
 
     @Override
     public ControlledVocabulary create(String name, String entityName, Language language) {
-        ControlledVocabulary controlledVocabulary = new ControlledVocabulary(name, entityName, language);
-        controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-        return controlledVocabularyRepo.save(controlledVocabulary);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndEntityNameAndLanguage(name, entityName, language);
+        if (controlledVocabulary == null) {
+            controlledVocabulary = new ControlledVocabulary(name, entityName, language);
+            controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
+            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+        }
+        return controlledVocabulary;
     }
 
     @Override
