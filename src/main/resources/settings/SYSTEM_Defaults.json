@@ -22,6 +22,9 @@
     },
     {
       "hierarchical": "false"
+    },
+    {
+      "new_submission_header_text": "Choose Your Organization"
     }
   ],
   "orcid": [{
@@ -179,6 +182,9 @@
     },
     {
       "APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME": "lastName"
+    },
+    {
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER": "institutionid"
     },
     {
       "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER": "uin"

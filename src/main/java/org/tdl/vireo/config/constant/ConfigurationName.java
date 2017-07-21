@@ -126,6 +126,7 @@ public class ConfigurationName {
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL = "auth.shib.attribute.email";
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME = "auth.shib.attribute.firstName";
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME = "auth.shib.attribute.lastName";
+    public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER = "auth.shib.attribute.institutionIdentifier";
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER = "auth.shib.attribute.institutionalIdentifier";
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME = "auth.shib.attribute.middleName";
     public final static String APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR = "auth.shib.attribute.birthYear";

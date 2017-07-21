@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
@@ -27,7 +26,7 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
 
-    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
+    final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -119,18 +118,10 @@ public class ControlledVocabulary extends BaseOrderedEntity {
         if (!getIsEntityProperty()) {
             values.addAll(dictionary);
         } else {
-            try {
-                EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
-                values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, craftPropertyName()));
-            } catch (ClassNotFoundException e) {
-                logger.info("Entity " + entityName + " not found!\n");
-            }
+            EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
+            values.addAll(entityControlledVocabularyService.getControlledVocabularyWords(entityName));
         }
         return values;
-    }
-
-    private String craftPropertyName() {
-        return name.substring(name.indexOf(getEntityName()) + getEntityName().length() + 1, name.length());
     }
 
     /**

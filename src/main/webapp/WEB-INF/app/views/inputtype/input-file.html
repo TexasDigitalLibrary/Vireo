@@ -5,7 +5,7 @@
         <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
         <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
-      <dropzone file-model="files" text="Drop a file here to begin upload" , patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
+      <dropzone file-model="files" text="Choose file here or drag and drop to upload" , patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
     </div>
   </div>
   <div class="col-md-7 col-sm-12 file-preview-container">
@@ -42,7 +42,7 @@
         <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
         <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
-      <dropzone file-model="files" text="Drop a file here to begin upload" , allow-multiple="true" patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
+      <dropzone file-model="files" text="Choose file here or drag and drop to upload" , allow-multiple="true" patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
     </div>
   </div>
   <div class="col-md-7 col-sm-12 file-preview-container" ng-if="previewing || hasFiles">

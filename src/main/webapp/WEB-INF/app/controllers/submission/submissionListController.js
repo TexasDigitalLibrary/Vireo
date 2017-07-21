@@ -432,6 +432,18 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         return value;
     };
 
+    $scope.displaySubmissionProperty = function(row, col) {
+        var value = $scope.getSubmissionProperty(row,col);
+        if ($scope.isDateColumn(col)) {
+            value = $filter('date')(value,'MMM dd, yyyy');
+        }
+        return value;
+    };
+
+    $scope.isDateColumn = function(col) {
+        return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME');
+    };
+
     $scope.sortBy = function(sortColumn) {
 
         switch (sortColumn.sort) {

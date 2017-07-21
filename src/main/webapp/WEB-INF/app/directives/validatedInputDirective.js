@@ -34,7 +34,7 @@ vireo.directive("validatedinput", function ($timeout) {
             if ($scope.form === undefined) {
                 $scope.forms = {
                     dynamic: {}
-                }
+                };
             }
 
             var getForm = function () {
@@ -81,11 +81,11 @@ vireo.directive("validatedinput", function ($timeout) {
                 }
             };
 
-            $scope.addMember = function(member) {
+            $scope.addMember = function (member) {
                 $scope.model[$scope.property].push(member ? member : "");
             };
 
-            $scope.removeMember = function(i) {
+            $scope.removeMember = function (i) {
                 $scope.model[$scope.property].splice(i, 1);
             };
 

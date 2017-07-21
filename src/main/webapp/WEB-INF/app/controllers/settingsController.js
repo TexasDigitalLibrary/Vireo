@@ -1,16 +1,18 @@
-vireo.controller("SettingsController", function($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
 
-    angular.extend(this, $controller("AbstractController", {$scope: $scope}));
+    angular.extend(this, $controller("AbstractController", {
+        $scope: $scope
+    }));
 
     $scope.settings = {};
 
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
-    
-    $scope.submissionsOpen = function() {
+
+    $scope.submissionsOpen = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
     };
 
-    $scope.multipleSubmissions = function() {
+    $scope.multipleSubmissions = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.allow_multiple_submissions ? $scope.settings.configurable.application.allow_multiple_submissions.value : 'false' : 'false');
     };
 
@@ -20,9 +22,9 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
 
         $scope.settings.user.fetch();
 
-        $scope.settings.user.ready().then(function() {
+        $scope.settings.user.ready().then(function () {
 
-            $scope.updateUserSetting = function(name) {
+            $scope.updateUserSetting = function (name) {
                 return $scope.settings.user.save();
             };
 
@@ -75,24 +77,24 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
                 }
             };
 
-            $scope.getUserSettingsValidations = function() {
+            $scope.getUserSettingsValidations = function () {
                 return userSettingsValidations;
             };
         });
 
         var submissions = StudentSubmissionRepo.getAll();
 
-        ConfigurationRepo.ready().then(function() {
+        ConfigurationRepo.ready().then(function () {
 
-            $scope.hasSubmissions = function() {
+            $scope.hasSubmissions = function () {
                 return submissions.length > 0;
             };
 
-            $scope.getFirstSubmissionId = function() {
+            $scope.getFirstSubmissionId = function () {
                 return submissions[0].id;
-            }
+            };
 
-            $scope.submissionInProgress = function() {
+            $scope.submissionInProgress = function () {
                 var isInProgress = false;
                 for (var i in submissions) {
                     var submission = submissions[i];
@@ -105,7 +107,7 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
                 return isInProgress;
             };
 
-            $scope.submissionNeedsCorrections = function() {
+            $scope.submissionNeedsCorrections = function () {
                 var isInProgress = false;
                 for (var i in submissions) {
                     var submission = submissions[i];
@@ -119,7 +121,7 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
             };
 
             //TODO: check these update config settings methods for redundancy and clean up.
-            $scope.delayedUpdateConfiguration = function(type, name) {
+            $scope.delayedUpdateConfiguration = function (type, name) {
 
                 if ($scope.pendingUpdate) {
                     $timeout.cancel($scope.updateTimeout);
@@ -127,23 +129,23 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
 
                 $scope.pendingUpdate = true;
 
-                $scope.updateTimeout = $timeout(function() {
+                $scope.updateTimeout = $timeout(function () {
                     $scope.updateConfiguration(type, name);
                     $scope.pendingUpdate = false;
                 }, 500);
 
             };
 
-            $scope.updateConfigurationPlainText = function(type, name) {
+            $scope.updateConfigurationPlainText = function (type, name) {
                 $scope.settings.configurable[type][name].value = filterHtml($scope.settings.configurable[type][name].value);
                 return $scope.settings.configurable[type][name].save();
             };
 
-            $scope.updateConfiguration = function(type, name) {
+            $scope.updateConfiguration = function (type, name) {
                 return $scope.settings.configurable[type][name].save();
             };
 
-            $scope.resetConfiguration = function(type, name) {
+            $scope.resetConfiguration = function (type, name) {
                 return $scope.settings.configurable[type][name].reset();
             };
 
@@ -151,7 +153,7 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
 
     }
 
-    var filterHtml = function(html) {
+    var filterHtml = function (html) {
         var temp = document.createElement("div");
         if (!html) {
             return "";
@@ -160,27 +162,27 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
         return temp.textContent || temp.innerText || "";
     };
 
-    var stringToBoolean = function(string) {
+    var stringToBoolean = function (string) {
         switch (string.toLowerCase().trim()) {
-            case "false":
-            case "no":
-            case "0":
-            case "":
-                return false;
-            default:
-                return true;
+        case "false":
+        case "no":
+        case "0":
+        case "":
+            return false;
+        default:
+            return true;
         }
     };
 
-    $scope.editMode = function(prop) {
+    $scope.editMode = function (prop) {
         $scope["edit" + prop] = true;
     };
 
-    $scope.viewMode = function(prop) {
+    $scope.viewMode = function (prop) {
         $scope["edit" + prop] = false;
     };
 
-    $scope.confirmEdit = function($event, prop) {
+    $scope.confirmEdit = function ($event, prop) {
         if ($event.which == 13) {
             if (prop)
                 $scope["edit" + prop] = false;
@@ -188,60 +190,50 @@ vireo.controller("SettingsController", function($controller, $scope, $timeout, U
         }
     };
 
-    $scope.hasError = function(field) {
+    $scope.hasError = function (field) {
         if (!field)
             field = {};
         return Object.keys(field).length > 0;
     };
 
     /**
-   * Toggle options
-   *
-   * {evaluation: gloss}
-   *
-   */
+     * Toggle options
+     *
+     * {evaluation: gloss}
+     *
+     */
 
     // SUBMISSION AVAILABILITY
-    $scope.submissionsOpenOptions = [
-        {
-            "true": "Open"
-        }, {
-            "false": "Closed"
-        }
-    ];
+    $scope.submissionsOpenOptions = [{
+        "true": "Open"
+    }, {
+        "false": "Closed"
+    }];
 
-    $scope.allowMultipleSubmissionsOptions = [
-        {
-            "true": "Yes"
-        }, {
-            "false": "No"
-        }
-    ];
+    $scope.allowMultipleSubmissionsOptions = [{
+        "true": "Yes"
+    }, {
+        "false": "No"
+    }];
 
     // PROQUEST / UMI SETTINGS / DEGREE CODE
-    $scope.proquestIndexingOptions = [
-        {
-            "true": "Yes"
-        }, {
-            "false": "No"
-        }
-    ];
+    $scope.proquestIndexingOptions = [{
+        "true": "Yes"
+    }, {
+        "false": "No"
+    }];
 
     // ORCID
-    $scope.orcidValidationOptions = [
-        {
-            "true": "Yes"
-        }, {
-            "false": "No"
-        }
-    ];
+    $scope.orcidValidationOptions = [{
+        "true": "Yes"
+    }, {
+        "false": "No"
+    }];
 
-    $scope.orcidAuthenticationOptions = [
-        {
-            "true": "Yes"
-        }, {
-            "false": "No"
-        }
-    ];
+    $scope.orcidAuthenticationOptions = [{
+        "true": "Yes"
+    }, {
+        "false": "No"
+    }];
 
 });
