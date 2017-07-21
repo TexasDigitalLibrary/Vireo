@@ -436,37 +436,6 @@
         },
         {
           "fieldPredicate":{
-            "value":"thesis.degree.level",
-            "documentTypePredicate":false
-          },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
-          },
-          "inputType":{
-            "name":"INPUT_SELECT"
-          },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Choose the level of degree you are seeking.",
-          "fieldGlosses":[
-            {
-              "value":"Degree Level",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
-        },
-        {
-          "fieldPredicate":{
             "value":"thesis.degree.discipline",
             "documentTypePredicate":false
           },
