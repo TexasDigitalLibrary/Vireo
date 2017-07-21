@@ -460,43 +460,13 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"Degrees",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
+              "name": "Degrees",
+              "entityName": "Degree",
+              "isEntityProperty":true,
+              "language": {
+                "name": "English"
               }
             }
-          ]
-        },
-        {
-          "fieldPredicate":{
-            "value":"thesis.degree.level",
-            "documentTypePredicate":false
-          },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
-          },
-          "inputType":{
-            "name":"INPUT_SELECT"
-          },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Choose the level of degree you are seeking.",
-          "fieldGlosses":[
-            {
-              "value":"Degree Level",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
           ]
         },
         {
@@ -860,8 +830,7 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"GraduationMonth",
-              "entityName":"GraduationMonth",
+              "name":"Graduation Months",
               "isEntityProperty":true,
               "language":{
                 "name":"English"
@@ -1157,7 +1126,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_SELECT"
+            "name":"INPUT_RADIO"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1176,7 +1145,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Default Embargos",
+              "isEntityProperty":true,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
@@ -1188,7 +1163,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_SELECT"
+            "name":"INPUT_RADIO"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1205,7 +1180,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Proquest Embargos",
+              "isEntityProperty":true,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         }
       ]

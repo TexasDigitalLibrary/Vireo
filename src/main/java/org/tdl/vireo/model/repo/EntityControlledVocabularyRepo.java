@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface EntityControlledVocabularyRepo<EntityControlledVocabulary> {
 
-    List<EntityControlledVocabulary> findAll();
+    public List<EntityControlledVocabulary> findAll();
 
 }

@@ -122,6 +122,8 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+        
+        System.out.println("\n\n\n" + meta + "\n\n\n");
 
         assertEquals("SUCCESS", meta.get("type"));
 

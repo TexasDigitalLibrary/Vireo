@@ -55,7 +55,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 return dissabled;
             };
 
-            if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].entityName === "GraduationMonth") {
+            if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].name === "Graduation Months") {
 
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDissabled(dateAndMode)) return "dissabled";

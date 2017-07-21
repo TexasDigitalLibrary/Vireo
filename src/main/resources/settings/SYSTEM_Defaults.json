@@ -35,72 +35,12 @@
     }
   ],
   "proquest_umi_degree_code": [{
-      "proquest_license": "This is default proquest licence text."
-    },
-    {
-      "proquest_institution_code": ""
-    },
-    {
-      "proquest_indexing": false
-    },
-    {
-      "doctor_of_philosophy": ""
-    },
-    {
-      "doctor_of_education": ""
-    },
-    {
-      "doctor_of_engineering": ""
-    },
-    {
-      "doctor_of_public_health": ""
-    },
-    {
-      "doctor_of_musical_arts": ""
-    },
-    {
-      "master_of_science": ""
-    },
-    {
-      "master_of_arts": ""
-    },
-    {
-      "master_of_landscape_architecture": ""
-    },
-    {
-      "master_of_marine_resources_management": ""
-    },
-    {
-      "master_of_maritime_administration_and_logistics": ""
-    },
-    {
-      "master_of_public_affairs": ""
-    },
-    {
-      "master_of_science_public_health": ""
-    },
-    {
-      "master_of_urban_planning": ""
-    },
-    {
-      "biology": ""
-    },
-    {
-      "biomedical_engineering": ""
-    },
-    {
-      "computer_science": ""
-    },
-    {
-      "master_of_public_health": ""
-    },
-    {
-      "psychology": ""
-    },
-    {
-      "transportation": ""
-    }
-  ],
+    "proquest_license": "This is default proquest licence text."
+  }, {
+    "proquest_institution_code": ""
+  }, {
+    "proquest_indexing": false
+  }],
   "lookAndFeel": [{
       "theme_path": "configuration/theme/"
     },

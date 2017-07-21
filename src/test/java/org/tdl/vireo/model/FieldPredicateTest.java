@@ -33,6 +33,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
 
     @Override
     public void testCascade() {
+
     }
 
     @After

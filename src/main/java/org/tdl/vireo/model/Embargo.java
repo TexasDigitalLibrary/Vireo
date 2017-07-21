@@ -194,7 +194,7 @@ public class Embargo extends BaseOrderedEntity implements EntityControlledVocabu
 
     @Override
     public String getControlledDefinition() {
-        return "";
+        return description;
     }
 
     @Override

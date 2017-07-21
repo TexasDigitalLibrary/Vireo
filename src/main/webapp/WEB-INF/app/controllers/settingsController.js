@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -17,6 +17,21 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
     };
 
     if (!$scope.isAnonymous()) {
+
+        var DegreeRepo = $injector.get("DegreeRepo");
+
+        $scope.degrees = DegreeRepo.getAll();
+
+        var proquestPromise = DegreeRepo.getProquestDegreeCodes().then(function (data) {
+            $scope.proquestDegreeCodes = [];
+            var codes = angular.fromJson(data.body).payload.HashMap;
+            for (var key in codes) {
+                $scope.proquestDegreeCodes.push({
+                    code: key,
+                    degree: codes[key]
+                });
+            }
+        });
 
         $scope.settings.user = new UserSettings();
 
@@ -147,6 +162,13 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
             $scope.resetConfiguration = function (type, name) {
                 return $scope.settings.configurable[type][name].reset();
+            };
+
+            $scope.saveDegree = function (degree) {
+                $scope.inProgress = true;
+                degree.save().then(function () {
+                    $scope.inProgress = false;
+                });
             };
 
         });

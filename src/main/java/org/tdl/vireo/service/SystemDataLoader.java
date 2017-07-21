@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
@@ -49,6 +51,7 @@ import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
@@ -127,6 +130,9 @@ public class SystemDataLoader {
     private LanguageRepo languageRepo;
 
     @Autowired
+    private DegreeLevelRepo degreeLevelRepo;
+
+    @Autowired
     private DocumentTypeRepo documentTypeRepo;
 
     @Autowired
@@ -145,45 +151,51 @@ public class SystemDataLoader {
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
-    private ProquestLanguageCodesService proquestLanguageCodesService;
+    private ProquestCodesService proquesteCodesService;
 
     @Autowired
     private DepositorService depositorService;
 
-    public void loadSystemDefaults() {
+    public void loadSystemData() {
 
         logger.info("Loading default input types");
-        loadSystemInputTypes();
+        loadInputTypes();
 
         logger.info("Loading default email templates");
-        loadSystemEmailTemplates();
+        loadEmailTemplates();
+
+        logger.info("Loading default degree levels");
+        loadDegreeLevels();
 
         logger.info("Loading default embargos");
-        loadSystemEmbargos();
+        loadEmbargos();
 
         logger.info("Loading default submission states");
-        loadSystemSubmissionStates();
+        loadSubmissionStates();
 
         logger.info("Loading default organization catagories");
         loadOrganizationCategories();
 
         logger.info("Loading default document types");
-        loadDefaultDocumentTypes();
+        loadDocumentTypes();
 
         logger.info("Loading default organization");
-        loadSystemOrganization();
+        loadOrganization();
 
         logger.info("Loading default controlled vocabularies");
-        loadDefaultControlledVocabularies();
+        loadControlledVocabularies();
 
-        logger.info("Loading default defaults");
-        generateSystemDefaults();
+        logger.info("Loading defaults");
+        loadSystemDefaults();
 
         logger.info("Loading default Proquest language codes");
         loadProquestLanguageCodes();
 
+        logger.info("Loading default Proquest degree codes");
+        loadProquestDegreeCodes();
+
         logger.info("Loading default Submission List Columns");
-        loadDefaultSubmissionListColumns();
+        loadSubmissionListColumns();
 
         logger.info("Loading default Packagers");
         loadPackagers();
@@ -192,7 +204,7 @@ public class SystemDataLoader {
         loadDepositors();
     }
 
-    private void loadDefaultControlledVocabularies() {
+    private void loadControlledVocabularies() {
 
         File controlledVocabularyDirectory = null;
         try {
@@ -244,7 +256,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadOrganizationCategories() {
+    private void loadDegreeLevels() {
         try {
 
             List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
@@ -264,7 +276,27 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemOrganization() {
+    private void loadOrganizationCategories() {
+        try {
+
+            List<DegreeLevel> degreeLevels = objectMapper.readValue(getFileFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {
+            });
+
+            for (DegreeLevel degreeLevel : degreeLevels) {
+                DegreeLevel dbDegreeLevel = degreeLevelRepo.findByName(degreeLevel.getName());
+
+                if (dbDegreeLevel == null) {
+                    dbDegreeLevel = degreeLevelRepo.create(degreeLevel.getName());
+                }
+
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default organization category.", e);
+        }
+    }
+
+    private void loadOrganization() {
 
         Organization organization = null;
 
@@ -359,8 +391,8 @@ public class SystemDataLoader {
 
                     // create new ControlledVocabulary if not already exists
                     if (newControlledVocabulary == null) {
-                        if (controlledVocabulary.getEntityName() != null) {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getEntityName(), language);
+                        if (controlledVocabulary.getIsEntityProperty()) {
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language, controlledVocabulary.getIsEntityProperty());
                         } else {
                             newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
                         }
@@ -510,7 +542,7 @@ public class SystemDataLoader {
 
     }
 
-    private void loadSystemSubmissionStates() {
+    private void loadSubmissionStates() {
 
         try {
             // read and map json to SubmissionState
@@ -613,7 +645,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemInputTypes() {
+    private void loadInputTypes() {
         try {
             List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {
             });
@@ -634,7 +666,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemEmailTemplates() {
+    private void loadEmailTemplates() {
 
         for (String name : getAllSystemEmailTemplateNames()) {
 
@@ -684,7 +716,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadDefaultSubmissionListColumns() {
+    private void loadSubmissionListColumns() {
 
         try {
 
@@ -766,7 +798,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemEmbargos() {
+    private void loadEmbargos() {
 
         try {
 
@@ -795,7 +827,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void generateSystemDefaults() {
+    private void loadSystemDefaults() {
         try {
             JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
@@ -834,7 +866,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadDefaultDocumentTypes() {
+    private void loadDocumentTypes() {
 
         try {
 
@@ -871,7 +903,16 @@ public class SystemDataLoader {
     }
 
     private void loadProquestLanguageCodes() {
-        Resource resource = resourcePatternResolver.getResource("classpath:/proquest/language_codes.xls");
+        proquesteCodesService.setCodes("languages", getProquestCodes("language_codes.xls"));
+    }
+
+    private void loadProquestDegreeCodes() {
+        proquesteCodesService.setCodes("degrees", getProquestCodes("degree_codes.xls"));
+    }
+
+    private Map<String, String> getProquestCodes(String xslFileName) {
+        Map<String, String> proquestCodes = new HashMap<String, String>();
+        Resource resource = resourcePatternResolver.getResource("classpath:/proquest/" + xslFileName);
 
         InputStream file = null;
         try {
@@ -896,7 +937,7 @@ public class SystemDataLoader {
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
 
-                    String language = null, code = null;
+                    String code = null, description = "";
 
                     Iterator<Cell> cellIterator = row.cellIterator();
                     while (cellIterator.hasNext()) {
@@ -909,15 +950,12 @@ public class SystemDataLoader {
                             if (code == null) {
                                 code = cellValue;
                             } else {
-                                language = cellValue;
+                                description = cellValue;
                             }
-                        } else {
-                            throw new RuntimeException("Proquest language codes xls is not valid");
                         }
                     }
 
-                    proquestLanguageCodesService.addLanguageCode(language, code);
-
+                    proquestCodes.put(code, description);
                 }
             }
 
@@ -928,6 +966,7 @@ public class SystemDataLoader {
             }
 
         }
+        return proquestCodes;
     }
 
     private void loadPackagers() {

@@ -1,10 +1,10 @@
 <div class="row">
-    
+
     <div class="col-md-6">
 
         <div class="col-md-10 col-md-offset-1">
 
-            <validatedinput                
+            <validatedinput
                 type="text"
                 label="ProQuest Institution Code"
                 model="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
@@ -14,7 +14,7 @@
                 form-view="true"
                 tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
             </validatedinput>
-    	
+
     	    <togglebutton
     	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
     	        label="Indexed by Search Engines"
@@ -42,128 +42,40 @@
         </div>
 
     </div>
-    
+
 </div>
 
 <hr/>
 
 <div class="row">
-    
+
     <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
 
     <div class="col-md-6">
 
         <div class="col-md-10 col-md-offset-1">
 
-            <validatedinput
-                type="text"
-                label="Doctor of Philosophy"
-                model="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.doctor_of_philosophy.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_philosophy')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Doctor of Education"
-                model="settings.configurable.proquest_umi_degree_code.doctor_of_education"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.doctor_of_education.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_education')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Doctor of Engineering"
-                model="settings.configurable.proquest_umi_degree_code.doctor_of_engineering"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.doctor_of_engineering.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_engineering')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Doctor of Public Health"
-                model="settings.configurable.proquest_umi_degree_code.doctor_of_public_health"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.doctor_of_public_health.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_public_health')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Doctor of Musical Arts"
-                model="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.doctor_of_musical_arts.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'doctor_of_musical_arts')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Science"
-                model="settings.configurable.proquest_umi_degree_code.master_of_science"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_science.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_science')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Arts"
-                model="settings.configurable.proquest_umi_degree_code.master_of_arts"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_arts.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_arts')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Landscape Architecture" 
-                model="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_landscape_architecture.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_landscape_architecture')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Marine Resources Management"
-                model="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_marine_resources_management.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_marine_resources_management')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Maritime Administration and Logistics"
-                model="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_maritime_administration_and_logistics.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_maritime_administration_and_logistics')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index < (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
 
         </div>
 
@@ -173,103 +85,27 @@
 
         <div class="col-md-10 col-md-offset-1">
 
-            <validatedinput
-                type="text"
-                label="Master of Public Affairs"
-                model="settings.configurable.proquest_umi_degree_code.master_of_public_affairs"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_public_affairs.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_public_affairs')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Science Public Health"
-                model="settings.configurable.proquest_umi_degree_code.master_of_science_public_health"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_science_public_health.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_science_public_health')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Urban Planning"
-                model="settings.configurable.proquest_umi_degree_code.master_of_urban_planning"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_urban_planning.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_urban_planning')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Biology"
-                model="settings.configurable.proquest_umi_degree_code.biology"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.biology.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'biology')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Biomedical Engineering"
-                model="settings.configurable.proquest_umi_degree_code.biomedical_engineering"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.biomedical_engineering.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'biomedical_engineering')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Computer Science"
-                model="settings.configurable.proquest_umi_degree_code.computer_science"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.computer_science.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'computer_science')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Master of Public Health"
-                model="settings.configurable.proquest_umi_degree_code.master_of_public_health"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.master_of_public_health.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'master_of_public_health')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"label="Psychology"
-                model="settings.configurable.proquest_umi_degree_code.psychology"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.psychology.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'psychology')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
-
-            <validatedinput
-                type="text"
-                label="Transportation"
-                model="settings.configurable.proquest_umi_degree_code.transportation"
-                property="value"
-                validations="settings.configurable.proquest_umi_degree_code.transportation.getValidations()"
-                confirm="updateConfiguration('proquest_umi_degree_code', 'transportation')"
-                form-view="true"
-                tool-tip="todo">
-            </validatedinput>
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index >= (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
 
         </div>
 

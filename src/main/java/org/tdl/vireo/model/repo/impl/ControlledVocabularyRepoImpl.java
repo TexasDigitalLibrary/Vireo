@@ -28,10 +28,10 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     }
 
     @Override
-    public ControlledVocabulary create(String name, String entityName, Language language) {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndEntityNameAndLanguage(name, entityName, language);
+    public ControlledVocabulary create(String name, Language language, Boolean isEntityProperty) {
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndLanguageAndIsEntityProperty(name, language, isEntityProperty);
         if (controlledVocabulary == null) {
-            controlledVocabulary = new ControlledVocabulary(name, entityName, language);
+            controlledVocabulary = new ControlledVocabulary(name, language, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
             controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         }

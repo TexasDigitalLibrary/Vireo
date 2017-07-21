@@ -18,8 +18,6 @@ public class ControlledVocabularyValidator extends BaseModelValidator {
         String isEntityPropertyProperty = "isEntityProperty";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Controlled Vocabulary requires an entity property flag", isEntityPropertyProperty, true));
 
-        String isEnumProperty = "isEnum";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Controlled Vocabulary requires an enum property flag", isEnumProperty, true));
     }
 
 }

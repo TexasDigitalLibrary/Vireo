@@ -7,7 +7,7 @@ public interface ControlledVocabularyRepoCustom {
 
     public ControlledVocabulary create(String name, Language language);
 
-    public ControlledVocabulary create(String name, String entityName, Language language);
+    public ControlledVocabulary create(String name, Language language, Boolean isEntityProperty);
 
     public void reorder(Long src, Long dest);
 
