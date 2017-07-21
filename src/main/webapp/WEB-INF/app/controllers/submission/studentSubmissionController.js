@@ -82,4 +82,14 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
         $scope.setActiveStep({name: 'review'});
     };
 
+    var includes = ['primary','supplemental','source','administrative'];
+
+    $scope.uploadFieldProfiles = function(fp) {
+      var pass = true;
+      if (fp.fieldPredicate.documentTypePredicate) {
+        pass = fp.fieldPredicate.value.match(new RegExp(includes.join('|'), 'gi'));
+      }
+      return pass;
+    };
+
 });

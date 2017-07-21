@@ -1156,6 +1156,106 @@
             }
           }],
           "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "_doctype_license",
+            "documentTypePredicate": true
+          },
+          "originatingWorkflowStep": {
+            "name": "File Upload"
+          },
+          "inputType": {
+            "name": "INPUT_FILE"
+          },
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "",
+          "fieldGlosses": [{
+            "value": "License Files",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "_doctype_archived",
+            "documentTypePredicate": true
+          },
+          "originatingWorkflowStep": {
+            "name": "File Upload"
+          },
+          "inputType": {
+            "name": "INPUT_FILE"
+          },
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "",
+          "fieldGlosses": [{
+            "value": "Archived Files",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "_doctype_feedback",
+            "documentTypePredicate": true
+          },
+          "originatingWorkflowStep": {
+            "name": "File Upload"
+          },
+          "inputType": {
+            "name": "INPUT_FILE"
+          },
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "",
+          "fieldGlosses": [{
+            "value": "Feedback Files",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
+        },
+        {
+          "fieldPredicate": {
+            "value": "_doctype_unknown",
+            "documentTypePredicate": true
+          },
+          "originatingWorkflowStep": {
+            "name": "File Upload"
+          },
+          "inputType": {
+            "name": "INPUT_FILE"
+          },
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "",
+          "fieldGlosses": [{
+            "value": "Unknown Files",
+            "language": {
+              "name": "English"
+            }
+          }],
+          "controlledVocabularies": []
         }
       ]
     }
