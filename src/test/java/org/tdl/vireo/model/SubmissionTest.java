@@ -45,7 +45,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
 
-        fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED);
+        fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
 
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
@@ -169,13 +169,16 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow step was deleted!", 4, submissionWorkflowStepRepo.count());
 
         long fieldValueCount = fieldValueRepo.count();
+        long submissionFieldValueCount = submission.getFieldValues().size();
         submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.saveAndFlush(submission);
+        
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
+        submissionFieldValueCount--;
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
         assertEquals("The field value was orphaned! ", null, orphan);
-        assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
+        assertEquals("The field value was not removed!", submissionFieldValueCount, submission.getFieldValues().size());
         assertEquals("The field value was orphaned!", fieldValueCount, fieldValueRepo.count());
 
         // From here on we test the actual cascade:

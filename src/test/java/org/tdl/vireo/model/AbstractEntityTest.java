@@ -72,6 +72,7 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_FIELD_PROFILE_FLAGGED = false;
     protected static final boolean TEST_FIELD_PROFILE_LOGGED = false;
     protected static final String TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
+    protected static final String TEST_FIELD_PROFILE_DEFAULT_VALUE = "Test Field Profile Default Value";
 
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
     protected static final String TEST_USER_FIRSTNAME = "TDL";
