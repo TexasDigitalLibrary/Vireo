@@ -22,7 +22,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 	@ExceptionHandler(MultipartException.class)
 	@ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
 	@ResponseBody
-	public ApiResponse handleMultipartException(MultipartException exception){
+	public ApiResponse handleMultipartException(MultipartException exception) {
 	    logger.error("File size limit exceeded",exception);
 	    return new ApiResponse(ERROR, "File size limit exceeded");
 	}
