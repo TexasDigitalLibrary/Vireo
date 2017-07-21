@@ -34,6 +34,13 @@
       "orcid_authentication": false
     }
   ],
+  "proquest_umi_degree_code": [{
+    "proquest_license": "This is default proquest licence text."
+  }, {
+    "proquest_institution_code": ""
+  }, {
+    "proquest_indexing": false
+  }],
   "lookAndFeel": [{
       "theme_path": "configuration/theme/"
     },

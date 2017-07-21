@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, DegreeRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -7,17 +7,6 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
     $scope.settings = {};
 
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
-
-    $scope.degrees = DegreeRepo.getAll();
-
-    var proquestPromise = DegreeRepo.getProquestDegreeCodes().then(function (data) {
-        $scope.proquestDegreeCodes = [];
-        for (var key in angular.fromJson(data.body).payload.HashMap) {
-            $scope.proquestDegreeCodes.push({
-                code: key
-            });
-        }
-    });
 
     $scope.submissionsOpen = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
@@ -28,6 +17,21 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
     };
 
     if (!$scope.isAnonymous()) {
+
+        var DegreeRepo = $injector.get("DegreeRepo");
+
+        $scope.degrees = DegreeRepo.getAll();
+
+        var proquestPromise = DegreeRepo.getProquestDegreeCodes().then(function (data) {
+            $scope.proquestDegreeCodes = [];
+            var codes = angular.fromJson(data.body).payload.HashMap;
+            for (var key in codes) {
+                $scope.proquestDegreeCodes.push({
+                    code: key,
+                    degree: codes[key]
+                });
+            }
+        });
 
         $scope.settings.user = new UserSettings();
 
@@ -161,10 +165,10 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
             };
 
             $scope.saveDegree = function (degree) {
-                if (typeof degree.proquestCode === 'object') {
-                    degree.proquestCode = degree.proquestCode.code;
-                }
-                return degree.save();
+                $scope.inProgress = true;
+                degree.save().then(function () {
+                    $scope.inProgress = false;
+                });
             };
 
         });

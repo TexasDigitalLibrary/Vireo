@@ -55,18 +55,27 @@
 
         <div class="col-md-10 col-md-offset-1">
 
-          <validatedinput ng-repeat="degree in degrees" ng-if="$index < (degrees.length / 2)"
-              type="text"
-              label="{{degree.name}}"
-              model="degree"
-              property="proquestCode"
-              typeahead="proquestDegreeCodes"
-              typeaheadproperty="code"
-              validations="degree.getValidations()"
-              confirm="saveDegree(degree)"
-              form-view="true"
-              tool-tip="todo">
-          </validatedinput>
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index < (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
 
         </div>
 
@@ -76,18 +85,27 @@
 
         <div class="col-md-10 col-md-offset-1">
 
-          <validatedinput ng-repeat="degree in degrees" ng-if="$index >= (degrees.length / 2)"
-              type="text"
-              label="{{degree.name}}"
-              model="degree"
-              property="proquestCode"
-              typeahead="proquestDegreeCodes"
-              typeaheadproperty="code"
-              validations="degree.getValidations()"
-              confirm="saveDegree(degree)"
-              form-view="true"
-              tool-tip="todo">
-          </validatedinput>
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index >= (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
 
         </div>
 
