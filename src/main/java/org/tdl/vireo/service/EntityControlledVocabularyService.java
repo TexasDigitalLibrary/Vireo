@@ -5,6 +5,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.aspect.annotation.EntityCV;
 import org.tdl.vireo.model.EntityControlledVocabulary;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
+
+import edu.tamu.framework.util.EntityUtility;
 
 @Service
 public class EntityControlledVocabularyService {
@@ -50,30 +54,68 @@ public class EntityControlledVocabularyService {
             if (bean instanceof EntityControlledVocabularyRepo) {
                 EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = (EntityControlledVocabularyRepo<EntityControlledVocabulary>) bean;
                 String entityName = getEntity(entityControlledVoabularyRepo).getSimpleName();
-                Optional<String> controlledVocabularyname = getEntityControlledVocabularyName(entityControlledVoabularyRepo);
-                controlledVocabularyRepo.create(controlledVocabularyname.isPresent() ? controlledVocabularyname.get() : entityName, entityName, language);
-                entityControlledVocabularyRepos.put(entityName, entityControlledVoabularyRepo);
-                logger.info("Created entity controlled vocabulary: " + entityName);
+                List<EntityCV.Subset> subsetAnnotations = getEntityControlledVocabularySubsets(entityControlledVoabularyRepo);
+                if (subsetAnnotations.size() > 0) {
+                    subsetAnnotations.forEach(entityCVSubset -> {
+                        String controlledVocabularyName = entityCVSubset.name();
+                        controlledVocabularyRepo.create(controlledVocabularyName, language, true);
+                        entityControlledVocabularyRepos.put(controlledVocabularyName, entityControlledVoabularyRepo);
+                        logger.info("Created entity controlled vocabulary: " + controlledVocabularyName);
+                    });
+                } else {
+                    Optional<String> controlledVocabularyName = getEntityControlledVocabularyName(entityControlledVoabularyRepo);
+                    String entityCVName = controlledVocabularyName.isPresent() ? controlledVocabularyName.get() : entityName;
+                    controlledVocabularyRepo.create(entityCVName, language, true);
+                    entityControlledVocabularyRepos.put(entityCVName, entityControlledVoabularyRepo);
+                    logger.info("Created entity controlled vocabulary: " + entityCVName);
+                }
             }
         }
     }
 
-    public List<VocabularyWord> getControlledVocabularyWords(String entityName) {
+    public List<VocabularyWord> getControlledVocabularyWords(String name) throws ClassNotFoundException {
         List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
-        EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = entityControlledVocabularyRepos.get(entityName);
+        EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = entityControlledVocabularyRepos.get(name);
         if (entityControlledVoabularyRepo != null) {
-            entityControlledVoabularyRepo.findAll().forEach(ecv -> {
-                dictionary.add(new VocabularyWord(ecv.getControlledName(), ecv.getControlledDefinition(), ecv.getControlledIdentifier(), ecv.getControlledContacts()));
-            });
+            List<EntityCV.Subset> subsets = getEntityControlledVocabularySubsets(entityControlledVoabularyRepo);
+            List<EntityCV.Filter> filters = new ArrayList<EntityCV.Filter>();
+            for (EntityCV.Subset subset : subsets) {
+                if (subset.name().equals(name)) {
+                    filters = Arrays.asList(subset.filters());
+                    break;
+                }
+            }
+            for (EntityControlledVocabulary ecv : entityControlledVoabularyRepo.findAll()) {
+                boolean include = true;
+                for (EntityCV.Filter filter : filters) {
+                    Object actualValue = EntityUtility.getValueFromPath(ecv, filter.path().split("\\."));
+                    if (!actualValue.toString().equals(filter.value())) {
+                        include = false;
+                        break;
+                    }
+                }
+                if (include) {
+                    dictionary.add(new VocabularyWord(ecv.getControlledName(), ecv.getControlledDefinition(), ecv.getControlledIdentifier(), ecv.getControlledContacts()));
+                }
+            }
         } else {
-            logger.warn("No entity controlled vocabulary " + entityName);
+            logger.warn("No entity controlled vocabulary " + name);
         }
         return dictionary;
     }
 
+    public List<EntityCV.Subset> getEntityControlledVocabularySubsets(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
+        List<EntityCV.Subset> subsets = new ArrayList<EntityCV.Subset>();
+        EntityCV annotation = Class.forName(getGenericType(repo.getClass())[0].getTypeName()).getDeclaredAnnotation(EntityCV.class);
+        if (annotation != null) {
+            subsets = Arrays.asList(annotation.subsets());
+        }
+        return subsets;
+    }
+
     public Optional<String> getEntityControlledVocabularyName(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
         Optional<String> name = Optional.empty();
-        org.tdl.vireo.aspect.annotation.EntityControlledVocabulary annotation = Class.forName(getGenericType(repo.getClass())[0].getTypeName()).getDeclaredAnnotation(org.tdl.vireo.aspect.annotation.EntityControlledVocabulary.class);
+        EntityCV annotation = Class.forName(getGenericType(repo.getClass())[0].getTypeName()).getDeclaredAnnotation(EntityCV.class);
         if (annotation != null) {
             name = Optional.of(annotation.name());
         } else {

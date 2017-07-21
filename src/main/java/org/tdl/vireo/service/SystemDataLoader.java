@@ -391,8 +391,8 @@ public class SystemDataLoader {
 
                     // create new ControlledVocabulary if not already exists
                     if (newControlledVocabulary == null) {
-                        if (controlledVocabulary.getEntityName() != null) {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getEntityName(), language);
+                        if (controlledVocabulary.getIsEntityProperty()) {
+                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language, controlledVocabulary.getIsEntityProperty());
                         } else {
                             newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
                         }

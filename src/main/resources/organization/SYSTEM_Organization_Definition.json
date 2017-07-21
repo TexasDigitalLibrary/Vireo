@@ -827,7 +827,6 @@
           "controlledVocabularies":[
             {
               "name":"Graduation Months",
-              "entityName":"GraduationMonth",
               "isEntityProperty":true,
               "language":{
                 "name":"English"
@@ -1123,7 +1122,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_SELECT"
+            "name":"INPUT_RADIO"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1142,7 +1141,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Default Embargos",
+              "isEntityProperty":true,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
@@ -1154,7 +1159,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_SELECT"
+            "name":"INPUT_RADIO"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1171,7 +1176,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Proquest Embargos",
+              "isEntityProperty":true,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         }
       ]
