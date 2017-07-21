@@ -40,45 +40,51 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Autowired
     private OrganizationRepo organizationRepo;
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, null, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, null, null, repeatable, overrideable, enabled, optional, false, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, null, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, null, repeatable, overrideable, enabled, optional, false, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, false, flagged, logged, new ArrayList<ControlledVocabulary>(), new ArrayList<FieldGloss>(), null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, null);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, false, flagged, logged, controlledVocabularies, fieldGlosses, null);
     }
 
     @Override
     @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
     public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
-        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute);
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, false, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute);
     }
 
-    private FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
-        FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute));
+    @Override
+    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
+    public FieldProfile create(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute);
+    }
+
+    private FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute));
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
 

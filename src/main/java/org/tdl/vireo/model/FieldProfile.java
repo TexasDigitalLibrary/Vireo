@@ -47,6 +47,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setRepeatable(false);
         setEnabled(true);
         setOptional(true);
+        setHidden(false);
         setFlagged(false);
         setLogged(false);
         setFieldGlosses(new ArrayList<FieldGloss>());
@@ -116,10 +117,16 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setControlledVocabularies(controlledVocabularies);
         setFieldGlosses(fieldGlosses);
     }
-    
+
     public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
         this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses);
         setMappedShibAttribute(mappedShibAttribute);
+    }
+
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses);
+        setMappedShibAttribute(mappedShibAttribute);
+        setHidden(hidden);
     }
 
     /**

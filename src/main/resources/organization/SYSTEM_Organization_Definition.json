@@ -1172,6 +1172,7 @@
           "overrideable": true,
           "enabled": true,
           "optional": true,
+          "hidden": true,
           "usage": "",
           "help": "",
           "fieldGlosses": [{
@@ -1197,6 +1198,7 @@
           "overrideable": true,
           "enabled": true,
           "optional": true,
+          "hidden": true,
           "usage": "",
           "help": "",
           "fieldGlosses": [{
@@ -1222,6 +1224,7 @@
           "overrideable": true,
           "enabled": true,
           "optional": true,
+          "hidden": true,
           "usage": "",
           "help": "",
           "fieldGlosses": [{
@@ -1247,6 +1250,7 @@
           "overrideable": true,
           "enabled": true,
           "optional": true,
+          "hidden": true,
           "usage": "",
           "help": "",
           "fieldGlosses": [{

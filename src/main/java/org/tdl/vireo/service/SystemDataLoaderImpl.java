@@ -195,10 +195,10 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
         logger.info("Load default document types");
         loadDefaultDocumentTypes();
-        
+
         logger.info("Generating system organization");
         loadSystemOrganization();
-        
+
         logger.info("Loading pre-defined controlled vocabularies");
         loadDefaultControlledVocabularies();
 
@@ -223,7 +223,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     @Override
     public void loadDefaultControlledVocabularies() {
-        
+
         File controlledVocabularyDirectory = null;
         try {
             controlledVocabularyDirectory = getFileFromResource("classpath:/controlled_vocabularies/");
@@ -231,11 +231,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-        
+
         for(File vocabularyJson : controlledVocabularyDirectory.listFiles()) {
             try {
                 ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
-                
+
                 //check to see if the Language exists
                 Language language = languageRepo.findByName(cv.getLanguage().getName());
 
@@ -243,28 +243,28 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 if (language == null) {
                     language = languageRepo.create(cv.getLanguage().getName());
                 }
-                
+
                 cv.setLanguage(language);
-                
+
                 //check to see if Controlled Vocabulary exists, and if so, merge up with it
                 ControlledVocabulary cvPreexisting = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
-                
+
                 if(cvPreexisting != null) {
                     cv.setPosition(cvPreexisting.getPosition());
-                    cv.setId(cvPreexisting.getId());                    
+                    cv.setId(cvPreexisting.getId());
                 }
                 else {
                     ControlledVocabulary cvBrandNew = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
                     cv.setPosition(controlledVocabularyRepo.count());
                     cv.setId(cvBrandNew.getId());
                 }
-                
+
                 controlledVocabularyRepo.saveAndFlush(cv);
-                
+
                 System.out.println("\tLoaded Controlled Vocabulary " + cv.getName() + ".  There are now a total of " + controlledVocabularyRepo.count() + " excellent vocabularies in your Vireo instance.");
-                
-                
-                
+
+
+
             } catch (JsonParseException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -275,15 +275,15 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
-            
-            
+
+
+
         }
-        
-        
+
+
 //        List<ControlledVocabulary> controlledVocabularies = controlledVocabularyRepo.findAllByIsEntityProperty(false);
-//        
-//        
+//
+//
 //
 //        controlledVocabularies.forEach(cv -> {
 //
@@ -339,7 +339,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     /**
      * Loads default system organization.
-     * 
+     *
      * @return
      * @return
      */
@@ -496,7 +496,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType,
                             fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(),
-                            fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(),
+                            fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(),
                             fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses,
                             fieldProfile.getMappedShibAttribute());
                 }

@@ -54,6 +54,8 @@
 
       <toggleButton label="Overridable:" scope-value="modalData.overrideable" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
 
+      <toggleButton label="Hidden:" scope-value="modalData.hidden" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
+
       <div ng-if="!inputFile" class="form-group row">
         <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
         <validatedinput model="modalData" property="fieldPredicate" label="Metadata Key" placeholder="Metadata Key of the field" autocomplete="off" typeahead="filteredPredicates" typeaheadproperty="value" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
