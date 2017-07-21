@@ -10,6 +10,15 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
     $scope.degrees = DegreeRepo.getAll();
 
+    var proquestPromise = DegreeRepo.getProquestDegreeCodes().then(function (data) {
+        $scope.proquestDegreeCodes = [];
+        for (var key in angular.fromJson(data.body).payload.HashMap) {
+            $scope.proquestDegreeCodes.push({
+                code: key
+            });
+        }
+    });
+
     $scope.submissionsOpen = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
     };
@@ -152,6 +161,9 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
             };
 
             $scope.saveDegree = function (degree) {
+                if (typeof degree.proquestCode === 'object') {
+                    degree.proquestCode = degree.proquestCode.code;
+                }
                 return degree.save();
             };
 

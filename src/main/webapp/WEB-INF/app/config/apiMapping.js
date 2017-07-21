@@ -209,6 +209,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/degree',
             'method': 'proquest'
+        },
+        proquest: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'proquest'
         }
     },
     DegreeLevel: {
