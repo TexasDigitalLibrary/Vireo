@@ -169,13 +169,16 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("The workflow step was deleted!", 4, submissionWorkflowStepRepo.count());
 
         long fieldValueCount = fieldValueRepo.count();
+        long submissionFieldValueCount = submission.getFieldValues().size();
         submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.saveAndFlush(submission);
+        
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
+        submissionFieldValueCount--;
         FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
         assertEquals("The field value was orphaned! ", null, orphan);
-        assertEquals("The field value was not removed!", 1, submission.getFieldValues().size());
+        assertEquals("The field value was not removed!", submissionFieldValueCount, submission.getFieldValues().size());
         assertEquals("The field value was orphaned!", fieldValueCount, fieldValueRepo.count());
 
         // From here on we test the actual cascade:
