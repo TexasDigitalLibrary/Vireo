@@ -20,6 +20,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.image = undefined;
 
+            $scope.errorMessage = "";
+
             $scope.save = function (fieldValue) {
                 if ($scope.fieldProfileForm.$dirty) {
                     fieldValue.updating = true;
@@ -107,6 +109,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.queueUpload = function (files) {
                 if (files.length > 0) {
+                    $scope.errorMessage = "";
                     $scope.previewing = true;
                     var i = 1;
                     refreshFieldValues();
@@ -164,6 +167,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                         });
                     }, function (response) {
                         console.log('Error status: ' + response.status);
+                        $scope.errorMessage = response.data.meta.message;
+                        $scope.cancelUpload();
                     }, function (progress) {
                         $scope.progress = progress;
                         fieldValue.progress = progress;
@@ -174,6 +179,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.cancelUpload = function () {
                 $scope.submission.removeAllUnsavedFieldValuesByPredicate($scope.profile.fieldPredicate);
                 $scope.previewing = false;
+                $scope.uploading = false;
                 refreshFieldValues();
             };
 
