@@ -25,8 +25,6 @@
             <button type="button" class="btn btn-default fp-button pull-right" ng-click="createFieldGloss(modalData.fieldGlosses[0])" ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
           </div>
         </div>
-
-
         <div class="row">
           <div class="col-sm-5 col-sm-offset-1 col-xs-6">
             <toggleButton label="Repeatable:" scope-value="modalData.repeatable" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
@@ -39,12 +37,9 @@
             <toggleButton label="Overridable:" scope-value="modalData.overrideable" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
           </div>
         </div>
-
       </uib-tab>
       <uib-tab index="1" heading="Advanced">
-        
         <div class="field-profile-section field-profile-open">
-
           <div ng-if="!inputFile" class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
@@ -52,33 +47,32 @@
               <button type="button" class="btn btn-default pull-right" ng-if="!modalData.fieldPredicate.id" ng-click="createFieldPredicate()">Create New Metadata Key</button>
             </div>
           </div>
-
           <div class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect options="inputTypes" optionproperty="name" model="modalData" property="inputType" label="Input Type" form="forms.create" change="inputTypeChanged()" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedselect>
             </div>
           </div>
-
-          <div ng-if="!inputFile" class="form-group row">
+          <div ng-if="inputFile" class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect options="documentTypes" optionproperty="name" model="documentData" property="documentType" label="Document Type" form="forms.create" change="documentTypeChanged()" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.ValidationResults"></validatedselect>
             </div>
           </div>
-
           <div class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedinput model="modalData" property="help" label="Help" placeholder="Help of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
             </div>
           </div>
-
+          <div class="form-group row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <validatedinput model="modalData" property="defaultValue" label="Default Value" placeholder="A default value for the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
+            </div>
+          </div>
           <div class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect options="modalData.shibbolethAttributes" optionproperty="name" model="modalData" property="ShibbolethAttributeMapping" label="Shibboleth Attribute Mapping" placeholder="Shibboleth attribute mapping of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results=""></validatedselect>
             </div>
           </div>
-
         </div>
-
       </uib-tab>
       <uib-tab index="2" heading="Controlled Vocabulary">
         <div class="field-profile-section field-profile-open">

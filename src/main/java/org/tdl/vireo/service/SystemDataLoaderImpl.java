@@ -498,7 +498,8 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
                             fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(),
                             fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(),
                             fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses,
-                            fieldProfile.getMappedShibAttribute());
+                            fieldProfile.getMappedShibAttribute(),
+                            fieldProfile.getDefaultValue());
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);

@@ -105,6 +105,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         submission.addFieldValue(fieldValue);
                     }
                 }
+                if (afp.getDefaultValue() != null) {
+                    FieldValue fieldValue = fieldValueRepo.create(afp.getFieldPredicate());
+                    fieldValue.setValue(afp.getDefaultValue());
+                    submission.addFieldValue(fieldValue);
+                }
             });
         });
 

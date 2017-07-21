@@ -53,7 +53,7 @@
               <validatedselect options="inputTypes" optionproperty="name" model="modalData" property="inputType" label="Input Type" form="forms.create" change="inputTypeChanged()" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedselect>
             </div>
           </div>
-          <div ng-if="!inputFile" class="form-group row">
+          <div ng-if="inputFile" class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect options="documentTypes" optionproperty="name" model="documentData" property="documentType" label="Document Type" form="forms.create" change="documentTypeChanged()" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.ValidationResults"></validatedselect>
               <!-- TODO: fieldPredicateRepo should be fieldProfileRepo -->
@@ -63,6 +63,11 @@
            <div class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedinput model="modalData" property="help" label="Help" placeholder="Help of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <validatedinput model="modalData" property="defaultValue" label="Default Value" placeholder="A default value for the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
             </div>
           </div>
           <div class="form-group row">
