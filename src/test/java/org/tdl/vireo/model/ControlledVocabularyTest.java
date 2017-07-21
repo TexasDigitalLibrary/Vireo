@@ -29,19 +29,14 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         embargo.setGuarantor(EmbargoGuarantor.PROQUEST);
         embargoRepo.save(embargo);
 
-        ControlledVocabulary entityControlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, TEST_CONTROLLED_VOCABULARY_EMBARGO, language);
+        ControlledVocabulary entityControlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_EMBARGO, TEST_CONTROLLED_VOCABULARY_EMBARGO, language);
         assertEquals("The repository did not save the entity!", 2, controlledVocabularyRepo.count());
-        assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR, entityControlledVocabulary.getName());
+        assertEquals("Saved entity did not contain the name!", TEST_CONTROLLED_VOCABULARY_EMBARGO, entityControlledVocabulary.getName());
         assertEquals("Saved entity did not contain the entity name!", TEST_CONTROLLED_VOCABULARY_EMBARGO, entityControlledVocabulary.getEntityName());
         assertEquals("Saved entity did not contain the language!", language, entityControlledVocabulary.getLanguage());
         assertEquals("Saved entity did not contain the is entity!", true, entityControlledVocabulary.getIsEntityProperty());
 
-        List<VocabularyWord> guarantors = null;
-        try {
-            guarantors = entityControlledVocabularyService.getControlledVocabulary(TEST_CONTROLLED_VOCABULARY_EMBARGO, TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        List<VocabularyWord> guarantors = entityControlledVocabularyService.getControlledVocabularyWords(TEST_CONTROLLED_VOCABULARY_EMBARGO);
 
         assertEquals("Number of guarantors does not match!", guarantors.size(), entityControlledVocabulary.getDictionary().size());
 
@@ -50,7 +45,6 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         for (VocabularyWord gaurantor : guarantors) {
             assertEquals("Guarantors does not contain entityControlledVocabulary value!", true, entityControlledVocabularyValues.contains(gaurantor));
         }
-        ;
 
     }
 

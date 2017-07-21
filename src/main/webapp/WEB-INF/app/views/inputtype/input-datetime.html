@@ -2,15 +2,18 @@
 	<span class="input-group-addon" ng-click="date=true">
     	<span class="glyphicon glyphicon-calendar toggle-href"></span>
   	</span>
+
   	<input
 		type="text" 
 		class="form-control" 
-		uib-datepicker-popup="MM/dd/yyyy" 
+		uib-datepicker-popup="{{datepickerFormat}}",
+    datepicker-options="datepickerOptions" 
 		ng-model="fieldValue.value"
 		ng-change="save(fieldValue)"
 		is-open="date"
 		ng-disabled="fieldValue.updating" 
-		ng-required="!profile.optional" 
+		ng-required="!profile.optional"
+    show-button-bar="false" 
 		close-text="Close"
 		stringtodate/>
   	<span class="input-group-addon">

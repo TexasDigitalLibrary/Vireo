@@ -81,7 +81,7 @@ public abstract class AbstractIntegrationTest extends MockData {
         return StompRequest(destination, objectMapper.convertValue(data, JsonNode.class).toString());
     }
 
-    public String StompRequest(String destination, String jsonNodeString) throws InterruptedException {
+    public synchronized String StompRequest(String destination, String jsonNodeString) throws InterruptedException {
         String root = destination.split("/")[1];
 
         String sessionId = String.valueOf(Math.round(Math.random() * 100000));
@@ -117,7 +117,7 @@ public abstract class AbstractIntegrationTest extends MockData {
 
         assertEquals("/queue" + destination + "-user" + sessionId, replyHeaders.getDestination());
 
-        Thread.sleep(100); // H2 needs time to commit/persist any sent messages
+        Thread.sleep(250); // H2 needs time to commit/persist any sent messages
 
         return new String((byte[]) reply.getPayload(), Charset.forName("UTF-8"));
     }

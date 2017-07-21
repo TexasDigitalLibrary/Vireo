@@ -39,6 +39,9 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean optional;
+    
+    @Column(nullable = false)
+    private Boolean hidden;
 
     @Column(nullable = false)
     private Boolean logged;
@@ -128,7 +131,15 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         this.optional = optional;
     }
 
-    public Boolean getLogged() {
+    public Boolean getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
+	}
+
+	public Boolean getLogged() {
         return logged;
     }
 

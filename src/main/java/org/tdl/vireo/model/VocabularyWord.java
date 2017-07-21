@@ -1,10 +1,13 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -33,6 +36,9 @@ public class VocabularyWord extends BaseEntity {
     @Column(nullable = true)
     private String identifier;
 
+    @ElementCollection(fetch = EAGER)
+    private List<String> contacts;
+
     @ManyToOne(cascade = { DETACH, REFRESH })
     @Fetch(FetchMode.SELECT)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = VocabularyWord.class, property = "id")
@@ -58,8 +64,19 @@ public class VocabularyWord extends BaseEntity {
         setIdentifier(identifier);
     }
 
+    public VocabularyWord(String name, String definition, String identifier, List<String> contacts) {
+        this(name, definition);
+        setIdentifier(identifier);
+        setContacts(contacts);
+    }
+
     public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier) {
         this(name, definition, identifier);
+        setControlledVocabulary(controlledVocabulary);
+    }
+
+    public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier, List<String> contacts) {
+        this(name, definition, identifier, contacts);
         setControlledVocabulary(controlledVocabulary);
     }
 
@@ -93,6 +110,14 @@ public class VocabularyWord extends BaseEntity {
 
     public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         this.controlledVocabulary = controlledVocabulary;
+    }
+
+    public List<String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<String> contacts) {
+        this.contacts = contacts;
     }
 
 }

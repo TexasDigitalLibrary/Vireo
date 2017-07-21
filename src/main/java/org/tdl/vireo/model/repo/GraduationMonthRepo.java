@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
 
-public interface GraduationMonthRepo extends JpaRepository<GraduationMonth, Long>, GraduationMonthRepoCustom {
+public interface GraduationMonthRepo extends JpaRepository<GraduationMonth, Long>, EntityControlledVocabularyRepo<GraduationMonth>, GraduationMonthRepoCustom {
 
     public GraduationMonth findByMonth(int month);
 
