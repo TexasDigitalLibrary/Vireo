@@ -18,6 +18,7 @@
         <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
       </div>
     </div>
+    <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
     <div class="file-info" ng-if="hasFile(fieldValue) || previewing">
       <p class="file-name">{{fieldValue.fileInfo.name}}</p>
       <p class="file-type">{{fieldValue.fileInfo.type}}</p>
