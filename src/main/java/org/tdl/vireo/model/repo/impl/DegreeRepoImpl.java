@@ -2,6 +2,7 @@ package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.Degree;
+import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.custom.DegreeRepoCustom;
 
@@ -16,10 +17,10 @@ public class DegreeRepoImpl implements DegreeRepoCustom {
     private DegreeRepo degreeRepo;
 
     @Override
-    public Degree create(String name, String proquestCode) {
-        Degree degree = degreeRepo.findByNameAndProquestCode(name, proquestCode);
+    public Degree create(String name, DegreeLevel level) {
+        Degree degree = degreeRepo.findByNameAndLevel(name, level);
         if (degree == null) {
-            degree = new Degree(name, proquestCode);
+            degree = new Degree(name, level);
         }
         degree.setPosition(degreeRepo.count() + 1);
         return degreeRepo.save(degree);

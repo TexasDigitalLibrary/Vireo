@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $scope, $timeout, UserSettings, ConfigurationRepo, DegreeRepo, StudentSubmissionRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -7,6 +7,8 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
     $scope.settings = {};
 
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
+
+    $scope.degrees = DegreeRepo.getAll();
 
     $scope.submissionsOpen = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
@@ -147,6 +149,10 @@ vireo.controller("SettingsController", function ($controller, $scope, $timeout, 
 
             $scope.resetConfiguration = function (type, name) {
                 return $scope.settings.configurable[type][name].reset();
+            };
+
+            $scope.saveDegree = function (degree) {
+                return degree.save();
             };
 
         });

@@ -16,6 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.repo.DegreeRepo;
+import org.tdl.vireo.service.ProquestCodesService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -36,6 +37,9 @@ public class DegreeController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private ProquestCodesService proquestCodesService;
+
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
     public ApiResponse allDegrees() {
@@ -47,7 +51,7 @@ public class DegreeController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createDegree(@ApiValidatedModel Degree degree) {
         logger.info("Creating degree with name " + degree.getName());
-        degree = degreeRepo.create(degree.getName(), degree.getProquestCode());
+        degree = degreeRepo.create(degree.getName(), degree.getLevel());
         simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, degree);
     }
@@ -90,6 +94,16 @@ public class DegreeController {
         degreeRepo.sort(column);
         simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @ApiMapping("/proquest")
+    @Auth(role = "MANAGER")
+    public ApiResponse getProquestLanguageCodes() {
+        return new ApiResponse(SUCCESS, proquestCodesService.getCodes("degrees"));
     }
 
 }

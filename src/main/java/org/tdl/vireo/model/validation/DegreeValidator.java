@@ -10,8 +10,8 @@ public class DegreeValidator extends BaseModelValidator {
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Degree requires a name", nameProperty, true));
 
-        String proquestCodeProperty = "proquestCode";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Degree requires a proquest code", proquestCodeProperty, true));
+        String levelProperty = "level";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Degree requires a level", levelProperty, true));
     }
 
 }

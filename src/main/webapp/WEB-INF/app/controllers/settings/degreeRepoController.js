@@ -1,4 +1,4 @@
-vireo.controller("DegreeRepoController", function ($controller, $scope, $q, DegreeRepo, DragAndDropListenerFactory) {
+vireo.controller("DegreeRepoController", function ($controller, $scope, $q, DegreeRepo, DegreeLevelRepo, DragAndDropListenerFactory) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -8,11 +8,13 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
 
     $scope.degrees = DegreeRepo.getAll();
 
+    $scope.degreeLevels = DegreeLevelRepo.getAll();
+
     DegreeRepo.listen(function (data) {
         $scope.resetDegree();
     });
 
-    $scope.ready = $q.all([DegreeRepo.ready()]);
+    $scope.ready = $q.all([DegreeLevelRepo.ready(), DegreeRepo.ready()]);
 
     $scope.dragging = false;
 
@@ -35,7 +37,10 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
             if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
                 $scope.modalData.refresh();
             }
-            $scope.modalData = {};
+
+            $scope.modalData = {
+                level: $scope.degreeLevels.length > 0 ? $scope.degreeLevels[0] : ''
+            };
 
             $scope.closeModal();
         };

@@ -17,21 +17,21 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the new degree"
-			form="forms.update"
-			validations="customActionRepo.getValidations()"
+			form="forms.create"
+			validations="degreeRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
 
-		<validatedinput
-			type="text"
-			model="modalData"
-			property="proquestCode"
-			label="ProQuest Code"
-			placeholder="ProQuest code for the new degree"
-			form="forms.update"
-			validations="customActionRepo.getValidations()"
-			results="modalData.ValidationResults">
-		</validatedinput>
+    <validatedselect
+      options="degreeLevels"
+      optionproperty="name"
+      model="modalData"
+      property="level"
+      label="Level"
+      form="forms.create"
+      validations="degreeRepo.getValidations()"
+      results="modalData.ValidationResults">
+		</validatedselect>
 
 	</div>
 

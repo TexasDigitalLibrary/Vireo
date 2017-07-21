@@ -25,6 +25,7 @@ import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
+import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
@@ -98,9 +99,11 @@ public abstract class AbstractEntityTest {
     // GraduationMonthTest
     protected static final int TEST_GRADUATION_MONTH = 1;
 
-    // DegreeTEst
+    // DegreeTest
     protected static final String TEST_DEGREE_NAME = "Test Degree";
-    protected static final String TEST_DEGREE_PROQUEST_CODE = "123";
+
+    // DegreeLevelTest
+    protected static final String TEST_DEGREE_LEVEL = "DOCTORAL";
 
     // ConfigurationTest
     protected static final String TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY = ConfigurationName.SUBMISSIONS_OPEN;
@@ -415,6 +418,11 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected DegreeRepo degreeRepo;
+
+    @Autowired
+    protected DegreeLevelRepo degreeLevelRepo;
+    
+    protected DegreeLevel degreeLevel;
 
     protected InputType inputType;
 

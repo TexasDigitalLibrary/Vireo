@@ -425,10 +425,11 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"Degrees",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
+              "name": "Degrees",
+              "entityName": "Degree",
+              "isEntityProperty":true,
+              "language": {
+                "name": "English"
               }
             }
           ]
@@ -825,7 +826,7 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"GraduationMonth",
+              "name":"Graduation Months",
               "entityName":"GraduationMonth",
               "isEntityProperty":true,
               "language":{

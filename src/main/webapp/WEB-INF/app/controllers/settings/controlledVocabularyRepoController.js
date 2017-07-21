@@ -30,20 +30,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.editableVW = {};
 
-    var firstEditableCv = function () {
-
-        var cv = null;
-
-        $scope.controlledVocabulary.some(function (pcv) {
-            var check = !pcv.isEntityProperty;
-            if (check) cv = pcv;
-            return check;
-        });
-
-        return cv;
-
-    };
-
     $scope.addVocabularyWord = function (newVW) {
         newVW.adding = true;
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function (res) {
@@ -90,7 +76,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             }
         }, {
             counts: [],
-            dataset: $scope.selectedCv.dictionary
+            dataset: $scope.selectedCv !== undefined && $scope.selectedCv !== null ? $scope.selectedCv.dictionary : []
         });
 
         if ($scope.lastCreatedVocabularyWordId) {
@@ -141,7 +127,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.setSelectedCv = function (cv) {
 
-        if ($scope.selectedCv) $scope.selectedCv.clearListens();
+        if ($scope.selectedCv) {
+            $scope.selectedCv.clearListens();
+        }
 
         $scope.selectedCv = cv;
 
@@ -302,11 +290,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             return defaultIndex;
         };
 
-        $scope.setSelectedCv(firstEditableCv());
-
-        reloadTable();
-
         $scope.resetControlledVocabulary = function (closeModal) {
+
+            $scope.setSelectedCv($scope.controlledVocabulary[getDefaultIndex()]);
+
+            reloadTable();
 
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {

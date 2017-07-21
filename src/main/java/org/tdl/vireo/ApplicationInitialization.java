@@ -23,7 +23,7 @@ public class ApplicationInitialization implements CommandLineRunner {
     @Override
     public void run(String... arg0) throws Exception {
         // load defaults first
-        systemDataLoader.loadSystemDefaults();
+        systemDataLoader.loadSystemData();
         // assumes one language defined in defaults
         entityControlledVocabularyService.scanForEntityControlledVocabularies();
     }

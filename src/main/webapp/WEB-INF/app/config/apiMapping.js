@@ -204,6 +204,24 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/degree'
+        },
+        proquest: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'proquest'
+        }
+    },
+    DegreeLevel: {
+        validations: true,
+        modelListeners: false,
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree-level',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'settings/degree-level'
         }
     },
     DepositLocation: {

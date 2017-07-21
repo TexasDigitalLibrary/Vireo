@@ -7,7 +7,7 @@
 
 <form ng-submit="updateDegree()" name="forms.update" novalidate>
 
-  <validationmessage results="modalData.ValidationResults"></validationmessage>
+  <validationmessage results="degreeRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 
@@ -18,20 +18,20 @@
 			label="Name"
 			placeholder="Update name of the degree"
 			form="forms.update"
-			validations="customActionRepo.getValidations()"
+			validations="degreeRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
 
-		<validatedinput
-			type="text"
-			model="modalData"
-			property="proquestCode"
-			label="ProQuest Code"
-			placeholder="Update ProQuest code for the degree"
-			form="forms.update"
-			validations="customActionRepo.getValidations()"
-			results="modalData.ValidationResults">
-		</validatedinput>
+    <validatedselect
+      options="degreeLevels"
+      optionproperty="name"
+      model="modalData"
+      property="level"
+      label="Level"
+      form="forms.update"
+      validations="degreeRepo.getValidations()"
+      results="modalData.ValidationResults">
+		</validatedselect>
 
 	</div>
 
