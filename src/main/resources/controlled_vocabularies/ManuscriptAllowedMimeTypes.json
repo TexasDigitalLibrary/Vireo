@@ -1,0 +1,14 @@
+{
+	"name": "Manuscript Allowed Mime Types",
+	"isEntityProperty": false,
+	"language": {
+		"name": "English"
+	},
+	"dictionary": [
+		{
+			"name": "pdf",
+			"definition": "PDF file",
+			"identifier": ""
+		}
+	]
+}
