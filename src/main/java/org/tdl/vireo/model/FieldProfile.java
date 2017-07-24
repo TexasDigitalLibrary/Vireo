@@ -118,10 +118,15 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setControlledVocabularies(controlledVocabularies);
         setFieldGlosses(fieldGlosses);
     }
-    
+
     public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute, String defaultValue) {
         this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, defaultValue);
         setMappedShibAttribute(mappedShibAttribute);
+    }
+
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, Configuration mappedShibAttribute, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute, defaultValue);
+        setHidden(hidden);
     }
 
     /**
@@ -171,12 +176,12 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
 
     @Override
     public void setOriginating(FieldProfile originating) {
-    	this.originating = originating;
+        this.originating = originating;
     }
 
     @Override
     public FieldProfile getOriginating() {
-    	return originating;
+        return originating;
     }
 
     @Override

@@ -435,7 +435,8 @@ public class SystemDataLoader {
 
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses, fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses, fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
+
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
