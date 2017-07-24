@@ -101,7 +101,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                     pattern = "";
                     for (var i in cv.dictionary) {
                         var word = cv.dictionary[i];
-                        pattern += pattern.length > 0 ? ", " + word.name : word.name;
+                        pattern += pattern.length > 0 ? (", ." + word.name) : ("." + word.name);
                     }
                 }
                 return pattern;
@@ -208,6 +208,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             $scope.getFile = function (fieldValue) {
+                console.log(fieldValue)
                 if ($scope.hasFile(fieldValue)) {
                     $scope.submission.file(fieldValue.value).then(function (data) {
                         saveAs(new Blob([data], {

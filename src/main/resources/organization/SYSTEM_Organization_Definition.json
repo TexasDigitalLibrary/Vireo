@@ -1252,7 +1252,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Manuscript Allowed Mime Types",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
