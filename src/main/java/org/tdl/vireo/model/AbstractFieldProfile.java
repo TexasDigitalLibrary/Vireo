@@ -48,7 +48,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
-
+    
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
@@ -65,6 +65,10 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = true)
     private Boolean flagged;
+    
+    
+    @Column(nullable = true, name = "`default`", columnDefinition = "text")
+    private String defaultValue;
 
     /**
      * @return the fieldPredicate
@@ -159,7 +163,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         this.usage = usage;
     }
 
-    /**
+	/**
      *
      * @return
      */
@@ -297,6 +301,14 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void setFlagged(Boolean flagged) {
         this.flagged = flagged;
     }
+    
+    public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 
     // TODO : Restrict multiple controlled vocabulary with the same language
 

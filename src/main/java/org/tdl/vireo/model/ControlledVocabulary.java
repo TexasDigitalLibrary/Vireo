@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
@@ -27,13 +26,10 @@ import edu.tamu.framework.model.BaseOrderedEntity;
 @Configurable
 public class ControlledVocabulary extends BaseOrderedEntity {
 
-    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
+    final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(nullable = true, unique = false)
-    private String entityName;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
@@ -44,38 +40,20 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @Column(nullable = false)
     private Boolean isEntityProperty;
 
-    @Column(nullable = false)
-    private Boolean isEnum;
-
     public ControlledVocabulary() {
         setModelValidator(new ControlledVocabularyValidator());
-        setIsEnum(false);
         setIsEntityProperty(false);
     }
 
-    /**
-     *
-     * @param name
-     * @param language
-     * @param order
-     */
     public ControlledVocabulary(String name, Language language) {
         this();
         setName(name);
         setLanguage(language);
     }
 
-    /**
-     *
-     * @param name
-     * @param entityName
-     * @param language
-     * @param order
-     */
-    public ControlledVocabulary(String name, String entityName, Language language) {
+    public ControlledVocabulary(String name, Language language, Boolean isEntityProperty) {
         this(name, language);
-        setEntityName(entityName);
-        setIsEntityProperty(true);
+        setIsEntityProperty(isEntityProperty);
     }
 
     /**
@@ -94,22 +72,6 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     *
-     * @return
-     */
-    public String getEntityName() {
-        return entityName;
-    }
-
-    /**
-     *
-     * @param entityName
-     */
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
-
-    /**
      * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
      *
      * @return the values
@@ -119,18 +81,14 @@ public class ControlledVocabulary extends BaseOrderedEntity {
         if (!getIsEntityProperty()) {
             values.addAll(dictionary);
         } else {
+            EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
             try {
-                EntityControlledVocabularyService entityControlledVocabularyService = SpringContext.bean(EntityControlledVocabularyService.class);
-                values.addAll(entityControlledVocabularyService.getControlledVocabulary(entityName, craftPropertyName()));
+                values.addAll(entityControlledVocabularyService.getControlledVocabularyWords(name));
             } catch (ClassNotFoundException e) {
-                logger.info("Entity " + entityName + " not found!\n");
+                e.printStackTrace();
             }
         }
         return values;
-    }
-
-    private String craftPropertyName() {
-        return name.substring(name.indexOf(getEntityName()) + getEntityName().length() + 1, name.length());
     }
 
     /**
@@ -192,21 +150,6 @@ public class ControlledVocabulary extends BaseOrderedEntity {
      */
     public void setIsEntityProperty(Boolean isEntityProperty) {
         this.isEntityProperty = isEntityProperty;
-    }
-
-    /**
-     * @return the isEnum
-     */
-    public Boolean getIsEnum() {
-        return isEnum;
-    }
-
-    /**
-     * @param isEnum
-     *            the isEnum to set
-     */
-    public void setIsEnum(Boolean isEnum) {
-        this.isEnum = isEnum;
     }
 
 }

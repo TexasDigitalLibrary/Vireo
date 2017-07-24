@@ -31,6 +31,7 @@
   <hr>
 
   <div class="row" ng-if="activeStep.name != 'review'">
+
     <div class="col-xs-12 col-sm-9 submission-workflow-steps">
       <ul class="list-unstyled">
         <li ng-repeat="fp in activeStep.aggregateFieldProfiles | filter:{hidden: false}">

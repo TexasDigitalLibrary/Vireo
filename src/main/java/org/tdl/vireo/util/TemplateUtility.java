@@ -12,6 +12,7 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 
 @Service
+@SuppressWarnings("unused")
 public class TemplateUtility {
 
     @Value("${app.url}")

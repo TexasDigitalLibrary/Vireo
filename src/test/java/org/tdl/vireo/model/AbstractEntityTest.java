@@ -25,16 +25,18 @@ import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
+import org.tdl.vireo.model.repo.DegreeLevelRepo;
+import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
@@ -73,6 +75,7 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_FIELD_PROFILE_FLAGGED = false;
     protected static final boolean TEST_FIELD_PROFILE_LOGGED = false;
     protected static final String TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
+    protected static final String TEST_FIELD_PROFILE_DEFAULT_VALUE = "Test Field Profile Default Value";
 
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
     protected static final String TEST_USER_FIRSTNAME = "TDL";
@@ -94,6 +97,15 @@ public abstract class AbstractEntityTest {
     // LanguageTest
     protected static final String TEST_LANGUAGE_NAME = "Test Language";
 
+    // GraduationMonthTest
+    protected static final int TEST_GRADUATION_MONTH = 1;
+
+    // DegreeTest
+    protected static final String TEST_DEGREE_NAME = "Test Degree";
+
+    // DegreeLevelTest
+    protected static final String TEST_DEGREE_LEVEL = "DOCTORAL";
+
     // ConfigurationTest
     protected static final String TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY = ConfigurationName.SUBMISSIONS_OPEN;
     protected static final String TEST_VIREO_INSTALL_DIR = "./";
@@ -110,7 +122,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER = "Test Severable Vocabulary Identifier";
 
     // must be the name of the property on the entity
-    protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO = "Embargo";
 
     // DepositLocation test
@@ -401,10 +412,18 @@ public abstract class AbstractEntityTest {
     protected NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
-    protected EntityCVWhitelistRepo entityCVWhitelistRepo;
+    protected AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
-    protected AbstractPackagerRepo abstractPackagerRepo;
+    protected GraduationMonthRepo graduationMonthRepo;
+
+    @Autowired
+    protected DegreeRepo degreeRepo;
+
+    @Autowired
+    protected DegreeLevelRepo degreeLevelRepo;
+    
+    protected DegreeLevel degreeLevel;
 
     protected InputType inputType;
 
@@ -450,8 +469,6 @@ public abstract class AbstractEntityTest {
     protected SubmissionWorkflowStep submissionWorkflowStep;
 
     protected VocabularyWord vocabularyWord;
-
-    protected EntityCVWhitelist entityCVWhitelist;
 
     protected ControlledVocabulary controlledVocabulary;
 
