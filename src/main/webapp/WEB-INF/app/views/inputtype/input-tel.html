@@ -1,0 +1,15 @@
+<div class="input-group">
+	<input
+		type="tel" 
+		class="form-control" 
+		name="profile.fieldPredicate.value" 
+		ng-required="!profile.optional" 
+		ng-blur="save(fieldValue)"
+		ng-disabled="fieldValue.updating"
+		ng-model="fieldValue.value"
+		uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"/>
+	<span class="input-group-addon">
+        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+    </span>
+</div>

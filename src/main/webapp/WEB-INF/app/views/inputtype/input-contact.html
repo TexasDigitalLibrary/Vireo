@@ -1,0 +1,32 @@
+
+<div class="input-group input-contact-value">
+	<input  type="text" 
+			class="form-control" 
+			name="profile.fieldPredicate.value" 
+			ng-required="!profile.optional" 
+			ng-model="fieldValue.value"
+			ng-blur="save(fieldValue)"
+			ng-disabled="fieldValue.updating"
+			placeholder="Input {{profile.fieldGlosses[0].value}} Name"
+			uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"/>
+	<span class="input-group-addon">
+        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+    </span>
+</div>
+
+<div class="input-group input-contact-identifier">
+	<input  type="text" 
+			class="form-control" 
+			name="profile.fieldPredicate.value" 
+			ng-required="!profile.optional" 
+			ng-model="fieldValue.identifier"
+			ng-blur="save(fieldValue)"
+			ng-disabled="fieldValue.updating"
+			placeholder="Input {{profile.fieldGlosses[0].value}} Email"
+			uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"/>
+	<span class="input-group-addon">
+        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+    </span>
+</div>

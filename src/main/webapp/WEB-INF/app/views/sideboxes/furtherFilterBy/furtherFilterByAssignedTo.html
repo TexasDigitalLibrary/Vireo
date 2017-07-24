@@ -1,0 +1,13 @@
+<form ng-init="box.assignToLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
+	<ul>
+		<li class="filter" ng-click="box[column.title.split(' ').join('')]=null;box.addExactMatchFilter(column, 'Unassigned');">
+			Unassigned
+		</li>
+		<li class="filter" ng-repeat="assignee in assignables = box.allUsers | filter:box.assignable | limitTo:box.assignToLimit"
+			ng-click="box[column.title.split(' ').join('')]=assignee.email;box.addExactMatchFilter(column, assignee.settings.displayName);">
+			{{assignee.settings.displayName}}
+		</li>
+		<li class="more-less" ng-click="box.assignToLimit=assignables.length" ng-if="box.assignToLimit<=box.defaultLimit && assignables.length>box.defaultLimit">more...</li>
+		<li class="more-less" ng-click="box.assignToLimit=box.defaultLimit" ng-if="box.assignToLimit>box.defaultLimit">less...</li>
+	</ul>
+</form>

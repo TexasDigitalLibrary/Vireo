@@ -1,0 +1,32 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="box.resetRemoveFilters()" aria-title="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Manage Filters</h3>
+</div>
+<form ng-submit="box.removeFilters()" name="forms.removeFilters" novalidate>
+	<div class="modal-body">
+		 <table class="table table-bordered table-striped etd-table">
+		 	<thead class="header">
+		 		<tr>
+			      	<th ng-repeat="column in ['remove','filter name','has columns','status']">
+			          	{{column}}
+			      	</th>
+			  </tr>
+		 	</thead>
+		 	<tbody>
+				<tr ng-repeat="filter in box.savedFilters">
+					<td>
+				        <button type="button" class="btn" ng-click="box.removeFilter(filter)">Remove</button>
+					</td>
+					<td>{{filter.name}}</td>
+					<td>{{filter.columnsFlag}}</td>
+					<td>{{box.getUserById(filter.user).firstName}} {{box.getUserById(filter.user).lastName}} {{filter.publicFlag ? 'public':'private'}} filter</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">        
+        <button type="button" class="btn btn-warning" ng-click="box.resetRemoveFilters()">Close</button>
+    </div>
+</form>

@@ -1,0 +1,133 @@
+{
+  "name": "In Progress",
+  "isArchived": false,
+  "isPublishable": false,
+  "isDeletable": false,
+  "isEditableByReviewer": false,
+  "isEditableByStudent": false,
+  "isActive": null,
+  "transitionSubmissionStates": [{
+      "name": "Submitted",
+      "isArchived": false,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "transitionSubmissionStates": [{
+        "name": "Under Review",
+        "isArchived": false,
+        "isPublishable": false,
+        "isDeletable": false,
+        "isEditableByReviewer": true,
+        "isEditableByStudent": false,
+        "isActive": true,
+        "transitionSubmissionStates": [{
+            "name": "Needs Correction",
+            "isArchived": false,
+            "isPublishable": false,
+            "isDeletable": false,
+            "isEditableByReviewer": true,
+            "isEditableByStudent": true,
+            "isActive": true,
+            "transitionSubmissionStates": [{
+              "name": "Corrections Received",
+              "isArchived": false,
+              "isPublishable": false,
+              "isDeletable": false,
+              "isEditableByReviewer": true,
+              "isEditableByStudent": false,
+              "isActive": true,
+              "transitionSubmissionStates": [{
+                  "name": "Under Review"
+                },
+                {
+                  "name": "Waiting On Requirements",
+                  "isArchived": false,
+                  "isPublishable": false,
+                  "isDeletable": false,
+                  "isEditableByReviewer": true,
+                  "isEditableByStudent": false,
+                  "isActive": true,
+                  "transitionSubmissionStates": [{
+                      "name": "Under Review"
+                    },
+                    {
+                      "name": "Approved",
+                      "isArchived": false,
+                      "isPublishable": false,
+                      "isDeletable": false,
+                      "isEditableByReviewer": true,
+                      "isEditableByStudent": false,
+                      "isActive": true,
+                      "transitionSubmissionStates": [{
+                        "name": "Pending Publication",
+                        "isArchived": true,
+                        "isPublishable": false,
+                        "isDeletable": false,
+                        "isEditableByReviewer": true,
+                        "isEditableByStudent": false,
+                        "isActive": false,
+                        "transitionSubmissionStates": [{
+                          "name": "Published",
+                          "isArchived": true,
+                          "isPublishable": false,
+                          "isDeletable": false,
+                          "isEditableByReviewer": true,
+                          "isEditableByStudent": false,
+                          "isActive": false,
+                          "transitionSubmissionStates": [{
+                            "name": "Pending Publication"
+                          }]
+                        }]
+                      }]
+                    }
+                  ]
+                },
+                {
+                  "name": "Approved"
+                }
+              ]
+            }]
+          },
+          {
+            "name": "Waiting On Requirements"
+          },
+          {
+            "name": "Approved"
+          }
+        ]
+      }]
+    },
+    {
+      "name": "On Hold",
+      "isArchived": false,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": true,
+      "transitionSubmissionStates": []
+    },
+    {
+      "name": "Withdrawn",
+      "isArchived": true,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "transitionSubmissionStates": []
+    },
+    {
+      "name": "Cancelled",
+      "isArchived": true,
+      "isPublishable": false,
+      "isDeletable": true,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "transitionSubmissionStates": []
+    }
+  ]
+}
