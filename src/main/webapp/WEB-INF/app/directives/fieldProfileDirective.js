@@ -208,7 +208,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             $scope.getFile = function (fieldValue) {
-                console.log(fieldValue)
                 if ($scope.hasFile(fieldValue)) {
                     $scope.submission.file(fieldValue.value).then(function (data) {
                         saveAs(new Blob([data], {
