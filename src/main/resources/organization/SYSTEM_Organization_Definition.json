@@ -1006,7 +1006,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1023,7 +1023,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Languages",
+              "isEntityProperty":true,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
@@ -1252,7 +1258,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Manuscript Allowed File Extensions",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

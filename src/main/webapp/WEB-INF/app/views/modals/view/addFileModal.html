@@ -9,9 +9,9 @@
 
   <div class="modal-body">
 
-    <span ng-if="hasPrimaryDocument()">
+    <span ng-show="hasPrimaryDocument()">
       <input type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection">
-      Replace the primary document<br>
+      Replace the primary document<br/>
 
       <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'replace', 'section-closed': addFileData.addFileSelection != 'replace'}">
 
@@ -32,13 +32,13 @@
     </span>
 
     <input type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection">
-    Add additional document<br>
+    Add additional document<br/>
 
     <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'add', 'section-closed': addFileData.addFileSelection != 'add'}">
 
       <div class="form-group">
         <label for="fileName">New Document Type:</label>
-        <select class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value">
+        <select class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentFieldPredicate.value">
           <option value="">Select File Type...</option>
         </select>
       </div>

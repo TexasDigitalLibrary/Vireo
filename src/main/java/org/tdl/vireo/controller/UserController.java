@@ -78,10 +78,10 @@ public class UserController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateRole(@ApiValidatedModel User updatedUser) {
 
-    	User persistedUser = userRepo.findOne(updatedUser.getId());
-    	// Awesome BeanUtils from Apache commons, included with Spring
-    	// copy properties from source, arg1, to destination, arg2, excluding ..., arg3
-    	copyProperties(updatedUser, persistedUser, "password", "activeFilter");
+        User persistedUser = userRepo.findOne(updatedUser.getId());
+        // Awesome BeanUtils from Apache commons, included with Spring
+        // copy properties from source, arg1, to destination, arg2, excluding ..., arg3
+        copyProperties(updatedUser, persistedUser, "password", "activeFilter");
 
         logger.info("Updating role for " + persistedUser.getEmail());
         persistedUser = userRepo.save(persistedUser);

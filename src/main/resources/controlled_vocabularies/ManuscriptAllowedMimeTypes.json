@@ -1,0 +1,14 @@
+{
+	"name": "Manuscript Allowed File Extensions",
+	"isEntityProperty": false,
+	"language": {
+		"name": "English"
+	},
+	"dictionary": [
+		{
+			"name": "pdf",
+			"definition": "PDF file",
+			"identifier": ""
+		}
+	]
+}

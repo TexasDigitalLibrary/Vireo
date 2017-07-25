@@ -32,9 +32,9 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
         $scope.resetLanguages = function () {
             $scope.languageRepo.clearValidationResults();
-            for (var key in $scope.forms) {
-                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-                    $scope.forms[key].$setPristine();
+            for (var i in $scope.forms) {
+                if ($scope.forms[i] !== undefined && !$scope.forms[i].$pristine) {
+                    $scope.forms[i].$setPristine();
                 }
             }
             if ($scope.uploadAction == 'process') {
@@ -42,11 +42,11 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
                 $scope.uploadStatus();
             }
 
-            for (var i in $scope.languages) {
-                for (var key in $scope.proquestLanguageCodes) {
-                    if ($scope.proquestLanguageCodes.hasOwnProperty(key)) {
-                        if ($scope.proquestLanguageCodes[key] === $scope.languages[i].name) {
-                            $scope.languages[i].proquestCode = key;
+            for (var j in $scope.languages) {
+                for (var k in $scope.proquestLanguageCodes) {
+                    if ($scope.proquestLanguageCodes.hasOwnProperty(k)) {
+                        if ($scope.proquestLanguageCodes[k] === $scope.languages[j].name) {
+                            $scope.languages[j].proquestCode = k;
                             break;
                         }
                     }

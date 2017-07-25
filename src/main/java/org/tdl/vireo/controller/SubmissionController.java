@@ -272,9 +272,10 @@ public class SubmissionController {
             if (orcidErrors.isEmpty()) {
                 Submission submission = submissionRepo.findOne(submissionId);
                 if (fieldValue.getId() == null) {
-                    submission.addFieldValue(fieldValueRepo.save(fieldValue));
+
+                    fieldValue = fieldValueRepo.save(fieldValue);
+                    submission.addFieldValue(fieldValue);
                     submission = submissionRepo.save(submission);
-                    fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
 
                     if (submissionFieldProfile.getLogged()) {
                         actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
@@ -668,7 +669,6 @@ public class SubmissionController {
     @ApiMapping(value = "/{submissionId}/{documentType}/archive-file")
     @Auth(role = "STUDENT")
     public ApiResponse archiveFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
-        ApiResponse apiResponse = null;
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
@@ -678,7 +678,7 @@ public class SubmissionController {
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
 
         actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
-        return apiResponse;
+        return new ApiResponse(SUCCESS, newUri);
     }
 
     @ApiMapping("/{submissionId}/send-advisor-email")
