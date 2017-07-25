@@ -141,7 +141,11 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = {
+        @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }),
+        @ApiValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true"),
+        @ApiValidation.Business(value = NONEXISTS)
+    })
     public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
