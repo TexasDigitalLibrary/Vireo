@@ -190,6 +190,21 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
             return promise;
         };
 
+        submission.getFieldProfileByPredicateName = function (predicateValue) {
+            var fieldProfile = null;
+            for (var i in submission.submissionWorkflowSteps) {
+                var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
+                for (var j in submissionWorkflowStep.aggregateFieldProfiles) {
+                    var currentFieldProfile = submissionWorkflowStep.aggregateFieldProfiles[j];
+                    if (currentFieldProfile.fieldPredicate.value === predicateValue) {
+                        fieldProfile = currentFieldProfile;
+                        break;
+                    }
+                }
+            }
+            return fieldProfile;
+        };
+
         submission.getFieldProfileByPredicate = function (predicate) {
             var fieldProfile = null;
             for (var i in submission.submissionWorkflowSteps) {

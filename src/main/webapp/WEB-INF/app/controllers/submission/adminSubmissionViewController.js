@@ -211,13 +211,34 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
 
+                var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
+
                 if ($scope.addFileData.addFileSelection === 'replace') {
-                    $scope.submission.removeFile($scope.submission.primaryDocumentFieldValue);
+                    $scope.submission.archiveFile($scope.submission.primaryDocumentFieldValue).then(function (response) {
+                        var archivedDocumentFieldValue = new FieldValue();
+
+                        archivedDocumentFieldValue.value = angular.fromJson(response.body).meta.message;
+
+                        var archivedDocumentFieldProfile = $scope.submission.getFieldProfileByPredicateName("_doctype_archived");
+
+                        if (archivedDocumentFieldProfile !== undefined && archivedDocumentFieldProfile !== null) {
+                            archivedDocumentFieldValue.fieldPredicate = archivedDocumentFieldProfile.fieldPredicate;
+
+                            archivedDocumentFieldValue.updating = true;
+
+                            $scope.submission.saveFieldValue(archivedDocumentFieldValue, archivedDocumentFieldProfile).then(function (response) {
+                                if (angular.fromJson(response.body).meta.type === "INVALID") {
+                                    fieldValue.refresh();
+                                }
+                                archivedDocumentFieldValue.updating = false;
+                            });
+                        } else {
+                            console.warn("No archived field profile exists on submission!");
+                        }
+                    });
                 }
 
                 fieldValue.value = response.data.meta.message;
-
-                var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
