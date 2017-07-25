@@ -1,8 +1,10 @@
-vireo.controller("AdminSubmissionViewController", function($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
 
-    angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+    angular.extend(this, $controller('AbstractController', {
+        $scope: $scope
+    }));
 
-    $scope.updateActionLogLimit = function() {
+    $scope.updateActionLogLimit = function () {
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
@@ -15,7 +17,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         DepositLocationRepo.getAll()
     ]);
 
-    ready.then(function(resolved) {
+    ready.then(function (resolved) {
 
         var submission = resolved[0];
         var users = resolved[1];
@@ -36,7 +38,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         var lastName = $scope.submission.submitter.lastName;
         var organization = $scope.submission.organization.name;
 
-        var firstAssignable = function() {
+        var firstAssignable = function () {
             var firstAssignable;
             for (var i in users) {
                 if (users[i].role === "ADMINISTRATOR" || users[i].role === "MANAGER") {
@@ -57,12 +59,14 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
         }
 
         if (addDefaultTemplate) {
-            emailTemplates.unshift({name: "Choose a Message Template"});
+            emailTemplates.unshift({
+                name: "Choose a Message Template"
+            });
         }
 
         $scope.addCommentModal = {};
 
-        $scope.resetCommentModal = function(addCommentModal) {
+        $scope.resetCommentModal = function (addCommentModal) {
             $scope.closeModal();
             addCommentModal.adding = false;
             addCommentModal.commentVisiblity = "public";
@@ -76,9 +80,9 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             addCommentModal.selectedTemplate = emailTemplates[0];
         };
 
-        $scope.addComment = function(addCommentModal) {
+        $scope.addComment = function (addCommentModal) {
             addCommentModal.adding = true;
-            $scope.submission.addComment(addCommentModal).then(function() {
+            $scope.submission.addComment(addCommentModal).then(function () {
                 $scope.resetCommentModal(addCommentModal);
             });
         };
@@ -87,7 +91,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         $scope.title = lastName + ', ' + firstName + ' (' + organization + ')';
 
-        $scope.showTab = function(workflowStep) {
+        $scope.showTab = function (workflowStep) {
             var show = false;
             for (var i in workflowStep.aggregateFieldProfiles) {
                 if (workflowStep.aggregateFieldProfiles[i].inputType.name !== 'INPUT_FILE') {
@@ -98,60 +102,62 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             return show;
         };
 
-        $scope.getTabPath = function(path) {
+        $scope.getTabPath = function (path) {
             return path + "/" + $scope.submission.id;
         };
 
-        $scope.editReviewerNotes = function() {
+        $scope.editReviewerNotes = function () {
             $scope.editingReviewerNotes = true;
             $scope.reviewerNotes = angular.copy($scope.submission.reviewerNotes);
         };
 
-        $scope.saveReviewerNotes = function() {
+        $scope.saveReviewerNotes = function () {
             $scope.savingReviewerNotes = true;
             $scope.editingReviewerNotes = false;
-            $scope.submission.saveReviewerNotes($scope.submission.reviewerNotes).then(function(response) {
+            $scope.submission.saveReviewerNotes($scope.submission.reviewerNotes).then(function (response) {
                 $scope.savingReviewerNotes = false;
             });
         };
 
-        $scope.cancelReviewerNotes = function() {
+        $scope.cancelReviewerNotes = function () {
             $scope.editingReviewerNotes = false;
             $scope.submission.reviewerNotes = angular.copy($scope.reviewerNotes);
         };
 
-        $scope.getFile = function(fieldValue) {
-            $scope.submission.file(fieldValue).then(function(data) {
-                saveAs(new Blob([data], {type: fieldValue.fileInfo.type}), fieldValue.fileInfo.name);
+        $scope.getFile = function (fieldValue) {
+            $scope.submission.file(fieldValue.value).then(function (data) {
+                saveAs(new Blob([data], {
+                    type: fieldValue.fileInfo.type
+                }), fieldValue.fileInfo.name);
             });
         };
 
-        $scope.getFileType = function(fieldPredicate) {
+        $scope.getFileType = function (fieldPredicate) {
             return FileUploadService.getFileType(fieldPredicate);
         };
 
-        $scope.isPrimaryDocument = function(fieldPredicate) {
+        $scope.isPrimaryDocument = function (fieldPredicate) {
             return $scope.getFileType(fieldPredicate) == 'PRIMARY';
         };
 
-        $scope.deleteFieldValue = function(fieldValue) {
+        $scope.deleteFieldValue = function (fieldValue) {
             fieldValue.updating = true;
-            FileUploadService.removeFile($scope.submission, fieldValue).then(function() {
+            FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
                 $scope.closeModal();
                 $scope.confirm = false;
                 delete fieldValue.updating;
             });
         };
 
-        $scope.saveFieldValue = function(fieldValue) {
+        $scope.saveFieldValue = function (fieldValue) {
             fieldValue.updating = true;
             $scope.closeModal();
-            $scope.submission.renameFile(fieldValue).then(function(response) {
+            $scope.submission.renameFile(fieldValue).then(function (response) {
                 fieldValue.value = angular.fromJson(response.body).meta.message;
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(response) {
+                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     }
@@ -162,16 +168,16 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         $scope.confirm = false;
 
-        $scope.toggleConfirm = function() {
+        $scope.toggleConfirm = function () {
             $scope.confirm = !$scope.confirm;
         };
 
-        $scope.cancel = function(fieldValue) {
+        $scope.cancel = function (fieldValue) {
             $scope.closeModal();
             fieldValue.refresh();
         };
 
-        var resetFileData = function() {
+        var resetFileData = function () {
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0],
                 sendEmailToRecipient: false,
@@ -181,23 +187,25 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         resetFileData();
 
-        $scope.queueUpload = function(files) {
+        $scope.queueUpload = function (files) {
             $scope.addFileData.files = files;
         };
 
-        $scope.removeFiles = function() {
+        $scope.removeFiles = function () {
             delete $scope.addFileData.files;
         };
 
-        $scope.submitAddFile = function() {
+        $scope.submitAddFile = function () {
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({fieldPredicate: $scope.addFileData.fieldPredicate});
+            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({
+                fieldPredicate: $scope.addFileData.fieldPredicate
+            });
 
             fieldValue.file = $scope.addFileData.files[0];
 
-            FileUploadService.uploadFile($scope.submission, fieldValue).then(function(response) {
+            FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
 
                 if ($scope.addFileData.addFileSelection === 'replace') {
                     $scope.submission.removeFile($scope.primaryDocumentFieldValue);
@@ -207,32 +215,31 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function(response) {
+                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
                         console.log($scope.addFileData);
                         if ($scope.addFileData.sendEmailToRecipient) {
-                             $scope.submission.sendEmail({
+                            $scope.submission.sendEmail({
                                 subject: $scope.addFileData.subject,
                                 message: $scope.addFileData.message,
                                 recipientEmail: $scope.addFileData.recipientEmail,
                                 ccRecipientEmail: $scope.addFileData.ccRecipientEmail,
                                 sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                 sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
-                            }).then(function() {
+                            }).then(function () {
                                 $scope.resetAddFile();
                             });
-                        }
-                        else {
-                             $scope.resetAddFile();
+                        } else {
+                            $scope.resetAddFile();
                         }
                     }
                 });
 
-            }, function(response) {
+            }, function (response) {
                 console.log('Error status: ' + response.status);
-            }, function(progress) {
+            }, function (progress) {
                 $scope.addFileData.progress = progress;
             });
 
@@ -242,12 +249,12 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
 
         };
 
-        $scope.resetAddFile = function() {
+        $scope.resetAddFile = function () {
             resetFileData();
             $scope.closeModal();
         };
 
-        $scope.disableSubmitAddFile = function() {
+        $scope.disableSubmitAddFile = function () {
             var disable = true;
             if ($scope.addFileData.addFileSelection == 'replace') {
                 disable = $scope.addFileData.files === undefined || $scope.addFileData.uploading;
@@ -257,27 +264,27 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             return disable;
         };
 
-        $scope.resetAddCommentModal = function() {
+        $scope.resetAddCommentModal = function () {
             $scope.closeModal();
         };
 
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
-            "getPrimaryDocumentFileName": function() {
+            "getPrimaryDocumentFileName": function () {
                 return $scope.submission.primaryDocumentFieldValue !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
             },
-            "downloadPrimaryDocument": function() {
+            "downloadPrimaryDocument": function () {
                 $scope.getFile($scope.submission.primaryDocumentFieldValue);
             },
-            "uploadNewFile": function() {
+            "uploadNewFile": function () {
                 $scope.openModal('#addFileModal');
             },
-            "gotoAllFiles": function() {
+            "gotoAllFiles": function () {
                 $location.hash('all-files');
                 $anchorScroll();
             },
-            "hasPrimaryDocument": function() {
+            "hasPrimaryDocument": function () {
                 return $scope.submission.primaryDocumentFieldValue && $scope.submission.primaryDocumentFieldValue.id;
             }
         };
@@ -294,53 +301,53 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             "allUsers": $scope.allUsers,
             "user": new User(),
             "sending": false,
-            "sendAdvisorEmail": function() {
+            "sendAdvisorEmail": function () {
                 $scope.submissionStatusBox.sending = true;
-                $scope.submission.sendAdvisorEmail().then(function() {
+                $scope.submission.sendAdvisorEmail().then(function () {
                     $scope.submissionStatusBox.sending = false;
                     $scope.closeModal();
                 });
             },
             "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
-            "changeStatus": function(state) {
+            "changeStatus": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.changeStatus(state.name).then(function() {
+                $scope.submission.changeStatus(state.name).then(function () {
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
                 });
             },
-            "publish": function(state) {
+            "publish": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function() {
+                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function () {
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
                 });
             },
-            "deleteSubmission": function() {
-                $scope.submission.delete().then(function() {
+            "deleteSubmission": function () {
+                $scope.submission.delete().then(function () {
                     $scope.submissionStatusBox.deleteWorking = false;
                     $location.path("/admin/list");
                 });
             },
-            "changeAssignee": function(assignee) {
-                $scope.submission.assign(assignee).then(function() {
+            "changeAssignee": function (assignee) {
+                $scope.submission.assign(assignee).then(function () {
                     $scope.submissionStatusBox.resetStatus();
                 });
             },
             "assignee": firstAssignable(),
-            "resetStatus": function() {
+            "resetStatus": function () {
                 $scope.submissionStatusBox.advanced = true;
                 $scope.submissionStatusBox.newStatus = submissionStates[0];
                 $scope.submissionStatusBox.assignee = firstAssignable();
                 $scope.closeModal();
             },
-            "setSubmitDate": function(newDate) {
+            "setSubmitDate": function (newDate) {
                 $scope.submissionStatusBox.savingDate = true;
-                $scope.submission.setSubmissionDate(newDate).then(function() {
+                $scope.submission.setSubmissionDate(newDate).then(function () {
                     $scope.submissionStatusBox.savingDate = false;
                 });
             }
@@ -350,7 +357,7 @@ vireo.controller("AdminSubmissionViewController", function($anchorScroll, $contr
             "title": "Custom Actions",
             "viewUrl": "views/sideboxes/customActions.html",
             "submission": $scope.submission,
-            "updateCustomActionValue": function(cav) {
+            "updateCustomActionValue": function (cav) {
                 $scope.submission.updateCustomActionValue(cav);
             }
         };

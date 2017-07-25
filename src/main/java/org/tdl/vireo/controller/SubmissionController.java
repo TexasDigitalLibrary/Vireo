@@ -272,9 +272,10 @@ public class SubmissionController {
             if (orcidErrors.isEmpty()) {
                 Submission submission = submissionRepo.findOne(submissionId);
                 if (fieldValue.getId() == null) {
-                    submission.addFieldValue(fieldValueRepo.save(fieldValue));
+
+                    fieldValue = fieldValueRepo.save(fieldValue);
+                    submission.addFieldValue(fieldValue);
                     submission = submissionRepo.save(submission);
-                    fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
 
                     if (submissionFieldProfile.getLogged()) {
                         actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());

@@ -92,7 +92,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
         submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValuesListen, {
                 'method': submission.id + '/field-values'
-            });
+            })
             WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function (data) {
                 var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
