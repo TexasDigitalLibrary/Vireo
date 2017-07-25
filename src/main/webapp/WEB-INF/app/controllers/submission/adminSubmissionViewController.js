@@ -64,6 +64,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             });
         }
 
+        var hasPrimaryDocumentFieldValue = function () {
+            return $scope.submission.primaryDocumentFieldValue !== undefined && $scope.submission.primaryDocumentFieldValue !== null;
+        };
+
         $scope.addCommentModal = {};
 
         $scope.resetCommentModal = function (addCommentModal) {
@@ -219,7 +223,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     if (angular.fromJson(response.body).meta.type === "INVALID") {
                         fieldValue.refresh();
                     } else {
-                        console.log($scope.addFileData);
                         if ($scope.addFileData.sendEmailToRecipient) {
                             $scope.submission.sendEmail({
                                 subject: $scope.addFileData.subject,
@@ -269,14 +272,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.hasPrimaryDocument = function () {
-            return $scope.submission.primaryDocumentFieldValue !== undefined && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+            return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
         }
 
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
             "getPrimaryDocumentFileName": function () {
-                return $scope.submission.primaryDocumentFieldValue !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
+                return hasPrimaryDocumentFieldValue() ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
             },
             "downloadPrimaryDocument": function () {
                 $scope.getFile($scope.submission.primaryDocumentFieldValue);
