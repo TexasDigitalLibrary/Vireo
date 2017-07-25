@@ -1,4 +1,4 @@
-var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsApi) {
 
     return function Submission() {
 
@@ -11,13 +11,13 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         submission.enableMergeCombinationOperation();
 
         //populate fieldValues with models for existing values
-        var instantiateFieldValues = function() {
+        var instantiateFieldValues = function () {
             var fieldValues = angular.copy(submission.fieldValues);
             if (submission.fieldValues) {
                 submission.fieldValues.length = 0;
             }
-            angular.forEach(fieldValues, function(fieldValue) {
-            	fieldValue = new FieldValue(fieldValue);
+            angular.forEach(fieldValues, function (fieldValue) {
+                fieldValue = new FieldValue(fieldValue);
                 if (fieldValue.fieldPredicate.documentTypePredicate) {
                     enrichDocumentTypeFieldValue(fieldValue);
                 }
@@ -26,24 +26,27 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         };
 
         //populate actionLogs with models for existing values
-        var instantiateActionLogs = function() {
+        var instantiateActionLogs = function () {
             var actionLogs = angular.copy(submission.actionLogs);
             if (submission.actionLogs) {
                 submission.actionLogs.length = 0;
             }
-            angular.forEach(actionLogs, function(actionLog) {
+            angular.forEach(actionLogs, function (actionLog) {
                 actionLog = new ActionLog(actionLog);
                 submission.actionLogs.push(actionLog);
             });
         };
 
         // additional model methods and variables
-        var createEmptyFieldValue = function(fieldPredicate) {
-            return new FieldValue({value: "", fieldPredicate: fieldPredicate});
+        var createEmptyFieldValue = function (fieldPredicate) {
+            return new FieldValue({
+                value: "",
+                fieldPredicate: fieldPredicate
+            });
         };
 
-        var enrichDocumentTypeFieldValue = function(fieldValue) {
-            submission.fileInfo(fieldValue).then(function(response) {
+        var enrichDocumentTypeFieldValue = function (fieldValue) {
+            submission.fileInfo(fieldValue).then(function (response) {
                 fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
                 fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
             });
@@ -52,17 +55,17 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             }
         };
 
-        submission.listen(function() {
+        submission.listen(function () {
             instantiateFieldValues();
             instantiateActionLogs();
         });
 
-        submission.before(function() {
+        submission.before(function () {
             instantiateFieldValues();
 
             // populate fieldValues with models for empty values
-            angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
-                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+            angular.forEach(submission.submissionWorkflowSteps, function (submissionWorkflowStep) {
+                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function (fp) {
                     var fieldValuesByFieldPredicate = submission.getFieldValuesByFieldPredicate(fp.fieldPredicate);
                     if (!fieldValuesByFieldPredicate.length) {
                         submission.fieldValues.push(createEmptyFieldValue(fp.fieldPredicate));
@@ -71,7 +74,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
         });
 
-        submission.before(function() {
+        submission.before(function () {
             instantiateActionLogs();
 
             angular.extend(apiMapping.Submission.actionLogListen, {
@@ -80,17 +83,17 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
             submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
 
-            submission.actionLogListenPromise.then(null, null, function(response) {
+            submission.actionLogListenPromise.then(null, null, function (response) {
                 var newActionLog = angular.fromJson(response.body).payload.ActionLog;
                 submission.actionLogs.push(new ActionLog(newActionLog));
             });
         });
 
-        submission.before(function() {
+        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValuesListen, {
                 'method': submission.id + '/field-values'
             });
-            WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function(data) {
+            WsApi.listen(apiMapping.Submission.fieldValuesListen).then(null, null, function (data) {
                 var replacedFieldValue = false;
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
                 var emptyFieldValues = [];
@@ -125,11 +128,11 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
         });
 
-        submission.before(function() {
+        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValueRemovedListen, {
                 'method': submission.id + '/removed-field-value'
             });
-            WsApi.listen(apiMapping.Submission.fieldValueRemovedListen).then(null, null, function(data) {
+            WsApi.listen(apiMapping.Submission.fieldValueRemovedListen).then(null, null, function (data) {
                 var removedFieldValue = angular.fromJson(data.body).payload.FieldValue;
                 for (var i in submission.fieldValues) {
                     var fieldValue = submission.fieldValues[i];
@@ -144,13 +147,13 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
         });
 
-        submission.addComment = function(data) {
-        	angular.extend(apiMapping.Submission.addComment, {
+        submission.addComment = function (data) {
+            angular.extend(apiMapping.Submission.addComment, {
                 'method': submission.id + "/add-comment",
                 'data': data
             });
             var promise = WsApi.fetch(apiMapping.Submission.addComment);
-            promise.then(function(res) {
+            promise.then(function (res) {
                 if (res.meta && res.meta.type == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
@@ -158,14 +161,14 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.sendEmail = function(data) {
+        submission.sendEmail = function (data) {
             console.log(data);
             angular.extend(apiMapping.Submission.sendEmail, {
                 'method': submission.id + "/send-email",
                 'data': data
             });
             var promise = WsApi.fetch(apiMapping.Submission.sendEmail);
-            promise.then(function(res) {
+            promise.then(function (res) {
                 if (res.meta && res.meta.type == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
@@ -174,12 +177,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
         };
 
         //Override
-        submission.delete = function() {
+        submission.delete = function () {
             angular.extend(apiMapping.Submission.remove, {
                 'method': "delete/" + submission.id
             });
             var promise = WsApi.fetch(apiMapping.Submission.remove);
-            promise.then(function(res) {
+            promise.then(function (res) {
                 if (res.meta && res.meta.type == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
@@ -187,7 +190,22 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.getFieldProfileByPredicate = function(predicate) {
+        submission.getFieldProfileByPredicateName = function (predicateValue) {
+            var fieldProfile = null;
+            for (var i in submission.submissionWorkflowSteps) {
+                var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
+                for (var j in submissionWorkflowStep.aggregateFieldProfiles) {
+                    var currentFieldProfile = submissionWorkflowStep.aggregateFieldProfiles[j];
+                    if (currentFieldProfile.fieldPredicate.value === predicateValue) {
+                        fieldProfile = currentFieldProfile;
+                        break;
+                    }
+                }
+            }
+            return fieldProfile;
+        };
+
+        submission.getFieldProfileByPredicate = function (predicate) {
             var fieldProfile = null;
             for (var i in submission.submissionWorkflowSteps) {
                 var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
@@ -202,7 +220,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return fieldProfile;
         };
 
-        submission.getPrimaryDocumentFieldProfile = function() {
+        submission.getPrimaryDocumentFieldProfile = function () {
             var fieldProfile = null;
             for (var i in submission.submissionWorkflowSteps) {
                 var submissionWorkflowStep = submission.submissionWorkflowSteps[i];
@@ -217,7 +235,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return fieldProfile;
         };
 
-        submission.getFieldValuesByFieldPredicate = function(fieldPredicate) {
+        submission.getFieldValuesByFieldPredicate = function (fieldPredicate) {
             var fieldValues = [];
             for (var i in submission.fieldValues) {
                 var fieldValue = submission.fieldValues[i];
@@ -228,7 +246,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return fieldValues;
         };
 
-        submission.getFieldValuesByInputType = function(inputType) {
+        submission.getFieldValuesByInputType = function (inputType) {
             var fieldValues = [];
             for (var i in submission.submissionWorkflowSteps) {
                 var workflowStep = submission.submissionWorkflowSteps[i];
@@ -242,7 +260,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return fieldValues;
         };
 
-        submission.findFieldValueById = function(id) {
+        submission.findFieldValueById = function (id) {
             var foundFieldValue = null;
             for (var i in submission.fieldValues) {
                 var fieldValue = submission.fieldValues[i];
@@ -254,18 +272,18 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return foundFieldValue;
         };
 
-        submission.addFieldValue = function(fieldPredicate) {
+        submission.addFieldValue = function (fieldPredicate) {
             var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
             submission.fieldValues.push(emptyFieldValue);
             return emptyFieldValue;
         };
 
-        submission.validateFieldValue = function(fieldValue, fieldProfile) {
+        submission.validateFieldValue = function (fieldValue, fieldProfile) {
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
             if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
-                return $q(function(resolve) {
+                return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
                     resolve();
@@ -277,11 +295,11 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
 
             var promise = WsApi.fetch(this.getMapping().validateFieldValue);
-            promise.then(function(response) {
+            promise.then(function (response) {
                 var responseObj = angular.fromJson(response.body);
                 if (responseObj.meta.type === "INVALID") {
                     fieldValue.setIsValid(false);
-                    angular.forEach(responseObj.payload.HashMap.value, function(value) {
+                    angular.forEach(responseObj.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
                     });
                 }
@@ -290,12 +308,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
         };
 
-        submission.saveFieldValue = function(fieldValue, fieldProfile) {
+        submission.saveFieldValue = function (fieldValue, fieldProfile) {
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
             if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
-                return $q(function(resolve) {
+                return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
                     resolve();
@@ -309,11 +327,11 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
 
             var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
-            promise.then(function(response) {
+            promise.then(function (response) {
                 var responseObj = angular.fromJson(response.body);
                 if (responseObj.meta.type === "INVALID") {
                     fieldValue.setIsValid(false);
-                    angular.forEach(responseObj.payload.HashMap.value, function(value) {
+                    angular.forEach(responseObj.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
                     });
 
@@ -350,12 +368,12 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.validate = function() {
+        submission.validate = function () {
             submission.isValid = false;
 
             var savePromises = [];
 
-            angular.forEach(submission.fieldValues, function(fv) {
+            angular.forEach(submission.fieldValues, function (fv) {
                 var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);
                 if (!fieldProfile.optional || (fv.value !== "" && fieldProfile.optional)) {
                     var savePromise = submission.validateFieldValue(fv, fieldProfile);
@@ -363,7 +381,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
                 }
             });
 
-            $q.all(savePromises).then(function() {
+            $q.all(savePromises).then(function () {
                 var valid = true;
                 for (var i in submission.fieldValues) {
                     var fv = submission.fieldValues[i];
@@ -376,7 +394,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             });
         };
 
-        submission.removeFieldValue = function(fieldValue) {
+        submission.removeFieldValue = function (fieldValue) {
             angular.extend(this.getMapping().removeFieldValue, {
                 method: submission.id + "/remove-field-value",
                 data: fieldValue
@@ -385,13 +403,13 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.removeUnsavedFieldValue = function(fieldValue) {
+        submission.removeUnsavedFieldValue = function (fieldValue) {
             if (!fieldValue.id) {
                 submission.fieldValues.splice(submission.fieldValues.indexOf(fieldValue), 1);
             }
         };
 
-        submission.removeAllUnsavedFieldValuesByPredicate = function(fieldPredicate) {
+        submission.removeAllUnsavedFieldValuesByPredicate = function (fieldPredicate) {
             for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                 var fieldValue = submission.fieldValues[i];
                 if (fieldValue.fieldPredicate.id === fieldPredicate.id) {
@@ -401,7 +419,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             submission.addFieldValue(fieldPredicate);
         };
 
-        submission.saveReviewerNotes = function(reviewerNotes) {
+        submission.saveReviewerNotes = function (reviewerNotes) {
             angular.extend(this.getMapping().saveReviewerNotes, {
                 method: submission.id + "/update-reviewer-notes",
                 data: {
@@ -412,7 +430,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.fileInfo = function(fieldValue) {
+        submission.fileInfo = function (fieldValue) {
             angular.extend(this.getMapping().fileInfo, {
                 data: {
                     'uri': fieldValue.value
@@ -422,17 +440,17 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.file = function(fieldValue) {
+        submission.file = function (uri) {
             angular.extend(this.getMapping().file, {
                 data: {
-                    'uri': fieldValue.value
+                    'uri': uri
                 }
             });
             var promise = FileApi.download(this.getMapping().file);
             return promise;
         };
 
-        submission.removeFile = function(fieldValue) {
+        submission.removeFile = function (fieldValue) {
             angular.extend(this.getMapping().removeFile, {
                 method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + '/remove-file',
                 data: {
@@ -443,7 +461,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.archiveFile = function(fieldValue) {
+        submission.archiveFile = function (fieldValue) {
             angular.extend(this.getMapping().archiveFile, {
                 method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + "/archive-file",
                 data: {
@@ -455,7 +473,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.renameFile = function(fieldValue) {
+        submission.renameFile = function (fieldValue) {
 
             angular.extend(this.getMapping().renameFile, {
                 method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + "/rename-file",
@@ -470,7 +488,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.needsCorrection = function() {
+        submission.needsCorrection = function () {
 
             angular.extend(this.getMapping().needsCorrection, {
                 method: submission.id + "/needs-correction"
@@ -481,7 +499,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.submitCorrections = function() {
+        submission.submitCorrections = function () {
 
             angular.extend(this.getMapping().submitCorrections, {
                 method: submission.id + "/submit-corrections"
@@ -492,7 +510,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.updateCustomActionValue = function(customActionValue) {
+        submission.updateCustomActionValue = function (customActionValue) {
             angular.extend(submission.getMapping().updateCustomActionValue, {
                 method: submission.id + "/update-custom-action-value",
                 data: customActionValue
@@ -500,7 +518,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return WsApi.fetch(submission.getMapping().updateCustomActionValue);
         };
 
-        submission.changeStatus = function(submissionStateName) {
+        submission.changeStatus = function (submissionStateName) {
 
             angular.extend(this.getMapping().changeStatus, {
                 method: submission.id + "/change-status/" + submissionStateName
@@ -511,7 +529,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.publish = function(depositLocation) {
+        submission.publish = function (depositLocation) {
             angular.extend(this.getMapping().publish, {
                 method: submission.id + "/publish/" + depositLocation.id
             });
@@ -521,11 +539,11 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.submit = function() {
+        submission.submit = function () {
             return submission.changeStatus('Submitted');
         };
 
-        submission.setSubmissionDate = function(newDate) {
+        submission.setSubmissionDate = function (newDate) {
 
             angular.extend(this.getMapping().submitDate, {
                 method: submission.id + "/submit-date",
@@ -537,7 +555,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.assign = function(assignee) {
+        submission.assign = function (assignee) {
 
             angular.extend(this.getMapping().assignTo, {
                 method: submission.id + "/assign-to",
@@ -549,7 +567,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.updateAdvisorApproval = function(approval) {
+        submission.updateAdvisorApproval = function (approval) {
 
             angular.extend(this.getMapping().updateAdvisorApproval, {
                 method: submission.id + "/update-advisor-approval",
@@ -561,7 +579,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.sendAdvisorEmail = function() {
+        submission.sendAdvisorEmail = function () {
 
             angular.extend(this.getMapping().sendAdvisorEmail, {
                 method: submission.id + "/send-advisor-email"
@@ -572,23 +590,22 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.getFlaggedFieldProfiles = function() {
+        submission.getFlaggedFieldProfiles = function () {
 
             var fieldProfiles = [];
 
-            angular.forEach(submission.submissionWorkflowSteps, function(submissionWorkflowStep) {
-                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function(fp) {
+            angular.forEach(submission.submissionWorkflowSteps, function (submissionWorkflowStep) {
+                angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function (fp) {
                     if (fp.flagged)
                         fieldProfiles.push(fp);
-                    }
-                );
+                });
             });
 
             return fieldProfiles;
 
         };
 
-        submission.addMessage = function(message) {
+        submission.addMessage = function (message) {
             angular.extend(this.getMapping().addMessage, {
                 method: submission.id + "/add-message",
                 data: message
@@ -597,7 +614,7 @@ var submissionModel = function($q, ActionLog, FieldValue, FileApi, RestApi, WsAp
             return promise;
         };
 
-        submission.getFileType = function(fieldPredicate) {
+        submission.getFileType = function (fieldPredicate) {
             return fieldPredicate.value.substring(9).toUpperCase();
         };
 
