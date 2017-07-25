@@ -12,6 +12,6 @@
     "ng-file-upload": "12.2.13",
     "ng-sortable": "1.3.8",
     "ng-table": "1.0.0",
-    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#9549c203a113d1f94a81afe62604058348d19e2f"
+    "core": "git@github.com:TAMULib/Weaver-UI-Core.git#cb1a5ca517b957c15cbc18b96db31228b88822cf"
   }
 }
