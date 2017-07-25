@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
+import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -27,13 +28,14 @@ import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
@@ -59,6 +61,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
+    
+    @Autowired
+    private InputTypeRepo inputTypeRepo;
 
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;
@@ -77,7 +82,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionState startingState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public Submission create(User submitter, Organization organization, SubmissionStatus startingState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
         
         
         if(organization.getAcceptsSubmissions().equals(false)) {
@@ -125,14 +130,42 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission updateStatus(Submission submission, SubmissionState submissionState, Credentials credentials) {
-        SubmissionState oldSubmissionState = submission.getSubmissionState();
+    public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
+        SubmissionStatus oldSubmissionState = submission.getSubmissionStatus();
         String oldSubmissionStateName = oldSubmissionState.getName();
+                
+        if(submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
+        	        	
+        	List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
+        	List<FieldValue> defaultLicenseFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
 
-        submission.setSubmissionState(submissionState);
+        	boolean attachProquestLicense = true;
+        	boolean attachDefaultLicenseFieldValues = true;
+        	
+        	for(FieldValue fv : proquestFieldValues) {
+        		attachProquestLicense = !fv.getValue().equals("false");
+        		if(!attachProquestLicense) break;
+        	}
+        	
+        	for(FieldValue fv : defaultLicenseFieldValues) {
+        		attachDefaultLicenseFieldValues = !fv.getValue().equals("false");
+        		if(!attachDefaultLicenseFieldValues) break;
+        	}
+        	
+        	if(attachProquestLicense) {
+        		System.out.println("Append proquest license");
+        	}
+        	
+        	if(attachDefaultLicenseFieldValues) {
+        		System.out.println("Append default license");
+        	}
+        	
+        }
+        
+        submission.setSubmissionStatus(submissionStatus);
         submission = submissionRepo.saveAndFlush(submission);
 
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionState.getName());
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionStatus.getName());
         return submission;
     }
 

@@ -21,14 +21,14 @@ import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -61,7 +61,7 @@ public class OrganizationController {
 	private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
 	@Autowired
-	private SubmissionStateRepo submissionStateRepo;
+	private SubmissionStatusRepo submissionStateRepo;
 
 	@Autowired
 	private WorkflowStepRepo workflowStepRepo;
@@ -120,7 +120,7 @@ public class OrganizationController {
 		ApiResponse response = new ApiResponse(SUCCESS);
 
 		Organization org = organizationRepo.findOne(requestingOrgID);
-		SubmissionState submissionState = submissionStateRepo.findOne(dataNode.get("submissionStateId").asLong());
+		SubmissionStatus submissionState = submissionStateRepo.findOne(dataNode.get("submissionStateId").asLong());
 		JsonNode recipientNode = dataNode.get("recipient");
 		EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
 

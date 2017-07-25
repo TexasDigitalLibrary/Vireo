@@ -71,8 +71,8 @@ public class TemplateUtility {
                 //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
         
 
-        if (submission.getSubmissionState() != null) {
-            compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionState().getName());
+        if (submission.getSubmissionStatus() != null) {
+            compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionStatus().getName());
         }
 
         if (submission.getAssignee() != null) {

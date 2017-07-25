@@ -25,7 +25,7 @@ public class SubmissionTest extends AbstractEntityTest {
         graduateOfficeEmployee1 = userRepo.create(TEST_SUBMISSION_REVIEWER2_EMAIL, TEST_SUBMISSION_REVIEWER1_FIRSTNAME, TEST_SUBMISSION_REVIEWER1_LASTNAME, TEST_SUBMISSION_REVIEWER1_ROLE);
         assertEquals("The second reviewer does not exist!", 3, userRepo.count());
 
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
+        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE, null);
         assertEquals("The submission state does not exist!", 1, submissionStateRepo.count());
 
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
@@ -81,7 +81,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submission = submissionRepo.save(submission);
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
-        assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getSubmissionState());
+        assertEquals("Saved submission did not contain the correct state!", submissionState, submission.getSubmissionStatus());
         assertEquals("Saved submission did not contain the correct submitter!", submitter, submission.getSubmitter());
         assertEquals("Saved submission did not contain the correct organization!", submission.getOrganization(), organization);
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));

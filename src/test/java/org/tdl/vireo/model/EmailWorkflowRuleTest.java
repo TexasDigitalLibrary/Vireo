@@ -11,7 +11,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     @Before
     public void setUp() {
         assertTrue("The repository was not empty!", emailWorkflowRuleRepo.count() == 0);
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
+        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE, null);
         emailTemplate = emailTemplateRepo.create("Important Notification", "A Marvelous Submission", "Be it known to ye that this submission is marvelous.");
         emailRecipient = emailRecipientRepo.createSubmitterRecipient();
     }
@@ -20,7 +20,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     public void testCreate() {
         EmailWorkflowRule notifyEverybodyOfImportantDoings = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
         assertTrue("We didn't have enough email workflow rules in the repo!", emailWorkflowRuleRepo.count() == 1);
-        assertTrue("We didn't have the right submissionState on our rule!", notifyEverybodyOfImportantDoings.getSubmissionState().equals(submissionState));
+        assertTrue("We didn't have the right submissionState on our rule!", notifyEverybodyOfImportantDoings.getSubmissionStatus().equals(submissionState));
         assertTrue("We didn't have the right recipient type on our rule!", notifyEverybodyOfImportantDoings.getEmailRecipient().equals(emailRecipient));
         assertTrue("We didn't have the right template on our rule!", notifyEverybodyOfImportantDoings.getEmailTemplate().equals(emailTemplate));
     }

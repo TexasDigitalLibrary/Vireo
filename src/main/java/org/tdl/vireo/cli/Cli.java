@@ -12,13 +12,13 @@ import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.framework.model.Credentials;
@@ -35,7 +35,7 @@ public class Cli implements CommandLineRunner {
 	OrganizationRepo organizationRepo;
 
 	@Autowired
-	SubmissionStateRepo submissionStateRepo;
+	SubmissionStatusRepo submissionStateRepo;
 
 	@Autowired
 	FieldValueRepo fieldValueRepo;
@@ -94,7 +94,7 @@ public class Cli implements CommandLineRunner {
 					case "generate":
 
 						Organization org = organizationRepo.findAll().get(0);
-						SubmissionState state = submissionStateRepo.findAll().get(0);
+						SubmissionStatus state = submissionStateRepo.findAll().get(0);
 
 						if(commandArgs.size() > 0 ) {
 							try {

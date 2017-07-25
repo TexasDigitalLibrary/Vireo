@@ -43,7 +43,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
@@ -318,7 +318,7 @@ public abstract class AbstractEntityTest {
     protected SubmissionRepo submissionRepo;
 
     @Autowired
-    protected SubmissionStateRepo submissionStateRepo;
+    protected SubmissionStatusRepo submissionStateRepo;
 
     @Autowired
     protected UserRepo userRepo;
@@ -428,9 +428,9 @@ public abstract class AbstractEntityTest {
     protected OrganizationCategory childCategory;
     protected OrganizationCategory organizationCategory;
 
-    protected SubmissionState submissionState;
-    protected SubmissionState includedSubmissionState;
-    protected SubmissionState excludedSubmissionState;
+    protected SubmissionStatus submissionState;
+    protected SubmissionStatus includedSubmissionState;
+    protected SubmissionStatus excludedSubmissionState;
 
     protected Submission testSubmission;
     protected Submission includedSubmission;

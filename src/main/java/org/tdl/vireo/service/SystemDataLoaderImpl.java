@@ -42,7 +42,7 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionListColumn;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
@@ -64,7 +64,7 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
@@ -118,7 +118,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
-    private SubmissionStateRepo submissionStateRepo;
+    private SubmissionStatusRepo submissionStatusRepo;
 
     private SubmissionListColumnRepo submissionListColumnRepo;
 
@@ -144,7 +144,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             FieldPredicateRepo fieldPredicateRepo, FieldGlossRepo fieldGlossRepo,
             ControlledVocabularyRepo controlledVocabularyRepo, LanguageRepo languageRepo,
             DocumentTypeRepo documentTypeRepo, EmailWorkflowRuleRepo emailWorkflowRuleRepo,
-            SubmissionStateRepo submissionStateRepo,
+            SubmissionStatusRepo submissionStateRepo,
             EntityControlledVocabularyService entityControlledVocabularyService,
             ProquestLanguageCodesService proquestLanguageCodesService,
             SubmissionListColumnRepo submissionListColumnRepo,
@@ -169,7 +169,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         this.languageRepo = languageRepo;
         this.documentTypeRepo = documentTypeRepo;
         this.emailWorkflowRuleRepo = emailWorkflowRuleRepo;
-        this.submissionStateRepo = submissionStateRepo;
+        this.submissionStatusRepo = submissionStateRepo;
         this.entityControlledVocabularyService = entityControlledVocabularyService;
         this.proquestLanguageCodesService = proquestLanguageCodesService;
         this.submissionListColumnRepo = submissionListColumnRepo;
@@ -188,7 +188,7 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
         generateAllSystemEmbargos();
 
         logger.info("Generating system submission states");
-        loadSystemSubmissionStates();
+        loadSystemSubmissionStatuses();
 
         logger.info("Generating system organization catagories");
         generateAllOrganizationCategories();
@@ -549,20 +549,21 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
             systemOrganization.getEmailWorkflowRules().forEach(emailWorkflowRule -> {
 
                 // check to see if the SubmissionState exists
-                SubmissionState newSubmissionState = submissionStateRepo
-                        .findByName(emailWorkflowRule.getSubmissionState().getName());
+                SubmissionStatus newSubmissionStatus = submissionStatusRepo
+                        .findByName(emailWorkflowRule.getSubmissionStatus().getName());
 
                 // create new SubmissionState if not already exists
-                if (newSubmissionState == null) {
-                    newSubmissionState = submissionStateRepo.create(emailWorkflowRule.getSubmissionState().getName(),
-                            emailWorkflowRule.getSubmissionState().isArchived(),
-                            emailWorkflowRule.getSubmissionState().isPublishable(),
-                            emailWorkflowRule.getSubmissionState().isDeletable(),
-                            emailWorkflowRule.getSubmissionState().isEditableByReviewer(),
-                            emailWorkflowRule.getSubmissionState().isEditableByStudent(),
-                            emailWorkflowRule.getSubmissionState().isActive());
-                    newSubmissionState = submissionStateRepo
-                            .save(recursivelyFindOrCreateSubmissionState(emailWorkflowRule.getSubmissionState()));
+                if (newSubmissionStatus == null) {
+                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(),
+                            emailWorkflowRule.getSubmissionStatus().isArchived(),
+                            emailWorkflowRule.getSubmissionStatus().isPublishable(),
+                            emailWorkflowRule.getSubmissionStatus().isDeletable(),
+                            emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(),
+                            emailWorkflowRule.getSubmissionStatus().isEditableByStudent(),
+                            emailWorkflowRule.getSubmissionStatus().isActive(),
+                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                    newSubmissionStatus = submissionStatusRepo
+                            .save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
                 }
 
                 // check to see if the EmailTemplate exists
@@ -601,11 +602,11 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
 
                 // check to see if the EmailWorkflowRule exists
                 EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo
-                        .findBySubmissionStateAndEmailRecipientAndEmailTemplate(newSubmissionState,
+                        .findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus,
                                 emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
                 if (newEmailWorkflowRule == null) {
-                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionState,
+                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionStatus,
                             emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
                 }
 
@@ -626,26 +627,27 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     /**
      * Loads default system submission states.
      */
-    public void loadSystemSubmissionStates() {
+    public void loadSystemSubmissionStatuses() {
 
         try {
             // read and map json to SubmissionState
-            SubmissionState systemSubmissionState = objectMapper.readValue(
-                    getFileFromResource("classpath:/submission_states/SYSTEM_Submission_States.json"),
-                    SubmissionState.class);
+            SubmissionStatus systemSubmissionStatus = objectMapper.readValue(
+                    getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json"),
+                    SubmissionStatus.class);
 
             // check to see if the SubmissionState exists
-            SubmissionState newSubmissionState = submissionStateRepo.findByName(systemSubmissionState.getName());
+            SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(systemSubmissionStatus.getName());
 
             // create new SubmissionState if not already exists
-            if (newSubmissionState == null) {
-                newSubmissionState = submissionStateRepo.create(systemSubmissionState.getName(),
-                        systemSubmissionState.isArchived(), systemSubmissionState.isPublishable(),
-                        systemSubmissionState.isDeletable(), systemSubmissionState.isEditableByReviewer(),
-                        systemSubmissionState.isEditableByStudent(), systemSubmissionState.isActive());
+            if (newSubmissionStatus == null) {
+                newSubmissionStatus = submissionStatusRepo.create(systemSubmissionStatus.getName(),
+                        systemSubmissionStatus.isArchived(), systemSubmissionStatus.isPublishable(),
+                        systemSubmissionStatus.isDeletable(), systemSubmissionStatus.isEditableByReviewer(),
+                        systemSubmissionStatus.isEditableByStudent(), systemSubmissionStatus.isActive(),
+                        null);
 
-                newSubmissionState = submissionStateRepo
-                        .save(recursivelyFindOrCreateSubmissionState(systemSubmissionState));
+                newSubmissionStatus = submissionStatusRepo
+                        .save(recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus));
             }
 
         } catch (IOException e) {
@@ -656,43 +658,45 @@ public class SystemDataLoaderImpl implements SystemDataLoader {
     /**
      * Recursively map transition submission states from json.
      */
-    public SubmissionState recursivelyFindOrCreateSubmissionState(SubmissionState submissionState) {
+    public SubmissionStatus recursivelyFindOrCreateSubmissionStatus(SubmissionStatus submissionStatus) {
 
-        // check to see if the SubmissionState exists
-        SubmissionState newSubmissionState = submissionStateRepo.findByName(submissionState.getName());
+        // check to see if the SubmissionStatus exists
+        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(submissionStatus.getName());
 
-        // create new SubmissionState if not already exists
-        if (newSubmissionState == null) {
-            newSubmissionState = submissionStateRepo.create(submissionState.getName(), submissionState.isArchived(),
-                    submissionState.isPublishable(), submissionState.isDeletable(),
-                    submissionState.isEditableByReviewer(), submissionState.isEditableByStudent(),
-                    submissionState.isActive());
+        // create new SubmissionStatus if not already exists
+        if (newSubmissionStatus == null) {
+            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(),
+                    submissionStatus.isPublishable(), submissionStatus.isDeletable(),
+                    submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(),
+                    submissionStatus.isActive(),
+                    submissionStatus.getSubmissionState());
         }
 
-        // temporary list of SubmissionState
-        List<SubmissionState> transitionStates = new ArrayList<SubmissionState>();
+        // temporary list of SubmissionStatus
+        List<SubmissionStatus> transitionStatuses = new ArrayList<SubmissionStatus>();
 
-        submissionState.getTransitionSubmissionStates().forEach(transitionState -> {
+        submissionStatus.getTransitionSubmissionStatuses().forEach(transitionStatus -> {
 
-            // check to see if the Transistion SubmissionState exists
-            SubmissionState newTransitionState = submissionStateRepo.findByName(transitionState.getName());
+            // check to see if the Transistion SubmissionStatus exists
+            SubmissionStatus newTransitionStatus = submissionStatusRepo.findByName(transitionStatus.getName());
 
-            // create new Transistion SubmissionState if not already exists
-            if (newTransitionState == null) {
-                newTransitionState = submissionStateRepo.create(transitionState.getName(), transitionState.isArchived(),
-                        transitionState.isPublishable(), transitionState.isDeletable(),
-                        transitionState.isEditableByReviewer(), transitionState.isEditableByStudent(),
-                        transitionState.isActive());
-                newTransitionState = submissionStateRepo.save(recursivelyFindOrCreateSubmissionState(transitionState));
+            // create new Transistion SubmissionStatus if not already exists
+            if (newTransitionStatus == null) {
+                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(),
+                        transitionStatus.isPublishable(), transitionStatus.isDeletable(),
+                        transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(),
+                        transitionStatus.isActive(),
+                        transitionStatus.getSubmissionState());
+                newTransitionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(transitionStatus));
             }
 
-            transitionStates.add(newTransitionState);
+            transitionStatuses.add(newTransitionStatus);
 
         });
 
-        newSubmissionState.setTransitionSubmissionStates(transitionStates);
+        newSubmissionStatus.setTransitionSubmissionStatuses(transitionStatuses);
 
-        return submissionStateRepo.save(newSubmissionState);
+        return submissionStatusRepo.save(newSubmissionStatus);
     }
 
     public EmailTemplate loadSystemEmailTemplate(String name) {

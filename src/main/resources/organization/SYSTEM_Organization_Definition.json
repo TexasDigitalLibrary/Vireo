@@ -1166,7 +1166,7 @@
   "emailWorkflowRules": [{
       "isSystem": true,
       "isDisabled": false,
-      "submissionState": {
+      "submissionStatus": {
         "name": "Submitted"
       },
       "recipientType": 2,
@@ -1178,7 +1178,7 @@
     {
       "isSystem": true,
       "isDisabled": false,
-      "submissionState": {
+      "submissionStatus": {
         "name": "Submitted"
       },
       "recipientType": 1,
