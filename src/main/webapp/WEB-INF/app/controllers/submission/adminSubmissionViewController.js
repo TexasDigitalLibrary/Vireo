@@ -199,7 +199,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.primaryDocumentFieldValue : new FieldValue({
+            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.submission.primaryDocumentFieldValue : new FieldValue({
                 fieldPredicate: $scope.addFileData.fieldPredicate
             });
 
@@ -208,7 +208,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
 
                 if ($scope.addFileData.addFileSelection === 'replace') {
-                    $scope.submission.removeFile($scope.primaryDocumentFieldValue);
+                    $scope.submission.removeFile($scope.submission.primaryDocumentFieldValue);
                 }
 
                 fieldValue.value = response.data.meta.message;
@@ -268,6 +268,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             $scope.closeModal();
         };
 
+        $scope.hasPrimaryDocument = function () {
+            return $scope.submission.primaryDocumentFieldValue !== undefined && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+        }
+
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
@@ -284,9 +288,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 $location.hash('all-files');
                 $anchorScroll();
             },
-            "hasPrimaryDocument": function () {
-                return $scope.submission.primaryDocumentFieldValue && $scope.submission.primaryDocumentFieldValue.id;
-            }
+            "hasPrimaryDocument": $scope.hasPrimaryDocument
         };
 
         $scope.submissionStatusBox = {
