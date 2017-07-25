@@ -1,0 +1,7 @@
+<div class="flagged-field-profiles">
+
+  <ul class="info-list">
+    <li ng-repeat="fieldProfile in box.submission.getFlaggedFieldProfiles()"><info submission="box.submission" field-profile="fieldProfile" label="{{fieldProfile.fieldGlosses[0].value}}" stacked="true"></info></li>
+  </ul>
+
+</div>

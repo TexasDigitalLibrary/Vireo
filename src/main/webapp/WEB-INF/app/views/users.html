@@ -1,0 +1,33 @@
+<div class="container" ng-controller="UserRepoController">
+	<div ng-if="isManager() || isAdmin()" class="col-12">
+		<div class="panel panel-default users-container">
+			<div class="panel-heading">
+				<h3 class="panel-title">Users</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover table-condensed">
+					<thead>
+						<tr>
+							<th>Email</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Role</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="thisUser in users track by thisUser.email">
+							<td>{{thisUser.email}}</td>
+							<td>{{thisUser.firstName}}</td>
+							<td>{{thisUser.lastName}}</td>
+							<td>
+								<select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
+									<option ng-repeat="role in allowableRoles(thisUser.role)">{{role}}</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

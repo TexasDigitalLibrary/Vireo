@@ -1,0 +1,10 @@
+<input  type="checkbox" 
+		ng-model="fieldValue.value" 
+		ng-true-value="'true'" 
+		ng-false-value="'false'"
+		ng-disabled="fieldValue.updating"
+		ng-click="save(fieldValue)"
+		ng-hide="fieldValue.updating"
+>
+<span ng-show="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+<span>{{profile.help}}</span>

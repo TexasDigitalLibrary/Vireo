@@ -1,0 +1,47 @@
+<form ng-submit="box.addDateFilter(column)">
+
+	<div class="input-group">
+		<span class="input-group-addon btn btn-default" ng-click="date1=true">
+	    	<span class="glyphicon glyphicon-calendar"></span>
+	  	</span>
+		<input  type="text"
+				name="{{column.title.split(' ').join('')+'Value1'}}" 
+	  			class="form-control" 
+	  			placeholder="mm/dd/yyyy" 
+	  			uib-datepicker-popup="MM/dd/yyyy" 
+	  			ng-model="box[column.title.split(' ').join('')].d1"
+	  			is-open="date1"
+	  			ng-required="true"
+	  			close-text="Close"
+	        	stringtodate 
+	  	/>
+	  	<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=true" ng-disabled="box[column.title.split(' ').join('')].range">
+	    	<span class="glyphicon glyphicon-plus"></span>
+	  	</span>
+	</div>
+
+	<p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
+
+	<div ng-if="box[column.title.split(' ').join('')].range" class="input-group">
+		<span class="input-group-addon" ng-click="date2=true">
+	    	<span class="glyphicon glyphicon-calendar"></span>
+	  	</span>
+		<input  type="text" 
+				name="{{column.title.split(' ').join('')+'Value2'}}"
+	  			class="form-control" 
+	  			placeholder="mm/dd/yyyy" 
+	  			uib-datepicker-popup="MM/dd/yyyy" 
+	  			ng-model="box[column.title.split(' ').join('')].d2"
+	  			is-open="date2"
+	  			ng-required="true"
+	  			close-text="Close"
+	        	stringtodate 
+	  	/>
+	  	<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=false">
+	    	<span class="glyphicon glyphicon-minus"></span>
+	  	</span>
+	</div>
+
+	<input type="submit" value="Add" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
+
+</form>

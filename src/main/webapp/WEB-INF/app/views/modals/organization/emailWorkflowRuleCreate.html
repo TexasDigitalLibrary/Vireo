@@ -1,0 +1,63 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Email Workflow Rule to {{state.name}}</h3>
+</div>
+
+<form ng-submit="addEmailWorkflowRule(newTemplate,newRecipient,state)" name="forms.add" novalidate>
+
+	<div class="addRecipientModal modal-body">
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Email Template</label>
+					 <select 
+	                	class="form-control" 
+	                	name="newTemplate"
+	                	ng-model="newTemplate" 
+	                	ng-options="t.name for t in emailTemplates">
+	                </select>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label>Recipient</label>
+					<select 
+	                	class="form-control" 
+	                	name="newRecipient"
+	                	ng-model="newRecipient"
+	                	ng-options="r as r.name for r in recipients">
+	                </select>
+				</div>
+			</div>
+		</div>
+		<div class="row email-workflow-rule-section" ng-class="{'email-workflow-rule-open': newRecipient.type==emailRecipientType.ORGANIZATION, 'email-workflow-rule-closed': newRecipient.type!=emailRecipientType.ORGANIZATION}">
+			<div class="col-xs-12">
+				<input 	class="form-control" 
+						placeholder="Select Organization" 
+						ng-model="newRecipient.data"
+						typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
+						uib-typeahead="o as o.name for o in organizations | filter:{name:$viewValue} | limitTo:8"
+				/>
+				<div class="typeahead-dropdown-container"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-default" 
+			ng-click="resetEmailWorkflowRule()">
+			Cancel
+		</button>
+		<button 
+			id="email-workflow-rule-save" 
+			type="submit" 
+			class="btn btn-primary" 
+			ng-disabled="forms.add.$invalid || (newRecipient.type=='Organization' && !newRecipient.data.id)">
+			Add
+		</button>
+	</div>	
+</form>

@@ -1,0 +1,19 @@
+<div ng-if="sortColumn && scopeValue.length > 0" class="sort-div">
+	<a href="" ng-click="sortMethod({column:sortColumn})">
+		<span class="glyphicon glyphicon-refresh"></span>
+		<span ng-if="sortAction!=sortActionSort"> Sort {{sortLabel}} by {{sortColumn}}</span>
+		<span ng-if="sortAction==sortActionSort"> Are you sure you want to sort all {{sortLabel}} by {{sortColumn}}?</span>
+	</a>
+</div>
+
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<td data-ng-repeat="header in properties">{{header}}</td>
+		</tr>
+	</thead>
+	<tbody data-as-sortable="listeners" data-ng-model="scopeValue">
+		<tr class="draggable-table-row" data-ng-repeat="item in scopeValue" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false" ng-include src="itemView" draggable="true" data-as-sortable-item >
+		</tr>
+	</tbody>
+</table>

@@ -1,0 +1,47 @@
+<div class="submission-status">
+	<ul>
+		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionState.name}}</button></li>
+		
+		<li>Assignee:</li>
+		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
+
+		<li>Last Action:</li>
+		<li>none</li>
+
+		<li>Submission Date:</li>
+		<li class="sidebar-btn"
+			ng-click="date=true"
+			ng-change="box.setSubmitDate(newSubmitDate)" 
+			uib-datepicker-popup="MM/dd/yyyy"
+			ng-model="newSubmitDate"
+			is-open="date"
+			close-text="Close"
+			stringtodate>
+			<span ng-if="!box.savingDate" class="glyphicon glyphicon-pencil"></span> <span ng-if="box.savingDate" class="glyphicon glyphicon-refresh spinning"></span> {{box.submission.submissionDate || "not submitted" | date: 'M/d/yyyy'}}
+		</li>
+
+		<li><button ng-click="openModal('#advisorEmail')" class="btn btn-default">Generate Advisor Email</button></li>
+
+	</ul>
+</div>
+
+<modal 
+	modal-id="advisorEmail" 
+	modal-view="views/modals/view/advisorEmail.html" 
+	modal-header-class="modal-header-primary"
+	static="true">
+</modal>
+
+<modal 
+	modal-id="submissionStatus" 
+	modal-view="views/modals/view/status.html" 
+	modal-header-class="modal-header-primary"
+	static="true">
+</modal>
+
+<modal 
+	modal-id="submissionAssign" 
+	modal-view="views/modals/view/assign.html" 
+	modal-header-class="modal-header-primary"
+	static="true">
+</modal>

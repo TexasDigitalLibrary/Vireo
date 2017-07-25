@@ -1,0 +1,162 @@
+<div id="controlled-vocabulary" class="container-fluid" ng-controller="ControlledVocabularyRepoController">
+
+	<validationmessage results="controlledVocabularyRepo.getValidationResults()"></validationmessage>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-10 col-md-offset-1">
+				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyNewModal')">
+					Create a Name for Controlled Vocabulary
+				</button>
+				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
+				<p ng-if="controlledVocabulary.length == 0">Add new Controlled Vocabulary</p>
+				<draganddroplist dragging="dragging" scope-value="controlledVocabulary" properties='["name"]' item-view='views/directives/dragAndDropControlledVocabulary.html' listeners='dragControlListeners' edit='editControlledVocabulary(index)' sort-label='Controlled Vocabulary' sort-column='name' sort-action='sortAction' sort-method='sortControlledVocabulary(column)'>
+				</draganddroplist>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="col-md-10 col-md-offset-1">
+				<trashcan id="{{trashCanId}}" dragging="dragging" listeners='dragControlListeners'>
+				</trashcan>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-10 col-md-offset-1">
+				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyUploadModal')" ng-click="uploadStatus()">
+					Upload Controlled Vocabularies
+					</button>
+				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which to upload new or append to existing controlled vocabulary. Additionally, able to export existing from here."></div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="col-md-10 col-md-offset-1">
+				<dropzone id="{{dropZoneId}}" text="Begin import by dropping csv into drop zone" patterns=".csv" drop-method="beginImport(file)">
+				</dropzone>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div class="row cv-editing-selection">
+
+		<h2>Edit Controlled Vocabularies</h2>
+
+		<div class="col-md-4">
+			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv(selectedCv)"></select>
+		</div>
+
+	</div>
+
+	<div class="row cv-editing-display">
+		<div class="col-md-12">
+			<table  ng-table="cvTableParams" show-filter="false" class="table table-condensed table-bordered table-striped table-hover cv-table">
+				<tbody>
+					<tr>
+						<td title="'Name'">
+							<div class="form-group" class="has-feedback" ng-class="{'has-error': nameFlasher}">
+								<input name="name" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.name" ng-keyup="createHotKeys($event, newVW)"  autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='name'" required>
+							</div>
+						</td>
+						<td title="'Definition'">
+							<div class="form-group">
+								<input name="definition" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.definition" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='definition'">
+							</div>
+						</td>
+						<td title="'Identifier'">
+							<div class="form-group">
+								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='identifier'">
+							</div>
+						</td>
+						<td title="'Actions'" class="actions">
+							<span ng-show="newVW.beginAdd">
+								<div class="form-group">
+									<div class="btn-group" role="group">
+										<button class="btn btn-sm btn-primary" ng-disabled="newVWForm.$invalid" ng-click="addVocabularyWord(newVW)">
+											<span class="glyphicon glyphicon-ok" ng-hide="newVW.adding"></span>
+											<span ng-if="newVW.adding" class="glyphicon glyphicon-refresh spinning"></span>
+										</button>
+										<button type="button" class="btn btn-sm btn-default" ng-click="cancelAdding(newVW)" ng-hide="newVW.adding">
+											<span class="glyphicon glyphicon-remove"></span>
+										</button>
+									</div>
+								</div>
+							</span>
+							<span ng-hide="newVW.beginAdd">
+								<button type="button" class="btn btn-sm btn-primary" ng-click="newVW.beginAdd=true;newVW.clickedCell='name'">
+									<span class="glyphicon glyphicon-plus" ng-hide="newVW.adding"></span>
+								</button>
+							</span>
+						</td>
+					</tr>
+
+					<tr ng-repeat="vocabularyWord in $data" ng-class="{'success': vocabularyWord.id===lastCreatedVocabularyWordId}">
+						<td title="'Name'" ng-dblclick="startEditVWMode(vocabularyWord, 'name')">
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.name}}</span>
+							<div class="form-group">
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.name" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='name'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
+							</div>
+						</td>
+						<td title="'Definition'" ng-dblclick="startEditVWMode(vocabularyWord, 'definition')">
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.definition}}</span>
+							<div class="form-group">
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.definition" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='definition'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
+							</div>
+						</td>
+						<td title="'Identifier'" ng-dblclick="startEditVWMode(vocabularyWord, 'identifier')">
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.identifier}}</span>
+							<div class="form-group">
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
+							</div>
+						</td>
+						<td title="'Actions'" >
+							<span ng-hide="editMode(vocabularyWord)">
+								<button class="btn btn-sm btn-default" ng-click="startEditVWMode(vocabularyWord, 'name')"><span class="glyphicon glyphicon-pencil"></span></button>
+								<button class="btn btn-sm btn-danger" ng-hide="deleting" ng-click="deleting=true"><span class="glyphicon glyphicon-trash"></span></button>
+								<div class="btn-group" role="group" ng-show="deleting">
+									<button class="btn btn-sm btn-danger disabled" disabled><span class="glyphicon glyphicon-trash"></span></button>
+									<button type="button" class="btn btn-sm btn-danger" ng-click="removeVocabularyWord(vocabularyWord)">
+										<span class="glyphicon glyphicon-ok" ng-hide="selectedCv.deleting"></span>
+										<span ng-if="selectedCv.deleting" class="glyphicon glyphicon-refresh spinning">
+									</button>
+									<button type="button" class="btn btn-sm btn-default" ng-click="deleting=false"><span class="glyphicon glyphicon-remove"></span></button>
+								</div>
+							</span>
+							<span ng-show="editMode(vocabularyWord)">
+								<div class="form-group">
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-sm btn-primary" ng-click="updateCv(editableVW)">
+											<span class="glyphicon glyphicon-ok" ng-hide="selectedCv.updating"></span>
+											<span ng-if="selectedCv.updating" class="glyphicon glyphicon-refresh spinning">
+										</button>
+										<button type="button" class="btn btn-sm btn-default" ng-click="cancelCvEdits(vocabularyWord)"><span class="glyphicon glyphicon-remove"></span></button>
+									</div>
+								</div>
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<modal modal-id="controlledVocabularyNewModal" modal-view="views/modals/settings/controlledVocabularyNewModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyEditModal" modal-view="views/modals/settings/controlledVocabularyEditModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyConfirmRemoveModal" modal-view="views/modals/settings/controlledVocabularyConfirmRemoveModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="controlledVocabularyUploadModal" modal-view="views/modals/settings/controlledVocabularyUploadModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" modal-backdrop="static" modal-fullscreen="true">
+	</modal>
+
+</div>

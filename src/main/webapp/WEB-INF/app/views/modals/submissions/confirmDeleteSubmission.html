@@ -1,0 +1,23 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<form novalidate>
+
+  <div class="modal-body">
+    Click to confirm the deletion of this submission.
+  </div>
+
+  <div class="modal-footer">
+    <button ng-disabled="deleting" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button ng-disabled="deleting" type="button" class="btn btn-danger" ng-click="deleteSubmission()">
+      <span ng-if="!deleting">Confirm</span>
+      <span ng-if="deleting">Deleting
+        <span class="glyphicon glyphicon-refresh spinning"></span>
+      </span>
+    </button>
+  </div>
+</form>

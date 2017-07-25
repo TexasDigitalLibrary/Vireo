@@ -1,0 +1,46 @@
+<div ng-controller="SubmissionListController">
+
+  <modal modal-id="customizeSubmissionListModal" modal-view="views/modals/submissions/customizeSubmissionListModal.html" modal-header-class="modal-header-primary"></modal>
+
+  <alerts seconds="90" channels="submission/select" types="WARNING" view="views/alerts/submissionItemViewAlert.html" exclusive></alerts>
+
+  <h1>List ETDs</h1>
+  <hr/>
+  <a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
+
+  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
+    <thead class="header">
+      <tr>
+        <th ng-repeat="column in userColumns">
+          <span class="btn btn-block" ng-click="sortBy(column)">{{column.title}}
+            <span ng-if="column.sortOrder > 0" class="pull-right select-toggle">
+              <span ng-if="column.sort == 'ASC'" class="glyphicon glyphicon-chevron-up"></span>
+              <span ng-if="column.sort == 'DESC'" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-if="column.sort == 'NONE'" class="glyphicon glyphicon-minus"></span>
+            </span>
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="row in $data" ng-click="viewSubmission(row)" class="select-toggle">
+        <td ng-repeat="col in $columns">
+          <span>{{displaySubmissionProperty(row, col)}}</span>
+        </td>
+        <!-- <td ng-if="col.inputType.name == 'INPUT_DATETIME'" ng-repeat="col in $columns">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</td> -->
+      </tr>
+    </tbody>
+    <tfoot class="header">
+      <tr>
+        <th colspan="{{userColumns.length}}">
+          {{page.totalElements || 0}}
+          matching records displayed on
+          {{page.totalPages || 0}}
+          pages ({{page.count || 0}}
+          per page).
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+
+</div>
