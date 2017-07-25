@@ -294,7 +294,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.hasPrimaryDocument = function () {
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
-        }
+        };
 
         $scope.activeDocumentBox = {
             "title": "Active Document",
