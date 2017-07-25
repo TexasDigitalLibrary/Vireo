@@ -3,8 +3,13 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -21,10 +26,14 @@ public class FieldValue extends BaseEntity {
     @Column(nullable = true)
     private String identifier;
 
+    @ElementCollection(fetch = EAGER)
+    private List<String> contacts;
+
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
+        this.contacts = new ArrayList<String>();
     }
 
     /**
@@ -34,6 +43,15 @@ public class FieldValue extends BaseEntity {
     public FieldValue(FieldPredicate fieldPredicate) {
         this();
         setFieldPredicate(fieldPredicate);
+    }
+
+    /**
+     *
+     * @param predicate
+     */
+    public FieldValue(FieldPredicate fieldPredicate, List<String> contacts) {
+        this(fieldPredicate);
+        setContacts(contacts);
     }
 
     /**
@@ -57,6 +75,22 @@ public class FieldValue extends BaseEntity {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<String> getContacts() {
+        return contacts;
+    }
+
+    /**
+     * 
+     * @param contacts
+     */
+    public void setContacts(List<String> contacts) {
+        this.contacts = contacts;
     }
 
     /**

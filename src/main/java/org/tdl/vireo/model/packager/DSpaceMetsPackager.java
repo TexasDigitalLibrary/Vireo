@@ -51,7 +51,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
             // Copy the manifest
             File manifestFile = File.createTempFile(manifestName, null);
-            FileUtils.writeStringToFile(manifestFile, manifest);
+            FileUtils.writeStringToFile(manifestFile, manifest, "UTF-8");
 
             ZipEntry ze = new ZipEntry(manifestName);
             zos.putNextEntry(ze);

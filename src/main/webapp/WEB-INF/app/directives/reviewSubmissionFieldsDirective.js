@@ -41,7 +41,7 @@ vireo.directive('reviewsubmissionsfields', function($location, InputTypes, Field
                     return true;
                   } else {
                     var fieldProfile = $scope.submission.getFieldProfileByPredicate(predicate);
-                    if ((fieldProfile.inputType.name === 'INPUT_PROQUEST' || fieldProfile.inputType.name === 'INPUT_LICENSE') && fieldValue.value === 'false'){
+                    if ((fieldProfile.inputType.name === 'INPUT_PROQUEST' || fieldProfile.inputType.name === 'INPUT_LICENSE') && fieldValue.value === 'false' && !fieldProfile.optional){
                       fieldValue.setIsValid(false);
                       fieldValue.addValidationMessage('You must accept the license agreement to continue');
                       return true;
