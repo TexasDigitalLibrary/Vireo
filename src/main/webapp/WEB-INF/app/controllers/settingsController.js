@@ -39,7 +39,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 
         $scope.settings.user.ready().then(function () {
 
+
             $scope.updateUserSetting = function (name) {
+                delete $scope.settings.user.UserSettings;
                 return $scope.settings.user.save();
             };
 
