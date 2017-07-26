@@ -1,4 +1,4 @@
-vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi) {
+vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestApi, WsApi) {
 
     var organizationRepo = this;
 
@@ -46,7 +46,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
         });
         var promise = WsApi.fetch(this.mapping.create);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.type === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -117,9 +117,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
             var orgPromise = WsApi.fetch(this.mapping.get);
             orgPromise.then(function (rawApiResponse) {
                 var fetchedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
-
                 organizationRepo.add(fetchedOrg);
-
                 fetchAggregateWorkflow(fetchedOrg, orgDefer);
             });
         }
@@ -133,7 +131,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
         });
         var promise = WsApi.fetch(this.mapping.children);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.type === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }
@@ -149,7 +147,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
         });
         var promise = WsApi.fetch(this.mapping.addWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.type === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }
@@ -163,10 +161,10 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
             'method': this.getSelectedOrganization().id + '/update-workflow-step',
             'data': workflowStep
         });
-        var promise = WsApi.fetch(this.mapping.updateWorkflowStep);
+        var promise = RestApi.post(this.mapping.updateWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+            if (res.meta.type === "INVALID") {
+                angular.extend(organizationRepo, res.payload);
                 console.log(organizationRepo);
             }
         });
@@ -179,10 +177,10 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
             'method': this.getSelectedOrganization().id + '/delete-workflow-step',
             'data': workflowStep
         });
-        var promise = WsApi.fetch(this.mapping.deleteWorkflowStep);
+        var promise = RestApi.post(this.mapping.deleteWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+            if (res.meta.type === "INVALID") {
+                angular.extend(organizationRepo, res.payload);
                 console.log(organizationRepo);
             }
         });
@@ -196,7 +194,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, WsApi
         });
         var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.type === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }
