@@ -12,7 +12,7 @@
 				results="organizationRepo.getValidationResults()">
 			</validatedinput>
 		</div>
-		
+
 		<sideboxsub>Category</sideboxsub>
 		<div class="sidebox-input">
 			<validatedselect
@@ -25,21 +25,19 @@
 				results="organizationRepo.ValidationResults">
 			</validatedselect>
 		</div>
-	
+
 		<div class="form-group">
-			<button 
+			<button
 				ng-if="settings.configurable.application.hierarchical.value == 'true'"
-				class="btn btn-primary organization-create-button" 
-				type="submit" 
+				class="btn btn-primary organization-create-button"
+				type="submit"
 				ng-disabled="forms.create.$invalid">Add to {{newOrganization.parent.name}}</button>
-			<button 
+			<button
 				ng-if="settings.configurable.application.hierarchical.value == 'false'"
-				class="btn btn-primary organization-create-button" 
-				type="submit" 
+				class="btn btn-primary organization-create-button"
+				type="submit"
 				ng-disabled="forms.create.$invalid">Create</button>
 		</div>
-
-		<alerts seconds="20" channels="/organization" types="SUCCESS, ERROR, WARNING, INFO" exclusive></alerts>
 
 	</form>
 </div>
