@@ -39,9 +39,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Column(nullable = true)
     private Boolean overrideable;
 
-    @Column(nullable = true)
-    private Boolean enabled;
-
     public FieldProfile() {
         setModelValidator(new FieldProfileValidator());
         setRepeatable(false);
@@ -157,21 +154,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
      */
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
-    }
-
-    /**
-     * @return the enabled
-     */
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    /**
-     * @param enabled
-     *            the enabled to set
-     */
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override
