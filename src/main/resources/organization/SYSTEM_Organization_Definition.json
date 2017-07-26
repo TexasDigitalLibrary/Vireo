@@ -1006,7 +1006,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_SELECT"
+            "name":"INPUT_TEXT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -1017,43 +1017,6 @@
           "fieldGlosses":[
             {
               "value":"Language",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Languages",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
-        },
-        {
-          "fieldPredicate":{
-            "value":"dc.contributor.committeeMember",
-            "documentTypePredicate":false
-          },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
-          },
-          "inputType":{
-            "name":"INPUT_TEXT"
-          },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the names and email addresses of your non-chairing committee members",
-          "fieldGlosses":[
-            {
-              "value":"Committee Members",
               "language":{
                 "name":"English"
               }
@@ -1085,6 +1048,37 @@
           "fieldGlosses":[
             {
               "value":"Committee Chair",
+              "language":{
+                "name":"English"
+              }
+            }
+          ],
+          "controlledVocabularies":[
+
+          ]
+        },
+        {
+          "fieldPredicate":{
+            "value":"dc.contributor.committeeMember",
+            "documentTypePredicate":false
+          },
+          "originatingWorkflowStep":{
+            "name":"Document Information"
+          },
+          "inputType":{
+            "name":"INPUT_TEXT"
+          },
+          "repeatable":true,
+          "overrideable":true,
+          "enabled":true,
+          "optional":false,
+          "flagged":false,
+          "logged":false,
+          "usage":"",
+          "help":"Enter the names and email addresses of your non-chairing committee members",
+          "fieldGlosses":[
+            {
+              "value":"Other Committee Members",
               "language":{
                 "name":"English"
               }
@@ -1258,13 +1252,7 @@
             }
           ],
           "controlledVocabularies":[
-            {
-              "name":"Manuscript Allowed File Extensions",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
+
           ]
         },
         {
