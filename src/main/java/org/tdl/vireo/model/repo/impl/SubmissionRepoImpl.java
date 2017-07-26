@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,11 +19,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.tdl.vireo.controller.SubmissionController;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
@@ -31,6 +34,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
@@ -40,7 +44,9 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
+import org.tdl.vireo.util.FileIOUtility;
 
+import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
@@ -70,9 +76,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
+    
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
     @Autowired
     private ActionLogRepo actionLogRepo;
+    
+    @Autowired
+    private FileIOUtility fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -138,6 +150,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
         SubmissionStatus oldSubmissionState = submission.getSubmissionStatus();
         String oldSubmissionStateName = oldSubmissionState.getName();
+        
+        byte[] proquestLicenseBytes = null;
+        byte[] defaultLicenseBytes = null;
                 
         if(submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
         	        	
@@ -159,13 +174,54 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         	
         	if(attachProquestLicense) {
         		System.out.println("Append proquest license");
+        		Configuration proquestLicense = configurationRepo.getByName("proquest_license");
+        		proquestLicenseBytes = proquestLicense != null ? proquestLicense.getValue().getBytes() : null;
         	}
         	
         	if(attachDefaultLicenseFieldValues) {
         		System.out.println("Append default license");
+        		Configuration defaultLicense = configurationRepo.getByName("submit_license");
+        		defaultLicenseBytes = defaultLicense != null ? defaultLicense.getValue().getBytes() : null;
         	}
         	
         }
+        
+        if(proquestLicenseBytes != null) {
+        	int hash = credentials.getEmail().hashCode();
+            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-proquest_license.txt";
+            
+            try {
+				fileIOUtility.write(proquestLicenseBytes, uri);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
+            fieldValue.setValue(uri);
+            submission.addFieldValue(fieldValue);
+			
+		}
+        
+//        if(defaultLicenseBytes != null) {
+//			MultipartFile mpf = new MockMultipartFile("default_license", "temp_Dfl", "text/plain", defaultLicenseBytes);
+//			ApiResponse apiResponse = null;
+//			try {
+//				apiResponse = submissionController.uploadSubmission(credentials, submission.getId(), "_doctype_license", mpf);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			String uri = (String) apiResponse.getPayload().get("String");
+//			
+//			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+//            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
+//            fieldValue.setValue(uri);
+//            submission.addFieldValue(fieldValue);
+//			
+//		}
         
         submission.setSubmissionStatus(submissionStatus);
         submission = submissionRepo.saveAndFlush(submission);
