@@ -4,6 +4,9 @@
 	</div>
 
 	<div class="panel-body">
+
+		<alerts seconds="45" channels="/organization/update" types="SUCCESS"></alerts>
+
 		<form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
 
 				<validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
