@@ -185,7 +185,7 @@ public class SystemDataLoader {
         logger.info("Loading default controlled vocabularies");
         loadControlledVocabularies();
 
-        logger.info("Loading defaults");
+        logger.info("Loading default settings");
         loadSystemDefaults();
 
         logger.info("Loading default Proquest language codes");
