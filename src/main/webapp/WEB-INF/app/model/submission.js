@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
 
     return function Submission() {
 
