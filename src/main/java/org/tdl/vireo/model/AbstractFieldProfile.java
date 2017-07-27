@@ -39,7 +39,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean optional;
-    
+
     @Column(nullable = false)
     private Boolean hidden;
 
@@ -48,7 +48,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
-    
+
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
@@ -65,10 +65,12 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = true)
     private Boolean flagged;
-    
-    
+
     @Column(nullable = true, name = "`default`", columnDefinition = "text")
     private String defaultValue;
+
+    @Column(nullable = true)
+    private Boolean enabled;
 
     /**
      * @return the fieldPredicate
@@ -132,14 +134,14 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     }
 
     public Boolean getHidden() {
-		return hidden;
-	}
+        return hidden;
+    }
 
-	public void setHidden(Boolean hidden) {
-		this.hidden = hidden;
-	}
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
+    }
 
-	public Boolean getLogged() {
+    public Boolean getLogged() {
         return logged;
     }
 
@@ -163,7 +165,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
         this.usage = usage;
     }
 
-	/**
+    /**
      *
      * @return
      */
@@ -301,14 +303,29 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     public void setFlagged(Boolean flagged) {
         this.flagged = flagged;
     }
-    
-    public String getDefaultValue() {
-		return defaultValue;
-	}
 
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    /**
+     * @return the enabled
+     */
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *            the enabled to set
+     */
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 
     // TODO : Restrict multiple controlled vocabulary with the same language
 

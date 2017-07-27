@@ -282,7 +282,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
-            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional && fieldProfile.enabled) {
                 return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
@@ -312,7 +312,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
-            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional && fieldProfile.enabled) {
                 return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
@@ -375,7 +375,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
 
             angular.forEach(submission.fieldValues, function (fv) {
                 var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);
-                if (!fieldProfile.optional || (fv.value !== "" && fieldProfile.optional)) {
+                if (!fieldProfile.optional && fieldProfile.enabled || (fv.value !== "" && fieldProfile.optional && fieldProfile.enabled)) {
                     var savePromise = submission.validateFieldValue(fv, fieldProfile);
                     savePromises.push(savePromise);
                 }
