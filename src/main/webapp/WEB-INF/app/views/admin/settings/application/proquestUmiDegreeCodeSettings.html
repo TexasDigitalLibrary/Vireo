@@ -1,9 +1,7 @@
 <div class="row">
 
-    <div class="col-md-6">
-
-        <div class="col-md-10 col-md-offset-1">
-
+    <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-6">
             <validatedinput
                 type="text"
                 label="ProQuest Institution Code"
@@ -14,32 +12,29 @@
                 form-view="true"
                 tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
             </validatedinput>
+        </div>
 
-    	    <togglebutton
-    	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
-    	        label="Indexed by Search Engines"
-    	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
-    	        toggle-options="{{proquestIndexingOptions}}"
-    	        tool-tip="todo">
-    	    </togglebutton>
-
+        <div class="col-md-6">
+      	    <togglebutton
+      	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
+      	        label="Indexed by Search Engines"
+      	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
+      	        toggle-options="{{proquestIndexingOptions}}"
+      	        tool-tip="todo">
+      	    </togglebutton>
         </div>
 
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-10 col-md-offset-1">
 
-        <div class="col-md-10 col-md-offset-1">
-
-            <lockingtextarea
-                label="ProQuest License Agreement"
-                hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
-                scope-value="settings.configurable.proquest_umi_degree_code.proquest_license.value"
-                on-blur="updateConfiguration('proquest_umi_degree_code', 'proquest_license')"
-                timer="5">
-            </lockingtextarea>
-
-        </div>
+        <lockingtextarea
+            label="ProQuest License Agreement"
+            hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+            scope-value="settings.configurable.proquest_umi_degree_code.proquest_license.value"
+            on-blur="updateConfiguration('proquest_umi_degree_code', 'proquest_license')"
+            timer="5">
+        </lockingtextarea>
 
     </div>
 
