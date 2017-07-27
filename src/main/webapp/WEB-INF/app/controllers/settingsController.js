@@ -16,12 +16,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.allow_multiple_submissions ? $scope.settings.configurable.application.allow_multiple_submissions.value : 'false' : 'false');
     };
 
-    if (!$scope.isAnonymous()) {
-
+    if ($scope.isAdmin()) {
         var DegreeRepo = $injector.get("DegreeRepo");
-
         $scope.degrees = DegreeRepo.getAll();
-
         var proquestPromise = DegreeRepo.getProquestDegreeCodes().then(function (data) {
             $scope.proquestDegreeCodes = [];
             var codes = angular.fromJson(data.body).payload.HashMap;
@@ -32,6 +29,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
                 });
             }
         });
+    }
+
+    if (!$scope.isAnonymous()) {
 
         $scope.settings.user = new UserSettings();
 
