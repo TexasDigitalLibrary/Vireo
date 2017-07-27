@@ -138,7 +138,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.id === removedFieldValue.id) {
                         submission.fieldValues.splice(i, 1);
-                        if (submission.primaryDocumentFieldValue !== undefined && fieldValue.id === submission.primaryDocumentFieldValue.id) {
+                        if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                             delete submission.primaryDocumentFieldValue;
                         }
                         break;
