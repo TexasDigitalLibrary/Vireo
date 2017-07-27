@@ -76,7 +76,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             $scope.removeFieldValue = function (fieldValue) {
-                if (fieldValue.id === null) {
+                if (fieldValue.id === undefined || fieldValue.id === null) {
                     $scope.submission.removeUnsavedFieldValue(fieldValue);
                 } else {
                     fieldValue.updating = true;
