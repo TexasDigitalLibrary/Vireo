@@ -23,7 +23,7 @@ import edu.tamu.framework.model.BaseEntity;
 public class ActionLog extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    private SubmissionStatus submissionState;
+    private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
     private User user;
@@ -44,7 +44,7 @@ public class ActionLog extends BaseEntity {
 
     public ActionLog(SubmissionStatus submissionState, User user, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionState = submissionState;
+        this.submissionStatus = submissionState;
         this.user = user;
         this.actionDate = actionDate;
         this.entry = entry;
@@ -53,7 +53,7 @@ public class ActionLog extends BaseEntity {
 
     public ActionLog(SubmissionStatus submissionState, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionState = submissionState;
+        this.submissionStatus = submissionState;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
@@ -62,16 +62,16 @@ public class ActionLog extends BaseEntity {
     /**
      * @return the submissionState
      */
-    public SubmissionStatus getSubmissionState() {
-        return submissionState;
+    public SubmissionStatus getSubmissionStatus() {
+        return submissionStatus;
     }
 
     /**
-     * @param submissionState
+     * @param submissionStatus
      *            the submissionState to set
      */
-    public void setSubmissionState(SubmissionStatus submissionState) {
-        this.submissionState = submissionState;
+    public void setSubmissionStatus(SubmissionStatus submissionStatus) {
+        this.submissionStatus = submissionStatus;
     }
 
     /**

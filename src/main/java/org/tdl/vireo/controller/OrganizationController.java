@@ -61,7 +61,7 @@ public class OrganizationController {
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
 	@Autowired
-	private SubmissionStatusRepo submissionStateRepo;
+	private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -120,7 +120,7 @@ public class OrganizationController {
 		ApiResponse response = new ApiResponse(SUCCESS);
 
 		Organization org = organizationRepo.findOne(requestingOrgID);
-		SubmissionStatus submissionState = submissionStateRepo.findOne(dataNode.get("submissionStateId").asLong());
+		SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStateId").asLong());
 		JsonNode recipientNode = dataNode.get("recipient");
 		EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
 
@@ -129,7 +129,7 @@ public class OrganizationController {
         if (emailRecipient == null) {
             response = new ApiResponse(ERROR, "Could not create recipient.");
         } else {
-            EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
+            EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
 
             org.addEmailWorkflowRule(newEmailWorkflowRule);
 

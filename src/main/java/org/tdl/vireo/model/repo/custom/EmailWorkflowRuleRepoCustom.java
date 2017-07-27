@@ -7,8 +7,8 @@ import org.tdl.vireo.model.SubmissionStatus;
 
 public interface EmailWorkflowRuleRepoCustom {
 
-    public EmailWorkflowRule create(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate);
+    public EmailWorkflowRule create(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate);
 
-    public EmailWorkflowRule create(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem);
+    public EmailWorkflowRule create(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem);
 
 }

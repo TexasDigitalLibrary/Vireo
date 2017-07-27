@@ -14,13 +14,13 @@ public class EmailWorkflowRuleRepoImpl implements EmailWorkflowRuleRepoCustom {
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
     @Override
-    public EmailWorkflowRule create(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
-        return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionState, emailRecipient, emailTemplate));
+    public EmailWorkflowRule create(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
+        return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionStatus, emailRecipient, emailTemplate));
     }
 
     @Override
-    public EmailWorkflowRule create(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
-        return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionState, emailRecipient, emailTemplate, isSystem));
+    public EmailWorkflowRule create(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
+        return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionStatus, emailRecipient, emailTemplate, isSystem));
     }
 
 }

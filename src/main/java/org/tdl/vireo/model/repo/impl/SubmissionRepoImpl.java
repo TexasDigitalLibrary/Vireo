@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.tdl.vireo.controller.SubmissionController;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
@@ -46,7 +45,6 @@ import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.util.FileIOUtility;
 
-import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
@@ -94,14 +92,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionStatus startingState, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
         
         
         if(organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();            
         }
         
-        Submission submission = submissionRepo.save(new Submission(submitter, organization, startingState));
+        Submission submission = submissionRepo.save(new Submission(submitter, organization, startingStatus));
 
         for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
             customActionValueRepo.create(submission, cad, false);
@@ -148,8 +146,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Override
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
-        SubmissionStatus oldSubmissionState = submission.getSubmissionStatus();
-        String oldSubmissionStateName = oldSubmissionState.getName();
+        SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
+        String oldSubmissionStatusName = oldSubmissionStatus.getName();
         
         byte[] proquestLicenseBytes = null;
         byte[] defaultLicenseBytes = null;
@@ -198,35 +196,40 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 			}
 			
 			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+			
             FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
             fieldValue.setValue(uri);
             submission.addFieldValue(fieldValue);
+            
+            System.out.println(fieldValue.getValue());
 			
 		}
         
-//        if(defaultLicenseBytes != null) {
-//			MultipartFile mpf = new MockMultipartFile("default_license", "temp_Dfl", "text/plain", defaultLicenseBytes);
-//			ApiResponse apiResponse = null;
-//			try {
-//				apiResponse = submissionController.uploadSubmission(credentials, submission.getId(), "_doctype_license", mpf);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			
-//			String uri = (String) apiResponse.getPayload().get("String");
-//			
-//			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-//            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
-//            fieldValue.setValue(uri);
-//            submission.addFieldValue(fieldValue);
-//			
-//		}
+        if(defaultLicenseBytes != null) {
+        	int hash = credentials.getEmail().hashCode();
+            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-license.txt";
+            
+            try {
+				fileIOUtility.write(defaultLicenseBytes, uri);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+			
+            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
+            fieldValue.setValue(uri);
+            submission.addFieldValue(fieldValue);
+            
+            System.out.println(fieldValue.getValue());
+			
+		}
         
         submission.setSubmissionStatus(submissionStatus);
         submission = submissionRepo.saveAndFlush(submission);
 
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + submissionStatus.getName());
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
 
@@ -392,9 +395,9 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     break;
 
-                case "submissionState.name":
+                case "submissionStatus.name":
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN submission_state ss ON ss.id=s.submission_state_id");
+                    sqlJoinsBuilder.append("\nLEFT JOIN submission_status ss ON ss.id=s.submission_status_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");

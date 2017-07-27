@@ -6,7 +6,7 @@
 	<div class="panel-body">
 
 		<accordion single-expand="false">
-			<pane ng-repeat="state in submissionStates" query="email-workflowstep-rules-{{state.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{state.name}}</pane>
+			<pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{status.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{status.name}}</pane>
 		</accordion>
 
 		<modal 

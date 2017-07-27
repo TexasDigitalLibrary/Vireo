@@ -1,9 +1,9 @@
-vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStateRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputTypes) {
+vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputTypes) {
 
 	angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
 	$scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
-	$scope.submissionStates = SubmissionStateRepo.getAll();
+	$scope.submissionStatuses = SubmissionStatusRepo.getAll();
 	$scope.emailTemplates = EmailTemplateRepo.getAll();
 	$scope.emailRecipientType = EmailRecipientType;
 	$scope.organizations = OrganizationRepo.getAll();
@@ -42,7 +42,7 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 		});
 	};
 
-	$q.all([SubmissionStateRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
+	$q.all([SubmissionStatusRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function() {
 		$scope.openAddEmailWorkflowRuleModal = function(id) {
 			$scope.buildRecipients();
 
@@ -59,17 +59,17 @@ vireo.controller("EmailWorkflowRulesController", function($controller, $scope, $
 			$scope.closeModal();
 		};
 
-		$scope.addEmailWorkflowRule = function(newTemplate, newRecipient, submissionState) {
+		$scope.addEmailWorkflowRule = function(newTemplate, newRecipient, submissionStatus) {
 
 			var templateId = newTemplate.id;
 			var recipient = angular.copy(newRecipient);
-			var submissionStateId = submissionState.id;
+			var submissionStatusId = submissionStatus.id;
 
 			if(recipient.type === EmailRecipientType.ORGANIZATION) {
 				recipient.data = recipient.data.id;
 			}
 
-			$scope.selectedOrganization.addEmailWorkflowRule(templateId, recipient, submissionStateId).then(function() {
+			$scope.selectedOrganization.addEmailWorkflowRule(templateId, recipient, submissionStatusId).then(function() {
 				$scope.resetEmailWorkflowRule();
 			});
 

@@ -37,7 +37,7 @@ public class Cli implements CommandLineRunner {
 	OrganizationRepo organizationRepo;
 
 	@Autowired
-	SubmissionStatusRepo submissionStateRepo;
+	SubmissionStatusRepo submissionStatusRepo;
 
 	@Autowired
 	FieldValueRepo fieldValueRepo;
@@ -92,7 +92,7 @@ public class Cli implements CommandLineRunner {
                 case "generate":
 
                     Organization org = organizationRepo.findAll().get(0);
-                    SubmissionStatus state = submissionStateRepo.findAll().get(0);
+                    SubmissionStatus state = submissionStatusRepo.findAll().get(0);
 
                     if (commandArgs.size() > 0) {
                         try {

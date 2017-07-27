@@ -9,11 +9,11 @@ import org.tdl.vireo.model.repo.custom.SubmissionStatusRepoCustom;
 public class SubmissionStatusRepoImpl implements SubmissionStatusRepoCustom {
 
     @Autowired
-    private SubmissionStatusRepo submissionStateRepo;
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Override
     public SubmissionStatus create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active, SubmissionState submissionState) {
-        return submissionStateRepo.save(new SubmissionStatus(name, archived, publishable, deletable, editableByReviewer, editableByStudent, active, submissionState = submissionState == null ? SubmissionState.NONE : submissionState));
+        return submissionStatusRepo.save(new SubmissionStatus(name, archived, publishable, deletable, editableByReviewer, editableByStudent, active, submissionState = submissionState == null ? SubmissionState.NONE : submissionState));
     }
 
 }

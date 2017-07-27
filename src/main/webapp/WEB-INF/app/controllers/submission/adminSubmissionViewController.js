@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStateRepo, UserRepo, User) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -11,7 +11,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     var ready = $q.all([
         SubmissionRepo.findSubmissionById($routeParams.id),
         UserRepo.getAll(),
-        SubmissionStateRepo.getAll(),
+        SubmissionStatusRepo.getAll(),
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
         DepositLocationRepo.getAll()
@@ -21,7 +21,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         var submission = resolved[0];
         var users = resolved[1];
-        var submissionStates = resolved[2];
+        var submissionStatuses = resolved[2];
         var emailTemplates = resolved[3];
         var fieldPredicates = resolved[4];
         var depositLocations = resolved[5];
@@ -316,13 +316,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.submissionStatusBox = {
-            "newStatus": submissionStates[0],
+            "newStatus": submissionStatuses[0],
             "depositLocations": depositLocations,
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
             "submission": $scope.submission,
-            "SubmissionStateRepo": SubmissionStateRepo,
-            "submissionStates": submissionStates,
+            "SubmissionStatusRepo": SubmissionStatusRepo,
+            "submissionStatuses": submissionStatuses,
             "advanced": true,
             "allUsers": $scope.allUsers,
             "user": new User(),
@@ -334,7 +334,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     $scope.closeModal();
                 });
             },
-            "cancelStatus": SubmissionStateRepo.findByName('Cancelled'),
+            "cancelStatus": SubmissionStatusRepo.findByName('Cancelled'),
             "changeStatus": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
@@ -367,7 +367,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "assignee": firstAssignable(),
             "resetStatus": function () {
                 $scope.submissionStatusBox.advanced = true;
-                $scope.submissionStatusBox.newStatus = submissionStates[0];
+                $scope.submissionStatusBox.newStatus = submissionStatuses[0];
                 $scope.submissionStatusBox.assignee = firstAssignable();
                 $scope.closeModal();
             },

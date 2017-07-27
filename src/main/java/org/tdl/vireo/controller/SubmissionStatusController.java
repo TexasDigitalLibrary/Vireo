@@ -11,16 +11,16 @@ import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.framework.model.ApiResponse;
 
 @Controller
-@ApiMapping("/submission-state")
-public class SubmissionStateController {
+@ApiMapping("/submission-status")
+public class SubmissionStatusController {
 
     @Autowired
-    private SubmissionStatusRepo submissionStateRepo;
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
-    public ApiResponse getAllSubmissionStates() {
-        return new ApiResponse(SUCCESS, submissionStateRepo.findAll());
+    public ApiResponse getAllSubmissionStatuses() {
+        return new ApiResponse(SUCCESS, submissionStatusRepo.findAll());
     }
 
 }

@@ -6,7 +6,7 @@
   "isEditableByReviewer": false,
   "isEditableByStudent": false,
   "isActive": null,
-  "submissionState": 0,
+  "submissionState": 1,
   "transitionSubmissionStatuses": [{
       "name": "Submitted",
       "isArchived": false,
@@ -24,7 +24,7 @@
         "isEditableByReviewer": true,
         "isEditableByStudent": false,
         "isActive": true,
-        "submissionState": 0,
+        "submissionState": 3,
         "transitionSubmissionStatuses": [{
             "name": "Needs Correction",
             "isArchived": false,
@@ -33,7 +33,7 @@
             "isEditableByReviewer": true,
             "isEditableByStudent": true,
             "isActive": true,
-            "submissionState": 0,
+            "submissionState": 4,
             "transitionSubmissionStatuses": [{
               "name": "Corrections Received",
               "isArchived": false,
@@ -42,7 +42,7 @@
               "isEditableByReviewer": true,
               "isEditableByStudent": false,
               "isActive": true,
-              "submissionState": 0,
+              "submissionState": 5,
               "transitionSubmissionStatuses": [{
                   "name": "Under Review"
                 },
@@ -54,7 +54,7 @@
                   "isEditableByReviewer": true,
                   "isEditableByStudent": false,
                   "isActive": true,
-                  "submissionState": 0,
+                  "submissionState": 6,
                   "transitionSubmissionStatuses": [{
                       "name": "Under Review"
                     },
@@ -66,7 +66,7 @@
                       "isEditableByReviewer": true,
                       "isEditableByStudent": false,
                       "isActive": true,
-                      "submissionState": 0,
+                      "submissionState": 7,
                       "transitionSubmissionStatuses": [{
                         "name": "Pending Publication",
                         "isArchived": true,
@@ -75,7 +75,7 @@
                         "isEditableByReviewer": true,
                         "isEditableByStudent": false,
                         "isActive": false,
-                        "submissionState": 0,
+                        "submissionState": 8,
                         "transitionSubmissionStatuses": [{
                           "name": "Published",
                           "isArchived": true,
@@ -84,7 +84,7 @@
                           "isEditableByReviewer": true,
                           "isEditableByStudent": false,
                           "isActive": false,
-                          "submissionState": 0,
+                          "submissionState": 9,
                           "transitionSubmissionStatuses": [{
                             "name": "Pending Publication"
                           }]
@@ -116,7 +116,7 @@
       "isEditableByReviewer": true,
       "isEditableByStudent": false,
       "isActive": true,
-      "submissionState": 0,
+      "submissionState": 10,
       "transitionSubmissionStatuses": []
     },
     {
@@ -127,7 +127,7 @@
       "isEditableByReviewer": true,
       "isEditableByStudent": false,
       "isActive": false,
-      "submissionState": 0,
+      "submissionState": 11,
       "transitionSubmissionStatuses": []
     },
     {
@@ -138,7 +138,7 @@
       "isEditableByReviewer": true,
       "isEditableByStudent": false,
       "isActive": false,
-      "submissionState": null,
+      "submissionState": 12,
       "transitionSubmissionStatuses": []
     }
   ]

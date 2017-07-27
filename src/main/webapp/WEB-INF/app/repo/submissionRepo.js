@@ -43,10 +43,10 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
         return promise;
     };
 
-    submissionRepo.batchUpdateStatus = function(submissionState) {
+    submissionRepo.batchUpdateStatus = function(submissionStatus) {
 
-        angular.extend(submissionRepo.mapping.batchUpdateSubmissionState, {'data': submissionState});
-        var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionState);
+        angular.extend(submissionRepo.mapping.batchUpdateSubmissionStatus, {'data': submissionStatus});
+        var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionStatus);
 
         return promise;
 
