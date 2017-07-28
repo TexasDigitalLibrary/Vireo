@@ -19,6 +19,4 @@ public interface ControlledVocabularyRepo extends JpaRepository<ControlledVocabu
 
     public List<ControlledVocabulary> findAllByIsEntityProperty(boolean isEntityProperty);
 
-    public void delete(ControlledVocabulary controlledVocabulary);
-
 }
