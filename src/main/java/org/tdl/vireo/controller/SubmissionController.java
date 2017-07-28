@@ -690,7 +690,7 @@ public class SubmissionController {
 
         InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT");
 
-        EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired("SYSTEM Advisor Review Request", true);
+        EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
 
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);

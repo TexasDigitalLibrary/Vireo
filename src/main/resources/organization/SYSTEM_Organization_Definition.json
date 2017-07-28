@@ -1478,7 +1478,7 @@
       "recipientType":2,
       "emailTemplate":{
         "name":"SYSTEM Advisor Review Request",
-        "isSystemRequired":true
+        "systemRequired":true
       }
     },
     {
@@ -1490,7 +1490,7 @@
       "recipientType":1,
       "emailTemplate":{
         "name":"SYSTEM Initial Submission",
-        "isSystemRequired":true
+        "systemRequired":true
       }
     }
   ]

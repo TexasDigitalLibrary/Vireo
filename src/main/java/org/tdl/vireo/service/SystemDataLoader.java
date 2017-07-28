@@ -504,7 +504,7 @@ public class SystemDataLoader {
                 }
 
                 // check to see if the EmailTemplate exists
-                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().isSystemRequired());
+                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSystemRequired());
 
                 // create new EmailTemplate if not already exists
                 if (newEmailTemplate == null) {
@@ -639,11 +639,11 @@ public class SystemDataLoader {
                 throw new IllegalStateException("Unable to identify the template's message.");
             }
 
-            EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
 
             if (template == null) {
                 template = emailTemplateRepo.create(name, subject, message);
-                template.isSystemRequired(true);
+                template.setSystemRequired(true);
             } else {
                 template.setSubject(subject);
                 template.setMessage(message);
@@ -682,7 +682,7 @@ public class SystemDataLoader {
         for (String name : getAllSystemEmailTemplateNames()) {
 
             // try to see if it already exists in the DB
-            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, true);
 
             // create template or upgrade the old one
             if (dbTemplate == null) {
@@ -695,7 +695,7 @@ public class SystemDataLoader {
                 // one loaded from .email file
                 if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
 
-                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
+                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, false);
 
                     // if this System template already has a custom template
                     // (meaning one named the same but that is
@@ -705,10 +705,9 @@ public class SystemDataLoader {
                         // a custom version of this System email template
                         // already exists, it's safe to override dbTemplate's
                         // data and save
-                        dbTemplate.isSystemRequired(false);
                         dbTemplate.setMessage(loadedTemplate.getMessage());
                         dbTemplate.setSubject(loadedTemplate.getSubject());
-                        dbTemplate.isSystemRequired(true);
+                        dbTemplate.setSystemRequired(true);
 
                         logger.info("Upgrading Old System Email Template for [" + dbTemplate.getName() + "]");
 
@@ -718,7 +717,7 @@ public class SystemDataLoader {
                     // dbTemplate !isSystemRequired and the save loadedTemplate
                     else {
                         logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
-                        dbTemplate.isSystemRequired(false);
+                        dbTemplate.setSystemRequired(false);
                         emailTemplateRepo.save(dbTemplate);
                         emailTemplateRepo.save(loadedTemplate);
                     }

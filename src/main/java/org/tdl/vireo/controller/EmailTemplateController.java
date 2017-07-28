@@ -57,14 +57,18 @@ public class EmailTemplateController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Updating email template with name " + emailTemplate.getName());
-        emailTemplate = emailTemplateRepo.save(emailTemplate);
+        if(emailTemplate.getSystemRequired()) {
+            emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
+        } else {
+            emailTemplate = emailTemplateRepo.save(emailTemplate);
+        }
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, emailTemplate);
     }
 
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Removing email template with name " + emailTemplate.getName());
         emailTemplateRepo.remove(emailTemplate);
