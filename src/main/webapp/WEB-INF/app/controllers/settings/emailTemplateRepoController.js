@@ -74,8 +74,9 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
         };
 
         $scope.createEmailTemplate = function () {
-            console.log('create', $scope.modalData);
-            $scope.modalData.save();
+            EmailTemplateRepo.create($scope.modalData).then(function (data) {
+
+            });
         };
 
         $scope.launchEditModal = function (index) {
@@ -84,7 +85,6 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
         };
 
         $scope.updateEmailTemplate = function () {
-            console.log('update', $scope.modalData);
             $scope.modalData.save();
         };
 
