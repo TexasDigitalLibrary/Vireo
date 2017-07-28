@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStateRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function(NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -24,8 +24,8 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.change = false;
 
-    SubmissionStateRepo.ready().then(function() {
-        $scope.advancedfeaturesBox.newStatus = submissionStates[0];
+    SubmissionStatusRepo.ready().then(function() {
+        $scope.advancedfeaturesBox.newStatus = submissionStatuses[0];
     });
 
     var documentTypes = DocumentTypeRepo.getAll();
@@ -33,7 +33,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
     var customActionDefinitions = CustomActionDefinitionRepo.getAll();
     var organizations = OrganizationRepo.getAll();
     var organizationCategories = OrganizationCategoryRepo.getAll();
-    var submissionStates = SubmissionStateRepo.getAll();
+    var submissionStatuses = SubmissionStatusRepo.getAll();
     var depositLocations = DepositLocationRepo.getAll();
 
     var findFirstAssignable = function() {
@@ -115,7 +115,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         "viewUrl": "views/sideboxes/advancedFeatures.html",
         "resetBatchUpdateStatus": resetBatchUpdateStatus,
         "batchUpdateStatus": batchUpdateStatus,
-        "submissionStates": submissionStates,
+        "submissionStatuses": submissionStatuses,
         "allUsers": allUsers,
         "resetBatchAssignTo": resetBatchAssignTo,
         "assignable": assignable,
@@ -235,7 +235,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
         "addFilter": addFilter,
         "addExactMatchFilter": addExactMatchFilter,
         "addDateFilter": addDateFilter,
-        "submissionStates": submissionStates,
+        "submissionStatuses": submissionStatuses,
         "customActionDefinitions": customActionDefinitions,
         "organizations": organizations,
         "organizationCategories": organizationCategories,
@@ -414,7 +414,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.getSubmissionProperty = function(row, col) {
         var value;
-
+        console.log(col.valuePath);
         for (var i in col.valuePath) {
 
             if (value === undefined) {
@@ -434,6 +434,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.displaySubmissionProperty = function(row, col) {
         var value = $scope.getSubmissionProperty(row,col);
+        
         if ($scope.isDateColumn(col)) {
             value = $filter('date')(value,'MMM dd, yyyy');
         }

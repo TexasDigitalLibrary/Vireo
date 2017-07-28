@@ -12,7 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.tdl.vireo.model.validation.SubmissionStateValidator;
+import org.tdl.vireo.enums.SubmissionState;
+import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -22,7 +23,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
-public class SubmissionState extends BaseEntity {
+public class SubmissionStatus extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -50,15 +51,17 @@ public class SubmissionState extends BaseEntity {
     @Column(nullable = true)
     @JsonProperty("isActive")
     private Boolean isActive;
+    
+    private SubmissionState submissionState;
 
-    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionState.class, property = "id")
+	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    private List<SubmissionState> transitionSubmissionStates;
+    private List<SubmissionStatus> transitionSubmissionStatuses;
 
-    public SubmissionState() {
-        setModelValidator(new SubmissionStateValidator());
-        setTransitionSubmissionStates(new ArrayList<SubmissionState>());
+    public SubmissionStatus() {
+        setModelValidator(new SubmissionStatusValidator());
+        setTransitionSubmissionStatuses(new ArrayList<SubmissionStatus>());
     }
 
     /**
@@ -70,7 +73,7 @@ public class SubmissionState extends BaseEntity {
      * @param isEditableByStudent
      * @param isActive
      */
-    public SubmissionState(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive) {
+    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionStatus) {
         this();
         setName(name);
         isArchived(isArchived);
@@ -79,6 +82,7 @@ public class SubmissionState extends BaseEntity {
         isEditableByReviewer(isEditableByReviewer);
         isEditableByStudent(isEditableByStudent);
         isActive(isActive);
+        setSubmissionState(submissionStatus);
     }
 
     /**
@@ -189,31 +193,39 @@ public class SubmissionState extends BaseEntity {
     /**
      * @return the transitionSubmissionStates
      */
-    public List<SubmissionState> getTransitionSubmissionStates() {
-        return transitionSubmissionStates;
+    public List<SubmissionStatus> getTransitionSubmissionStatuses() {
+        return transitionSubmissionStatuses;
     }
 
     /**
-     * @param transitionSubmissionStates
+     * @param transitionSubmissionStatuses
      *            the transitionSubmissionStates to set
      */
-    public void setTransitionSubmissionStates(List<SubmissionState> transitionSubmissionStates) {
-        this.transitionSubmissionStates = transitionSubmissionStates;
+    public void setTransitionSubmissionStatuses(List<SubmissionStatus> transitionSubmissionStates) {
+        this.transitionSubmissionStatuses = transitionSubmissionStates;
     }
 
     /**
      *
-     * @param transitionSubmissionState
+     * @param transitionSubmissionStatus
      */
-    public void addTransitionSubmissionState(SubmissionState transitionSubmissionState) {
-        getTransitionSubmissionStates().add(transitionSubmissionState);
+    public void addTransitionSubmissionStatus(SubmissionStatus transitionSubmissionState) {
+        getTransitionSubmissionStatuses().add(transitionSubmissionState);
     }
 
     /**
      *
-     * @param transitionSubmissionState
+     * @param transitionSubmissionStatus
      */
-    public void removeTransitionSubmissionState(SubmissionState transitionSubmissionState) {
-        getTransitionSubmissionStates().remove(transitionSubmissionState);
+    public void removeTransitionSubmissionStatus(SubmissionStatus transitionSubmissionState) {
+        getTransitionSubmissionStatuses().remove(transitionSubmissionState);
     }
+    
+    public SubmissionState getSubmissionState() {
+		return submissionState;
+	}
+
+	public void setSubmissionState(SubmissionState submissionState) {
+		this.submissionState = submissionState;
+	}
 }

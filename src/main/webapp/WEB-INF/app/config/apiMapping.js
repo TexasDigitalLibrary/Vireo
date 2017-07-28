@@ -775,10 +775,10 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission'
         },
-        batchUpdateSubmissionState: {
+        batchUpdateSubmissionStatus: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            'method': 'batch-update-state'
+            'method': 'batch-update-status'
         },
         batchAssignTo: {
             'endpoint': '/private/queue',
@@ -943,17 +943,17 @@ var apiMapping = {
             'controller': 'submission-list'
         }
     },
-    SubmissionState: {
+    SubmissionStatus: {
         validations: true,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
-            'controller': 'submission-state',
+            'controller': 'submission-status',
             'method': 'all'
         },
         listen: {
             'endpoint': '/channel',
-            'controller': 'submission-state'
+            'controller': 'submission-status'
         }
     },
     ManagerSubmissionListColumn: {

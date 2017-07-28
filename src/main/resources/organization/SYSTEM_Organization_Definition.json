@@ -1472,8 +1472,8 @@
     {
       "isSystem":true,
       "isDisabled":false,
-      "submissionState":{
-        "name":"Submitted"
+      "submissionStatus": {
+        "name": "Submitted"
       },
       "recipientType":2,
       "emailTemplate":{
@@ -1484,8 +1484,8 @@
     {
       "isSystem":true,
       "isDisabled":false,
-      "submissionState":{
-        "name":"Submitted"
+      "submissionStatus": {
+        "name": "Submitted"
       },
       "recipientType":1,
       "emailTemplate":{

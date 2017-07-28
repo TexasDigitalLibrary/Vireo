@@ -1,4 +1,4 @@
-vireo.controller('NewSubmissionController', function($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ConfigurationRepo) {
+vireo.controller('NewSubmissionController', function($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ConfigurationRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -36,7 +36,7 @@ vireo.controller('NewSubmissionController', function($controller, $location, $q,
         for (var i in studentSubmissions) {
             var submission = studentSubmissions[i];
             if (submission.organization.id === organization.id) {
-                if (submission.submissionState.name === 'In Progress') {
+                if (submission.submissionStatus.submissionState === SubmissionStates.IN_PROGRESS) {
                     $location.path("/submission/" + submission.id);
                 } else {
                     $location.path("/submission/" + submission.id + "/view");

@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo) {
+vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -114,7 +114,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
                 var isInProgress = false;
                 for (var i in submissions) {
                     var submission = submissions[i];
-                    if (submission.submissionState.name === "In Progress") {
+                    if (submission.submissionStatus.submissionState === SubmissionStates.IN_PROGRESS) {
                         isInProgress = true;
                         break;
                     }
@@ -127,7 +127,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
                 var isInProgress = false;
                 for (var i in submissions) {
                     var submission = submissions[i];
-                    if (submission.submissionState.name === "Needs Corrections") {
+                    if (submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS) {
                         isInProgress = true;
                         break;
                     }

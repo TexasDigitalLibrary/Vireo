@@ -1,10 +1,12 @@
-vireo.controller("SubmissionViewController", function($controller, $filter, $q, $scope, $routeParams, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, StudentSubmission) {
+vireo.controller("SubmissionViewController", function($controller, $filter, $q, $scope, $routeParams, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, StudentSubmission, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
     $scope.fieldPredicate = {};
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.SubmissionStates = SubmissionStates;
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(response) {
         $scope.loaded = true;

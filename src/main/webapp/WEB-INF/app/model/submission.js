@@ -518,10 +518,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             return WsApi.fetch(submission.getMapping().updateCustomActionValue);
         };
 
-        submission.changeStatus = function (submissionStateName) {
+        submission.changeStatus = function (submissionStatusName) {
 
             angular.extend(this.getMapping().changeStatus, {
-                method: submission.id + "/change-status/" + submissionStateName
+                method: submission.id + "/change-status/" + submissionStatusName
             });
 
             var promise = WsApi.fetch(this.getMapping().changeStatus);

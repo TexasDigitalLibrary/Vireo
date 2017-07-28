@@ -15,13 +15,13 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE);
-        assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
+        submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
+        assertEquals("The submissionStatus repository is not empty!", 1, submissionStatusRepo.count());
 
         parentCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
 
-        testSubmission = submissionRepo.create(testUser, organization, submissionState, getCredentials());
+        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials());
 
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
@@ -36,13 +36,13 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("Saved action log does not have the correct submitter first name", TEST_USER_FIRSTNAME, testActionLog.getUser().getFirstName());
         assertEquals("Saved action log does not have the correct submitter last name", TEST_USER_LASTNAME, testActionLog.getUser().getLastName());
         assertEquals("Saved action log does not have the correct submitter role", TEST_USER_ROLE, testActionLog.getUser().getRole());
-        assertEquals("Saved action log does not have the correct submission state name", TEST_SUBMISSION_STATE_NAME, testActionLog.getSubmissionState().getName());
-        assertEquals("Saved action log does not have the correct submission archived state ", TEST_SUBMISSION_STATE_ARCHIVED, testActionLog.getSubmissionState().isArchived());
-        assertEquals("Saved action log does not have the correct submission publishable state ", TEST_SUBMISSION_STATE_PUBLISHABLE, testActionLog.getSubmissionState().isPublishable());
-        assertEquals("Saved action log does not have the correct submission deletable state ", TEST_SUBMISSION_STATE_DELETABLE, testActionLog.getSubmissionState().isDeletable());
-        assertEquals("Saved action log does not have the correct submission editable by reviewer", TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, testActionLog.getSubmissionState().isEditableByReviewer());
-        assertEquals("Saved action log does not have the correct submission editable by  student state ", TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, testActionLog.getSubmissionState().isEditableByStudent());
-        assertEquals("Saved action log does not have the correct submission  active state ", TEST_SUBMISSION_STATE_ACTIVE, testActionLog.getSubmissionState().isActive());
+        assertEquals("Saved action log does not have the correct submission state name", TEST_SUBMISSION_STATUS_NAME, testActionLog.getSubmissionStatus().getName());
+        assertEquals("Saved action log does not have the correct submission archived state ", TEST_SUBMISSION_STATUS_ARCHIVED, testActionLog.getSubmissionStatus().isArchived());
+        assertEquals("Saved action log does not have the correct submission publishable state ", TEST_SUBMISSION_STATUS_PUBLISHABLE, testActionLog.getSubmissionStatus().isPublishable());
+        assertEquals("Saved action log does not have the correct submission deletable state ", TEST_SUBMISSION_STATUS_DELETABLE, testActionLog.getSubmissionStatus().isDeletable());
+        assertEquals("Saved action log does not have the correct submission editable by reviewer", TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, testActionLog.getSubmissionStatus().isEditableByReviewer());
+        assertEquals("Saved action log does not have the correct submission editable by  student state ", TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, testActionLog.getSubmissionStatus().isEditableByStudent());
+        assertEquals("Saved action log does not have the correct submission  active state ", TEST_SUBMISSION_STATUS_ACTIVE, testActionLog.getSubmissionStatus().isActive());
         assertEquals("Saved action log does not have the correct log entry ", TEST_ACTION_LOG_ENTRY, testActionLog.getEntry());
         assertEquals("Saved action log does not have the correct flag ", TEST_ACTION_LOG_FLAG, testActionLog.isPrivateFlag());
     }
@@ -70,7 +70,7 @@ public class ActionLogTest extends AbstractEntityTest {
         actionLogRepo.delete(testActionLog);
         assertEquals("The test action log was not deleted!", 0, actionLogRepo.count());
         assertEquals("Submission is not deleted", 1, submissionRepo.count());
-        assertEquals("Submission State is not deleted", 1, submissionStateRepo.count());
+        assertEquals("Submission State is not deleted", 1, submissionStatusRepo.count());
         assertEquals("User is not deleted", 1, userRepo.count());
     }
 
@@ -80,7 +80,7 @@ public class ActionLogTest extends AbstractEntityTest {
             actionLogRepo.delete(actionLog);
         });
         submissionRepo.deleteAll();
-        submissionStateRepo.deleteAll();
+        submissionStatusRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
         namedSearchFilterRepo.findAll().forEach(nsf -> {

@@ -13,13 +13,13 @@ import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.framework.model.Credentials;
@@ -27,20 +27,20 @@ import edu.tamu.framework.model.Credentials;
 @Component
 public class Cli implements CommandLineRunner {
 
-    @Autowired
-    private SubmissionRepo submissionRepo;
+	@Autowired
+	SubmissionRepo submissionRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+	@Autowired
+	UserRepo userRepo;
 
-    @Autowired
-    private OrganizationRepo organizationRepo;
+	@Autowired
+	OrganizationRepo organizationRepo;
 
-    @Autowired
-    private SubmissionStateRepo submissionStateRepo;
+	@Autowired
+	SubmissionStatusRepo submissionStatusRepo;
 
-    @Autowired
-    private FieldValueRepo fieldValueRepo;
+	@Autowired
+	FieldValueRepo fieldValueRepo;
 
     @Override
     public void run(String... arg0) throws Exception {
@@ -89,11 +89,10 @@ public class Cli implements CommandLineRunner {
                     System.out.println("\nGoodbye.");
                     running = false;
                     break;
-
                 case "generate":
 
                     Organization org = organizationRepo.findAll().get(0);
-                    SubmissionState state = submissionStateRepo.findAll().get(0);
+                    SubmissionStatus state = submissionStatusRepo.findAll().get(0);
 
                     if (commandArgs.size() > 0) {
                         try {
