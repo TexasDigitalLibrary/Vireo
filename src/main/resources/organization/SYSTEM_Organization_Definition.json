@@ -324,7 +324,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"college",
+            "value":"thesis.degree.college",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
@@ -361,7 +361,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"program",
+            "value":"thesis.degree.discipline",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
@@ -471,7 +471,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"thesis.degree.discipline",
+            "value":"thesis.degree.major",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
