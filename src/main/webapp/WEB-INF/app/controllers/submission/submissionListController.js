@@ -414,7 +414,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.getSubmissionProperty = function(row, col) {
         var value;
-        console.log(col.valuePath);
+        
         for (var i in col.valuePath) {
 
             if (value === undefined) {
