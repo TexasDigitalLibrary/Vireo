@@ -44,6 +44,7 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
@@ -66,6 +67,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -125,6 +127,9 @@ public class SystemDataLoader {
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
+
+    @Autowired
+    private VocabularyWordRepo vocabularyRepo;
 
     @Autowired
     private LanguageRepo languageRepo;
@@ -229,27 +234,32 @@ public class SystemDataLoader {
                 cv.setLanguage(language);
 
                 // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                ControlledVocabulary cvPreexisting = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
 
-                if (cvPreexisting != null) {
-                    cv.setPosition(cvPreexisting.getPosition());
-                    cv.setId(cvPreexisting.getId());
-                } else {
-                    ControlledVocabulary cvBrandNew = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
-                    cv.setPosition(controlledVocabularyRepo.count());
-                    cv.setId(cvBrandNew.getId());
+                if (persistedCV == null) {
+                    persistedCV = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
                 }
 
-                controlledVocabularyRepo.saveAndFlush(cv);
+                for (VocabularyWord vw : cv.getDictionary()) {
+
+                    VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
+
+                    if (persistedVW == null) {
+                        persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
+                        persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                    } else {
+                        persistedVW.setDefinition(vw.getDefinition());
+                        persistedVW.setIdentifier(vw.getIdentifier());
+                        persistedVW.setContacts(vw.getContacts());
+                        persistedVW = vocabularyRepo.save(persistedVW);
+                    }
+                }
 
             } catch (JsonParseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (JsonMappingException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

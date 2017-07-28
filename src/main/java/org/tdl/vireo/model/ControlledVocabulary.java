@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private Language language;
 
-    @ManyToMany(cascade = { ALL }, fetch = EAGER)
+    @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
     private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
 
     @Column(nullable = false)

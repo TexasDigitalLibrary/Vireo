@@ -1,9 +1,14 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 
 import edu.tamu.framework.service.OrderedEntityService;
@@ -15,6 +20,9 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
+
+    @Autowired
+    private VocabularyWordRepo vocabularyWordRepo;
 
     @Override
     public ControlledVocabulary create(String name, Language language) {
@@ -51,6 +59,26 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
     @Override
     public void remove(ControlledVocabulary controlledVocabulary) {
         orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, controlledVocabulary.getPosition());
+    }
+
+    @Override
+    public void delete(ControlledVocabulary controlledVocabulary) {
+
+        List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
+
+        controlledVocabulary.getDictionary().forEach(vw -> {
+            dictionary.add(vw);
+        });
+
+        controlledVocabulary.setDictionary(new ArrayList<VocabularyWord>());
+
+        controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+
+        dictionary.forEach(vw -> {
+            vocabularyWordRepo.delete(vw);
+        });
+
+        controlledVocabularyRepo.delete(controlledVocabulary.getId());
     }
 
 }

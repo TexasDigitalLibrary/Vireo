@@ -15,4 +15,6 @@ public interface ControlledVocabularyRepoCustom {
 
     public void remove(ControlledVocabulary controlledVocabulary);
 
+    public void delete(ControlledVocabulary controlledVocabulary);
+
 }
