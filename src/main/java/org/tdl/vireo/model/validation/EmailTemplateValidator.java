@@ -22,8 +22,8 @@ public class EmailTemplateValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.required, "Email Template requires a message", messageProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Email Template message must be at least 2 characters", messageProperty, 2));
 
-        String isSystemRequiredProperty = "isSystemRequired";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Email Template requires a system required flag", isSystemRequiredProperty, true));
+        String systemRequiredProperty = "systemRequired";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Email Template requires a system required flag", systemRequiredProperty, true));
 
     }
 

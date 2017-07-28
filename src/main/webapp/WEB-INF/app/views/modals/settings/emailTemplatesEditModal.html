@@ -7,7 +7,7 @@
 
 <form ng-submit="updateEmailTemplate()" name="forms.update" novalidate>
 
-    <validationmessage results="modalData.ValidationResults"></validationmessage>
+    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
 
     <div class="modal-body">
 
@@ -18,7 +18,7 @@
             placeholder="Name of the email template"
             form="forms.update"
             validations="emailTemplateRepo.getValidations()"
-            results="modalData.ValidationResults">
+            results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
         <validatedinput
@@ -28,7 +28,7 @@
             placeholder="Subject of the email template"
             form="forms.update"
             validations="emailTemplateRepo.getValidations()"
-            results="modalData.ValidationResults">
+            results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
         <div class="row">

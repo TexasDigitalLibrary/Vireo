@@ -53,7 +53,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         });
     };
 
-    $scope.updateCv = function (vw) {
+    $scope.updateVocabularyWord = function (vw) {
         $scope.selectedCv.updating = true;
         ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function (res) {
             $scope.selectedCv.updating = false;

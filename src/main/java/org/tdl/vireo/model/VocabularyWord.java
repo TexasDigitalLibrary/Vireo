@@ -13,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.validation.VocabularyWordValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -39,9 +37,8 @@ public class VocabularyWord extends BaseEntity {
     @ElementCollection(fetch = EAGER)
     private List<String> contacts;
 
-    @ManyToOne(cascade = { DETACH, REFRESH })
-    @Fetch(FetchMode.SELECT)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = VocabularyWord.class, property = "id")
+    @ManyToOne(cascade = { DETACH, REFRESH }, fetch = EAGER, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = ControlledVocabulary.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private ControlledVocabulary controlledVocabulary;
 
