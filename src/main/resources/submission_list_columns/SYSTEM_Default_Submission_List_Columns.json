@@ -10,7 +10,7 @@
   {
     "title": "Status",
     "sort": "NONE",
-    "valuePath": ["submissionState", "name"],
+    "valuePath": ["submissionStatus", "name"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

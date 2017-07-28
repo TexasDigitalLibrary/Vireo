@@ -19,15 +19,15 @@ public class OrganizationTest extends AbstractEntityTest {
 
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
 
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE, null);
+        submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
 
-        assertEquals("The submissionState does not exist!", 1, submissionStateRepo.count());
+        assertEquals("The submissionStatus does not exist!", 1, submissionStatusRepo.count());
 
         emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
 
         assertEquals("The emailTemplate does not exist!", 1, emailTemplateRepo.count());
 
-        emailWorkflowRule = emailWorkflowRuleRepo.create(submissionState, emailRecipient, emailTemplate);
+        emailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
 
         assertEquals("The emailWorkflowRule does not exist!", 1, emailWorkflowRuleRepo.count());
     }
@@ -391,7 +391,7 @@ public class OrganizationTest extends AbstractEntityTest {
         });
 
         emailWorkflowRuleRepo.deleteAll();
-        submissionStateRepo.deleteAll();
+        submissionStatusRepo.deleteAll();
         emailTemplateRepo.deleteAll();
     }
 

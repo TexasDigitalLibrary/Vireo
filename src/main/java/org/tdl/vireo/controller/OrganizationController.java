@@ -120,7 +120,7 @@ public class OrganizationController {
 		ApiResponse response = new ApiResponse(SUCCESS);
 
 		Organization org = organizationRepo.findOne(requestingOrgID);
-		SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStateId").asLong());
+		SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
 		JsonNode recipientNode = dataNode.get("recipient");
 		EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
 

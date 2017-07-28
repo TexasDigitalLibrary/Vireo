@@ -4,9 +4,9 @@ import edu.tamu.framework.enums.InputValidationType;
 import edu.tamu.framework.validation.BaseModelValidator;
 import edu.tamu.framework.validation.InputValidator;
 
-public class SubmissionStateValidator extends BaseModelValidator {
+public class SubmissionStatusValidator extends BaseModelValidator {
 
-    public SubmissionStateValidator() {
+    public SubmissionStatusValidator() {
         String nameProperty = "name";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Submission State requires a name", nameProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Submission State name must be at least 1 characters", nameProperty, 1));

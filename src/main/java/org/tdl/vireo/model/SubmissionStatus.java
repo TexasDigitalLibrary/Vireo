@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
 import org.tdl.vireo.enums.SubmissionState;
-import org.tdl.vireo.model.validation.SubmissionStateValidator;
+import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -60,7 +60,7 @@ public class SubmissionStatus extends BaseEntity {
     private List<SubmissionStatus> transitionSubmissionStatuses;
 
     public SubmissionStatus() {
-        setModelValidator(new SubmissionStateValidator());
+        setModelValidator(new SubmissionStatusValidator());
         setTransitionSubmissionStatuses(new ArrayList<SubmissionStatus>());
     }
 
@@ -73,7 +73,7 @@ public class SubmissionStatus extends BaseEntity {
      * @param isEditableByStudent
      * @param isActive
      */
-    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionState) {
+    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionStatus) {
         this();
         setName(name);
         isArchived(isArchived);
@@ -82,7 +82,7 @@ public class SubmissionStatus extends BaseEntity {
         isEditableByReviewer(isEditableByReviewer);
         isEditableByStudent(isEditableByStudent);
         isActive(isActive);
-        setSubmissionState(submissionState);
+        setSubmissionState(submissionStatus);
     }
 
     /**

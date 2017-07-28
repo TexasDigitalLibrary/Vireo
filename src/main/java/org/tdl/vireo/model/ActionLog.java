@@ -42,25 +42,25 @@ public class ActionLog extends BaseEntity {
         setModelValidator(new ActionLogValidator());
     }
 
-    public ActionLog(SubmissionStatus submissionState, User user, Calendar actionDate, String entry, boolean privateFlag) {
+    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionStatus = submissionState;
+        this.submissionStatus = submissionStatus;
         this.user = user;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
     }
 
-    public ActionLog(SubmissionStatus submissionState, Calendar actionDate, String entry, boolean privateFlag) {
+    public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionStatus = submissionState;
+        this.submissionStatus = submissionStatus;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
     }
 
     /**
-     * @return the submissionState
+     * @return the submissionStatus
      */
     public SubmissionStatus getSubmissionStatus() {
         return submissionStatus;
@@ -68,7 +68,7 @@ public class ActionLog extends BaseEntity {
 
     /**
      * @param submissionStatus
-     *            the submissionState to set
+     *            the submissionStatus to set
      */
     public void setSubmissionStatus(SubmissionStatus submissionStatus) {
         this.submissionStatus = submissionStatus;

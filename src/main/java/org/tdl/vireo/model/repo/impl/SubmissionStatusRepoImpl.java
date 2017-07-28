@@ -13,7 +13,7 @@ public class SubmissionStatusRepoImpl implements SubmissionStatusRepoCustom {
 
     @Override
     public SubmissionStatus create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active, SubmissionState submissionState) {
-        return submissionStatusRepo.save(new SubmissionStatus(name, archived, publishable, deletable, editableByReviewer, editableByStudent, active, submissionState = submissionState == null ? SubmissionState.NONE : submissionState));
+        return submissionStatusRepo.save(new SubmissionStatus(name, archived, publishable, deletable, editableByReviewer, editableByStudent, active, submissionState == null ? SubmissionState.NONE : submissionState));
     }
 
 }

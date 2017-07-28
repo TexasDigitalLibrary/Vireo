@@ -44,15 +44,15 @@ public class EmailWorkflowRule extends BaseEntity {
         isDisabled(true);
     }
 
-    public EmailWorkflowRule(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
+    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
         this();
-        setSubmissionStatus(submissionState);
+        setSubmissionStatus(submissionStatus);
         setEmailRecipient(emailRecipient);
         setEmailTemplate(emailTemplate);
     }
 
-    public EmailWorkflowRule(SubmissionStatus submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
-        this(submissionState, emailRecipient, emailTemplate);
+    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
+        this(submissionStatus, emailRecipient, emailTemplate);
         isSystem(isSystem);
     }
 

@@ -16,12 +16,12 @@ public class CustomActionValueTest extends AbstractEntityTest {
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals("The user repository is not empty!", 1, userRepo.count());
 
-        submissionState = submissionStateRepo.create(TEST_SUBMISSION_STATE_NAME, TEST_SUBMISSION_STATE_ARCHIVED, TEST_SUBMISSION_STATE_PUBLISHABLE, TEST_SUBMISSION_STATE_DELETABLE, TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATE_ACTIVE, null);
-        assertEquals("The submissionState repository is not empty!", 1, submissionStateRepo.count());
+        submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
+        assertEquals("The submissionStatus repository is not empty!", 1, submissionStatusRepo.count());
 
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
 
-        testSubmission = submissionRepo.create(testUser, organization, submissionState, getCredentials());
+        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials());
 
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
 
@@ -73,7 +73,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
             namedSearchFilterRepo.delete(nsf);
         });
         userRepo.deleteAll();
-        submissionStateRepo.deleteAll();
+        submissionStatusRepo.deleteAll();
         customActionDefinitionRepo.deleteAll();
     }
 
