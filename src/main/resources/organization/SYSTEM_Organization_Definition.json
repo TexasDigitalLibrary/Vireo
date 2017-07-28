@@ -335,7 +335,7 @@
           },
           "repeatable":false,
           "overrideable":true,
-          "enabled":false,
+          "enabled":true,
           "optional":false,
           "flagged":false,
           "logged":false,
