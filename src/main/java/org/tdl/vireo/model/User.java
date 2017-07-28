@@ -124,6 +124,7 @@ public class User extends AbstractCoreUser {
     public User(String email, String firstName, String lastName, AppRole role) {
         this();
         setEmail(email);
+        setUin(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role);

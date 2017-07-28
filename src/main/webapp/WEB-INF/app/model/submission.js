@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
 
     return function Submission() {
 
@@ -138,7 +138,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
                     var fieldValue = submission.fieldValues[i];
                     if (fieldValue.id === removedFieldValue.id) {
                         submission.fieldValues.splice(i, 1);
-                        if (submission.primaryDocumentFieldValue !== undefined && fieldValue.id === submission.primaryDocumentFieldValue.id) {
+                        if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                             delete submission.primaryDocumentFieldValue;
                         }
                         break;
@@ -282,7 +282,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
-            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional && fieldProfile.enabled) {
                 return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
@@ -312,7 +312,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
-            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional) {
+            if ((!fieldValue.value || fieldValue.value === "") && !fieldProfile.optional && fieldProfile.enabled) {
                 return $q(function (resolve) {
                     fieldValue.setIsValid(false);
                     fieldValue.addValidationMessage("This field is required");
@@ -375,7 +375,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, RestApi, WsA
 
             angular.forEach(submission.fieldValues, function (fv) {
                 var fieldProfile = submission.getFieldProfileByPredicate(fv.fieldPredicate);
-                if (!fieldProfile.optional || (fv.value !== "" && fieldProfile.optional)) {
+                if (!fieldProfile.optional && fieldProfile.enabled || (fv.value !== "" && fieldProfile.optional && fieldProfile.enabled)) {
                     var savePromise = submission.validateFieldValue(fv, fieldProfile);
                     savePromises.push(savePromise);
                 }

@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
-import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
@@ -35,9 +34,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @Override
     public void setup() {
-
-        controlledVocabularyRepo.deleteAll();
-
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1, languageRepo.create(TEST_LANGUAGE_NAME1));
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2, languageRepo.create(TEST_LANGUAGE_NAME2));
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME3, languageRepo.create(TEST_LANGUAGE_NAME3));
@@ -49,27 +45,6 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         brokerChannel.addInterceptor(brokerChannelInterceptor);
 
         StompConnect();
-    }
-
-    public void addVocabularyWords() {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
-
-        VocabularyWord word1 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME1, TEST_VOCABULARY_WORD_DEFINITION1, TEST_VOCABULARY_WORD_IDENTIFIER1);
-        VocabularyWord word2 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME2, TEST_VOCABULARY_WORD_DEFINITION2, TEST_VOCABULARY_WORD_IDENTIFIER2);
-        VocabularyWord word3 = vocabularyWordRepo.create(TEST_VOCABULARY_WORD_NAME3, TEST_VOCABULARY_WORD_DEFINITION3, TEST_VOCABULARY_WORD_IDENTIFIER3);
-
-        word1.setControlledVocabulary(controlledVocabulary);
-        vocabularyWordRepo.save(word1);
-        word2.setControlledVocabulary(controlledVocabulary);
-        vocabularyWordRepo.save(word2);
-        word3.setControlledVocabulary(controlledVocabulary);
-        vocabularyWordRepo.save(word3);
-
-        controlledVocabulary.addValue(word1);
-        controlledVocabulary.addValue(word2);
-        controlledVocabulary.addValue(word3);
-
-        controlledVocabularyRepo.save(controlledVocabulary);
     }
 
     @Test
@@ -122,7 +97,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
-        
+
         System.out.println("\n\n\n" + meta + "\n\n\n");
 
         assertEquals("SUCCESS", meta.get("type"));
@@ -219,7 +194,13 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     @SuppressWarnings("unchecked")
     public void testExportControlledVocabulary() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
 
-        addVocabularyWords();
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
+
+        vocabularyWordRepo.create(controlledVocabulary, TEST_VOCABULARY_WORD_NAME1, TEST_VOCABULARY_WORD_DEFINITION1, TEST_VOCABULARY_WORD_IDENTIFIER1);
+        controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
+        vocabularyWordRepo.create(controlledVocabulary, TEST_VOCABULARY_WORD_NAME2, TEST_VOCABULARY_WORD_DEFINITION2, TEST_VOCABULARY_WORD_IDENTIFIER2);
+        controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1);
+        vocabularyWordRepo.create(controlledVocabulary, TEST_VOCABULARY_WORD_NAME3, TEST_VOCABULARY_WORD_DEFINITION3, TEST_VOCABULARY_WORD_IDENTIFIER3);
 
         String responseJson = StompRequest("/settings/controlled-vocabulary/export/" + TEST_CONTROLLED_VOCABULARY_NAME1, "");
 
@@ -280,15 +261,12 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @Override
     public void cleanup() {
-        vocabularyWordRepo.findAll().forEach(word -> {
-            ControlledVocabulary cv = word.getControlledVocabulary();
-            cv.removeValue(word);
-            controlledVocabularyRepo.save(cv);
-            word.setControlledVocabulary(null);
-            vocabularyWordRepo.save(word);
+        controlledVocabularyRepo.findAll().forEach(cv -> {
+            controlledVocabularyRepo.delete(cv);
         });
-        vocabularyWordRepo.deleteAll();
-        controlledVocabularyRepo.deleteAll();
+        vocabularyWordRepo.findAll().forEach(vw -> {
+            vocabularyWordRepo.delete(vw);
+        });
         languageRepo.deleteAll();
     }
 

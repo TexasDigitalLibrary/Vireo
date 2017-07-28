@@ -44,6 +44,7 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
@@ -66,6 +67,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -127,6 +129,9 @@ public class SystemDataLoader {
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
     @Autowired
+    private VocabularyWordRepo vocabularyRepo;
+
+    @Autowired
     private LanguageRepo languageRepo;
 
     @Autowired
@@ -185,7 +190,7 @@ public class SystemDataLoader {
         logger.info("Loading default controlled vocabularies");
         loadControlledVocabularies();
 
-        logger.info("Loading defaults");
+        logger.info("Loading default settings");
         loadSystemDefaults();
 
         logger.info("Loading default Proquest language codes");
@@ -229,27 +234,32 @@ public class SystemDataLoader {
                 cv.setLanguage(language);
 
                 // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                ControlledVocabulary cvPreexisting = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
 
-                if (cvPreexisting != null) {
-                    cv.setPosition(cvPreexisting.getPosition());
-                    cv.setId(cvPreexisting.getId());
-                } else {
-                    ControlledVocabulary cvBrandNew = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
-                    cv.setPosition(controlledVocabularyRepo.count());
-                    cv.setId(cvBrandNew.getId());
+                if (persistedCV == null) {
+                    persistedCV = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
                 }
 
-                controlledVocabularyRepo.saveAndFlush(cv);
+                for (VocabularyWord vw : cv.getDictionary()) {
+
+                    VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
+
+                    if (persistedVW == null) {
+                        persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
+                        persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                    } else {
+                        persistedVW.setDefinition(vw.getDefinition());
+                        persistedVW.setIdentifier(vw.getIdentifier());
+                        persistedVW.setContacts(vw.getContacts());
+                        persistedVW = vocabularyRepo.save(persistedVW);
+                    }
+                }
 
             } catch (JsonParseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (JsonMappingException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -494,7 +504,7 @@ public class SystemDataLoader {
                 }
 
                 // check to see if the EmailTemplate exists
-                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().isSystemRequired());
+                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSystemRequired());
 
                 // create new EmailTemplate if not already exists
                 if (newEmailTemplate == null) {
@@ -629,11 +639,11 @@ public class SystemDataLoader {
                 throw new IllegalStateException("Unable to identify the template's message.");
             }
 
-            EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
 
             if (template == null) {
                 template = emailTemplateRepo.create(name, subject, message);
-                template.isSystemRequired(true);
+                template.setSystemRequired(true);
             } else {
                 template.setSubject(subject);
                 template.setMessage(message);
@@ -672,7 +682,7 @@ public class SystemDataLoader {
         for (String name : getAllSystemEmailTemplateNames()) {
 
             // try to see if it already exists in the DB
-            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, true);
 
             // create template or upgrade the old one
             if (dbTemplate == null) {
@@ -685,7 +695,7 @@ public class SystemDataLoader {
                 // one loaded from .email file
                 if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
 
-                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
+                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, false);
 
                     // if this System template already has a custom template
                     // (meaning one named the same but that is
@@ -695,10 +705,9 @@ public class SystemDataLoader {
                         // a custom version of this System email template
                         // already exists, it's safe to override dbTemplate's
                         // data and save
-                        dbTemplate.isSystemRequired(false);
                         dbTemplate.setMessage(loadedTemplate.getMessage());
                         dbTemplate.setSubject(loadedTemplate.getSubject());
-                        dbTemplate.isSystemRequired(true);
+                        dbTemplate.setSystemRequired(true);
 
                         logger.info("Upgrading Old System Email Template for [" + dbTemplate.getName() + "]");
 
@@ -708,7 +717,7 @@ public class SystemDataLoader {
                     // dbTemplate !isSystemRequired and the save loadedTemplate
                     else {
                         logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
-                        dbTemplate.isSystemRequired(false);
+                        dbTemplate.setSystemRequired(false);
                         emailTemplateRepo.save(dbTemplate);
                         emailTemplateRepo.save(loadedTemplate);
                     }

@@ -24,9 +24,9 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 
     @Override
     public EmailTemplate findByNameOverride(String name) {
-        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, false);
+        EmailTemplate emailTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, false);
         if (emailTemplate == null) {
-            emailTemplate = emailTemplateRepo.findByNameAndIsSystemRequired(name, true);
+            emailTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, true);
         }
         return emailTemplate;
     }

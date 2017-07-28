@@ -3,7 +3,7 @@ var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
         validations: true,
-        modelListeners: false,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',

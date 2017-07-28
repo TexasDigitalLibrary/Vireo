@@ -23,20 +23,22 @@
 			</td>
 		  </tr>
 		</table>
-	
-		<div ng-controller="SettingsController">
-			<button class="btn btn-primary" ng-if="multipleSubmissions()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
 
-			<modal 
-				modal-id="confirmNewSubmission" 
-				modal-view="views/modals/submissions/confirmNewSubmission.html" 
+		<div ng-controller="SettingsController">
+			<button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length > 0" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
+	    <button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length === 0" ng-click="startNewSubmission('/submission/new')">New Submission</button>
+	    <button class="btn btn-primary" ng-if="!multipleSubmissions() && studentsSubmissions.length === 0" ng-click="startNewSubmission('/submission/new')">New Submission</button>
+
+			<modal
+				modal-id="confirmNewSubmission"
+				modal-view="views/modals/submissions/confirmNewSubmission.html"
 				modal-header-class="modal-header-danger"
 				static="true">
 			</modal>
 
-			<modal 
-				modal-id="confirmDeleteSubmission" 
-				modal-view="views/modals/submissions/confirmDeleteSubmission.html" 
+			<modal
+				modal-id="confirmDeleteSubmission"
+				modal-view="views/modals/submissions/confirmDeleteSubmission.html"
 				modal-header-class="modal-header-danger"
 				static="true">
 			</modal>
