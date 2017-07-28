@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
@@ -53,6 +54,7 @@ import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.DegreeLevelRepo;
+import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
@@ -135,6 +137,9 @@ public class SystemDataLoader {
     private LanguageRepo languageRepo;
 
     @Autowired
+    private DegreeRepo degreeRepo;
+
+    @Autowired
     private DegreeLevelRepo degreeLevelRepo;
 
     @Autowired
@@ -171,6 +176,9 @@ public class SystemDataLoader {
 
         logger.info("Loading default degree levels");
         loadDegreeLevels();
+
+        logger.info("Loading default degrees");
+        loadDegrees();
 
         logger.info("Loading default embargos");
         loadEmbargos();
@@ -266,7 +274,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadDegreeLevels() {
+    private void loadOrganizationCategories() {
         try {
 
             List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
@@ -286,7 +294,7 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadOrganizationCategories() {
+    private void loadDegreeLevels() {
         try {
 
             List<DegreeLevel> degreeLevels = objectMapper.readValue(getFileFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {
@@ -302,7 +310,41 @@ public class SystemDataLoader {
             }
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
-            logger.debug("Unable to initialize default organization category.", e);
+            logger.debug("Unable to initialize default degree levels.", e);
+        }
+    }
+
+    private void loadDegrees() {
+        try {
+
+            List<Degree> degrees = objectMapper.readValue(getFileFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {
+            });
+
+            for (Degree degree : degrees) {
+
+                DegreeLevel degreeLevel = degreeLevelRepo.findByName(degree.getLevel().getName());
+
+                if (degreeLevel == null) {
+                    degreeLevel = degreeLevelRepo.create(degree.getLevel().getName());
+                } else {
+                    degreeLevel.setName(degree.getLevel().getName());
+                    degreeLevel = degreeLevelRepo.save(degreeLevel);
+                }
+
+                Degree dbDegree = degreeRepo.findByNameAndLevel(degree.getName(), degreeLevel);
+
+                if (dbDegree == null) {
+                    dbDegree = degreeRepo.create(degree.getName(), degreeLevel);
+                } else {
+                    dbDegree.setName(degree.getName());
+                    dbDegree.setLevel(degreeLevel);
+                    dbDegree = degreeRepo.save(dbDegree);
+                }
+
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default degrees.", e);
         }
     }
 
