@@ -101,9 +101,9 @@ public class OrganizationController {
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
         Organization persistedOrg = organizationRepo.findOne(organization.getId());
         copyProperties(organization, persistedOrg, "originalWorkflowSteps", "aggregateWorkflowSteps", "parentOrganization", "childrenOrganizations", "emailWorkflowRules");
-        organization = organizationRepo.save(persistedOrg);
+        persistedOrg = organizationRepo.save(persistedOrg);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
-        return new ApiResponse(SUCCESS, organization);
+        return new ApiResponse(SUCCESS, persistedOrg);
     }
 
     @ApiMapping(value = "/delete", method = POST)
