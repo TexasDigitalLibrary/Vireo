@@ -87,12 +87,11 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute, defaultValue));
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
-
-        fieldGlosses.forEach(
-
-                        fieldGloss -> {
-                            submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
-                        });
+        fieldGlosses.forEach(fieldGloss -> {
+            if (submissionListColumnRepo.findByTitle(fieldGloss.getValue()) == null) {
+                submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
+            }
+        });
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
