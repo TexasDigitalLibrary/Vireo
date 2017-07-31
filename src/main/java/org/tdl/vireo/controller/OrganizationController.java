@@ -7,6 +7,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,8 @@ public class OrganizationController {
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
-	@Autowired
-	private SubmissionStatusRepo submissionStatusRepo;
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -98,7 +99,9 @@ public class OrganizationController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-        organization = organizationRepo.save(organization);
+        Organization persistedOrg = organizationRepo.findOne(organization.getId());
+        copyProperties(organization, persistedOrg, "originalWorkflowSteps", "aggregateWorkflowSteps", "parentOrganization", "childrenOrganizations", "emailWorkflowRules");
+        organization = organizationRepo.save(persistedOrg);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return new ApiResponse(SUCCESS, organization);
     }
@@ -112,17 +115,17 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
 
-	@Transactional
-	@ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
-	@Auth(role = "MANAGER")
-	public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
+    @Transactional
+    @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
+    @Auth(role = "MANAGER")
+    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
 
-		ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response = new ApiResponse(SUCCESS);
 
-		Organization org = organizationRepo.findOne(requestingOrgID);
-		SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
-		JsonNode recipientNode = dataNode.get("recipient");
-		EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
+        Organization org = organizationRepo.findOne(requestingOrgID);
+        SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
+        JsonNode recipientNode = dataNode.get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
