@@ -39,6 +39,7 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Note;
@@ -62,6 +63,7 @@ import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
+import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
@@ -143,6 +145,9 @@ public class SystemDataLoader {
     private DegreeLevelRepo degreeLevelRepo;
 
     @Autowired
+    private GraduationMonthRepo graduationMonthRepo;
+
+    @Autowired
     private DocumentTypeRepo documentTypeRepo;
 
     @Autowired
@@ -179,6 +184,9 @@ public class SystemDataLoader {
 
         logger.info("Loading default degrees");
         loadDegrees();
+
+        logger.info("Loading default graduation months");
+        loadGraduationMonths();
 
         logger.info("Loading default embargos");
         loadEmbargos();
@@ -345,6 +353,26 @@ public class SystemDataLoader {
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default degrees.", e);
+        }
+    }
+
+    private void loadGraduationMonths() {
+        try {
+
+            List<GraduationMonth> graduationMonths = objectMapper.readValue(getFileFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {
+            });
+
+            for (GraduationMonth graduationMonth : graduationMonths) {
+                GraduationMonth persistedGraduationMonth = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
+
+                if (persistedGraduationMonth == null) {
+                    persistedGraduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
+                }
+
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default graduation months.", e);
         }
     }
 
