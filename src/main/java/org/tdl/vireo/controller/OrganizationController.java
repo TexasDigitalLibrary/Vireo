@@ -60,8 +60,8 @@ public class OrganizationController {
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
-	@Autowired
-	private SubmissionStatusRepo submissionStatusRepo;
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -73,7 +73,7 @@ public class OrganizationController {
     @ApiMapping("/all")
     @Auth(role = "STUDENT")
     public ApiResponse allOrganizations() {
-        return new ApiResponse(SUCCESS, organizationRepo.findAll());
+        return new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc());
     }
 
     @Transactional
@@ -90,7 +90,7 @@ public class OrganizationController {
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.findOne(parentOrgID);
         organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -99,7 +99,7 @@ public class OrganizationController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
         organization = organizationRepo.save(organization);
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS, organization);
     }
 
@@ -108,21 +108,21 @@ public class OrganizationController {
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }) })
     public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
         organizationRepo.delete(organization);
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
 
-	@Transactional
-	@ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
-	@Auth(role = "MANAGER")
-	public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
+    @Transactional
+    @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
+    @Auth(role = "MANAGER")
+    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
 
-		ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response = new ApiResponse(SUCCESS);
 
-		Organization org = organizationRepo.findOne(requestingOrgID);
-		SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
-		JsonNode recipientNode = dataNode.get("recipient");
-		EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
+        Organization org = organizationRepo.findOne(requestingOrgID);
+        SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
+        JsonNode recipientNode = dataNode.get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
