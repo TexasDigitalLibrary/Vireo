@@ -18,12 +18,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
         $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
 
-        if ($location.hash()) {
-            $scope.submission.ready().then(function () {
-                $scope.submission.validate();
-            });
-        }
-
         $scope.onLastStep = function () {
             var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
             return currentStepIndex === -1;
@@ -54,6 +48,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
             }
         } else if (step.name === "review") {
             stepNum = reviewStepNum;
+            $scope.submission.validate();
         }
 
         $scope.nextStep = $scope.submission.submissionWorkflowSteps[stepNum];

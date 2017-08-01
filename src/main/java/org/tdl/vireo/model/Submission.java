@@ -52,7 +52,7 @@ public class Submission extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private Organization organization;
 
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
