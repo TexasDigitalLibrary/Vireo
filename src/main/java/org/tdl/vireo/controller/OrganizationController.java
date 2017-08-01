@@ -105,7 +105,7 @@ public class OrganizationController {
 
     @ApiMapping(value = "/delete", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @ApiValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
     public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
         organizationRepo.delete(organization);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
