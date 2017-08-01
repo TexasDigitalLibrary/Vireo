@@ -66,8 +66,8 @@
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>
         			<span class="input-group-addon">
-        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
-        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
         			</span>
         		</div>
         	</div>
@@ -96,8 +96,8 @@
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>
         			<span class="input-group-addon">
-        				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
-        				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
         			</span>
         		</div>
         	</div>
