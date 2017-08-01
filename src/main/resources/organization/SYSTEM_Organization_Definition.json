@@ -1,5 +1,6 @@
 {
   "name":"Institution",
+  "acceptsSubmissions": false,
   "category":{
     "name":"System"
   },

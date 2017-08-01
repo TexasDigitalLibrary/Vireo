@@ -398,6 +398,7 @@ public class SystemDataLoader {
             // create new organization if not already exists
             if (organization == null) {
                 organization = organizationRepo.create(systemOrganization.getName(), category);
+                organization.setAcceptsSubmissions(systemOrganization.getAcceptsSubmissions());
             }
             // else set systemOrganization to existing organization
             else {
