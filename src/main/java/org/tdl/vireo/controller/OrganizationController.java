@@ -7,6 +7,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,9 +99,11 @@ public class OrganizationController {
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
-        organization = organizationRepo.save(organization);
+        Organization persistedOrg = organizationRepo.findOne(organization.getId());
+        copyProperties(organization, persistedOrg, "originalWorkflowSteps", "aggregateWorkflowSteps", "parentOrganization", "childrenOrganizations", "emailWorkflowRules");
+        persistedOrg = organizationRepo.save(persistedOrg);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
-        return new ApiResponse(SUCCESS, organization);
+        return new ApiResponse(SUCCESS, persistedOrg);
     }
 
     @ApiMapping(value = "/delete", method = POST)
