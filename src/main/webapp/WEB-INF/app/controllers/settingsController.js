@@ -8,6 +8,8 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 
     $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
 
+    $scope.inProgress = {};
+
     $scope.submissionsOpen = function () {
         return stringToBoolean($scope.settings.configurable.application ? $scope.settings.configurable.application.submissions_open ? $scope.settings.configurable.application.submissions_open.value : 'false' : 'false');
     };
@@ -166,9 +168,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
             };
 
             $scope.saveDegree = function (degree) {
-                $scope.inProgress = true;
+                $scope.inProgress[degree.id] = true;
                 degree.save().then(function () {
-                    $scope.inProgress = false;
+                    $scope.inProgress[degree.id] = false;
                 });
             };
 
