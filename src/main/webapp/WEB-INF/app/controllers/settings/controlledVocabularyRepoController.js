@@ -365,7 +365,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.updateControlledVocabulary = function () {
-            $scope.modalData.save();
+            $scope.modalData.save().then(function (res) {
+                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                    $scope.resetControlledVocabulary(true);
+                }
+            });
         };
 
         $scope.removeControlledVocabulary = function () {
