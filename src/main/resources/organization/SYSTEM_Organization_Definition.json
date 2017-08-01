@@ -1085,7 +1085,7 @@
           "help":"Enter the names and email addresses of your non-chairing committee members",
           "fieldGlosses":[
             {
-              "value":"Other Committee Members",
+              "value":"Non-Chairing Committee Members",
               "language":{
                 "name":"English"
               }
