@@ -9,6 +9,6 @@ import org.tdl.vireo.model.repo.custom.SubmissionFieldProfileRepoCustom;
 
 public interface SubmissionFieldProfileRepo extends JpaRepository<SubmissionFieldProfile, Long>, SubmissionFieldProfileRepoCustom {
 
-    public SubmissionFieldProfile findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndFlaggedAndLoggedAndUsageAndHelpAndMappedShibAttributeAndDefaultValue(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, String usage, String help, Configuration mappedShibAttribute, String defaultValue);
+    public SubmissionFieldProfile findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean optional, Boolean hidden, Boolean logged, String usage, String help, Configuration mappedShibAttribute, Boolean flagged, String defaultValue, Boolean enabled);
 
 }
