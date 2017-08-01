@@ -8,17 +8,17 @@
 <div class="modal-body">
 	<div class="row">
 		<div class="col-xs-12">
-			
+
             <div class="form-group">
                 <button class="btn btn-default" ng-click="box.changeAssignee(box.user);box.assignWorking=true;">Assign to me <span ng-if="box.assignWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
             </div>
 
             <form class="form-inline" name="">
-                <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>                    
-                <select 
-                    class="form-control" 
+                <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>
+                <select
+                    class="form-control"
                     name="newStatus"
-                    ng-model="box.assignee" 
+                    ng-model="box.assignee"
                     ng-options="au.settings.displayName for au in box.allUsers | filter:box.assignable">
                 </select>
                 <button type="button" class="btn btn-primary" ng-click="box.changeAssignee(box.assignee);box.assignSaveWorking=true;">Save <span ng-if="box.assignSaveWorking" class="glyphicon glyphicon-refresh spinning"></span></button>

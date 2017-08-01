@@ -324,7 +324,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "SubmissionStatusRepo": SubmissionStatusRepo,
             "submissionStatuses": submissionStatuses,
             "advanced": true,
-            "allUsers": $scope.allUsers,
+            "allUsers": UserRepo.getAll(),
             "user": new User(),
             "sending": false,
             "sendAdvisorEmail": function () {
