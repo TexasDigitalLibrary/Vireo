@@ -1,0 +1,38 @@
+<sideboxsub>DISPLAY NAME</sideboxsub>
+<div class="sidebox-input">
+	<validatedinput
+		model="settings.user"
+		property="displayName"
+		placeholder="User display name"
+		blur-enabled="true"
+		form-view="true"
+		confirm="updateUserSetting('displayName')"
+		validations="getUserSettingsValidations()">
+	</validatedinput>
+</div>
+
+<sideboxsub>PREFERRED EMAIL</sideboxsub>
+<div class="sidebox-input">
+	<validatedinput
+		model="settings.user"
+		property="preferedEmail"
+		placeholder="User preferred email"
+		blur-enabled="true"
+		form-view="true"
+		confirm="updateUserSetting('preferedEmail')"
+		validations="getUserSettingsValidations()">
+	</validatedinput>
+</div>
+
+<div class="sidebox-input">
+	<validatedinput
+		type="checkbox"
+		model="settings.user"
+		property="ccEmail"
+		placeholder="I want to recieve copy of all emails sent by the system on my behalf."
+		truevalue="'true'"
+		falsevalue="'false'"
+		form-view="true"
+		confirm="updateUserSetting('ccEmail')">
+	</validatedinput>
+</div>

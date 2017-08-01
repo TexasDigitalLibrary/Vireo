@@ -1,0 +1,47 @@
+  	
+<button class="btn btn-default" ng-click="openAddEmailWorkflowRuleModal('#createEmailWorkflowRule'+state.name.split(' ').join(''))">Add Rule</button>
+
+<div class="table-responsive">
+  	<table class="table table-hover table-striped">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Email template</th>
+				<th>Recipient</th>
+				<th></th>
+				<th>
+					<span class="glyphicon glyphicon-play"></span>/
+					<span class="glyphicon glyphicon-pause"></span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-if="rule.submissionStatus.id === state.id" ng-repeat="rule in selectedOrganization.emailWorkflowRules" class="email-workflow-rule-row"">
+				<td ng-click="openEditEmailWorkflowRule(rule)">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</td>
+				<td ng-click="openEditEmailWorkflowRule(rule)">
+					{{rule.emailTemplate.name}}
+				</td>
+				<td ng-click="openEditEmailWorkflowRule(rule)">
+					{{rule.emailRecipient.name}}
+				</td>
+				<td ng-click="confirmEmailWorkflowRuleDelete(rule);">
+					<span ng-if="rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-refresh spinning"></span>
+					<span ng-if="!rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-trash"></span>
+				</td>
+				<td ng-click="changeEmailWorkflowRuleActivationWorking=true;changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
+					<span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>
+					<span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
+					<span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play"></span>
+				</td>
+			</tr>
+		</tbody>
+  	</table>
+</div>
+
+<modal 
+	modal-id="createEmailWorkflowRule{{state.name.split(' ').join('')}}" 
+	modal-view="views/modals/organization/emailWorkflowRuleCreate.html" 
+	modal-header-class="modal-header-primary">
+</modal>

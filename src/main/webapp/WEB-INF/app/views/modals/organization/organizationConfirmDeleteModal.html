@@ -1,0 +1,17 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="cancelDeleteOrganization()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Delete Organization</h3>
+</div>
+
+<form novalidate>
+  <validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+  <div class="modal-body">
+    <h4>Really delete organization "{{ getSelectedOrganization().name }}"?</h4>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancelDeleteOrganization()">Cancel</button>
+    <button id="organization-confirm" type="submit" class="btn btn-danger" ng-click="deleteOrganization(getSelectedOrganization())">Confirm</button>
+  </div>
+</form>

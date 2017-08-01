@@ -1,0 +1,18 @@
+.cv-editing-selection {
+    margin-bottom: 25px;
+}
+
+.cv-editing-display .actions {
+    width: 190px;
+}
+
+.cv-editing-display tr td {
+    -webkit-transition: background 1s ease-in-out;
+    -moz-transition: background 1s ease-in-out;
+    -o-transition: background 1s ease-in-out;
+    transition: background 1s ease-in-out;
+}
+
+.cv-editing-display .table > tbody > tr > td {
+    vertical-align: middle;
+}

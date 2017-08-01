@@ -1,0 +1,109 @@
+<div class="row">
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-6">
+            <validatedinput
+                type="text"
+                label="ProQuest Institution Code"
+                model="settings.configurable.proquest_umi_degree_code.proquest_institution_code"
+                property="value"
+                validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
+                confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
+                form-view="true"
+                tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+            </validatedinput>
+        </div>
+
+        <div class="col-md-6">
+      	    <togglebutton
+      	        ng-click="updateConfiguration('proquest_umi_degree_code', 'proquest_indexing')"
+      	        label="Indexed by Search Engines"
+      	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
+      	        toggle-options="{{proquestIndexingOptions}}"
+      	        tool-tip="todo">
+      	    </togglebutton>
+        </div>
+
+    </div>
+
+    <div class="col-md-10 col-md-offset-1">
+
+        <lockingtextarea
+            label="ProQuest License Agreement"
+            hint="Students may be required to accept this license as part of their submission. The following HTML tags are allowed h1 - h5, p, a, b, i, u, ol, li, img. New lines are converted to paragraphs automatically."
+            scope-value="settings.configurable.proquest_umi_degree_code.proquest_license.value"
+            on-blur="updateConfiguration('proquest_umi_degree_code', 'proquest_license')"
+            timer="5">
+        </lockingtextarea>
+
+    </div>
+
+</div>
+
+<hr/>
+
+<div class="row">
+
+    <p>Degree codes are used by some export formats (i.e. ProQuest) to translate degrees into abbreviated codes.</p>
+
+    <div class="col-md-6">
+
+        <div class="col-md-10 col-md-offset-1">
+
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index < (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="col-md-10 col-md-offset-1">
+
+          <div class="form-group" ng-repeat="degree in degrees" ng-if="$index >= (degrees.length / 2)">
+        	 	<label ng-if="label" for="degree-{{degree.id}}">{{degree.name}} ( {{degree.level.name}} )</label>
+        		<div class="input-group">
+        			<input
+        				id="degree-{{degree.id}}"
+        				name="degree-{{degree.id}}"
+        				type="text"
+        				class="form-control"
+        				aria-describedby="{{degree.name}}"
+        				autocomplete="off"
+        				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
+        				ng-model="degree.proquestCode"
+                ng-blur="saveDegree(degree)"
+        				typeahead-select-on-blur="true"
+                typeahead-on-select="saveDegree(degree)"/>
+        			<span class="input-group-addon">
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
+        			</span>
+        		</div>
+        	</div>
+
+        </div>
+
+    </div>
+
+</div>
