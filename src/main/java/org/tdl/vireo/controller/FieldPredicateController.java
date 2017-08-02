@@ -85,7 +85,7 @@ public class FieldPredicateController {
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeEmbargo(@ApiValidatedModel FieldPredicate fieldPredicate) {
+    public ApiResponse removeFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.delete(fieldPredicate);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
@@ -93,7 +93,7 @@ public class FieldPredicateController {
     }
     
     /**
-     * Endpoint to create a field predicate
+     * Endpoint to update a field predicate
      *
      * @return ApiResponse with all input types.
      */
