@@ -1,6 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -149,8 +152,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
         
-        byte[] proquestLicenseBytes = null;
-        byte[] defaultLicenseBytes = null;
+        submission.setSubmissionStatus(submissionStatus);
                 
         if(submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
         	        	
@@ -171,67 +173,80 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         	}
         	
         	if(attachProquestLicense) {
-        		System.out.println("Append proquest license");
-        		Configuration proquestLicense = configurationRepo.getByName("proquest_license");
-        		proquestLicenseBytes = proquestLicense != null ? proquestLicense.getValue().getBytes() : null;
+        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license");
         	}
         	
         	if(attachDefaultLicenseFieldValues) {
-        		System.out.println("Append default license");
-        		Configuration defaultLicense = configurationRepo.getByName("submit_license");
-        		defaultLicenseBytes = defaultLicense != null ? defaultLicense.getValue().getBytes() : null;
+        		writeLicenseFile(credentials, submission, "submit_license", "license");
         	}
-        	
         }
         
-        if(proquestLicenseBytes != null) {
-        	int hash = credentials.getEmail().hashCode();
-            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-proquest_license.txt";
-            
-            try {
-				fileIOUtility.write(proquestLicenseBytes, uri);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-			
-            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
-            fieldValue.setValue(uri);
-            submission.addFieldValue(fieldValue);
-            
-            System.out.println(fieldValue.getValue());
-			
-		}
-        
-        if(defaultLicenseBytes != null) {
-        	int hash = credentials.getEmail().hashCode();
-            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-license.txt";
-            
-            try {
-				fileIOUtility.write(defaultLicenseBytes, uri);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-			
-            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
-            fieldValue.setValue(uri);
-            submission.addFieldValue(fieldValue);
-            
-            System.out.println(fieldValue.getValue());
-			
-		}
-        
-        submission.setSubmissionStatus(submissionStatus);
         submission = submissionRepo.saveAndFlush(submission);
 
         actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
+    
+    
+    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName) {
+    	
+    	byte[] licenseBytes = null;
+    	
+    	Configuration proquestLicense = configurationRepo.getByName(licenseName);
+		
+		User submitter = submission.getSubmitter();
+		
+		StringBuilder proquestLicenseStringBuilder = new StringBuilder();
+		
+		DateFormat formatter = DateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM, 
+                DateFormat.MEDIUM);
+		
+		String acceptedDate = formatter.format(submission.getSubmissionDate().getTime());
+		
+		proquestLicenseStringBuilder
+			.append("\n")
+			.append("The license above was accepted by ")
+			.append(submitter.getFirstName())
+			.append(" ")
+			.append(submitter.getLastName())
+			.append(" on ")
+			.append(acceptedDate);
+		
+		int seporatorLength = proquestLicenseStringBuilder.length();
+		        		
+		for(int i=0; i<seporatorLength; i++)
+			proquestLicenseStringBuilder.insert(0, "-");
+		
+		proquestLicenseStringBuilder.insert(0, "\n\n");
+		
+		proquestLicenseStringBuilder.insert(0, proquestLicense.getValue());
+		
+		licenseBytes = proquestLicenseStringBuilder.toString().getBytes();
+		
+		if(licenseBytes != null) {
+        	int hash = credentials.getEmail().hashCode();
+            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-"+fileName+".txt";
+            
+            try {
+				fileIOUtility.write(licenseBytes, uri);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+			
+            FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
+            fieldValue.setValue(uri);
+            submission.addFieldValue(fieldValue);
+            
+            System.out.println(fieldValue.getValue());
+			
+		}
+		
+    }
+    
 
     @Override
     public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {

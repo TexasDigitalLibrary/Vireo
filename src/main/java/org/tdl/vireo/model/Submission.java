@@ -193,9 +193,10 @@ public class Submission extends BaseEntity {
 
     private Calendar getDay() {
         Calendar day = getTime();
-        day.clear(Calendar.HOUR);
-        day.clear(Calendar.MINUTE);
-        day.clear(Calendar.SECOND);
+// TODO: Confirm that this is not needed.
+//        day.clear(Calendar.HOUR);
+//        day.clear(Calendar.MINUTE);
+//        day.clear(Calendar.SECOND);
         return day;
     }
 
