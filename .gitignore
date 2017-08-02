@@ -17,3 +17,5 @@ src/main/webapp/WEB-INF/app/resources/styles/sass/app.css
 .project
 .tern-project
 *.log*
+package-lock.json
+.vscode/

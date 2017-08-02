@@ -25,8 +25,7 @@
     <tbody>
       <tr ng-repeat="row in $data" ng-click="viewSubmission(row)" class="select-toggle">
         <td ng-repeat="col in $columns">
-          <span ng-if="col.inputType.name != 'INPUT_DATETIME'">{{getSubmissionProperty(row, col)}}</span>
-          <span ng-if="col.inputType.name == 'INPUT_DATETIME'">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</span>
+          <span>{{displaySubmissionProperty(row, col)}}</span>
         </td>
         <!-- <td ng-if="col.inputType.name == 'INPUT_DATETIME'" ng-repeat="col in $columns">{{getSubmissionProperty(row, col)|  date: 'MMM dd, yyyy'}}</td> -->
       </tr>

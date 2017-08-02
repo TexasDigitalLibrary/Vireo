@@ -1,0 +1,290 @@
+[
+  {
+    "name":"Master of Engineering Technical Management",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Real Estate",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Science in Public Health",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Geoscience",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Laws",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Industrial Distirubtion",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Engineering",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Jurisprudence",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Land and Property Development",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Natural Resource Development",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Public Health",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Recreation and Resources Development",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Doctor of Engineering",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Master of Architecture",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Bachelor of Arts",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  },
+  {
+    "name":"Master of Business Administration",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Health Administration",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Fine Arts",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Ocean Science and Technology",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Water Management",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Equine Industry Management",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Marine Resource Management",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Financial Management",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Biotechnology",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Wildlife Science",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Maritime Administration and Logistics",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Bachelor of Business Administration",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  },
+  {
+    "name":"Doctor of Dentistry",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Master of Urban Planning",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Doctor of Education",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Master of Science",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Education",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Doctor of Medicine",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Doctor of Public Health",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Bachelor of Science in Nursing",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  },
+  {
+    "name":"Doctor of Veterinary Medicine",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Doctor of Jurisprudence",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Bachelor of Environmental Design",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  },
+  {
+    "name":"Bachelor of Science",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  },
+  {
+    "name":"Master of International Affairs",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Science in Nursing",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Doctor of Philosophy",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Master of Agribusiness",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Doctor of Pharmacy",
+    "level":{
+      "name":"DOCTORAL"
+    }
+  },
+  {
+    "name":"Master of Landscape Architecture",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Agricultural Economics",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Master of Public Service and Administration",
+    "level":{
+      "name":"MASTERS"
+    }
+  },
+  {
+    "name":"Bachelor of Landscape Architecture",
+    "level":{
+      "name":"UNDERGRADUATE"
+    }
+  }
+]

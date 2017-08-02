@@ -29,6 +29,7 @@ import javax.persistence.UniqueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.AppContextInitializedHandler;
+import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
@@ -46,12 +47,12 @@ public class Submission extends BaseEntity {
     private User assignee;
 
     @ManyToOne(cascade = { REFRESH })
-    private SubmissionState submissionState;
+    private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private Organization organization;
 
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
@@ -109,7 +110,7 @@ public class Submission extends BaseEntity {
 
     /**
      * @param submitter
-     * @param submissionState
+     * @param submissionStatus
      */
     public Submission(User submitter, Organization organization) {
         this();
@@ -120,11 +121,11 @@ public class Submission extends BaseEntity {
 
     /**
      * @param submitter
-     * @param submissionState
+     * @param submissionStatus
      */
-    public Submission(User submitter, Organization organization, SubmissionState submissionState) {
+    public Submission(User submitter, Organization organization, SubmissionStatus submissionStatus) {
         this(submitter, organization);
-        setSubmissionState(submissionState);
+        setSubmissionStatus(submissionStatus);
     }
 
     /**
@@ -160,29 +161,29 @@ public class Submission extends BaseEntity {
     }
 
     /**
-     * @return the submissionState
+     * @return the submissionStatus
      */
-    public SubmissionState getSubmissionState() {
-        return submissionState;
+    public SubmissionStatus getSubmissionStatus() {
+        return submissionStatus;
     }
 
     /**
-     * @param submissionState
-     *            the submissionState to set
+     * @param submissionStatus
+     *            the submissionStatus to set
      */
-    public void setSubmissionState(SubmissionState submissionState) {
+    public void setSubmissionStatus(SubmissionStatus submissionStatus) {
 
-        if (submissionState.getName().equals("Submitted")) {
+        if (submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
             setSubmissionDate(getDay());
         }
 
-        if (this.submissionState != null) {
-            logger.debug("Changing status of submission " + getId() + " from " + this.submissionState.getName() + " to " + submissionState.getName());
+        if (this.submissionStatus != null) {
+            logger.debug("Changing status of submission " + getId() + " from " + this.submissionStatus.getName() + " to " + submissionStatus.getName());
         } else {
-            logger.debug("Changing status of submission "  + getId() + "to " + submissionState.getName());
+            logger.debug("Changing status of submission "  + getId() + "to " + submissionStatus.getName());
         }
 
-        this.submissionState = submissionState;
+        this.submissionStatus = submissionStatus;
 
     }
 

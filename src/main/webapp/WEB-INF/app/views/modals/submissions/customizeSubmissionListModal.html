@@ -38,9 +38,9 @@
                 <select 
                 	class="form-control results-per-page-select" 
                 	name="resultsPerPageOptions" 
-                	ng-model="$parent.$parent.pageSize" 
-                	ng-options="ps for ps in pageSizeOptions" 
-                	ng-change="updatePagination()">
+                    ng-model="page.count"
+                    ng-options="ps for ps in page.options"
+                    ng-change="updatePagination()">
                 </select>
 	        </form>
 	    </div>

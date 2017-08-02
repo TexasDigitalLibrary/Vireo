@@ -1,12 +1,16 @@
-vireo.controller("StudentSubmissionController", function($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission) {
+vireo.controller("StudentSubmissionController", function ($controller, $scope, $location, $routeParams, $anchorScroll, $timeout, StudentSubmissionRepo, StudentSubmission, ConfigurationRepo) {
 
-    angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+    angular.extend(this, $controller('AbstractController', {
+        $scope: $scope
+    }));
 
     $scope.studentSubmissionRepoReady = false;
 
-    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(data) {
+    $scope.configuration = ConfigurationRepo.getAllMapByType();
 
-        $timeout(function() {
+    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (data) {
+
+        $timeout(function () {
             $anchorScroll();
         });
 
@@ -14,13 +18,7 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
 
         $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
 
-        if ($location.hash()) {
-            $scope.submission.ready().then(function() {
-                $scope.submission.validate();
-            });
-        }
-
-        $scope.onLastStep = function() {
+        $scope.onLastStep = function () {
             var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
             return currentStepIndex === -1;
         };
@@ -31,7 +29,7 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
 
     });
 
-    $scope.setActiveStep = function(step, hash) {
+    $scope.setActiveStep = function (step, hash) {
 
         var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
         var reviewStepNum = $scope.submission.submissionWorkflowSteps.length + 1;
@@ -50,6 +48,7 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
             }
         } else if (step.name === "review") {
             stepNum = reviewStepNum;
+            $scope.submission.validate();
         }
 
         $scope.nextStep = $scope.submission.submissionWorkflowSteps[stepNum];
@@ -68,16 +67,18 @@ vireo.controller("StudentSubmissionController", function($controller, $scope, $l
 
     };
 
-    $scope.submit = function() {
+    $scope.submit = function () {
         $scope.submitting = true;
-        $scope.submission.submit().then(function() {
+        $scope.submission.submit().then(function () {
             $scope.submitting = false;
             $location.path("/submission/complete");
         });
     };
 
-    $scope.reviewSubmission = function() {
-        $scope.setActiveStep({name: 'review'});
+    $scope.reviewSubmission = function () {
+        $scope.setActiveStep({
+            name: 'review'
+        });
     };
 
 });

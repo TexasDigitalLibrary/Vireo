@@ -7,11 +7,13 @@ vireo.controller('SubmissionHistoryController', function($controller, $location,
   $scope.SubmissionStatuses = SubmissionStatuses;
   $scope.submissionToDelete = {};
 
+  $scope.studentsSubmissions = StudentSubmissionRepo.getAll();
+
   var buildTable = function() {
     return new NgTableParams({}, {
       counts: [],
       filterDelay: 0,
-      dataset: StudentSubmissionRepo.getAll()
+      dataset: $scope.studentsSubmissions
     });
   };
 

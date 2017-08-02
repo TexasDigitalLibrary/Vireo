@@ -7,12 +7,10 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.EmailTemplateValidator;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import edu.tamu.framework.model.BaseOrderedEntity;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "isSystemRequired" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "systemRequired" }) })
 public class EmailTemplate extends BaseOrderedEntity {
 
     @Column(nullable = false)
@@ -25,12 +23,11 @@ public class EmailTemplate extends BaseOrderedEntity {
     private String message;
 
     @Column(nullable = false)
-    @JsonProperty("isSystemRequired")
-    private Boolean isSystemRequired;
+    private Boolean systemRequired;
 
     public EmailTemplate() {
         setModelValidator(new EmailTemplateValidator());
-        isSystemRequired(false);
+        setSystemRequired(false);
     }
 
     /**
@@ -95,19 +92,12 @@ public class EmailTemplate extends BaseOrderedEntity {
         this.message = message;
     }
 
-    /**
-     * @return the systemRequired
-     */
-    public Boolean isSystemRequired() {
-        return isSystemRequired;
+    public Boolean getSystemRequired() {
+        return systemRequired;
     }
 
-    /**
-     * @param systemRequired
-     *            the systemRequired to set
-     */
-    public void isSystemRequired(Boolean isSystemRequired) {
-        this.isSystemRequired = isSystemRequired;
+    public void setSystemRequired(Boolean systemRequired) {
+        this.systemRequired = systemRequired;
     }
 
 }

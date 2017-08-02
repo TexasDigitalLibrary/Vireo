@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaverframework</groupId>
     <artifactId>weaver-webservice-parent</artifactId>
-    <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+    <version>1.2.0-RC-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -26,7 +26,6 @@
     <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
     <tomcat.version>7.0.59</tomcat.version>
     <java.version>1.8</java.version>
-    <postgresql.version>9.4-1202-jdbc42</postgresql.version>
   </properties>
 
   <packaging>war</packaging>
@@ -96,7 +95,7 @@
     <dependency>
       <groupId>edu.tamu.weaverframework</groupId>
       <artifactId>weaver-webservice-core</artifactId>
-      <version>1.2.x-delete-join-validation-fix-SNAPSHOT</version>
+      <version>1.2.0-RC-SNAPSHOT</version>
     </dependency>
 
     <!-- H2 in-memory SQL DB - brought in through the tamu core framework -->
@@ -109,7 +108,6 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>${postgresql.version}</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <!-- MySQL SQL DB -->
@@ -322,7 +320,6 @@
               <executable>npm${npm-extension}</executable>
               <arguments>
                 <argument>install</argument>
-                <argument>--no-bin-links</argument>
               </arguments>
             </configuration>
             <goals>

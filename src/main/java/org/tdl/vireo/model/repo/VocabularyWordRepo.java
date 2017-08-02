@@ -9,4 +9,6 @@ public interface VocabularyWordRepo extends JpaRepository<VocabularyWord, Long>,
 
     VocabularyWord findByNameAndControlledVocabulary(String name, ControlledVocabulary controlledVocabulary);
 
+    public void delete(VocabularyWord vocabularyWord);
+
 }

@@ -1,0 +1,145 @@
+{
+  "name": "In Progress",
+  "isArchived": false,
+  "isPublishable": false,
+  "isDeletable": false,
+  "isEditableByReviewer": false,
+  "isEditableByStudent": false,
+  "isActive": null,
+  "submissionState": 1,
+  "transitionSubmissionStatuses": [{
+      "name": "Submitted",
+      "isArchived": false,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "submissionState": 2,
+      "transitionSubmissionStatuses": [{
+        "name": "Under Review",
+        "isArchived": false,
+        "isPublishable": false,
+        "isDeletable": false,
+        "isEditableByReviewer": true,
+        "isEditableByStudent": false,
+        "isActive": true,
+        "submissionState": 3,
+        "transitionSubmissionStatuses": [{
+            "name": "Needs Correction",
+            "isArchived": false,
+            "isPublishable": false,
+            "isDeletable": false,
+            "isEditableByReviewer": true,
+            "isEditableByStudent": true,
+            "isActive": true,
+            "submissionState": 4,
+            "transitionSubmissionStatuses": [{
+              "name": "Corrections Received",
+              "isArchived": false,
+              "isPublishable": false,
+              "isDeletable": false,
+              "isEditableByReviewer": true,
+              "isEditableByStudent": false,
+              "isActive": true,
+              "submissionState": 5,
+              "transitionSubmissionStatuses": [{
+                  "name": "Under Review"
+                },
+                {
+                  "name": "Waiting On Requirements",
+                  "isArchived": false,
+                  "isPublishable": false,
+                  "isDeletable": false,
+                  "isEditableByReviewer": true,
+                  "isEditableByStudent": false,
+                  "isActive": true,
+                  "submissionState": 6,
+                  "transitionSubmissionStatuses": [{
+                      "name": "Under Review"
+                    },
+                    {
+                      "name": "Approved",
+                      "isArchived": false,
+                      "isPublishable": false,
+                      "isDeletable": false,
+                      "isEditableByReviewer": true,
+                      "isEditableByStudent": false,
+                      "isActive": true,
+                      "submissionState": 7,
+                      "transitionSubmissionStatuses": [{
+                        "name": "Pending Publication",
+                        "isArchived": true,
+                        "isPublishable": false,
+                        "isDeletable": false,
+                        "isEditableByReviewer": true,
+                        "isEditableByStudent": false,
+                        "isActive": false,
+                        "submissionState": 8,
+                        "transitionSubmissionStatuses": [{
+                          "name": "Published",
+                          "isArchived": true,
+                          "isPublishable": false,
+                          "isDeletable": false,
+                          "isEditableByReviewer": true,
+                          "isEditableByStudent": false,
+                          "isActive": false,
+                          "submissionState": 9,
+                          "transitionSubmissionStatuses": [{
+                            "name": "Pending Publication"
+                          }]
+                        }]
+                      }]
+                    }
+                  ]
+                },
+                {
+                  "name": "Approved"
+                }
+              ]
+            }]
+          },
+          {
+            "name": "Waiting On Requirements"
+          },
+          {
+            "name": "Approved"
+          }
+        ]
+      }]
+    },
+    {
+      "name": "On Hold",
+      "isArchived": false,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": true,
+      "submissionState": 10,
+      "transitionSubmissionStatuses": []
+    },
+    {
+      "name": "Withdrawn",
+      "isArchived": true,
+      "isPublishable": false,
+      "isDeletable": false,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "submissionState": 11,
+      "transitionSubmissionStatuses": []
+    },
+    {
+      "name": "Cancelled",
+      "isArchived": true,
+      "isPublishable": false,
+      "isDeletable": true,
+      "isEditableByReviewer": true,
+      "isEditableByStudent": false,
+      "isActive": false,
+      "submissionState": 12,
+      "transitionSubmissionStatuses": []
+    }
+  ]
+}

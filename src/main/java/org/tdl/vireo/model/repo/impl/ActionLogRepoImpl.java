@@ -33,7 +33,7 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
 
     @Override
     public ActionLog create(Submission submission, User user, Calendar actionDate, String entry, boolean privateFlag) {
-        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionState(), user, actionDate, entry, privateFlag));
+        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), user, actionDate, entry, privateFlag));
         submission.addActionLog(log);
         submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
@@ -42,7 +42,7 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
     
     @Override
     public ActionLog create(Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
-        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionState(), actionDate, entry, privateFlag));
+        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), actionDate, entry, privateFlag));
         submission.addActionLog(log);
         submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));

@@ -11,7 +11,7 @@
 
       <h2>Current Transitions</h2>
       <ul class="list-inline">
-        <li ng-init="state=box.SubmissionStateRepo.findById(stateId); box.newStatus = state" ng-repeat="stateId in box.submission.submissionState.transitionSubmissionStates">
+        <li ng-init="state=box.SubmissionStatusRepo.findById(stateId); box.newStatus = state" ng-repeat="stateId in box.submission.submissionStatus.transitionSubmissionStatuses">
           <button ng-if="state.name!='Published'" class="btn btn-default" ng-click="box.changeStatus(state)" ng-disabled="state.updating || box.updating">{{state.name}}
             <span ng-if="state.updating" class="glyphicon glyphicon-refresh spinning"></span>
           </button>
@@ -33,7 +33,7 @@
             <div class="form-group">
               <label for="newStatus">
                 <strong>New Status</strong>:</label>
-              <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStates"></select>
+              <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStatuses"></select>
               <button ng-if="box.newStatus.name!='Published'" type="button" class="btn btn-primary" ng-click="box.changeStatus(box.newStatus)" ng-disabled="box.newStatus.updating || box.updating">Save
                 <span ng-if="box.newStatus.updating" class=" glyphicon glyphicon-refresh spinning"></span>
               </button>
@@ -51,13 +51,13 @@
 
           <form class="form-inline" role="form">
             <div class="form-group">
-              <button ng-if="box.submission.submissionState.id !== box.cancelStatus.id" ng-click="box.changeStatus(box.cancelStatus)" class="btn btn-default" ng-disabled="box.cancelStatus.updating || box.updating">Cancel Submission
+              <button ng-if="box.submission.submissionStatus.id !== box.cancelStatus.id" ng-click="box.changeStatus(box.cancelStatus)" class="btn btn-default" ng-disabled="box.cancelStatus.updating || box.updating">Cancel Submission
                 <span ng-if="box.cancelStatus.updating" class="glyphicon glyphicon-refresh spinning"></span>
               </button>
-              <button ng-if="(box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete!=true) || box.deleteWorking" ng-click="box.confirmDelete=true" class="btn btn-danger">Delete Submission
+              <button ng-if="(box.submission.submissionStatus.id === box.cancelStatus.id && box.confirmDelete!=true) || box.deleteWorking" ng-click="box.confirmDelete=true" class="btn btn-danger">Delete Submission
                 <span ng-if="box.deleteWorking" class="glyphicon glyphicon-refresh spinning"></span>
               </button>
-              <div class="btn-group" ng-if="box.submission.submissionState.id === box.cancelStatus.id && box.confirmDelete==true && !box.deleteWorking">
+              <div class="btn-group" ng-if="box.submission.submissionStatus.id === box.cancelStatus.id && box.confirmDelete==true && !box.deleteWorking">
                 <button class="btn btn-danger disabled" disabled=true>Confirm</button>
                 <button ng-click="box.deleteSubmission(); box.deleteWorking=true;" class="btn btn-danger">
                   <span class="glyphicon glyphicon-ok"></span>

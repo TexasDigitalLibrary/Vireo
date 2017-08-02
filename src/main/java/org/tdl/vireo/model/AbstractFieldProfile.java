@@ -28,7 +28,7 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
@@ -39,6 +39,9 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean optional;
+
+    @Column(nullable = false)
+    private Boolean hidden;
 
     @Column(nullable = false)
     private Boolean logged;
@@ -62,6 +65,12 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
 
     @Column(nullable = true)
     private Boolean flagged;
+
+    @Column(nullable = true, name = "`default`", columnDefinition = "text")
+    private String defaultValue;
+
+    @Column(nullable = true)
+    private Boolean enabled;
 
     /**
      * @return the fieldPredicate
@@ -122,6 +131,14 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      */
     public void setOptional(Boolean optional) {
         this.optional = optional;
+    }
+
+    public Boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        this.hidden = hidden;
     }
 
     public Boolean getLogged() {
@@ -285,6 +302,29 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      */
     public void setFlagged(Boolean flagged) {
         this.flagged = flagged;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    /**
+     * @return the enabled
+     */
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *            the enabled to set
+     */
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     // TODO : Restrict multiple controlled vocabulary with the same language

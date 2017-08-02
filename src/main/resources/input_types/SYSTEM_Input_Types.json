@@ -54,6 +54,11 @@
     "validationMessage": null
   },
   {
+    "name": "INPUT_CONDITIONAL_TEXTAREA",
+    "validationPatern": null,
+    "validationMessage": null
+  },
+  {
     "name": "INPUT_SELECT",
     "validationPatern": null,
     "validationMessage": null
@@ -62,5 +67,15 @@
     "name": "INPUT_ORCID",
     "validationPatern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$",
     "validationMessage": "Field must be in a valid ORCID format nnnn-nnnn-nnnn-nnnn"
+  },
+  {
+    "name": "INPUT_LICENSE",
+    "validationPatern": "^(true|false)$",
+    "validationMessage": "You must accept the license agreement to continue"
+  },
+  {
+    "name": "INPUT_PROQUEST",
+    "validationPatern": "^(true|false)$",
+    "validationMessage": "You must accept the license agreement to continue"
   }
 ]

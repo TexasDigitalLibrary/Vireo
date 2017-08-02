@@ -76,7 +76,7 @@ public class GraduationMonthController {
     @Auth(role = "MANAGER")
     @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
     public ApiResponse reorderGraduationMonths(@ApiVariable Long src, @ApiVariable Long dest) {
-        logger.info("Reordering document types");
+        logger.info("Reordering graduation months");
         graduationMonthRepo.reorder(src, dest);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);

@@ -52,11 +52,8 @@ public class AppAuthController extends CoreAuthController {
 
     public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
 
-    @Value("${app.host}")
-    private String host;
-
-    @Value("${server.port}")
-    private String port;
+    @Value("${app.url}")
+    private String url;
 
     @Autowired
     private UserRepo userRepo;
@@ -89,7 +86,7 @@ public class AppAuthController extends CoreAuthController {
             String content = "";
 
             try {
-                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", host + ":" + port + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
+                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", url + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
             } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
@@ -150,7 +147,7 @@ public class AppAuthController extends CoreAuthController {
         }
 
         User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
-        
+
         user.setUin(email);
 
         user.setPassword(authUtility.encodePassword(password));
