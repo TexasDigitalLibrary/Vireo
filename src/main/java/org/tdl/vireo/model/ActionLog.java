@@ -23,7 +23,7 @@ import edu.tamu.framework.model.BaseEntity;
 public class ActionLog extends BaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
-    private SubmissionState submissionState;
+    private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
     private User user;
@@ -42,36 +42,36 @@ public class ActionLog extends BaseEntity {
         setModelValidator(new ActionLogValidator());
     }
 
-    public ActionLog(SubmissionState submissionState, User user, Calendar actionDate, String entry, boolean privateFlag) {
+    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionState = submissionState;
+        this.submissionStatus = submissionStatus;
         this.user = user;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
     }
 
-    public ActionLog(SubmissionState submissionState, Calendar actionDate, String entry, boolean privateFlag) {
+    public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionState = submissionState;
+        this.submissionStatus = submissionStatus;
         this.actionDate = actionDate;
         this.entry = entry;
         this.privateFlag = privateFlag;
     }
 
     /**
-     * @return the submissionState
+     * @return the submissionStatus
      */
-    public SubmissionState getSubmissionState() {
-        return submissionState;
+    public SubmissionStatus getSubmissionStatus() {
+        return submissionStatus;
     }
 
     /**
-     * @param submissionState
-     *            the submissionState to set
+     * @param submissionStatus
+     *            the submissionStatus to set
      */
-    public void setSubmissionState(SubmissionState submissionState) {
-        this.submissionState = submissionState;
+    public void setSubmissionStatus(SubmissionStatus submissionStatus) {
+        this.submissionStatus = submissionStatus;
     }
 
     /**

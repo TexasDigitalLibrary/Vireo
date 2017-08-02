@@ -39,7 +39,7 @@ import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
-import org.tdl.vireo.model.SubmissionState;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.export.ExportPackage;
@@ -52,7 +52,7 @@ import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.service.DepositorService;
@@ -79,11 +79,11 @@ import edu.tamu.framework.validation.ValidationResults;
 @ApiMapping("/submission")
 public class SubmissionController {
 
-    private static final String STARTING_SUBMISSION_STATE_NAME = "In Progress";
+    private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
-    private static final String NEEDS_CORRECTION_SUBMISSION_STATE_NAME = "Needs Correction";
+    private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
 
-    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME = "Corrections Received";
+    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
 
     @Autowired
     private UserRepo userRepo;
@@ -104,7 +104,7 @@ public class SubmissionController {
     private InputTypeRepo inputTypeRepo;
 
     @Autowired
-    private SubmissionStateRepo submissionStateRepo;
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -175,7 +175,7 @@ public class SubmissionController {
     @ApiMapping("/create")
     @Auth(role = "STUDENT")
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) throws OrganizationDoesNotAcceptSubmissionsExcception {
-        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStateRepo.findByName(STARTING_SUBMISSION_STATE_NAME), credentials);
+        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
         actionLogRepo.createPublicLog(submission, credentials, "Submission created.");
         return new ApiResponse(SUCCESS, submission);
@@ -272,9 +272,10 @@ public class SubmissionController {
             if (orcidErrors.isEmpty()) {
                 Submission submission = submissionRepo.findOne(submissionId);
                 if (fieldValue.getId() == null) {
-                    submission.addFieldValue(fieldValueRepo.save(fieldValue));
+
+                    fieldValue = fieldValueRepo.save(fieldValue);
+                    submission.addFieldValue(fieldValue);
                     submission = submissionRepo.save(submission);
-                    fieldValue = submission.getFieldValueByValueAndPredicate(fieldValue.getValue() == null ? "" : fieldValue.getValue(), fieldValue.getFieldPredicate());
 
                     if (submissionFieldProfile.getLogged()) {
                         actionLogRepo.createPublicLog(submission, credentials, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
@@ -339,20 +340,20 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/change-status/{submissionStateName}")
+    @ApiMapping("/{submissionId}/change-status/{submissionStatusName}")
     @Auth(role = "STUDENT")
-    public ApiResponse changeStatus(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String submissionStateName) {
+    public ApiResponse changeStatus(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String submissionStatusName) {
         Submission submission = submissionRepo.findOne(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
 
-            SubmissionState submissionState = submissionStateRepo.findByName(submissionStateName);
-            if (submissionState != null) {
-                submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+            SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
+            if (submissionStatus != null) {
+                submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
-                response = new ApiResponse(ERROR, "Could not find a submission state name " + submissionStateName);
+                response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -364,12 +365,12 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/batch-update-state")
+    @ApiMapping("/batch-update-status")
     @Auth(role = "MANAGER")
-    public ApiResponse batchUpdateSubmissionStates(@ApiCredentials Credentials credentials, @ApiModel SubmissionState submissionState) {
+    public ApiResponse batchUpdateSubmissionStatuses(@ApiCredentials Credentials credentials, @ApiModel SubmissionStatus submissionStatus) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
-            submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+            submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
             processEmailWorkflowRules(submission);
         });
         return new ApiResponse(SUCCESS);
@@ -384,8 +385,8 @@ public class SubmissionController {
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
 
-            SubmissionState submissionState = submissionStateRepo.findByName("Published");
-            if (submissionState != null) {
+            SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
+            if (submissionStatus != null) {
 
                 DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
 
@@ -400,7 +401,7 @@ public class SubmissionController {
                         String result = depositor.deposit(depositLocation, exportPackage);
 
                         if (result != null) {
-                            submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+                            submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
                             simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
                         } else {
                             response = new ApiResponse(ERROR, "Could not deposit submission");
@@ -412,7 +413,7 @@ public class SubmissionController {
                     response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
                 }
             } else {
-                response = new ApiResponse(ERROR, "Could not find a submission state name Published");
+                response = new ApiResponse(ERROR, "Could not find a submission status name Published");
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -429,8 +430,8 @@ public class SubmissionController {
     public ApiResponse batchPublish(@ApiCredentials Credentials credentials, @ApiVariable Long depositLocationId) {
         ApiResponse response = new ApiResponse(SUCCESS);
         User user = userRepo.findByEmail(credentials.getEmail());
-        SubmissionState submissionState = submissionStateRepo.findByName("Published");
-        if (submissionState != null) {
+        SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
+        if (submissionStatus != null) {
             DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
             if (depositLocation != null) {
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
@@ -442,7 +443,7 @@ public class SubmissionController {
                             String result = depositor.deposit(depositLocation, exportPackage);
 
                             if (result != null) {
-                                submission = submissionRepo.updateStatus(submission, submissionState, credentials);
+                                submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
                                 simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId(), new ApiResponse(SUCCESS, submission));
                             } else {
                                 throw new RuntimeException("Failed batch publish on submission " + submission.getId());
@@ -459,7 +460,7 @@ public class SubmissionController {
                 response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
             }
         } else {
-            response = new ApiResponse(ERROR, "Could not find a submission state name Published");
+            response = new ApiResponse(ERROR, "Could not find a submission status name Published");
         }
         return response;
     }
@@ -542,11 +543,11 @@ public class SubmissionController {
     @Auth(role = "MANAGER")
     public ApiResponse setSubmissionNeedsCorrection(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
         Submission submission = submissionRepo.findOne(submissionId);
-        SubmissionState needsCorrectionState = submissionStateRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
-        String oldSubmissionStateName = submission.getSubmissionState().getName();
-        submission.setSubmissionState(needsCorrectionState);
+        SubmissionStatus needsCorrectionStatus = submissionStatusRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
+        String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
+        submission.setSubmissionStatus(needsCorrectionStatus);
         submissionRepo.save(submission);
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + NEEDS_CORRECTION_SUBMISSION_STATE_NAME);
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
         ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
         return apiResponse;
@@ -557,11 +558,11 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse setSubmissionCorrectionsReceived(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId) {
         Submission submission = submissionRepo.findOne(submissionId);
-        String oldSubmissionStateName = submission.getSubmissionState().getName();
-        SubmissionState needsCorrectionState = submissionStateRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
-        submission.setSubmissionState(needsCorrectionState);
+        String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
+        SubmissionStatus needsCorrectionStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        submission.setSubmissionStatus(needsCorrectionStatus);
         submissionRepo.save(submission);
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStateName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATE_NAME);
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
         ApiResponse apiResponse = new ApiResponse(SUCCESS, submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, apiResponse);
         return apiResponse;
@@ -668,7 +669,6 @@ public class SubmissionController {
     @ApiMapping(value = "/{submissionId}/{documentType}/archive-file")
     @Auth(role = "STUDENT")
     public ApiResponse archiveFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
-        ApiResponse apiResponse = null;
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
@@ -678,7 +678,7 @@ public class SubmissionController {
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
 
         actionLogRepo.createPublicLog(submissionRepo.findOne(submissionId), credentials, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
-        return apiResponse;
+        return new ApiResponse(SUCCESS, newUri);
     }
 
     @ApiMapping("/{submissionId}/send-advisor-email")
@@ -690,7 +690,7 @@ public class SubmissionController {
 
         InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT");
 
-        EmailTemplate template = emailTemplateRepo.findByNameAndIsSystemRequired("SYSTEM Advisor Review Request", true);
+        EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
 
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
@@ -756,7 +756,7 @@ public class SubmissionController {
 
         rules.forEach(rule -> {
 
-            if (rule.getSubmissionState().equals(submission.getSubmissionState()) && !rule.isDisabled()) {
+            if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
                 // TODO: Not all variables are currently being replaced.
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);

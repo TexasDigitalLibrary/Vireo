@@ -85,7 +85,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
                         heritableRepo.delete(heritableModelToRemove);
                     }
                 }
-                simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+                simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
             } // workflow step doesn't originate the heritableModel and it is non-overrideable
             else {
                 throw new HeritableModelNonOverrideableException();
@@ -286,7 +286,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
 
             resultingHeritableModel = newHeritableModel;
         }
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return resultingHeritableModel;
     }
 
@@ -316,7 +316,7 @@ public class HeritableRepo<M extends HeritableComponent, R extends HeritableJpaR
             deleteDescendantsOfHeritableModel(heritableModel);
 
             heritableRepo.delete(heritableModel.getId());
-            simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+            simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         }
     }
 

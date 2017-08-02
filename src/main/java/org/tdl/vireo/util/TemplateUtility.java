@@ -12,6 +12,7 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 
 @Service
+@SuppressWarnings("unused")
 public class TemplateUtility {
 
     @Value("${app.url}")
@@ -71,8 +72,8 @@ public class TemplateUtility {
                 //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
         
 
-        if (submission.getSubmissionState() != null) {
-            compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionState().getName());
+        if (submission.getSubmissionStatus() != null) {
+            compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionStatus().getName());
         }
 
         if (submission.getAssignee() != null) {

@@ -10,7 +10,7 @@
   {
     "title": "Status",
     "sort": "NONE",
-    "valuePath": ["submissionState", "name"],
+    "valuePath": ["submissionStatus", "name"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"
@@ -46,7 +46,7 @@
   {
     "title": "Submission date",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["submissionDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"

@@ -1,17 +1,18 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.validation.VocabularyWordValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -33,9 +34,11 @@ public class VocabularyWord extends BaseEntity {
     @Column(nullable = true)
     private String identifier;
 
-    @ManyToOne(cascade = { DETACH, REFRESH })
-    @Fetch(FetchMode.SELECT)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = VocabularyWord.class, property = "id")
+    @ElementCollection(fetch = EAGER)
+    private List<String> contacts;
+
+    @ManyToOne(cascade = { DETACH, REFRESH }, fetch = EAGER, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = ControlledVocabulary.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private ControlledVocabulary controlledVocabulary;
 
@@ -58,8 +61,19 @@ public class VocabularyWord extends BaseEntity {
         setIdentifier(identifier);
     }
 
+    public VocabularyWord(String name, String definition, String identifier, List<String> contacts) {
+        this(name, definition);
+        setIdentifier(identifier);
+        setContacts(contacts);
+    }
+
     public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier) {
         this(name, definition, identifier);
+        setControlledVocabulary(controlledVocabulary);
+    }
+
+    public VocabularyWord(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier, List<String> contacts) {
+        this(name, definition, identifier, contacts);
         setControlledVocabulary(controlledVocabulary);
     }
 
@@ -93,6 +107,14 @@ public class VocabularyWord extends BaseEntity {
 
     public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         this.controlledVocabulary = controlledVocabulary;
+    }
+
+    public List<String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<String> contacts) {
+        this.contacts = contacts;
     }
 
 }

@@ -6,7 +6,7 @@
 		<div class="col-md-6">
 			<div class="col-md-10 col-md-offset-1">
 				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyNewModal')">
-					Add Controlled Vocabulary
+					Create a Name for Controlled Vocabulary
 				</button>
 				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
 				<p ng-if="controlledVocabulary.length == 0">Add new Controlled Vocabulary</p>
@@ -28,7 +28,7 @@
 		<div class="col-md-6">
 			<div class="col-md-10 col-md-offset-1">
 				<button class="btn btn-default modal-add-btn" ng-click="openModal('#controlledVocabularyUploadModal')" ng-click="uploadStatus()">
-					Manage Controlled Vocabularies
+					Upload Controlled Vocabularies
 					</button>
 				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which to upload new or append to existing controlled vocabulary. Additionally, able to export existing from here."></div>
 			</div>
@@ -96,7 +96,7 @@
 						</td>
 					</tr>
 
-					<tr ng-repeat="vocabularyWord in $data" ng-class="{'success': vocabularyWord.id===lastCreatedVocabularyWordId}">	
+					<tr ng-repeat="vocabularyWord in $data" ng-class="{'success': vocabularyWord.id===lastCreatedVocabularyWordId}">
 						<td title="'Name'" ng-dblclick="startEditVWMode(vocabularyWord, 'name')">
 							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.name}}</span>
 							<div class="form-group">
@@ -131,7 +131,7 @@
 							<span ng-show="editMode(vocabularyWord)">
 								<div class="form-group">
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-sm btn-primary" ng-click="updateCv(editableVW)">
+										<button type="button" class="btn btn-sm btn-primary" ng-click="updateVocabularyWord(editableVW)">
 											<span class="glyphicon glyphicon-ok" ng-hide="selectedCv.updating"></span>
 											<span ng-if="selectedCv.updating" class="glyphicon glyphicon-refresh spinning">
 										</button>

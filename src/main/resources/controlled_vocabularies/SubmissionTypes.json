@@ -8,7 +8,7 @@
 		{
 			"name": "Performance Piece",
 			"definition": "a live artistic performance",
-			"identifier": "test Performance Piece id"
+			"identifier": ""
 		},
 		{
 			"name": "Thesis",
@@ -17,8 +17,8 @@
 		},
 		{
 			"name": "Dissertation",
-			"definition": "test dissertation definition",
-			"identifier": "test dissertation identifier"
+			"definition": "",
+			"identifier": ""
 		},
 		{
 			"name": "Honors Thesis",
@@ -27,8 +27,8 @@
 		},
 		{
 			"name": "Project Report",
-			"definition": "test Project Report definition",
-			"identifier": "test Project Report id"
+			"definition": "",
+			"identifier": ""
 		},
 		{
 			"name": "Capstone Project",

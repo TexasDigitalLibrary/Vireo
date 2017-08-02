@@ -32,7 +32,7 @@ public class EmailWorkflowRule extends BaseEntity {
     private EmailRecipient emailRecipient;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
-    private SubmissionState submissionState;
+    private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JoinColumn(name = "emailTemplateId")
@@ -44,15 +44,15 @@ public class EmailWorkflowRule extends BaseEntity {
         isDisabled(true);
     }
 
-    public EmailWorkflowRule(SubmissionState submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
+    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
         this();
-        setSubmissionState(submissionState);
+        setSubmissionStatus(submissionStatus);
         setEmailRecipient(emailRecipient);
         setEmailTemplate(emailTemplate);
     }
 
-    public EmailWorkflowRule(SubmissionState submissionState, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
-        this(submissionState, emailRecipient, emailTemplate);
+    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
+        this(submissionStatus, emailRecipient, emailTemplate);
         isSystem(isSystem);
     }
 
@@ -87,18 +87,18 @@ public class EmailWorkflowRule extends BaseEntity {
     }
 
     /**
-     * @return the submissionState
+     * @return the submissionStatus
      */
-    public SubmissionState getSubmissionState() {
-        return submissionState;
+    public SubmissionStatus getSubmissionStatus() {
+        return submissionStatus;
     }
 
     /**
-     * @param submissionState
-     *            the submissionState to set
+     * @param submissionStatus
+     *            the submissionStatus to set
      */
-    public void setSubmissionState(SubmissionState submissionState) {
-        this.submissionState = submissionState;
+    public void setSubmissionStatus(SubmissionStatus submissionStatus) {
+        this.submissionStatus = submissionStatus;
     }
 
     /**

@@ -25,16 +25,18 @@ import org.tdl.vireo.model.repo.ContactInfoRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
+import org.tdl.vireo.model.repo.DegreeLevelRepo;
+import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.EntityCVWhitelistRepo;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
@@ -43,7 +45,7 @@ import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStateRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
@@ -57,12 +59,12 @@ import edu.tamu.framework.model.Credentials;
 @SpringBootTest(classes = { Application.class })
 public abstract class AbstractEntityTest {
 
-    protected static final boolean TEST_SUBMISSION_STATE_ARCHIVED = true;
-    protected static final boolean TEST_SUBMISSION_STATE_PUBLISHABLE = true;
-    protected static final boolean TEST_SUBMISSION_STATE_DELETABLE = true;
-    protected static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    protected static final boolean TEST_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    protected static final boolean TEST_SUBMISSION_STATE_ACTIVE = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_ARCHIVED = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_PUBLISHABLE = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_DELETABLE = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT = true;
+    protected static final boolean TEST_SUBMISSION_STATUS_ACTIVE = true;
     protected static final boolean TEST_ACTION_LOG_FLAG = true;
     protected static final boolean TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT = true;
     protected static final boolean TEST_CUSTOM_ACTION_VALUE = true;
@@ -73,12 +75,13 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_FIELD_PROFILE_FLAGGED = false;
     protected static final boolean TEST_FIELD_PROFILE_LOGGED = false;
     protected static final String TEST_FIELD_PROFILE_USAGE = "Test Field Profile Usage";
+    protected static final String TEST_FIELD_PROFILE_DEFAULT_VALUE = "Test Field Profile Default Value";
 
     protected static final String TEST_USER_EMAIL = "admin@tdl.org";
     protected static final String TEST_USER_FIRSTNAME = "TDL";
     protected static final String TEST_USER_LASTNAME = "Admin";
 
-    protected static final String TEST_SUBMISSION_STATE_NAME = "Test Submission State";
+    protected static final String TEST_SUBMISSION_STATUS_NAME = "Test Submission Status";
     protected static final String TEST_DOCUMENT_NAME = "Test Document Name";
 
     protected static final String TEST_ACTION_LOG_ENTRY = "Test ActionLog Entry";
@@ -93,6 +96,15 @@ public abstract class AbstractEntityTest {
 
     // LanguageTest
     protected static final String TEST_LANGUAGE_NAME = "Test Language";
+
+    // GraduationMonthTest
+    protected static final int TEST_GRADUATION_MONTH = 1;
+
+    // DegreeTest
+    protected static final String TEST_DEGREE_NAME = "Test Degree";
+
+    // DegreeLevelTest
+    protected static final String TEST_DEGREE_LEVEL = "DOCTORAL";
 
     // ConfigurationTest
     protected static final String TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY = ConfigurationName.SUBMISSIONS_OPEN;
@@ -110,7 +122,6 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_IDENTIFIER = "Test Severable Vocabulary Identifier";
 
     // must be the name of the property on the entity
-    protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO_GUARANTOR = "guarantor";
     protected static final String TEST_CONTROLLED_VOCABULARY_EMBARGO = "Embargo";
 
     // DepositLocation test
@@ -149,14 +160,14 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_FIELD_GLOSS_VALUE = "Test Severable Gloss";
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME = "Test Severable Controlled Vocaublary";
 
-    // Submission State Test
-    protected static final String TEST_PARENT_SUBMISSION_STATE_NAME = "Test Parent Submission State";
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_ARCHIVED = true;
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_PUBLISHABLE = true;
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_DELETABLE = true;
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    protected static final boolean TEST_PARENT_SUBMISSION_STATE_ACTIVE = true;
+    // Submission Status Test
+    protected static final String TEST_PARENT_SUBMISSION_STATUS_NAME = "Test Parent Submission Status";
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_ARCHIVED = true;
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE = true;
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_DELETABLE = true;
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER = true;
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT = true;
+    protected static final boolean TEST_PARENT_SUBMISSION_STATUS_ACTIVE = true;
 
     protected static final boolean TEST_PARENT_WORKFLOW_INHERITABILITY = true;
     protected static final boolean TEST_CHILD_WORKFLOW_INHERITABILITY = true;
@@ -164,14 +175,14 @@ public abstract class AbstractEntityTest {
     protected static final boolean TEST_SEVERABLE_PARENT_WORKFLOW_INHERITABILITY = true;
     protected static final boolean TEST_SEVERABLE_CHILD_WORKFLOW_INHERITABILITY = true;
 
-    protected static final String TEST_TRANSITION1_SUBMISSION_STATE_NAME = "Test Transition1 Submission State";
-    protected static final String TEST_TRANSITION2_SUBMISSION_STATE_NAME = "Test Transition2 Submission State";
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_ARCHIVED = true;
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_PUBLISHABLE = true;
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_DELETABLE = true;
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_REVIEWER = true;
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_EDITABLE_BY_STUDENT = true;
-    protected static final boolean TEST_TRANSITION_SUBMISSION_STATE_ACTIVE = true;
+    protected static final String TEST_TRANSITION1_SUBMISSION_STATUS_NAME = "Test Transition1 Submission Status";
+    protected static final String TEST_TRANSITION2_SUBMISSION_STATUS_NAME = "Test Transition2 Submission Status";
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_ARCHIVED = true;
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_PUBLISHABLE = true;
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_DELETABLE = true;
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER = true;
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_EDITABLE_BY_STUDENT = true;
+    protected static final boolean TEST_TRANSITION_SUBMISSION_STATUS_ACTIVE = true;
     protected static final boolean TEST_WORKFLOW_INHERITABILITY = true;
     protected static final String TEST_SEVERABLE_FIELD_PROFILE_USAGE = "Test Severable Field Profile Usage";
     protected static final boolean TEST_SEVERABLE_FIELD_PROFILE_REPEATABLE = false;
@@ -202,9 +213,9 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_PARENT_WORKFLOW_STEP_NAME = "Test Parent Workflow Step";
     protected static final String TEST_SEVERABLE_WORKFLOW_STEP_NAME = "Test Severable Workflow Step";
 
-    protected static final String TEST_SUBMISSION_STATE_ACTION_LOG_ENTRY = "Test ActionLog Entry";
-    protected static final boolean TEST_SUBMISSION_STATE_ACTION_LOG_FLAG = true;
-    protected static final Calendar TEST_SUBMISSION_STATE_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
+    protected static final String TEST_SUBMISSION_STATUS_ACTION_LOG_ENTRY = "Test ActionLog Entry";
+    protected static final boolean TEST_SUBMISSION_STATUS_ACTION_LOG_FLAG = true;
+    protected static final Calendar TEST_SUBMISSION_STATUS_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
 
     protected static final String TEST_EMBARGO_TYPE_NAME = "Test Embargo Type Name";
     protected static final String TEST_EMBARGO_TYPE_DESCRIPTION = "Test Embargo Type Description";
@@ -259,9 +270,9 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_PARENT_EMAIL = "Test Severable Parent Email";
     protected static final String TEST_SEVERABLE_CHILD_EMAIL = "Test Severable Child Email";
 
-    protected static final String TEST_CHILD_SUBMISSION_STATE_NAME = "Test Child Submission State";
-    protected static final String TEST_SEVERABLE_PARENT_SUBMISSION_STATE_NAME = "Test Severable Parent Submission State";
-    protected static final String TEST_SEVERABLE_CHILD_SUBMISSION_STATE_NAME = "Test Severable Child Submission State";
+    protected static final String TEST_CHILD_SUBMISSION_STATUS_NAME = "Test Child Submission Status";
+    protected static final String TEST_SEVERABLE_PARENT_SUBMISSION_STATUS_NAME = "Test Severable Parent Submission Status";
+    protected static final String TEST_SEVERABLE_CHILD_SUBMISSION_STATUS_NAME = "Test Severable Child Submission Status";
     protected static final String TEST_FIELD_VALUE = "Test Field Value";
 
     protected static final String TEST_INCLUDED_SUBMITTER_EMAIL = "includedSubmitter@tdl.org";
@@ -285,8 +296,8 @@ public abstract class AbstractEntityTest {
 
     protected static final String TEST_NAMED_SEARCH_FILTER_NAME = "Test Filter Name";
 
-    protected static final String TEST_INCLUDED_SUBMISSION_STATE_NAME = "Test Included Submission State Name";
-    protected static final String TEST_EXCLUDED_SUBMISSION_STATE_NAME = "Test Excluded Submission State Name";
+    protected static final String TEST_INCLUDED_SUBMISSION_STATUS_NAME = "Test Included Submission Status Name";
+    protected static final String TEST_EXCLUDED_SUBMISSION_STATUS_NAME = "Test Excluded Submission Status Name";
 
     protected static final String TEST_FIELD_PROFILE_INPUT_TEXT_NAME = "INPUT_TEXT";
 
@@ -318,7 +329,7 @@ public abstract class AbstractEntityTest {
     protected SubmissionRepo submissionRepo;
 
     @Autowired
-    protected SubmissionStateRepo submissionStateRepo;
+    protected SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     protected UserRepo userRepo;
@@ -401,10 +412,18 @@ public abstract class AbstractEntityTest {
     protected NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
-    protected EntityCVWhitelistRepo entityCVWhitelistRepo;
+    protected AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
-    protected AbstractPackagerRepo abstractPackagerRepo;
+    protected GraduationMonthRepo graduationMonthRepo;
+
+    @Autowired
+    protected DegreeRepo degreeRepo;
+
+    @Autowired
+    protected DegreeLevelRepo degreeLevelRepo;
+    
+    protected DegreeLevel degreeLevel;
 
     protected InputType inputType;
 
@@ -428,9 +447,9 @@ public abstract class AbstractEntityTest {
     protected OrganizationCategory childCategory;
     protected OrganizationCategory organizationCategory;
 
-    protected SubmissionState submissionState;
-    protected SubmissionState includedSubmissionState;
-    protected SubmissionState excludedSubmissionState;
+    protected SubmissionStatus submissionStatus;
+    protected SubmissionStatus includedSubmissionStatus;
+    protected SubmissionStatus excludedSubmissionStatus;
 
     protected Submission testSubmission;
     protected Submission includedSubmission;
@@ -450,8 +469,6 @@ public abstract class AbstractEntityTest {
     protected SubmissionWorkflowStep submissionWorkflowStep;
 
     protected VocabularyWord vocabularyWord;
-
-    protected EntityCVWhitelist entityCVWhitelist;
 
     protected ControlledVocabulary controlledVocabulary;
 

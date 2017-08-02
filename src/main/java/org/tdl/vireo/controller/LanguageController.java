@@ -19,7 +19,7 @@ import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.service.ProquestLanguageCodesService;
+import org.tdl.vireo.service.ProquestCodesService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
@@ -45,7 +45,7 @@ public class LanguageController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    private ProquestLanguageCodesService proquestLanguageCodes;
+    private ProquestCodesService proquestCodesService;
 
     /**
      *
@@ -143,7 +143,7 @@ public class LanguageController {
     @ApiMapping("/proquest")
     @Auth(role = "MANAGER")
     public ApiResponse getProquestLanguageCodes() {
-        return new ApiResponse(SUCCESS, proquestLanguageCodes.getLanguageCodes());
+        return new ApiResponse(SUCCESS, proquestCodesService.getCodes("languages"));
     }
 
 }

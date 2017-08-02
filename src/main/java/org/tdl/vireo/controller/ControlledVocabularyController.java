@@ -37,7 +37,6 @@ import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.ControlledVocabularyCache;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
@@ -71,9 +70,6 @@ public class ControlledVocabularyController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
-    @Autowired
-    private LanguageRepo languageRepo;
 
     /**
      * Endpoint to request all controlled vocabulary.
@@ -145,7 +141,7 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
@@ -287,23 +283,23 @@ public class ControlledVocabularyController {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
         logger.info("Comparing controlled vocabulary " + name);
-        cvCache.getNewVocabularyWords().parallelStream().forEach(newVocabularyWord -> {
+        for(VocabularyWord newVocabularyWord : cvCache.getNewVocabularyWords()) {
             newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
-            controlledVocabulary.addValue(newVocabularyWord);
-        });
-        cvCache.getUpdatingVocabularyWords().parallelStream().forEach(updatingVocabularyWord -> {
+            controlledVocabulary = controlledVocabularyRepo.findByName(name);
+        }
+        for(VocabularyWord[] updatingVocabularyWord : cvCache.getUpdatingVocabularyWords()) {
             VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
             updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
             updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
             updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
-        });
+        }
         ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
-    
+
     /**
      * Endpoint to add a blank vocabulart word to a controlled vocabulary.
      *
@@ -312,23 +308,19 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value="/add-vocabulary-word/{cvId}")
+    @ApiMapping(value = "/add-vocabulary-word/{cvId}")
     @Auth(role = "MANAGER")
     public ApiResponse addaddVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vocabularyWord) {
-    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
-    	cv.addValue(vocabularyWord);
-    	cv = controlledVocabularyRepo.save(cv);
-    	    	
-    	for(VocabularyWord vw : cv.getDictionary()) {    		
-    		if(vocabularyWord.getName().equals(vw.getName())) {
-    			vocabularyWord = vw;
-    		}
-    	}
-    	
+        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+
+        vocabularyWord = vocabularyWordRepo.create(cv, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier());
+
+        cv = controlledVocabularyRepo.findOne(cv.getId());
+
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
-    	return new ApiResponse(SUCCESS, vocabularyWord);
+        return new ApiResponse(SUCCESS, vocabularyWord);
     }
-    
+
     /**
      * Endpoint to remove a vocabulary word from a controlled vocabulary.
      *
@@ -337,20 +329,20 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value="/remove-vocabulary-word/{cvId}/{vwId}")
+    @ApiMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     @Auth(role = "MANAGER")
     public ApiResponse removesVocabularyWord(@ApiVariable Long cvId, @ApiVariable Long vwId) {
-    	
-    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
-    	VocabularyWord vw = vocabularyWordRepo.findOne(vwId); 
-    	
-    	cv.removeValue(vw);
-    	cv = controlledVocabularyRepo.save(cv);
-    	
+
+        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+        VocabularyWord vw = vocabularyWordRepo.findOne(vwId);
+
+        cv.removeValue(vw);
+        cv = controlledVocabularyRepo.save(cv);
+
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
-    	return new ApiResponse(SUCCESS, cv);
+        return new ApiResponse(SUCCESS, cv);
     }
-    
+
     /**
      * Endpoint to update a vocabulary word on a controlled vocabulary.
      *
@@ -359,13 +351,13 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value="/update-vocabulary-word/{cvId}")
+    @ApiMapping(value = "/update-vocabulary-word/{cvId}")
     @Auth(role = "MANAGER")
-    public ApiResponse updateVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vw) {    	
-    	vocabularyWordRepo.save(vw); 
-    	ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+    public ApiResponse updateVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vw) {
+        vw = vocabularyWordRepo.save(vw);
+        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
-    	return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, vw);
     }
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {

@@ -3,6 +3,7 @@ var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
         validations: true,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
@@ -85,6 +86,7 @@ var apiMapping = {
     },
     CustomActionDefinition: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/custom-action',
@@ -133,6 +135,7 @@ var apiMapping = {
     Configuration: {
         lazy: true,
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/configurable',
@@ -167,8 +170,63 @@ var apiMapping = {
             'method': 'remove'
         }
     },
+    Degree: {
+        validations: true,
+        modelListeners: false,
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'settings/degree'
+        },
+        create: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'remove'
+        },
+        reorder: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree'
+        },
+        sort: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree'
+        },
+        proquest: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree',
+            'method': 'proquest'
+        }
+    },
+    DegreeLevel: {
+        validations: true,
+        modelListeners: false,
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/degree-level',
+            'method': 'all'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'settings/degree-level'
+        }
+    },
     DepositLocation: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/deposit-location',
@@ -209,6 +267,7 @@ var apiMapping = {
     },
     DocumentType: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/document-type',
@@ -244,6 +303,7 @@ var apiMapping = {
     },
     Embargo: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/embargo',
@@ -279,6 +339,7 @@ var apiMapping = {
     },
     EmailTemplate: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/email-template',
@@ -314,6 +375,7 @@ var apiMapping = {
     },
     FieldGloss: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/field-gloss',
@@ -327,10 +389,21 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/field-gloss',
             'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-gloss',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/field-gloss',
+            'method': 'remove'
         }
     },
     FieldPredicate: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/field-predicates',
@@ -362,6 +435,7 @@ var apiMapping = {
     },
     FieldValue: {
         validations: true,
+        modelListeners: false,
         update: {
             'endpoint': '/private/queue',
             'controller': 'submission'
@@ -369,6 +443,7 @@ var apiMapping = {
     },
     GraduationMonth: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/graduation-month',
@@ -404,6 +479,7 @@ var apiMapping = {
     },
     FieldProfile: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'field-profile',
@@ -416,6 +492,7 @@ var apiMapping = {
     },
     InputType: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/input-types',
@@ -433,6 +510,7 @@ var apiMapping = {
     },
     Language: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/language',
@@ -473,6 +551,7 @@ var apiMapping = {
     },
     Note: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'note',
@@ -485,6 +564,7 @@ var apiMapping = {
     },
     Organization: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'organization',
@@ -563,6 +643,7 @@ var apiMapping = {
     },
     OrganizationCategory: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/organization-category',
@@ -598,6 +679,7 @@ var apiMapping = {
     },
     Packager: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'packager',
@@ -611,6 +693,7 @@ var apiMapping = {
     Submission: {
         lazy: true,
         validations: true,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -702,10 +785,10 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission'
         },
-        batchUpdateSubmissionState: {
+        batchUpdateSubmissionStatus: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            'method': 'batch-update-state'
+            'method': 'batch-update-status'
         },
         batchAssignTo: {
             'endpoint': '/private/queue',
@@ -732,6 +815,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'remove-file'
         },
+        archiveFile: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'archive-file'
+        },
         needsCorrection: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -750,6 +838,7 @@ var apiMapping = {
     },
     StudentSubmission: {
         lazy: true,
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -824,6 +913,7 @@ var apiMapping = {
     },
     AdvisorSubmission: {
         lazy: true,
+        modelListeners: true,
         getByHash: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -852,6 +942,7 @@ var apiMapping = {
     },
     SubmissionListColumn: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -862,20 +953,22 @@ var apiMapping = {
             'controller': 'submission-list'
         }
     },
-    SubmissionState: {
+    SubmissionStatus: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
-            'controller': 'submission-state',
+            'controller': 'submission-status',
             'method': 'all'
         },
         listen: {
             'endpoint': '/channel',
-            'controller': 'submission-state'
+            'controller': 'submission-status'
         }
     },
     ManagerSubmissionListColumn: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -903,6 +996,7 @@ var apiMapping = {
     },
     ManagerFilterColumn: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -920,6 +1014,7 @@ var apiMapping = {
     },
     User: {
         validations: true,
+        modelListeners: false,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
@@ -942,6 +1037,7 @@ var apiMapping = {
     },
     UserSettings: {
         lazy: true,
+        modelListeners: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
@@ -959,6 +1055,7 @@ var apiMapping = {
     },
     WorkflowStep: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'workflow-step',
@@ -1026,6 +1123,7 @@ var apiMapping = {
     },
     NamedSearchFilterGroup: {
         validations: true,
+        modelListeners: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -1057,6 +1155,7 @@ var apiMapping = {
     },
     SavedFilter: {
         validations: true,
+        modelListeners: false,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',

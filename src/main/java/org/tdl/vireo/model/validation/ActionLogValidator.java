@@ -10,8 +10,8 @@ public class ActionLogValidator extends BaseModelValidator {
         String submissionProperty = "submission";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Action Log requires a submission", submissionProperty, true));
 
-        String submissionStateProperty = "submissionState";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Action Log requires a submission state", submissionStateProperty, true));
+        String submissionStatusProperty = "submissionStatus";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Action Log requires a submission status", submissionStatusProperty, true));
 
         String userProperty = "user";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Action Log requires a user", userProperty, true));
