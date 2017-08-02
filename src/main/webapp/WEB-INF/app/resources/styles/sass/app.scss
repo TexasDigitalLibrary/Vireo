@@ -1332,7 +1332,8 @@ input[type=color]:focus {
 .tip {
   position: fixed;
   top: 999999px;
-  width: 250px;
+  width: auto;
+  max-width: 250px;
   padding: 15px;
   border-radius: 10px;
   border: solid 2px #CCC;
