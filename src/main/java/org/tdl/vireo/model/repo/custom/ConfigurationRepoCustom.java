@@ -1,6 +1,10 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.model.Configuration;
+import java.util.List;
+import java.util.Map;
+
+import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.interfaces.Configuration;
 
 public interface ConfigurationRepoCustom {
 
@@ -14,7 +18,7 @@ public interface ConfigurationRepoCustom {
      * @param type
      * @return
      */
-    public Configuration create(String name, String value, String type);
+    public ManagedConfiguration create(String name, String value, String type);
 
     /**
      * Resets existing configuration to its system value
@@ -23,7 +27,7 @@ public interface ConfigurationRepoCustom {
      * @param configuration
      * @return
      */
-    public Configuration reset(Configuration configuration);
+    public ManagedConfiguration reset(ManagedConfiguration configuration);
 
     /**
      * Gets a Configuration from the repo
@@ -33,7 +37,7 @@ public interface ConfigurationRepoCustom {
      * @param name
      * @return
      */
-    public Configuration getByName(String name);
+    public ManagedConfiguration getByName(String name);
 
     /**
      * Gets a String value from the configuration repo.
@@ -56,5 +60,18 @@ public interface ConfigurationRepoCustom {
      * @return config value or fallback
      */
     public Integer getValue(String name, Integer fallback);
-
+    
+    /**
+     * Gets a String value from the configuration repo.
+     * 
+     * 
+     * @param name
+     * @param type
+     * @return config value
+     */
+    public String getValueByNameAndType(String name,String type);
+    
+    public List<Configuration> getAllByType(String type);
+    
+    public Map<String,List<Configuration>> getCurrentConfigurations();
 }

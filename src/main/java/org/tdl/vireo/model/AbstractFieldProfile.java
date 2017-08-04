@@ -61,7 +61,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     private List<ControlledVocabulary> controlledVocabularies;
 
     @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    private Configuration mappedShibAttribute;
+    private ManagedConfiguration mappedShibAttribute;
 
     @Column(nullable = true)
     private Boolean flagged;
@@ -356,7 +356,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
     /**
      * @return the mappedShibAttribute
      */
-    public Configuration getMappedShibAttribute() {
+    public ManagedConfiguration getMappedShibAttribute() {
         return mappedShibAttribute;
     }
 
@@ -364,7 +364,7 @@ public abstract class AbstractFieldProfile<FP> extends BaseEntity {
      * @param mappedShibAttribute
      *            the mappedShibAttribute to set
      */
-    public void setMappedShibAttribute(Configuration mappedShibAttribute) {
+    public void setMappedShibAttribute(ManagedConfiguration mappedShibAttribute) {
         this.mappedShibAttribute = mappedShibAttribute;
     }
 

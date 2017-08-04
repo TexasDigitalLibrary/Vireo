@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.util.FileIOUtility;
 
@@ -54,7 +54,7 @@ public class LookAndFeelController {
 
         fileIOUtility.write(inputStream, path);
 
-        Configuration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
+        ManagedConfiguration newLogoConfig = configurationRepo.create(logoName, path, "lookAndFeel");
 
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, newLogoConfig);
@@ -65,8 +65,8 @@ public class LookAndFeelController {
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
-        Configuration systemLogo = configurationRepo.getByName(lfModel.getSetting());
-        Configuration defaultLogoConfig = configurationRepo.reset(systemLogo);
+        ManagedConfiguration systemLogo = configurationRepo.getByName(lfModel.getSetting());
+        ManagedConfiguration defaultLogoConfig = configurationRepo.reset(systemLogo);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, defaultLogoConfig);
     }

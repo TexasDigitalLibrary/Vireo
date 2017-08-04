@@ -1,4 +1,4 @@
-vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi) {
+vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsApi) {
 
     var configurationRepo = this;
 
@@ -6,7 +6,57 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo(Configuration, WsApi)
 
     var listening = false;
 
+    var defer = $q.defer();
+
     // additional repo methods and variables
+
+    var fetch = function (mapping) {
+        if (mapping.all !== undefined) {
+            return WsApi.fetch(mapping.all).then(function (res) {
+                build(unwrap(res)).then(function () {
+                    defer.resolve(configurations);
+                });
+            });
+        }
+    };
+
+    var build = function (data) {
+        return $q(function (resolve) {
+            angular.extend(configurations, data);
+            resolve();
+        });
+    };
+
+    var unwrap = function (res) {
+        var repoObj = {};
+        var payload = angular.fromJson(res.body).payload;
+        var keys = Object.keys(payload);
+        angular.forEach(keys, function (key) {
+            angular.forEach(payload[key],function (configurations,type) {
+                repoObj[type] = {};
+                angular.forEach(configurations, function (config) {
+                    repoObj[type][config.name] = config;
+
+                });
+            });
+        });
+        return repoObj;
+    };
+
+    configurationRepo.getAll = function () {
+        if (this.mapping.lazy) {
+            fetch(this.mapping);
+        }
+        return configurationRepo.getContents();
+    };
+
+    configurationRepo.getContents = function () {
+        return configurations;
+    };
+
+    configurationRepo.ready = function () {
+        return defer.promise;
+    };
 
     var getAndListen = function() {
         var allConfigurations = configurationRepo.getAll();

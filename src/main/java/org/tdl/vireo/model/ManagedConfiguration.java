@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.validation.ConfigurationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +19,7 @@ import edu.tamu.framework.model.BaseEntity;
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
-public class Configuration extends BaseEntity {
+public class ManagedConfiguration extends BaseEntity implements Configuration {
 
     @Column(nullable = false, length = 255)
     private String name;
@@ -38,7 +39,7 @@ public class Configuration extends BaseEntity {
      *
      * By default new ones are not system required.
      */
-    public Configuration() {
+    public ManagedConfiguration() {
         setModelValidator(new ConfigurationValidator());
         isSystemRequired(false);
     }
@@ -53,7 +54,7 @@ public class Configuration extends BaseEntity {
      * @param type
      *            The type of the configuration parameter.
      */
-    public Configuration(String name, String value, String type) {
+    public ManagedConfiguration(String name, String value, String type) {
         this();
         this.name = name;
         this.value = value;

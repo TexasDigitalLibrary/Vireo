@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -29,15 +29,15 @@ public class ConfigurableSettingsController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
+    
     @ApiMapping("/all")
     public ApiResponse getSettings() {
-        return new ApiResponse(SUCCESS, configurationRepo.findAll());
+        return new ApiResponse(SUCCESS, configurationRepo.getCurrentConfigurations());
     }
 
     @ApiMapping("/update")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateSetting(@ApiValidatedModel Configuration configuration) {
+    public ApiResponse updateSetting(@ApiValidatedModel ManagedConfiguration configuration) {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.save(configuration);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
@@ -46,7 +46,7 @@ public class ConfigurableSettingsController {
 
     @ApiMapping("/reset")
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
-    public ApiResponse resetSetting(@ApiValidatedModel Configuration configuration) {
+    public ApiResponse resetSetting(@ApiValidatedModel ManagedConfiguration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.reset(configuration);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));

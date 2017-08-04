@@ -1,14 +1,14 @@
 package org.tdl.vireo.model;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 public abstract class AbstractPreferences {
     protected ArrayList<String> allowedKeys;
-    protected Map<String,String> preferences;
+    protected List<DefaultConfiguration> preferences;
     protected String type;
     
-    public AbstractPreferences(String type, Map<String, String> preferences) {
+    public AbstractPreferences(String type, List<DefaultConfiguration> preferences) {
         setType(type);
         setPreferences(preferences);
     }
@@ -17,11 +17,11 @@ public abstract class AbstractPreferences {
         this.type = type;
     }
     
-    public void setPreferences(Map<String, String> preferences) {
+    public void setPreferences(List<DefaultConfiguration> preferences) {
         this.preferences = preferences;
     }
         
-    public Map<String, String> getPreferences() {
+    public List<DefaultConfiguration> getPreferences() {
         return this.preferences;
     }
     

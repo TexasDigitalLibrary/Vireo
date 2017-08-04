@@ -2,12 +2,11 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 		
-	$scope.configurable = ConfigurationRepo.getAllMapByType();
+	$scope.configurable = ConfigurationRepo.getAll();
 
 	$scope.logoPath = "";
 
 	ConfigurationRepo.ready().then(function() {
-		
 		$scope.logoPath = $scope.configurable.lookAndFeel.left_logo;
 
 		$scope.logoImage = function() {	

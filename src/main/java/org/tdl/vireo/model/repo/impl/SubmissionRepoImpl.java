@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
@@ -112,7 +112,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         submission.getSubmissionWorkflowSteps().forEach(ws -> {
             ws.getAggregateFieldProfiles().forEach(afp -> {
-                Configuration mappedShibAttribute = afp.getMappedShibAttribute();
+                ManagedConfiguration mappedShibAttribute = afp.getMappedShibAttribute();
                 if (mappedShibAttribute != null) {
                     if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
                         String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
@@ -192,7 +192,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     	
     	byte[] licenseBytes = null;
     	
-    	Configuration proquestLicense = configurationRepo.getByName(licenseName);
+    	ManagedConfiguration proquestLicense = configurationRepo.getByName(licenseName);
 		
 		User submitter = submission.getSubmitter();
 		
