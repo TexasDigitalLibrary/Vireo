@@ -172,11 +172,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         	}
         	
         	if(attachProquestLicense) {
-        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license");
+        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license","proquest_umi_degree_code");
         	}
         	
         	if(attachDefaultLicenseFieldValues) {
-        		writeLicenseFile(credentials, submission, "submit_license", "license");
+        		writeLicenseFile(credentials, submission, "submit_license", "license","submission");
         	}
         }
         
@@ -187,11 +187,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
     
     
-    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName) {
+    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
     	
     	byte[] licenseBytes = null;
     	
-    	Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName,"submission");
+    	Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName,configurationType);
 		
 		User submitter = submission.getSubmitter();
 		
