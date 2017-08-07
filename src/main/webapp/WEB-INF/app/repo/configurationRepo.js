@@ -35,7 +35,7 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsA
             angular.forEach(payload[key],function (configurations,type) {
                 repoObj[type] = {};
                 angular.forEach(configurations, function (config) {
-                    repoObj[type][config.name] = config;
+                    repoObj[type][config.name] = new Configuration(config);
 
                 });
             });
@@ -58,42 +58,8 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsA
         return defer.promise;
     };
 
-    var getAndListen = function() {
-        var allConfigurations = configurationRepo.getAll();
-
-        var mapByType = function() {
-            angular.forEach(allConfigurations, function(config) {
-                if (configurations[config.type] === undefined) {
-                    configurations[config.type] = {};
-                }
-                configurations[config.type][config.name] = config;
-            });
-        };
-
-        configurationRepo.ready().then(function() {
-            mapByType();
-            WsApi.listen(configurationRepo.mapping.selectiveListen).then(null, null, function(response) {
-                var config = new Configuration(angular.fromJson(response.body).payload.Configuration);
-                configurations[config.type][config.name] = config;
-            });
-        });
-
-        configurationRepo.listen(function() {
-            mapByType();
-        });
-
-        listening = true;
-    };
-
     this.reset = function(model) {
         return model.reset();
-    };
-
-    this.getAllMapByType = function() {
-        if (!listening) {
-            getAndListen();
-        }
-        return configurations;
     };
 
     this.findByTypeAndName = function(type, name) {
