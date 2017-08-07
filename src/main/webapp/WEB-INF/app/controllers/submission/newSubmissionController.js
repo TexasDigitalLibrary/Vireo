@@ -7,7 +7,7 @@ vireo.controller('NewSubmissionController', function($controller, $location, $q,
     $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
     ConfigurationRepo.ready().then(function() {
-        $scope.configuration = ConfigurationRepo.getAllMapByType();
+        $scope.configuration = ConfigurationRepo.getAll();
     });
 
     var studentSubmissions = StudentSubmissionRepo.getAll();

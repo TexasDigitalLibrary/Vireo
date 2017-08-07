@@ -6,7 +6,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
     $scope.studentSubmissionRepoReady = false;
 
-    $scope.configuration = ConfigurationRepo.getAllMapByType();
+    $scope.configuration = ConfigurationRepo.getAll();
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (data) {
 
