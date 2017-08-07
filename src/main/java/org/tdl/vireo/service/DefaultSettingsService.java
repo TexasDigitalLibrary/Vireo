@@ -15,8 +15,20 @@ public class DefaultSettingsService {
         defaultSettings = new ArrayList<DefaultPreferences>();
     }
     
-    public String getSetting(String field,String type) {
-        return getSettingsByType(type).stream().filter(preference -> preference.getName() == field).findFirst().orElse(null).getValue();
+    public DefaultConfiguration getSettingByName(String field) {
+    	for (DefaultPreferences defaultPreferences:defaultSettings) {
+    		for (DefaultConfiguration defaultConfiguration:defaultPreferences.getPreferences()) {
+    			if (defaultConfiguration.getName().equals(field)) {
+    				return defaultConfiguration;
+    			}
+    		}
+    	}
+    	return null;
+    }
+
+    
+    public DefaultConfiguration getSettingByNameAndType(String field,String type) {
+        return getSettingsByType(type).stream().filter(preference -> preference.getName() == field).findFirst().orElse(null);
     }
     
     public List<String> getTypes() {

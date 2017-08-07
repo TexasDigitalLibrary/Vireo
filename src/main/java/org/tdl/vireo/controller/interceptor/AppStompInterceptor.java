@@ -1,5 +1,8 @@
 package org.tdl.vireo.controller.interceptor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -45,20 +48,28 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
     @Override
     public User confirmCreateUser(Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
+        
+        Map<String,String> shibSettings = new HashMap<String,String>();
+        Map<String,String> shibValues = new HashMap<String,String>();
 
-        // get shib headers out of DB
-        String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
-        String birthYearHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
-        String middleNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
-        String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
-        String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
+        
+        shibSettings.forEach((k,v) -> {
+        	shibValues.put(k, configurationRepo.getValueByNameAndType(k,"shibboleth") != null ? configurationRepo.getValueByNameAndType(k,"shibboleth"):v);
+        });
 
-        String uin = credentials.getAllCredentials().get(institutionalIdentifierHeader);
 
-        if (uin == null) {
+        
+        String uin = credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER));
+        
+        if(uin == null) {
             uin = credentials.getEmail();
         }
-
+        
         // TODO: check to see if credentials is from basic login or shibboleth
         // do not create new user from basic login credentials that have no user!
         if (user == null) {
@@ -80,12 +91,12 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
 
             user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
 
-            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
-            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
+            user.setNetid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID)));
+            if (credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))));
             }
-            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
+            user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
             user.setUin(uin);
 
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
@@ -95,12 +106,12 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
 
             // TODO: update only if user properties does not match current credentials
 
-            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
-            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
+            user.setNetid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER)));
+            if (credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))));
             }
-            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
+            user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
             user.setUin(uin);
 
             user = userRepo.save(user);
@@ -110,7 +121,6 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
         credentials.setUin(user.getUin());
 
         return user;
-
     }
 
 }

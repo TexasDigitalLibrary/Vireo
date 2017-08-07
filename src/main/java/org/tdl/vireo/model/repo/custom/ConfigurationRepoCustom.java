@@ -9,9 +9,8 @@ import org.tdl.vireo.model.interfaces.Configuration;
 public interface ConfigurationRepoCustom {
 
     /**
-     * Creates a configuration
+     * Creates a ManagedConfiguration
      * 
-     * Will create a non-isSystemRequired
      * 
      * @param name
      * @param value
@@ -27,42 +26,28 @@ public interface ConfigurationRepoCustom {
      * @param configuration
      * @return
      */
-    public ManagedConfiguration reset(ManagedConfiguration configuration);
+    public Configuration reset(ManagedConfiguration configuration);
 
     /**
-     * Gets a Configuration from the repo
+     * Gets a Configuration by its name and type
      * 
-     * Will always pick a non-isSystemRequired if it exists.
+     * 
+     * @param String name
+     * @param String type
+     * @return
+     */
+    public Configuration getByNameAndType(String name, String type);
+    
+    /**
+     * Gets a Configuration from the repo or falls back to the default, returns null if neither exist
      * 
      * @param name
      * @return
      */
-    public ManagedConfiguration getByName(String name);
+    public String getValueByName(String name);
 
     /**
-     * Gets a String value from the configuration repo.
-     * 
-     * If it's not found in DB, a fallback value is used instead.
-     * 
-     * @param name
-     * @param fallback
-     * @return config value or fallback
-     */
-    public String getValue(String name, String fallback);
-
-    /**
-     * Gets an Integer value from the configuration repo.
-     * 
-     * If it's not found in DB, a fallback value is used instead.
-     * 
-     * @param name
-     * @param fallback
-     * @return config value or fallback
-     */
-    public Integer getValue(String name, Integer fallback);
-    
-    /**
-     * Gets a String value from the configuration repo.
+     * Gets a Configuration's string value by its name and type.
      * 
      * 
      * @param name

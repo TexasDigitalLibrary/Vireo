@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.util.FileIOUtility;
 
@@ -39,6 +40,8 @@ public class LookAndFeelController {
 
     @Autowired
     private FileIOUtility fileIOUtility;
+    
+    private String lookAndFeelType = "lookAndFeel";
 
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
@@ -48,7 +51,7 @@ public class LookAndFeelController {
         String logoFileName = logoName + "." + lfModel.getFileType();
 
         // TODO: folder should be a configuration
-        String path = "public/" + configurationRepo.getByName(ConfigurationName.THEME_PATH).getValue() + logoFileName;
+        String path = "public/" + configurationRepo.getByNameAndType(ConfigurationName.THEME_PATH,lookAndFeelType).getValue() + logoFileName;
 
         logger.info("Changing logo " + logoName);
 
@@ -65,8 +68,8 @@ public class LookAndFeelController {
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
-        ManagedConfiguration systemLogo = configurationRepo.getByName(lfModel.getSetting());
-        ManagedConfiguration defaultLogoConfig = configurationRepo.reset(systemLogo);
+        Configuration systemLogo = configurationRepo.getByNameAndType(lfModel.getSetting(),lookAndFeelType);
+        Configuration defaultLogoConfig = configurationRepo.reset((ManagedConfiguration) systemLogo);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, defaultLogoConfig);
     }

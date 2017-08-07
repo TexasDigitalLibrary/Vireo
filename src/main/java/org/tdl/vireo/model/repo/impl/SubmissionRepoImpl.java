@@ -2,8 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +33,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
@@ -192,7 +191,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     	
     	byte[] licenseBytes = null;
     	
-    	ManagedConfiguration proquestLicense = configurationRepo.getByName(licenseName);
+    	Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName,"submission");
 		
 		User submitter = submission.getSubmitter();
 		

@@ -28,50 +28,21 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
     }
 
     @Override
-    public ManagedConfiguration reset(ManagedConfiguration configuration) {
+    public Configuration reset(ManagedConfiguration configuration) {
 
         configurationRepo.delete(configuration);
-
-        return configurationRepo.findByNameAndIsSystemRequired(configuration.getName(), true);
+        
+        return defaultSettingsService.getSettingByNameAndType(configuration.getName(), configuration.getType());
 
     }
-
+    
     @Override
-    public String getValue(String name, String fallback) {
-        String ret = fallback;
-        ManagedConfiguration configuration = configurationRepo.getByName(name);
+    public Configuration getByNameAndType(String name,String type) {
+        ManagedConfiguration configuration = configurationRepo.findByName(name);
         if (configuration != null) {
-            ret = configuration.getValue();
+            return configuration;
         }
-        return ret;
-    }
-
-    @Override
-    public Integer getValue(String name, Integer fallback) {
-        Integer ret = fallback;
-        ManagedConfiguration configuration = configurationRepo.getByName(name);
-        if (configuration != null) {
-            try {
-                return Integer.parseInt(configuration.getValue());
-            } catch (NumberFormatException e) {
-                // do nothing, ret will use fallback
-            }
-        }
-        return ret;
-    }
-
-    @Override
-    public ManagedConfiguration getByName(String name) {
-        List<ManagedConfiguration> configurations = configurationRepo.findByName(name);
-        ManagedConfiguration ret = null;
-        for (ManagedConfiguration configuration : configurations) {
-            if (configuration.isSystemRequired() && ret == null) {
-                ret = configuration;
-            } else if (!configuration.isSystemRequired()) {
-                ret = configuration;
-            }
-        }
-        return ret;
+    	return defaultSettingsService.getSettingByNameAndType(name, type);
     }
     
     /**
@@ -84,9 +55,32 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
      */
     @Override
     public String getValueByNameAndType(String name, String type) {
-        String overrideValue = configurationRepo.getValueByNameAndType(name,type);
-        return (overrideValue != null) ? overrideValue:defaultSettingsService.getSetting(name, type);
+        Configuration overrideConfig = configurationRepo.findByNameAndType(name,type);
+        if (overrideConfig != null) {
+        	return overrideConfig.getValue();
+        }
+        
+        Configuration defaultConfig = defaultSettingsService.getSettingByNameAndType(name, type);
+        if (defaultConfig != null) {
+        	return defaultConfig.getValue();
+        }
+        return null;
     }
+    
+    @Override
+    public String getValueByName(String name) {
+        Configuration overrideConfig = configurationRepo.findByName(name);
+        if (overrideConfig != null) {
+        	return overrideConfig.getValue();
+        }
+        
+        Configuration defaultConfig = defaultSettingsService.getSettingByName(name);
+        if (defaultConfig != null) {
+        	return defaultConfig.getValue();
+        }
+        return null;
+    }
+
     
     public List<Configuration> getAllByType(String type) {
         return mergeConfigurations(configurationRepo.findByType(type),defaultSettingsService.getSettingsByType(type));

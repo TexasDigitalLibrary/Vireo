@@ -8,9 +8,6 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.validation.ConfigurationValidator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import edu.tamu.framework.model.BaseEntity;
 
 /**
@@ -18,7 +15,7 @@ import edu.tamu.framework.model.BaseEntity;
  *
  */
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 public class ManagedConfiguration extends BaseEntity implements Configuration {
 
     @Column(nullable = false, length = 255)
@@ -30,10 +27,6 @@ public class ManagedConfiguration extends BaseEntity implements Configuration {
     @Column(nullable = false, length = 255)
     private String type;
 
-    @Column(nullable = false)
-    @JsonProperty("isSystemRequired")
-    private Boolean isSystemRequired;
-
     /**
      * Construct a new JpaConfigurationImpl
      *
@@ -41,7 +34,6 @@ public class ManagedConfiguration extends BaseEntity implements Configuration {
      */
     public ManagedConfiguration() {
         setModelValidator(new ConfigurationValidator());
-        isSystemRequired(false);
     }
 
     /**
@@ -106,20 +98,4 @@ public class ManagedConfiguration extends BaseEntity implements Configuration {
         this.type = type;
     }
 
-    /**
-     * @return the isSystemRequired
-     */
-    @JsonIgnore
-    public Boolean isSystemRequired() {
-        return isSystemRequired;
-    }
-
-    /**
-     * @param isSystemRequired
-     *            the isSystemRequired to set
-     */
-    @JsonIgnore
-    public void isSystemRequired(Boolean isSystemRequired) {
-        this.isSystemRequired = isSystemRequired;
-    }
 }

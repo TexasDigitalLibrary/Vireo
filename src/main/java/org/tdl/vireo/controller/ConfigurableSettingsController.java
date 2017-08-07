@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -48,8 +49,8 @@ public class ConfigurableSettingsController {
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetSetting(@ApiValidatedModel ManagedConfiguration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
-        configuration = configurationRepo.reset(configuration);
-        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
+        Configuration defaultConfiguration = configurationRepo.reset(configuration);
+        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, defaultConfiguration));
         return new ApiResponse(SUCCESS, configuration);
     }
 
