@@ -2,7 +2,6 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.RESET;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
+import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.model.ApiResponse;
@@ -46,8 +46,7 @@ public class ConfigurableSettingsController {
     }
 
     @ApiMapping("/reset")
-    @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
-    public ApiResponse resetSetting(@ApiValidatedModel ManagedConfiguration configuration) {
+    public ApiResponse resetSetting(@ApiModel ManagedConfiguration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         Configuration defaultConfiguration = configurationRepo.reset(configuration);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, defaultConfiguration));

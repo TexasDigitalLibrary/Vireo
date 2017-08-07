@@ -29,11 +29,8 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Override
     public Configuration reset(ManagedConfiguration configuration) {
-
         configurationRepo.delete(configuration);
-        
         return defaultSettingsService.getSettingByNameAndType(configuration.getName(), configuration.getType());
-
     }
     
     @Override

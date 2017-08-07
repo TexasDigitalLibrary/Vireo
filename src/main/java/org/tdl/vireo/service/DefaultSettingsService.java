@@ -28,7 +28,7 @@ public class DefaultSettingsService {
 
     
     public DefaultConfiguration getSettingByNameAndType(String field,String type) {
-        return getSettingsByType(type).stream().filter(preference -> preference.getName() == field).findFirst().orElse(null);
+        return getSettingsByType(type).stream().filter(preference -> preference.getName().equals(field)).findFirst().orElse(null);
     }
     
     public List<String> getTypes() {
@@ -40,7 +40,7 @@ public class DefaultSettingsService {
     }
     
     public List<DefaultConfiguration> getSettingsByType(String type) {
-        return defaultSettings.stream().filter(preferences -> preferences.getType() == type).findFirst().orElse(null).getPreferences();
+        return defaultSettings.stream().filter(preferences -> preferences.getType().equals(type)).findFirst().orElse(null).getPreferences();
     }
     
     public void addSettings(String type, List<DefaultConfiguration> preferences) {

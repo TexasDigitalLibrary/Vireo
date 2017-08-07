@@ -60,7 +60,13 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsA
 
     configurationRepo.ready().then(function() {
         WsApi.listen(configurationRepo.mapping.selectiveListen).then(null, null, function(response) {
-            var config = new Configuration(angular.fromJson(response.body).payload.ManagedConfiguration);
+            var payload = angular.fromJson(response.body).payload;
+            var config = {};
+            if (payload.ManagedConfiguration) {
+                config = new Configuration(payload.ManagedConfiguration);
+            } else {
+                config = new Configuration(payload.DefaultConfiguration);
+            }
             configurations[config.type][config.name] = config;
         });
     });
