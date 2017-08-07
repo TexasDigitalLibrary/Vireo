@@ -1,10 +1,8 @@
 package org.tdl.vireo.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractPreferences {
-    protected ArrayList<String> allowedKeys;
     protected List<DefaultConfiguration> preferences;
     protected String type;
     
