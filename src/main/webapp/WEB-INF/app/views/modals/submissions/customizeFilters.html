@@ -22,7 +22,7 @@
 	    		<h4>Disabled Filters</h4>
 	    		<div class="column-background">
 		    		<ul class="disabled-column-container" as-sortable="box.getFilterColumnOptions()" ng-model="box.getFilterColumns().inactiveFilterColumns">
-		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in box.getFilterColumns().inactiveFilterColumns" as-sortable-item>
+		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in box.getFilterColumns().inactiveFilterColumns | orderBy: 'title'" as-sortable-item>
 		    				<div as-sortable-item-handle>{{column.title}}</div>
 		    			</li>
 		    		</ul>
@@ -33,6 +33,6 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-warning" ng-click="box.resetSaveUserFilters()">Cancel</button>        
-    <button type="button" class="btn btn-primary" ng-disabled="!box.getFilterChange()" ng-click="box.saveUserFilters()">Save</button>        
+    <button type="button" class="btn btn-warning" ng-click="box.resetSaveUserFilters()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-disabled="!box.getFilterChange()" ng-click="box.saveUserFilters()">Save</button>
 </div>
