@@ -6,7 +6,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 
     $scope.settings = {};
 
-    $scope.settings.configurable = ConfigurationRepo.getAllMapByType();
+    $scope.settings.configurable = ConfigurationRepo.getAll();
 
     $scope.inProgress = {};
 

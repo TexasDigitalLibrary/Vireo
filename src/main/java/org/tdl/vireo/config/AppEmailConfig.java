@@ -34,19 +34,29 @@ public class AppEmailConfig extends CoreEmailConfig {
         CoreEmailUtility emailUtility = new CoreEmailUtility();
 
         emailUtility.setDefaultEncoding("UTF-8");
+        
+        emailUtility.setFrom(getConfigValue(ConfigurationName.APPLICATION_MAIL_FROM, defaultFrom));
+        emailUtility.setReplyTo(getConfigValue(ConfigurationName.APPLICATION_MAIL_REPLYTO, defaultReplyTo));
 
-        emailUtility.setFrom(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_FROM, defaultFrom));
-        emailUtility.setReplyTo(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_REPLYTO, defaultReplyTo));
-
-        emailUtility.setHost(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_HOST, defaultHost));
+        emailUtility.setHost(getConfigValue(ConfigurationName.APPLICATION_MAIL_HOST, defaultHost));
 
         // some hardcoded defaults
-        emailUtility.setPort(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PORT, 25));
-        emailUtility.setProtocol(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, "smtp"));
-        emailUtility.setUsername(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_USER, (String) null));
-        emailUtility.setPassword(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_PASSWORD, (String) null));
-        emailUtility.setChannel(configurationRepo.getValue(ConfigurationName.APPLICATION_MAIL_CHANNEL, "clear"));
+        emailUtility.setPort(getConfigValue(ConfigurationName.APPLICATION_MAIL_PORT, 25));
+        emailUtility.setProtocol(getConfigValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, "smtp"));
+        emailUtility.setUsername(getConfigValue(ConfigurationName.APPLICATION_MAIL_USER, (String) null));
+        emailUtility.setPassword(getConfigValue(ConfigurationName.APPLICATION_MAIL_PASSWORD, (String) null));
+        emailUtility.setChannel(getConfigValue(ConfigurationName.APPLICATION_MAIL_CHANNEL, "clear"));
+
         return emailUtility;
     }
 
+    private String getConfigValue(String name, String defaultValue) {
+        String value = configurationRepo.getValueByName(name);
+        return (value != null) ? value:defaultValue;
+    }
+
+    private Integer getConfigValue(String name, Integer defaultValue) {
+        Integer value =  Integer.getInteger(configurationRepo.getValueByName(name));
+        return (value != null) ? value:defaultValue;
+    }
 }

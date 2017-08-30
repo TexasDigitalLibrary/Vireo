@@ -21,6 +21,6 @@ public class AppRestInterceptor extends CoreRestInterceptor<User> {
 
     @Override
     public User confirmCreateUser(Credentials credentials) {
-    	return userCredentialsService.updateUserByCredentials(credentials);
+        return userCredentialsService.updateUserByCredentials(credentials);
     }
 }

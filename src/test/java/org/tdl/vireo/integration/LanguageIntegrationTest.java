@@ -33,6 +33,8 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Override
     public void setup() {
 
+        systemDataLoader.loadSystemDefaults();
+
         languageRepo.create(TEST_LANGUAGE_NAME1);
         languageRepo.create(TEST_LANGUAGE_NAME2);
         languageRepo.create(TEST_LANGUAGE_NAME3);

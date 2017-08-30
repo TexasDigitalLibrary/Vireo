@@ -2,8 +2,6 @@ package org.tdl.vireo.model.repo.impl;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
-import org.tdl.vireo.model.Configuration;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
@@ -35,6 +33,7 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
@@ -112,7 +111,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         submission.getSubmissionWorkflowSteps().forEach(ws -> {
             ws.getAggregateFieldProfiles().forEach(afp -> {
-                Configuration mappedShibAttribute = afp.getMappedShibAttribute();
+                ManagedConfiguration mappedShibAttribute = afp.getMappedShibAttribute();
                 if (mappedShibAttribute != null) {
                     if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
                         String credentialValue = credentials.getAllCredentials().get(mappedShibAttribute.getValue());
@@ -173,11 +172,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         	}
         	
         	if(attachProquestLicense) {
-        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license");
+        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license","proquest_umi_degree_code");
         	}
         	
         	if(attachDefaultLicenseFieldValues) {
-        		writeLicenseFile(credentials, submission, "submit_license", "license");
+        		writeLicenseFile(credentials, submission, "submit_license", "license","submission");
         	}
         }
         
@@ -188,11 +187,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
     
     
-    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName) {
+    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
     	
     	byte[] licenseBytes = null;
     	
-    	Configuration proquestLicense = configurationRepo.getByName(licenseName);
+    	Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName,configurationType);
 		
 		User submitter = submission.getSubmitter();
 		

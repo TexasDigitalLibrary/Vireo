@@ -1,5 +1,8 @@
 package org.tdl.vireo.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,19 +16,19 @@ import edu.tamu.framework.model.Credentials;
 
 @Service
 public class UserCredentialsService {
-	@Autowired
-	UserRepo userRepo;
-	
-	@Autowired
-	ConfigurationRepo configurationRepo;
-	
+    @Autowired
+    UserRepo userRepo;
+
+    @Autowired
+    ConfigurationRepo configurationRepo;
+
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
-	
+
     @Value("${app.authority.admins}")
     private String[] admins;
-	
-	public Credentials buildAnonymousCredentials() {
+
+    public Credentials buildAnonymousCredentials() {
         Credentials anonymousCredentials = new Credentials();
         anonymousCredentials.setAffiliation("NA");
         anonymousCredentials.setLastName("Anonymous");
@@ -35,21 +38,26 @@ public class UserCredentialsService {
         anonymousCredentials.setExp("1436982214754");
         anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
         anonymousCredentials.setRole("NONE");
-        return anonymousCredentials;		
-	}
-	
+        return anonymousCredentials;
+    }
+
     public User updateUserByCredentials(Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        // get shib headers out of DB
-        String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
-        String birthYearHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
-        String middleNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
-        String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
-        String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
+        Map<String, String> shibSettings = new HashMap<String, String>();
+        Map<String, String> shibValues = new HashMap<String, String>();
 
-        String uin = credentials.getAllCredentials().get(institutionalIdentifierHeader);
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
 
+        shibSettings.forEach((k, v) -> {
+            shibValues.put(k, configurationRepo.getValueByNameAndType(k, "shibboleth") != null ? configurationRepo.getValueByNameAndType(k, "shibboleth") : v);
+        });
+
+        String uin = credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER));
         if (uin == null) {
             uin = credentials.getEmail();
         }
@@ -75,12 +83,12 @@ public class UserCredentialsService {
 
             user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
 
-            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
-            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
+            user.setNetid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID)));
+            if (credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))));
             }
-            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
+            user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
             user.setUin(uin);
 
             user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
@@ -90,12 +98,12 @@ public class UserCredentialsService {
 
             // TODO: update only if user properties does not match current credentials
 
-            user.setNetid(credentials.getAllCredentials().get(netIdHeader));
-            if (credentials.getAllCredentials().get(birthYearHeader) != null) {
-                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(birthYearHeader)));
+            user.setNetid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER)));
+            if (credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)) != null) {
+                user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))));
             }
-            user.setMiddleName(credentials.getAllCredentials().get(middleNameHeader));
-            user.setOrcid(credentials.getAllCredentials().get(orcidHeader));
+            user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
+            user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
             user.setUin(uin);
 
             user = userRepo.save(user);

@@ -1,20 +1,23 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.model.Configuration;
+import java.util.List;
+import java.util.Map;
+
+import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.interfaces.Configuration;
 
 public interface ConfigurationRepoCustom {
 
     /**
-     * Creates a configuration
+     * Creates a ManagedConfiguration
      * 
-     * Will create a non-isSystemRequired
      * 
      * @param name
      * @param value
      * @param type
      * @return
      */
-    public Configuration create(String name, String value, String type);
+    public ManagedConfiguration create(String name, String value, String type);
 
     /**
      * Resets existing configuration to its system value
@@ -23,38 +26,37 @@ public interface ConfigurationRepoCustom {
      * @param configuration
      * @return
      */
-    public Configuration reset(Configuration configuration);
+    public Configuration reset(ManagedConfiguration configuration);
 
     /**
-     * Gets a Configuration from the repo
+     * Gets a Configuration by its name and type
      * 
-     * Will always pick a non-isSystemRequired if it exists.
+     * 
+     * @param String name
+     * @param String type
+     * @return
+     */
+    public Configuration getByNameAndType(String name, String type);
+    
+    /**
+     * Gets a Configuration from the repo or falls back to the default, returns null if neither exist
      * 
      * @param name
      * @return
      */
-    public Configuration getByName(String name);
+    public String getValueByName(String name);
 
     /**
-     * Gets a String value from the configuration repo.
+     * Gets a Configuration's string value by its name and type.
      * 
-     * If it's not found in DB, a fallback value is used instead.
-     * 
-     * @param name
-     * @param fallback
-     * @return config value or fallback
-     */
-    public String getValue(String name, String fallback);
-
-    /**
-     * Gets an Integer value from the configuration repo.
-     * 
-     * If it's not found in DB, a fallback value is used instead.
      * 
      * @param name
-     * @param fallback
-     * @return config value or fallback
+     * @param type
+     * @return config value
      */
-    public Integer getValue(String name, Integer fallback);
-
+    public String getValueByNameAndType(String name,String type);
+    
+    public List<Configuration> getAllByType(String type);
+    
+    public Map<String,List<Configuration>> getCurrentConfigurations();
 }

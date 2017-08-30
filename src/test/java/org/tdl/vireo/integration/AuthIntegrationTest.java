@@ -39,6 +39,8 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Override
     public void setup() {
+        systemDataLoader.loadSystemDefaults();
+
         userRepo.deleteAll();
 
         userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), AppRole.ADMINISTRATOR);

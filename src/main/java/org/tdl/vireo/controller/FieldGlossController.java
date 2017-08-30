@@ -14,8 +14,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.AbstractFieldProfile;
 import org.tdl.vireo.model.FieldGloss;
-import org.tdl.vireo.model.FieldProfile;
-import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -33,12 +31,12 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/field-gloss")
 public class FieldGlossController {
-	
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private FieldGlossRepo fieldGlossRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -70,7 +68,7 @@ public class FieldGlossController {
         simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
         return new ApiResponse(SUCCESS, fg);
     }
-    
+
     /**
      * Endpoint to remove a field gloss
      *
@@ -78,14 +76,14 @@ public class FieldGlossController {
      */
     @ApiMapping("/remove")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = {@ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse RemoveFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
-    	fieldGlossRepo.delete(fieldGloss);
+        fieldGlossRepo.delete(fieldGloss);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
-    	return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS);
     }
-    
+
     /**
      * Endpoint to update a field gloss
      *
@@ -93,12 +91,12 @@ public class FieldGlossController {
      */
     @ApiMapping("/update")
     @Auth(role = "MANAGER")
-    @ApiValidation(business = {@ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse UpdateFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
-    	fieldGlossRepo.save(fieldGloss);
+        fieldGlossRepo.save(fieldGloss);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
-    	return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS);
     }
 
 }

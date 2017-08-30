@@ -3,6 +3,7 @@ package edu.tamu.auth.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
@@ -139,19 +140,27 @@ public class MockTokenController {
 
         String token = params.get("token");
 
-        // get shib headers out of DB
-        String netIdHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
-        String birthYearHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
-        String middleNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
-        String firstNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME, "firstName");
-        String lastNameHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME, "lastName");
-        String emailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL, "email");
-        String orcidHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
-        String institutionIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER, "institutionid");
-        String institutionalIdentifierHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
-        String permEmailHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS, "permanentEmailAddress");
-        String permPhoneHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER, "permanentPhoneNumber");
-        String permAddressHeader = configurationRepo.getValue(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS, "permanentPostalAddress");
+        // get shib headers
+        Map<String,String> shibSettings = new HashMap<String,String>();
+        Map<String,String> shibValues = new HashMap<String,String>();
+
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID, "netid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR, "birthYear");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME, "middleName");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME, "firstName");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME, "lastName");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL, "email");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID, "orcid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER, "institutionid");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER, "uin");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS, "permanentEmailAddress");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER, "permanentPhoneNumber");
+        shibSettings.put(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS, "permanentPostalAddress");
+        
+        shibSettings.forEach((k,v) -> {
+        	String overrideValue = configurationRepo.getValueByNameAndType(k,"shibboleth");
+        	shibValues.put(k, overrideValue != null ? overrideValue:v);
+        });        
 
         newToken = jwtUtility.craftToken();
 
@@ -176,33 +185,33 @@ public class MockTokenController {
                         logger.info("Adding " + k + ": " + p + " to jwt.");
                     }
                 } else if (mockUser.equals("admin")) {
-                    newToken.makeClaim(netIdHeader, "aggieJack");
-                    newToken.makeClaim(institutionIdentifierHeader, "inst-id-123");
-                    newToken.makeClaim(institutionalIdentifierHeader, "123456789");
-                    newToken.makeClaim(lastNameHeader, "Daniels");
-                    newToken.makeClaim(firstNameHeader, "Jack");
-                    newToken.makeClaim(emailHeader, "aggieJack@tamu.edu");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID), "aggieJack");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER), "inst-id-123");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER), "123456789");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME), "Daniels");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME), "Jack");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL), "aggieJack@tamu.edu");
 
-                    newToken.makeClaim(birthYearHeader, "1977");
-                    newToken.makeClaim(middleNameHeader, "Jay");
-                    newToken.makeClaim(orcidHeader, "0000-0000-0000-0000");
-                    newToken.makeClaim(permEmailHeader, "aggieJack@tamu.edu");
-                    newToken.makeClaim(permPhoneHeader, "800-555-1234");
-                    newToken.makeClaim(permAddressHeader, "5000 TAMU");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR), "1977");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME), "Jay");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID), "0000-0000-0000-0000");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS), "aggieJack@tamu.edu");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER), "800-555-1234");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS), "5000 TAMU");
                 } else {
-                    newToken.makeClaim(netIdHeader, "bobBoring");
-                    newToken.makeClaim(institutionIdentifierHeader, "inst-id-123");
-                    newToken.makeClaim(institutionalIdentifierHeader, "987654321");
-                    newToken.makeClaim(lastNameHeader, "Boring");
-                    newToken.makeClaim(firstNameHeader, "Bob");
-                    newToken.makeClaim(emailHeader, "bobBoring@tamu.edu");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID), "bobBoring");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER), "inst-id-123");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER), "987654321");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME), "Boring");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME), "Bob");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL), "bobBoring@tamu.edu");
 
-                    newToken.makeClaim(birthYearHeader, "1978");
-                    newToken.makeClaim(middleNameHeader, "Be");
-                    newToken.makeClaim(orcidHeader, "0000-0000-0000-0001");
-                    newToken.makeClaim(permEmailHeader, "bobBoring@tamu.edu");
-                    newToken.makeClaim(permPhoneHeader, "800-555-4321");
-                    newToken.makeClaim(permAddressHeader, "5000 TAMU");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR), "1978");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME), "Be");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID), "0000-0000-0000-0001");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS), "bobBoring@tamu.edu");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER), "800-555-4321");
+                    newToken.makeClaim(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS), "5000 TAMU");
                 }
             }
         }

@@ -4,7 +4,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope: $scope
     }));
 
-    $scope.shibbolethAttributes = ConfigurationRepo.getAllMapByType().shibboleth;
+    $scope.shibbolethAttributes = ConfigurationRepo.getAll().shibboleth;
 
     $scope.organizationRepo = OrganizationRepo;
 
