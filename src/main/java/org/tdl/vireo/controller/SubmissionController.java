@@ -531,10 +531,12 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/update-reviewer-notes")
     @Auth(role = "MANAGER")
-    public ApiResponse updateReviewerNotes(@ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
+    public ApiResponse updateReviewerNotes(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
         Submission submission = submissionRepo.findOne(submissionId);
-        submission.setReviewerNotes(requestData.get("reviewerNotes"));
+        String reviewerNotes = requestData.get("reviewerNotes");
+        submission.setReviewerNotes(reviewerNotes);
         submissionRepo.save(submission);
+        actionLogRepo.createPrivateLog(submission, credentials, "Submission notes changed to \"" + reviewerNotes + "\"");
         return new ApiResponse(SUCCESS);
     }
 
