@@ -14,13 +14,16 @@
         <ul class="list-unstyled">
           <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
             <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
-            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
+            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST">
               {{fv.value}}
               <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
                 ({{fv.identifier}})</span>
             </span>
             <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
               <a href ng-click="getFile(fv)">{{fv.value}}</a>
+            </span>
+            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_LICENSE||aggregateFieldProfile.inputType.name==InputTypes.INPUT_PROQUEST">
+              {{fv.value=='true' ? 'yes' : 'no'}}
             </span>
           </li>
         </ul>
