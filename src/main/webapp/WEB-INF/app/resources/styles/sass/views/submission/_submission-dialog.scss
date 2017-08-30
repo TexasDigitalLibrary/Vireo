@@ -28,7 +28,7 @@ submissiondialog div.dialog.state {
 }
 @media (max-width: 1540px) {
   submissiondialog div.dialog.state {
-    position: relative;
+    position: fixed;
     bottom: 4%;
     left: 50%;
     width: 50%;
@@ -66,6 +66,7 @@ submissiondialog div.dialog.actions {
   background-color: #d9edf7;
   border: 1px solid #bce8f1;
   color: #31708f;
+  z-index:500;
 }
 @media (max-width: 1540px) {
   submissiondialog div.dialog.actions {
