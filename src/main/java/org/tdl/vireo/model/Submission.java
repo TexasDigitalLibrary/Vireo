@@ -29,7 +29,6 @@ import javax.persistence.UniqueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.AppContextInitializedHandler;
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.framework.model.BaseEntity;
@@ -70,7 +69,7 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar approveApplicationDate;
+    private Calendar approvalDate;
 
     @Column(nullable = true)
     private boolean approveEmbargo;
@@ -93,7 +92,7 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     private String advisorAccessHash;
-    
+
     @Column(nullable = true)
     private String depositUri;
 
@@ -172,32 +171,7 @@ public class Submission extends BaseEntity {
      *            the submissionStatus to set
      */
     public void setSubmissionStatus(SubmissionStatus submissionStatus) {
-
-        if (submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
-            setSubmissionDate(getDay());
-        }
-
-        if (this.submissionStatus != null) {
-            logger.debug("Changing status of submission " + getId() + " from " + this.submissionStatus.getName() + " to " + submissionStatus.getName());
-        } else {
-            logger.debug("Changing status of submission "  + getId() + "to " + submissionStatus.getName());
-        }
-
         this.submissionStatus = submissionStatus;
-
-    }
-
-    private Calendar getTime() {
-        return Calendar.getInstance();
-    }
-
-    private Calendar getDay() {
-        Calendar day = getTime();
-// TODO: Confirm that this is not needed.
-//        day.clear(Calendar.HOUR);
-//        day.clear(Calendar.MINUTE);
-//        day.clear(Calendar.SECOND);
-        return day;
     }
 
     /**
@@ -335,12 +309,12 @@ public class Submission extends BaseEntity {
         return approveEmbargoDate;
     }
 
-    public void setApproveApplicationDate(Calendar approveApplicationDate) {
-        this.approveApplicationDate = approveApplicationDate;
+    public Calendar getApprovalDate() {
+        return approvalDate;
     }
 
-    public Calendar getApproveApplicationDate() {
-        return approveApplicationDate;
+    public void setApprovalDate(Calendar approvalDate) {
+        this.approvalDate = approvalDate;
     }
 
     public boolean getApproveEmbargo() {
@@ -349,7 +323,7 @@ public class Submission extends BaseEntity {
 
     public void setApproveEmbargo(boolean approveEmbargo) {
         if (approveEmbargo) {
-            this.approveEmbargoDate = getTime();
+            this.approveEmbargoDate = Calendar.getInstance();
         } else {
             this.approveEmbargoDate = null;
         }
@@ -366,16 +340,11 @@ public class Submission extends BaseEntity {
     }
 
     public void setApproveApplication(boolean approveApplication) {
-        if (approveApplication) {
-            this.approveApplicationDate = getTime();
-        } else {
-            this.approveApplicationDate = null;
-        }
         this.approveApplication = approveApplication;
     }
 
     public void clearApproveApplication() {
-        this.approveApplicationDate = null;
+        this.approvalDate = null;
         this.approveApplication = false;
     }
 
@@ -470,14 +439,14 @@ public class Submission extends BaseEntity {
     }
 
     public String getDepositUri() {
-		return depositUri;
-	}
+        return depositUri;
+    }
 
-	public void setDepositUri(String depositUri) {
-		this.depositUri = depositUri;
-	}
+    public void setDepositUri(String depositUri) {
+        this.depositUri = depositUri;
+    }
 
-	/**
+    /**
      * @return the customActionValues
      */
     public List<CustomActionValue> getCustomActionValues() {
@@ -569,7 +538,7 @@ public class Submission extends BaseEntity {
         }
         return fielsValues;
     }
-    
+
     public List<SubmissionFieldProfile> getSubmissionFieldProfilesByInputTypeName(String inputType) {
 
         List<SubmissionFieldProfile> submissionFieldProfiles = new ArrayList<SubmissionFieldProfile>();
