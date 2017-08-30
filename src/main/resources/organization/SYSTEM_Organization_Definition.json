@@ -1215,7 +1215,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"",
+          "help":"Upload the primary manuscript. You may only upload one file. Additional files may be uploaded below.",
           "fieldGlosses":[
             {
               "value":"Manuscript in PDF",
