@@ -62,7 +62,7 @@ public class TemplateUtility {
                 // TODO: We should use a url builder service to create/retrieve these.
                 .replaceAll("\\{" + STUDENT_URL + "\\}", url + "/submission/" + submission.getId() + "/view")
                 .replaceAll("\\{" + SUBMISSION_URL + "\\}", url + "/submission/" + submission.getId())
-                .replaceAll("\\{" + ADVISOR_URL + "\\}", url + "/review/" + submission.getAdvisorAccessHash())
+                .replaceAll("\\{" + ADVISOR_URL + "\\}", submission.getAdvisorReviewURL())
                 .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri());
                 
                 // This is being handled elswhere and may not be useful, since 

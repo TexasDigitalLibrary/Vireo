@@ -16,6 +16,10 @@
 
   </div>
 
+  <div class="row" ng-if="submission.advisorReviewURL">
+  <span>Faculty Review URL:</span> <span>{{submission.advisorReviewURL}}</span>
+  </div>
+
   <div class="row" ng-show="loaded">
     <div class="view-section-header">
       <h1>REVIEWER NOTES</h1>

@@ -28,6 +28,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionValidator;
@@ -37,6 +38,9 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
+    
+    @Value("${app.url}")
+    private String url;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
@@ -93,6 +97,9 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     private String advisorAccessHash;
+    
+    @Column(nullable = true)
+    private String advisorReviewURL;
     
     @Column(nullable = true)
     private String depositUri;
@@ -459,6 +466,7 @@ public class Submission extends BaseEntity {
 
     private void generateAdvisorAccessHash() {
         setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
+        this.advisorReviewURL = url + "/review/" + this.getAdvisorAccessHash();
     }
 
     public void setAdvisorAccessHash(String string) {
@@ -585,4 +593,7 @@ public class Submission extends BaseEntity {
         return submissionFieldProfiles;
     }
 
+    public String getAdvisorReviewURL() {
+        return advisorReviewURL;
+    }
 }
