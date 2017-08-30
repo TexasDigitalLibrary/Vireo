@@ -26,14 +26,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldGloss;
@@ -46,13 +45,13 @@ import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
-import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.DegreeRepo;
@@ -92,9 +91,6 @@ public class SystemDataLoader {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
-
-    @Autowired
-    private ConfigurationRepo configurationRepo;
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -170,6 +166,9 @@ public class SystemDataLoader {
 
     @Autowired
     private DepositorService depositorService;
+
+    @Autowired
+    private DefaultSettingsService defaultSettingsService;
 
     public void loadSystemData() {
 
@@ -908,33 +907,29 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemDefaults() {
+    public void loadSystemDefaults() {
         try {
             JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
+                List<DefaultConfiguration> defaultConfigurations = new ArrayList<DefaultConfiguration>();
                 if (entry.getValue().isArray()) {
                     for (JsonNode objNode : entry.getValue()) {
-                        Iterator<String> fieldNames = objNode.fieldNames();
-                        while (fieldNames.hasNext()) {
-                            String name = fieldNames.next();
-                            // only load system configurations
-                            Configuration configuration = configurationRepo.findByNameAndIsSystemRequired(name, true);
-                            // if one didn't already exist, create it
-                            if (configuration == null) {
-                                configuration = configurationRepo.create(name, objNode.get(name).asText(), entry.getKey());
-                                configuration.isSystemRequired(true);
-                            } else {
-                                configuration.setType(entry.getKey());
-                                configuration.setValue(objNode.get(name).asText());
-                            }
-                            configurationRepo.save(configuration);
-                        }
+                        objNode.fieldNames().forEachRemaining(n -> {
+                            defaultConfigurations.add(new DefaultConfiguration(n, objNode.get(n).asText(), entry.getKey()));
+                        });
                     }
                 }
+                defaultSettingsService.addSettings(entry.getKey(), defaultConfigurations);
             }
+            defaultSettingsService.getTypes().forEach(t -> {
+                logger.info("Stored preferences for type: " + t);
+                defaultSettingsService.getSettingsByType(t).forEach(c -> {
+                    logger.info(c.getName() + ": " + c.getValue());
+                });
+            });
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

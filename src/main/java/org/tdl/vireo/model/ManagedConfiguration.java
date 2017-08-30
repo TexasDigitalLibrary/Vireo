@@ -5,10 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.validation.ConfigurationValidator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -17,8 +15,8 @@ import edu.tamu.framework.model.BaseEntity;
  *
  */
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "isSystemRequired" }))
-public class Configuration extends BaseEntity {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
+public class ManagedConfiguration extends BaseEntity implements Configuration {
 
     @Column(nullable = false, length = 255)
     private String name;
@@ -29,18 +27,13 @@ public class Configuration extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String type;
 
-    @Column(nullable = false)
-    @JsonProperty("isSystemRequired")
-    private Boolean isSystemRequired;
-
     /**
      * Construct a new JpaConfigurationImpl
      *
      * By default new ones are not system required.
      */
-    public Configuration() {
+    public ManagedConfiguration() {
         setModelValidator(new ConfigurationValidator());
-        isSystemRequired(false);
     }
 
     /**
@@ -53,7 +46,7 @@ public class Configuration extends BaseEntity {
      * @param type
      *            The type of the configuration parameter.
      */
-    public Configuration(String name, String value, String type) {
+    public ManagedConfiguration(String name, String value, String type) {
         this();
         this.name = name;
         this.value = value;
@@ -105,20 +98,4 @@ public class Configuration extends BaseEntity {
         this.type = type;
     }
 
-    /**
-     * @return the isSystemRequired
-     */
-    @JsonIgnore
-    public Boolean isSystemRequired() {
-        return isSystemRequired;
-    }
-
-    /**
-     * @param isSystemRequired
-     *            the isSystemRequired to set
-     */
-    @JsonIgnore
-    public void isSystemRequired(Boolean isSystemRequired) {
-        this.isSystemRequired = isSystemRequired;
-    }
 }

@@ -7,14 +7,14 @@
     <div class="col-md-10 col-md-offset-1">
 
       <button class="btn btn-default modal-add-btn" ng-click="openModal('#documentTypesNewModal')">
-        Add Document Type
+        Add File Type
       </button>
 
-      <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new document type."></div>
+      <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog to create a new file type."></div>
 
-      <p ng-if="graduationMonths.length == 0">Add new Document Type</p>
+      <p ng-if="graduationMonths.length == 0">Add new File Type</p>
 
-      <draganddroplist dragging="dragging" scope-value="documentTypes" properties='["name"]' item-view='views/directives/dragAndDropDocumentType.html' listeners='dragControlListeners' edit='launchEditModal(index)' sort-column='name' , sort-action='sortAction' sort-method='sortDocumentTypes(column)' sort-label='Document Types'></draganddroplist>
+      <draganddroplist dragging="dragging" scope-value="documentTypes" properties='["name"]' item-view='views/directives/dragAndDropDocumentType.html' listeners='dragControlListeners' edit='launchEditModal(index)' sort-column='name' , sort-action='sortAction' sort-method='sortDocumentTypes(column)' sort-label='File Types'></draganddroplist>
     </div>
   </div>
 

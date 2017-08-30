@@ -6,7 +6,7 @@
       "allow_multiple_submissions": false
     },
     {
-      "current_semester": "Spring 2016"
+      "current_semester": "Fall 2017"
     },
     {
       "grantor": "Texas A&M University"
@@ -72,7 +72,7 @@
       "custom_css": "/* Insert Custom CSS here! */"
     },
     {
-      "front_page_instructions_before": "<h1>Welcome to the Thesis<br/>&amp; Dissertation Submission System</h1>&#10;<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with the Texas A&amp;M, MIT, and UIUC.</p>&#10;<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>"
+      "front_page_instructions_before": "<h1>Welcome to the Thesis<br/>&amp; Dissertation Submission System</h1>&#10;<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with Texas A&amp;M, Texas Tech, and Baylor Universities.</p>&#10;<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>"
     },
     {
       "front_page_instructions_after": "<h2>Your help can make things better</h2>&#10;<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the your Thesis Office regarding any issues that may arise during the submission process.</p>"

@@ -29,3 +29,9 @@
 .submission-view-upload-files-hr {
   border-color: #a94442;
 }
+
+@media (max-width: 1540px) {
+  .submission-view-container {
+    margin-bottom:300px;
+  }
+}

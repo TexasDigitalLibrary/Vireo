@@ -26,135 +26,137 @@ import edu.tamu.framework.model.Credentials;
 
 public class UserIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-	@Autowired
-	private NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
-	@Override
-	public void setup() {
-	    
-	        namedSearchFilterRepo.findAll().forEach(nsf -> {
-	            namedSearchFilterRepo.delete(nsf);
-	        });
-	        
-	        userRepo.deleteAll();
+    @Override
+    public void setup() {
 
-		userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), AppRole.ADMINISTRATOR);
-		userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), AppRole.MANAGER);
-		userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), AppRole.STUDENT);
+        systemDataLoader.loadSystemDefaults();
 
-		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
 
-		brokerChannelInterceptor = new MockChannelInterceptor();
+        userRepo.deleteAll();
 
-		brokerChannel.addInterceptor(brokerChannelInterceptor);
+        userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), AppRole.ADMINISTRATOR);
+        userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), AppRole.MANAGER);
+        userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), AppRole.STUDENT);
 
-		StompConnect();
-	}
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 
-	@Test
-	public void testUserCredentialsOverStomp() throws InterruptedException, IOException {
-		String responseJson = StompRequest("/user/credentials", "");
+        brokerChannelInterceptor = new MockChannelInterceptor();
 
-		Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
-		});
+        brokerChannel.addInterceptor(brokerChannelInterceptor);
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
+        StompConnect();
+    }
 
-		@SuppressWarnings("unchecked")
-		Credentials shib = new Credentials((Map<String, String>) payload.get("Credentials"));
+    @Test
+    public void testUserCredentialsOverStomp() throws InterruptedException, IOException {
+        String responseJson = StompRequest("/user/credentials", "");
 
-		assertEquals("Daniels", shib.getLastName());
-		assertEquals("Jack", shib.getFirstName());
-		assertEquals("aggieJack", shib.getNetid());
-		assertEquals("123456789", shib.getUin());
-		assertEquals("aggieJack@tamu.edu", shib.getEmail());
-		assertEquals("ADMINISTRATOR", shib.getRole());
-	}
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
+        });
 
-	@Test
-	public void testUserCredentialsOverRest() throws Exception {
-		mockMvc.perform(get("/user/credentials").contentType(MediaType.APPLICATION_JSON).header("jwt", jwtString)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.type").value("SUCCESS")).andExpect(jsonPath("$.payload.Credentials.firstName").value("Jack")).andExpect(jsonPath("$.payload.Credentials.lastName").value("Daniels")).andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack")).andExpect(jsonPath("$.payload.Credentials.uin").value("123456789")).andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu")).andExpect(jsonPath("$.payload.Credentials.role").value("ADMINISTRATOR")).andDo(MockMvcResultHandlers.print());
-	}
+        @SuppressWarnings("unchecked")
+        Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 
-	@Test
-	public void testAllUser() throws Exception {
+        @SuppressWarnings("unchecked")
+        Credentials shib = new Credentials((Map<String, String>) payload.get("Credentials"));
 
-		String responseJson = StompRequest("/user/all", "");
+        assertEquals("Daniels", shib.getLastName());
+        assertEquals("Jack", shib.getFirstName());
+        assertEquals("aggieJack", shib.getNetid());
+        assertEquals("123456789", shib.getUin());
+        assertEquals("aggieJack@tamu.edu", shib.getEmail());
+        assertEquals("ADMINISTRATOR", shib.getRole());
+    }
 
-		Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
-		});
+    @Test
+    public void testUserCredentialsOverRest() throws Exception {
+        mockMvc.perform(get("/user/credentials").contentType(MediaType.APPLICATION_JSON).header("jwt", jwtString)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.type").value("SUCCESS")).andExpect(jsonPath("$.payload.Credentials.firstName").value("Jack")).andExpect(jsonPath("$.payload.Credentials.lastName").value("Daniels")).andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack")).andExpect(jsonPath("$.payload.Credentials.uin").value("123456789")).andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu")).andExpect(jsonPath("$.payload.Credentials.role").value("ADMINISTRATOR")).andDo(MockMvcResultHandlers.print());
+    }
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
+    @Test
+    public void testAllUser() throws Exception {
 
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> listMap = (List<Map<String, Object>>) payload.get("ArrayList<User>");
+        String responseJson = StompRequest("/user/all", "");
 
-		assertEquals(3, listMap.size());
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
+        });
 
-		for (Map<String, Object> map : listMap) {
-			String email = (String) map.get("email");
-			switch (email) {
-			case TEST_USER2_EMAIL: {
-				assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
-				assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));
-				assertEquals(TEST_USER2.getRole().toString(), (String) map.get("role"));
-			}
-				;
-				break;
-			case TEST_USER3_EMAIL: {
-				assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
-				assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));
-				assertEquals(TEST_USER3.getRole().toString(), (String) map.get("role"));
-			}
-				;
-				break;
-			case TEST_USER4_EMAIL: {
-				assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
-				assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
-				assertEquals(TEST_USER4.getRole().toString(), (String) map.get("role"));
-			}
-				;
-				break;
-			}
-		}
-	}
+        @SuppressWarnings("unchecked")
+        Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 
-	@Test
-	public void testUpdateRole() throws Exception {
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> listMap = (List<Map<String, Object>>) payload.get("ArrayList<User>");
 
-		User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), AppRole.STUDENT);
+        assertEquals(3, listMap.size());
 
-		userToUpdate.setRole(TEST_USER_ROLE_UPDATE);
+        for (Map<String, Object> map : listMap) {
+            String email = (String) map.get("email");
+            switch (email) {
+            case TEST_USER2_EMAIL: {
+                assertEquals(TEST_USER2.getFirstName(), (String) map.get("firstName"));
+                assertEquals(TEST_USER2.getLastName(), (String) map.get("lastName"));
+                assertEquals(TEST_USER2.getRole().toString(), (String) map.get("role"));
+            }
+                ;
+                break;
+            case TEST_USER3_EMAIL: {
+                assertEquals(TEST_USER3.getFirstName(), (String) map.get("firstName"));
+                assertEquals(TEST_USER3.getLastName(), (String) map.get("lastName"));
+                assertEquals(TEST_USER3.getRole().toString(), (String) map.get("role"));
+            }
+                ;
+                break;
+            case TEST_USER4_EMAIL: {
+                assertEquals(TEST_USER4.getFirstName(), (String) map.get("firstName"));
+                assertEquals(TEST_USER4.getLastName(), (String) map.get("lastName"));
+                assertEquals(TEST_USER4.getRole().toString(), (String) map.get("role"));
+            }
+                ;
+                break;
+            }
+        }
+    }
 
-		String responseJson = StompRequest("/user/update", userToUpdate);
+    @Test
+    public void testUpdateRole() throws Exception {
 
-		Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
-		});
+        User userToUpdate = userRepo.create(TEST_USER_EMAIL, TEST_USER.getFirstName(), TEST_USER.getLastName(), AppRole.STUDENT);
 
-		@SuppressWarnings("unchecked")
-		Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
+        userToUpdate.setRole(TEST_USER_ROLE_UPDATE);
 
-		assertEquals("SUCCESS", meta.get("type"));
+        String responseJson = StompRequest("/user/update", userToUpdate);
 
-		User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
+        Map<String, Object> responseObject = objectMapper.readValue(responseJson, new TypeReference<Map<String, Object>>() {
+        });
 
-		assertEquals(TEST_USER_FIRST_NAME, testUser.getFirstName());
-		assertEquals(TEST_USER_LAST_NAME, testUser.getLastName());
-		assertEquals(TEST_USER_EMAIL, testUser.getEmail());
-		assertEquals(TEST_USER_ROLE_UPDATE, testUser.getRole());
-	}
+        @SuppressWarnings("unchecked")
+        Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-	@Override
-	public void cleanup() {
-		namedSearchFilterRepo.findAll().forEach(nsf -> {
-			namedSearchFilterRepo.delete(nsf);
-		});
-		userRepo.deleteAll();
-	}
+        assertEquals("SUCCESS", meta.get("type"));
+
+        User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
+
+        assertEquals(TEST_USER_FIRST_NAME, testUser.getFirstName());
+        assertEquals(TEST_USER_LAST_NAME, testUser.getLastName());
+        assertEquals(TEST_USER_EMAIL, testUser.getEmail());
+        assertEquals(TEST_USER_ROLE_UPDATE, testUser.getRole());
+    }
+
+    @Override
+    public void cleanup() {
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
+        userRepo.deleteAll();
+    }
 
 }

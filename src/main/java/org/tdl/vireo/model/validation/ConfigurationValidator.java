@@ -21,8 +21,6 @@ public class ConfigurationValidator extends BaseModelValidator {
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Configuration type must be at least 2 characters", typeProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Configuration type cannot be more than 255 characters", typeProperty, 255));
 
-        String isSystemRequiredProperty = "isSystemRequired";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Configuration requires a system required flag", isSystemRequiredProperty, true));
     }
 
 }
