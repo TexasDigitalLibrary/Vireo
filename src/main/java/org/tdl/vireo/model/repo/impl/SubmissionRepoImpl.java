@@ -3,6 +3,7 @@ package org.tdl.vireo.model.repo.impl;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -67,7 +67,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
-    
+
     @Autowired
     private InputTypeRepo inputTypeRepo;
 
@@ -76,13 +76,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
-    
+
     @Autowired
     private ConfigurationRepo configurationRepo;
 
     @Autowired
     private ActionLogRepo actionLogRepo;
-    
+
     @Autowired
     private FileIOUtility fileIOUtility;
 
@@ -95,12 +95,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Override
     public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
-        
-        
-        if(organization.getAcceptsSubmissions().equals(false)) {
-            throw new OrganizationDoesNotAcceptSubmissionsExcception();            
+
+        if (organization.getAcceptsSubmissions().equals(false)) {
+            throw new OrganizationDoesNotAcceptSubmissionsExcception();
         }
-        
+
         Submission submission = submissionRepo.save(new Submission(submitter, organization, startingStatus));
 
         for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
@@ -150,102 +149,133 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
-        
-        submission.setSubmissionStatus(submissionStatus);
-                
-        if(submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
-        	        	
-        	List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
-        	List<FieldValue> defaultLicenseFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
 
-        	boolean attachProquestLicense = true;
-        	boolean attachDefaultLicenseFieldValues = true;
-        	
-        	for(FieldValue fv : proquestFieldValues) {
-        		attachProquestLicense = !fv.getValue().equals("false");
-        		if(!attachProquestLicense) break;
-        	}
-        	
-        	for(FieldValue fv : defaultLicenseFieldValues) {
-        		attachDefaultLicenseFieldValues = !fv.getValue().equals("false");
-        		if(!attachDefaultLicenseFieldValues) break;
-        	}
-        	
-        	if(attachProquestLicense) {
-        		writeLicenseFile(credentials, submission, "proquest_license", "proquest_license","proquest_umi_degree_code");
-        	}
-        	
-        	if(attachDefaultLicenseFieldValues) {
-        		writeLicenseFile(credentials, submission, "submit_license", "license","submission");
-        	}
+        if (submission.getSubmissionStatus() != null) {
+            logger.debug("Changing status of submission " + submission.getId() + " from " + submission.getSubmissionStatus().getName() + " to " + submissionStatus.getName());
+        } else {
+            logger.debug("Changing status of submission " + submission.getId() + "to " + submissionStatus.getName());
         }
-        
+
+        submission.setSubmissionStatus(submissionStatus);
+
+        switch (submissionStatus.getSubmissionState()) {
+        case SUBMITTED:
+
+            submission.setSubmissionDate(Calendar.getInstance());
+
+            List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
+            List<FieldValue> defaultLicenseFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
+
+            boolean attachProquestLicense = true;
+            boolean attachDefaultLicenseFieldValues = true;
+
+            for (FieldValue fv : proquestFieldValues) {
+                attachProquestLicense = !fv.getValue().equals("false");
+                if (!attachProquestLicense) {
+                    break;
+                }
+            }
+
+            for (FieldValue fv : defaultLicenseFieldValues) {
+                attachDefaultLicenseFieldValues = !fv.getValue().equals("false");
+                if (!attachDefaultLicenseFieldValues) {
+                    break;
+                }
+            }
+
+            if (attachProquestLicense) {
+                writeLicenseFile(credentials, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
+            }
+
+            if (attachDefaultLicenseFieldValues) {
+                writeLicenseFile(credentials, submission, "submit_license", "license", "submission");
+            }
+            break;
+        case APPROVED:
+            submission.setApproveApplication(true);
+            submission.setApprovalDate(Calendar.getInstance());
+            break;
+        case CANCELED:
+            break;
+        case CORRECTIONS_RECIEVED:
+            break;
+        case IN_PROGRESS:
+            break;
+        case NEEDS_CORRECTIONS:
+            break;
+        case NONE:
+            break;
+        case ON_HOLD:
+            break;
+        case PENDING_PUBLICATION:
+            break;
+        case PUBLISHED:
+            break;
+        case UNDER_REVIEW:
+            break;
+        case WAITING_ON_REQUIREMENTS:
+            break;
+        case WITHDRAWN:
+            break;
+        default:
+            break;
+        }
+
         submission = submissionRepo.saveAndFlush(submission);
 
         actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
-    
-    
+
     private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
-    	
-    	byte[] licenseBytes = null;
-    	
-    	Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName,configurationType);
-		
-		User submitter = submission.getSubmitter();
-		
-		StringBuilder proquestLicenseStringBuilder = new StringBuilder();
-		
-		DateFormat formatter = DateFormat.getDateTimeInstance(
-                DateFormat.MEDIUM, 
-                DateFormat.MEDIUM);
-		
-		String acceptedDate = formatter.format(submission.getSubmissionDate().getTime());
-		
-		proquestLicenseStringBuilder
-			.append("\n")
-			.append("The license above was accepted by ")
-			.append(submitter.getFirstName())
-			.append(" ")
-			.append(submitter.getLastName())
-			.append(" on ")
-			.append(acceptedDate);
-		
-		int seporatorLength = proquestLicenseStringBuilder.length();
-		        		
-		for(int i=0; i<seporatorLength; i++)
-			proquestLicenseStringBuilder.insert(0, "-");
-		
-		proquestLicenseStringBuilder.insert(0, "\n\n");
-		
-		proquestLicenseStringBuilder.insert(0, proquestLicense.getValue());
-		
-		licenseBytes = proquestLicenseStringBuilder.toString().getBytes();
-		
-		if(licenseBytes != null) {
-        	int hash = credentials.getEmail().hashCode();
-            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-"+fileName+".txt";
-            
+
+        byte[] licenseBytes = null;
+
+        Configuration proquestLicense = configurationRepo.getByNameAndType(licenseName, configurationType);
+
+        User submitter = submission.getSubmitter();
+
+        StringBuilder proquestLicenseStringBuilder = new StringBuilder();
+
+        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+
+        String acceptedDate = formatter.format(submission.getSubmissionDate().getTime());
+
+        proquestLicenseStringBuilder.append("\n").append("The license above was accepted by ").append(submitter.getFirstName()).append(" ").append(submitter.getLastName()).append(" on ").append(acceptedDate);
+
+        int seporatorLength = proquestLicenseStringBuilder.length();
+
+        for (int i = 0; i < seporatorLength; i++)
+            proquestLicenseStringBuilder.insert(0, "-");
+
+        proquestLicenseStringBuilder.insert(0, "\n\n");
+
+        proquestLicenseStringBuilder.insert(0, proquestLicense.getValue());
+
+        licenseBytes = proquestLicenseStringBuilder.toString().getBytes();
+
+        if (licenseBytes != null) {
+            int hash = credentials.getEmail().hashCode();
+            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
+
             try {
-				fileIOUtility.write(licenseBytes, uri);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-			
+                fileIOUtility.write(licenseBytes, uri);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+
             FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
             fieldValue.setValue(uri);
             submission.addFieldValue(fieldValue);
-            
+
             System.out.println(fieldValue.getValue());
-			
-		}
-		
+
+        }
+
     }
-    
 
     @Override
     public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
