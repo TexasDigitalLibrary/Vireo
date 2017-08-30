@@ -18,7 +18,7 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
-    
+
     @Autowired
     private DefaultSettingsService defaultSettingsService;
 
@@ -32,19 +32,18 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
         configurationRepo.delete(configuration);
         return defaultSettingsService.getSettingByNameAndType(configuration.getName(), configuration.getType());
     }
-    
+
     @Override
-    public Configuration getByNameAndType(String name,String type) {
+    public Configuration getByNameAndType(String name, String type) {
         ManagedConfiguration configuration = configurationRepo.findByName(name);
         if (configuration != null) {
             return configuration;
         }
-    	return defaultSettingsService.getSettingByNameAndType(name, type);
+        return defaultSettingsService.getSettingByNameAndType(name, type);
     }
-    
+
     /**
-     * Gets a config value from the DB by name and type.
-     * If no value is found, it checks the DefaultSettingsService, which returns the default for that name and type if it exists, null otherwise.
+     * Gets a config value from the DB by name and type. If no value is found, it checks the DefaultSettingsService, which returns the default for that name and type if it exists, null otherwise.
      * 
      * @param name
      * @param type
@@ -52,59 +51,58 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
      */
     @Override
     public String getValueByNameAndType(String name, String type) {
-        Configuration overrideConfig = configurationRepo.findByNameAndType(name,type);
+        Configuration overrideConfig = configurationRepo.findByNameAndType(name, type);
         if (overrideConfig != null) {
-        	return overrideConfig.getValue();
+            return overrideConfig.getValue();
         }
-        
+
         Configuration defaultConfig = defaultSettingsService.getSettingByNameAndType(name, type);
         if (defaultConfig != null) {
-        	return defaultConfig.getValue();
-        }
-        return null;
-    }
-    
-    @Override
-    public String getValueByName(String name) {
-        Configuration overrideConfig = configurationRepo.findByName(name);
-        if (overrideConfig != null) {
-        	return overrideConfig.getValue();
-        }
-        
-        Configuration defaultConfig = defaultSettingsService.getSettingByName(name);
-        if (defaultConfig != null) {
-        	return defaultConfig.getValue();
+            return defaultConfig.getValue();
         }
         return null;
     }
 
-    
+    @Override
+    public String getValueByName(String name) {
+        Configuration overrideConfig = configurationRepo.findByName(name);
+        if (overrideConfig != null) {
+            return overrideConfig.getValue();
+        }
+
+        Configuration defaultConfig = defaultSettingsService.getSettingByName(name);
+        if (defaultConfig != null) {
+            return defaultConfig.getValue();
+        }
+        return null;
+    }
+
     public List<Configuration> getAllByType(String type) {
-        return mergeConfigurations(configurationRepo.findByType(type),defaultSettingsService.getSettingsByType(type));
+        return mergeConfigurations(configurationRepo.findByType(type), defaultSettingsService.getSettingsByType(type));
     }
-    
-    public Map<String,List<Configuration>> getCurrentConfigurations() {
-    	Map<String,List<Configuration>> currentConfigurations = new HashMap<String,List<Configuration>>();
-    	defaultSettingsService.getTypes().forEach(type -> {
-    		currentConfigurations.put(type, mergeConfigurations(configurationRepo.findByType(type),defaultSettingsService.getSettingsByType(type)));
-    	});
-    	return currentConfigurations;
+
+    public Map<String, List<Configuration>> getCurrentConfigurations() {
+        Map<String, List<Configuration>> currentConfigurations = new HashMap<String, List<Configuration>>();
+        defaultSettingsService.getTypes().forEach(type -> {
+            currentConfigurations.put(type, mergeConfigurations(configurationRepo.findByType(type), defaultSettingsService.getSettingsByType(type)));
+        });
+        return currentConfigurations;
     }
-    
+
     private List<Configuration> mergeConfigurations(List<ManagedConfiguration> managedConfigurations, List<DefaultConfiguration> defaultConfigurations) {
         List<Configuration> settings = new ArrayList<Configuration>();
-        Map<String,ManagedConfiguration> overrideConfigs = new HashMap<String,ManagedConfiguration>();
+        Map<String, ManagedConfiguration> overrideConfigs = new HashMap<String, ManagedConfiguration>();
         managedConfigurations.forEach(c -> {
-        	overrideConfigs.put(c.getName(), c);
+            overrideConfigs.put(c.getName(), c);
         });
         defaultConfigurations.forEach(dc -> {
-        	if (overrideConfigs.containsKey(dc.getName())) {
-        		settings.add(overrideConfigs.get(dc.getName()));
-        	} else {
-        		settings.add(dc);
-        	}
+            if (overrideConfigs.containsKey(dc.getName())) {
+                settings.add(overrideConfigs.get(dc.getName()));
+            } else {
+                settings.add(dc);
+            }
         });
         return settings;
     }
-    
+
 }

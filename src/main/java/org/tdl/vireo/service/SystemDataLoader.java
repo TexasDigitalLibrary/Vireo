@@ -166,7 +166,7 @@ public class SystemDataLoader {
 
     @Autowired
     private DepositorService depositorService;
-    
+
     @Autowired
     private DefaultSettingsService defaultSettingsService;
 
@@ -907,29 +907,29 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSystemDefaults() {
+    public void loadSystemDefaults() {
         try {
             JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
-            	Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
-            	List<DefaultConfiguration> defaultConfigurations = new ArrayList<DefaultConfiguration>();
-            	if (entry.getValue().isArray()) {
-            		for (JsonNode objNode : entry.getValue()) {
-            			objNode.fieldNames().forEachRemaining(n -> {
-            				defaultConfigurations.add(new DefaultConfiguration(n,objNode.get(n).asText(),entry.getKey()));
-            			});
-            		}
-            	}
-            	defaultSettingsService.addSettings(entry.getKey(),defaultConfigurations);
+                Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
+                List<DefaultConfiguration> defaultConfigurations = new ArrayList<DefaultConfiguration>();
+                if (entry.getValue().isArray()) {
+                    for (JsonNode objNode : entry.getValue()) {
+                        objNode.fieldNames().forEachRemaining(n -> {
+                            defaultConfigurations.add(new DefaultConfiguration(n, objNode.get(n).asText(), entry.getKey()));
+                        });
+                    }
+                }
+                defaultSettingsService.addSettings(entry.getKey(), defaultConfigurations);
             }
             defaultSettingsService.getTypes().forEach(t -> {
-            	logger.info("Stored preferences for type: "+t);
-            	defaultSettingsService.getSettingsByType(t).forEach(c -> {
-            		logger.info(c.getName()+": "+c.getValue());
-            	});
-            });            	
+                logger.info("Stored preferences for type: " + t);
+                defaultSettingsService.getSettingsByType(t).forEach(c -> {
+                    logger.info(c.getName() + ": " + c.getValue());
+                });
+            });
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
