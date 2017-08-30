@@ -10,7 +10,11 @@ import org.tdl.vireo.model.DefaultPreferences;
 @Service
 public class DefaultSettingsService {
 
-    private final static List<DefaultPreferences> defaultSettings = new ArrayList<DefaultPreferences>();
+    private static List<DefaultPreferences> defaultSettings;
+
+    public DefaultSettingsService() {
+        defaultSettings = new ArrayList<DefaultPreferences>();
+    }
 
     public DefaultConfiguration getSettingByName(String field) {
         for (DefaultPreferences defaultPreferences : defaultSettings) {
