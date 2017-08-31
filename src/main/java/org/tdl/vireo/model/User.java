@@ -93,7 +93,7 @@ public class User extends AbstractCoreUser {
     @OrderColumn
     private List<SubmissionListColumn> displayedSubmissionColumns;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
