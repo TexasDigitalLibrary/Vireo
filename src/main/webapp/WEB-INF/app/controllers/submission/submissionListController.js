@@ -285,11 +285,11 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
                 $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
 
-                $scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.excludedColumns, 'title');
+                $scope.columns = $filter('orderBy')($filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.excludedColumns, 'title'), 'title');
 
                 $scope.filterColumns.userFilterColumns = ManagerFilterColumnRepo.getAll();
 
-                $scope.filterColumns.inactiveFilterColumns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title');
+                $scope.filterColumns.inactiveFilterColumns = $filter('orderBy')($filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title'), 'title');
 
                 query();
 
@@ -414,7 +414,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.getSubmissionProperty = function(row, col) {
         var value;
-        
+
         for (var i in col.valuePath) {
 
             if (value === undefined) {
@@ -434,7 +434,7 @@ vireo.controller("SubmissionListController", function(NgTableParams, uibDatePars
 
     $scope.displaySubmissionProperty = function(row, col) {
         var value = $scope.getSubmissionProperty(row,col);
-        
+
         if ($scope.isDateColumn(col)) {
             value = $filter('date')(value,'MMM dd, yyyy');
         }

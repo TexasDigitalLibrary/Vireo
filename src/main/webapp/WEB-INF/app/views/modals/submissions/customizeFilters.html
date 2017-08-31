@@ -22,7 +22,7 @@
 	    		<h4>Disabled Filters</h4>
 	    		<div class="column-background">
 		    		<ul class="disabled-column-container" as-sortable="box.getFilterColumnOptions()" ng-model="box.getFilterColumns().inactiveFilterColumns">
-		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in box.getFilterColumns().inactiveFilterColumns | orderBy: 'title'" as-sortable-item>
+		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in box.getFilterColumns().inactiveFilterColumns" as-sortable-item>
 		    				<div as-sortable-item-handle>{{column.title}}</div>
 		    			</li>
 		    		</ul>
