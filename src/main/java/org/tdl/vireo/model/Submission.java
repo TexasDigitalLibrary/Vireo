@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -114,6 +115,7 @@ public class Submission extends BaseEntity {
         setApproveEmbargo(false);
         setCustomActionValues(new ArrayList<CustomActionValue>());
     }
+
 
     /**
      * @param submitter
@@ -466,7 +468,6 @@ public class Submission extends BaseEntity {
 
     private void generateAdvisorAccessHash() {
         setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
-        this.advisorReviewURL = url + "/review/" + this.getAdvisorAccessHash();
     }
 
     public void setAdvisorAccessHash(String string) {
@@ -593,6 +594,10 @@ public class Submission extends BaseEntity {
         return submissionFieldProfiles;
     }
 
+    public void generateAdvisorReviewUrl(String baseUrl) {
+        this.advisorReviewURL = baseUrl + "/review/" + this.getAdvisorAccessHash();
+    }
+    
     public String getAdvisorReviewURL() {
         return advisorReviewURL;
     }
