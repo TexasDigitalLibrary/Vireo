@@ -7,6 +7,7 @@
   "originalWorkflowSteps":[
     {
       "name":"Personal Information",
+      "instructions": "<h4>Instructions:</h4><p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p><p>Required fields are indicated with an asterisk.</p>",
       "overrideable":true,
       "originatingOrganization":{
         "name":"Institution",
@@ -622,6 +623,7 @@
     },
     {
       "name":"License Agreement",
+      "instructions": "",
       "overrideable":true,
       "originatingOrganization":{
         "name":"Institution",
@@ -699,6 +701,7 @@
     },
     {
       "name":"Document Information",
+      "instructions": "<h4>Instructions:</h4><p>In this step you describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>",
       "overrideable":true,
       "originatingOrganization":{
         "name":"Institution",
@@ -1166,6 +1169,7 @@
     },
     {
       "name":"File Upload",
+      "instructions": "<h4>Instructions:</h4><p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>",
       "overrideable":true,
       "originatingOrganization":{
         "name":"Institution",

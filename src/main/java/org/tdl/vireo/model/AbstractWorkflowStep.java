@@ -29,7 +29,8 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<N> aggregateNotes;
-    
+
+    @Column(columnDefinition = "text")
     private String instructions;
 
     /**
@@ -177,14 +178,14 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     public void removeAggregateNote(N aggregateNote) {
         getAggregateNotes().remove(aggregateNote);
     }
-    
-    public String getInstructions() {
-		return instructions;
-	}
 
-	public void setInstructions(String instructions) {
-		this.instructions = instructions;
-	}
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
 
     public boolean replaceAggregateNote(N n1, N n2) {
         boolean res = false;

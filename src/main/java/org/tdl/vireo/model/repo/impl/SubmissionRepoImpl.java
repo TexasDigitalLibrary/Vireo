@@ -3,6 +3,7 @@ package org.tdl.vireo.model.repo.impl;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -100,7 +100,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     @Override
     public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus,
             Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
-
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();
         }
@@ -157,20 +156,29 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
+        if (submission.getSubmissionStatus() != null) {
+            logger.debug("Changing status of submission " + submission.getId() + " from " + submission.getSubmissionStatus().getName() + " to " + submissionStatus.getName());
+        } else {
+            logger.debug("Changing status of submission " + submission.getId() + "to " + submissionStatus.getName());
+        }
+
         submission.setSubmissionStatus(submissionStatus);
 
-        if (submissionStatus.getSubmissionState() == SubmissionState.SUBMITTED) {
+        switch (submissionStatus.getSubmissionState()) {
+        case SUBMITTED:
 
-            List<FieldValue> proquestFieldValues = submission
-                    .getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
-            List<FieldValue> defaultLicenseFieldValues = submission
-                    .getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
+            submission.setSubmissionDate(Calendar.getInstance());
+
+            List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
+            List<FieldValue> defaultLicenseFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
+
 
             boolean attachProquestLicense = true;
             boolean attachDefaultLicenseFieldValues = true;
 
             for (FieldValue fv : proquestFieldValues) {
                 attachProquestLicense = !fv.getValue().equals("false");
+
                 if (!attachProquestLicense)
                     break;
             }
@@ -189,6 +197,35 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             if (attachDefaultLicenseFieldValues) {
                 writeLicenseFile(credentials, submission, "submit_license", "license", "submission");
             }
+            break;
+        case APPROVED:
+            submission.setApproveApplication(true);
+            submission.setApprovalDate(Calendar.getInstance());
+            break;
+        case CANCELED:
+            break;
+        case CORRECTIONS_RECIEVED:
+            break;
+        case IN_PROGRESS:
+            break;
+        case NEEDS_CORRECTIONS:
+            break;
+        case NONE:
+            break;
+        case ON_HOLD:
+            break;
+        case PENDING_PUBLICATION:
+            break;
+        case PUBLISHED:
+            break;
+        case UNDER_REVIEW:
+            break;
+        case WAITING_ON_REQUIREMENTS:
+            break;
+        case WITHDRAWN:
+            break;
+        default:
+            break;
         }
 
         submission = submissionRepo.saveAndFlush(submission);
@@ -216,6 +253,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         proquestLicenseStringBuilder.append("\n").append("The license above was accepted by ")
                 .append(submitter.getFirstName()).append(" ").append(submitter.getLastName()).append(" on ")
                 .append(acceptedDate);
+
 
         int seporatorLength = proquestLicenseStringBuilder.length();
 
