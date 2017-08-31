@@ -2,6 +2,8 @@ package org.tdl.vireo.util;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -17,6 +19,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.Application;
 
@@ -28,6 +32,9 @@ public class FileIOUtility {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+	@Autowired
+    private ResourcePatternResolver resourcePatternResolver;
 
     private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
 
@@ -107,6 +114,17 @@ public class FileIOUtility {
             Files.createDirectories(parentDir);
         }
         return path;
+    }
+    
+    public File getFileFromResource(String resourcePath) throws IOException {
+        Resource resource = resourcePatternResolver.getResource(resourcePath);
+        if (!resource.getURL().toString().startsWith("jar:")) {
+            return resource.getFile();
+        } // else (we're inside a war/jar)
+        File resourceFile = File.createTempFile("temp", ".tmp");
+        resourceFile.deleteOnExit();
+        IOUtils.copy(resource.getInputStream(), new FileOutputStream(resourceFile));
+        return resourceFile;
     }
 
 }

@@ -72,6 +72,7 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.util.FileIOUtility;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -91,6 +92,9 @@ public class SystemDataLoader {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
+    
+    @Autowired
+    private FileIOUtility fileIOUtility;
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -1065,14 +1069,7 @@ public class SystemDataLoader {
     }
 
     private File getFileFromResource(String resourcePath) throws IOException {
-        Resource resource = resourcePatternResolver.getResource(resourcePath);
-        if (!resource.getURL().toString().startsWith("jar:")) {
-            return resource.getFile();
-        } // else (we're inside a war/jar)
-        File resourceFile = File.createTempFile("temp", ".tmp");
-        resourceFile.deleteOnExit();
-        IOUtils.copy(resource.getInputStream(), new FileOutputStream(resourceFile));
-        return resourceFile;
+    	return fileIOUtility.getFileFromResource(resourcePath);
     }
 
 }
