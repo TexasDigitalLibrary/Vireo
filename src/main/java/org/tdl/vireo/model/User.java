@@ -93,7 +93,7 @@ public class User extends AbstractCoreUser {
     @OrderColumn
     private List<SubmissionListColumn> displayedSubmissionColumns;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
@@ -456,6 +456,19 @@ public class User extends AbstractCoreUser {
 
     public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
         this.filterColumns = filterColumns;
+    }
+    
+    public void addFilterColumn(SubmissionListColumn submissionListColumn) {
+    	this.filterColumns.add(submissionListColumn);
+    }
+    
+    public void removeFilterColumn(SubmissionListColumn submissionListColumn) {
+    	this.filterColumns.forEach(fc->{
+    		if(fc.getId() == submissionListColumn.getId()) {
+    			int indexOfFc = this.filterColumns.indexOf(fc);
+    			this.filterColumns.remove(indexOfFc);
+    		}
+    	});
     }
 
     @Override
