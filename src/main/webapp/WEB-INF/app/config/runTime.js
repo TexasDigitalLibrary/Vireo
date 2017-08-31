@@ -1,4 +1,4 @@
-vireo.run(function($route, $rootScope, $location, ModalService, $timeout) {
+vireo.run(function($route, $rootScope, $location, ModalService) {
 
 	angular.element("body").fadeIn(1000);
 
