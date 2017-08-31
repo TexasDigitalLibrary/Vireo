@@ -89,11 +89,11 @@ public class User extends AbstractCoreUser {
     @Column(nullable = false)
     private Integer pageSize;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> displayedSubmissionColumns;
 
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
