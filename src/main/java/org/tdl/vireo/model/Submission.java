@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +28,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionValidator;
@@ -39,9 +37,6 @@ import edu.tamu.framework.model.BaseEntity;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
-    
-    @Value("${app.url}")
-    private String url;
 
     final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
 
@@ -61,7 +56,8 @@ public class Submission extends BaseEntity {
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id",
+            "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
@@ -98,10 +94,10 @@ public class Submission extends BaseEntity {
 
     @Column(nullable = true)
     private String advisorAccessHash;
-    
+
     @Column(nullable = true)
     private String advisorReviewURL;
-    
+
     @Column(nullable = true)
     private String depositUri;
 
@@ -115,7 +111,6 @@ public class Submission extends BaseEntity {
         setApproveEmbargo(false);
         setCustomActionValues(new ArrayList<CustomActionValue>());
     }
-
 
     /**
      * @param submitter
@@ -187,9 +182,10 @@ public class Submission extends BaseEntity {
         }
 
         if (this.submissionStatus != null) {
-            logger.debug("Changing status of submission " + getId() + " from " + this.submissionStatus.getName() + " to " + submissionStatus.getName());
+            logger.debug("Changing status of submission " + getId() + " from " + this.submissionStatus.getName()
+                    + " to " + submissionStatus.getName());
         } else {
-            logger.debug("Changing status of submission "  + getId() + "to " + submissionStatus.getName());
+            logger.debug("Changing status of submission " + getId() + "to " + submissionStatus.getName());
         }
 
         this.submissionStatus = submissionStatus;
@@ -202,10 +198,10 @@ public class Submission extends BaseEntity {
 
     private Calendar getDay() {
         Calendar day = getTime();
-// TODO: Confirm that this is not needed.
-//        day.clear(Calendar.HOUR);
-//        day.clear(Calendar.MINUTE);
-//        day.clear(Calendar.SECOND);
+        // TODO: Confirm that this is not needed.
+        // day.clear(Calendar.HOUR);
+        // day.clear(Calendar.MINUTE);
+        // day.clear(Calendar.SECOND);
         return day;
     }
 
@@ -479,14 +475,14 @@ public class Submission extends BaseEntity {
     }
 
     public String getDepositUri() {
-		return depositUri;
-	}
+        return depositUri;
+    }
 
-	public void setDepositUri(String depositUri) {
-		this.depositUri = depositUri;
-	}
+    public void setDepositUri(String depositUri) {
+        this.depositUri = depositUri;
+    }
 
-	/**
+    /**
      * @return the customActionValues
      */
     public List<CustomActionValue> getCustomActionValues() {
@@ -562,7 +558,8 @@ public class Submission extends BaseEntity {
     public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
-            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental") || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental")
+                    || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
                 fielsValues.add(fieldValue);
             }
         }
@@ -570,15 +567,15 @@ public class Submission extends BaseEntity {
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
-        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("license_agreement")) {
-                fielsValues.add(fieldValue);
+                fieldValues.add(fieldValue);
             }
         }
-        return fielsValues;
+        return fieldValues;
     }
-    
+
     public List<SubmissionFieldProfile> getSubmissionFieldProfilesByInputTypeName(String inputType) {
 
         List<SubmissionFieldProfile> submissionFieldProfiles = new ArrayList<SubmissionFieldProfile>();
@@ -597,7 +594,7 @@ public class Submission extends BaseEntity {
     public void generateAdvisorReviewUrl(String baseUrl) {
         this.advisorReviewURL = baseUrl + "/review/" + this.getAdvisorAccessHash();
     }
-    
+
     public String getAdvisorReviewURL() {
         return advisorReviewURL;
     }
