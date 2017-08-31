@@ -433,13 +433,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         return value;
     };
 
-<<<<<<< HEAD
-    $scope.displaySubmissionProperty = function(row, col) {
-        var value = $scope.getSubmissionProperty(row,col);
-=======
     $scope.displaySubmissionProperty = function (row, col) {
         var value = $scope.getSubmissionProperty(row, col);
->>>>>>> 4.0.x-sprint26-staging
 
         if ($scope.isDateColumn(col)) {
             value = $filter('date')(value, 'MMM dd, yyyy');
