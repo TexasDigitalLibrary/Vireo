@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -44,6 +45,7 @@ public class VocabularyWord extends BaseEntity {
 
     public VocabularyWord() {
         setModelValidator(new VocabularyWordValidator());
+        setContacts(new ArrayList<String>());
     }
 
     public VocabularyWord(String name) {

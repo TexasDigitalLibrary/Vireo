@@ -1027,7 +1027,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Committee Chairs",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

@@ -40,6 +40,18 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 }
             };
 
+            $scope.saveWithWord = function (fieldValue, item) {
+                fieldValue.contacts = item.contacts;
+                $scope.save(fieldValue);
+            };
+
+            $scope.saveContacts = function (fieldValue) {
+                if(typeof fieldValue.contacts === 'string') {
+                  fieldValue.contacts = fieldValue.contacts.split(",");
+                }                
+                $scope.save(fieldValue);
+            };
+
             $scope.datepickerOptions = {};
             $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
             var checkDissabled = function (dateAndMode) {
