@@ -4,17 +4,16 @@
 		<span class="input-group-addon btn btn-default" ng-click="date1=true">
 	    	<span class="glyphicon glyphicon-calendar"></span>
 	  	</span>
-		<input  type="text"
-				name="{{column.title.split(' ').join('')+'Value1'}}" 
-	  			class="form-control" 
-	  			placeholder="mm/dd/yyyy" 
-	  			uib-datepicker-popup="MM/dd/yyyy" 
+		<input type="text"
+				  name="{{column.title.split(' ').join('')+'Value1'}}"
+	  			class="form-control"
+	  			placeholder="mm/dd/yyyy"
+	  			uib-datepicker-popup="MM/dd/yyyy"
 	  			ng-model="box[column.title.split(' ').join('')].d1"
 	  			is-open="date1"
 	  			ng-required="true"
 	  			close-text="Close"
-	        	stringtodate 
-	  	/>
+	        stringtodate />
 	  	<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=true" ng-disabled="box[column.title.split(' ').join('')].range">
 	    	<span class="glyphicon glyphicon-plus"></span>
 	  	</span>
@@ -26,17 +25,16 @@
 		<span class="input-group-addon" ng-click="date2=true">
 	    	<span class="glyphicon glyphicon-calendar"></span>
 	  	</span>
-		<input  type="text" 
-				name="{{column.title.split(' ').join('')+'Value2'}}"
-	  			class="form-control" 
-	  			placeholder="mm/dd/yyyy" 
-	  			uib-datepicker-popup="MM/dd/yyyy" 
+		<input type="text"
+				  name="{{column.title.split(' ').join('')+'Value2'}}"
+	  			class="form-control"
+	  			placeholder="mm/dd/yyyy"
+	  			uib-datepicker-popup="MM/dd/yyyy"
 	  			ng-model="box[column.title.split(' ').join('')].d2"
 	  			is-open="date2"
 	  			ng-required="true"
 	  			close-text="Close"
-	        	stringtodate 
-	  	/>
+	        stringtodate />
 	  	<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=false">
 	    	<span class="glyphicon glyphicon-minus"></span>
 	  	</span>

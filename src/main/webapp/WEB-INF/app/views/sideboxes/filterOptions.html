@@ -1,7 +1,7 @@
 <div class="filter-options">
 
 	<sideboxsub>Manage Filters</sideboxsub>
-	<ul>
+	<ul class="sidebox-list">
 		<li><a href="#" ng-click="box.clearFilters()">Clear current filter</a></li>
 		<li><a href="#" ng-click="openModal('#saveCurrentFilters')">Save current filter</a></li>
 		<li><a href="#" ng-click="openModal('#removeExistingFilters')">Remove existing filters</a></li>
@@ -9,7 +9,7 @@
 	</ul>
 
 	<sideboxsub>Saved Filters</sideboxsub>
-	<ul class="saved-filters">
+	<ul class="sidebox-list saved-filters">
 		<li ng-repeat="filterType in ['Without Columns','With Columns']" class="sideboxsub-sub">{{filterType}}
 			<ul class="list">
 				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:($index > 0 ? true:false)})" ng-click="box.applyFilter(filter)">
@@ -23,20 +23,20 @@
 
 </div>
 
-<modal 
-	modal-id="saveCurrentFilters" 
-	modal-view="views/modals/submissions/saveCurrentFilter.html" 
+<modal
+	modal-id="saveCurrentFilters"
+	modal-view="views/modals/submissions/saveCurrentFilter.html"
 	modal-header-class="modal-header-primary">
 </modal>
 
-<modal 
-	modal-id="removeExistingFilters" 
-	modal-view="views/modals/submissions/removeExistingFilters.html" 
+<modal
+	modal-id="removeExistingFilters"
+	modal-view="views/modals/submissions/removeExistingFilters.html"
 	modal-header-class="modal-header-primary">
 </modal>
 
-<modal 
-	modal-id="customizeFilters" 
-	modal-view="views/modals/submissions/customizeFilters.html" 
+<modal
+	modal-id="customizeFilters"
+	modal-view="views/modals/submissions/customizeFilters.html"
 	modal-header-class="modal-header-primary">
 </modal>

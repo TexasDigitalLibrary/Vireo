@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -97,11 +96,12 @@ public class User extends AbstractCoreUser {
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
+    // TODO: should this be a OneToMany?
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {

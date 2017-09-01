@@ -1,5 +1,5 @@
 <form ng-init="box.organizationCategoryLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
-	<ul>
+	<ul class="sidebox-list">
 		<li class="filter" ng-if="organizationCategory.name !== 'System'" ng-repeat="organizationCategory in box.organizationCategories | limitTo:box.organizationCategoryLimit" ng-click="box[column.title.split(' ').join('')]=organizationCategory.name;box.addExactMatchFilter(column, organizationCategory.name);">{{organizationCategory.name}}</li>
 		<li class="more-less" ng-click="box.organizationCategoryLimit=box.organizationCategories.length" ng-if="box.organizationCategoryLimit<=box.defaultLimit && box.organizationCategories.length>box.defaultLimit">more...</li>
 		<li class="more-less" ng-click="box.organizationCategoryLimit=box.defaultLimit" ng-if="box.organizationCategoryLimit>box.defaultLimit">less...</li>

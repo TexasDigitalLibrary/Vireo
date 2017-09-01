@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -135,7 +135,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 
     $scope.savedFilters = SavedFilterRepo.getAll();
 
-    //This is for piping the user/all columns through to the customizeFilters modal
+    // This is for piping the user/all columns through to the customizeFilters modal
     $scope.filterColumns = {};
 
     $scope.getUserById = function (userId) {
@@ -178,7 +178,26 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
     $scope.resetSaveFilter = function () {
         $scope.closeModal();
         $scope.activeFilters.refresh();
-        //Todo: reset the data in the modal
+        var filtersPreviouslyDisabled = [];
+        for (var i = $scope.filterColumns.userFilterColumns.length - 1; i >= 0; i--) {
+            if ($scope.filterColumns.userFilterColumns[i].status === 'previouslyDisabled') {
+                delete $scope.filterColumns.userFilterColumns[i].status;
+                filtersPreviouslyDisabled.push($scope.filterColumns.userFilterColumns[i]);
+                $scope.filterColumns.userFilterColumns.splice(i, 1);
+            }
+        }
+        var filtersPreviouslyDisplayed = [];
+        for (var i = $scope.filterColumns.inactiveFilterColumns.length - 1; i >= 0; i--) {
+            if ($scope.filterColumns.inactiveFilterColumns[i].status === 'previouslyDisplayed') {
+                delete $scope.filterColumns.inactiveFilterColumns[i].status;
+                filtersPreviouslyDisplayed.push($scope.filterColumns.inactiveFilterColumns[i]);
+                $scope.filterColumns.inactiveFilterColumns.splice(i, 1);
+            }
+        }
+
+        $scope.filterColumns.userFilterColumns = filtersPreviouslyDisplayed.concat($scope.filterColumns.userFilterColumns);
+
+        $scope.filterColumns.inactiveFilterColumns = filtersPreviouslyDisabled.concat($scope.filterColumns.inactiveFilterColumns);
     };
 
     $scope.removeFilter = function (filter) {
@@ -381,10 +400,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 
     $scope.saveUserFilters = function () {
         ManagerFilterColumnRepo.updateFilterColumns($scope.filterColumns.userFilterColumns).then(function () {
-            $scope.closeModal();
-            $timeout(function () {
-                update();
-            }, 250);
+            for (var i in $scope.filterColumns.userFilterColumns) {
+                delete $scope.filterColumns.userFilterColumns[i].status;
+            }
+            update();
         });
     };
 
@@ -487,6 +506,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
             return true;
         },
+        dragStart: function (event) {
+            event.source.itemScope.element.css('margin-top', '60px');
+        },
+        dragEnd: function (event) {
+            event.source.itemScope.element.css('margin-top', '');
+        },
         itemMoved: function (event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
                 event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
@@ -498,7 +523,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         orderChanged: function (event) {
             $scope.change = true;
         },
-        containment: '#column-modal',
+        containment: '.customize-submission-list-columns',
+        containerPositioning: 'relative',
         additionalPlaceholderClass: 'column-placeholder'
     };
 
@@ -506,17 +532,25 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
             return true;
         },
+        dragStart: function (event) {
+            event.source.itemScope.element.css('margin-top', '60px');
+        },
+        dragEnd: function (event) {
+            event.source.itemScope.element.css('margin-top', '');
+        },
         itemMoved: function (event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
                 event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
             } else {
-                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'prreviouslyDisabled' : null;
+                event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisabled' : null;
             }
             $scope.filterChange = true;
         },
         orderChanged: function (event) {
             $scope.filterChange = true;
         },
+        containment: '.customize-filters',
+        containerPositioning: 'relative',
         additionalPlaceholderClass: 'column-placeholder'
     };
 
