@@ -464,7 +464,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Majors",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

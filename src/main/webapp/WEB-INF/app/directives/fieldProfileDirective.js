@@ -32,7 +32,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                         resolve();
                     });
                 });
-            }
+            };
 
             $scope.save = function (fieldValue) {
                 // give typeahead select time to save the value
