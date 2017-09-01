@@ -94,6 +94,9 @@ public class Submission extends BaseEntity {
     private String advisorAccessHash;
 
     @Column(nullable = true)
+    private String advisorReviewURL;
+
+    @Column(nullable = true)
     private String depositUri;
 
     public Submission() {
@@ -530,13 +533,13 @@ public class Submission extends BaseEntity {
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
-        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("license_agreement")) {
-                fielsValues.add(fieldValue);
+                fieldValues.add(fieldValue);
             }
         }
-        return fielsValues;
+        return fieldValues;
     }
 
     public List<SubmissionFieldProfile> getSubmissionFieldProfilesByInputTypeName(String inputType) {
@@ -554,4 +557,11 @@ public class Submission extends BaseEntity {
         return submissionFieldProfiles;
     }
 
+    public void generateAdvisorReviewUrl(String baseUrl) {
+        this.advisorReviewURL = baseUrl + "/review/" + this.getAdvisorAccessHash();
+    }
+
+    public String getAdvisorReviewURL() {
+        return advisorReviewURL;
+    }
 }

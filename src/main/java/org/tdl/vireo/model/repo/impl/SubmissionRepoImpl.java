@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +53,9 @@ import edu.tamu.framework.model.Credentials;
 public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     final static Logger logger = LoggerFactory.getLogger(SubmissionRepoImpl.class);
+
+    @Value("${app.url}")
+    private String url;
 
     @Autowired
     private SubmissionRepo submissionRepo;
@@ -95,7 +99,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
     @Override
     public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
-
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();
         }
@@ -128,6 +131,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 }
             });
         });
+
+        submission.generateAdvisorReviewUrl(url);
 
         setCheckboxDefaultValue(submission, "INPUT_CHECKBOX");
         setCheckboxDefaultValue(submission, "INPUT_LICENSE");
@@ -171,16 +176,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
             for (FieldValue fv : proquestFieldValues) {
                 attachProquestLicense = !fv.getValue().equals("false");
-                if (!attachProquestLicense) {
+
+                if (!attachProquestLicense)
                     break;
-                }
             }
 
             for (FieldValue fv : defaultLicenseFieldValues) {
                 attachDefaultLicenseFieldValues = !fv.getValue().equals("false");
-                if (!attachDefaultLicenseFieldValues) {
+                if (!attachDefaultLicenseFieldValues)
                     break;
-                }
             }
 
             if (attachProquestLicense) {
@@ -319,7 +323,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         // get all the possible columns, some of which we will make visible
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
 
-        // set sort and sort order on all submission list columns that are set on the requesting user's submission list columns
+        // set sort and sort order on all submission list columns that are set
+        // on the requesting user's submission list columns
         submissionListColums.forEach(submissionListColumn -> {
             for (SubmissionListColumn slc : allSubmissionListColumns) {
                 if (submissionListColumn.equals(slc)) {
@@ -331,7 +336,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
         });
 
-        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
+        // add column filters to SubmissionListColumns, add all column filters
+        // to allColumnSearchFilters
         if (activeFilter != null) {
             activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
                 if (namedSearchFilter.getAllColumnSearch()) {
@@ -348,7 +354,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             });
         }
 
-        // sort all submission list columns by sort order provided by users submission list columns
+        // sort all submission list columns by sort order provided by users
+        // submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
@@ -375,7 +382,15 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN").append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*").append("\n   FROM submission_field_values sfv").append(n).append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ").append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n).append("\n	ON pfv").append(n).append(".submission_id=s.id");
+                    // @formatter:off
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                  .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                                  .append("\n   FROM submission_field_values sfv").append(n)
+                                  .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                                  .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
+                                  .append("\n ON pfv").append(n).append(".submission_id=s.id");
+
+                    // @formatter:on
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
@@ -451,7 +466,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" ss").append(".name = '").append(filterString).append("' OR");
                         } else {
-                            // TODO: determine if status will ever be search using a like
+                            // TODO: determine if status will ever be search
+                            // using a like
                             sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
 
@@ -477,7 +493,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" o").append(".name = '").append(filterString).append("' OR");
                         } else {
-                            // TODO: determine if organization name will ever be search using a like
+                            // TODO: determine if organization name will ever be
+                            // search using a like
                             sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
                     }
@@ -504,7 +521,8 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" oc").append(".name = '").append(filterString).append("' OR");
                         } else {
-                            // TODO: determine if organization category name will ever be search using a like
+                            // TODO: determine if organization category name
+                            // will ever be search using a like
                             sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
                     }
@@ -540,8 +558,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     break;
 
                 case "embargoTypes.name":
-
-                    sqlJoinsBuilder.append("\nLEFT JOIN").append("\n   (SELECT e.id, e.name, semt.submission_id").append("\n   FROM embargo e").append("\n   LEFT JOIN submission_embargo_types semt").append("\n   ON semt.embargo_types_id=e.id) embs").append("\n   ON embs.submission_id=s.id");
+                    // @formatter:off
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                   .append("\n   (SELECT e.id, e.name, semt.submission_id")
+                                   .append("\n   FROM embargo e")
+                                   .append("\n   LEFT JOIN submission_embargo_types semt")
+                                   .append("\n   ON semt.embargo_types_id=e.id) embs")
+                                   .append("\n   ON embs.submission_id=s.id");
+                    // @formatter:on
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
