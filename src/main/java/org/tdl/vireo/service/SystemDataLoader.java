@@ -431,9 +431,7 @@ public class SystemDataLoader {
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
-
                 organization = organizationRepo.findOne(organization.getId());
-
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
 
@@ -544,6 +542,8 @@ public class SystemDataLoader {
             }
 
             newWorkflowStep.setOriginalNotes(notes);
+
+            newWorkflowStep.setInstructions(workflowStep.getInstructions());
 
             newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 
