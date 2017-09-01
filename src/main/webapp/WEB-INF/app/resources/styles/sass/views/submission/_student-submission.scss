@@ -1,6 +1,25 @@
 /***********************
 ** STUDENT SUBMISSION **
 ************************/
+.start-your-submission {
+  box-shadow: 1px 1px 7px -1px #000;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.triptych-start-submission {
+  box-shadow: 1px 1px 7px -1px #000;
+  font-size:1.2em;
+  padding: 10px;
+  padding-bottom: 35px;
+  min-width: 400px;
+}
+
+.triptych-start-submission .disabled {
+  min-width: 400px;
+}
+
+
 .student-submission,
 .student-submission-loader.ready {
   opacity: 0;
