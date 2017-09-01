@@ -35,7 +35,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         if(typeof newVW.contacts === 'string') {
             newVW.contacts = newVW.contacts.split(",");
         }
-        console.log(newVW)
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function (res) {
             $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
             reloadTable();
