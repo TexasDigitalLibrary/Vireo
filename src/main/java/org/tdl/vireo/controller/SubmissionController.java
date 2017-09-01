@@ -20,6 +20,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -84,6 +85,10 @@ public class SubmissionController {
     private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
 
     private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
+    
+    @Value("${app.documentType.rename}")
+    String [] documentTypesToRename;
+    
 
     @Autowired
     private UserRepo userRepo;
@@ -617,7 +622,21 @@ public class SubmissionController {
     @Auth(role = "STUDENT")
     public ApiResponse uploadSubmission(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @RequestParam("file") MultipartFile file) throws IOException {
         int hash = credentials.getEmail().hashCode();
+        
         String fileName = file.getOriginalFilename();
+        String[] fileNameParts = fileName.split("\\.");
+        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+        
+        for(String documentTypeToRename : documentTypesToRename) {
+            String lastName = credentials.getLastName().toUpperCase();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            
+            //TODO:  do we need to get the year off the submission?  How can we be guaranteed it is present in metadata at the time of file upload?
+            if(documentTypeToRename.equals(documentType)) {
+                fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
+            }
+        }
+        
         String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
 
