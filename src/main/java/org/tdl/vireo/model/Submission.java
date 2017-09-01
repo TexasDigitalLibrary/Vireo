@@ -77,9 +77,6 @@ public class Submission extends BaseEntity {
     @Column(nullable = true)
     private boolean approveApplication;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = LAZY)
-    private Set<Embargo> embargoTypes;
-
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private List<CustomActionValue> customActionValues;
 
@@ -104,7 +101,6 @@ public class Submission extends BaseEntity {
         setFieldValues(new HashSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
         setActionLogs(new ArrayList<ActionLog>());
-        setEmbargoTypes(new HashSet<Embargo>());
         setApproveApplication(false);
         setApproveEmbargo(false);
         setCustomActionValues(new ArrayList<CustomActionValue>());
@@ -380,37 +376,6 @@ public class Submission extends BaseEntity {
      */
     public void removeActionLog(ActionLog actionLog) {
         getActionLogs().remove(actionLog);
-    }
-
-    /**
-     * @return the embargoTypes
-     */
-    public Set<Embargo> getEmbargoTypes() {
-        return embargoTypes;
-    }
-
-    /**
-     * @param embargoTypes
-     *            the embargoTypes to set
-     */
-    public void setEmbargoTypes(Set<Embargo> embargoType) {
-        this.embargoTypes = embargoType;
-    }
-
-    /**
-     *
-     * @param emabargoType
-     */
-    public void addEmbargoType(Embargo embargoType) {
-        getEmbargoTypes().add(embargoType);
-    }
-
-    /**
-     *
-     * @param embargoType
-     */
-    public void removeEmbargoType(Embargo embargoType) {
-        getEmbargoTypes().remove(embargoType);
     }
 
     /**
