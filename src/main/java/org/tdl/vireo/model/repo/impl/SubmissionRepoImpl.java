@@ -98,8 +98,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus,
-            Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();
         }
@@ -172,7 +171,6 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
             List<FieldValue> defaultLicenseFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_LICENSE"));
 
-
             boolean attachProquestLicense = true;
             boolean attachDefaultLicenseFieldValues = true;
 
@@ -190,8 +188,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
 
             if (attachProquestLicense) {
-                writeLicenseFile(credentials, submission, "proquest_license", "proquest_license",
-                        "proquest_umi_degree_code");
+                writeLicenseFile(credentials, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
             }
 
             if (attachDefaultLicenseFieldValues) {
@@ -230,13 +227,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         submission = submissionRepo.saveAndFlush(submission);
 
-        actionLogRepo.createPublicLog(submission, credentials,
-                "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
+        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
 
-    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName,
-            String configurationType) {
+    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
 
         byte[] licenseBytes = null;
 
@@ -250,10 +245,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         String acceptedDate = formatter.format(submission.getSubmissionDate().getTime());
 
-        proquestLicenseStringBuilder.append("\n").append("The license above was accepted by ")
-                .append(submitter.getFirstName()).append(" ").append(submitter.getLastName()).append(" on ")
-                .append(acceptedDate);
-
+        proquestLicenseStringBuilder.append("\n").append("The license above was accepted by ").append(submitter.getFirstName()).append(" ").append(submitter.getLastName()).append(" on ").append(acceptedDate);
 
         int seporatorLength = proquestLicenseStringBuilder.length();
 
@@ -290,8 +282,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter,
-            List<SubmissionListColumn> submissionListColums) {
+    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
         String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
         List<Long> ids = new ArrayList<Long>();
         this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
@@ -301,8 +292,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter,
-            List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
         String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
         List<Long> ids = new ArrayList<Long>();
         this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
@@ -325,8 +315,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         return new PageImpl<Submission>(actualResults, new PageRequest((int) Math.floor(offset / limit), limit), total);
     }
 
-    private String[] craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter,
-            List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    private String[] craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
@@ -386,25 +375,25 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
-            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0
-                    || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
+            if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
 
                 switch (String.join(".", submissionListColumn.getValuePath())) {
                 case "fieldValues.value":
 
                     Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN").append("\n  (SELECT sfv").append(n)
-                            .append(".submission_id, fv").append(n).append(".*")
-                            .append("\n   FROM submission_field_values sfv").append(n)
-                            .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n)
-                            .append(".id=sfv").append(n).append(".field_values_id ").append("\n   WHERE fv").append(n)
-                            .append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
-                            .append("\n	ON pfv").append(n).append(".submission_id=s.id");
+                    // @formatter:off
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                  .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                                  .append("\n   FROM submission_field_values sfv").append(n)
+                                  .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                                  .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
+                                  .append("\n ON pfv").append(n).append(".submission_id=s.id");
+
+                    // @formatter:on
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " pfv" + n + ".value");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -415,36 +404,29 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                             if (filterString.contains("|")) {
                                 // Date Range
                                 String[] dates = filterString.split(Pattern.quote("|"));
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '")
-                                        .append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '").append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
 
                             } else {
                                 // Date Match
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '")
-                                        .append(filterString).append("') OR");
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
                             }
                             break;
                         case "INPUT_CHECKBOX":
                             // Column's values are a boolean
                             if (Boolean.valueOf(filterString)) {
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString)
-                                        .append("' OR");
+                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
                             } else {
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString)
-                                        .append("' OR").append(" pfv").append(n).append(".value IS NULL ")
-                                        .append(" OR");
+                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR").append(" pfv").append(n).append(".value IS NULL ").append(" OR");
                             }
                             break;
                         default:
                             // Column's values can be handled by this default
                             if (submissionListColumn.getExactMatch()) {
                                 // perform exact match
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString)
-                                        .append("' OR");
+                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
                             } else {
                                 // perform like when input from text field
-                                sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%")
-                                        .append(filterString.toLowerCase()).append("%' OR");
+                                sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                             }
                             break;
                         }
@@ -453,8 +435,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%")
-                                .append(filterString.toLowerCase()).append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     n++;
@@ -464,8 +445,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                 case "id":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " s.id");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -479,8 +459,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     sqlJoinsBuilder.append("\nLEFT JOIN submission_status ss ON ss.id=s.submission_status_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " ss.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -489,16 +468,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         } else {
                             // TODO: determine if status will ever be search
                             // using a like
-                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%")
-                                    .append(filterString.toLowerCase()).append("%' OR");
+                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
 
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase())
-                                .append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     break;
@@ -509,8 +486,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " o.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -519,15 +495,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         } else {
                             // TODO: determine if organization name will ever be
                             // search using a like
-                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%")
-                                    .append(filterString.toLowerCase()).append("%' OR");
+                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase())
-                                .append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     break;
@@ -540,8 +514,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " oc.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -550,15 +523,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                         } else {
                             // TODO: determine if organization category name
                             // will ever be search using a like
-                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%")
-                                    .append(filterString.toLowerCase()).append("%' OR");
+                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase())
-                                .append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     break;
@@ -568,43 +539,41 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
                     sqlJoinsBuilder.append("\nLEFT JOIN core_users a ON a.id=s.assignee_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " a.email");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" a").append(".email = '").append(filterString).append("' OR");
                         } else {
-                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%")
-                                    .append(filterString.toLowerCase()).append("%' OR");
+                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase())
-                                .append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     break;
 
                 case "embargoTypes.name":
-
-                    sqlJoinsBuilder.append("\nLEFT JOIN").append("\n   (SELECT e.id, e.name, semt.submission_id")
-                            .append("\n   FROM embargo e").append("\n   LEFT JOIN submission_embargo_types semt")
-                            .append("\n   ON semt.embargo_types_id=e.id) embs")
-                            .append("\n   ON embs.submission_id=s.id");
+                    // @formatter:off
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                   .append("\n   (SELECT e.id, e.name, semt.submission_id")
+                                   .append("\n   FROM embargo e")
+                                   .append("\n   LEFT JOIN submission_embargo_types semt")
+                                   .append("\n   ON semt.embargo_types_id=e.id) embs")
+                                   .append("\n   ON embs.submission_id=s.id");
+                    // @formatter:on
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder,
-                                " embs.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         if (filterString.equals("None")) {
-                            sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR")
-                                    .append(" embs.id IS NULL OR");
+                            sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR").append(" embs.id IS NULL OR");
                         } else {
                             sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR");
                         }
@@ -612,8 +581,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%")
-                                .append(filterString.toLowerCase()).append("%' OR");
+                        sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
                     break;
@@ -649,15 +617,13 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             int offset = pageable.getPageSize() * pageable.getPageNumber();
             int limit = pageable.getPageSize();
 
-            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString()
-                    + sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
+            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString() + sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
 
         } else {
             sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
         }
 
-        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString()
-                + sqlWheresBuilder.toString();
+        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
 
         logger.debug("QUERY:\n" + sqlQuery);
 
@@ -666,8 +632,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         return new String[] { sqlQuery, sqlCountQuery };
     }
 
-    public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder,
-            String value) {
+    public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
         sqlSelectBuilder.append(value).append(",");
         switch (sort) {
         case ASC:

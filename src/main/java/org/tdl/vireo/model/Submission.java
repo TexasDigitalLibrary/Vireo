@@ -55,8 +55,7 @@ public class Submission extends BaseEntity {
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id",
-            "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
+    @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
@@ -526,8 +525,7 @@ public class Submission extends BaseEntity {
     public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
-            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental")
-                    || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental") || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
                 fielsValues.add(fieldValue);
             }
         }
