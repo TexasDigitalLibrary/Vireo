@@ -62,15 +62,6 @@
     }
   },
   {
-    "title": "Embargo type",
-    "sort": "NONE",
-    "valuePath": ["embargoTypes", "name"],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_TEXT"
-    }
-  },
-  {
     "title": "Institutional ID",
     "sort": "NONE",
     "valuePath": [],

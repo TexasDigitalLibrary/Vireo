@@ -8,11 +8,11 @@
 				ng-change="save(fieldValue)"
 				name="profile.fieldPredicate.value"
 				ng-disabled="fieldValue.updating"
-				ng-value="word.definition"/>
+				ng-value="word.name"/>
 		</label>
 	</div>
   <div class="col-xs-8 well">
-		<span>{{word.definition}}</span>
+		<span><h5><b>{{word.name}}</b></h5>{{word.definition}}</span>
 	</div>
 	<div class="col-xs-2">
         <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
