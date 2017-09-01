@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, uibDateParser, $controller, $filter, $location, $q, $scope, $timeout, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, WsApi, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -506,6 +506,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
             return true;
         },
+        dragStart: function (event) {
+            event.source.itemScope.element.css('margin-top', '60px');
+        },
+        dragEnd: function (event) {
+            event.source.itemScope.element.css('margin-top', '');
+        },
         itemMoved: function (event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
                 event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
@@ -517,13 +523,20 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         orderChanged: function (event) {
             $scope.change = true;
         },
-        containment: '#column-modal',
+        containment: '.customize-submission-list-columns',
+        containerPositioning: 'relative',
         additionalPlaceholderClass: 'column-placeholder'
     };
 
     $scope.filterColumnOptions = {
         accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
             return true;
+        },
+        dragStart: function (event) {
+            event.source.itemScope.element.css('margin-top', '60px');
+        },
+        dragEnd: function (event) {
+            event.source.itemScope.element.css('margin-top', '');
         },
         itemMoved: function (event) {
             if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
@@ -536,6 +549,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
         orderChanged: function (event) {
             $scope.filterChange = true;
         },
+        containment: '.customize-filters',
+        containerPositioning: 'relative',
         additionalPlaceholderClass: 'column-placeholder'
     };
 
