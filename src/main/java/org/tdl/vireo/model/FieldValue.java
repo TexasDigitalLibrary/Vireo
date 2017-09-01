@@ -33,7 +33,7 @@ public class FieldValue extends BaseEntity {
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
-        this.contacts = new ArrayList<String>();
+        setContacts(new ArrayList<String>());
     }
 
     /**
