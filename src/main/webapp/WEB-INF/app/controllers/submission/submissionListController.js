@@ -306,11 +306,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, uibDatePar
 
                 $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
 
-                $scope.columns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.excludedColumns, 'title');
+                $scope.columns = $filter('orderBy')($filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.excludedColumns, 'title'), 'title');
 
                 $scope.filterColumns.userFilterColumns = ManagerFilterColumnRepo.getAll();
 
-                $scope.filterColumns.inactiveFilterColumns = $filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title');
+                $scope.filterColumns.inactiveFilterColumns = $filter('orderBy')($filter('exclude')(SubmissionListColumnRepo.getAll(), $scope.filterColumns.userFilterColumns, 'title'), 'title');
 
                 query();
 
