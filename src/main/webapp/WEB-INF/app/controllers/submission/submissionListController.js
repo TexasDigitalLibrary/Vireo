@@ -187,11 +187,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }
         }
         var filtersPreviouslyDisplayed = [];
-        for (var i = $scope.filterColumns.inactiveFilterColumns.length - 1; i >= 0; i--) {
-            if ($scope.filterColumns.inactiveFilterColumns[i].status === 'previouslyDisplayed') {
-                delete $scope.filterColumns.inactiveFilterColumns[i].status;
-                filtersPreviouslyDisplayed.push($scope.filterColumns.inactiveFilterColumns[i]);
-                $scope.filterColumns.inactiveFilterColumns.splice(i, 1);
+        for (var j = $scope.filterColumns.inactiveFilterColumns.length - 1; j >= 0; j--) {
+            if ($scope.filterColumns.inactiveFilterColumns[j].status === 'previouslyDisplayed') {
+                delete $scope.filterColumns.inactiveFilterColumns[j].status;
+                filtersPreviouslyDisplayed.push($scope.filterColumns.inactiveFilterColumns[j]);
+                $scope.filterColumns.inactiveFilterColumns.splice(j, 1);
             }
         }
 
