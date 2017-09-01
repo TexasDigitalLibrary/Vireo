@@ -23,7 +23,7 @@
 	    		<h4>Disabled Columns</h4>
 	    		<div class="column-background">
 		    		<ul class="disabled-column-container" as-sortable="columnOptions" ng-model="columns">
-		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns | orderBy: 'title'" as-sortable-item>
+		    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status == 'previouslyDisplayed'}" ng-repeat="column in columns" as-sortable-item>
 		    				<div as-sortable-item-handle>{{column.title}}</div>
 		    			</li>
 		    		</ul>
