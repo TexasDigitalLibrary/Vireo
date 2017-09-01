@@ -45,7 +45,6 @@ public class VocabularyWord extends BaseEntity {
 
     public VocabularyWord() {
         setModelValidator(new VocabularyWordValidator());
-        setContacts(new ArrayList<String>());
     }
 
     public VocabularyWord(String name) {
@@ -116,7 +115,12 @@ public class VocabularyWord extends BaseEntity {
     }
 
     public void setContacts(List<String> contacts) {
-        this.contacts = contacts;
+        this.contacts = new ArrayList<String>();
+        if (contacts != null) {
+            contacts.forEach(contact -> {
+                this.contacts.add(contact.trim());
+            });
+        }
     }
 
 }

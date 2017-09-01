@@ -33,7 +33,7 @@ public class FieldValue extends BaseEntity {
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
-        setContacts(new ArrayList<String>());
+
     }
 
     /**
@@ -90,7 +90,12 @@ public class FieldValue extends BaseEntity {
      * @param contacts
      */
     public void setContacts(List<String> contacts) {
-        this.contacts = contacts;
+        this.contacts = new ArrayList<String>();
+        if (contacts != null) {
+            contacts.forEach(contact -> {
+                this.contacts.add(contact.trim());
+            });
+        }
     }
 
     /**

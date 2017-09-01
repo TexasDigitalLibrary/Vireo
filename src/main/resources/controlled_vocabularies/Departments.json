@@ -9,8 +9,7 @@
     {
       "name":"Obstetrics and Gynecology",
       "definition":"Academic Department",
-      "identifier":"fa66af82-91b1-11e6-99e2-00059a3c7a00",
-      "contacts": ["email1@mailinator.com", "email2@mailinator.com"]
+      "identifier":"fa66af82-91b1-11e6-99e2-00059a3c7a00"
     },
     {
       "name":"Surgery",
