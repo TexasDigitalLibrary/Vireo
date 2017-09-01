@@ -32,6 +32,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.addVocabularyWord = function (newVW) {
         newVW.adding = true;
+        if(typeof newVW.contacts === 'string') {
+            newVW.contacts = newVW.contacts.split(",");
+        }
         ControlledVocabularyRepo.addVocabularyWord($scope.selectedCv, newVW).then(function (res) {
             $scope.lastCreatedVocabularyWordId = angular.fromJson(res.body).payload.VocabularyWord.id;
             reloadTable();
@@ -54,6 +57,9 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
     };
 
     $scope.updateVocabularyWord = function (vw) {
+        if(typeof vw.contacts === 'string') {
+          vw.contacts = vw.contacts.split(",");
+        }
         $scope.selectedCv.updating = true;
         ControlledVocabularyRepo.updateVocabularyWord($scope.selectedCv, vw).then(function (res) {
             $scope.selectedCv.updating = false;
@@ -163,6 +169,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                     newVW.clickedCell = "definition";
                 } else if (newVW.clickedCell === "definition") {
                     newVW.clickedCell = "identifier";
+                } else if (newVW.clickedCell === "identifier") {
+                    newVW.clickedCell = "contacts";
                 }
                 $timeout(function () {
                     newVW.moving = false;
@@ -181,6 +189,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                     newVW.clickedCell = "name";
                 } else if (newVW.clickedCell === "identifier") {
                     newVW.clickedCell = "definition";
+                } else if (newVW.clickedCell === "contacts") {
+                    newVW.clickedCell = "identifier";
                 }
                 $timeout(function () {
                     newVW.moving = false;
@@ -240,6 +250,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                     $scope.editableVW.clickedCell = "definition";
                 } else if ($scope.editableVW.clickedCell === "definition") {
                     $scope.editableVW.clickedCell = "identifier";
+                } else if ($scope.editableVW.clickedCell === "identifier") {
+                    $scope.editableVW.clickedCell = "contacts";
                 }
                 $timeout(function () {
                     $scope.editableVW.moving = false;
@@ -259,6 +271,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                     $scope.editableVW.clickedCell = "name";
                 } else if ($scope.editableVW.clickedCell === "identifier") {
                     $scope.editableVW.clickedCell = "definition";
+                } else if ($scope.editableVW.clickedCell === "contacts") {
+                    $scope.editableVW.clickedCell = "identifier";
                 }
                 $timeout(function () {
                     $scope.editableVW.moving = false;
@@ -428,36 +442,55 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             return {
                 name: word.name,
                 definition: word.definition,
-                identifier: word.identifier
+                identifier: word.identifier,
+                contacts: word.contacts
             };
         };
 
         $scope.filterWordArray = function (words) {
 
             var definition = "";
-
-            if (words[0].definition.length > 0) {
-                definition += '<span class="red">' + words[0].definition + '</span>';
+            if(words[0].definition === words[1].definition) {
+                definition += '<span>' + words[0].definition + '</span>';
+            } else {
+                if (words[0].definition.length > 0) {
+                    definition += '<span class="red">' + words[0].definition + '</span>';
+                }
+                if (definition.length > 0 && words[1].definition.length > 0) {
+                    definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>';
+                }
             }
-
-            if (definition.length > 0 && words[1].definition.length > 0) {
-                definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>';
-            }
-
+            
+            
             var identifier = "";
-
-            if (words[0].identifier.length > 0) {
-                identifier += '<span class="red">' + words[0].identifier + '</span>';
+            if(words[0].identifier === words[1].identifier) {
+                identifier += '<span>' + words[0].identifier + '</span>';
+            } else {
+                if (words[0].identifier.length > 0 && words[0].identifier !== words[1].identifier) {
+                    identifier += '<span class="red">' + words[0].identifier + '</span>';
+                }
+                if (identifier.length > 0 && words[1].identifier.length > 0 && words[0].identifier !== words[1].identifier) {
+                    identifier += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].identifier + '</span>';
+                }
             }
 
-            if (identifier.length > 0 && words[1].identifier.length > 0) {
-                identifier += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].identifier + '</span>';
+            var contacts = "";
+            if(words[0].contacts === words[1].contacts) {
+                contacts += '<span>' + words[0].contacts + '</span>';
+            } else {
+                if (words[0].contacts.length > 0 && contacts !== words[1].contacts) {
+                    contacts += '<span class="red">' + words[0].contacts + '</span>';
+                }
+                if (contacts.length > 0 && words[1].contacts.length > 0 && contacts !== words[1].contacts) {
+                    contacts += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].contacts + '</span>';
+                }
             }
 
             return {
                 name: words[0].name,
                 definition: definition,
-                identifier: identifier
+                identifier: identifier,
+                contacts: contacts
             };
         };
 

@@ -697,9 +697,10 @@ public class SubmissionController {
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
+        // TODO: this needs to only send email to the advisor not any field value that is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
             try {
-                emailSender.sendEmail(fv.getIdentifier(), subject, content);
+                emailSender.sendEmail(String.join(",", fv.getContacts()), subject, content);
             } catch (MessagingException e) {
                 e.printStackTrace();
             }

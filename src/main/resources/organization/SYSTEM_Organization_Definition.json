@@ -465,7 +465,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Majors",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
@@ -1030,7 +1036,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Committee Chairs",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {
