@@ -1,4 +1,3 @@
-
 <div class="input-group input-contact-value">
   <input type="text" 
     class="form-control" 
@@ -8,7 +7,7 @@
     ng-disabled="fieldValue.updating"
     placeholder="Input {{profile.fieldGlosses[0].value}} Name"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
-    typeahead-on-select="saveWithWord(fieldValue, $item)"/>
+    typeahead-on-select="saveWithContacts(fieldValue, $item)"/>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
