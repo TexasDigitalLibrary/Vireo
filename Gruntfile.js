@@ -80,9 +80,9 @@ module.exports = function (grunt) {
                     'node_modules/tinymce/tinymce.min.js',
                     'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
 
-                    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+                    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
                     
-                    'node_modules/file-saver/FileSaver.min.js',
+                    'node_modules/file-saver/FileSaver.min.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
