@@ -238,6 +238,5 @@ module.exports = function (grunt) {
     grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy', 'symlink', 'watch']);
 
     grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy', 'symlink']);
-    // TODO: get uglify to work to reduce concat file sizes
 
 };
