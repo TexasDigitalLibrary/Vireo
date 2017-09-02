@@ -26,7 +26,7 @@ vireo.directive("validatedinput", function ($timeout) {
             $scope.inProgress = false;
 
             if ($scope.formView) {
-                $scope.view = 'bower_components/core/app/views/directives/validatedInputForm.html';
+                $scope.view = 'node_modules/weaver-ui-core/app/views/directives/validatedInputForm.html';
             } else {
                 $scope.view = 'views/directives/validatedInput.html';
             }

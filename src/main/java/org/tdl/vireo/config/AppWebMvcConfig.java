@@ -19,13 +19,10 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    	
+    	registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
 
         registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
-
-        // TODO: investigate and implement dynamic resource locations at runtime via symlinks
-        // paths: "/data/documents/**", "/conf/theme/**"
-        // locations: BASE_PATH + symlink
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
 
         registry.setOrder(Integer.MAX_VALUE - 2);
     }

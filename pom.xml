@@ -344,21 +344,6 @@
             </goals>
           </execution>
 
-          <!-- Compass Compile -->
-          <execution>
-            <id>exec-compass-compile</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <executable>compass${compass-extension}</executable>
-              <arguments>
-                <argument>compile</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-
           <!-- Grunt Deploy -->
           <!--
           <execution>

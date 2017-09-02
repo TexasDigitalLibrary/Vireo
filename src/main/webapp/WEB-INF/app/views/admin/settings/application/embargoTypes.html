@@ -25,7 +25,7 @@
 			<button 
 				class="btn btn-default modal-add-btn"
 				ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
-				Add New
+				Add Default Embaroe
 			</button>
 
 		</div>
@@ -54,7 +54,7 @@
 			<button 
 				class="btn btn-default modal-add-btn"
 				ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
-				Add New
+				Add Proquest Embargoe
 			</button>
 
 		</div>
@@ -64,21 +64,21 @@
 		   modal-view="views/modals/settings/embargoNewModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
-		   modal-backdrop="static">
+		   wvr-modal-backdrop="static">
 	</modal>
 
 	<modal modal-id="embargoEditModal" 
 		   modal-view="views/modals/settings/embargoEditModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
-		   modal-backdrop="static">
+		   wvr-modal-backdrop="static">
 	</modal>
 
 	<modal modal-id="embargoConfirmRemoveModal" 
 		   modal-view="views/modals/settings/embargoConfirmRemoveModal.html" 
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
-		   modal-backdrop="static">
+		   wvr-modal-backdrop="static">
 	</modal>
 
 </div>
