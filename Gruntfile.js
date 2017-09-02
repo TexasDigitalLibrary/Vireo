@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                 reporter: require('jshint-stylish')
             },
             all: [
-                'Gruntfile.js',
+            	'Gruntfile.js',
                 '<%= build.app %>/**/*.js',
                 'node_modules/weaver-ui-core/**/*',
                 'node_modules/weaver-ui-core/components/**/*',
@@ -87,21 +87,72 @@ module.exports = function (grunt) {
             },
             core: {
                 src: [
-                    'node_modules/weaver-ui-core/**/*.js',
-                    '!node_modules/weaver-ui-core/components/**/*',
-                    '!node_modules/weaver-ui-core/resources/**/*',
+                	'node_modules/weaver-ui-core/app/config/coreConfig.js',
+
+                	'node_modules/weaver-ui-core/app/components/version/version.js',
+                	'node_modules/weaver-ui-core/app/components/version/version-directive.js',
+                	'node_modules/weaver-ui-core/app/components/version/interpolate-filter.js',
+
+                	'config/appConfig.js',
+                	'config/apiMapping.js',
+
+                	'components/version/version.js',
+                	'components/version/version-directive.js',
+                	'components/version/interpolate-filter.js',
+
+                	'node_modules/weaver-ui-core/app/core.js',
+                	'node_modules/weaver-ui-core/app/setup.js',
+                	'node_modules/weaver-ui-core/app/config/coreRuntime.js',
+                	'node_modules/weaver-ui-core/app/config/coreAngularConfig.js',
+                	'node_modules/weaver-ui-core/app/config/logging.js',
+
+                	'node_modules/weaver-ui-core/app/directives/headerDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/footerDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/userDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/modalDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/alertDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/validationMessageDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/validatedSelectDirective.js',
+                	'node_modules/weaver-ui-core/app/directives/validatedTextAreaDirective.js',
+
+                	'node_modules/weaver-ui-core/app/services/accesscontrollservice.js',
+                	'node_modules/weaver-ui-core/app/services/wsservice.js',
+                	'node_modules/weaver-ui-core/app/services/wsapi.js',
+                	'node_modules/weaver-ui-core/app/services/restapi.js',
+                	'node_modules/weaver-ui-core/app/services/fileapi.js',
+                	'node_modules/weaver-ui-core/app/services/authserviceapi.js',
+                	'node_modules/weaver-ui-core/app/services/storageservice.js',
+                	'node_modules/weaver-ui-core/app/services/utilityservice.js',
+                	'node_modules/weaver-ui-core/app/services/alertservice.js',
+                	'node_modules/weaver-ui-core/app/services/validationstore.js',
+                	'node_modules/weaver-ui-core/app/services/userservice.js',
+                	'node_modules/weaver-ui-core/app/services/modalservice.js',
+                	'node_modules/weaver-ui-core/app/services/modelcache.js',
+                	'node_modules/weaver-ui-core/app/services/modelupdateservice.js',
+
+                	'node_modules/weaver-ui-core/app/repo/abstractRepo.js',
+
+                	'node_modules/weaver-ui-core/app/model/abstractModel.js',
+                	'node_modules/weaver-ui-core/app/model/assumedControl.js',
+                	'node_modules/weaver-ui-core/app/model/user.js',
+
+                	'node_modules/weaver-ui-core/app/controllers/abstractController.js',
+                	'node_modules/weaver-ui-core/app/controllers/coreAdminController.js',
+                	'node_modules/weaver-ui-core/app/controllers/authenticationController.js',
+                	'node_modules/weaver-ui-core/app/controllers/loginController.js',
+                	'node_modules/weaver-ui-core/app/controllers/registrationController.js',
+                	'node_modules/weaver-ui-core/app/controllers/userController.js',
+                	'node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js',
                 ],
                 dest: '<%= build.app %>/resources/scripts/core_concat.js'
             },
             angular: {
                 src: [
                     '<%= build.app %>/**/*.js',
-                    '<%= build.app %>/config/appConfig.js',
                     '!<%= build.app %>/config/appConfig_sample.js',
                     '!<%= build.app %>/node_modules/**/*',
                     '!<%= build.app %>/components/**/*',
-                    '!<%= build.app %>/resources/**/*',
-                    '!<%= build.app %>/resources/scripts/app_concat.js'
+                    '!<%= build.app %>/resources/**/*'
                 ],
                 dest: '<%= build.app %>/resources/scripts/app_concat.js'
             }
@@ -146,6 +197,19 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        
+        copy: {
+            main: {
+               files: [
+            	   {
+            		   cwd: 'node_modules/ng-sortable/dist/',
+            		   src: 'ng-sortable.min.css',
+            		   dest: '<%= build.app %>/resources/styles/',
+            		   expand: true
+            	   }
+        	   ],
+            },
+        },
 
         watch: {
             css: {
@@ -158,18 +222,20 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-usemin');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-symlink');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-symlink');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'symlink']);
+    grunt.registerTask('default', ['jshint', 'sass', 'copy', 'symlink']);
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'uglify', 'usemin', 'sass']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy', 'symlink']);
+    // TODO: get uglify to work to reduce concat file sizes
 
 };
