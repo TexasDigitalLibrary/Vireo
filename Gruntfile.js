@@ -49,25 +49,24 @@ module.exports = function (grunt) {
 
         concat: {
             options: {
-                separator: ';'
+                separator: ';',
+                sourceMap: false
             },
             vendor: {
                 src: [
-                    'node_modules/jquery/dist/jquery.min.js',
-                    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+                    'node_modules/jquery/dist/jquery.js',
+                    'node_modules/bootstrap/dist/js/bootstrap.js',
 
                     'node_modules/sockjs-client/dist/sockjs.min.js',
                     'node_modules/stomp-websocket/lib/stomp.min.js',
-
-                    'node_modules/file-saver/FileSaver.min.js',
 
                     'node_modules/angular/angular.min.js',
 
                     'node_modules/angular-sanitize/angular-sanitize.min.js',
                     'node_modules/angular-route/angular-route.min.js',
                     'node_modules/angular-loader/angular-loader.min.js',
+                    'node_modules/angular-messages/angular-messages.min.js',
                     'node_modules/angular-mocks/angular-mocks.js',
-                    'node_modules/angular-messages/angular-messages.js',
 
                     'node_modules/ng-csv/build/ng-csv.min.js',
 
@@ -82,6 +81,8 @@ module.exports = function (grunt) {
                     'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
 
                     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+                    
+                    'node_modules/file-saver/FileSaver.min.js',
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
@@ -93,12 +94,12 @@ module.exports = function (grunt) {
                 	'node_modules/weaver-ui-core/app/components/version/version-directive.js',
                 	'node_modules/weaver-ui-core/app/components/version/interpolate-filter.js',
 
-                	'config/appConfig.js',
-                	'config/apiMapping.js',
+                	'<%= build.app %>/config/appConfig.js',
+                	'<%= build.app %>/config/apiMapping.js',
 
-                	'components/version/version.js',
-                	'components/version/version-directive.js',
-                	'components/version/interpolate-filter.js',
+                	'<%= build.app %>/components/version/version.js',
+                	'<%= build.app %>/components/version/version-directive.js',
+                	'<%= build.app %>/components/version/interpolate-filter.js',
 
                 	'node_modules/weaver-ui-core/app/core.js',
                 	'node_modules/weaver-ui-core/app/setup.js',
@@ -149,6 +150,7 @@ module.exports = function (grunt) {
             angular: {
                 src: [
                     '<%= build.app %>/**/*.js',
+                    '!<%= build.app %>/config/appConfig.js',
                     '!<%= build.app %>/config/appConfig_sample.js',
                     '!<%= build.app %>/node_modules/**/*',
                     '!<%= build.app %>/components/**/*',

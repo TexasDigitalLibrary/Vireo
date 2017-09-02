@@ -55,6 +55,36 @@
         <compass-extension></compass-extension>
       </properties>
     </profile>
+    <profile>
+      <id>production</id>
+      <activation>
+        <property><name>production</name></property>
+      </activation>
+      <build>
+        <plugins>        
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <!-- Grunt Deploy -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt</executable>
+                  <arguments>
+                    <argument>deploy</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <reporting>
@@ -343,23 +373,6 @@
               <goal>exec</goal>
             </goals>
           </execution>
-
-          <!-- Grunt Deploy -->
-          <!--
-          <execution>
-            <id>exec-grunt-deploy</id>
-            <phase>generate-sources</phase> 
-            <configuration>
-              <executable>grunt</executable>
-              <arguments>
-                <argument>deploy</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-          -->
 
         </executions>
       </plugin>
