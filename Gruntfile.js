@@ -150,11 +150,13 @@ module.exports = function (grunt) {
             vireo: {
                 src: [
                     '<%= build.app %>/**/*.js',
+                    '<%= build.app %>/config/routes.js',
+                    '<%= build.app %>/config/runTime.js',
                     '!<%= build.app %>/config/appConfig.js',
-                    '!<%= build.app %>/config/appConfig_sample.js',
-                    '!<%= build.app %>/node_modules/**/*',
+                    '!<%= build.app %>/config/apiMapping.js',
+                    '!<%= build.app %>/resources/**/*',
                     '!<%= build.app %>/components/**/*',
-                    '!<%= build.app %>/resources/**/*'
+                    '!<%= build.app %>/node_modules/**/*'
                 ],
                 dest: '<%= build.app %>/resources/scripts/vireo_concat.js'
             },
