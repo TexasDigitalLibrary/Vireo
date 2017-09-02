@@ -248,6 +248,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy', 'symlink']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy']);
 
 };

@@ -31,6 +31,7 @@
   <packaging>war</packaging>
 
   <profiles>
+  
     <profile>
       <id>windows-profile</id>
       <activation>
@@ -43,6 +44,7 @@
         <compass-extension>.bat</compass-extension>
       </properties>
     </profile>
+    
     <profile>
       <id>non-windows-profile</id>
       <activation>
@@ -55,13 +57,42 @@
         <compass-extension></compass-extension>
       </properties>
     </profile>
+
+    <profile>
+      <id>!production</id>
+      <activation>
+        <property><name>production</name></property>
+      </activation>
+      <build>
+        <plugins>        
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <!-- Grunt Default -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt</executable>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>production</id>
       <activation>
         <property><name>production</name></property>
       </activation>
       <build>
-        <plugins>        
+        <plugins>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -85,6 +116,7 @@
         </plugins>
       </build>
     </profile>
+
   </profiles>
 
   <reporting>

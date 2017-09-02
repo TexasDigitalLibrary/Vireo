@@ -11,7 +11,6 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "preinstall": "npm install -g grunt-cli",
-    "postinstall": "grunt",
     "pretest": "npm install",
     "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js",
     "test-single-run": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js  --single-run",
