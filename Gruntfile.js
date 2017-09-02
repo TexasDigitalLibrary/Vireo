@@ -86,7 +86,7 @@ module.exports = function (grunt) {
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
-            core: {
+            weaver: {
                 src: [
                 	'node_modules/weaver-ui-core/app/config/coreConfig.js',
 
@@ -145,7 +145,7 @@ module.exports = function (grunt) {
                 	'node_modules/weaver-ui-core/app/controllers/userController.js',
                 	'node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js',
                 ],
-                dest: '<%= build.app %>/resources/scripts/core_concat.js'
+                dest: '<%= build.app %>/resources/scripts/weaver_concat.js'
             },
             vireo: {
                 src: [
@@ -161,7 +161,7 @@ module.exports = function (grunt) {
             bundle: {
                 src: [
                     '<%= build.app %>/resources/scripts/vendor_concat.js',
-                    '<%= build.app %>/resources/scripts/core_concat.js',
+                    '<%= build.app %>/resources/scripts/weaver_concat.js',
                     '<%= build.app %>/resources/scripts/vireo_concat.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/bundle.js'
@@ -246,8 +246,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat:vendor', 'concat:weaver', 'concat:vireo', 'concat:bundle', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat:vendor', 'concat:weaver', 'concat:vireo', 'concat:bundle', 'usemin', 'uglify:bundle', 'sass', 'copy']);
 
 };
