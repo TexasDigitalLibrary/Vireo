@@ -61,7 +61,7 @@
     <profile>
       <id>!production</id>
       <activation>
-        <property><name>production</name></property>
+        <property><name>development</name></property>
       </activation>
       <build>
         <plugins>        

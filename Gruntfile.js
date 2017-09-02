@@ -150,8 +150,6 @@ module.exports = function (grunt) {
             vireo: {
                 src: [
                     '<%= build.app %>/**/*.js',
-                    '<%= build.app %>/config/routes.js',
-                    '<%= build.app %>/config/runTime.js',
                     '!<%= build.app %>/config/appConfig.js',
                     '!<%= build.app %>/config/apiMapping.js',
                     '!<%= build.app %>/resources/**/*',
@@ -248,8 +246,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat:vendor', 'concat:weaver', 'concat:vireo', 'concat:bundle', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat:vendor', 'concat:weaver', 'concat:vireo', 'concat:bundle', 'usemin', 'uglify:bundle', 'sass', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify:bundle', 'sass', 'copy']);
 
 };
