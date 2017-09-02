@@ -201,7 +201,7 @@ module.exports = function (grunt) {
         },
         
         copy: {
-            main: {
+            styles: {
                files: [
             	   {
             		   cwd: 'node_modules/ng-sortable/dist/',
@@ -211,6 +211,17 @@ module.exports = function (grunt) {
             	   }
         	   ],
             },
+            weaver: {
+                files: [
+             	   {
+             		   src: [
+             			   'node_modules/weaver-ui-core/**/*.html'
+             		   ],
+             		   dest: '<%= build.app %>/node_modules',
+             		   expand: true
+             	   }
+         	   ],
+             }
         },
 
         watch: {
@@ -231,11 +242,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-symlink');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'copy', 'symlink']);
+    grunt.registerTask('default', ['jshint', 'sass', 'copy:styles', 'symlink']);
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
 
     grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy', 'symlink']);
 
