@@ -147,7 +147,7 @@ module.exports = function (grunt) {
                 ],
                 dest: '<%= build.app %>/resources/scripts/core_concat.js'
             },
-            angular: {
+            vireo: {
                 src: [
                     '<%= build.app %>/**/*.js',
                     '!<%= build.app %>/config/appConfig.js',
@@ -156,7 +156,15 @@ module.exports = function (grunt) {
                     '!<%= build.app %>/components/**/*',
                     '!<%= build.app %>/resources/**/*'
                 ],
-                dest: '<%= build.app %>/resources/scripts/app_concat.js'
+                dest: '<%= build.app %>/resources/scripts/vireo_concat.js'
+            },
+            bundle: {
+                src: [
+                    '<%= build.app %>/resources/scripts/vendor_concat.js',
+                    '<%= build.app %>/resources/scripts/core_concat.js',
+                    '<%= build.app %>/resources/scripts/vireo_concat.js'
+                ],
+                dest: '<%= build.app %>/resources/scripts/bundle.js'
             }
         },
 
@@ -164,17 +172,9 @@ module.exports = function (grunt) {
             options: {
                 mangle: false
             },
-            vendor: {
-                src: '<%= build.app %>/resources/scripts/vendor_concat.js',
-                dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
-            },
-            core: {
-                src: '<%= build.app %>/resources/scripts/core_concat.js',
-                dest: '<%= build.app %>/resources/scripts/core_concat.js'
-            },
-            angular: {
-                src: '<%= build.app %>/resources/scripts/app_concat.js',
-                dest: '<%= build.app %>/resources/scripts/app_concat.js'
+            bundle: {
+                src: '<%= build.app %>/resources/scripts/bundle.js',
+                dest: '<%= build.app %>/resources/scripts/bundle.js'
             }
         },
 
