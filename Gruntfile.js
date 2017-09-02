@@ -87,7 +87,10 @@ module.exports = function (grunt) {
             },
             core: {
                 src: [
-                    'node_modules/weaver-ui-core/**/*.js'
+                    'node_modules/weaver-ui-core/**/*.js',
+                    '!node_modules/**/*',
+                    '!node_modules/weaver-ui-core/components/**/*',
+                    '!node_modules/weaver-ui-core/resources/**/*',
                 ],
                 dest: '<%= build.app %>/resources/scripts/core_concat.js'
             },
