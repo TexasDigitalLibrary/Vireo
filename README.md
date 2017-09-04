@@ -1,11 +1,51 @@
 # Vireo 4
 Vireo 4 is a turnkey Electronic Thesis and Dissertation (ETD) Management System.
 
-## Compiling and creating the zip and war packages
+## Building Vireo 4
+
+### Development
 ```bash
 $ mvn clean package
 ```
+
+or run for development:
+```bash
+$ mvn clean spring-boot:run
+```
+
+or run for production
+```bash
+$ mvn clean spring-boot:run -Dproduction
+```
+
+### Production
+```bash
+$ mvn clean package -DskipTests -Dproduction
+```
 If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
+
+## Testing Vireo 4
+
+### Server
+```bash
+$ mvn clean test
+```
+
+### Client
+```bash
+$ npm run test
+```
+
+### Server and Client
+```bash
+$ mvn clean test -DtestClient
+```
+
+### e2e
+```bash
+$ mvn clean spring-boot:run
+$ npm run protractor
+```
 
 ## Installing Zip Package to filesystem
 Unzip package into preferred directory (or any directory you choose):
@@ -25,12 +65,18 @@ drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 * conf -- where the external config files reside
 * webapp -- the extracted WAR file
 
-## Installing WAR Package in Tomcat 7
-Copy war file into Tomcat 7 webapps directory (your location may vary -- this is an example):
+## Installing WAR Package in Tomcat
+Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
+
 ```bash
-$ cd /var/lib/tomcat7/webapps
-$ cp ~/vireo-4.0.x-SNAPSHOT.war vireo.war
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/vireo.war
 ```
+
+or as root:
+```bash
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/ROOT.war
+```
+
 
 ## Running as a stand-alone Spring Boot application
 ```bash

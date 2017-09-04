@@ -11,10 +11,10 @@
 		<modal  modal-id="addWorkflowStepModal"
 				modal-view="views/modals/organization/workflowStepCreateModal.html"
 				modal-header-class="modal-header-primary"
-				modal-backdrop="static">
+				wvr-modal-backdrop="static">
 		</modal>
-		<accordion single-expand="false">
-      <pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/admin/settings/organization/workflowsteps/workflowStep.html" query="{{step.name}}" html="views/admin/settings/organization/workflowsteps/workflowStepContent.html">{{$index+1}}. {{step.name}}</pane>
-		</accordion>
+		<vireo-accordion single-expand="false">
+            <vireo-pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/admin/settings/organization/workflowsteps/workflowStep.html" query="{{step.name}}" html="views/admin/settings/organization/workflowsteps/workflowStepContent.html">{{$index+1}}. {{step.name}}</vireo-pane>
+		</vireo-accordion>
 	</div>
 </div>
