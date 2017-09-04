@@ -55,6 +55,35 @@ module.exports = function(grunt) {
             vendor: {
                 src: [
                     // TODO: move vendor scripts here, remove from vendor copy, ** some vendor modules do not work correctly here **
+                    'node_modules/jquery/dist/jquery.min.js',
+                    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+
+                    'node_modules/sockjs-client/dist/sockjs.min.js',
+                    'node_modules/stompjs/lib/stomp.min.js',
+
+                    'node_modules/angular/angular.min.js',
+
+                    'node_modules/angular-sanitize/angular-sanitize.min.js',
+                    'node_modules/angular-route/angular-route.min.js',
+                    'node_modules/angular-loader/angular-loader.min.js',
+                    'node_modules/angular-messages/angular-messages.min.js',
+                    'node_modules/angular-mocks/angular-mocks.js',
+
+                    'node_modules/ng-csv/build/ng-csv.min.js',
+
+                    'node_modules/ng-sortable/dist/ng-sortable.min.js',
+
+                    'node_modules/ng-table/bundles/ng-table.min.js',
+
+                    'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js',
+                    'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
+
+                    'node_modules/tinymce/tinymce.min.js',
+                    'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
+
+                    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+
+                    'node_modules/file-saver/FileSaver.min.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
@@ -172,6 +201,17 @@ module.exports = function(grunt) {
             }
         },
 
+        clean: {
+            development: [
+                '<%= build.app %>/node_modules'
+            ],
+            production: {
+                folder: [
+                    '<%= build.app %>/node_modules'
+                ]
+            }
+        },
+
         copy: {
             styles: {
                 files: [{
@@ -181,47 +221,11 @@ module.exports = function(grunt) {
                     expand: true
                 }],
             },
-            vendor: {
-                files: [{
-                    src: [
-                        'node_modules/jquery/dist/jquery.min.js',
-                        'node_modules/bootstrap/dist/js/bootstrap.min.js',
-
-                        'node_modules/sockjs-client/dist/sockjs.min.js',
-                        'node_modules/stompjs/lib/stomp.min.js',
-
-                        'node_modules/angular/angular.min.js',
-
-                        'node_modules/angular-sanitize/angular-sanitize.min.js',
-                        'node_modules/angular-route/angular-route.min.js',
-                        'node_modules/angular-loader/angular-loader.min.js',
-                        'node_modules/angular-messages/angular-messages.min.js',
-                        'node_modules/angular-mocks/angular-mocks.js',
-
-                        'node_modules/ng-csv/build/ng-csv.min.js',
-
-                        'node_modules/ng-sortable/dist/ng-sortable.min.js',
-
-                        'node_modules/ng-table/bundles/ng-table.min.js',
-
-                        'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js',
-                        'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
-
-                        'node_modules/tinymce/tinymce.min.js',
-                        'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
-
-                        'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
-
-                        'node_modules/file-saver/FileSaver.min.js'
-                    ],
-                    dest: '<%= build.app %>',
-                    expand: true
-                }],
-            },
             weaver: {
                 files: [{
                     src: [
-                        'node_modules/weaver-ui-core/**/*.html'
+                        'node_modules/weaver-ui-core/**/*.html',
+                        '!node_modules/weaver-ui-core/docs/'
                     ],
                     dest: '<%= build.app %>',
                     expand: true
@@ -241,18 +245,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-symlink');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'copy:styles', 'symlink']);
+    grunt.registerTask('default', ['jshint', 'sass', 'copy:styles', 'clean', 'symlink']);
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'clean', 'copy']);
 
 };
