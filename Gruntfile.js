@@ -22,13 +22,6 @@ module.exports = function (grunt) {
             }
         },
 
-        useminPrepare: {
-            html: '<%= build.app %>/index.html',
-            options: {
-                dest: '<%= build.app %>'
-            }
-        },
-
         jshint: {
             options: {
                 jshintrc: '.jshintrc',
@@ -264,8 +257,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'uglify', 'usemin', 'sass', 'clean', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'sass', 'clean', 'copy']);
 
 };
