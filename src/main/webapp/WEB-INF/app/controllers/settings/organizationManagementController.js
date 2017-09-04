@@ -61,6 +61,22 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 		$scope.cancelDeleteOrganization = function() {
 			$scope.closeModal();
 			$scope.getSelectedOrganization().clearValidationResults();
+    };
+    
+    $scope.restoreOrganizationDefaults = function(organization) {
+			organization.restoreDefaults().then(function(data) {
+				if(data.meta.type != 'INVALID') {
+					$scope.closeModal();
+					$timeout(function() {
+						AlertService.add(data.meta, 'organization/restore-defaults');
+					}, 300);
+				}
+			});
+		};
+
+		$scope.cancelDeleteOrganization = function() {
+			$scope.closeModal();
+			$scope.getSelectedOrganization().clearValidationResults();
 		};
 
 		$scope.addWorkflowStep = function() {

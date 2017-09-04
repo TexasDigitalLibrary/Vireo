@@ -34,7 +34,18 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 			promise.then(function(res) {
 				if(res.meta.type == "INVALID") {
 					organization.setValidationResults(res.payload.ValidationResults);
-					console.log(organization);
+				}
+			});
+			return promise;
+    };
+    
+		this.restoreDefaults = function() {
+			var organization = this;
+			angular.extend(apiMapping.Organization.restoreDefaults, {'data': organization});
+			var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
+			promise.then(function(res) {
+				if(res.meta.type == "INVALID") {
+					organization.setValidationResults(res.payload.ValidationResults);
 				}
 			});
 			return promise;

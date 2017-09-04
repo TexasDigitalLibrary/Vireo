@@ -68,7 +68,12 @@
 							    ng-if="getSelectedOrganization().id !== 1"
 								type="button"
 								class="btn btn-danger"
-								ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+                ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+              <button
+							    ng-if="getSelectedOrganization().id !== 1"
+								type="button"
+								class="btn btn-warning"
+								ng-click="openModal('#organizationConfirmRestoreDefaultsModal')">Restore Defaults</button>
 							<button
 								type="button"
 								class="btn btn-default"
@@ -85,6 +90,12 @@
 				<modal modal-id="organizationConfirmDeleteModal"
 					modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
 					modal-header-class="modal-header-danger"
+					modal-backdrop="static">
+        </modal>
+        
+        <modal modal-id="organizationConfirmRestoreDefaultsModal"
+					modal-view="views/modals/organization/organizationConfirmRestoreDefaultsModal.html"
+					modal-header-class="modal-header-warning"
 					modal-backdrop="static">
 				</modal>
 
