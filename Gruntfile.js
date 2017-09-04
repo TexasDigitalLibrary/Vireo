@@ -214,7 +214,7 @@ module.exports = function(grunt) {
 
                         'node_modules/file-saver/FileSaver.min.js'
                     ],
-                    dest: '<%= build.app %>/node_modules',
+                    dest: '<%= build.app %>',
                     expand: true
                 }],
             },
@@ -223,7 +223,7 @@ module.exports = function(grunt) {
                     src: [
                         'node_modules/weaver-ui-core/**/*.html'
                     ],
-                    dest: '<%= build.app %>/node_modules',
+                    dest: '<%= build.app %>',
                     expand: true
                 }],
             }
