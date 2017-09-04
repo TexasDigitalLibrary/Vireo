@@ -1,11 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
-import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -20,10 +17,10 @@ public class UserRepoImpl implements UserRepoCustom {
 
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
-    
+
     @Autowired
     DefaultFiltersService defaultFiltersService;
-    
+
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
@@ -38,11 +35,11 @@ public class UserRepoImpl implements UserRepoCustom {
 
         newUser.putSetting("id", newUser.getId().toString());
         newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());
-        newUser.putSetting("preferedEmail", newUser.getEmail());        
+        newUser.putSetting("preferedEmail", newUser.getEmail());
         newUser.setActiveFilter(activeFilter);
         newUser.setFilterColumns(defaultFiltersService.getDefaultFilter());
         newUser.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
-        
+
         return userRepo.save(newUser);
     }
 

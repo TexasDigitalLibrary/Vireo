@@ -16,16 +16,18 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
 
     @Value("${app.ui.path}")
     private String path;
+    
+    @Value("${info.build.production:false}")
+    private boolean production;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    	
+    	if(!production) {
+    		registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
+    	}
 
         registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
-
-        // TODO: investigate and implement dynamic resource locations at runtime via symlinks
-        // paths: "/data/documents/**", "/conf/theme/**"
-        // locations: BASE_PATH + symlink
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
 
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
