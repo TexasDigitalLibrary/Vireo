@@ -8,6 +8,7 @@ Vireo 4 is a turnkey Electronic Thesis and Dissertation (ETD) Management System.
 $ mvn clean package
 ```
 
+or run for development:
 ```bash
 $ mvn clean spring-boot:run
 ```
@@ -61,7 +62,7 @@ drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 
 ## Installing WAR Package in Tomcat
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
-Under a subpath:
+
 ```bash
 $ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/vireo.war
 ```
