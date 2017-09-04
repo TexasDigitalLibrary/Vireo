@@ -54,7 +54,7 @@ module.exports = function(grunt) {
             },
             vendor: {
                 src: [
-
+                    // TODO: move vendor scripts here, remove from vendor copy, ** some vendor modules do not work correctly here **
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
@@ -204,8 +204,8 @@ module.exports = function(grunt) {
 
                         'node_modules/ng-table/bundles/ng-table.min.js',
 
-                        'node_modules/ng-file-upload/ng-file-upload-shim.min.js',
-                        'node_modules/ng-file-upload/ng-file-upload.min.js',
+                        'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js',
+                        'node_modules/ng-file-upload/dist/ng-file-upload.min.js',
 
                         'node_modules/tinymce/tinymce.min.js',
                         'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
