@@ -12,12 +12,11 @@
   "scripts": {
     "preinstall": "npm install -g grunt-cli",
     "pretest": "npm install",
-    "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js",
-    "test-single-run": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js  --single-run",
+    "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor e2e-tests/protractor.conf.js"
+    "protractor": "protractor src/main/webapp/WEB-INF/tests/protractor.conf.js"
   },
   "dependencies": {
     "angular-ui-tinymce": "0.0.19",
