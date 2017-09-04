@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     // Configurable paths
     var build = {
@@ -219,13 +219,22 @@ module.exports = function(grunt) {
                     src: 'ng-sortable.min.css',
                     dest: '<%= build.app %>/resources/styles/',
                     expand: true
-                }],
+                }]
             },
             weaver: {
                 files: [{
                     src: [
                         'node_modules/weaver-ui-core/**/*.html',
                         '!node_modules/weaver-ui-core/docs/'
+                    ],
+                    dest: '<%= build.app %>',
+                    expand: true
+                }]
+            },
+            fonts: {
+                files: [{
+                    src: [
+                        'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
                     ],
                     dest: '<%= build.app %>',
                     expand: true
