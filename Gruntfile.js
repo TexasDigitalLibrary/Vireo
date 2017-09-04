@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     // Configurable paths
     var build = {
@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 
         // Project settings
         build: build,
-        
+
         symlink: {
             options: {
                 overwrite: true,
@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                 reporter: require('jshint-stylish')
             },
             all: [
-            	'Gruntfile.js',
+                'Gruntfile.js',
                 '<%= build.app %>/**/*.js',
                 'node_modules/weaver-ui-core/**/*',
                 'node_modules/weaver-ui-core/components/**/*',
@@ -54,68 +54,68 @@ module.exports = function (grunt) {
             },
             vendor: {
                 src: [
-                    
+
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
             weaver: {
                 src: [
-                	'node_modules/weaver-ui-core/app/config/coreConfig.js',
+                    'node_modules/weaver-ui-core/app/config/coreConfig.js',
 
-                	'node_modules/weaver-ui-core/app/components/version/version.js',
-                	'node_modules/weaver-ui-core/app/components/version/version-directive.js',
-                	'node_modules/weaver-ui-core/app/components/version/interpolate-filter.js',
+                    'node_modules/weaver-ui-core/app/components/version/version.js',
+                    'node_modules/weaver-ui-core/app/components/version/version-directive.js',
+                    'node_modules/weaver-ui-core/app/components/version/interpolate-filter.js',
 
-                	'<%= build.app %>/config/appConfig.js',
-                	'<%= build.app %>/config/apiMapping.js',
+                    '<%= build.app %>/config/appConfig.js',
+                    '<%= build.app %>/config/apiMapping.js',
 
-                	'<%= build.app %>/components/version/version.js',
-                	'<%= build.app %>/components/version/version-directive.js',
-                	'<%= build.app %>/components/version/interpolate-filter.js',
+                    '<%= build.app %>/components/version/version.js',
+                    '<%= build.app %>/components/version/version-directive.js',
+                    '<%= build.app %>/components/version/interpolate-filter.js',
 
-                	'node_modules/weaver-ui-core/app/core.js',
-                	'node_modules/weaver-ui-core/app/setup.js',
-                	'node_modules/weaver-ui-core/app/config/coreRuntime.js',
-                	'node_modules/weaver-ui-core/app/config/coreAngularConfig.js',
-                	'node_modules/weaver-ui-core/app/config/logging.js',
+                    'node_modules/weaver-ui-core/app/core.js',
+                    'node_modules/weaver-ui-core/app/setup.js',
+                    'node_modules/weaver-ui-core/app/config/coreRuntime.js',
+                    'node_modules/weaver-ui-core/app/config/coreAngularConfig.js',
+                    'node_modules/weaver-ui-core/app/config/logging.js',
 
-                	'node_modules/weaver-ui-core/app/directives/headerDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/footerDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/userDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/modalDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/alertDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/validationMessageDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/validatedSelectDirective.js',
-                	'node_modules/weaver-ui-core/app/directives/validatedTextAreaDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/headerDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/footerDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/userDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/modalDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/alertDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/validationMessageDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/validatedSelectDirective.js',
+                    'node_modules/weaver-ui-core/app/directives/validatedTextAreaDirective.js',
 
-                	'node_modules/weaver-ui-core/app/services/accesscontrollservice.js',
-                	'node_modules/weaver-ui-core/app/services/wsservice.js',
-                	'node_modules/weaver-ui-core/app/services/wsapi.js',
-                	'node_modules/weaver-ui-core/app/services/restapi.js',
-                	'node_modules/weaver-ui-core/app/services/fileapi.js',
-                	'node_modules/weaver-ui-core/app/services/authserviceapi.js',
-                	'node_modules/weaver-ui-core/app/services/storageservice.js',
-                	'node_modules/weaver-ui-core/app/services/utilityservice.js',
-                	'node_modules/weaver-ui-core/app/services/alertservice.js',
-                	'node_modules/weaver-ui-core/app/services/validationstore.js',
-                	'node_modules/weaver-ui-core/app/services/userservice.js',
-                	'node_modules/weaver-ui-core/app/services/modalservice.js',
-                	'node_modules/weaver-ui-core/app/services/modelcache.js',
-                	'node_modules/weaver-ui-core/app/services/modelupdateservice.js',
+                    'node_modules/weaver-ui-core/app/services/accesscontrollservice.js',
+                    'node_modules/weaver-ui-core/app/services/wsservice.js',
+                    'node_modules/weaver-ui-core/app/services/wsapi.js',
+                    'node_modules/weaver-ui-core/app/services/restapi.js',
+                    'node_modules/weaver-ui-core/app/services/fileapi.js',
+                    'node_modules/weaver-ui-core/app/services/authserviceapi.js',
+                    'node_modules/weaver-ui-core/app/services/storageservice.js',
+                    'node_modules/weaver-ui-core/app/services/utilityservice.js',
+                    'node_modules/weaver-ui-core/app/services/alertservice.js',
+                    'node_modules/weaver-ui-core/app/services/validationstore.js',
+                    'node_modules/weaver-ui-core/app/services/userservice.js',
+                    'node_modules/weaver-ui-core/app/services/modalservice.js',
+                    'node_modules/weaver-ui-core/app/services/modelcache.js',
+                    'node_modules/weaver-ui-core/app/services/modelupdateservice.js',
 
-                	'node_modules/weaver-ui-core/app/repo/abstractRepo.js',
+                    'node_modules/weaver-ui-core/app/repo/abstractRepo.js',
 
-                	'node_modules/weaver-ui-core/app/model/abstractModel.js',
-                	'node_modules/weaver-ui-core/app/model/assumedControl.js',
-                	'node_modules/weaver-ui-core/app/model/user.js',
+                    'node_modules/weaver-ui-core/app/model/abstractModel.js',
+                    'node_modules/weaver-ui-core/app/model/assumedControl.js',
+                    'node_modules/weaver-ui-core/app/model/user.js',
 
-                	'node_modules/weaver-ui-core/app/controllers/abstractController.js',
-                	'node_modules/weaver-ui-core/app/controllers/coreAdminController.js',
-                	'node_modules/weaver-ui-core/app/controllers/authenticationController.js',
-                	'node_modules/weaver-ui-core/app/controllers/loginController.js',
-                	'node_modules/weaver-ui-core/app/controllers/registrationController.js',
-                	'node_modules/weaver-ui-core/app/controllers/userController.js',
-                	'node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js',
+                    'node_modules/weaver-ui-core/app/controllers/abstractController.js',
+                    'node_modules/weaver-ui-core/app/controllers/coreAdminController.js',
+                    'node_modules/weaver-ui-core/app/controllers/authenticationController.js',
+                    'node_modules/weaver-ui-core/app/controllers/loginController.js',
+                    'node_modules/weaver-ui-core/app/controllers/registrationController.js',
+                    'node_modules/weaver-ui-core/app/controllers/userController.js',
+                    'node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js',
                 ],
                 dest: '<%= build.app %>/resources/scripts/weaver_concat.js'
             },
@@ -158,7 +158,7 @@ module.exports = function (grunt) {
         },
 
         sass: {
-        	options: {
+            options: {
                 sourceMap: false
             },
             dist: {
@@ -171,68 +171,62 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        
+
         copy: {
             styles: {
-               files: [
-            	   {
-            		   cwd: 'node_modules/ng-sortable/dist/',
-            		   src: 'ng-sortable.min.css',
-            		   dest: '<%= build.app %>/resources/styles/',
-            		   expand: true
-            	   }
-        	   ],
+                files: [{
+                    cwd: 'node_modules/ng-sortable/dist/',
+                    src: 'ng-sortable.min.css',
+                    dest: '<%= build.app %>/resources/styles/',
+                    expand: true
+                }],
             },
             vendor: {
-                files: [
-             	   {
-             		   src: [
-             			  'node_modules/jquery/dist/jquery.min.js',
-                          'node_modules/bootstrap/dist/js/bootstrap.min.js',
+                files: [{
+                    src: [
+                        'node_modules/jquery/dist/jquery.min.js',
+                        'node_modules/bootstrap/dist/js/bootstrap.min.js',
 
-                          'node_modules/sockjs-client/dist/sockjs.min.js',
-                          'node_modules/stompjs/lib/stomp.min.js',
+                        'node_modules/sockjs-client/dist/sockjs.min.js',
+                        'node_modules/stompjs/lib/stomp.min.js',
 
-                          'node_modules/angular/angular.min.js',
+                        'node_modules/angular/angular.min.js',
 
-                          'node_modules/angular-sanitize/angular-sanitize.min.js',
-                          'node_modules/angular-route/angular-route.min.js',
-                          'node_modules/angular-loader/angular-loader.min.js',
-                          'node_modules/angular-messages/angular-messages.min.js',
-                          'node_modules/angular-mocks/angular-mocks.js',
+                        'node_modules/angular-sanitize/angular-sanitize.min.js',
+                        'node_modules/angular-route/angular-route.min.js',
+                        'node_modules/angular-loader/angular-loader.min.js',
+                        'node_modules/angular-messages/angular-messages.min.js',
+                        'node_modules/angular-mocks/angular-mocks.js',
 
-                          'node_modules/ng-csv/build/ng-csv.min.js',
+                        'node_modules/ng-csv/build/ng-csv.min.js',
 
-                          'node_modules/ng-sortable/dist/ng-sortable.min.js',
+                        'node_modules/ng-sortable/dist/ng-sortable.min.js',
 
-                          'node_modules/ng-table/bundles/ng-table.min.js',
+                        'node_modules/ng-table/bundles/ng-table.min.js',
 
-                          'node_modules/ng-file-upload/ng-file-upload-shim.min.js',
-                          'node_modules/ng-file-upload/ng-file-upload.min.js',
+                        'node_modules/ng-file-upload/ng-file-upload-shim.min.js',
+                        'node_modules/ng-file-upload/ng-file-upload.min.js',
 
-                          'node_modules/tinymce/tinymce.min.js',
-                          'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
+                        'node_modules/tinymce/tinymce.min.js',
+                        'node_modules/angular-ui-tinymce/dist/tinymce.min.js',
 
-                          'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
-                          
-                          'node_modules/file-saver/FileSaver.min.js'
-             		   ],
-             		   dest: '<%= build.app %>/node_modules',
-             		   expand: true
-             	   }
-         	   ],
-             },
+                        'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+
+                        'node_modules/file-saver/FileSaver.min.js'
+                    ],
+                    dest: '<%= build.app %>/node_modules',
+                    expand: true
+                }],
+            },
             weaver: {
-                files: [
-             	   {
-             		   src: [
-             			   'node_modules/weaver-ui-core/**/*.html'
-             		   ],
-             		   dest: '<%= build.app %>/node_modules',
-             		   expand: true
-             	   }
-         	   ],
-             }
+                files: [{
+                    src: [
+                        'node_modules/weaver-ui-core/**/*.html'
+                    ],
+                    dest: '<%= build.app %>/node_modules',
+                    expand: true
+                }],
+            }
         },
 
         watch: {

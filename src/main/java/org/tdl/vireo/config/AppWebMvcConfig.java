@@ -17,7 +17,7 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
     @Value("${app.ui.path}")
     private String path;
     
-    @Value("${app.production}")
+    @Value("${info.build.production}")
     private boolean production;
 
     @Override
