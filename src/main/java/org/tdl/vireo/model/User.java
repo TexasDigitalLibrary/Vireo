@@ -457,19 +457,6 @@ public class User extends AbstractCoreUser {
     public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
         this.filterColumns = filterColumns;
     }
-    
-    public void addFilterColumn(SubmissionListColumn submissionListColumn) {
-    	this.filterColumns.add(submissionListColumn);
-    }
-    
-    public void removeFilterColumn(SubmissionListColumn submissionListColumn) {
-    	this.filterColumns.forEach(fc->{
-    		if(fc.getId() == submissionListColumn.getId()) {
-    			int indexOfFc = this.filterColumns.indexOf(fc);
-    			this.filterColumns.remove(indexOfFc);
-    		}
-    	});
-    }
 
     @Override
     @JsonIgnore
