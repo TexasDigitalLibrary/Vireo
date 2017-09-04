@@ -1,7 +1,6 @@
 package org.tdl.vireo.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -161,6 +160,9 @@ public class SystemDataLoader {
 
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
+    
+    @Autowired
+    DefaultFiltersService defaultFiltersService;
 
     @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
@@ -220,6 +222,9 @@ public class SystemDataLoader {
 
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumns();
+        
+        logger.info("Loading default Submission List Columns");
+        loadSubmissionListColumnsFilters();
 
         logger.info("Loading default Packagers");
         loadPackagers();
@@ -861,6 +866,23 @@ public class SystemDataLoader {
                         IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default submission list column titles. ", e);
+        }
+
+    }
+    
+    private void loadSubmissionListColumnsFilters() {
+
+    	List<SubmissionListColumn> defaultFilterColumns = null;
+		try {
+			defaultFilterColumns = objectMapper.readValue(fileIOUtility.getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
+			SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
+			defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
         }
 
     }

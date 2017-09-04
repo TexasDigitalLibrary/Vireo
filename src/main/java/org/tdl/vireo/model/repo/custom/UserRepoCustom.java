@@ -10,8 +10,6 @@ public interface UserRepoCustom {
 
     public User create(String email, String firstName, String lastName, AppRole role);
 
-    public User create(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> submissionViewColumns);
-
     public void delete(User user);
 
 }
