@@ -16,11 +16,16 @@ public class AppWebMvcConfig extends CoreWebMvcConfig {
 
     @Value("${app.ui.path}")
     private String path;
+    
+    @Value("${app.production}")
+    private boolean production;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	
-    	registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
+    	if(!production) {
+    		registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
+    	}
 
         registry.addResourceHandler("/**").addResourceLocations("WEB-INF" + path + "/");
 
