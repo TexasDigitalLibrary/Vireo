@@ -13,6 +13,11 @@ or run for development:
 $ mvn clean spring-boot:run
 ```
 
+or run for production
+```bash
+$ mvn clean spring-boot:run -Dproduction
+```
+
 ### Production
 ```bash
 $ mvn clean package -DskipTests -Dproduction
