@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static org.springframework.beans.BeanUtils.copyProperties;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -136,6 +138,21 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
         organizationRepo.delete(orgId);
     }
+    
+    @Override
+	public void restoreDefaults(Organization organization) {
+    	 final Organization persistedOrg = organizationRepo.findOne(organization.getId());
+    	 Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
+    	 
+    	 persistedOrg.getAggregateWorkflowSteps().clear();
+    	 parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
+    		 persistedOrg.addAggregateWorkflowStep(ws);
+         });
+    	 
+    	 //TODO: Maybe this should also reset email workflow rules. This was not specified in feature request.
+    	 	      	 
+         organizationRepo.save(persistedOrg);
+	}
 
     @Override
     public Set<Organization> getDescendantOrganizations(Organization org) {
