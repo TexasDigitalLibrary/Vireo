@@ -266,6 +266,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('develop', ['jshint', 'useminPrepare', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'usemin', 'uglify', 'sass', 'clean', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'useminPrepare', 'concat', 'uglify', 'usemin', 'sass', 'clean', 'copy']);
 
 };
