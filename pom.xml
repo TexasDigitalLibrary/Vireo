@@ -60,9 +60,9 @@
     </profile>
 
     <profile>
-      <id>!production</id>
+      <id>development</id>
       <activation>
-        <property><name>development</name></property>
+        <property><name>!production</name></property>
       </activation>
       <build>
         <plugins>        
