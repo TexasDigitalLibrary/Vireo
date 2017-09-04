@@ -10,6 +10,8 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
+import org.tdl.vireo.service.DefaultFiltersService;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 public class UserRepoImpl implements UserRepoCustom {
 
@@ -18,6 +20,12 @@ public class UserRepoImpl implements UserRepoCustom {
 
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    
+    @Autowired
+    DefaultFiltersService defaultFiltersService;
+    
+    @Autowired
+    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @Override
     public User create(String email, String firstName, String lastName, AppRole role) {
@@ -30,16 +38,11 @@ public class UserRepoImpl implements UserRepoCustom {
 
         newUser.putSetting("id", newUser.getId().toString());
         newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());
-        newUser.putSetting("preferedEmail", newUser.getEmail());
+        newUser.putSetting("preferedEmail", newUser.getEmail());        
         newUser.setActiveFilter(activeFilter);
-
-        return userRepo.save(newUser);
-    }
-
-    @Override
-    public User create(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> submissionViewColumns) {
-        User newUser = create(email, firstName, lastName, role);
-        newUser.setSubmissionViewColumns(submissionViewColumns);
+        newUser.setFilterColumns(defaultFiltersService.getDefaultFilter());
+        newUser.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
+        
         return userRepo.save(newUser);
     }
 
