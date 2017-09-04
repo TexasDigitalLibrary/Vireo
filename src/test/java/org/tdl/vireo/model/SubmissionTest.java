@@ -72,7 +72,6 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        submission.addEmbargoType(embargoType);
 
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
@@ -86,20 +85,19 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct organization!", submission.getOrganization(), organization);
         assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));
         assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
-        assertEquals("Saved submission did not contain the correct embargo type!", true, submission.getEmbargoTypes().contains(embargoType));
         assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
 
     }
-    
+
     @Test(expected = OrganizationDoesNotAcceptSubmissionsExcception.class)
     public void testAcceptsSubmissions() throws OrganizationDoesNotAcceptSubmissionsExcception {
         organization.setAcceptsSubmissions(false);
-        
-        //expect an exception when creating Submission on the Organization that doesn't accept them
+
+        // expect an exception when creating Submission on the Organization that doesn't accept them
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
     }
 
-    @Override 
+    @Override
     @Test(expected = DataIntegrityViolationException.class)
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsExcception {
 
@@ -120,7 +118,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     @Transactional
-    public void testCascade() throws OrganizationDoesNotAcceptSubmissionsExcception{
+    public void testCascade() throws OrganizationDoesNotAcceptSubmissionsExcception {
         organization = organizationRepo.findOne(organization.getId());
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
 
@@ -152,7 +150,6 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submissionRepo.saveAndFlush(submission);
 
-        submission.addEmbargoType(embargoType);
         submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
 
@@ -172,7 +169,7 @@ public class SubmissionTest extends AbstractEntityTest {
         long submissionFieldValueCount = submission.getFieldValues().size();
         submission.removeFieldValue(severableFieldValue);
         submission = submissionRepo.saveAndFlush(submission);
-        
+
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
         submissionFieldValueCount--;
@@ -213,7 +210,6 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        submission.addEmbargoType(embargoType);
 
         submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
         organization = organizationRepo.findOne(organization.getId());

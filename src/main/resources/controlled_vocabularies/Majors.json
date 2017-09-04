@@ -1,517 +1,645 @@
 {
-	"name": "Majors",
-	"isEntityProperty": false,
-	"isEnum": false,
-	"language": {
-		"name": "English"
-	},
-	"dictionary": [{
-		
-		"name": "Ocean and Coastal Resources",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Ocean Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Oceanography",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Offshore and Coastal Systems Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marine Engineering Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Maritime Administration",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Journalism",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Molecular & Cell Biology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Plant & Environmental Soil Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marine Fisheries",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agricultural Systems Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marine Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Maritime Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Chemistry",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marketing",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Food Science & Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Civil Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Leadership",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Classics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Allied Health",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Communication",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marine Transportation",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Biology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Political Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Management Information Systems",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Biomedical Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Manufacturing & Mechanical Engineering Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Biomedical Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Multidisciplinary Engineering Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Chemical Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Marine Environmental Law & Policy",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Dance Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Ecological Restoration",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Economics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Electrical Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Community Health",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Computer Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Computer Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Forensic & Investigative Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Forestry",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Genetics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Geographic Information Science & Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Mathematics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Mechanical Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Geography",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Meteorology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Microbiology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Modern Languages",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Interdisciplinary Studies-Middle Grades Math/Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Interdisciplinary Studies-Special Education",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "International Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Kinesiology-Applied Exercise Physiology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Kinesiology-Basic Exercise Physiology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Kinesiology-Motor Behavior",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Kinesiology-Physical Education Certification",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Landscape Architecture",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Construction Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Oceans and One Health",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Dance",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Animal Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Environmental Business",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Anthropology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Poultry Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Geography",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Marine Biology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agricultural Communications & Journalism",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Nuclear Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Performance Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Nutritional Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Environmental Geosciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Geology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Environmental Studies (Geosciences)",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Geophysics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Industrial Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Environmental Studies (Plant Pathology & Microbiology)",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Interdisciplinary Studies-Bilingual Education",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Finance",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Interdisciplinary Studies-Early Childhood",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Sport Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Interdisciplinary Studies-Middle Grades English/Language Arts/Social Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agricultural Economics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agricultural Leadership & Development",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agricultural Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Accounting",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Psychology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - GIS & Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Race, Gender & Ethnicity",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Applied Mathematical Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Religious Thought, Practices & Cultures",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Society, Ethics & Law",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Visualization",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Urban & Regional Planning",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Wildlife & Fisheries Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Aerospace Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Women's and Gender Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Agribusiness",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Public Health",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Rangeland Ecology & Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Recreation, Park & Tourism Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Renewable Natural Resources",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Telecommunication Media Studies",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Turfgrass Science",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Architecture",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Petroleum Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "University Studies - Child Professional Services",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Electronic Systems Engineering Technology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Zoology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "School Health",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Biochemistry",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Bioenvironmental Sciences",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Philosophy",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "History",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Statistics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Horticulture",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Supply Chain Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Human Resource Development",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Physics",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Industrial Distribution",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "English",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Biological & Agricultural Engineering",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Entomology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Sociology",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Technology Management",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Environmental Design",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Spanish",
-		"definition": "",
-		"identifier": ""}, {
-		
-		"name": "Spatial Sciences",
-		"definition": "",
-		"identifier": ""}]
+  "name":"Majors",
+  "isEntityProperty":false,
+  "isEnum":false,
+  "language":{
+    "name":"English"
+  },
+  "dictionary":[
+    {
+      "name":"Ocean and Coastal Resources",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Ocean Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Oceanography",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Offshore and Coastal Systems Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marine Engineering Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Maritime Administration",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Journalism",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Molecular & Cell Biology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Plant & Environmental Soil Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marine Fisheries",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agricultural Systems Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marine Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Maritime Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Chemistry",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marketing",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Food Science & Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Civil Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Leadership",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Classics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Allied Health",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Communication",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marine Transportation",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Biology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Political Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Management Information Systems",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Biomedical Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Manufacturing & Mechanical Engineering Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Biomedical Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Multidisciplinary Engineering Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Chemical Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Marine Environmental Law & Policy",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Dance Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Ecological Restoration",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Economics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Electrical Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Community Health",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Computer Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Computer Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Forensic & Investigative Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Forestry",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Genetics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Geographic Information Science & Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Mathematics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Mechanical Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Geography",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Meteorology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Microbiology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Modern Languages",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Interdisciplinary Studies-Middle Grades Math/Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Interdisciplinary Studies-Special Education",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"International Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Kinesiology-Applied Exercise Physiology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Kinesiology-Basic Exercise Physiology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Kinesiology-Motor Behavior",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Kinesiology-Physical Education Certification",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Landscape Architecture",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Construction Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Oceans and One Health",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Dance",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Animal Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Environmental Business",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Anthropology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Poultry Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Geography",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Marine Biology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agricultural Communications & Journalism",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Nuclear Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Performance Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Nutritional Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Environmental Geosciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Geology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Environmental Studies (Geosciences)",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Geophysics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Industrial Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Environmental Studies (Plant Pathology & Microbiology)",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Interdisciplinary Studies-Bilingual Education",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Finance",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Interdisciplinary Studies-Early Childhood",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Sport Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Interdisciplinary Studies-Middle Grades English/Language Arts/Social Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agricultural Economics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agricultural Leadership & Development",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agricultural Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Accounting",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Psychology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - GIS & Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Race, Gender & Ethnicity",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Applied Mathematical Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Religious Thought, Practices & Cultures",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Society, Ethics & Law",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Visualization",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Urban & Regional Planning",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Wildlife & Fisheries Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Aerospace Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Women's and Gender Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Agribusiness",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Public Health",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Rangeland Ecology & Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Recreation, Park & Tourism Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Renewable Natural Resources",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Telecommunication Media Studies",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Turfgrass Science",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Architecture",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Petroleum Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"University Studies - Child Professional Services",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Electronic Systems Engineering Technology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Zoology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"School Health",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Biochemistry",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Bioenvironmental Sciences",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Philosophy",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"History",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Statistics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Horticulture",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Supply Chain Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Human Resource Development",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Physics",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Industrial Distribution",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"English",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Biological & Agricultural Engineering",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Entomology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Sociology",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Technology Management",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Environmental Design",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Spanish",
+      "definition":"",
+      "identifier":""
+    },
+    {
+      "name":"Spatial Sciences",
+      "definition":"",
+      "identifier":""
+    }
+  ]
 }

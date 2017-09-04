@@ -480,22 +480,22 @@ sidebox .heading-text {
   margin-right: 15px;
 }
 
-sidebox ul {
+sidebox ul.sidebox-list {
   list-style-type: none;
 }
 
-sidebox ul li {
+sidebox ul.sidebox-list li {
   padding: 3px;
 }
 
-sidebox ul input {
+sidebox ul.sidebox-list input {
   border: 1px solid #cccccc;
   padding: 2px 0 2px 3px;
   background-color: #ffffff;
   height: 24px;
 }
 
-.sidebox-body ul {
+.sidebox-body ul.sidebox-list {
   padding: 15px;
 }
 
@@ -536,6 +536,7 @@ togglebutton {
   min-height: 20px;
   margin-bottom: 40px;
   margin-top: 25px;
+  min-width: 350px;
 }
 
 .toggle-button-heading {

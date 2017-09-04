@@ -1,19 +1,19 @@
 <form name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
-	<ul>
+	<ul class="sidebox-list">
 		<li class="filter" ng-click="box[column.title.split(' ').join('')]=ss.name;box.addExactMatchFilter(column);" ng-repeat="ss in box.submissionStatuses | filter:{isActive:null}">{{ss.name}}</li>
-		
+
 		<li ng-click="activeExpanded = activeExpanded ? !activeExpanded : true" class="status-category">+ Active</li>
-		
+
 		<li>
-			<ul class="status-list" ng-class="{'expanded': activeExpanded}">
+			<ul class="sidebox-list status-list" ng-class="{'expanded': activeExpanded}">
 				<li class="filter" ng-click="box[column.title.split(' ').join('')]=ss.name;box.addExactMatchFilter(column);" ng-repeat="ss in box.submissionStatuses | filter:{isActive:true}">{{ss.name}}</li>
 			</ul>
 		</li>
 
 		<li ng-click="archiveExpanded = archiveExpanded ? !archiveExpanded : true" class="status-category">+ Archived</li>
-		
+
 		<li>
-			<ul class="status-list" ng-class="{'expanded': archiveExpanded}">
+			<ul class="sidebox-list status-list" ng-class="{'expanded': archiveExpanded}">
 				<li class="filter" ng-click="box[column.title.split(' ').join('')]=ss.name;box.addExactMatchFilter(column);" ng-repeat="ss in box.submissionStatuses | filter:{isArchived:true}">{{ss.name}}</li>
 			</ul>
 		</li>

@@ -22,9 +22,6 @@ public class UserCredentialsService {
     @Autowired
     ConfigurationRepo configurationRepo;
 
-    @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
-
     @Value("${app.authority.admins}")
     private String[] admins;
 
@@ -90,8 +87,6 @@ public class UserCredentialsService {
             user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
             user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
             user.setUin(uin);
-
-            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
             user = userRepo.save(user);
         } else {

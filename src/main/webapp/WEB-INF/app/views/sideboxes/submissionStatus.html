@@ -1,7 +1,7 @@
 <div class="submission-status">
-	<ul>
+	<ul class="sidebox-list">
 		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionStatus.name}}</button></li>
-		
+
 		<li>Assignee:</li>
 		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
 
@@ -11,7 +11,7 @@
 		<li>Submission Date:</li>
 		<li class="sidebar-btn"
 			ng-click="date=true"
-			ng-change="box.setSubmitDate(newSubmitDate)" 
+			ng-change="box.setSubmitDate(newSubmitDate)"
 			uib-datepicker-popup="MM/dd/yyyy"
 			ng-model="newSubmitDate"
 			is-open="date"
@@ -25,23 +25,23 @@
 	</ul>
 </div>
 
-<modal 
-	modal-id="advisorEmail" 
-	modal-view="views/modals/view/advisorEmail.html" 
+<modal
+	modal-id="advisorEmail"
+	modal-view="views/modals/view/advisorEmail.html"
 	modal-header-class="modal-header-primary"
 	modal-backdrop="static">
 </modal>
 
-<modal 
-	modal-id="submissionStatus" 
-	modal-view="views/modals/view/status.html" 
+<modal
+	modal-id="submissionStatus"
+	modal-view="views/modals/view/status.html"
 	modal-header-class="modal-header-primary"
 	modal-backdrop="static">
 </modal>
 
-<modal 
-	modal-id="submissionAssign" 
-	modal-view="views/modals/view/assign.html" 
+<modal
+	modal-id="submissionAssign"
+	modal-view="views/modals/view/assign.html"
 	modal-header-class="modal-header-primary"
 	modal-backdrop="static">
 </modal>

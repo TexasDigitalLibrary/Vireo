@@ -45,9 +45,6 @@
 	<hr/>
 
 	<div class="row cv-editing-selection">
-
-		<h2>Edit Controlled Vocabularies</h2>
-
 		<div class="col-md-4">
 			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv(selectedCv)"></select>
 		</div>
@@ -72,6 +69,11 @@
 						<td title="'Identifier'">
 							<div class="form-group">
 								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='identifier'">
+							</div>
+						</td>
+						<td title="'Contacts'">
+							<div class="form-group">
+								<input name="contacts" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.contacts" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='contacts'">
 							</div>
 						</td>
 						<td title="'Actions'" class="actions">
@@ -113,6 +115,12 @@
 							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.identifier}}</span>
 							<div class="form-group">
 								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
+							</div>
+						</td>
+						<td title="'Contacts'" ng-dblclick="startEditVWMode(vocabularyWord, 'contacts')">
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.contacts}}</span>
+							<div class="form-group">
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.contacts" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='contacts'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
 						<td title="'Actions'" >

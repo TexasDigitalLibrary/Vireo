@@ -1,0 +1,37 @@
+[
+  {
+    "inputType": {
+      "name": "INPUT_TEXT"
+	},
+    "title": "Search Box",
+    "predicate": null
+  },
+  {
+    "inputType": {
+      "name": "INPUT_TEXT"
+    },
+    "title": "Status",
+    "predicate": null
+  },
+  {
+    "inputType": {
+      "name": "INPUT_TEXT"
+    },
+    "title": "Assigned to",
+    "predicate": null
+  },
+  {
+    "inputType": {
+      "name": "INPUT_DATE"
+    },
+    "title": "Graduation semester",
+    "predicate": null
+  },
+  {
+    "inputType": {
+      "name": "INPUT_SELECT"
+    },
+    "title": "Degree",
+    "predicate": "thesis.degree.name"
+  }
+]
