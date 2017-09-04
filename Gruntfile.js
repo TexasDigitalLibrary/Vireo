@@ -213,6 +213,17 @@ module.exports = function (grunt) {
                     expand: true
                 }]
             },
+            tinymce: {
+                files: [{
+                    cwd: 'node_modules/tinymce/',
+                    src: [
+                        'themes/**/*',
+                        'skins/**/*'
+                    ],
+                    dest: '<%= build.app %>/resources/scripts/',
+                    expand: true
+                }]
+            },
             weaver: {
                 files: [{
                     src: [
