@@ -54,7 +54,6 @@ module.exports = function (grunt) {
             },
             vendor: {
                 src: [
-                    // TODO: move vendor scripts here, remove from vendor copy, ** some vendor modules do not work correctly here **
                     'node_modules/jquery/dist/jquery.min.js',
                     'node_modules/bootstrap/dist/js/bootstrap.min.js',
 
