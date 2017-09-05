@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, DepositLocationRepo, EmbargoRepo, SubmissionRepo, SubmissionStatusRepo, SubmissionListColumnRepo, ManagerSubmissionListColumnRepo, ManagerFilterColumnRepo, DocumentTypeRepo, OrganizationRepo, OrganizationCategoryRepo, SidebarService, NamedSearchFilterGroup, SavedFilterRepo, Submission, UserRepo, CustomActionDefinitionRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -102,12 +102,22 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         console.log("batchCommentEmail");
     };
 
+    var packagers = PackagerRepo.getAll();
+
     var resetBatchDownloadExport = function () {
         $scope.closeModal();
     };
 
-    var batchDownloadExport = function () {
-        console.log("batchDownloadExport");
+    var batchDownloadExport = function (packager) {
+        $scope.advancedfeaturesBox.exporting = true;
+        SubmissionRepo.batchExport(packager).then(function (data) {
+            
+            saveAs(new Blob([data], {
+                type: 'application/zip'
+            }), packager.name);
+
+            resetBatchUpdateStatus();
+        });
     };
 
     $scope.advancedfeaturesBox = {
@@ -126,7 +136,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         "resetBatchCommentEmail": resetBatchCommentEmail,
         "batchCommentEmail": batchCommentEmail,
         "resetBatchDownloadExport": resetBatchDownloadExport,
-        "batchDownloadExport": batchDownloadExport
+        "batchDownloadExport": batchDownloadExport,
+        "packagers": packagers
     };
 
     $scope.filterChange = false;

@@ -114,7 +114,7 @@
 
 <div class="modal-footer">
 	<button type="button" class="btn btn-primary pull-left" ng-csv="exportControlledVocabulary()" csv-header='headers' filename='{{uploadModalData.cv.name}}.csv' ng-disabled="!uploadModalData.cv || uploadAction == 'process'" data-dismiss="modal" title="Download this controlled vocabulary's CSV from the server">Export CSV</button>
-	<button type="button" class="btn btn-warning" ng-click="resetControlledVocabulary(true)">Cancel</button>
+	<button type="button" class="btn btn-default" ng-click="resetControlledVocabulary(true)">Cancel</button>
 	<button ng-if="uploadModalData.cv.inProgress" class="btn btn-danger" ng-click="uploadModalData.cv.inProgress = false">Override</button>
 	<button id="controlledVocabulary-upload" type="button" class="btn btn-primary" ng-disabled="!uploadModalData.file || uploadModalData.cv.isEntityProperty || uploadModalData.cv.inProgress" ng-click="uploadControlledVocabulary()">
     <span ng-if="uploadAction == 'confirm'">Upload</span>

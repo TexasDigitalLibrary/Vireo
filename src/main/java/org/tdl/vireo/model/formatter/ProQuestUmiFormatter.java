@@ -11,11 +11,11 @@ import org.tdl.vireo.util.FileHelperUtility;
 import org.thymeleaf.context.Context;
 
 @Entity
-public class DSpaceMetsFormatter extends AbstractFormatter {
+public class ProQuestUmiFormatter extends AbstractFormatter {
 
-    public DSpaceMetsFormatter() {
-        setName("DSpace METS");
-        setTemplate("dspace_mets");
+    public ProQuestUmiFormatter() {
+        setName("ProQuest");
+        setTemplate("ProquestUMI");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
         ctx.setVariable("time", format.format(new Date()));
 
-        ctx.setVariable("agent", "Vireo DSpace METS packager");
+        ctx.setVariable("agent", "Vireo Proquest UMI packager");
 
         return ctx;
     }

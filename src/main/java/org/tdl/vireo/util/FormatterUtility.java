@@ -13,7 +13,7 @@ public class FormatterUtility {
     private SpringTemplateEngine templateEngine;
 
     public String renderManifest(Formatter formatter, Submission submission) throws Exception {
-        return templateEngine.process("dspace_mets", formatter.craftContext(submission));
+        return templateEngine.process(formatter.getTemplate(), formatter.craftContext(submission));
     }
 
 }

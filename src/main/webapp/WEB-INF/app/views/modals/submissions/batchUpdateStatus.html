@@ -31,12 +31,12 @@
 </div>
 
 <div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="box.resetBatchUpdateStatus()">Cancel</button>
   <button ng-if="box.newStatus.name!='Published'" type="button" class="btn btn-primary" ng-click="box.batchUpdateStatus(box.newStatus)" ng-disabled="box.processing">Update Statuses
     <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
   </button>
   <button ng-if="box.newStatus.name=='Published'" type="button" class="btn btn-primary" ng-click="box.batchPublish(box.newStatus)" ng-disabled="!box.depositLocation || box.processing">Batch Publish
     <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
   </button>
-  <button type="button" class="btn btn-warning" ng-click="box.resetBatchUpdateStatus()">Cancel</button>
 </div>
 </div>

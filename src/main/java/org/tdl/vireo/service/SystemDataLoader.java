@@ -49,6 +49,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -1073,6 +1074,7 @@ public class SystemDataLoader {
 
     private void loadPackagers() {
         abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
+        abstractPackagerRepo.createProQuestUmiPackager(new ProQuestUmiFormatter());
     }
 
     private void loadDepositors() {

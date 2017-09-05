@@ -21,13 +21,13 @@ import org.tdl.vireo.model.export.TemplateExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
 @Entity
-public class DSpaceMetsPackager extends AbstractPackager {
+public class ProQuestUmiPackager extends AbstractPackager {
 
-    public DSpaceMetsPackager() {
-        setName("DSpace METS");
+    public ProQuestUmiPackager() {
+        setName("ProQuest");
     }
 
-    public DSpaceMetsPackager(AbstractFormatter formatter) {
+    public ProQuestUmiPackager(AbstractFormatter formatter) {
         this();
         setFormatter(formatter);
     }
@@ -36,13 +36,13 @@ public class DSpaceMetsPackager extends AbstractPackager {
     public ExportPackage packageExport(String manifest, Submission submission) {
 
         String mimeType = null;
-        String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
-        String manifestName = "mets.xml";
+        String format = "ProQuest";
+        String manifestName = "proquest.xml";
 
         File pkg = null;
         try {
 
-            pkg = File.createTempFile("DSpaceMets", ".zip");
+            pkg = File.createTempFile("ProQuest", ".zip");
 
             mimeType = "application/zip";
 
