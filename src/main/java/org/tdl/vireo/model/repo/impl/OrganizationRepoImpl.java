@@ -141,10 +141,15 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     
     @Override
 	public void restoreDefaults(Organization organization) {
-    	 final Organization persistedOrg = organizationRepo.findOne(organization.getId());
+    	 Organization persistedOrg = organizationRepo.findOne(organization.getId());
     	 Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
     	 
-    	 persistedOrg.getAggregateWorkflowSteps().clear();
+    	 List<WorkflowStep> stepsToRemove = new ArrayList<WorkflowStep>(persistedOrg.getAggregateWorkflowSteps());
+    	 
+    	 stepsToRemove.forEach(awfs->{
+    		 persistedOrg.removeAggregateWorkflowStep(awfs);
+    	 });
+    	 
     	 parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
     		 persistedOrg.addAggregateWorkflowStep(ws);
          });

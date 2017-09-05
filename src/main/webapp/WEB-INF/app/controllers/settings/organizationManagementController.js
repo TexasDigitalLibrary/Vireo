@@ -74,7 +74,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 			});
 		};
 
-		$scope.cancelDeleteOrganization = function() {
+		$scope.cancelRestoreOrganizationDefaults = function() {
 			$scope.closeModal();
 			$scope.getSelectedOrganization().clearValidationResults();
 		};

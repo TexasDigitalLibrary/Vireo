@@ -117,7 +117,7 @@ public class OrganizationController {
     
     @ApiMapping(value = "/restore-defaults", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @ApiValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
+    //@ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @ApiValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
     public ApiResponse restoreOrganizationDefaults(@ApiValidatedModel Organization organization) {
     	organizationRepo.restoreDefaults(organization);
     	simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
