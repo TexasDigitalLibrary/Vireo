@@ -79,7 +79,7 @@ module.exports = function (grunt) {
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
-            weaver: {
+            core: {
                 src: [
                     'node_modules/weaver-ui-core/app/config/coreConfig.js',
 
@@ -138,9 +138,9 @@ module.exports = function (grunt) {
                     'node_modules/weaver-ui-core/app/controllers/userController.js',
                     'node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js',
                 ],
-                dest: '<%= build.app %>/resources/scripts/weaver_concat.js'
+                dest: '<%= build.app %>/resources/scripts/core_concat.js'
             },
-            vireo: {
+            app: {
                 src: [
                     '<%= build.app %>/**/*.js',
                     '!<%= build.app %>/config/appConfig.js',
@@ -149,13 +149,13 @@ module.exports = function (grunt) {
                     '!<%= build.app %>/components/**/*',
                     '!<%= build.app %>/node_modules/**/*'
                 ],
-                dest: '<%= build.app %>/resources/scripts/vireo_concat.js'
+                dest: '<%= build.app %>/resources/scripts/app_concat.js'
             },
             bundle: {
                 src: [
                     '<%= build.app %>/resources/scripts/vendor_concat.js',
-                    '<%= build.app %>/resources/scripts/weaver_concat.js',
-                    '<%= build.app %>/resources/scripts/vireo_concat.js'
+                    '<%= build.app %>/resources/scripts/core_concat.js',
+                    '<%= build.app %>/resources/scripts/app_concat.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/bundle.js'
             }
@@ -217,6 +217,7 @@ module.exports = function (grunt) {
                 files: [{
                     cwd: 'node_modules/tinymce/',
                     src: [
+                        'plugins/**/*',
                         'themes/**/*',
                         'skins/**/*'
                     ],
