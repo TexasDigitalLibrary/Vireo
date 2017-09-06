@@ -130,6 +130,8 @@ public class SWORDv1Depositor implements Depositor {
             }
 
             PostMessage message = new PostMessage();
+            
+            System.out.println("\n\n" + exportFile.getAbsolutePath() + "\n\n");
 
             message.setFilepath(exportFile.getAbsolutePath());
             message.setDestination(depLocation.getCollection());

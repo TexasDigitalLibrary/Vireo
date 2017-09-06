@@ -64,7 +64,7 @@ public class ProQuestUmiPackager extends AbstractPackager {
 
                 File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
 
-                zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                zos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
                 zos.write(Files.readAllBytes(exportFile.toPath()));
                 zos.closeEntry();
 

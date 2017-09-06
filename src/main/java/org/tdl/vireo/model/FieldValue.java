@@ -69,10 +69,18 @@ public class FieldValue extends BaseEntity {
         this.value = value;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * 
+     * @param identifier
+     */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
