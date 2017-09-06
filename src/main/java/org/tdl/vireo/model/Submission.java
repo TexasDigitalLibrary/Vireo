@@ -5,10 +5,12 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,10 +28,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.validation.SubmissionValidator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -37,7 +38,12 @@ import edu.tamu.framework.model.BaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends BaseEntity {
 
-    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+    private final static String COMMA = ", ";
+    private final static String HYPHEN = "-";
+    private final static String SPACE = " ";
+    private final static String NOTHING = "";
 
     @ManyToOne(optional = false)
     private User submitter;
@@ -211,41 +217,6 @@ public class Submission extends BaseEntity {
         getFieldValues().add(fieldValue);
     }
 
-    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate fieldPredicate) {
-        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
-        getFieldValues().forEach(fieldValue -> {
-            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
-                fielsValues.add(fieldValue);
-            }
-        });
-        return fielsValues;
-    }
-
-    public List<FieldValue> getFieldValuesByPredicateValue(String predicateValue) {
-        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
-        getFieldValues().forEach(fieldValue -> {
-            if (fieldValue.getFieldPredicate().getValue().equals(predicateValue)) {
-                fielsValues.add(fieldValue);
-            }
-        });
-        return fielsValues;
-    }
-
-    /**
-     *
-     * @param fieldValue
-     */
-    public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
-        FieldValue foundFieldValue = null;
-        for (FieldValue fieldValue : getFieldValues()) {
-            if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
-                foundFieldValue = fieldValue;
-                break;
-            }
-        }
-        return foundFieldValue;
-    }
-
     /**
      *
      * @param fieldValue
@@ -300,26 +271,50 @@ public class Submission extends BaseEntity {
         this.submissionDate = submissionDate;
     }
 
+    /**
+     * 
+     * @param approveEmbargoDate
+     */
     public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
         this.approveEmbargoDate = approveEmbargoDate;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Calendar getApproveEmbargoDate() {
         return approveEmbargoDate;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Calendar getApprovalDate() {
         return approvalDate;
     }
 
+    /**
+     * 
+     * @param approvalDate
+     */
     public void setApprovalDate(Calendar approvalDate) {
         this.approvalDate = approvalDate;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean getApproveEmbargo() {
         return approveEmbargo;
     }
 
+    /**
+     * 
+     * @param approveEmbargo
+     */
     public void setApproveEmbargo(boolean approveEmbargo) {
         if (approveEmbargo) {
             this.approveEmbargoDate = Calendar.getInstance();
@@ -329,19 +324,33 @@ public class Submission extends BaseEntity {
         this.approveEmbargo = approveEmbargo;
     }
 
+    /**
+     * 
+     */
     public void clearApproveEmbargo() {
         this.approveEmbargoDate = null;
         this.approveEmbargo = false;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean getApproveApplication() {
         return approveApplication;
     }
 
+    /**
+     * 
+     * @param approveApplication
+     */
     public void setApproveApplication(boolean approveApplication) {
         this.approveApplication = approveApplication;
     }
 
+    /**
+     * 
+     */
     public void clearApproveApplication() {
         this.approvalDate = null;
         this.approveApplication = false;
@@ -394,22 +403,41 @@ public class Submission extends BaseEntity {
         this.reviewerNotes = reviewerNotes;
     }
 
+    /**
+     * 
+     */
     private void generateAdvisorAccessHash() {
         setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
     }
 
+    /**
+     * 
+     * @param string
+     */
     public void setAdvisorAccessHash(String string) {
         advisorAccessHash = string;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getAdvisorAccessHash() {
         return advisorAccessHash;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getDepositUri() {
         return depositUri;
     }
 
+    /**
+     * 
+     * @param depositUri
+     */
     public void setDepositUri(String depositUri) {
         this.depositUri = depositUri;
     }
@@ -429,6 +457,10 @@ public class Submission extends BaseEntity {
         this.customActionValues = customActionValues;
     }
 
+    /**
+     * 
+     * @param customActionValue
+     */
     public void addCustomActionValue(CustomActionValue customActionValue) {
         this.customActionValues.add(customActionValue);
     }
@@ -450,6 +482,41 @@ public class Submission extends BaseEntity {
         return customActionValue;
     }
 
+    @JsonIgnore
+    public List<FieldValue> getFieldValuesByPredicate(FieldPredicate fieldPredicate) {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                fielsValues.add(fieldValue);
+            }
+        });
+        return fielsValues;
+    }
+
+    @JsonIgnore
+    public List<FieldValue> getFieldValuesByPredicateValue(String predicateValue) {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().getValue().equals(predicateValue)) {
+                fielsValues.add(fieldValue);
+            }
+        });
+        return fielsValues;
+    }
+
+    @JsonIgnore
+    public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
+        FieldValue foundFieldValue = null;
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
+                foundFieldValue = fieldValue;
+                break;
+            }
+        }
+        return foundFieldValue;
+    }
+
+    @JsonIgnore
     public List<FieldValue> getFieldValuesByInputType(InputType inputType) {
 
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
@@ -466,6 +533,7 @@ public class Submission extends BaseEntity {
         return fieldValues;
     }
 
+    @JsonIgnore
     public List<FieldValue> getAllDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
@@ -476,6 +544,7 @@ public class Submission extends BaseEntity {
         return fielsValues;
     }
 
+    @JsonIgnore
     public FieldValue getPrimaryDocumentFieldValue() {
         FieldValue primaryDocumentFieldValue = null;
         for (FieldValue fieldValue : getFieldValues()) {
@@ -487,6 +556,19 @@ public class Submission extends BaseEntity {
         return primaryDocumentFieldValue;
     }
 
+    @JsonIgnore
+    public FieldValue getLicenseDocumentFieldValues() {
+        FieldValue primaryDocumentFieldValue = null;
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_license")) {
+                primaryDocumentFieldValue = fieldValue;
+                break;
+            }
+        }
+        return primaryDocumentFieldValue;
+    }
+
+    @JsonIgnore
     public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
@@ -497,6 +579,7 @@ public class Submission extends BaseEntity {
         return fielsValues;
     }
 
+    @JsonIgnore
     public List<FieldValue> getLicenseAgreementFieldValues() {
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
@@ -507,6 +590,7 @@ public class Submission extends BaseEntity {
         return fieldValues;
     }
 
+    @JsonIgnore
     public List<SubmissionFieldProfile> getSubmissionFieldProfilesByInputTypeName(String inputType) {
 
         List<SubmissionFieldProfile> submissionFieldProfiles = new ArrayList<SubmissionFieldProfile>();
@@ -529,4 +613,59 @@ public class Submission extends BaseEntity {
     public String getAdvisorReviewURL() {
         return advisorReviewURL;
     }
+
+    // convinience methods for exporter templating
+    // NOTE: uses hard coded predicate values
+
+    @JsonIgnore
+    public String getSubmissionDateString() {
+        return dateFormat.format(submissionDate.getTime());
+    }
+
+    @JsonIgnore
+    public String getCommitteeEmbargoApprovalDateString() {
+        return dateFormat.format(approveEmbargoDate.getTime());
+    }
+
+    @JsonIgnore
+    public String getApprovalDateString() {
+        return dateFormat.format(approvalDate.getTime());
+    }
+
+    @JsonIgnore
+    public String getSubmissionType() {
+        Optional<String> submissionType = getFieldValueByPredicateValue("submission_type");
+        return (submissionType.isPresent() ? submissionType.get() : NOTHING);
+    }
+
+    @JsonIgnore
+    public String getStudentFullNameWithBirthYear() {
+        Optional<String> firstName = getFieldValueByPredicateValue("first_name");
+        Optional<String> middleName = getFieldValueByPredicateValue("middle_name");
+        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
+        Optional<String> birthYear = getFieldValueByPredicateValue("birth_year");
+        return (lastName.isPresent() ? lastName.get() + COMMA : NOTHING) + (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (middleName.isPresent() ? middleName.get() + SPACE : NOTHING) + (birthYear.isPresent() ? birthYear.get() + HYPHEN : NOTHING);
+    }
+
+    @JsonIgnore
+    public String getStudentFullName() {
+        Optional<String> firstName = getFieldValueByPredicateValue("first_name");
+        Optional<String> middleName = getFieldValueByPredicateValue("middle_name");
+        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
+        return (lastName.isPresent() ? lastName.get() + COMMA : NOTHING) + (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (middleName.isPresent() ? middleName.get() + SPACE : NOTHING);
+    }
+
+    @JsonIgnore
+    public String getStudentShortName() {
+        Optional<String> firstName = getFieldValueByPredicateValue("first_name");
+        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
+        return (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (lastName.isPresent() ? lastName.get() : NOTHING);
+    }
+
+    @JsonIgnore
+    public Optional<String> getFieldValueByPredicateValue(String predicateValue) {
+        List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
+        return fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+    }
+
 }

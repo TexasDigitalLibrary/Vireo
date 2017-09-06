@@ -431,7 +431,11 @@ public class SubmissionController {
 
         try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
 
-            // TODO: must enforce filtering by UMI Publication = true
+            // TODO: need a more dynamic way to achieve this
+            if (packagerName.equals("ProQuest")) {
+                // TODO: add filter for UMI Publication true
+            }
+
             for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
                 ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                 File exportFile = exportPackage.getFile();

@@ -14,8 +14,8 @@ import org.thymeleaf.context.Context;
 public class ProQuestUmiFormatter extends AbstractFormatter {
 
     public ProQuestUmiFormatter() {
-        setName("ProQuest");
-        setTemplate("ProquestUMI");
+        setName("ProQuestUMI");
+        setTemplate("proquest_umi");
     }
 
     @Override

@@ -42,11 +42,7 @@
                     <!-- Metadata -->
                 
                     <!-- dc.creator = Student -->
-                    <dim:field mdschema="dc" element="creator" th:text="
-                      ${submission.getFieldValuesByPredicateValue('last_name').size() > 0 ? submission.getFieldValuesByPredicateValue('last_name').get(0).value + ', ' : '' } +
-                      ${submission.getFieldValuesByPredicateValue('first_name').size() > 0 ? submission.getFieldValuesByPredicateValue('first_name').get(0).value + ' ' : ''} +
-                      ${submission.getFieldValuesByPredicateValue('middle_name').size() > 0 ? (submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('middle_name').get(0).value + ' ' : submission.getFieldValuesByPredicateValue('middle_name').get(0).value) : ''} +
-                      ${submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('birth_year').get(0).value + '-' : ''}">
+                    <dim:field mdschema="dc" element="creator" th:text="${submission.getStudentFullNameWithBirthYear()}">
                     </dim:field>
                     
                     <!-- dc, thesis, and local schema -->
@@ -81,7 +77,7 @@
                     <!-- TODO: complete the following with adding accessor methods to submission -->
                 
                     <!-- dc.description.provenance = License Agreement Date -->
-                    <!--/* 
+                    <!--/*
                     <dim:field
                       th:if="${ submission.getLicenseAgreementDate() }"
                       mdschema="dc"
@@ -92,15 +88,13 @@
                     */-->
                      
                     <!-- dc.description.provenance = Submission Date -->
-                    <!--/* 
                     <dim:field
                       th:if="${ submission.getSubmissionDate() }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The student, ' + submission.getStudentShortName() + ', submitted this ' + submission.getSubmissionType() + ' for approval of ' + submission.getSubmissionDate() + '.' }">                         
+                      th:text="${ 'The student, ' + submission.getStudentShortName() + ', submitted this ' + submission.getSubmissionType() + ' for approval of ' + submission.getSubmissionDateString() + '.' }">                         
                     </dim:field>
-                    */-->
                     
                     <!-- dc.description.provenance = Committee Approval Date -->
                     <!--/*
@@ -114,26 +108,24 @@
                     */-->
                     
                     <!-- dc.description.provenance = Committee Embargo Approval Date -->
-                    <!--/*
                     <dim:field
-                      th:if="${ submission.getCommitteeEmbargoApprovalDate() }"
+                      th:if="${ submission.getApproveEmbargoDate() }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The committee advisor approved the embargo selection for this ' + submission.getSubmissionType() + ' on ' + submission.getCommitteeEmbargoApprovalDate() + '.' }">                         
+                      th:text="${ 'The committee advisor approved the embargo selection for this ' + submission.getSubmissionType() + ' on ' + submission.getCommitteeEmbargoApprovalDateString() + '.' }">                         
                     </dim:field> 
-                    */-->
                     
                     <!-- dc.description.provenance = Approval Date -->
-                    <!--/*
+                    
                     <dim:field
                       th:if="${ submission.getApprovalDate() }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'This ' + submission.getSubmissionType() + ' was approved for publication on ' + submission.getApprovalDate() + '.' }">                         
+                      th:text="${ 'This ' + submission.getSubmissionType() + ' was approved for publication on ' + submission.getApprovalDateString() + '.' }">                         
                     </dim:field> 
-                    */-->
+                    
                     
                     <!-- dc.description.provenance = Statement about when this package was generated. -->
                     <dim:field
@@ -178,7 +170,16 @@
         <fileGrp ID="vireo-mets-fgrp-2" USE="LICENSE">
             
             <!-- Licence Documents -->
-            <!--  TODO: generate file from license agreement -->
+            <file 
+              th:each="fv,iter : ${ submission.getLicenseDocumentFieldValues() }"
+              th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id }, 
+                       ID=${ 'piper-mets-file-' + fv.id },
+                       MIMETYPE=${ fileHelper.getMimeType(fv.value) },
+                       SEQ=${ iter.index + 2 }">
+                <FLocat
+                    LOCTYPE="URL"
+                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
+            </file>
             
         </fileGrp>
     </fileSec>
