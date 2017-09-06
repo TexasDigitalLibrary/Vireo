@@ -14,7 +14,7 @@ import org.thymeleaf.context.Context;
 public class DSpaceMetsFormatter extends AbstractFormatter {
 
     public DSpaceMetsFormatter() {
-        setName("DSpace METS");
+        setName("DSpaceMETS");
         setTemplate("dspace_mets");
     }
 

@@ -4,30 +4,31 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.Authenticator.RequestorType;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -417,38 +418,29 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping(value = "/batch-export/{packagerName}", method = RequestMethod.GET)
     @Auth(role = "MANAGER")
-    public void batchExport(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiVariable String packagerName) throws Exception {
+    @ApiMapping(value = "/batch-export/{packagerName}", method = RequestMethod.GET)
+    public void batchExport(HttpServletResponse response, @ApiCredentials Credentials credentials, @PathVariable String packagerName) throws Exception {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
-        System.out.print("\n\n\n" + packagerName);
-
         AbstractPackager packager = packagerUtility.getPackager(packagerName);
 
-        List<ExportPackage> exportPackages = new ArrayList<ExportPackage>();
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
 
-        // TODO: must enforce filtering by UMI Publication = true
-        for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
+        try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
 
-            System.out.print("          " + submission.getId());
-
-            exportPackages.add(packagerUtility.packageExport(packager, submission));
-
+            // TODO: must enforce filtering by UMI Publication = true
+            for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
+                ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                File exportFile = exportPackage.getFile();
+                zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                zos.write(Files.readAllBytes(exportFile.toPath()));
+                zos.closeEntry();
+            }
+            zos.close();
         }
-
-        System.out.print("\n");
-
-        response.setHeader("Content-Type", "application/zip");
-        response.addHeader("Content-Disposition", "attachment");
-        
-        System.out.println("\n\n" + exportPackages.get(0).getFile().getAbsolutePath() + "\n\n");
-        
-        System.out.println("\n\n" + exportPackages.get(0).getFile().exists() + "\n\n");
-
-        response.getOutputStream().write(FileUtils.readFileToByteArray(exportPackages.get(0).getFile()));
-        response.flushBuffer();
     }
 
     @Transactional

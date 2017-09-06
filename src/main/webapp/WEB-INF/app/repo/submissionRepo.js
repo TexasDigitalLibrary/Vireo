@@ -1,4 +1,4 @@
-vireo.repo("SubmissionRepo", function SubmissionRepo($q, RestApi, WsApi, Submission) {
+vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submission) {
 
     var submissionRepo = this;
 
@@ -47,7 +47,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, RestApi, WsApi, Submiss
         angular.extend(submissionRepo.mapping.batchExport, {
             'method': 'batch-export/' + packager.name
         });
-        var promise = RestApi.get(submissionRepo.mapping.batchExport);
+        var promise = FileApi.download(submissionRepo.mapping.batchExport);
         return promise;
     };
 

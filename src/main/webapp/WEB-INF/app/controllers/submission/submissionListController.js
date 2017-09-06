@@ -111,11 +111,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     var batchDownloadExport = function (packager) {
         $scope.advancedfeaturesBox.exporting = true;
         SubmissionRepo.batchExport(packager).then(function (data) {
-            
             saveAs(new Blob([data], {
                 type: 'application/zip'
-            }), packager.name);
-
+            }), packager.name + '.zip');
             resetBatchUpdateStatus();
         });
     };

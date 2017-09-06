@@ -1,9 +1,9 @@
 package org.tdl.vireo.model.packager;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.tdl.vireo.model.formatter.AbstractFormatter;
 public class DSpaceMetsPackager extends AbstractPackager {
 
     public DSpaceMetsPackager() {
-        setName("DSpace METS");
+        setName("DSpaceMETS");
     }
 
     public DSpaceMetsPackager(AbstractFormatter formatter) {
@@ -34,17 +34,14 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
     @Override
     public ExportPackage packageExport(String manifest, Submission submission) {
-
-        String mimeType = null;
-        String format = "http://purl.org/net/sword-types/METSDSpaceSIP";
+        
+        String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
 
         File pkg = null;
         try {
 
-            pkg = File.createTempFile("DSpaceMets", ".zip");
-
-            mimeType = "application/zip";
+            pkg = File.createTempFile(packageName, ".zip");
 
             FileOutputStream fos = new FileOutputStream(pkg);
             ZipOutputStream zos = new ZipOutputStream(fos);
@@ -53,17 +50,9 @@ public class DSpaceMetsPackager extends AbstractPackager {
             File manifestFile = File.createTempFile(manifestName, null);
             FileUtils.writeStringToFile(manifestFile, manifest, "UTF-8");
 
-            ZipEntry ze = new ZipEntry(manifestName);
-            zos.putNextEntry(ze);
-            FileInputStream in = new FileInputStream(manifestFile);
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                zos.write(buf, 0, len);
-            }
-
-            in.close();
+            // Add manifest to zip
+            zos.putNextEntry(new ZipEntry(manifestName));
+            zos.write(Files.readAllBytes(manifestFile.toPath()));
             zos.closeEntry();
 
             manifestFile.delete();
@@ -73,21 +62,10 @@ public class DSpaceMetsPackager extends AbstractPackager {
 
                 // TODO: add file whitelist for publish
 
-                String fileName = documentFieldValue.getFileName();
+                File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
 
-                File exportFile = File.createTempFile(fileName, null);
-
-                FileUtils.copyFile(getAbsolutePath(documentFieldValue.getValue()).toFile(), exportFile);
-
-                ze = new ZipEntry(fileName);
-                zos.putNextEntry(ze);
-                in = new FileInputStream(exportFile);
-
-                while ((len = in.read(buf)) > 0) {
-                    zos.write(buf, 0, len);
-                }
-
-                in.close();
+                zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                zos.write(Files.readAllBytes(exportFile.toPath()));
                 zos.closeEntry();
 
             }
@@ -99,7 +77,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new TemplateExportPackage(submission, mimeType, format, pkg, null);
+        return new TemplateExportPackage(submission, "application/zip", "http://purl.org/net/sword-types/METSDSpaceSIP", pkg, null);
     }
 
     public Path getAbsolutePath(String relativePath) {
