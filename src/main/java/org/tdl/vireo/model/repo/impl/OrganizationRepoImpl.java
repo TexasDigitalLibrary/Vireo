@@ -133,6 +133,10 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         for (WorkflowStep ws : workflowStepsToDelete) {
             workflowStepRepo.delete(ws);
         }
+        
+        //required to prevent a FK constraint on ORGANIZATION_EMAILS when doing the delete
+        organization.setEmails(null);
+        organizationRepo.save(organization);
 
         organizationRepo.delete(orgId);
     }
