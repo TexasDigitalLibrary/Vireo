@@ -678,7 +678,7 @@
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
-            "name":"UMI Publication"
+            "name":"Proquest Publication"
           },
           "inputType":{
             "name":"INPUT_PROQUEST"
