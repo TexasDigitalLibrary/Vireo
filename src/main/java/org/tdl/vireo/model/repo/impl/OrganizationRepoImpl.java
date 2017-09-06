@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static org.springframework.beans.BeanUtils.copyProperties;
+import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -18,6 +19,8 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
+
+import edu.tamu.framework.model.ApiResponse;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
@@ -32,6 +35,9 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Autowired
     private SubmissionRepo submissionRepo;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public Organization create(String name, OrganizationCategory category) {
@@ -140,24 +146,18 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
     }
     
     @Override
-	public void restoreDefaults(Organization organization) {
+	public Organization restoreDefaults(Organization organization) {
     	 Organization persistedOrg = organizationRepo.findOne(organization.getId());
     	 Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
     	 
-    	 List<WorkflowStep> stepsToRemove = new ArrayList<WorkflowStep>(persistedOrg.getAggregateWorkflowSteps());
-    	 
-    	 stepsToRemove.forEach(awfs->{
-    		 persistedOrg.removeAggregateWorkflowStep(awfs);
-    	 });
+    	 persistedOrg.clearAggregatedWorkflowStepsFromHiarchy(); 
     	 
     	 parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
     		 persistedOrg.addAggregateWorkflowStep(ws);
          });
-    	 
-    	 //TODO: Maybe this should also reset email workflow rules. This was not specified in feature request.
-    	 	      	 
-         organizationRepo.save(persistedOrg);
-	}
+    	
+         return  organizationRepo.save(persistedOrg);
+   	}
 
     @Override
     public Set<Organization> getDescendantOrganizations(Organization org) {

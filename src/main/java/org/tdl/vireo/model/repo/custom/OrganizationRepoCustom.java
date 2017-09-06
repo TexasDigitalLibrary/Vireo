@@ -16,7 +16,7 @@ public interface OrganizationRepoCustom {
 
     public void delete(Organization organization);
     
-	public void restoreDefaults(Organization organization);
+	public Organization restoreDefaults(Organization organization);
 
     public Set<Organization> getDescendantOrganizations(Organization org);
 

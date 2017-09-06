@@ -69,11 +69,6 @@
 								type="button"
 								class="btn btn-danger"
                 ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
-              <button
-							    ng-if="getSelectedOrganization().id !== 1"
-								type="button"
-								class="btn btn-warning"
-								ng-click="openModal('#organizationConfirmRestoreDefaultsModal')">Restore Defaults</button>
 							<button
 								type="button"
 								class="btn btn-default"
@@ -93,12 +88,6 @@
 					wvr-modal-backdrop="static">
         </modal>
         
-        <modal modal-id="organizationConfirmRestoreDefaultsModal"
-					modal-view="views/modals/organization/organizationConfirmRestoreDefaultsModal.html"
-					modal-header-class="modal-header-warning"
-					wvr-modal-backdrop="static">
-				</modal>
-
 		</form>
 
 	</div>

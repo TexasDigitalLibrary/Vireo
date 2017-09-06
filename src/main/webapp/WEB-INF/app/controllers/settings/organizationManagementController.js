@@ -64,7 +64,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
     };
     
     $scope.restoreOrganizationDefaults = function(organization) {
-			organization.restoreDefaults().then(function(data) {
+			OrganizationRepo.restoreDefaults(organization).then(function(data) {
 				if(data.meta.type != 'INVALID') {
 					$scope.closeModal();
 					$timeout(function() {
@@ -77,7 +77,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 		$scope.cancelRestoreOrganizationDefaults = function() {
 			$scope.closeModal();
 			$scope.getSelectedOrganization().clearValidationResults();
-		};
+    };
 
 		$scope.addWorkflowStep = function() {
 			OrganizationRepo.addWorkflowStep($scope.modalData);
@@ -106,9 +106,9 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 	    $scope.resetManageOrganization = function() {
 			$scope.getSelectedOrganization().clearValidationResults();
 			$scope.setSelectedOrganization($scope.getSelectedOrganization());
-	    };
+	  };
 
-	    $scope.testBoolean = true;
+	  $scope.testBoolean = true;
 
 	});
 

@@ -2,13 +2,13 @@
   <button type="button" class="close" ng-click="cancelRestoreOrganizationDefaults()" aria-label="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
-  <h3 class="modal-title">Resore Defaults</h3>
+  <h3 class="modal-title">Sync with Parent</h3>
 </div>
 
 <form novalidate>
   <div class="modal-body">
-    <h4>Really restore defaults for "{{ getSelectedOrganization().name }}"?</h4>
-    <p>This will result in the loss of all organizational customizations.</p> 
+    <h4>Really sync the workflow for "{{ getSelectedOrganization().name }}" with parent?</h4>
+    <p>This will result in the loss of all organizational customizations for this organization and all of its decendent organizations.</p> 
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancelRestoreOrganizationDefaults()">Cancel</button>
