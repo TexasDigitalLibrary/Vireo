@@ -258,7 +258,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 Set<WorkflowStep> workflowStepsToSave = new HashSet<WorkflowStep>();
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
-                        if (ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
+                        if (ws.getOriginatingWorkflowStep() != null && ws.getOriginatingWorkflowStep().equals(persistedWorkflowStep)) {
                             ws.setOriginatingWorkflowStep(newWorkflowStep);
                             workflowStepsToSave.add(ws);
                         }
