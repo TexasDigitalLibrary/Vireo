@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
@@ -25,6 +27,8 @@ import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 import edu.tamu.framework.model.ApiResponse;
 
 public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
+    
+    final static Logger logger = LoggerFactory.getLogger(WorkflowStepRepoImpl.class);
 
     @Autowired
     private NoteRepo noteRepo;
@@ -154,6 +158,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
         // if the requestingOrganization originates the workflowStep, make the change directly
         if (requestingOrganization.getId().equals(persistedWorkflowStep.getOriginatingOrganization().getId())) {
+            
+            logger.info("Requesting organization " + requestingOrganization.getName() + " originates step " + persistedWorkflowStep.getId() );
 
             if (!pendingWorkflowStep.getOverrideable() && overridabilityOfPersistedWorkflowStep) {
 
@@ -225,6 +231,8 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         // if the requestingOrganization is not originator of workflowStep, make
         // a new workflow step to override the original
         else {
+            
+            logger.info("Requesting organization " + requestingOrganization.getName() + " does not originate step " + persistedWorkflowStep.getId() + " ... making a new step." );
 
             if (overridabilityOfPersistedWorkflowStep) {
 
@@ -235,7 +243,9 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
                 clonedWorkflowStep.setOriginatingWorkflowStep(persistedWorkflowStep);
                 clonedWorkflowStep.setOriginatingOrganization(requestingOrganization);
 
-                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
+                
+                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep); 
+                logger.info("Created new Workflow Step " + newWorkflowStep.getName() + "(" + newWorkflowStep.getId() + ")" + " originating at Org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")"); 
 
                 requestingOrganization = organizationRepo.findOne(requestingOrganizationId);
 
@@ -247,11 +257,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
                 // in descendant organizations, have WSs that originated from
                 // the step being overridden now originate from the override
-                System.out.println("In descendant orgs, have WSs that originated from the step being overridden now originate from the override:");
+                logger.info("In descendant orgs, have WSs that originated from the step being overridden now originate from the override:");
                 for (Organization organization : organizationRepo.getDescendantOrganizations(requestingOrganization)) {
-                    System.out.println("\t" + organization.getName() + "(" + organization.getId() + ").  Therein orginate WSs: ");
+                    logger.info("\t" + organization.getName() + "(" + organization.getId() + ").  Therein orginate WSs: ");
                     for (WorkflowStep ws : organization.getOriginalWorkflowSteps()) {
-                        System.out.println("\t\t" + ws.getName() + "(" + ws.getId() + ")");
+                        logger.info("\t\t" + ws.getName() + "(" + ws.getId() + ")");
                     }
                 }
 
