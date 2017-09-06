@@ -1593,8 +1593,8 @@ input[type=color]:focus {
   transition: max-height 0.5s ease-out;
 }
 
-.further-filter-by .status-list li {
-  margin-left: -25px;
+ul.status-list{
+  padding:0px;
 }
 
 .further-filter-by .filter:hover {
