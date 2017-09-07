@@ -247,10 +247,11 @@ public class SubmissionController {
             }
             
             User user = userRepo.findByEmail(credentials.getEmail());
-            user.getSetting("ccEmail");
-            if(user.getSetting("ccEmail").equals("true")) {
-            	smm.setBcc(credentials.getEmail());
-            }
+			String preferedEmail = user.getSetting("preferedEmail");
+			user.getSetting("ccEmail");
+			if(user.getSetting("ccEmail").equals("true")) {
+				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+			}
 
             smm.setSubject(subject);
             smm.setText(templatedMessage);
@@ -711,9 +712,10 @@ public class SubmissionController {
 			smm.setTo(String.join(",", fv.getContacts()));
 			 
 			User user = userRepo.findByEmail(credentials.getEmail());
+			String preferedEmail = user.getSetting("preferedEmail");
 			user.getSetting("ccEmail");
 			if(user.getSetting("ccEmail").equals("true")) {
-				 smm.setBcc(credentials.getEmail());
+				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
 			}
 			 
 			smm.setSubject(subject);
@@ -786,18 +788,19 @@ public class SubmissionController {
 
                 rule.getEmailRecipient().getEmails(submission).forEach(email -> {
                 	
-                	 smm.setTo(email);
+                	smm.setTo(email);
 
-                	 User user = userRepo.findByEmail(credentials.getEmail());
-                     user.getSetting("ccEmail");
-                     if(user.getSetting("ccEmail").equals("true")) {
-                     	smm.setBcc(credentials.getEmail());
-                     }
+                	User user = userRepo.findByEmail(credentials.getEmail());
+					String preferedEmail = user.getSetting("preferedEmail");
+					user.getSetting("ccEmail");
+					if(user.getSetting("ccEmail").equals("true")) {
+						 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+					}
 
-                     smm.setSubject(subject);
-                     smm.setText(content);
+                    smm.setSubject(subject);
+                    smm.setText(content);
                 	
-                     emailSender.send(smm);
+                    emailSender.send(smm);
                 });
 
             }
