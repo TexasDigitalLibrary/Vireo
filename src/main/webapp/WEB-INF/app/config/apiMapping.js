@@ -589,6 +589,11 @@ var apiMapping = {
             'controller': 'organization',
             'method': 'delete'
         },
+        restoreDefaults: {
+          'endpoint': '/private/queue',
+          'controller': 'organization',
+          'method': 'restore-defaults'
+        },
         removeEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
