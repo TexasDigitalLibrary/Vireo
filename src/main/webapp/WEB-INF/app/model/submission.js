@@ -605,6 +605,18 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
 
         };
 
+        submission.getContactEmails = function() {
+          
+          var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
+          var emails = [];
+
+          angular.forEach(fieldValues, function(fv) {
+            angular.extend(emails, fv.contacts);
+          });
+          
+          return emails;
+        };
+
         submission.addMessage = function (message) {
             angular.extend(this.getMapping().addMessage, {
                 method: submission.id + "/add-message",
