@@ -8,8 +8,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
-    var userModel = new UserSettings();
-    userModel.fetch();
+    var userSettingsUnfetched = new UserSettings();
+    userSettingsUnfetched.fetch();
 
     var ready = $q.all([
         SubmissionRepo.findSubmissionById($routeParams.id),
