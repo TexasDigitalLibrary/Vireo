@@ -8,7 +8,7 @@
 			<a href ng-click="openModal('#loginModal')" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && isAnonymous()">Login</a>
 			<a href="submission/history" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && multipleSubmissions() && (hasSubmissions() || submissionInProgress() || submissionNeedsCorrections()) && hasSubmissions()">Manage/View your submission(s)</a>
 			<a href="{{'submission/' + getFirstSubmissionId()}}" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && submissionInProgress()">Continue your submission</a>
-			<a href="submission/history" class="btn btn-primary start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
+			<a href="submission/history" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && submissionNeedsCorrections()">Correct your submission</a>
 			<p class="alert alert-danger" ng-if="submissionsOpen() && !isAnonymous() && !multipleSubmissions() && !submissionInProgress() && !submissionNeedsCorrections() && hasSubmissions()">You've already submitted an ETD <a href="submission/history" class="btn btn-primary">Submission History</a></p>
 			<a href="submission/new" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && (!submissionInProgress() || !submissionNeedsCorrections() || !hasSubmissions()) && !hasSubmissions()">Start your submission</a>
 		</div>
