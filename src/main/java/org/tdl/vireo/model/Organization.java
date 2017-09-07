@@ -459,5 +459,30 @@ public class Organization extends BaseEntity {
 
         return parentOrganizationHiarchy;
     }
+    
+    
+    public void clearAllWorkflowSteps() {
+    	
+    	List<WorkflowStep> originals = new ArrayList<WorkflowStep>(getOriginalWorkflowSteps());
+    	List<WorkflowStep> aggregets = new ArrayList<WorkflowStep>(getAggregateWorkflowSteps());
+    	
+    	originals.forEach(owfs->{
+    		removeOriginalWorkflowStep(owfs);
+    	});
+    	
+    	aggregets.forEach(awfs->{
+    		removeAggregateWorkflowStep(awfs);
+    	});
+    }
+
+	public void clearAggregatedWorkflowStepsFromHiarchy() {
+		//Clear this organization's worlkflow steps
+		clearAllWorkflowSteps();
+		
+		// Clear all steps from the children organization
+		this.getChildrenOrganizations().forEach(childOrg->{
+			childOrg.clearAggregatedWorkflowStepsFromHiarchy();
+		});
+	}
 
 }
