@@ -26,11 +26,14 @@
     <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
     <tomcat.version>7.0.59</tomcat.version>
     <java.version>1.8</java.version>
+    <production>false</production>
+    <failIfNoTests>false</failIfNoTests>
   </properties>
 
   <packaging>war</packaging>
 
   <profiles>
+
     <profile>
       <id>windows-profile</id>
       <activation>
@@ -43,6 +46,7 @@
         <compass-extension>.bat</compass-extension>
       </properties>
     </profile>
+
     <profile>
       <id>non-windows-profile</id>
       <activation>
@@ -55,6 +59,168 @@
         <compass-extension></compass-extension>
       </properties>
     </profile>
+
+    <profile>
+      <id>development</id>
+      <activation>
+        <property>
+          <name>!production</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Default -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt</executable>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>production</id>
+      <activation>
+        <property>
+          <name>production</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Deploy -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt</executable>
+                  <arguments>
+                    <argument>deploy</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>test-client</id>
+      <activation>
+        <property>
+          <name>testClient</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Grunt Default -->
+              <execution>
+                <id>exec-grunt-deploy</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>grunt</executable>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Karma Testing for AngularJS -->
+              <execution>
+                <id>exec-npm-run-test</id>
+                <phase>test</phase>
+                <configuration>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>test</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <reporting>
@@ -103,7 +269,7 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
     </dependency>
-    
+
     <!-- PostgreSQL SQL DB - brought in through the tamu core framework -->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -304,99 +470,6 @@
             <file>src/main/resources/application.properties</file>
           </files>
         </configuration>
-      </plugin>
-
-      <!-- General Maven Execution Plugin -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-
-          <!-- NPM Install -->
-          <execution>
-            <id>exec-npm-install</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <executable>npm${npm-extension}</executable>
-              <arguments>
-                <argument>install</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-
-          <!-- Protractor Testing for AngularJS -->
-          <execution>
-            <id>exec-npm-run-protractor</id>
-            <phase>test</phase>
-            <configuration>
-              <skip>true</skip>
-              <executable>npm</executable>
-              <arguments>
-                <argument>run</argument>
-                <argument>protractor</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-
-          <!-- Compass Compile -->
-          <execution>
-            <id>exec-compass-compile</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <executable>compass${compass-extension}</executable>
-              <arguments>
-                <argument>compile</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-
-          <!-- Grunt Deploy -->
-          <!--
-          <execution>
-            <id>exec-grunt-deploy</id>
-            <phase>generate-sources</phase> 
-            <configuration>
-              <executable>grunt</executable>
-              <arguments>
-                <argument>deploy</argument>
-              </arguments>
-            </configuration>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-          -->
-
-        </executions>
-      </plugin>
-
-      <!-- Karma Testing for AngularJS -->
-      <plugin>
-        <groupId>com.kelveden</groupId>
-        <artifactId>maven-karma-plugin</artifactId>
-        <version>1.6</version>
-        <executions>
-          <execution>
-            <id>maven-karma-test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>start</goal>
-            </goals>
-            <configuration>
-              <karmaExecutable>${basedir}/node_modules/.bin/karma</karmaExecutable>
-              <configFile>src/main/webapp/WEB-INF/tests/karma.conf.js</configFile>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
       <!-- Assembly Plugin to generate Release zip file -->

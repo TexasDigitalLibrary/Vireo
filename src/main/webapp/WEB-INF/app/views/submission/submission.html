@@ -23,14 +23,13 @@
     </div>
   </div>
 
-  <div class="row" ng-if="activeStep.name != 'review' && activeStep.instructions !== null && activeStep.instructions !== ''">
-    <div class="col-xs-12" ng-bind-html="activeStep.instructions">
-    </div>
+  <div class="row" ng-if="activeStep.name !== 'review' && activeStep.instructions !== undefined && activeStep.instructions !== null && activeStep.instructions !== ''">
+    <div class="col-xs-12" ng-bind-html="activeStep.instructions"></div>
   </div>
 
-  <hr>
+  <hr />
 
-  <div class="row" ng-if="activeStep.name != 'review'">
+  <div class="row" ng-if="activeStep.name !== 'review'">
     <div class="col-xs-12 col-sm-9 submission-workflow-steps">
       <ul class="list-unstyled">
         <li ng-repeat="fp in activeStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
@@ -50,12 +49,10 @@
 
   </div>
 
-  <div class="row" ng-if="activeStep.name == 'review'">
-
+  <div class="row" ng-if="activeStep.name === 'review'">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
       <div ng-include="'views/submission/submissionReview.html'"></div>
     </div>
-
   </div>
 
   <div class="row">

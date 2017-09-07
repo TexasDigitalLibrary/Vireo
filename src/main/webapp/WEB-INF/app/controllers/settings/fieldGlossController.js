@@ -12,8 +12,6 @@ vireo.controller('FieldGlossController', function ($controller, $scope, $q, $fil
 
     $scope.fieldGlosses = FieldGlossRepo.getAll();
 
-    console.log($scope.fieldGlosses);
-
     $scope.ready = $q.all([FieldGlossRepo.ready()]);
 
     $scope.dragging = false;

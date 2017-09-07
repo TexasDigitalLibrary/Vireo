@@ -108,8 +108,9 @@ public class WorkflowStepController {
         FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
 
         fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findOne(requestingOrgId), workflowStep, persistedFieldProfile);
-
-        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
+        
+        //If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
+        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && workflowStep.getOriginatingOrganization().getId().equals(requestingOrgId)) {
             fieldProfileRepo.delete(persistedFieldProfile);
         }
 

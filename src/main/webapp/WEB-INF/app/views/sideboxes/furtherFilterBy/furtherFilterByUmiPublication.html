@@ -1,5 +1,5 @@
 <form name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
-	<ul>
+	<ul class="sidebox-list">
 		<li class="filter" ng-click="box[column.title.split(' ').join('')]=true;box.addFilter(column, 'yes');">Yes</li>
 		<li class="filter" ng-click="box[column.title.split(' ').join('')]=false;box.addFilter(column, 'no');">No</li>
 	</ul>

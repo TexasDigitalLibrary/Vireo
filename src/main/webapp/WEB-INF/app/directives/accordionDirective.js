@@ -1,4 +1,4 @@
-vireo.directive("accordion", function () {
+vireo.directive("vireoAccordion", function () {
 	return {
 		template: '<div class="accordion" ng-transclude></div>',
 		restrict: 'E',
@@ -16,7 +16,7 @@ vireo.directive("accordion", function () {
 	};
 });
 
-vireo.directive("pane", function($location, $timeout, $routeParams, AccordionService) {
+vireo.directive("vireoPane", function($location, $timeout, $routeParams, AccordionService) {
 	var count = 0;
 	return {
         templateUrl:function(element, attr) {
@@ -25,7 +25,7 @@ vireo.directive("pane", function($location, $timeout, $routeParams, AccordionSer
 		restrict: 'E',
 		replace: false,
 		transclude: true,
-		require: "^accordion",
+		require: "^vireoAccordion",
 		scope: true,
 		link: function ($scope, element, attr, parent) {
 
@@ -120,7 +120,7 @@ vireo.service("AccordionService", function() {
 
 	AccordionService.remove = function(id) {
 		if(panes[id] !== undefined) {
-			// ???? deletepanes[id];
+			delete panes[id];
 		}
 		else {
 			console.log('No pane with id:', id);

@@ -7,10 +7,12 @@
             <button
                 class="btn btn-default modal-add-btn"
                 ng-click="openModal('#emailTemplatesNewModal')">
-                Add New Email Template
+                Add Email Template
             </button>
 
             <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new email template."></div>
+            
+            <p ng-if="emailTemplates.length == 0">Add new email template</p>
 
             <draganddroplist
                 dragging="dragging"
@@ -41,7 +43,7 @@
         modal-id="emailTemplatesNewModal"
         modal-view="views/modals/settings/emailTemplatesNewModal.html"
         modal-header-class="modal-header-primary"
-        modal-backdrop="static"
+        wvr-modal-backdrop="static"
         modal-fullscreen="true">
     </modal>
 
@@ -49,7 +51,7 @@
         modal-id="emailTemplatesEditModal"
         modal-view="views/modals/settings/emailTemplatesEditModal.html"
         modal-header-class="modal-header-primary"
-        modal-backdrop="static"
+        wvr-modal-backdrop="static"
         modal-fullscreen="true">
     </modal>
 
@@ -57,7 +59,7 @@
         modal-id="emailTemplatesConfirmRemoveModal"
         modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html"
         modal-header-class="modal-header-danger"
-        modal-backdrop="static">
+        wvr-modal-backdrop="static">
     </modal>
 
 </div>

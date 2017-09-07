@@ -1,5 +1,5 @@
 <form ng-init="box.assignToLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
-	<ul>
+	<ul class="sidebox-list">
 		<li class="filter" ng-click="box[column.title.split(' ').join('')]=null;box.addExactMatchFilter(column, 'Unassigned');">
 			Unassigned
 		</li>
