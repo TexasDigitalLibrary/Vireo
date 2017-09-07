@@ -68,6 +68,8 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
         Long orgId = organization.getId();
 
+        organization.getEmails().clear();
+
         Organization parentOrganization = organization.getParentOrganization();
 
         // Have all the parent organizations not have this one as their child anymore
@@ -76,15 +78,15 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
             parentOrganization = organizationRepo.save(parentOrganization);
             organization = organizationRepo.findOne(orgId);
         }
-        
+
         Set<Organization> childrenToRemove = new HashSet<Organization>();
 
         // Have all the child organizations get this one's parent as their parent
         for (Organization childOrganization : organization.getChildrenOrganizations()) {
             childrenToRemove.add(childOrganization);
         }
-        
-        for(Organization childOrganization : childrenToRemove) {
+
+        for (Organization childOrganization : childrenToRemove) {
             organization.removeChildOrganization(childOrganization);
             organization = organizationRepo.save(organization);
             if (parentOrganization != null) {
@@ -96,7 +98,7 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
                 childOrganization = organizationRepo.save(childOrganization);
             }
         }
-         
+
         // Have all the submissions on this organization get the parent as their new organization
         // TODO: for now, have to delete them if there is no parent org to attach them to.
         for (Submission submission : submissionRepo.findByOrganization(organization)) {
@@ -133,10 +135,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         for (WorkflowStep ws : workflowStepsToDelete) {
             workflowStepRepo.delete(ws);
         }
-        
-        //required to prevent a FK constraint on ORGANIZATION_EMAILS when doing the delete
-        organization.setEmails(null);
-        organizationRepo.save(organization);
 
         organizationRepo.delete(orgId);
     }
