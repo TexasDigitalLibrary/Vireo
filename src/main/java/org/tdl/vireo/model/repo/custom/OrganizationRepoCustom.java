@@ -15,6 +15,8 @@ public interface OrganizationRepoCustom {
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2);
 
     public void delete(Organization organization);
+    
+	public Organization restoreDefaults(Organization organization);
 
     public Set<Organization> getDescendantOrganizations(Organization org);
 
