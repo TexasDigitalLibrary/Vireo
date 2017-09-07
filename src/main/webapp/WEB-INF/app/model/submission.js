@@ -611,7 +611,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
           var emails = [];
 
           angular.forEach(fieldValues, function(fv) {
-            angular.extend(emails, );
+            angular.extend(emails, fv.contacts);
           });
           
           return emails;

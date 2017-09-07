@@ -89,7 +89,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           addCommentModal.message = "";
           addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
           addCommentModal.selectedTemplate = emailTemplates[0];
-          addCommentModal.needsCorrection = userSettings.notes_flag_submission_as_needs_corrections_by_default==="true"
+          addCommentModal.needsCorrection = userSettings.notes_flag_submission_as_needs_corrections_by_default==="true";
         };
 
         $scope.addComment = function (addCommentModal) {
