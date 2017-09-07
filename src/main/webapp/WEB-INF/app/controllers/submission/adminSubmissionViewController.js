@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User, UserSettings) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -8,13 +8,17 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
+    var userModel = new UserSettings();
+    userModel.fetch();
+
     var ready = $q.all([
         SubmissionRepo.findSubmissionById($routeParams.id),
         UserRepo.getAll(),
         SubmissionStatusRepo.getAll(),
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
-        DepositLocationRepo.getAll()
+        DepositLocationRepo.getAll(),
+        userModel.ready()
     ]);
 
     ready.then(function (resolved) {
@@ -25,6 +29,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var emailTemplates = resolved[3];
         var fieldPredicates = resolved[4];
         var depositLocations = resolved[5];
+        var userSettings = resolved[6];
 
         $scope.loaded = true;
 
@@ -184,8 +189,11 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var resetFileData = function () {
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0],
-                sendEmailToRecipient: false,
-                sendEmailToCCRecipient: false
+                sendEmailToRecipient: (userSettings.attachment_email_student_by_default==="true") || (userSettings.attachment_cc_student_advisor_by_default==="true"),
+                recipientEmail: userSettings.attachment_email_student_by_default==="true" ? "Student": "",
+                sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default==="true",
+                ccRecipientEmail: userSettings.attachment_cc_student_advisor_by_default==="true" ? "Advisor": "",
+                needsCorrection: userSettings.attachment_flag_submission_as_needs_corrections_by_default==="true"
             };
         };
 

@@ -1,87 +1,87 @@
 // CONVENTION: must match model name, case sensitive
 var apiMapping = {
-    ActionLog: {},
-    ControlledVocabulary: {
-        validations: true,
-        modelListeners: true,
-        all: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'all'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'settings/controlled-vocabulary'
-        },
-        create: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'create'
-        },
-        update: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'update'
-        },
-        remove: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'remove'
-        },
-        reorder: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary'
-        },
-        sort: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary'
-        },
-        change: {
-            'endpoint': '/channel',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'change'
-        },
-        downloadCSV: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'export'
-        },
-        uploadCSV: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'import'
-        },
-        confirmCSV: {
-            'endpoint': '',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'compare',
-            'file': null
-        },
-        cancel: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'cancel'
-        },
-        status: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'status'
-        },
-        addVocabularyWord: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'add-vocabulary-word'
-        },
-        removeVocabularyWord: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'remove-vocabulary-word'
-        },
-        updateVocabularyWord: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'update-vocabulary-word'
-        }
+  ActionLog: {},
+  ControlledVocabulary: {
+      validations: true,
+      modelListeners: true,
+      all: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'all'
+      },
+      listen: {
+          'endpoint': '/channel',
+          'controller': 'settings/controlled-vocabulary'
+      },
+      create: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'create'
+      },
+      update: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'update'
+      },
+      remove: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'remove'
+      },
+      reorder: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary'
+      },
+      sort: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary'
+      },
+      change: {
+          'endpoint': '/channel',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'change'
+      },
+      downloadCSV: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'export'
+      },
+      uploadCSV: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'import'
+      },
+      confirmCSV: {
+          'endpoint': '',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'compare',
+          'file': null
+      },
+      cancel: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'cancel'
+      },
+      status: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'status'
+      },
+      addVocabularyWord: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'add-vocabulary-word'
+      },
+      removeVocabularyWord: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'remove-vocabulary-word'
+      },
+      updateVocabularyWord: {
+          'endpoint': '/private/queue',
+          'controller': 'settings/controlled-vocabulary',
+          'method': 'update-vocabulary-word'
+      }
 
     },
     CustomActionDefinition: {
