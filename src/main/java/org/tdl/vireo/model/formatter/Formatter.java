@@ -9,6 +9,6 @@ public interface Formatter {
 
     public String getTemplate();
 
-    public Context craftContext(Submission submission);
+    public void populateContext(Context context, Submission submission);
 
 }

@@ -12,8 +12,8 @@ public interface ConfigurationRepo extends JpaRepository<ManagedConfiguration, L
 
     public ManagedConfiguration findByName(String name);
 
-    public ManagedConfiguration findByNameAndType(String name,String type);
+    public ManagedConfiguration findByNameAndType(String name, String type);
 
     public List<ManagedConfiguration> findByType(String type);
-    
+
 }

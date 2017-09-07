@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -29,9 +32,14 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.SubmissionValidator;
+import org.tdl.vireo.service.DefaultSettingsService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
+import edu.tamu.framework.SpringContext;
 import edu.tamu.framework.model.BaseEntity;
 
 @Entity
@@ -39,6 +47,10 @@ import edu.tamu.framework.model.BaseEntity;
 public class Submission extends BaseEntity {
 
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+    private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+    private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
     private final static String COMMA = ", ";
     private final static String HYPHEN = "-";
@@ -557,15 +569,14 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
-    public FieldValue getLicenseDocumentFieldValues() {
-        FieldValue primaryDocumentFieldValue = null;
+    public List<FieldValue> getLicenseDocumentFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("_doctype_license")) {
-                primaryDocumentFieldValue = fieldValue;
-                break;
+                fielsValues.add(fieldValue);
             }
         }
-        return primaryDocumentFieldValue;
+        return fielsValues;
     }
 
     @JsonIgnore
@@ -614,22 +625,41 @@ public class Submission extends BaseEntity {
         return advisorReviewURL;
     }
 
-    // convinience methods for exporter templating
+    // convenience methods for exporter templating
+
     // NOTE: uses hard coded predicate values
 
     @JsonIgnore
     public String getSubmissionDateString() {
-        return dateFormat.format(submissionDate.getTime());
+        return submissionDate != null ? dateFormat.format(submissionDate.getTime()) : "";
     }
 
     @JsonIgnore
     public String getCommitteeEmbargoApprovalDateString() {
-        return dateFormat.format(approveEmbargoDate.getTime());
+        return approveEmbargoDate != null ? dateFormat.format(approveEmbargoDate.getTime()) : "";
     }
 
     @JsonIgnore
     public String getApprovalDateString() {
-        return dateFormat.format(approvalDate.getTime());
+        return approvalDate != null ? dateFormat.format(approvalDate.getTime()) : "";
+    }
+
+    @JsonIgnore
+    public String getGraduationMonthString() throws ParseException {
+        Optional<String> graduationMonth = getFieldValueByPredicateValue("dc.date.created");
+        return graduationMonth.isPresent() ? dateFormat.format(dateTimeFormat.parse(graduationMonth.get())) : "";
+    }
+
+    @JsonIgnore
+    public String getEmail() {
+        Optional<String> email = getFieldValueByPredicateValue("email");
+        return email.isPresent() ? email.get() : "";
+    }
+
+    @JsonIgnore
+    public String getPermanentEmail() {
+        Optional<String> email = getFieldValueByPredicateValue("permanent_email");
+        return email.isPresent() ? email.get() : "";
     }
 
     @JsonIgnore
@@ -640,32 +670,309 @@ public class Submission extends BaseEntity {
 
     @JsonIgnore
     public String getStudentFullNameWithBirthYear() {
-        Optional<String> firstName = getFieldValueByPredicateValue("first_name");
-        Optional<String> middleName = getFieldValueByPredicateValue("middle_name");
-        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
-        Optional<String> birthYear = getFieldValueByPredicateValue("birth_year");
-        return (lastName.isPresent() ? lastName.get() + COMMA : NOTHING) + (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (middleName.isPresent() ? middleName.get() + SPACE : NOTHING) + (birthYear.isPresent() ? birthYear.get() + HYPHEN : NOTHING);
+        String firstName = getFirstName();
+        String middleName = getMiddleName();
+        String lastName = getLastName();
+        String birthYear = getBirthYear();
+        return (lastName.length() > 0 ? lastName + COMMA : NOTHING) + (firstName.length() > 0 ? firstName + SPACE : NOTHING) + (middleName.length() > 0 ? middleName + SPACE : NOTHING) + (birthYear.length() > 0 ? birthYear + HYPHEN : NOTHING);
     }
 
     @JsonIgnore
     public String getStudentFullName() {
-        Optional<String> firstName = getFieldValueByPredicateValue("first_name");
-        Optional<String> middleName = getFieldValueByPredicateValue("middle_name");
-        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
-        return (lastName.isPresent() ? lastName.get() + COMMA : NOTHING) + (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (middleName.isPresent() ? middleName.get() + SPACE : NOTHING);
+        String firstName = getFirstName();
+        String middleName = getMiddleName();
+        String lastName = getLastName();
+        return (lastName.length() > 0 ? lastName + COMMA : NOTHING) + (firstName.length() > 0 ? firstName + SPACE : NOTHING) + (middleName.length() > 0 ? middleName + SPACE : NOTHING);
     }
 
     @JsonIgnore
     public String getStudentShortName() {
+        String firstName = getFirstName();
+        String lastName = getLastName();
+        return (firstName.length() > 0 ? firstName + SPACE : NOTHING) + (lastName.length() > 0 ? lastName : NOTHING);
+    }
+
+    @JsonIgnore
+    public String getFirstName() {
         Optional<String> firstName = getFieldValueByPredicateValue("first_name");
-        Optional<String> lastName = getFieldValueByPredicateValue("last_name");
-        return (firstName.isPresent() ? firstName.get() + SPACE : NOTHING) + (lastName.isPresent() ? lastName.get() : NOTHING);
+        return firstName.isPresent() ? firstName.get() : "";
+    }
+
+    @JsonIgnore
+    public String getMiddleName() {
+        Optional<String> firstName = getFieldValueByPredicateValue("middle_name");
+        return firstName.isPresent() ? firstName.get() : "";
+    }
+
+    @JsonIgnore
+    public String getLastName() {
+        Optional<String> firstName = getFieldValueByPredicateValue("last_name");
+        return firstName.isPresent() ? firstName.get() : "";
+    }
+
+    @JsonIgnore
+    public String getBirthYear() {
+        Optional<String> birthYear = getFieldValueByPredicateValue("birth_year");
+        return birthYear.isPresent() ? birthYear.get() : "";
+    }
+
+    @JsonIgnore
+    public String getCurrentPhoneNumber() {
+        Optional<String> currentPhone = getFieldValueByPredicateValue("current_phone");
+        return currentPhone.isPresent() ? currentPhone.get() : "";
+    }
+
+    @JsonIgnore
+    public String getPermanentPhoneNumber() {
+        Optional<String> permanentPhone = getFieldValueByPredicateValue("permanent_phone");
+        return permanentPhone.isPresent() ? permanentPhone.get() : "";
+    }
+
+    @JsonIgnore
+    public String getPhoneNumber() {
+        Optional<String> permanentPhone = getFieldValueByPredicateValue("permanent_phone");
+        Optional<String> currentPhone = getFieldValueByPredicateValue("current_phone");
+        return currentPhone.isPresent() ? currentPhone.get() : permanentPhone.isPresent() ? permanentPhone.get() : "";
+    }
+
+    @JsonIgnore
+    public int getCountryCode(String number) throws NumberParseException {
+        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+        return phoneNumber.getCountryCode();
+    }
+
+    @JsonIgnore
+    public String getAreaCode(String number) throws NumberParseException {
+        Optional<String> areaCode = Optional.empty();
+        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+        String nationalSignificantNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
+        int areaCodeLength = phoneUtil.getLengthOfGeographicalAreaCode(phoneNumber);
+        if (areaCodeLength > 0) {
+            areaCode = Optional.of(nationalSignificantNumber.substring(0, areaCodeLength));
+        }
+        return areaCode.isPresent() ? areaCode.get() : "";
+    }
+
+    @JsonIgnore
+    public String getNumber(String number) throws NumberParseException {
+        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+        String fullNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
+        if (fullNumber.length() > 7) {
+            fullNumber = fullNumber.substring(3, fullNumber.length());
+        }
+        return fullNumber;
+    }
+
+    @JsonIgnore
+    public String getExt(String number) throws NumberParseException {
+        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+        return phoneNumber.getExtension();
+    }
+
+    // Patterns for Scott's Address Parse Algorithm
+    private static final Pattern[] patterns = {
+                    // Plan A: State and city are all separated with either a comma or new line and
+                    Pattern.compile("^([^\\d]*?)[\\s\\n,]*" + // Country (optional)
+                                    "([\\d-#]+)[\\s\\n,]+" + // Zip code (required)
+                                    "([^,\\n]+?)\\s*[\\n,]+\\s*" + // State (required)
+                                    "([^,\\n]+?)\\s*[\\n,]+\\s*" + // City (required)
+                                    "(.+)$" // Address lines (required)
+                                    , Pattern.DOTALL),
+
+                    // Plan B: allow state & city to be separated by a space
+                    Pattern.compile("^([^\\d]*?)[\\s\\n,]*" + // Country (optional)
+                                    "([\\d-#]+)[\\s\\n,]+" + // Zip code (required)
+                                    "([^,\\n]+?)[\\s\\n,]+" + // State (required)
+                                    "([^,\\n]+?)\\s*[\\n,]+\\s*" + // City (required)
+                                    "(.+)$" // Address lines (required)
+                                    , Pattern.DOTALL),
+
+                    // Plan C: allow everything to be separated by a space
+                    Pattern.compile("^([^\\d]*?)[\\s\\n,]*" + // Country (optional)
+                                    "([\\d-#]+)[\\s\\n,]+" + // Zip code (required)
+                                    "([^,\\n]+?)[\\s\\n,]+" + // State (required)
+                                    "([^,\\n]+?)[\\s\\n,]+" + // City (required)
+                                    "(.+)$" // Address lines (required)
+                                    , Pattern.DOTALL), };
+
+    /**
+     * Reverse the string provided.
+     */
+    private String reverse(String string) {
+        return new StringBuilder(string).reverse().toString();
+    }
+
+    /**
+     * Scott Phillips's address parsing algorithm.
+     * 
+     * This algorithm works by searching backwards. Starting at the end of the address identify the zip code. Once you have that assume anything following the zip code is the country, and then the two tokens preceding the zip code are the city and state. We do this by performing a series of regular expressions on a reverse address string. The difference between the regular expressions is how linent they are for extracting the city and state. The first one in the list demands that city and state
+     * are either separated by a new line or a comma. Each of the next versions back off of this by allowing spaces between these tokens. This sometimes breaks multi-word cities or state, but sometimes people just don't supply a city.
+     * 
+     * This algorithm works on most international and American addresses. However it will sometimes miss identify components like getting the city or state wrong. It will often not identify the country if it is specified before the zip code.
+     * 
+     * 
+     * @param fullAddress
+     *            The full address
+     * @return An address object if the parse was successful, otherwise return null.
+     */
+    private Address addressParsingAlgorithmByScott(String fullAddress) {
+        // The address parts that we are trying to extract
+        String addrline = "";
+        String city = "";
+        String state = "";
+        String zip = "";
+        String cntry = "";
+
+        String reverseAddress = reverse(fullAddress);
+
+        Matcher matcher = null;
+        for (Pattern pattern : patterns) {
+            matcher = pattern.matcher(reverseAddress);
+            if (matcher.matches()) {
+                break;
+            }
+        }
+
+        if (matcher.matches()) {
+            cntry = reverse(matcher.group(1));
+            zip = reverse(matcher.group(2));
+            state = reverse(matcher.group(3));
+            city = reverse(matcher.group(4));
+            addrline = reverse(matcher.group(5));
+        }
+
+        return new Address(addrline, "", city, state, zip, cntry);
+    }
+
+    @JsonIgnore
+    public String getCurrentAddress() {
+        Optional<String> currentAddress = getFieldValueByPredicateValue("current_address");
+        return currentAddress.isPresent() ? currentAddress.get() : "";
+    }
+
+    @JsonIgnore
+    public String getPermanentAddress() {
+        Optional<String> permanentAddress = getFieldValueByPredicateValue("permanent_address");
+        return permanentAddress.isPresent() ? permanentAddress.get() : "";
+    }
+
+    @JsonIgnore
+    public String getStreet(String address) {
+        return addressParsingAlgorithmByScott(address).getAddress1();
+    }
+
+    @JsonIgnore
+    public String getCity(String address) {
+        return addressParsingAlgorithmByScott(address).getCity();
+    }
+
+    @JsonIgnore
+    public String getState(String address) {
+        return addressParsingAlgorithmByScott(address).getState();
+    }
+
+    @JsonIgnore
+    public String getZip(String address) {
+        return addressParsingAlgorithmByScott(address).getPostalCode();
+    }
+
+    @JsonIgnore
+    public String getCountry(String address) {
+        return addressParsingAlgorithmByScott(address).getCountry();
+    }
+
+    @JsonIgnore
+    public String getDegreeLevel() {
+        Optional<String> degreeLevel = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
+        return degreeLevel.isPresent() ? degreeLevel.get() : "";
+    }
+
+    @JsonIgnore
+    public String getExternalId() {
+        Long id = getId();
+        String lastName = getLastName();
+        String externalIdPrefix = getSettingByNameAndType("external_id_prefix", "proquest_umi_degree_code").getValue();
+        String institutionCode = getSettingByNameAndType("proquest_institution_code", "proquest_umi_degree_code").getValue();
+        return String.join("", institutionCode, externalIdPrefix, String.valueOf(id), lastName);
+    }
+
+    @JsonIgnore
+    public String getApplyForCopyright() {
+        return getSettingByNameAndType("apply_for_copyright", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public int getEmbargoCode() {
+
+        int embargoCode = 0;
+
+        Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
+        Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
+
+        Optional<FieldValue> embargo = proquestEmbargo.isPresent() ? proquestEmbargo : defaultEmbargo.isPresent() ? defaultEmbargo : Optional.empty();
+
+        if (embargo.isPresent()) {
+            String duration = embargo.get().getIdentifier();
+            if (duration != null) {
+                int d = Integer.valueOf(duration);
+                if (d == 0) {
+                    embargoCode = 0;
+                } else if (d <= 6) {
+                    embargoCode = 1;
+                } else if (d <= 12) {
+                    embargoCode = 2;
+                } else {
+                    embargoCode = 3;
+                }
+            } else {
+                if (proquestEmbargo.isPresent()) {
+                    // proquest flexible delayed release, configured in SYSTEM_Defaults under proquest_umi_degree_code
+                    embargoCode = 4;
+                } else {
+                    // The vireo embargo is tagged as indefinite, so the best we can do with UMI is 2 years.
+                    embargoCode = 3;
+                }
+            }
+        }
+        return embargoCode;
+    }
+
+    @JsonIgnore
+    public String getGrantor() {
+        String grantor = getSettingByNameAndType("grantor", "application").getValue();
+        return grantor != null ? grantor : "";
+    }
+
+    @JsonIgnore
+    public boolean getReleaseStudentContactInformation() {
+        String grantor = getSettingByNameAndType("release_student_contact_information", "export").getValue();
+        return grantor != null ? Boolean.valueOf(grantor) : false;
     }
 
     @JsonIgnore
     public Optional<String> getFieldValueByPredicateValue(String predicateValue) {
         List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
         return fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+    }
+
+    @JsonIgnore
+    public Optional<String> getFieldValueIdentifierByPredicateValue(String predicateValue) {
+        List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
+        return fieldValues.size() > 0 && fieldValues.get(0).getIdentifier() != null ? Optional.of(fieldValues.get(0).getIdentifier()) : Optional.empty();
+    }
+
+    @JsonIgnore
+    public Optional<FieldValue> getFirstFieldValueByPredicateValue(String predicateValue) {
+        List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
+        return fieldValues.size() > 0 ? Optional.of(fieldValues.get(0)) : Optional.empty();
+    }
+
+    // NOTE: used context to get the default settings service
+
+    @JsonIgnore
+    public DefaultConfiguration getSettingByNameAndType(String name, String type) {
+        DefaultSettingsService defaultSettingsService = SpringContext.bean(DefaultSettingsService.class);
+        return defaultSettingsService.getSettingByNameAndType(name, type);
     }
 
 }

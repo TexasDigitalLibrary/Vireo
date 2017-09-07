@@ -77,7 +77,7 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
 
     @Override
     public String getControlledIdentifier() {
-        return "";
+        return level.getName();
     }
 
     @Override

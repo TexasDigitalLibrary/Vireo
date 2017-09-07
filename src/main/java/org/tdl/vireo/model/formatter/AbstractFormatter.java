@@ -10,10 +10,10 @@ import edu.tamu.framework.model.BaseEntity;
 @Inheritance
 public abstract class AbstractFormatter extends BaseEntity implements Formatter {
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String template;
 
     public String getName() {
