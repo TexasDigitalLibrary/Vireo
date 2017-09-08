@@ -37,7 +37,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.save = function (fieldValue) {
                 // give typeahead select time to save the value
                 $timeout(function () {
-                    if ($scope.fieldProfileForm.$dirty && !fieldValue.updating) {
+                    if (($scope.fieldProfileForm && $scope.fieldProfileForm.$dirty) || !fieldValue.updating) {
                         fieldValue.updating = true;
                         return save(fieldValue);
                     }
