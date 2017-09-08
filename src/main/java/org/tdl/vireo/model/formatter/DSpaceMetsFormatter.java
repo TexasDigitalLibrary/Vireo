@@ -22,7 +22,6 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
     @Override
     public void populateContext(Context context, Submission submission) {
         for (DSpaceMETSKey key : DSpaceMETSKey.values()) {
-            System.out.println("\n\n  " + key + "\n\n");
             switch(key) {
             case AGENT:
                 context.setVariable(key.name(), "Vireo DSpace METS packager");

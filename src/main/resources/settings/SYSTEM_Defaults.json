@@ -51,6 +51,18 @@
     },
     {
       "apply_for_copyright":false
+    },
+    {
+      "sale_restriction_code":0
+    },
+    {
+      "sale_restriction_remove":" "
+    },
+    {
+      "format_restriction_code":0
+    },
+    {
+      "format_restriction_remove":" "
     }
   ],
   "export": [

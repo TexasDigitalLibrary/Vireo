@@ -192,9 +192,7 @@
 
         </DISS_author>
     </DISS_authorship>
-    
-    
-     
+
     <DISS_description page_count="" th:attr="type=${SUBMISSION.getDegreeLevel()},external_id=${SUBMISSION.getExternalId()},apply_for_copyright=${ SUBMISSION.getApplyForCopyright() ? 'yes' : 'no'}">
         <DISS_title th:text="${SUBMISSION.getTitle()}"></DISS_title>
         
@@ -249,34 +247,25 @@
 
     </DISS_description>
     
-    
-    
     <DISS_content>
         <DISS_abstract>
             <DISS_para th:each="line : ${SUBMISSION.getAbstractLines()}" th:text="${line}"></DISS_para>
         </DISS_abstract>
         
-<!--/*#{if sub.getPrimaryDocument() != null }*/-->
-        <DISS_binary type="PDF"><!--/*${ sub.getStudentLastName()?.escapeXml()?.raw() }_${ sub.getStudentFirstName()?.escapeXml()?.raw() }.${ org.apache.commons.io.FilenameUtils.getExtension(sub.getPrimaryDocument().getName())?.escapeXml()?.raw() }*/--></DISS_binary>
-<!--/*#{/if}*/-->
-<!--/*#{list items:sub.getAttachmentsByType(org.tdl.vireo.model.AttachmentType.SUPPLEMENTAL), as:'attachment' }*/-->
-        <DISS_attachment>
-            <DISS_file_name><!--/*supp_file_${ attachment.getName()?.escapeXml()?.raw() }*/--></DISS_file_name>
-            <DISS_file_category><!--/*${ proquestUtils.categorize(attachment)?.escapeXml()?.raw() }*/--></DISS_file_category>
+        <DISS_binary th:if="${SUBMISSION.getPrimaryDocumentFieldValue() != null }" th:text="${SUBMISSION.getPrimaryDocumentFieldValue().getFileName()}" th:attr="type=${FILE_HELPER.getMimeType(SUBMISSION.getPrimaryDocumentFieldValue().getValue()) == 'application/pdf' ? 'PDF' : 'Other'}"></DISS_binary>
+
+        <DISS_attachment th:each="fv,iter : ${SUBMISSION.getSupplementalDocumentFieldValues()}">
+            <DISS_file_name th:text="${fv.getFileName()}"></DISS_file_name>
+            <DISS_file_category th:text="${SUBMISSION.categorize(FILE_HELPER.getMimeType(fv.getValue()))}"></DISS_file_category>
             <DISS_file_descr>Supplemental File</DISS_file_descr>
         </DISS_attachment>
-<!--/*#{/list}*/-->
+
     </DISS_content>
     
-    
-<!--/*#{if embargoCode == 4}*/-->
-    <DISS_restriction>    
-        <DISS_sales_restriction code="1" remove="1"/>
-        <DISS_format_restriction code="1" remove="1"/>
+    <DISS_restriction th:if="${SUBMISSION.getEmbargoCode() == 4}">
+        <DISS_sales_restriction th:attr="code=${SUBMISSION.getProQuestSaleRestrictionCode()},remove=${SUBMISSION.getProQuestSaleRestrictionRemove()}"/>
+        <DISS_format_restriction  th:attr="code=${SUBMISSION.getProQuestFormatRestrictionCode()},remove=${SUBMISSION.getProQuestFormatRestrictionRemove()}"/>
         <DISS_note/>
     </DISS_restriction>
-<!--/*#{/if}*/-->
-
-
 
 </DISS_submission>

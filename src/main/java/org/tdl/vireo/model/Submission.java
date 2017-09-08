@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.framework.SpringContext;
 import edu.tamu.framework.model.BaseEntity;
 
@@ -596,6 +596,17 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
+    public List<FieldValue> getSupplementalDocumentFieldValues() {
+        List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        for (FieldValue fieldValue : getFieldValues()) {
+            if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental")) {
+                fielsValues.add(fieldValue);
+            }
+        }
+        return fielsValues;
+    }
+
+    @JsonIgnore
     public List<FieldValue> getLicenseAgreementFieldValues() {
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : getFieldValues()) {
@@ -906,7 +917,8 @@ public class Submission extends BaseEntity {
 
     @JsonIgnore
     public String[] getAbstractLines() {
-        return getAbstract().split("\n");
+        String descAbstract = getAbstract();
+        return descAbstract.length() > 0 ? descAbstract.split("\n") : new String[] {};
     }
 
     @JsonIgnore
@@ -919,6 +931,26 @@ public class Submission extends BaseEntity {
     public String getTitle() {
         Optional<String> title = getFieldValueByPredicateValue("dc.title");
         return title.isPresent() ? title.get() : "";
+    }
+
+    @JsonIgnore
+    public String getProQuestSaleRestrictionCode() {
+        return getSettingByNameAndType("sale_restriction_code", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public String getProQuestSaleRestrictionRemove() {
+        return getSettingByNameAndType("sale_restriction_remove", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public String getProQuestFormatRestrictionCode() {
+        return getSettingByNameAndType("format_restriction_code", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public String getProQuestFormatRestrictionRemove() {
+        return getSettingByNameAndType("format_restriction_remove", "proquest_umi_degree_code").getValue();
     }
 
     @JsonIgnore
@@ -967,6 +999,71 @@ public class Submission extends BaseEntity {
     @JsonIgnore
     public String getApplyForCopyright() {
         return getSettingByNameAndType("apply_for_copyright", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public String categorize(String mimeType) {
+
+        String category = "other";
+
+        // Start with the simple stuff first
+        if (mimeType.startsWith("audio/"))
+            category = "audio";
+
+        if (mimeType.startsWith("image/"))
+            category = "image";
+
+        if (mimeType.startsWith("text/"))
+            category = "text";
+
+        if (mimeType.startsWith("video/"))
+            category = "video";
+
+        if (CAT.containsKey(mimeType))
+            category = CAT.get(mimeType);
+
+        return category;
+    }
+
+    public static final Map<String, String> CAT = new HashMap<String, String>();
+    static {
+        CAT.put("application/word", "text");
+        CAT.put("application/msword", "text");
+        CAT.put("application/x-latex", "text");
+        CAT.put("application/postscript", "text");
+        CAT.put("application/x-tex", "text");
+        CAT.put("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text");
+
+        CAT.put("application/postscript", "image");
+
+        CAT.put("text/html", "webpage");
+        CAT.put("text/xhtml", "webpage");
+        CAT.put("text/css", "webpage");
+        CAT.put("text/javascript", "webpage");
+        CAT.put("application/x-javascript", "webpage");
+        CAT.put("application/xhtml", "webpage");
+        CAT.put("application/xhtml+xml", "webpage");
+
+        CAT.put("text/xml", "data");
+        CAT.put("application/excel", "data");
+        CAT.put("application/msexcel", "data");
+        CAT.put("application/vnd.ms-excel", "data");
+        CAT.put("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "data");
+        CAT.put("application/vnd.openxmlformats-officedocument.spreadsheetml.template", "data");
+
+        CAT.put("application/powerpoint", "presentation");
+        CAT.put("application/ms-powerpoint", "presentation");
+        CAT.put("application/vnd.ms-powerpoint", "presentation");
+        CAT.put("application/vnd.openxmlformats-officedocument.presentationml.presentation", "presentation");
+
+        CAT.put("text/xslt", "code/script");
+
+        CAT.put("application/pdf", "pdf");
+        CAT.put("application/x-pdf", "pdf");
+        CAT.put("application/acrobat", "pdf");
+        CAT.put("applications/vnd.pdf", "pdf");
+        CAT.put("text/pdf", "pdf");
+        CAT.put("text/x-pdf", "pdf");
     }
 
     @JsonIgnore
