@@ -82,7 +82,6 @@ var apiMapping = {
             'controller': 'settings/controlled-vocabulary',
             'method': 'update-vocabulary-word'
         }
-
     },
     CustomActionDefinition: {
         validations: true,
@@ -588,6 +587,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization',
             'method': 'delete'
+        },
+        restoreDefaults: {
+            'endpoint': '/private/queue',
+            'controller': 'organization',
+            'method': 'restore-defaults'
         },
         removeEmailWorkflowRule: {
             'endpoint': '/private/queue',

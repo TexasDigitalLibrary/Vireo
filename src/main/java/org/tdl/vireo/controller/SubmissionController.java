@@ -245,6 +245,13 @@ public class SubmissionController {
             if (sendCCRecipientEmail) {
                 smm.setCc(dataNode.get("ccRecipientEmail").asText().split(";"));
             }
+            
+            User user = userRepo.findByEmail(credentials.getEmail());
+			String preferedEmail = user.getSetting("preferedEmail");
+			user.getSetting("ccEmail");
+			if(user.getSetting("ccEmail").equals("true")) {
+				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+			}
 
             smm.setSubject(subject);
             smm.setText(templatedMessage);
@@ -359,7 +366,7 @@ public class SubmissionController {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
-        processEmailWorkflowRules(submission);
+        processEmailWorkflowRules(credentials, submission);
 
         return response;
     }
@@ -371,7 +378,7 @@ public class SubmissionController {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
-            processEmailWorkflowRules(submission);
+            processEmailWorkflowRules(credentials, submission);
         });
         return new ApiResponse(SUCCESS);
     }
@@ -419,7 +426,7 @@ public class SubmissionController {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
-        processEmailWorkflowRules(submission);
+        processEmailWorkflowRules(credentials, submission);
 
         return response;
     }
@@ -531,10 +538,12 @@ public class SubmissionController {
     @Transactional
     @ApiMapping("/{submissionId}/update-reviewer-notes")
     @Auth(role = "MANAGER")
-    public ApiResponse updateReviewerNotes(@ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
+    public ApiResponse updateReviewerNotes(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
         Submission submission = submissionRepo.findOne(submissionId);
-        submission.setReviewerNotes(requestData.get("reviewerNotes"));
+        String reviewerNotes = requestData.get("reviewerNotes");
+        submission.setReviewerNotes(reviewerNotes);
         submissionRepo.save(submission);
+        actionLogRepo.createPrivateLog(submission, credentials, "Submission notes changed to \"" + reviewerNotes + "\"");
         return new ApiResponse(SUCCESS);
     }
 
@@ -695,12 +704,25 @@ public class SubmissionController {
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
+        // TODO: this needs to only send email to the advisor not any field value that is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-            try {
-                emailSender.sendEmail(fv.getIdentifier(), subject, content);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+        	 
+        	SimpleMailMessage smm = new SimpleMailMessage();
+        	
+			smm.setTo(String.join(",", fv.getContacts()));
+			 
+			User user = userRepo.findByEmail(credentials.getEmail());
+			String preferedEmail = user.getSetting("preferedEmail");
+			user.getSetting("ccEmail");
+			if(user.getSetting("ccEmail").equals("true")) {
+				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+			}
+			 
+			smm.setSubject(subject);
+			smm.setText(content);
+        	
+			emailSender.send(smm);
+			
         });
 
         actionLogRepo.createPublicLog(submission, credentials, "Advisor review email manually generated.");
@@ -750,24 +772,35 @@ public class SubmissionController {
 
     }
 
-    private void processEmailWorkflowRules(Submission submission) {
+    private void processEmailWorkflowRules(Credentials credentials, Submission submission) {
+    	
+    	SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
 
         rules.forEach(rule -> {
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
-
+            	
                 // TODO: Not all variables are currently being replaced.
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
                 rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-                    try {
-                        emailSender.sendEmail(email, subject, content);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
+                	
+                	smm.setTo(email);
+
+                	User user = userRepo.findByEmail(credentials.getEmail());
+					String preferedEmail = user.getSetting("preferedEmail");
+					user.getSetting("ccEmail");
+					if(user.getSetting("ccEmail").equals("true")) {
+						 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+					}
+
+                    smm.setSubject(subject);
+                    smm.setText(content);
+                	
+                    emailSender.send(smm);
                 });
 
             }

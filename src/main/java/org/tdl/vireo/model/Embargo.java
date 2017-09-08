@@ -189,7 +189,7 @@ public class Embargo extends BaseOrderedEntity implements EntityControlledVocabu
 
     @Override
     public String getControlledName() {
-        return guarantor.name();
+        return name;
     }
 
     @Override
@@ -199,7 +199,7 @@ public class Embargo extends BaseOrderedEntity implements EntityControlledVocabu
 
     @Override
     public String getControlledIdentifier() {
-        return "";
+        return guarantor.name();
     }
 
     @Override

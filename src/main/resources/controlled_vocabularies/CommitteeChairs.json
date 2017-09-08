@@ -1,0 +1,25 @@
+{
+  "name":"Committee Chairs",
+  "isEntityProperty":false,
+  "language":{
+    "name":"English"
+  },
+  "dictionary":[
+    {
+      "name":"Bob Boring",
+      "definition":"Chair of Computer Science",
+      "identifier":"",
+      "contacts":[
+        "bobboring@mailinator.com"
+      ]
+    },
+    {
+      "name":"Eddie Exciting",
+      "definition":"Chair of Anthropology",
+      "identifier":"",
+      "contacts":[
+        "eddieexciting@mailinator.com"
+      ]
+    }
+  ]
+}

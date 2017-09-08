@@ -22,6 +22,18 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.errorMessage = "";
 
+            var save = function(fieldValue) {
+                return $q(function (resolve) {
+                    $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
+                        delete fieldValue.updating;
+                        if ($scope.fieldProfileForm !== undefined) {
+                            $scope.fieldProfileForm.$setPristine();
+                        }
+                        resolve();
+                    });
+                });
+            };
+
             $scope.save = function (fieldValue) {
                 // give typeahead select time to save the value
                 $timeout(function () {

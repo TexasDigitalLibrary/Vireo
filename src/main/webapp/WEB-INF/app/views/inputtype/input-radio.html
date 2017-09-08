@@ -1,16 +1,18 @@
 <div class="input-radio-container row" ng-repeat="word in profile.controlledVocabularies[0].dictionary">
 
-	<div class="col-xs-2">
-		<input
-      type="radio"
-			ng-model="fieldValue.value"
-			ng-change="save(fieldValue)"
-			name="profile.fieldPredicate.value"
-			ng-disabled="fieldValue.updating"
-			ng-value="word.definition"/>
+	<div class="col-xs-1">
+		<label class="radio-inline">
+			<input
+	      type="radio"
+				ng-model="fieldValue.value"
+				ng-change="save(fieldValue)"
+				name="profile.fieldPredicate.value"
+				ng-disabled="fieldValue.updating"
+				ng-value="word.name"/>
+		</label>
 	</div>
   <div class="col-xs-8 well">
-		<span>{{word.definition}}</span>
+		<span><h5><b>{{word.name}}</b></h5>{{word.definition}}</span>
 	</div>
 	<div class="col-xs-2">
         <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>

@@ -85,7 +85,7 @@
 					   modal-view="views/modals/organization/fieldprofiles/fieldProfilesNewModal.html"
 					   modal-header-class="modal-header-primary"
 					   modal-keyboard="false"
-					   modal-backdrop="static"
+					   wvr-modal-backdrop="static"
              modal-fullscreen="true">
 				</modal>
 
@@ -93,7 +93,7 @@
 					   modal-view="views/modals/organization/fieldprofiles/fieldProfilesEditModal.html"
 					   modal-header-class="modal-header-primary"
 					   modal-keyboard="false"
-					   modal-backdrop="static"
+					   wvr-modal-backdrop="static"
              modal-fullscreen="true">
 				</modal>
 
@@ -101,7 +101,7 @@
 					   modal-view="views/modals/organization/fieldprofiles/fieldProfilesConfirmRemoveModal.html"
 					   modal-header-class="modal-header-danger"
 					   modal-keyboard="false"
-					   modal-backdrop="static"
+					   wvr-modal-backdrop="static"
              modal-fullscreen="true">
 				</modal>
 
@@ -167,21 +167,21 @@
 					   modal-view="views/modals/organization/notesNewModal.html"
 					   modal-header-class="modal-header-primary"
 					   modal-keyboard="false"
-					   modal-backdrop="static">
+					   wvr-modal-backdrop="static">
 				</modal>
 
 				<modal modal-id="notesEditModal-{{step.id}}"
 					   modal-view="views/modals/organization/notesEditModal.html"
 					   modal-header-class="modal-header-primary"
 					   modal-keyboard="false"
-					   modal-backdrop="static">
+					   wvr-modal-backdrop="static">
 				</modal>
 
 				<modal modal-id="notesConfirmRemoveModal-{{step.id}}"
 					   modal-view="views/modals/organization/notesConfirmRemoveModal.html"
 					   modal-header-class="modal-header-danger"
 					   modal-keyboard="false"
-					   modal-backdrop="static">
+					   wvr-modal-backdrop="static">
 				</modal>
 
 			</div>
@@ -195,9 +195,6 @@
 			<li ng-repeat="note in step.aggregateNotes">
 					 {{note.position}}. {{note.name}}
 			</li>
-		   <!-- <li ng-repeat="note in step.aggregateNotes">
-		      	{{note.position}}. {{note.name}} - id: {{note.id}} - originating workflowstep id: {{note.originatingWorkflowStep}} <span ng-if="note.originating"> - originating id: {{note.originating}}</span>
-		   </li> -->
 		</ul>
 	</div>
 

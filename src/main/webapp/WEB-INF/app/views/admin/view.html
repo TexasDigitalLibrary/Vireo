@@ -1,6 +1,10 @@
 <div class="item-view" ng-controller="AdminSubmissionViewController">
 
-  <modal modal-id="addFileModal" modal-view="views/modals/view/addFileModal.html" modal-header-class="modal-header-primary"></modal>
+  <modal modal-id="addFileModal" 
+    modal-view="views/modals/view/addFileModal.html" 
+    modal-header-class="modal-header-primary" 
+    wvr-modal-backdrop="static">
+  </modal>
 
   <div class="row">
     <h1>
@@ -10,10 +14,14 @@
       <span ng-if="submission">{{title}}</span>
     </h1>
     <hr>
-    <tabs ng-show="loaded">
-      <tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></tab>
-    </tabs>
+    <vireo-tabs ng-show="loaded">
+      <vireo-tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
+    </vireo-tabs>
 
+  </div>
+
+  <div class="advisor-review-url" ng-if="submission.advisorReviewURL">
+    <strong>Faculty Review URL:</strong> <a href="{{submission.advisorReviewURL}}">{{submission.advisorReviewURL}}</a>
   </div>
 
   <div class="row" ng-show="loaded">
@@ -39,7 +47,7 @@
       <button class="btn btn-default view-action-button" ng-click="openModal('#addCommentModal')">Add Comment</button>
     </div>
 
-    <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary"></modal>
+    <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
     <actionlog ng-if="submission" submission="submission" ready="submisisonReady"></actionlog>
 
@@ -70,7 +78,7 @@
           <td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
           <td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
           <td class="all-files-action">
-            <modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary"></modal>
+            <modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
             <span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
             <span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
           </td>

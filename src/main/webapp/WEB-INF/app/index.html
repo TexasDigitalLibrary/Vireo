@@ -26,7 +26,7 @@
 
   <meta name="description" content="Electronic Thesis &amp; Dissertation Submission Workflow Tool" />
 
-  <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.min.css" />
+  <link rel="stylesheet" href="resources/styles/ng-sortable.min.css" />
 
   <link rel="stylesheet" href="resources/styles/app.css" />
 
@@ -51,9 +51,8 @@
             </button>
         </div>
 
-        <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html"
-          modal-header-class="modal-header-primary"></modal>
-        <modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary"></modal>
+        <modal modal-id="verifyEmailModal" modal-view="views/modals/verifyEmailModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
+        <modal modal-id="loginModal" modal-view="views/modals/loginModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
         <div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
@@ -166,47 +165,49 @@
     </div>
   </footer>
 
-  <!-- Bower component -->
-  <!-- build:js resources/scripts/vendor_concat.js -->
-  <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
-  <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+  <!-- build:js resources/scripts/bundle.js -->
+  <!-- Vendor Libraries -->
 
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
-  <script src="bower_components/FileSaver/FileSaver.min.js"></script>
+  <script src="node_modules/sockjs-client/dist/sockjs.min.js"></script>
+  <script src="node_modules/stompjs/lib/stomp.min.js"></script>
 
-  <script src="bower_components/angular/angular.min.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-  <script src="bower_components/angular-route/angular-route.min.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="bower_components/angular-loader/angular-loader.min.js"></script>
-  <script src="bower_components/angular-mocks/angular-mocks.js"></script>
-  <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+  <script src="node_modules/angular/angular.min.js"></script>
+  
+  <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="node_modules/angular-route/angular-route.min.js"></script>  
+  <script src="node_modules/angular-loader/angular-loader.min.js"></script>
+  <script src="node_modules/angular-messages/angular-messages.min.js"></script>
+  <script src="node_modules/angular-mocks/angular-mocks.js"></script>
+
+  <script src="node_modules/ng-csv/build/ng-csv.min.js"></script>
+
+  <script src="node_modules/ng-sortable/dist/ng-sortable.min.js"></script>
+
+  <script src="node_modules/ng-table/bundles/ng-table.min.js"></script>
+
+  <script src="node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
+  <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+  
+  <script src="node_modules/tinymce/tinymce.min.js"></script>
+  <script src="node_modules/angular-ui-tinymce/dist/tinymce.min.js"></script>
+  
+  <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+  
+  <script src="node_modules/file-saver/FileSaver.min.js"></script>
 
 
-  <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+  <!-- Core Libraries -->
 
-  <script src="bower_components/ng-sortable/dist/ng-sortable.min.js"></script>
-
-  <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
-
-  <script src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
-  <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
-  <!-- endbuild -->
-
-  <script src="bower_components/tinymce/tinymce.min.js"></script>
-  <script src="bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
-
-  <!-- Core libraries -->
-  <!-- build:js resources/scripts/core_concat.js -->
   <!-- Core Configuration -->
-  <script src="bower_components/core/app/config/coreConfig.js"></script>
+  <script src="node_modules/weaver-ui-core/app/config/coreConfig.js"></script>
 
   <!-- Core Modules -->
-  <script src="bower_components/core/app/components/version/version.js"></script>
-  <script src="bower_components/core/app/components/version/version-directive.js"></script>
-  <script src="bower_components/core/app/components/version/interpolate-filter.js"></script>
+  <script src="node_modules/weaver-ui-core/app/components/version/version.js"></script>
+  <script src="node_modules/weaver-ui-core/app/components/version/version-directive.js"></script>
+  <script src="node_modules/weaver-ui-core/app/components/version/interpolate-filter.js"></script>
 
   <!-- App Configuration -->
   <script src="config/appConfig.js"></script>
@@ -218,61 +219,60 @@
   <script src="components/version/interpolate-filter.js"></script>
 
   <!-- Application Start -->
-  <script src="bower_components/core/app/core.js"></script>
-  <script src="bower_components/core/app/setup.js"></script>
-  <script src="bower_components/core/app/config/coreRuntime.js"></script>
-  <script src="bower_components/core/app/config/coreAngularConfig.js"></script>
-  <script src="bower_components/core/app/config/logging.js"></script>
+  <script src="node_modules/weaver-ui-core/app/core.js"></script>
+  <script src="node_modules/weaver-ui-core/app/setup.js"></script>
+  <script src="node_modules/weaver-ui-core/app/config/coreRuntime.js"></script>
+  <script src="node_modules/weaver-ui-core/app/config/coreAngularConfig.js"></script>
+  <script src="node_modules/weaver-ui-core/app/config/logging.js"></script>
 
   <!-- Directives -->
-  <script src="bower_components/core/app/directives/headerDirective.js"></script>
-  <script src="bower_components/core/app/directives/footerDirective.js"></script>
-  <script src="bower_components/core/app/directives/userDirective.js"></script>
-  <script src="bower_components/core/app/directives/modalDirective.js"></script>
-  <script src="bower_components/core/app/directives/alertDirective.js"></script>
-  <script src="bower_components/core/app/directives/validationMessageDirective.js"></script>
-  <script src="bower_components/core/app/directives/validatedSelectDirective.js"></script>
-  <script src="bower_components/core/app/directives/validatedTextAreaDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/headerDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/footerDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/userDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/modalDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/alertDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/validationMessageDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/validatedSelectDirective.js"></script>
+  <script src="node_modules/weaver-ui-core/app/directives/validatedTextAreaDirective.js"></script>
 
   <!-- Services -->
-  <script src="bower_components/core/app/services/accesscontrollservice.js"></script>
-  <script src="bower_components/core/app/services/wsservice.js"></script>
-  <script src="bower_components/core/app/services/wsapi.js"></script>
-  <script src="bower_components/core/app/services/restapi.js"></script>
-  <script src="bower_components/core/app/services/fileapi.js"></script>
-  <script src="bower_components/core/app/services/authserviceapi.js"></script>
-  <script src="bower_components/core/app/services/storageservice.js"></script>
-  <script src="bower_components/core/app/services/utilityservice.js"></script>
-  <script src="bower_components/core/app/services/alertservice.js"></script>
-  <script src="bower_components/core/app/services/validationstore.js"></script>
-  <script src="bower_components/core/app/services/userservice.js"></script>
-  <script src="bower_components/core/app/services/modalservice.js"></script>
-  <script src="bower_components/core/app/services/modelcache.js"></script>
-  <script src="bower_components/core/app/services/modelupdateservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/accesscontrollservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/wsservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/wsapi.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/restapi.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/fileapi.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/authserviceapi.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/storageservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/utilityservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/alertservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/validationstore.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/userservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/modalservice.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/modelcache.js"></script>
+  <script src="node_modules/weaver-ui-core/app/services/modelupdateservice.js"></script>
 
   <!-- Factories -->
 
   <!-- Repo -->
-  <script src="bower_components/core/app/repo/abstractRepo.js"></script>
+  <script src="node_modules/weaver-ui-core/app/repo/abstractRepo.js"></script>
 
   <!-- Models -->
-  <script src="bower_components/core/app/model/abstractModel.js"></script>
-  <script src="bower_components/core/app/model/assumedControl.js"></script>
-  <script src="bower_components/core/app/model/user.js"></script>
+  <script src="node_modules/weaver-ui-core/app/model/abstractModel.js"></script>
+  <script src="node_modules/weaver-ui-core/app/model/assumedControl.js"></script>
+  <script src="node_modules/weaver-ui-core/app/model/user.js"></script>
 
   <!-- Controllers -->
-  <script src="bower_components/core/app/controllers/abstractController.js"></script>
-  <script src="bower_components/core/app/controllers/coreAdminController.js"></script>
-  <script src="bower_components/core/app/controllers/authenticationController.js"></script>
-  <script src="bower_components/core/app/controllers/loginController.js"></script>
-  <script src="bower_components/core/app/controllers/registrationController.js"></script>
-  <script src="bower_components/core/app/controllers/userController.js"></script>
-  <script src="bower_components/core/app/controllers/errorpagecontroller.js"></script>
-  <!-- endbuild -->
+  <script src="node_modules/weaver-ui-core/app/controllers/abstractController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/coreAdminController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/authenticationController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/loginController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/registrationController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/userController.js"></script>
+  <script src="node_modules/weaver-ui-core/app/controllers/errorpagecontroller.js"></script>
 
 
-  <!-- App libraries -->
-  <!-- build:js resources/scripts/app_concat.js -->
+  <!-- App Libraries -->
+
   <!-- Application Start -->
   <script src="app.js"></script>
   <script src="config/runTime.js"></script>

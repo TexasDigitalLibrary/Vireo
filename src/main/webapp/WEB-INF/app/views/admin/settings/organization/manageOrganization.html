@@ -68,7 +68,7 @@
 							    ng-if="getSelectedOrganization().id !== 1"
 								type="button"
 								class="btn btn-danger"
-								ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+                ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
 							<button
 								type="button"
 								class="btn btn-default"
@@ -85,9 +85,9 @@
 				<modal modal-id="organizationConfirmDeleteModal"
 					modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
 					modal-header-class="modal-header-danger"
-					modal-backdrop="static">
-				</modal>
-
+					wvr-modal-backdrop="static">
+        </modal>
+        
 		</form>
 
 	</div>
