@@ -14,6 +14,11 @@
     "validationMessage": null
   },
   {
+    "name": "INPUT_TEXT_WITH_DEFINITION",
+    "validationPatern": null,
+    "validationMessage": null
+  },
+  {
     "name": "INPUT_PASSWORD",
     "validationPatern": null,
     "validationMessage": null

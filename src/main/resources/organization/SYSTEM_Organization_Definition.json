@@ -1043,7 +1043,7 @@
           ],
           "controlledVocabularies":[
             {
-              "name":"Committee Chairs",
+              "name":"Committee Members",
               "isEntityProperty":false,
               "language":{
                 "name":"English"
@@ -1060,7 +1060,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_TEXT_WITH_DEFINITION"
           },
           "repeatable":true,
           "overrideable":true,
@@ -1069,7 +1069,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the names and email addresses of your non-chairing committee members",
+          "help":"Enter the names and select role of your non-chairing committee members",
           "fieldGlosses":[
             {
               "value":"Non-Chairing Committee Members",
@@ -1079,7 +1079,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Committee Members",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

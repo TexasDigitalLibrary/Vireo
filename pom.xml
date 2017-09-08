@@ -342,6 +342,12 @@
       <version>8.8.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.steveash.hnp</groupId>
+      <artifactId>human-name-parser</artifactId>
+      <version>0.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>

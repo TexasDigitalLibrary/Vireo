@@ -41,6 +41,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.tupilabs.human_name_parser.HumanNameParserParser;
 
 import edu.tamu.framework.SpringContext;
 import edu.tamu.framework.model.BaseEntity;
@@ -932,6 +933,12 @@ public class Submission extends BaseEntity {
         Optional<String> title = getFieldValueByPredicateValue("dc.title");
         return title.isPresent() ? title.get() : "";
     }
+    
+    @JsonIgnore
+    public String getCommitteeChair() {
+        Optional<String> chair = getFieldValueByPredicateValue("dc.contributor.advisor");
+        return chair.isPresent() ? chair.get() : "";
+    }
 
     @JsonIgnore
     public String getProQuestSaleRestrictionCode() {
@@ -959,6 +966,24 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
+    public String getFirstName(String name) {
+        HumanNameParserParser parser = new HumanNameParserParser(name);
+        return parser.getFirst();
+    }
+
+    @JsonIgnore
+    public String getMiddleName(String name) {
+        HumanNameParserParser parser = new HumanNameParserParser(name);
+        return parser.getMiddle();
+    }
+
+    @JsonIgnore
+    public String getLastName(String name) {
+        HumanNameParserParser parser = new HumanNameParserParser(name);
+        return parser.getLast();
+    }
+
+    @JsonIgnore
     public List<FieldValue> getSubjectFieldValues() {
         return getFieldValuesByPredicateValue("dc.subject");
     }
@@ -966,6 +991,11 @@ public class Submission extends BaseEntity {
     @JsonIgnore
     public List<FieldValue> getKeywordFieldValues() {
         return getFieldValuesByPredicateValue("keywords");
+    }
+    
+    @JsonIgnore
+    public List<FieldValue> getCommitteeMemberFieldValues() {
+        return getFieldValuesByPredicateValue("dc.contributor.committeeMember");
     }
 
     @JsonIgnore

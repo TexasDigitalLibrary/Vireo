@@ -54,12 +54,10 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.saveContacts = function (fieldValue) {
                 fieldValue.updating = true;
-                fieldValue.identifier = item.identifier;
-                fieldValue.definition = item.definition;
                 if(typeof fieldValue.contacts === 'string') {
                   fieldValue.contacts = fieldValue.contacts.split(",");
                 }                
-                $scope.save(fieldValue);
+                save(fieldValue);
             };
 
             $scope.datepickerOptions = {};
