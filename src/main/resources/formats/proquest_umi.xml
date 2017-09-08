@@ -168,7 +168,7 @@
             </DISS_contact>
             
             <DISS_contact th:if="${SUBMISSION.getReleaseStudentContactInformation()}" type="future">
-                <DISS_contact_effdt th:text="${SUBMISSION.getGraduationMonthString()}"></DISS_contact_effdt>
+                <DISS_contact_effdt th:text="${SUBMISSION.getGraduationDateString()}"></DISS_contact_effdt>
 
                 <DISS_contact_effdt th:text="${SUBMISSION.getSubmissionDateString()}"></DISS_contact_effdt>
 
@@ -196,20 +196,23 @@
     
      
     <DISS_description page_count="" th:attr="type=${SUBMISSION.getDegreeLevel()},external_id=${SUBMISSION.getExternalId()},apply_for_copyright=${ SUBMISSION.getApplyForCopyright() ? 'yes' : 'no'}">
-        <DISS_title><!--/*${ sub.getDocumentTitle()?.escapeXml()?.raw() }*/--></DISS_title>
-<!--/*#{if sub.getGraduationYear() != null }*/-->
-        <DISS_dates>
-            <DISS_comp_date><!--/*${ sub.getGraduationYear() }*/--></DISS_comp_date>
-            <DISS_accept_date><!--/*${ sub.getGraduationMonth() != null ? (sub.getGraduationMonth() + 1).format("00") : "01" }/01/${ sub.getGraduationYear() }*/--></DISS_accept_date>
+        <DISS_title th:text="${SUBMISSION.getTitle()}"></DISS_title>
+        
+        <DISS_dates th:if="${SUBMISSION.getGraduationDateString().length() > 0}">
+            <DISS_comp_date th:text="${SUBMISSION.getGraduationYearString()}"></DISS_comp_date>
+            <DISS_accept_date th:text="${SUBMISSION.getGraduationDateString()}"></DISS_accept_date>
         </DISS_dates>
-<!--/*#{/if}*/-->
-        <DISS_degree><!--/*${ proquestUtils.degreeCode(sub.getDegree()) }*/--></DISS_degree>    
+
+        <DISS_degree th:text="${SUBMISSION.getDegreeProQuestCode()}"></DISS_degree>
+
         <DISS_institution>
-            <DISS_inst_code><!--/*${ institution_code }*/--></DISS_inst_code>
-            <DISS_inst_name><!--/*${ institution_name }*/--></DISS_inst_name>
-            <DISS_inst_contact><!--/*${ sub.getDepartment()?.escapeXml()?.raw() }*/--></DISS_inst_contact>
-            <DISS_processing_code><!--/*${ sub.getDegreeLevel()?.name()?.substring(0,1)?.toUpperCase()?.escapeXml()?.raw() }*/--></DISS_processing_code>
+            <DISS_inst_code th:text="${SUBMISSION.getProQuestInstitutionCode()}"></DISS_inst_code>
+            <DISS_inst_name th:text="${SUBMISSION.getGrantor()}"></DISS_inst_name>
+            <DISS_inst_contact th:text="${SUBMISSION.getDepartment()}"></DISS_inst_contact>
+            <DISS_processing_code th:text="${SUBMISSION.getDegreeLevel()}"></DISS_processing_code>
         </DISS_institution>
+
+
 <!--/*#{list items:sub.getCommitteeMembers(), as:'member'}*/-->
 <!--/*#{if member.hasRole("Chair","Co-Chair","Supervisor","Co-Supervisor","Advisor") }*/-->
         <DISS_advisor>
@@ -226,45 +229,33 @@
                 <DISS_surname><!--/*${ member.getLastName()?.escapeXml()?.raw() }*/--></DISS_surname>
                 <DISS_fname><!--/*${ member.getFirstName()?.escapeXml()?.raw() }*/--></DISS_fname>
                 <DISS_middle><!--/*${ member.getMiddleName()?.escapeXml()?.raw() }*/--></DISS_middle>
-            </DISS_name>            
+            </DISS_name>
         </DISS_cmte_member>
 <!--/*#{/elseif}*/-->
-<!--/*#{/list}*/-->
+
+
         <DISS_categorization>
-<!--/*#{list items:sub.getDocumentSubjects(), as:'subject'}*/-->
-<!--/*#{if proquestRepo.findSubjectByDescription(subject) != null }*/-->
-            <DISS_category>
-                <DISS_cat_code><!--/*${ proquestRepo.findSubjectByDescription(subject)?.getCode()?.escapeXml()?.raw() }*/--></DISS_cat_code>
-                <DISS_cat_desc><!--/*${ subject?.escapeXml()?.raw() }*/--></DISS_cat_desc>
+
+            <DISS_category th:each="subjectFieldValue : ${SUBMISSION.getSubjectFieldValues()}" th:if="${SUBMISSION.isProQuestSubject(subjectFieldValue)}">
+                <DISS_cat_code th:text="${subjectFieldValue.getIdentifier()}"></DISS_cat_code>
+                <DISS_cat_desc th:text="${subjectFieldValue.getValue()}"></DISS_cat_desc>
             </DISS_category>
-<!--/*#{/if}*/-->
-<!--/*#{/list}*/-->
-<!--/*#{if sub.getDocumentKeywords() != null}*/-->
-<!--/*#{list items:sub.getDocumentKeywords().split(";"), as:'keyword'}*/-->
-<!--/*#{if keyword != null && keyword.trim().length() > 0}*/-->
-            <DISS_keyword><!--/*${keyword.trim()?.escapeXml()?.raw()}*/--></DISS_keyword>
-<!--/*#{/if}*/-->
-<!--/*#{/list}*/-->
-<!--/*#{/if}*/-->
-<!--/*#{if sub.getDocumentLanguage() != null && proquestUtils.languageCode(sub.getDocumentLanguageLocale()) != null}*/-->
-<!--/*%{ def lang = proquestUtils.languageCode(sub.getDocumentLanguageLocale()) }%*/-->
-            <DISS_language><!--/*${ lang?.getCode()?.escapeXml()?.raw() }*/--></DISS_language>
-<!--/*#{/if}*/-->
+
+            <DISS_keyword th:each="keywordFieldValue : ${SUBMISSION.getKeywordFieldValues()}" th:text="${keywordFieldValue.getValue().trim()}"></DISS_keyword>
+
+            <DISS_language th:if="${SUBMISSION.getLanguageProQuestCode().length() > 0}" th:text="${SUBMISSION.getLanguageProQuestCode()}"></DISS_language>
+
         </DISS_categorization>
+
     </DISS_description>
     
     
     
     <DISS_content>
         <DISS_abstract>
-<!--/*#{if sub.getDocumentAbstract() != null}*/-->
-<!--/*#{list items:sub.getDocumentAbstract().split("\n"), as:'para'}*/-->
-<!--/*#{if para != null && para.trim().length() != 0}*/-->
-            <DISS_para><!--/*${ para?.escapeXml()?.raw() }*/--></DISS_para>
-<!--/*#{/if}*/-->
-<!--/*#{/list}*/-->
-<!--/*#{/if}*/-->
+            <DISS_para th:each="line : ${SUBMISSION.getAbstractLines()}" th:text="${line}"></DISS_para>
         </DISS_abstract>
+        
 <!--/*#{if sub.getPrimaryDocument() != null }*/-->
         <DISS_binary type="PDF"><!--/*${ sub.getStudentLastName()?.escapeXml()?.raw() }_${ sub.getStudentFirstName()?.escapeXml()?.raw() }.${ org.apache.commons.io.FilenameUtils.getExtension(sub.getPrimaryDocument().getName())?.escapeXml()?.raw() }*/--></DISS_binary>
 <!--/*#{/if}*/-->
@@ -276,10 +267,12 @@
         </DISS_attachment>
 <!--/*#{/list}*/-->
     </DISS_content>
+    
+    
 <!--/*#{if embargoCode == 4}*/-->
     <DISS_restriction>    
         <DISS_sales_restriction code="1" remove="1"/>
-        <DISS_format_restriction code="$1" remove="1"/>
+        <DISS_format_restriction code="1" remove="1"/>
         <DISS_note/>
     </DISS_restriction>
 <!--/*#{/if}*/-->

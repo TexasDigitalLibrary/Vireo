@@ -970,7 +970,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Subjects",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

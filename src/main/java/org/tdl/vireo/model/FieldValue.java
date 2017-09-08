@@ -26,6 +26,9 @@ public class FieldValue extends BaseEntity {
     @Column(nullable = true)
     private String identifier;
 
+    @Column(nullable = true)
+    private String definition;
+
     @ElementCollection(fetch = EAGER)
     private List<String> contacts;
 
@@ -83,6 +86,14 @@ public class FieldValue extends BaseEntity {
      */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
     }
 
     /**

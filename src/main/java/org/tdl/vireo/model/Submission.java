@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -33,12 +34,14 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.SubmissionValidator;
 import org.tdl.vireo.service.DefaultSettingsService;
+import org.tdl.vireo.service.ProquestCodesService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.framework.SpringContext;
 import edu.tamu.framework.model.BaseEntity;
 
@@ -47,6 +50,8 @@ import edu.tamu.framework.model.BaseEntity;
 public class Submission extends BaseEntity {
 
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+    private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
@@ -645,9 +650,15 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
-    public String getGraduationMonthString() throws ParseException {
-        Optional<String> graduationMonth = getFieldValueByPredicateValue("dc.date.created");
-        return graduationMonth.isPresent() ? dateFormat.format(dateTimeFormat.parse(graduationMonth.get())) : "";
+    public String getGraduationDateString() throws ParseException {
+        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
+        return graduationDate.isPresent() ? dateFormat.format(dateTimeFormat.parse(graduationDate.get())) : "";
+    }
+
+    @JsonIgnore
+    public String getGraduationYearString() throws ParseException {
+        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
+        return graduationYear.isPresent() ? yearFormat.format(dateTimeFormat.parse(graduationYear.get())) : "";
     }
 
     @JsonIgnore
@@ -882,9 +893,66 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
+    public String getDepartment() {
+        Optional<String> department = getFieldValueByPredicateValue("thesis.degree.department");
+        return department.isPresent() ? department.get() : "";
+    }
+
+    @JsonIgnore
+    public String getAbstract() {
+        Optional<String> descAbstract = getFieldValueByPredicateValue("dc.description.abstract");
+        return descAbstract.isPresent() ? descAbstract.get() : "";
+    }
+
+    @JsonIgnore
+    public String[] getAbstractLines() {
+        return getAbstract().split("\n");
+    }
+
+    @JsonIgnore
     public String getDegreeLevel() {
         Optional<String> degreeLevel = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
+    }
+
+    @JsonIgnore
+    public String getTitle() {
+        Optional<String> title = getFieldValueByPredicateValue("dc.title");
+        return title.isPresent() ? title.get() : "";
+    }
+
+    @JsonIgnore
+    public String getProQuestInstitutionCode() {
+        return getSettingByNameAndType("proquest_institution_code", "proquest_umi_degree_code").getValue();
+    }
+
+    @JsonIgnore
+    public List<FieldValue> getSubjectFieldValues() {
+        return getFieldValuesByPredicateValue("dc.subject");
+    }
+
+    @JsonIgnore
+    public List<FieldValue> getKeywordFieldValues() {
+        return getFieldValuesByPredicateValue("keywords");
+    }
+
+    @JsonIgnore
+    public String getLanguageProQuestCode() {
+        Optional<String> language = getFieldValueByPredicateValue("dc.language.iso");
+        Optional<String> languageProQuestCode = language.isPresent() ? getProQuestCodeByNameAndType(language.get(), "languages") : Optional.empty();
+        return languageProQuestCode.isPresent() ? languageProQuestCode.get() : "";
+    }
+
+    @JsonIgnore
+    public String getDegreeProQuestCode() {
+        Optional<String> degree = getFieldValueByPredicateValue("thesis.degree.name");
+        Optional<String> degreeProQuestCode = degree.isPresent() ? getProQuestCodeByNameAndType(degree.get(), "degrees") : Optional.empty();
+        return degreeProQuestCode.isPresent() ? degreeProQuestCode.get() : "";
+    }
+
+    @JsonIgnore
+    public boolean isProQuestSubject(FieldValue subjectFieldValue) {
+        return subjectFieldValue.getIdentifier() != null && subjectFieldValue.getIdentifier().length() > 0;
     }
 
     @JsonIgnore
@@ -892,7 +960,7 @@ public class Submission extends BaseEntity {
         Long id = getId();
         String lastName = getLastName();
         String externalIdPrefix = getSettingByNameAndType("external_id_prefix", "proquest_umi_degree_code").getValue();
-        String institutionCode = getSettingByNameAndType("proquest_institution_code", "proquest_umi_degree_code").getValue();
+        String institutionCode = getProQuestInstitutionCode();
         return String.join("", institutionCode, externalIdPrefix, String.valueOf(id), lastName);
     }
 
@@ -962,6 +1030,12 @@ public class Submission extends BaseEntity {
     }
 
     @JsonIgnore
+    public Optional<String> getFieldValueDefinitionByPredicateValue(String predicateValue) {
+        List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
+        return fieldValues.size() > 0 && fieldValues.get(0).getDefinition() != null ? Optional.of(fieldValues.get(0).getDefinition()) : Optional.empty();
+    }
+
+    @JsonIgnore
     public Optional<FieldValue> getFirstFieldValueByPredicateValue(String predicateValue) {
         List<FieldValue> fieldValues = getFieldValuesByPredicateValue(predicateValue);
         return fieldValues.size() > 0 ? Optional.of(fieldValues.get(0)) : Optional.empty();
@@ -973,6 +1047,24 @@ public class Submission extends BaseEntity {
     public DefaultConfiguration getSettingByNameAndType(String name, String type) {
         DefaultSettingsService defaultSettingsService = SpringContext.bean(DefaultSettingsService.class);
         return defaultSettingsService.getSettingByNameAndType(name, type);
+    }
+
+    @JsonIgnore
+    public Optional<String> getProQuestCodeByNameAndType(String name, String type) {
+        ProquestCodesService proquestCodesService = SpringContext.bean(ProquestCodesService.class);
+        Map<String, String> codes = proquestCodesService.getCodes(type);
+        Optional<String> code = Optional.empty();
+        for (Map.Entry<String, String> entry : codes.entrySet()) {
+            String proquestCode = entry.getKey();
+            String description = entry.getValue();
+            System.out.println("  " + name + " : " + description);
+            if (description.equals(name)) {
+                code = Optional.of(proquestCode);
+                break;
+            }
+        }
+        System.out.println("\n\n" + code + "\n\n");
+        return code;
     }
 
 }
