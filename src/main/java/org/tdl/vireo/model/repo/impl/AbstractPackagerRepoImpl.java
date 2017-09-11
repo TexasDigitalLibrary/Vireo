@@ -14,13 +14,13 @@ public class AbstractPackagerRepoImpl implements AbstractPackagerRepoCustom {
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Override
-    public Packager createDSpaceMetsPackager(AbstractFormatter formatter) {
-        return abstractPackagerRepo.save(new DSpaceMetsPackager(formatter));
+    public Packager createDSpaceMetsPackager(String name, AbstractFormatter formatter) {
+        return abstractPackagerRepo.save(new DSpaceMetsPackager(name, formatter));
     }
-    
+
     @Override
-    public Packager createProQuestUmiPackager(AbstractFormatter formatter) {
-        return abstractPackagerRepo.save(new ProQuestUmiPackager(formatter));
+    public Packager createProQuestUmiPackager(String name, AbstractFormatter formatter) {
+        return abstractPackagerRepo.save(new ProQuestUmiPackager(name, formatter));
     }
 
 }

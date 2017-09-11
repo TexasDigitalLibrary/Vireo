@@ -1119,8 +1119,12 @@ public class SystemDataLoader {
     }
 
     private void loadPackagers() {
-        abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
-        abstractPackagerRepo.createProQuestUmiPackager(new ProQuestUmiFormatter());
+        if (abstractPackagerRepo.findByName("DSpaceMETS") == null) {
+            abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
+        }
+        if (abstractPackagerRepo.findByName("ProQuestUMI") == null) {
+            abstractPackagerRepo.createProQuestUmiPackager("ProQuestUMI", new ProQuestUmiFormatter());
+        }
     }
 
     private void loadDepositors() {
