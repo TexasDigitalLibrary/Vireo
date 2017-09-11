@@ -44,17 +44,20 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 }, 500);
             };
 
-            $scope.saveWithContacts = function (fieldValue, item) {
+            $scope.saveWithCV = function (fieldValue, item) {
                 fieldValue.updating = true;
+                fieldValue.identifier = item.identifier;
+                fieldValue.definition = item.definition;
                 fieldValue.contacts = item.contacts;
                 save(fieldValue);
             };
 
             $scope.saveContacts = function (fieldValue) {
+                fieldValue.updating = true;
                 if(typeof fieldValue.contacts === 'string') {
                   fieldValue.contacts = fieldValue.contacts.split(",");
                 }                
-                $scope.save(fieldValue);
+                save(fieldValue);
             };
 
             $scope.datepickerOptions = {};

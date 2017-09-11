@@ -1,12 +1,12 @@
 {
-  "name":"Committee Chairs",
+  "name":"Committee Members",
   "isEntityProperty":false,
   "language":{
     "name":"English"
   },
   "dictionary":[
     {
-      "name":"Bob Boring",
+      "name":"Dr. Bob Boring",
       "definition":"Chair of Computer Science",
       "identifier":"",
       "contacts":[
@@ -14,12 +14,24 @@
       ]
     },
     {
-      "name":"Eddie Exciting",
+      "name":"Eddie Ed Exciting",
       "definition":"Chair of Anthropology",
       "identifier":"",
       "contacts":[
         "eddieexciting@mailinator.com"
       ]
+    },
+    {
+      "name":"Aggie Jack",
+      "definition":"",
+      "identifier":"",
+      "contacts":[]
+    },
+    {
+      "name":"Ted To Marrow",
+      "definition":"",
+      "identifier":"",
+      "contacts":[]
     }
   ]
 }

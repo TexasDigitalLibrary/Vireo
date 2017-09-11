@@ -6,5 +6,7 @@ import org.tdl.vireo.model.packager.Packager;
 public interface AbstractPackagerRepoCustom {
 
     public Packager createDSpaceMetsPackager(AbstractFormatter formatter);
+    
+    public Packager createProQuestUmiPackager(AbstractFormatter formatter);
 
 }

@@ -49,6 +49,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -91,7 +92,7 @@ public class SystemDataLoader {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
-    
+
     @Autowired
     private FileIOUtility fileIOUtility;
 
@@ -160,7 +161,7 @@ public class SystemDataLoader {
 
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
-    
+
     @Autowired
     DefaultFiltersService defaultFiltersService;
 
@@ -220,9 +221,12 @@ public class SystemDataLoader {
         logger.info("Loading default Proquest degree codes");
         loadProquestDegreeCodes();
 
+        logger.info("Loading default Proquest subject codes");
+        loadProquestSubjectCodes();
+
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumns();
-        
+
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumnsFilters();
 
@@ -869,20 +873,20 @@ public class SystemDataLoader {
         }
 
     }
-    
+
     private void loadSubmissionListColumnsFilters() {
 
-    	List<SubmissionListColumn> defaultFilterColumns = null;
-		try {
-			defaultFilterColumns = objectMapper.readValue(fileIOUtility.getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
-			SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
-			defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+        List<SubmissionListColumn> defaultFilterColumns = null;
+        try {
+            defaultFilterColumns = objectMapper.readValue(fileIOUtility.getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
+            SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
+            defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
         }
 
     }
@@ -1012,6 +1016,49 @@ public class SystemDataLoader {
         proquesteCodesService.setCodes("degrees", getProquestCodes("degree_codes.xls"));
     }
 
+    private void loadProquestSubjectCodes() {
+        Map<String, String> subjectCodes = getProquestCodes("umi_subjects.xls");
+
+        proquesteCodesService.setCodes("subjects", subjectCodes);
+
+        createSubjectControlledVocabulary(subjectCodes);
+    }
+
+    private void createSubjectControlledVocabulary(Map<String, String> subjectCodes) {
+
+        // check to see if the Language exists
+        Language language = languageRepo.findByName("English");
+
+        // create new Language if not already exists
+        if (language == null) {
+            language = languageRepo.create("English");
+        }
+
+        // check to see if Controlled Vocabulary exists, and if so, merge up with it
+        ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+
+        if (persistedCV == null) {
+            persistedCV = controlledVocabularyRepo.create("Subjects", language);
+        }
+
+        for (Map.Entry<String, String> entry : subjectCodes.entrySet()) {
+            String code = entry.getKey();
+            String description = entry.getValue();
+
+            VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(description, persistedCV);
+
+            if (persistedVW == null) {
+                persistedVW = vocabularyRepo.create(persistedCV, description, "", code, new ArrayList<String>());
+                persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+            } else {
+                persistedVW.setDefinition("");
+                persistedVW.setIdentifier(code);
+                persistedVW = vocabularyRepo.save(persistedVW);
+            }
+        }
+
+    }
+
     private Map<String, String> getProquestCodes(String xslFileName) {
         Map<String, String> proquestCodes = new HashMap<String, String>();
         Resource resource = resourcePatternResolver.getResource("classpath:/proquest/" + xslFileName);
@@ -1073,6 +1120,7 @@ public class SystemDataLoader {
 
     private void loadPackagers() {
         abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
+        abstractPackagerRepo.createProQuestUmiPackager(new ProQuestUmiFormatter());
     }
 
     private void loadDepositors() {
@@ -1091,7 +1139,7 @@ public class SystemDataLoader {
     }
 
     private File getFileFromResource(String resourcePath) throws IOException {
-    	return fileIOUtility.getFileFromResource(resourcePath);
+        return fileIOUtility.getFileFromResource(resourcePath);
     }
 
 }

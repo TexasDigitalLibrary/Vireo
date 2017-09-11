@@ -7,7 +7,7 @@
     ng-blur="save(fieldValue)"
     placeholder="Input {{profile.fieldGlosses[0].value}}"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
-    typeahead-on-select="saveWithContacts(fieldValue, $item)"/>
+    typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>

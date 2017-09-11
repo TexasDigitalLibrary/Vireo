@@ -21,7 +21,7 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
     private String name;
 
     @Column(nullable = true)
-    private String proquestCode;
+    private String degreeCode;
 
     @ManyToOne(optional = false)
     private DegreeLevel level;
@@ -38,7 +38,7 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
 
     public Degree(String name, DegreeLevel level, String proquestCode) {
         this(name, level);
-        setProquestCode(proquestCode);
+        setDegreeCode(degreeCode);
     }
 
     public String getName() {
@@ -57,12 +57,12 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
         this.level = level;
     }
 
-    public String getProquestCode() {
-        return proquestCode;
+    public String getDegreeCode() {
+        return degreeCode;
     }
 
-    public void setProquestCode(String proquestCode) {
-        this.proquestCode = proquestCode;
+    public void setDegreeCode(String degreeCode) {
+        this.degreeCode = degreeCode;
     }
 
     @Override
@@ -72,12 +72,12 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
 
     @Override
     public String getControlledDefinition() {
-        return proquestCode;
+        return degreeCode;
     }
 
     @Override
     public String getControlledIdentifier() {
-        return "";
+        return level.getName();
     }
 
     @Override

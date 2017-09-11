@@ -728,11 +728,6 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'publish'
         },
-        batchPublish: {
-            'endpoint': '/private/queue',
-            'controller': 'submission',
-            'method': 'batch-publish'
-        },
         submitDate: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -788,6 +783,16 @@ var apiMapping = {
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'
+        },
+        batchExport: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-export'
+        },
+        batchPublish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-publish'
         },
         batchUpdateSubmissionStatus: {
             'endpoint': '/private/queue',

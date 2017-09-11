@@ -1,11 +1,12 @@
-<div class="input-group">
-  <input type="tel" 
+<div class="input-group input-contact-value">
+  <input type="text" 
     class="form-control" 
     name="profile.fieldPredicate.value" 
     ng-required="!profile.optional" 
-    ng-blur="save(fieldValue)"
-    ng-disabled="fieldValue.updating"
     ng-model="fieldValue.value"
+    ng-disabled="fieldValue.updating"
+    ng-blur="save(fieldValue)"
+    placeholder="Input {{profile.fieldGlosses[0].value}} Name"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
@@ -13,3 +14,9 @@
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
   </span>
 </div>
+
+<!--
+an implementation of this nature may be needed in the future.
+<div class="input-group input-contact-contacts">
+  Select roles...
+</div>-->

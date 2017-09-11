@@ -4,6 +4,7 @@ import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +28,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +47,7 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.export.ExportPackage;
+import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
@@ -336,7 +341,7 @@ public class SubmissionController {
     }
 
     private boolean isOrcidVerificationActive(SubmissionFieldProfile submissionFieldProfile, FieldValue fieldValue) {
-        return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByNameAndType("orcid_authentication","orcid").getValue().toLowerCase().equals("true");
+        return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByNameAndType("orcid_authentication", "orcid").getValue().toLowerCase().equals("true");
     }
 
     @Transactional
@@ -382,7 +387,7 @@ public class SubmissionController {
         });
         return new ApiResponse(SUCCESS);
     }
-
+  
     @Transactional
     @ApiMapping("/{submissionId}/publish/{depositLocationId}")
     @Auth(role = "STUDENT")
@@ -429,6 +434,49 @@ public class SubmissionController {
         processEmailWorkflowRules(credentials, submission);
 
         return response;
+    }
+
+    @Transactional
+    @Auth(role = "MANAGER")
+    @ApiMapping(value = "/batch-export/{packagerName}", method = RequestMethod.GET)
+    public void batchExport(HttpServletResponse response, @ApiCredentials Credentials credentials, @PathVariable String packagerName) throws Exception {
+
+        User user = userRepo.findByEmail(credentials.getEmail());
+
+        AbstractPackager packager = packagerUtility.getPackager(packagerName);
+
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
+
+        try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
+
+            // TODO: need a more dynamic way to achieve this
+            if (packagerName.equals("ProQuest")) {
+                // TODO: add filter for UMI Publication true
+            }
+
+            for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
+                ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                File exportFile = exportPackage.getFile();
+                zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                zos.write(Files.readAllBytes(exportFile.toPath()));
+                zos.closeEntry();
+            }
+            zos.close();
+        }
+    }
+
+    @Transactional
+    @ApiMapping("/batch-assign-to")
+    @Auth(role = "MANAGER")
+    public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
+        User user = userRepo.findByEmail(credentials.getEmail());
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
+            sub.setAssignee(assignee);
+            actionLogRepo.createPublicLog(sub, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+            submissionRepo.save(sub);
+        });
+        return new ApiResponse(SUCCESS);
     }
 
     @Transactional
@@ -592,19 +640,6 @@ public class SubmissionController {
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
-    }
-
-    @Transactional
-    @ApiMapping("/batch-assign-to")
-    @Auth(role = "MANAGER")
-    public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
-        User user = userRepo.findByEmail(credentials.getEmail());
-        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-            sub.setAssignee(assignee);
-            actionLogRepo.createPublicLog(sub, credentials, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
-            submissionRepo.save(sub);
-        });
-        return new ApiResponse(SUCCESS);
     }
 
     @ApiMapping(value = "/file")

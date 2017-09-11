@@ -21,13 +21,13 @@ import org.tdl.vireo.model.export.TemplateExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
 @Entity
-public class DSpaceMetsPackager extends AbstractPackager {
+public class ProQuestUmiPackager extends AbstractPackager {
 
-    public DSpaceMetsPackager() {
-        setName("DSpaceMETS");
+    public ProQuestUmiPackager() {
+        setName("ProQuestUMI");
     }
 
-    public DSpaceMetsPackager(AbstractFormatter formatter) {
+    public ProQuestUmiPackager(AbstractFormatter formatter) {
         this();
         setFormatter(formatter);
     }
@@ -36,7 +36,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
     public ExportPackage packageExport(String manifest, Submission submission) {
         
         String packageName = "submission-" + submission.getId() + "-";
-        String manifestName = "mets.xml";
+        String manifestName = "proquest.xml";
 
         File pkg = null;
         try {
@@ -77,7 +77,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new TemplateExportPackage(submission, "application/zip", "http://purl.org/net/sword-types/METSDSpaceSIP", pkg, null);
+        return new TemplateExportPackage(submission, "application/zip", "ProQuest UMI", pkg, null);
     }
 
     public Path getAbsolutePath(String relativePath) {

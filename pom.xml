@@ -246,10 +246,12 @@
   </reporting>
 
   <repositories>
+
     <repository>
       <id>tamu-releases</id>
       <url>https://maven.library.tamu.edu/content/repositories/releases</url>
     </repository>
+
     <repository>
       <id>tamu-snapshots</id>
       <url>https://maven.library.tamu.edu/content/repositories/snapshots</url>
@@ -333,6 +335,19 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>8.8.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.steveash.hnp</groupId>
+      <artifactId>human-name-parser</artifactId>
+      <version>0.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
