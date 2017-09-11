@@ -133,117 +133,117 @@
     def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
 
  */-->
-<DISS_submission publishing_option="0" th:attr="embargo_code=${SUBMISSION.getEmbargoCode()},third_party_search=${SUBMISSION.getSettingByNameAndType('proquest_indexing', 'proquest_umi_degree_code').getValue() ? 'Y' : 'N'}">
+<DISS_submission publishing_option="0" th:attr="embargo_code=${EMBARGO_CODE},third_party_search=${PROQUEST_INDEXING}">
     
     <DISS_authorship>
         <DISS_author type="primary">
             <DISS_name>
-                <DISS_surname th:text="${SUBMISSION.getLastName()}"></DISS_surname>
-                <DISS_fname th:text="${SUBMISSION.getFirstName()}"></DISS_fname>
-                <DISS_middle th:text="${SUBMISSION.getMiddleName()}"></DISS_middle>
-                <DISS_affiliation th:text="${SUBMISSION.getGrantor()}"></DISS_affiliation>
+                <DISS_surname th:text="${SUBMITTER_LAST_NAME}"></DISS_surname>
+                <DISS_fname th:text="${SUBMITTER_FIRST_NAME}"></DISS_fname>
+                <DISS_middle th:text="${SUBMITTER_MIDDLE_NAME}"></DISS_middle>
+                <DISS_affiliation th:text="${APPLICATION_GRANTOR}"></DISS_affiliation>
             </DISS_name>
 
-            <DISS_contact th:if="${SUBMISSION.getReleaseStudentContactInformation()}" type="current">
-                <DISS_contact_effdt th:text="${SUBMISSION.getSubmissionDateString()}"></DISS_contact_effdt>
-                <DISS_phone_fax th:with="phoneNumber = ${SUBMISSION.getCurrentPhoneNumber()}" th:if="${SUBMISSION.getCurrentPhoneNumber().length() > 0}" type="P">
-                    <DISS_cntry_cd th:text="${SUBMISSION.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
-                    <DISS_area_code th:text="${SUBMISSION.getAreaCode(phoneNumber)}"></DISS_area_code>
-                    <DISS_phone_num th:text="${SUBMISSION.getNumber(phoneNumber)}"></DISS_phone_num>
-                    <DISS_phone_ext th:text="${SUBMISSION.getExt(phoneNumber)}"></DISS_phone_ext>
+            <DISS_contact th:if="${EXPORT_RELEASE_STUDENT_CONTACT_INFORMATION}" type="current">
+                <DISS_contact_effdt th:text="${FORMATTED_SUBMISSION_DATE}"></DISS_contact_effdt>
+                <DISS_phone_fax th:with="phoneNumber = ${SUBMITTER_CURRENT_PHONE_NUMBER}" th:if="${SUBMITTER_CURRENT_PHONE_NUMBER.length() > 0}" type="P">
+                    <DISS_cntry_cd th:text="${SUBMISSION_HELPER.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
+                    <DISS_area_code th:text="${SUBMISSION_HELPER.getAreaCode(phoneNumber)}"></DISS_area_code>
+                    <DISS_phone_num th:text="${SUBMISSION_HELPER.getNumber(phoneNumber)}"></DISS_phone_num>
+                    <DISS_phone_ext th:text="${SUBMISSION_HELPER.getExt(phoneNumber)}"></DISS_phone_ext>
                 </DISS_phone_fax>
-                <DISS_address th:with="address = ${SUBMISSION.getCurrentAddress()}" th:if="${SUBMISSION.getCurrentAddress().length() > 0}">
-                    <DISS_addrline th:text="${SUBMISSION.getStreet(address)}"></DISS_addrline>
-                    <DISS_city th:text="${SUBMISSION.getCity(address)}"></DISS_city>
-                    <DISS_st th:text="${SUBMISSION.getState(address)}"></DISS_st>
-                    <DISS_pcode th:text="${SUBMISSION.getZip(address)}"></DISS_pcode>
-                    <DISS_country th:text="${SUBMISSION.getCountry(address)}"></DISS_country>
+                <DISS_address th:with="address = ${SUBMITTER_CURRENT_ADDRESS}" th:if="${SUBMITTER_CURRENT_ADDRESS.length() > 0}">
+                    <DISS_addrline th:text="${SUBMISSION_HELPER.getStreet(address)}"></DISS_addrline>
+                    <DISS_city th:text="${SUBMISSION_HELPER.getCity(address)}"></DISS_city>
+                    <DISS_st th:text="${SUBMISSION_HELPER.getState(address)}"></DISS_st>
+                    <DISS_pcode th:text="${SUBMISSION_HELPER.getZip(address)}"></DISS_pcode>
+                    <DISS_country th:text="${SUBMISSION_HELPER.getCountry(address)}"></DISS_country>
                 </DISS_address>
-                <DISS_email th:text="${SUBMISSION.getEmail()}"></DISS_email>
+                <DISS_email th:text="${SUBMITTER_EMAIL}"></DISS_email>
             </DISS_contact>
             
-            <DISS_contact th:if="${SUBMISSION.getReleaseStudentContactInformation()}" type="future">
-                <DISS_contact_effdt th:text="${SUBMISSION.getGraduationDateString()}"></DISS_contact_effdt>
-                <DISS_contact_effdt th:text="${SUBMISSION.getSubmissionDateString()}"></DISS_contact_effdt>
-                <DISS_phone_fax th:with="phoneNumber = ${SUBMISSION.getPermanentPhoneNumber()}" th:if="${SUBMISSION.getPermanentPhoneNumber().length() > 0}" type="P">
-                    <DISS_cntry_cd th:text="${SUBMISSION.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
-                    <DISS_area_code th:text="${SUBMISSION.getAreaCode(phoneNumber)}"></DISS_area_code>
-                    <DISS_phone_num th:text="${SUBMISSION.getNumber(phoneNumber)}"></DISS_phone_num>
-                    <DISS_phone_ext th:text="${SUBMISSION.getExt(phoneNumber)}"></DISS_phone_ext>
+            <DISS_contact th:if="${EXPORT_RELEASE_STUDENT_CONTACT_INFORMATION}" type="future">
+                <DISS_contact_effdt th:text="${SUBMITTER_GRADUATION_DATE}"></DISS_contact_effdt>
+                <DISS_contact_effdt th:text="${FORMATTED_SUBMISSION_DATE}"></DISS_contact_effdt>
+                <DISS_phone_fax th:with="phoneNumber = ${SUBMITTER_PERMANENT_PHONE_NUMBER}" th:if="${SUBMITTER_PERMANENT_PHONE_NUMBER.length() > 0}" type="P">
+                    <DISS_cntry_cd th:text="${SUBMISSION_HELPER.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
+                    <DISS_area_code th:text="${SUBMISSION_HELPER.getAreaCode(phoneNumber)}"></DISS_area_code>
+                    <DISS_phone_num th:text="${SUBMISSION_HELPER.getNumber(phoneNumber)}"></DISS_phone_num>
+                    <DISS_phone_ext th:text="${SUBMISSION_HELPER.getExt(phoneNumber)}"></DISS_phone_ext>
                 </DISS_phone_fax>
-                <DISS_address th:with="address = ${SUBMISSION.getPermanentAddress()}" th:if="${SUBMISSION.getPermanentAddress().length() > 0}">
-                    <DISS_addrline th:text="${SUBMISSION.getStreet(address)}"></DISS_addrline>
-                    <DISS_city th:text="${SUBMISSION.getCity(address)}"></DISS_city>
-                    <DISS_st th:text="${SUBMISSION.getState(address)}"></DISS_st>
-                    <DISS_pcode th:text="${SUBMISSION.getZip(address)}"></DISS_pcode>
-                    <DISS_country th:text="${SUBMISSION.getCountry(address)}"></DISS_country>
+                <DISS_address th:with="address = ${SUBMITTER_PERMANENT_ADDRESS}" th:if="${SUBMITTER_PERMANENT_ADDRESS.length() > 0}">
+                    <DISS_addrline th:text="${SUBMISSION_HELPER.getStreet(address)}"></DISS_addrline>
+                    <DISS_city th:text="${SUBMISSION_HELPER.getCity(address)}"></DISS_city>
+                    <DISS_st th:text="${SUBMISSION_HELPER.getState(address)}"></DISS_st>
+                    <DISS_pcode th:text="${SUBMISSION_HELPER.getZip(address)}"></DISS_pcode>
+                    <DISS_country th:text="${SUBMISSION_HELPER.getCountry(address)}"></DISS_country>
                 </DISS_address>
-                <DISS_email th:text="${SUBMISSION.getPermanentEmail()}"></DISS_email>
+                <DISS_email th:text="${SUBMITTER_PERMANENT_EMAIL}"></DISS_email>
             </DISS_contact>
 
         </DISS_author>
     </DISS_authorship>
      
-    <DISS_description page_count="" th:attr="type=${SUBMISSION.getDegreeLevel()},external_id=${SUBMISSION.getExternalId()},apply_for_copyright=${ SUBMISSION.getApplyForCopyright() ? 'yes' : 'no'}">
-        <DISS_title th:text="${SUBMISSION.getTitle()}"></DISS_title>
+    <DISS_description page_count="" th:attr="type=${DEGREE_LEVEL},external_id=${PROQUEST_EXTERNAL_ID},apply_for_copyright=${PROQUEST_APPLY_FOR_COPYRIGHT}">
+        <DISS_title th:text="${TITLE}"></DISS_title>
         
-        <DISS_dates th:if="${SUBMISSION.getGraduationDateString().length() > 0}">
-            <DISS_comp_date th:text="${SUBMISSION.getGraduationYearString()}"></DISS_comp_date>
-            <DISS_accept_date th:text="${SUBMISSION.getGraduationDateString()}"></DISS_accept_date>
+        <DISS_dates th:if="${SUBMITTER_GRADUATION_DATE.length() > 0}">
+            <DISS_comp_date th:text="${SUBMITTER_GRADUATION_YEAR}"></DISS_comp_date>
+            <DISS_accept_date th:text="${SUBMITTER_GRADUATION_DATE}"></DISS_accept_date>
         </DISS_dates>
 
-        <DISS_degree th:text="${SUBMISSION.getDegreeProQuestCode()}"></DISS_degree>
+        <DISS_degree th:text="${PROQUEST_DEGREE_CODE}"></DISS_degree>
 
         <DISS_institution>
-            <DISS_inst_code th:text="${SUBMISSION.getProQuestInstitutionCode()}"></DISS_inst_code>
-            <DISS_inst_name th:text="${SUBMISSION.getGrantor()}"></DISS_inst_name>
-            <DISS_inst_contact th:text="${SUBMISSION.getDepartment()}"></DISS_inst_contact>
-            <DISS_processing_code th:text="${SUBMISSION.getDegreeLevel()}"></DISS_processing_code>
+            <DISS_inst_code th:text="${PROQUEST_INSTITUTION_CODE}"></DISS_inst_code>
+            <DISS_inst_name th:text="${APPLICATION_GRANTOR}"></DISS_inst_name>
+            <DISS_inst_contact th:text="${DEPARTMENT}"></DISS_inst_contact>
+            <DISS_processing_code th:text="${DEGREE_LEVEL}"></DISS_processing_code>
         </DISS_institution>
 
-        <DISS_advisor th:if="${SUBMISSION.getCommitteeChair().length() > 0}">
-            <DISS_name th:with="name=${SUBMISSION.getCommitteeChair()}">
-                <DISS_surname th:text="${SUBMISSION.getLastName(name)}"></DISS_surname>
-                <DISS_fname th:text="${SUBMISSION.getFirstName(name)}"></DISS_fname>
-                <DISS_middle th:text="${SUBMISSION.getMiddleName(name)}"></DISS_middle>
+        <DISS_advisor th:if="${COMMITTEE_CHAIR.length() > 0}">
+            <DISS_name th:with="name=${COMMITTEE_CHAIR}">
+                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
+                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
+                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
             </DISS_name>
         </DISS_advisor>
 
-        <DISS_cmte_member th:each="committeeMemberFieldValue : ${SUBMISSION.getCommitteeMemberFieldValues()}" th:if="${committeeMemberFieldValue.getValue().length() > 0}">
+        <DISS_cmte_member th:each="committeeMemberFieldValue : ${COMMITTEE_MEMBER_FIELD_VALUES}" th:if="${committeeMemberFieldValue.getValue().length() > 0}">
             <DISS_name th:with="name=${committeeMemberFieldValue.getValue()}">
-                <DISS_surname th:text="${SUBMISSION.getLastName(name)}"></DISS_surname>
-                <DISS_fname th:text="${SUBMISSION.getFirstName(name)}"></DISS_fname>
-                <DISS_middle th:text="${SUBMISSION.getMiddleName(name)}"></DISS_middle>
+                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
+                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
+                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
             </DISS_name>
         </DISS_cmte_member>
 
         <DISS_categorization>
-            <DISS_category th:each="subjectFieldValue : ${SUBMISSION.getSubjectFieldValues()}" th:if="${SUBMISSION.isProQuestSubject(subjectFieldValue)}">
+            <DISS_category th:each="subjectFieldValue : ${SUBJECT_FIELD_VALUES}" th:if="${SUBMISSION_HELPER.isProQuestSubject(subjectFieldValue)}">
                 <DISS_cat_code th:text="${subjectFieldValue.getIdentifier()}"></DISS_cat_code>
                 <DISS_cat_desc th:text="${subjectFieldValue.getValue()}"></DISS_cat_desc>
             </DISS_category>
-            <DISS_keyword th:each="keywordFieldValue : ${SUBMISSION.getKeywordFieldValues()}" th:text="${keywordFieldValue.getValue().trim()}"></DISS_keyword>
-            <DISS_language th:if="${SUBMISSION.getLanguageProQuestCode().length() > 0}" th:text="${SUBMISSION.getLanguageProQuestCode()}"></DISS_language>
+            <DISS_keyword th:each="keywordFieldValue : ${KEYWORD_FIELD_VALUES}" th:text="${keywordFieldValue.getValue().trim()}"></DISS_keyword>
+            <DISS_language th:if="${PROQUEST_LANGUAGE_CODE.length() > 0}" th:text="${PROQUEST_LANGUAGE_CODE}"></DISS_language>
         </DISS_categorization>
 
     </DISS_description>
     
     <DISS_content>
         <DISS_abstract>
-            <DISS_para th:each="line : ${SUBMISSION.getAbstractLines()}" th:text="${line}"></DISS_para>
+            <DISS_para th:each="line : ${ABSTRACT_LINES}" th:text="${line}"></DISS_para>
         </DISS_abstract>
-        <DISS_binary th:if="${SUBMISSION.getPrimaryDocumentFieldValue() != null }" th:text="${SUBMISSION.getPrimaryDocumentFieldValue().getFileName()}" th:attr="type=${FILE_HELPER.getMimeType(SUBMISSION.getPrimaryDocumentFieldValue().getValue()) == 'application/pdf' ? 'PDF' : 'Other'}"></DISS_binary>
-        <DISS_attachment th:each="fv,iter : ${SUBMISSION.getSupplementalDocumentFieldValues()}">
+        <DISS_binary th:if="${PRIMARY_DOCUMENT_FIELD_VALUE != null }" th:text="${PRIMARY_DOCUMENT_FIELD_VALUE.getFileName()}" th:attr="type=${PRIMARY_DOCUMENT_MIMETYPE}"></DISS_binary>
+        <DISS_attachment th:each="fv,iter : ${SUPPLEMENTAL_DOCUMENT_FIELD_VALUES}">
             <DISS_file_name th:text="${fv.getFileName()}"></DISS_file_name>
-            <DISS_file_category th:text="${SUBMISSION.categorize(FILE_HELPER.getMimeType(fv.getValue()))}"></DISS_file_category>
+            <DISS_file_category th:text="${SUBMISSION_HELPER.categorize(FILE_HELPER.getMimeType(fv.getValue()))}"></DISS_file_category>
             <DISS_file_descr>Supplemental File</DISS_file_descr>
         </DISS_attachment>
 
     </DISS_content>
     
-    <DISS_restriction th:if="${SUBMISSION.getEmbargoCode() == 4}">    
-        <DISS_sales_restriction th:attr="code=${SUBMISSION.getProQuestSaleRestrictionCode()},remove=${SUBMISSION.getProQuestSaleRestrictionRemove()}"/>
-        <DISS_format_restriction  th:attr="code=${SUBMISSION.getProQuestFormatRestrictionCode()},remove=${SUBMISSION.getProQuestFormatRestrictionRemove()}"/>
+    <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
+        <DISS_sales_restriction th:attr="code=${PROQUEST_SALE_RESTRICTION_CODE},remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
+        <DISS_format_restriction  th:attr="code=${PROQUEST_FORMAT_RESTRICTION_CODE},remove=${PROQUEST_FORMAT_RESTRICTION_REMOVE}"/>
         <DISS_note/>
     </DISS_restriction>
 
