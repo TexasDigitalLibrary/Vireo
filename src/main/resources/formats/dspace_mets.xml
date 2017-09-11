@@ -48,9 +48,9 @@
                     <!-- dc, thesis, and local schema -->
                     <dim:field
                       th:each="fv : ${ METS_FIELD_VALUES }"
-                      th:attr="mdschema=${ fv.fieldPredicate.getSchema() },
-                               element=${ fv.fieldPredicate.getElement() },
-                               qualifier=${ fv.fieldPredicate.getQualifier() }"
+                      th:attr="mdschema=${ fv.getFieldPredicate().getSchema() },
+                               element=${ fv.getFieldPredicate().getElement() },
+                               qualifier=${ fv.getFieldPredicate().getQualifier() }"
                       th:text="${ fv.value }">
                     </dim:field>
                     

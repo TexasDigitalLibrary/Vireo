@@ -1,7 +1,6 @@
 package org.tdl.vireo.model.formatter;
 
 import java.text.ParseException;
-import java.util.Optional;
 
 import javax.persistence.Entity;
 
@@ -21,6 +20,8 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
 
     @Override
     public void populateContext(Context context, Submission submission) {
+        // NOTE: !important to get common export values
+        super.populateContext(context, submission);
         // TODO: in order to use mappings from an organization for this export,
         // the methods from the submission helper utility would have to be brought
         // the exporter and extract predicate values from the mapping to define

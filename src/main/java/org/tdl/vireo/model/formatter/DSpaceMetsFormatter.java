@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.formatter;
 
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 
@@ -20,6 +21,8 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
 
     @Override
     public void populateContext(Context context, Submission submission) {
+        // NOTE: !important to get common export values
+        super.populateContext(context, submission);
         // TODO: in order to use mappings from an organization for this export,
         // the methods from the submission helper utility would have to be brought
         // the exporter and extract predicate values from the mapping to define
@@ -59,9 +62,9 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submission.getFieldValues().parallelStream().filter(new Predicate<FieldValue>() {
                     @Override
                     public boolean test(FieldValue fv) {
-                        return fv.getFieldPredicate().getSchema() == "dc" || fv.getFieldPredicate().getSchema() == "thesis" || fv.getFieldPredicate().getSchema() == "local";
+                        return fv.getFieldPredicate().getSchema().equals("dc") || fv.getFieldPredicate().getSchema().equals("thesis") || fv.getFieldPredicate().getSchema().equals("local");
                     }
-                }));
+                }).collect(Collectors.toList()));
                 break;
             default:
                 break;
