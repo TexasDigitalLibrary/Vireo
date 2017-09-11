@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User, UserSettings, SubmissionStatuses) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -8,13 +8,17 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
+    var userSettingsUnfetched = new UserSettings();
+    userSettingsUnfetched.fetch();
+
     var ready = $q.all([
         SubmissionRepo.findSubmissionById($routeParams.id),
         UserRepo.getAll(),
         SubmissionStatusRepo.getAll(),
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
-        DepositLocationRepo.getAll()
+        DepositLocationRepo.getAll(),
+        userSettingsUnfetched.ready()
     ]);
 
     ready.then(function (resolved) {
@@ -25,6 +29,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var emailTemplates = resolved[3];
         var fieldPredicates = resolved[4];
         var depositLocations = resolved[5];
+        var userSettings = resolved[6];
+
+        console.log(userSettings);
 
         $scope.loaded = true;
 
@@ -71,22 +78,26 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.addCommentModal = {};
 
         $scope.resetCommentModal = function (addCommentModal) {
-            $scope.closeModal();
-            addCommentModal.adding = false;
-            addCommentModal.commentVisiblity = "public";
-            addCommentModal.recipientEmail = "";
-            addCommentModal.ccRecipientEmail = "";
-            addCommentModal.sendEmailToRecipient = false;
-            addCommentModal.sendEmailToCCRecipient = false;
-            addCommentModal.subject = "";
-            addCommentModal.message = "";
-            addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
-            addCommentModal.selectedTemplate = emailTemplates[0];
+          $scope.closeModal();
+          addCommentModal.adding = false;
+          addCommentModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+          addCommentModal.recipientEmail = userSettings.notes_email_student_by_default==="true" ? $scope.submission.submitter.email : "";
+          addCommentModal.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default==="true" ? $scope.submission.getContactEmails() : "";
+          addCommentModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default==="true")||(userSettings.notes_cc_student_advisor_by_default==="true") ;
+          addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default==="true";
+          addCommentModal.subject = "";
+          addCommentModal.message = "";
+          addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
+          addCommentModal.selectedTemplate = emailTemplates[0];
+          addCommentModal.needsCorrection = userSettings.notes_flag_submission_as_needs_corrections_by_default==="true";
         };
 
         $scope.addComment = function (addCommentModal) {
             addCommentModal.adding = true;
             $scope.submission.addComment(addCommentModal).then(function () {
+                if(addCommentModal.needsCorrection) {
+                  $scope.submission.changeStatus(SubmissionStatuses.NEEDS_CORRECTION);
+                }
                 $scope.resetCommentModal(addCommentModal);
             });
         };
@@ -184,8 +195,11 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var resetFileData = function () {
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0],
-                sendEmailToRecipient: false,
-                sendEmailToCCRecipient: false
+                sendEmailToRecipient: (userSettings.attachment_email_student_by_default==="true") || (userSettings.attachment_cc_student_advisor_by_default==="true"),
+                recipientEmail: userSettings.attachment_email_student_by_default==="true" ? $scope.submission.submitter.email : "",
+                sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default==="true",
+                ccRecipientEmail: userSettings.attachment_cc_student_advisor_by_default==="true" ? $scope.submission.getContactEmails().join(",") : "",
+                needsCorrection: userSettings.attachment_flag_submission_as_needs_corrections_by_default==="true"
             };
         };
 
