@@ -486,7 +486,7 @@ sidebox ul.sidebox-list {
 }
 
 sidebox ul.sidebox-list li {
-  padding: 3px;
+  padding: 0px;
 }
 
 sidebox ul.sidebox-list input {
@@ -498,6 +498,11 @@ sidebox ul.sidebox-list input {
 
 .sidebox-body ul.sidebox-list {
   padding: 15px;
+}
+
+.sidebox-body ul.sidebox-list.status-list {
+  padding-bottom: 21px;
+  margin-top: -10px;
 }
 
 .hover-pointer:hover {
