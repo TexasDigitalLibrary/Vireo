@@ -1,0 +1,69 @@
+{
+  "name":"Colleges",
+  "isEntityProperty":false,
+  "language":{
+    "name":"English"
+  },
+  "dictionary":[
+    {
+      "name":"College of Science",
+      "definition":"College",
+      "identifier":"c6962923-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Irma Lerma Rangel College of Pharmacy",
+      "definition":"College",
+      "identifier":"fa66ad06-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"College of Dentistry",
+      "definition":"College",
+      "identifier":"fa66acbf-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"College of Engineering",
+      "definition":"College",
+      "identifier":"fa66ac64-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"College of Nursing",
+      "definition":"College",
+      "identifier":"c6962c50-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Geosciences",
+      "definition":"College",
+      "identifier":"c696283a-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Architecture",
+      "definition":"College",
+      "identifier":"c6950771-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Liberal Arts",
+      "definition":"College",
+      "identifier":"c69628e7-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Veterinary Medicine and Biomedical Sciences",
+      "definition":"College",
+      "identifier":"c696295a-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Medicine",
+      "definition":"College",
+      "identifier":"c69628b0-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Education and Human Development",
+      "definition":"College",
+      "identifier":"c69627c7-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"College of Agriculture and Life Sciences",
+      "definition":"College",
+      "identifier":"c6962751-3430-11e6-934e-5ce0c5308215"
+    }
+  ]
+}

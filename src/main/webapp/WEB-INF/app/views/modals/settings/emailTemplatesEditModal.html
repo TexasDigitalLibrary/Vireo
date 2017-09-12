@@ -1,0 +1,89 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" type="button" class="close" ng-click="resetEmailTemplates()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Edit an email template</h3>
+</div>
+
+<form ng-submit="updateEmailTemplate()" name="forms.update" novalidate>
+
+    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+
+        <validatedinput
+            model="modalData"
+            property="name"
+            label="Name"
+            placeholder="Name of the email template"
+            form="forms.update"
+            validations="emailTemplateRepo.getValidations()"
+            results="emailTemplateRepo.getValidationResults()">
+        </validatedinput>
+
+        <validatedinput
+            model="modalData"
+            property="subject"
+            label="Subject"
+            placeholder="Subject of the email template"
+            form="forms.update"
+            validations="emailTemplateRepo.getValidations()"
+            results="emailTemplateRepo.getValidationResults()">
+        </validatedinput>
+
+        <div class="row">
+
+            <div class="col-md-9" ng-click="setCursorLocation($event)" ng-keyup="setCursorLocation($event)">
+
+                <validatedtextarea
+                    model="modalData"
+                    property="message"
+                    label="Message Body"
+                    rows="25"
+                    form="forms.update"
+                    validations="emailTemplateRepo.getValidations()"
+                    results="modalData.ValidationResults">
+                </validatedtextarea>
+
+            </div>
+
+            <div class="col-md-3">
+                <div id="email-template-modal-instructions-label">Properties:
+                    <div class="btn-group-vertical">
+                        <button type="button" ng-click="insertText('DEPOSIT_URI')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> DEPOSIT_URI </button>
+                        <button type="button" ng-click="insertText('STUDENT_URL')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> STUDENT_URL </button>
+                        <button type="button" ng-click="insertText('ADVISOR_URL')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> ADVISOR_URL </button>
+                        <button type="button" ng-click="insertText('SUBMISSION_STATUS')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> SUBMISSION_STATUS </button>
+                        <button type="button" ng-click="insertText('SUBMISSION_URL')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> SUBMISSION_URL </button>
+                        <button type="button" ng-click="insertText('SUBMISSION_ASSIGNED_TO')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> SUBMISSION_ASSIGNED_TO </button>
+                    </div>
+                </div>
+
+                <div id="email-template-fields">Fields:
+                    <div class="input-group">
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-filter"></span>
+                      </span>
+                      <input class="form-control" placeholder="limit results" ng-model="fpFilter" />
+                    </div>
+                    <div id="email-template-fields-list" class="btn-group-vertical">
+                        <button type="button" ng-repeat="fp in fieldPredicates | filter:fpFilter " ng-click="insertText(fp.value)" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> {{fp.value}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-default"
+            ng-click="resetEmailTemplates()">Cancel</button>
+        <button
+            id="emailTemplate-save"
+            type="submit"
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid">Update</button>
+    </div>
+
+</form>

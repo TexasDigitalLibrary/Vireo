@@ -1,0 +1,18 @@
+.filter-div,
+.sort-div {
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+.filter-div .form-control {
+  max-width: 300px;
+}
+
+.as-sortable-dragging {
+  position: fixed;
+  opacity: 0.8;
+}
+
+.as-sortable-placeholder {
+  border: 1px solid #dcdcdc;
+}

@@ -1,0 +1,12 @@
+<span>
+	<div class="col-sm-6">
+		<ul class="info-list">
+			<li ng-repeat="fieldProfile in workflowStep.aggregateFieldProfiles | filter:{enabled: true}" ng-if="$index < (workflowStep.aggregateFieldProfiles.length / 2) && fieldProfile.inputType.name !== 'INPUT_FILE'"><info submission="submission" field-profile="fieldProfile" label="{{fieldProfile.fieldGlosses[0].value}}"></info></li>
+		</ul>
+	</div>
+	<div class="col-sm-6">
+		<ul class="info-list">
+			<li ng-repeat="fieldProfile in workflowStep.aggregateFieldProfiles | filter:{enabled: true}" ng-if="$index >= (workflowStep.aggregateFieldProfiles.length / 2) && fieldProfile.inputType.name !== 'INPUT_FILE'"><info submission="submission" field-profile="fieldProfile" label="{{fieldProfile.fieldGlosses[0].value}}"></info></li>
+		</ul>
+	</div>
+</span>

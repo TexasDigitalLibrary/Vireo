@@ -1,0 +1,24 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="box.resetBatchDownloadExport()" aria-title="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Batch Export</h3>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xs-12">
+      <p>Download all the submissions selected by the currently active filter. The download will begin immediately, and may take some time to complete. Unfortunately, your browser will not be able to provide an estimate of when the download is complete.</p>
+      <form class="form-inline" ng-init="packager = box.packagers[0]">
+        <label class="export" for="packager"><strong>Results per page</strong>:</label>
+        <select class="form-control" name="exportType" ng-model="packager" ng-options="p.name for p in box.packagers">
+        </select>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchDownloadExport()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="box.batchDownloadExport(packager)">Download Export</button>
+</div>

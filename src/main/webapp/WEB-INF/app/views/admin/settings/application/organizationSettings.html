@@ -1,0 +1,92 @@
+<div id="organization-settings" class="row" ng-controller="OrganizationCategoriesController">
+
+    <validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-10 col-md-offset-1">
+                <toggleButton
+                    ng-click="updateConfiguration('application', 'hierarchical')"
+                    label="Hierarchical Organization Management:"
+                    scope-value="settings.configurable.application.hierarchical.value"
+                    toggle-options="{{organizationHierarchicalOptions}}"
+                    tool-tip="Allow/disallow hierarchical organization management.">
+                </toggleButton>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-10 col-md-offset-1">
+                <validatedinput
+                    type="text"
+                    label="New Submission Organization Selector Header"
+                    model="settings.configurable.application.new_submission_header_text"
+                    property="value"
+                    confirm="updateConfiguration('application', 'new_submission_header_text')"
+                    form-view="true"
+                    tool-tip="This text will appear as a header if an organization needs to be selected before starting a new submission.">
+                </validatedinput>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-10 col-md-offset-1">
+                <button class="btn btn-default modal-add-btn" ng-click="openModal('#organizationCategoryNewModal')">
+                    Add Organization Category
+                </button>
+
+                <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new organization category."></div>
+
+                <p ng-if="organizationCategories.length == 0">Add new Organization Category</p>
+
+                <draganddroplist
+                    dragging="dragging"
+                    scope-value="organizationCategories"
+                    properties='["name"]'
+                    item-view='views/directives/dragAndDropOrganizationCategory.html'
+                    listeners='dragControlListeners'
+                    edit='launchEditModal(index)'
+                    sort-label='Organization Category'>
+                </draganddroplist>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="col-md-10 col-md-offset-1">
+                <trashcan
+                    id="{{trashCanId}}"
+                    dragging="dragging"
+                    listeners='dragControlListeners'>
+                </trashcan>
+            </div>
+        </div>
+    </div>
+
+    <modal
+        modal-id="organizationCategoryNewModal"
+        modal-view="views/modals/settings/organizationCategoryNewModal.html"
+        modal-header-class="modal-header-primary"
+        modal-keyboard="false"
+        wvr-modal-backdrop="static">
+    </modal>
+
+    <modal
+        modal-id="organizationCategoryEditModal"
+        modal-view="views/modals/settings/organizationCategoryEditModal.html"
+        modal-header-class="modal-header-primary"
+        modal-keyboard="false"
+        wvr-modal-backdrop="static">
+    </modal>
+
+    <modal
+        modal-id="organizationCategoryConfirmRemoveModal"
+        modal-view="views/modals/settings/organizationCategoryConfirmRemoveModal.html"
+        modal-header-class="modal-header-primary"
+        modal-keyboard="false"
+        wvr-modal-backdrop="static">
+    </modal>
+
+</div>

@@ -1,0 +1,90 @@
+<div class="item-view" ng-controller="AdminSubmissionViewController">
+
+  <modal modal-id="addFileModal" 
+    modal-view="views/modals/view/addFileModal.html" 
+    modal-header-class="modal-header-primary" 
+    wvr-modal-backdrop="static">
+  </modal>
+
+  <div class="row">
+    <h1>
+      <span ng-if="!submission">
+        <span class="glyphicon glyphicon-refresh spinning"></span>
+        Loading Submission...</span>
+      <span ng-if="submission">{{title}}</span>
+    </h1>
+    <hr>
+    <vireo-tabs ng-show="loaded">
+      <vireo-tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
+    </vireo-tabs>
+
+  </div>
+
+  <div class="advisor-review-url" ng-if="submission.advisorReviewURL">
+    <strong>Faculty Review URL:</strong> <a href="{{submission.advisorReviewURL}}">{{submission.advisorReviewURL}}</a>
+  </div>
+
+  <div class="row" ng-show="loaded">
+    <div class="view-section-header">
+      <h1>REVIEWER NOTES</h1>
+    </div>
+    <div class="form-inline reviewer-notes">
+      <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
+      <span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"></span>
+      <span ng-if="!editingReviewerNotes" ng-class="{'info-empty': !submission.reviewerNotes}">{{submission.reviewerNotes || 'none'}}</span>
+      <div class="input-group" ng-if="editingReviewerNotes">
+        <textarea class="form-control" ng-model="submission.reviewerNotes" cols="200"></textarea>
+        <span class="glyphicon glyphicon-ok toggle-href" ng-click="saveReviewerNotes()"></span>
+        <span class="glyphicon glyphicon-remove toggle-href" ng-click="cancelReviewerNotes()"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" ng-show="loaded">
+
+    <div class="view-section-header">
+      <h1>ACTION LOG</h1>
+      <button class="btn btn-default view-action-button" ng-click="openModal('#addCommentModal')">Add Comment</button>
+    </div>
+
+    <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
+
+    <actionlog ng-if="submission" submission="submission" ready="submisisonReady"></actionlog>
+
+  </div>
+
+  <div class="row" ng-show="loaded">
+    <a name="all-files"></a>
+    <div class="view-section-header">
+      <h1>ALL FILES</h1>
+      <button class="btn btn-default view-action-button" ng-click="openModal('#addFileModal')">Add File</button>
+    </div>
+    <table class="table table-bordered table-striped table-hover etd-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>File</th>
+          <th>Type</th>
+          <th>Time</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile" ng-if="documentFieldValue.id">
+          <td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+          <td>
+            <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
+          </td>
+          <td>{{getFileType(documentFieldValue.fieldPredicate)}}</td>
+          <td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
+          <td class="all-files-action">
+            <modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
+            <span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+            <span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

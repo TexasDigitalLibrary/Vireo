@@ -1,0 +1,19 @@
+<div class="container" ng-controller="RegistrationController">
+
+  <validationmessage results="user.getValidationResults()"></validationmessage>
+
+  <h3>Continue registration</h3>
+  <hr>
+  <form class="registration" name="forms.register" ng-submit="register()" novalidate>
+    <validatedinput model="registration" property="firstName" label="First Name" placeholder="Enter first name" form="forms.register" validations="user.getValidations()" results="user.getValidationResults()">
+    </validatedinput>
+    <validatedinput model="registration" property="lastName" label="Last Name" placeholder="Enter last name" form="forms.register" validations="user.getValidations()" results="user.getValidationResults()">
+    </validatedinput>
+    <validatedinput type="password" model="registration" property="password" label="Password" placeholder="Enter password" form="forms.register" validations="user.getValidations()" results="user.getValidationResults()">
+    </validatedinput>
+    <validatedinput type="password" model="registration" property="confirm" label="Confirm Password" placeholder="Enter password again" form="forms.register" validations="user.getValidations()" results="user.getValidationResults()">
+    </validatedinput>
+    <button type="submit" class="btn btn-primary" ng-disabled="forms.register.$invalid">Register</button>
+  </form>
+  <hr>
+</div>

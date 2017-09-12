@@ -1,85 +1,93 @@
-# Vireo Electronic Thesis and Dissertation Management System #
+# Vireo 4
+Vireo 4 is a turnkey Electronic Thesis and Dissertation (ETD) Management System.
 
-## About Vireo  ##
+## Building Vireo 4
 
-Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System
-addressing all steps of the ETD process, from submission to publication to 
-preservation. Vireo provides students the ability to submit their digital
-theses and dissertations via a simple online interface. Graduate offices can
-use Vireo to manage the ETD submission and approval process. 
+### Development
+```bash
+$ mvn clean package
+```
 
-The project is organized by the [Texas Digital Library](https://www.tdl.org/)
-in collaboration with [Texas A&M University](http://www.tamu.edu/),
-[University of Illinois at Urbana-Champaign](http://illinois.edu/), and
-[Massachusetts Institute of Technology](http://web.mit.edu/).
+or run for development:
+```bash
+$ mvn clean spring-boot:run
+```
 
-For more information on Vireo, visit the 
-[Github Project page for Vireo](https://github.com/TexasDigitalLibrary/Vireo)
-OR
-[Github Project wiki for Vireo](https://github.com/TexasDigitalLibrary/Vireo/wiki)
-OR
-[Github page for Vireo](http://texasdigitallibrary.github.io/Vireo/)
+or run for production
+```bash
+$ mvn clean spring-boot:run -Dproduction
+```
 
-## Vireo 3.0 - What's New ##
+### Production
+```bash
+$ mvn clean package -DskipTests -Dproduction
+```
+If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
 
-Vireo 3.0 is major feature upgrade to Vireo. It builds upon the past success of 
-2.0 and the Java Play Framework to enable new features. Here are some highlights
+## Testing Vireo 4
 
-**New Fields:**
-- ORCID
-- ProQuest Embargoes
+### Server
+```bash
+$ mvn clean test
+```
 
-**New Features:**
-- Revised Needs Corrections workflow: Vireo 3 includes a more intuitive student workflow for submitting corrected manuscripts, including better validations to minimize student errors.
-- Email: Vireo 3 adds the ability to set up rules for sending automated emails to configurable groups of stakeholders.
-- Reporting and Exports: Vireo 3 allows administrative users to create custom, exportable Excel reports by using saved filters and columns. It also includes the addition of the Action Log to a file export package.
-- Multiple submissions: Vireo 3 overhauls the functionality for allowing multiple submissions by a single student. Specifically, it adds more sophisticated validations to prevent students from creating a new submission for the same degree, while allowing legitimate multiple submissions (for different degrees) by the same student.
-- Embargoes: Vireo 3 adds a separate, optional embargo period for submissions going to ProQuest.
-- Custom Action Checklist: In Vireo 3, administrative users have the ability to filter an ETD list by individual Custom Actions. Additionally, Vireo 3 can be configured to display certain Checklist items in the student view.
+### Client
+```bash
+$ npm run test
+```
 
-**New Settings:**
-- Email "From" and "ReplyTo" are now in administrative settings instead of application.conf
-- Deposit locations can now be configured to have a timeout (defaulted to 60 seconds, used to be 10 seconds) for the SWORD client when depositing large items into DSpace
-- Email Workflow Rules
-- Administrative Groups
-- Separate "Default" and "ProQuest" embargoes
+### Server and Client
+```bash
+$ mvn clean test -DtestClient
+```
 
-**Other New Features:**
-- An ADA-compliant student submission interface
-- Several bug fixes
+### e2e
+```bash
+$ mvn clean spring-boot:run
+$ npm run protractor
+```
 
-## Building and Deploying Vireo ##
+## Installing Zip Package to filesystem
+Unzip package into preferred directory (or any directory you choose):
+```bash
+$ cd /opt/vireo
+$ unzip ~/Vireo-4.0.x-SNAPSHOT-install.zip
+```
 
-Refer to [the wiki pages](https://github.com/TexasDigitalLibrary/Vireo/wiki) 
-for instructions on deploying Vireo from scratch or updating a previous release. 
+### Directory Structure of installed package
+```bash
+/opt/vireo$ ls
+drwxr-xr-x 2 root root 4096 Nov 11 11:54 attachments
+drwxr-xr-x 2 root root 4096 Oct  2 15:36 conf
+drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
+```
+* attachments -- where pdf's will be uploaded to
+* conf -- where the external config files reside
+* webapp -- the extracted WAR file
 
-## License and Copyright ##
+## Installing WAR Package in Tomcat
+Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
-Copyright (c) 2015, Texas Digital Library
-All rights reserved.
+```bash
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/vireo.war
+```
 
-Redistribution and use in source and binary forms, with or without 
-modification, are permitted provided that the following conditions 
-are met:
+or as root:
+```bash
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/ROOT.war
+```
 
-- Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
 
-- Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation 
-  and/or other materials provided with the distribution.
+## Running as a stand-alone Spring Boot application
+```bash
+java -jar target/vireo-4.0.x-SNAPSHOT.war
+```
 
-- Neither the name of the Texas Digital Library nor the names of its
-  contributors may be used to endorse or promote products derived from this
-  software without specific prior written permission.
+## Configuring
+There is an external `application.properties` file under the `conf` directory that you can modify to override the values in the built-in `application.properties`.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**NOTE: The `conf` directory is only available if deployed from the ZIP package.**
+
+**NOTE: If you need an external configuration file to the WAR file, you'll need to put a `conf` directory in the same directory as the WAR file (whether running inside tomcat or as stand-alone Spring Boot application).**
+
+**You should override the database config and the spring secret key.**

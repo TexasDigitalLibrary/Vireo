@@ -1,0 +1,10 @@
+<form ng-init="box.organizationNameLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
+	<ul class="sidebox-list organization-by-category-top-list" ng-if="c.name!='System'" ng-repeat="c in box.organizationCategories">
+		<li class="organization-category" ng-if="box[c.name+'Orgs'].length" ng-click="box[c.name+'Expanded'] = box[c.name+'Expanded']?!box[c.name+'Expanded']:true"><span ng-if="!box[c.name+'Expanded']">+</span><span ng-if="box[c.name+'Expanded']">-</span> {{c.name}}</li>
+		<li ng-class="{'expanded': box[c.name+'Expanded']}" class="organization-by-category-sub-list">
+			<ul>
+				<li class="organization-filter filter" ng-repeat="o in box[c.name+'Orgs'] = (box.organizations | filter:{category: {name: c.name}})" ng-click="box[column.title.split(' ').join('')]=o.name;box.addExactMatchFilter(column, o.name);">{{o.name}}</li>
+			</ul>
+		</li>
+	</ul>
+</form>

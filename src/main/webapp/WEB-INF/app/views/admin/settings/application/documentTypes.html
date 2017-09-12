@@ -1,0 +1,32 @@
+<div id="document-types" class="row" ng-controller="DocumentTypesController">
+
+  <validationmessage results="documentTypeRepo.getValidationResults()"></validationmessage>
+
+  <div class="col-sm-6">
+
+    <div class="col-md-10 col-md-offset-1">
+
+      <button class="btn btn-default modal-add-btn" ng-click="openModal('#documentTypesNewModal')">
+        Add File Type
+      </button>
+
+      <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog to create a new file type."></div>
+
+      <p ng-if="graduationMonths.length == 0">Add new File Type</p>
+
+      <draganddroplist dragging="dragging" scope-value="documentTypes" properties='["name"]' item-view='views/directives/dragAndDropDocumentType.html' listeners='dragControlListeners' edit='launchEditModal(index)' sort-column='name' , sort-action='sortAction' sort-method='sortDocumentTypes(column)' sort-label='File Types'></draganddroplist>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="col-md-10 col-md-offset-1">
+      <trashcan id="{{trashCanId}}" dragging="dragging" listeners='dragControlListeners'></trashcan>
+      <div></div>
+
+      <modal modal-id="documentTypesNewModal" modal-view="views/modals/settings/documentTypesNewModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" wvr-modal-backdrop="static"></modal>
+
+      <modal modal-id="documentTypesEditModal" modal-view="views/modals/settings/documentTypesEditModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" wvr-modal-backdrop="static"></modal>
+
+      <modal modal-id="documentTypesConfirmRemoveModal" modal-view="views/modals/settings/documentTypesConfirmRemoveModal.html" modal-header-class="modal-header-primary" modal-keyboard="false" wvr-modal-backdrop="static"></modal>
+
+    </div>

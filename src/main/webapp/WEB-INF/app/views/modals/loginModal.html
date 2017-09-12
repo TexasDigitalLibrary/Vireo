@@ -1,0 +1,48 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="reset()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Login</h3>
+</div>
+
+<form name="forms.login" novalidate>
+
+    <span ng-controller="LoginController">
+
+        <validationmessage results="user.getValidationResults()"></validationmessage>
+
+        <div class="modal-body loginModal">
+            
+            <validatedinput
+                model="account"
+                property="email"
+                label="Email"
+                placeholder="Enter email"
+                form="forms.login"
+                validations="user.getValidations()"
+                results="user.getValidationResults()">
+            </validatedinput>
+
+            <validatedinput
+                type="password"
+                model="account"
+                property="password"
+                label="Password"
+                placeholder="Enter password"
+                form="forms.login"
+                validations="user.getValidations()"
+                results="user.getValidationResults()">
+            </validatedinput>
+
+            <button class="btn btn-primary" type="submit" ng-click="login()" ng-disabled="forms.login.$invalid">Login</button>
+
+        </div>
+
+    </span>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="reset()">Cancel</button>
+        <button type="button" class="btn btn-primary pull-left" ng-click="login()">Shibboleth Login</button>        
+    </div>
+
+</form>

@@ -1,0 +1,128 @@
+submissiondialog div.dialog {
+  position: fixed;
+  font-size: 13px;
+  width: 325px;
+  bottom: 6%;
+  padding: 10px 20px;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+@media (max-width: 1540px) {
+  submissiondialog div.dialog {
+    opacity: 0.9;
+    padding: 10px 20px;
+    z-index: 1;
+  }
+}
+@media (min-width: 1540px) {
+  submissiondialog div.dialog {
+    box-shadow: 3px 3px 10px -6px #000000;
+  }
+}
+
+submissiondialog div.dialog.state {
+  right: 2%;
+}
+@media (max-width: 1540px) {
+  submissiondialog div.dialog.state {
+    position: fixed;
+    bottom: 4%;
+    left: 50%;
+    width: 50%;
+    margin-left: -26%;
+  }
+}
+
+submissiondialog div.dialog.state.immutable {
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+  color: #584521;
+}
+
+submissiondialog div.dialog.state.needs-correction {
+  background-color: #f2dede;
+  border: 1px solid #eed3d7;
+  color: #752e2d;
+}
+
+.needs-correction-link {
+  color: #666666;
+  text-decoration: none;
+}
+
+.needs-correction-action {
+  padding: 17px 20px 18px;
+  margin-top: 18px;
+  margin-bottom: 18px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e5e5e5;
+}
+
+submissiondialog div.dialog.actions {
+  left: 2%;
+  background-color: #d9edf7;
+  border: 1px solid #bce8f1;
+  color: #31708f;
+  z-index:500;
+}
+@media (max-width: 1540px) {
+  submissiondialog div.dialog.actions {
+    position: relative;
+    left: 50%;
+    width: 50%;
+    margin-left: -26%;
+  }
+}
+
+span.dialog-close {
+  float: right;
+}
+
+h4.dialog-header {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+span.submission-state {
+  font-weight: bold;
+}
+
+li.action-list-element {
+  margin-right: 15px;
+  margin-bottom: 5px;
+}
+
+ul.dialog-actions-list {
+  list-style-type: none;
+}
+
+.dialog-content {
+  -webkit-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -moz-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -o-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.dialog-confirm {
+  -webkit-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -moz-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  -o-transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out;
+  overflow: hidden;
+  color: red;
+}
+
+.dialog-closed {
+  opacity: 0;
+  max-height: 0;
+}
+
+.dialog-open {
+  opacity: 1;
+  max-height: 5000px;
+}
