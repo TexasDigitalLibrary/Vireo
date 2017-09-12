@@ -1,4 +1,4 @@
-vireo.controller('NewSubmissionController', function($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ConfigurationRepo, SubmissionStates) {
+vireo.controller('NewSubmissionController', function($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ManagedConfigurationRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -6,9 +6,7 @@ vireo.controller('NewSubmissionController', function($controller, $location, $q,
 
     $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
 
-    ConfigurationRepo.ready().then(function() {
-        $scope.configuration = ConfigurationRepo.getAll();
-    });
+    $scope.configuration = ManagedConfigurationRepo.getAll();
 
     var studentSubmissions = StudentSubmissionRepo.getAll();
 
