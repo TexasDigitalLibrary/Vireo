@@ -24,17 +24,21 @@ import org.tdl.vireo.model.formatter.AbstractFormatter;
 public class DSpaceMetsPackager extends AbstractPackager {
 
     public DSpaceMetsPackager() {
-        setName("DSpaceMETS");
+
     }
 
-    public DSpaceMetsPackager(AbstractFormatter formatter) {
-        this();
+    public DSpaceMetsPackager(String name) {
+        setName(name);
+    }
+
+    public DSpaceMetsPackager(String name, AbstractFormatter formatter) {
+        this(name);
         setFormatter(formatter);
     }
 
     @Override
     public ExportPackage packageExport(String manifest, Submission submission) {
-        
+
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
 
