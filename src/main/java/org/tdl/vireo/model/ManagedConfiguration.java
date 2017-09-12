@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.interfaces.Configuration;
-import org.tdl.vireo.model.validation.ConfigurationValidator;
+import org.tdl.vireo.model.validation.ManagedConfigurationValidator;
 
 import edu.tamu.framework.model.BaseEntity;
 
@@ -33,7 +33,7 @@ public class ManagedConfiguration extends BaseEntity implements Configuration {
      * By default new ones are not system required.
      */
     public ManagedConfiguration() {
-        setModelValidator(new ConfigurationValidator());
+        setModelValidator(new ManagedConfigurationValidator());
     }
 
     /**

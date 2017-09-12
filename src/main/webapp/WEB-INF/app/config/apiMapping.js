@@ -131,7 +131,7 @@ var apiMapping = {
             'controller': 'settings/custom-action'
         }
     },
-    Configuration: {
+    ManagedConfiguration: {
         lazy: true,
         validations: true,
         modelListeners: false,
@@ -433,7 +433,7 @@ var apiMapping = {
         }
     },
     FieldValue: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         update: {
             'endpoint': '/private/queue',
@@ -682,7 +682,7 @@ var apiMapping = {
         }
     },
     Packager: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -976,7 +976,7 @@ var apiMapping = {
         }
     },
     ManagerSubmissionListColumn: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -1004,7 +1004,7 @@ var apiMapping = {
         }
     },
     ManagerFilterColumn: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -1163,7 +1163,7 @@ var apiMapping = {
         }
     },
     SavedFilter: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
