@@ -24,7 +24,7 @@ import org.tdl.vireo.model.formatter.AbstractFormatter;
 public class ProQuestUmiPackager extends AbstractPackager {
 
     public ProQuestUmiPackager() {
-        setName("ProQuestUMI");
+        setName("ProQuest");
     }
 
     public ProQuestUmiPackager(AbstractFormatter formatter) {
