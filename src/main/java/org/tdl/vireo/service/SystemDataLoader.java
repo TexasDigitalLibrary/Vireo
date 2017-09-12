@@ -1122,8 +1122,8 @@ public class SystemDataLoader {
         if (abstractPackagerRepo.findByName("DSpaceMETS") == null) {
             abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
         }
-        if (abstractPackagerRepo.findByName("ProQuestUMI") == null) {
-            abstractPackagerRepo.createProQuestUmiPackager("ProQuestUMI", new ProQuestUmiFormatter());
+        if (abstractPackagerRepo.findByName("ProQuest") == null) {
+            abstractPackagerRepo.createProQuestUmiPackager("ProQuest", new ProQuestUmiFormatter());
         }
     }
 
