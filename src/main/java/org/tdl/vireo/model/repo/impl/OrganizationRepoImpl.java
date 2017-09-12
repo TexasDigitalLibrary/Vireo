@@ -1,14 +1,11 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -19,8 +16,6 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
-
-import edu.tamu.framework.model.ApiResponse;
 
 public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
@@ -35,9 +30,6 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Autowired
     private SubmissionRepo submissionRepo;
-    
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public Organization create(String name, OrganizationCategory category) {
@@ -146,20 +138,20 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
         organizationRepo.delete(orgId);
     }
-    
+
     @Override
-	public Organization restoreDefaults(Organization organization) {
-    	 Organization persistedOrg = organizationRepo.findOne(organization.getId());
-    	 Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
-    	 
-    	 persistedOrg.clearAggregatedWorkflowStepsFromHiarchy(); 
-    	 
-    	 parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
-    		 persistedOrg.addAggregateWorkflowStep(ws);
-         });
-    	
-         return  organizationRepo.save(persistedOrg);
-   	}
+    public Organization restoreDefaults(Organization organization) {
+        Organization persistedOrg = organizationRepo.findOne(organization.getId());
+        Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
+
+        persistedOrg.clearAggregatedWorkflowStepsFromHiarchy();
+
+        parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
+            persistedOrg.addAggregateWorkflowStep(ws);
+        });
+
+        return organizationRepo.save(persistedOrg);
+    }
 
     @Override
     public Set<Organization> getDescendantOrganizations(Organization org) {

@@ -1,6 +1,6 @@
-vireo.model("Configuration", function Configuration($sanitize, WsApi) {
+vireo.model("ManagedConfiguration", function ManagedConfiguration($sanitize, WsApi) {
 
-    return function Configuration() {
+    return function ManagedConfiguration() {
 
         // additional model methods and variables
 

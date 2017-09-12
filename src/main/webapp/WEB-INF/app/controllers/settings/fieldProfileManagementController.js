@@ -1,10 +1,10 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, DocumentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ConfigurationRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, DocumentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ManagedConfigurationRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
     }));
 
-    $scope.shibbolethAttributes = ConfigurationRepo.getAll().shibboleth;
+    $scope.shibbolethAttributes = ManagedConfigurationRepo.getAll().shibboleth;
 
     $scope.organizationRepo = OrganizationRepo;
 

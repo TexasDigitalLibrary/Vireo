@@ -1,9 +1,7 @@
-vireo.controller("CompleteSubmissionController", function($controller, $scope, ConfigurationRepo) {
+vireo.controller("CompleteSubmissionController", function($controller, $scope, ManagedConfigurationRepo) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-    ConfigurationRepo.ready().then(function() {
-        $scope.configuration = ConfigurationRepo.getAll();
-    });
+    $scope.configuration = ManagedConfigurationRepo.getAll();
 
 });

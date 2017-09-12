@@ -1,4 +1,4 @@
-vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ConfigurationRepo, StudentSubmissionRepo, SubmissionStates) {
+vireo.controller("SettingsController", function ($controller, $injector, $scope, $timeout, UserSettings, ManagedConfigurationRepo, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -6,7 +6,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 
     $scope.settings = {};
 
-    $scope.settings.configurable = ConfigurationRepo.getAll();
+    $scope.settings.configurable = ManagedConfigurationRepo.getAll();
 
     $scope.inProgress = {};
 
@@ -102,7 +102,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
 
         var submissions = StudentSubmissionRepo.getAll();
 
-        ConfigurationRepo.ready().then(function () {
+        ManagedConfigurationRepo.ready().then(function () {
 
             $scope.hasSubmissions = function () {
                 return submissions.length > 0;

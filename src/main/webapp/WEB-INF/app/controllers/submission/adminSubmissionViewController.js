@@ -31,8 +31,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var depositLocations = resolved[5];
         var userSettings = resolved[6];
 
-        console.log(userSettings);
-
         $scope.loaded = true;
 
         $scope.submission = submission;
