@@ -80,7 +80,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           addCommentModal.adding = false;
           addCommentModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
           addCommentModal.recipientEmail = userSettings.notes_email_student_by_default==="true" ? $scope.submission.submitter.email : "";
-          addCommentModal.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default==="true" ? $scope.submission.getContactEmails() : "";
+          addCommentModal.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default==="true" ? $scope.submission.getContactEmails().join(",") : "";
           addCommentModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default==="true")||(userSettings.notes_cc_student_advisor_by_default==="true") ;
           addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default==="true";
           addCommentModal.subject = "";
