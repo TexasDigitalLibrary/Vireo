@@ -5,12 +5,14 @@ import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
@@ -87,12 +89,12 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute, defaultValue));
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
         workflowStepRepo.save(originatingWorkflowStep);
-
-        fieldGlosses.forEach(
-
-                        fieldGloss -> {
-                            submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
-                        });
+        fieldGlosses.forEach(fieldGloss -> {
+            Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(fieldGloss.getValue(), fieldPredicate.getValue(), inputType);
+            if(!slc.isPresent()) {
+                submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
+            }
+        });
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
