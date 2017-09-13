@@ -34,11 +34,10 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 			promise.then(function(res) {
 				if(res.meta.type == "INVALID") {
 					organization.setValidationResults(res.payload.ValidationResults);
-					console.log(organization);
 				}
 			});
 			return promise;
-		};
+    };
 
 		this.addEmailWorkflowRule = function(templateId, recipient, submissionStatus) {
 			var organization = this;

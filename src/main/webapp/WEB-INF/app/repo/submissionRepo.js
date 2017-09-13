@@ -1,4 +1,4 @@
-vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
+vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submission) {
 
     var submissionRepo = this;
 
@@ -43,33 +43,32 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, WsApi, Submission) {
         return promise;
     };
 
-    submissionRepo.batchUpdateStatus = function(submissionStatus) {
+    submissionRepo.batchExport = function(packager) {
+        angular.extend(submissionRepo.mapping.batchExport, {
+            'method': 'batch-export/' + packager.name
+        });
+        var promise = FileApi.download(submissionRepo.mapping.batchExport);
+        return promise;
+    };
 
+    submissionRepo.batchUpdateStatus = function(submissionStatus) {
         angular.extend(submissionRepo.mapping.batchUpdateSubmissionStatus, {'data': submissionStatus});
         var promise = WsApi.fetch(submissionRepo.mapping.batchUpdateSubmissionStatus);
-
         return promise;
-
     };
 
     submissionRepo.batchPublish = function(depositLocation) {
-
         angular.extend(submissionRepo.mapping.batchPublish, {
             method: "batch-publish/" + depositLocation.id
         });
-
         var promise = WsApi.fetch(submissionRepo.mapping.batchPublish);
-
         return promise;
     };
 
     submissionRepo.batchAssignTo = function(assignee) {
-
         angular.extend(submissionRepo.mapping.batchAssignTo, {'data': assignee});
         var promise = WsApi.fetch(submissionRepo.mapping.batchAssignTo);
-
         return promise;
-
     };
 
     return submissionRepo;

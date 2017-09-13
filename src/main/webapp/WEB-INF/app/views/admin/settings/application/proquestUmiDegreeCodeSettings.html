@@ -10,7 +10,7 @@
                 validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
                 confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
                 form-view="true"
-                tool-tip="The code assigned by ProQuest/UMI to identify the institution associated with all submissions when submitting to their catalogue.">
+                tool-tip="The code assigned by ProQuest to identify the institution associated with all submissions when submitting to their catalogue.">
             </validatedinput>
         </div>
 
@@ -61,7 +61,7 @@
         				aria-describedby="{{degree.name}}"
         				autocomplete="off"
         				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
-        				ng-model="degree.proquestCode"
+        				ng-model="degree.degreeCode"
                 ng-blur="saveDegree(degree)"
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>
@@ -91,7 +91,7 @@
         				aria-describedby="{{degree.name}}"
         				autocomplete="off"
         				uib-typeahead="data.code as (data.code + ' (' + data.degree + ')') for data in proquestDegreeCodes | filter:$viewValue"
-        				ng-model="degree.proquestCode"
+        				ng-model="degree.degreeCode"
                 ng-blur="saveDegree(degree)"
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>

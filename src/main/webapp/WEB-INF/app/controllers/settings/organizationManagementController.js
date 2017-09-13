@@ -61,7 +61,23 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 		$scope.cancelDeleteOrganization = function() {
 			$scope.closeModal();
 			$scope.getSelectedOrganization().clearValidationResults();
+    };
+    
+    $scope.restoreOrganizationDefaults = function(organization) {
+			OrganizationRepo.restoreDefaults(organization).then(function(data) {
+				if(data.meta.type != 'INVALID') {
+					$scope.closeModal();
+					$timeout(function() {
+						AlertService.add(data.meta, 'organization/restore-defaults');
+					}, 300);
+				}
+			});
 		};
+
+		$scope.cancelRestoreOrganizationDefaults = function() {
+			$scope.closeModal();
+			$scope.getSelectedOrganization().clearValidationResults();
+    };
 
 		$scope.addWorkflowStep = function() {
 			OrganizationRepo.addWorkflowStep($scope.modalData);
@@ -90,9 +106,9 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 	    $scope.resetManageOrganization = function() {
 			$scope.getSelectedOrganization().clearValidationResults();
 			$scope.setSelectedOrganization($scope.getSelectedOrganization());
-	    };
+	  };
 
-	    $scope.testBoolean = true;
+	  $scope.testBoolean = true;
 
 	});
 

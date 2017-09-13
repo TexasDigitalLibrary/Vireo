@@ -82,7 +82,6 @@ var apiMapping = {
             'controller': 'settings/controlled-vocabulary',
             'method': 'update-vocabulary-word'
         }
-
     },
     CustomActionDefinition: {
         validations: true,
@@ -132,7 +131,7 @@ var apiMapping = {
             'controller': 'settings/custom-action'
         }
     },
-    Configuration: {
+    ManagedConfiguration: {
         lazy: true,
         validations: true,
         modelListeners: false,
@@ -434,7 +433,7 @@ var apiMapping = {
         }
     },
     FieldValue: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         update: {
             'endpoint': '/private/queue',
@@ -589,6 +588,11 @@ var apiMapping = {
             'controller': 'organization',
             'method': 'delete'
         },
+        restoreDefaults: {
+            'endpoint': '/private/queue',
+            'controller': 'organization',
+            'method': 'restore-defaults'
+        },
         removeEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
@@ -678,7 +682,7 @@ var apiMapping = {
         }
     },
     Packager: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -723,11 +727,6 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'publish'
-        },
-        batchPublish: {
-            'endpoint': '/private/queue',
-            'controller': 'submission',
-            'method': 'batch-publish'
         },
         submitDate: {
             'endpoint': '/private/queue',
@@ -784,6 +783,16 @@ var apiMapping = {
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission'
+        },
+        batchExport: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-export'
+        },
+        batchPublish: {
+            'endpoint': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-publish'
         },
         batchUpdateSubmissionStatus: {
             'endpoint': '/private/queue',
@@ -967,7 +976,7 @@ var apiMapping = {
         }
     },
     ManagerSubmissionListColumn: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -995,7 +1004,7 @@ var apiMapping = {
         }
     },
     ManagerFilterColumn: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',
@@ -1154,7 +1163,7 @@ var apiMapping = {
         }
     },
     SavedFilter: {
-        validations: true,
+        validations: false,
         modelListeners: false,
         all: {
             'endpoint': '/private/queue',

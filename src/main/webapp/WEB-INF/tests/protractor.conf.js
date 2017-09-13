@@ -20,12 +20,11 @@ exports.config = {
 	  };
 	  browser.addMockModule('disableNgAnimate', disableNgAnimate);
 	  browser.driver.manage().window().maximize();
-	  browser.executeScript('$.fx.off = true');
   },
 
   chromeOnly: true,
 
-  baseUrl: 'http://localhost:8081/',
+  baseUrl: 'http://localhost:9000/',
 
   framework: 'jasmine',
 

@@ -1,0 +1,17 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="cancelRestoreOrganizationDefaults()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Sync with Parent</h3>
+</div>
+
+<form novalidate>
+  <div class="modal-body">
+    <h4>Really sync the workflow for "{{ getSelectedOrganization().name }}" with parent?</h4>
+    <p>This will result in the loss of all organizational customizations for this organization and all of its decendent organizations.</p> 
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancelRestoreOrganizationDefaults()">Cancel</button>
+    <button id="organization-confirm" type="submit" class="btn btn-warning" ng-click="restoreOrganizationDefaults(getSelectedOrganization())">Confirm</button>
+  </div>
+</form>

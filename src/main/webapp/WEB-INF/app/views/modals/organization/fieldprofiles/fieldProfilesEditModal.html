@@ -45,7 +45,7 @@
           <div ng-if="!inputFile" class="form-group row">
             <div class="col-sm-10 col-sm-offset-1">
               <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
-              <validatedinput model="modalData" property="fieldPredicate" label="Metadata Key" placeholder="Metadata Key of the field" autocomplete="off" typeahead="filteredPredicates" typeaheadproperty="value" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
+              <validatedinput model="modalData" property="fieldPredicate" label="Metadata Key" placeholder="Metadata Key of the field" autocomplete="off" wvr-typeahead="filteredPredicates" typeaheadproperty="value" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
               <button type="button" class="btn btn-default pull-right" ng-if="!modalData.fieldPredicate.id" ng-click="createFieldPredicate()">Create New Metadata Key</button>
             </div>
           </div>

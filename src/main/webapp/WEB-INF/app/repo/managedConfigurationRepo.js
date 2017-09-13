@@ -1,4 +1,4 @@
-vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsApi) {
+vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, ManagedConfiguration, WsApi) {
 
     var configurationRepo = this;
 
@@ -32,10 +32,10 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsA
         var payload = angular.fromJson(res.body).payload;
         var keys = Object.keys(payload);
         angular.forEach(keys, function (key) {
-            angular.forEach(payload[key],function (configurations,type) {
+            angular.forEach(payload[key],function (configurations, type) {
                 repoObj[type] = {};
                 angular.forEach(configurations, function (config) {
-                    repoObj[type][config.name] = new Configuration(config);
+                    repoObj[type][config.name] = new ManagedConfiguration(config);
 
                 });
             });
@@ -63,9 +63,9 @@ vireo.repo("ConfigurationRepo", function ConfigurationRepo($q,Configuration, WsA
             var payload = angular.fromJson(response.body).payload;
             var config = {};
             if (payload.ManagedConfiguration) {
-                config = new Configuration(payload.ManagedConfiguration);
+                config = new ManagedConfiguration(payload.ManagedConfiguration);
             } else {
-                config = new Configuration(payload.DefaultConfiguration);
+                config = new ManagedConfiguration(payload.DefaultConfiguration);
             }
             configurations[config.type][config.name] = config;
         });

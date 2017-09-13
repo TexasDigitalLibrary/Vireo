@@ -47,7 +47,7 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 				if(data.payload !== undefined) {
 					// validation
 				
-	                if(data.payload.Configuration !== undefined) {
+	                if(data.payload.ManagedConfiguration !== undefined) {
 	                	updateLogos(data);
 	                }
 				}
@@ -85,7 +85,7 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 				if(data.payload !== undefined) {
 					// validation
 				
-	                if(data.payload.Configuration !== undefined) {
+	                if(data.payload.ManagedConfiguration !== undefined) {
 	                	updateLogos(data);
 					}
 				}
@@ -104,7 +104,7 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, WsA
 
 	var updateLogos = function(data) {
 
-		var newLogoConfiguration = typeof data.body === "string" ? JSON.parse(data.body).payload.Configuration : data.payload.Configuration;
+		var newLogoConfiguration = typeof data.body === "string" ? JSON.parse(data.body).payload.ManagedConfiguration : data.payload.ManagedConfiguration;
 
 		if(newLogoConfiguration !== undefined) {
 			if(newLogoConfiguration.name == "left_logo") {

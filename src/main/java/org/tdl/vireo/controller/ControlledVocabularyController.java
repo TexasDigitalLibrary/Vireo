@@ -202,7 +202,7 @@ public class ControlledVocabularyController {
         logger.info("Exporting controlled vocabulary for " + name);
         ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier" }));
+        map.put("headers", Arrays.asList(new String[] { "name", "definition", "identifier", "contacts" }));
         List<List<Object>> rows = new ArrayList<List<Object>>();
         cv.getDictionary().forEach(vocabularyWord -> {
             List<Object> row = new ArrayList<Object>();
@@ -210,6 +210,7 @@ public class ControlledVocabularyController {
             row.add(actualVocabularyWord.getName());
             row.add(actualVocabularyWord.getDefinition());
             row.add(actualVocabularyWord.getIdentifier());
+            row.add(String.join(",", actualVocabularyWord.getContacts()));
             rows.add(row);
         });
         map.put("rows", rows);
@@ -283,14 +284,15 @@ public class ControlledVocabularyController {
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
         logger.info("Comparing controlled vocabulary " + name);
-        for(VocabularyWord newVocabularyWord : cvCache.getNewVocabularyWords()) {
-            newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier());
+        for (VocabularyWord newVocabularyWord : cvCache.getNewVocabularyWords()) {
+            newVocabularyWord = vocabularyWordRepo.create(controlledVocabulary, newVocabularyWord.getName(), newVocabularyWord.getDefinition(), newVocabularyWord.getIdentifier(), newVocabularyWord.getContacts());
             controlledVocabulary = controlledVocabularyRepo.findByName(name);
         }
-        for(VocabularyWord[] updatingVocabularyWord : cvCache.getUpdatingVocabularyWords()) {
+        for (VocabularyWord[] updatingVocabularyWord : cvCache.getUpdatingVocabularyWords()) {
             VocabularyWord updatedVocabularyWord = vocabularyWordRepo.findByNameAndControlledVocabulary(updatingVocabularyWord[1].getName(), controlledVocabulary);
             updatedVocabularyWord.setDefinition(updatingVocabularyWord[1].getDefinition());
             updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
+            updatedVocabularyWord.setContacts(updatingVocabularyWord[1].getContacts());
             updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
         }
         ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
@@ -310,10 +312,10 @@ public class ControlledVocabularyController {
     @Transactional
     @ApiMapping(value = "/add-vocabulary-word/{cvId}")
     @Auth(role = "MANAGER")
-    public ApiResponse addaddVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vocabularyWord) {
+    public ApiResponse addVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vocabularyWord) {
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
 
-        vocabularyWord = vocabularyWordRepo.create(cv, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier());
+        vocabularyWord = vocabularyWordRepo.create(cv, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier(), vocabularyWord.getContacts());
 
         cv = controlledVocabularyRepo.findOne(cv.getId());
 
@@ -331,7 +333,7 @@ public class ControlledVocabularyController {
     @Transactional
     @ApiMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     @Auth(role = "MANAGER")
-    public ApiResponse removesVocabularyWord(@ApiVariable Long cvId, @ApiVariable Long vwId) {
+    public ApiResponse removeVocabularyWord(@ApiVariable Long cvId, @ApiVariable Long vwId) {
 
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
         VocabularyWord vw = vocabularyWordRepo.findOne(vwId);
@@ -362,7 +364,7 @@ public class ControlledVocabularyController {
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
 
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
+        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier", "contacts").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
 
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
@@ -379,7 +381,7 @@ public class ControlledVocabularyController {
                 continue;
             }
 
-            VocabularyWord currentVocabularyWord = new VocabularyWord(record.get("name"), record.get("definition"), record.get("identifier"));
+            VocabularyWord currentVocabularyWord = new VocabularyWord(record.get("name"), record.get("definition"), record.get("identifier"), new ArrayList<String>(Arrays.asList(record.get("contacts").split(","))));
 
             boolean isRepeat = false;
             for (VocabularyWord newWord : newWords) {
@@ -407,6 +409,7 @@ public class ControlledVocabularyController {
 
                         String definition = word.getDefinition();
                         String identifier = word.getIdentifier();
+                        List<String> contacts = word.getContacts();
 
                         boolean change = false;
 
@@ -415,6 +418,10 @@ public class ControlledVocabularyController {
                         }
 
                         if (identifier != null && !record.get("identifier").equals(identifier)) {
+                            change = true;
+                        }
+
+                        if (contacts != null && !record.get("contacts").equals(String.join(",", word.getContacts()))) {
                             change = true;
                         }
 

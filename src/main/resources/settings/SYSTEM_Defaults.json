@@ -1,91 +1,122 @@
 {
-  "application": [{
-      "submissions_open": false
+  "application":[
+    {
+      "submissions_open":false
     },
     {
-      "allow_multiple_submissions": false
+      "allow_multiple_submissions":false
     },
     {
-      "current_semester": "Fall 2017"
+      "current_semester":"Fall 2017"
     },
     {
-      "grantor": "Texas A&M University"
+      "grantor":"Texas A&M University"
     },
     {
-      "email_from": "noreply@tdl.org"
+      "email_from":"noreply@tdl.org"
     },
     {
-      "email_reply_to": "dev@tdl.org"
+      "email_reply_to":"dev@tdl.org"
     },
     {
-      "documents.path": "documents/"
+      "documents.path":"documents/"
     },
     {
-      "hierarchical": "false"
+      "hierarchical":"false"
     },
     {
-      "new_submission_header_text": "Choose Your Organization"
+      "new_submission_header_text":"Choose Your Organization"
     }
   ],
-  "orcid": [{
-      "orcid_validation": true
+  "orcid":[
+    {
+      "orcid_validation":true
     },
     {
-      "orcid_authentication": false
+      "orcid_authentication":false
     }
   ],
-  "proquest_umi_degree_code": [{
-    "proquest_license": "This is default proquest licence text."
-  }, {
-    "proquest_institution_code": ""
-  }, {
-    "proquest_indexing": false
-  }],
-  "lookAndFeel": [{
-      "theme_path": "configuration/theme/"
+  "proquest_umi_degree_code":[
+    {
+      "proquest_license":"This is default proquest licence text."
     },
     {
-      "background_main_color": "#1b333f"
+      "proquest_institution_code":"INSTITUTIONID"
     },
     {
-      "background_highlight_color": "#43606e"
+      "proquest_indexing":false
     },
     {
-      "button_main_color_on": "#1b333f"
+      "external_id_prefix":"vireo:"
     },
     {
-      "button_highlight_color_on": "#43606e"
+      "apply_for_copyright":false
     },
     {
-      "button_main_color_off": "#a6a18c"
+      "sale_restriction_code":0
     },
     {
-      "button_highlight_color_off": "#c7c2a9"
+      "sale_restriction_remove":" "
     },
     {
-      "left_logo": "resources/images/default-left-logo.png"
+      "format_restriction_code":0
     },
     {
-      "right_logo": "resources/images/default-right-logo.gif"
-    },
-    {
-      "custom_css": "/* Insert Custom CSS here! */"
-    },
-    {
-      "front_page_instructions_before": "<h1>Welcome to the Thesis<br/>&amp; Dissertation Submission System</h1>&#10;<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with Texas A&amp;M, Texas Tech, and Baylor Universities.</p>&#10;<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>"
-    },
-    {
-      "front_page_instructions_after": "<h2>Your help can make things better</h2>&#10;<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the your Thesis Office regarding any issues that may arise during the submission process.</p>"
-    },
-    {
-      "post_submission_instructions": "<p>The Thesis Office has received your electronic submittal. You will also receive an email confirmation. We will check your records as soon as possible to determine whether or not we have the signed Approval Form on file. Please be aware that your file is not complete and cannot be reviewed until we have both the electronic manuscript and the signed Approval Form.</p>&#10;<p>As soon as both items have been received, your manuscript will be placed in the queue and will be processed along with all other submissions for the semester in the order in which your completed file (manuscript and Approval Form) was received.</p>&#10;<p>The following are approximate turn-around times after the manuscript and the signed approval form have been submitted to the Thesis Office.&#160;Manuscripts are reviewed in the order received.</p>&#10;<p>&#160;</p>&#10;<p>Early in semester &#8211; 5 working days</p>&#10;<p>Week before Deadline Day &#8211; 10 working days</p>&#10;<p>Deadline Day &#8211; 15 working days</p>&#10;<p>&#160;</p>&#10;<p>If you have any questions about your submittal, feel free to contact our office.</p>&#10;<p>&#160;</p>&#10;<p>Thank you, Thesis Office</p>"
-    },
-    {
-      "post_correction_instructions": "<p>The Thesis Office has received your corrections. Manuscripts are reviewed in the order received.</p>&#10;<p>&#160;</p>&#10;<p>Early in semester &#8211; 5 working days</p>&#10;<p>Week before Deadline Day &#8211; 10 working days</p>&#10;<p>Deadline Day &#8211; 15 working days</p>&#10;<p>&#160;</p>&#10;<p>If you have any questions about your submittal, feel free to contact our office.</p>&#10;<p>&#160;</p>&#10;<p>Thank you, Thesis Office</p>"
+      "format_restriction_remove":" "
     }
   ],
-  "submission": [{
-    "submit_license": "<p>I grant the Texas Digital Library (hereafter called \"TDL\"), my home institution (hereafter called \"Institution\"), and my academic department (hereafter called \"Department\") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called \"Work\") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.</p>
+  "export": [
+    {
+      "release_student_contact_information": true
+    }
+  ],
+  "lookAndFeel":[
+    {
+      "theme_path":"configuration/theme/"
+    },
+    {
+      "background_main_color":"#1b333f"
+    },
+    {
+      "background_highlight_color":"#43606e"
+    },
+    {
+      "button_main_color_on":"#1b333f"
+    },
+    {
+      "button_highlight_color_on":"#43606e"
+    },
+    {
+      "button_main_color_off":"#a6a18c"
+    },
+    {
+      "button_highlight_color_off":"#c7c2a9"
+    },
+    {
+      "left_logo":"resources/images/default-left-logo.png"
+    },
+    {
+      "right_logo":"resources/images/default-right-logo.gif"
+    },
+    {
+      "custom_css":"/* Insert Custom CSS here! */"
+    },
+    {
+      "front_page_instructions_before":"<h1>Welcome to the Thesis<br/>&amp; Dissertation Submission System</h1>&#10;<p>Once you have passed the final defense and satisfied the requirements of the committee, you are ready to submit your manuscript to the Thesis Office for review. This submission process is fully electronic, and is made through an online application developed and maintained by the Texas Digital Library, in conjunction with Texas A&amp;M, Texas Tech, and Baylor Universities.</p>&#10;<p>To get started with your submission, click the link below. You will be asked to authenticate using your NetID:</p>"
+    },
+    {
+      "front_page_instructions_after":"<h2>Your help can make things better</h2>&#10;<p>You feedback is very important to us; it allows us to continue to improve the system. Please feel free to notify us directly at dev@tdl.org if you have any suggestions to increase the usability or effectiveness of this application. You can talk to the your Thesis Office regarding any issues that may arise during the submission process.</p>"
+    },
+    {
+      "post_submission_instructions":"<p>The Thesis Office has received your electronic submittal. You will also receive an email confirmation. We will check your records as soon as possible to determine whether or not we have the signed Approval Form on file. Please be aware that your file is not complete and cannot be reviewed until we have both the electronic manuscript and the signed Approval Form.</p>&#10;<p>As soon as both items have been received, your manuscript will be placed in the queue and will be processed along with all other submissions for the semester in the order in which your completed file (manuscript and Approval Form) was received.</p>&#10;<p>The following are approximate turn-around times after the manuscript and the signed approval form have been submitted to the Thesis Office.&#160;Manuscripts are reviewed in the order received.</p>&#10;<p>&#160;</p>&#10;<p>Early in semester &#8211; 5 working days</p>&#10;<p>Week before Deadline Day &#8211; 10 working days</p>&#10;<p>Deadline Day &#8211; 15 working days</p>&#10;<p>&#160;</p>&#10;<p>If you have any questions about your submittal, feel free to contact our office.</p>&#10;<p>&#160;</p>&#10;<p>Thank you, Thesis Office</p>"
+    },
+    {
+      "post_correction_instructions":"<p>The Thesis Office has received your corrections. Manuscripts are reviewed in the order received.</p>&#10;<p>&#160;</p>&#10;<p>Early in semester &#8211; 5 working days</p>&#10;<p>Week before Deadline Day &#8211; 10 working days</p>&#10;<p>Deadline Day &#8211; 15 working days</p>&#10;<p>&#160;</p>&#10;<p>If you have any questions about your submittal, feel free to contact our office.</p>&#10;<p>&#160;</p>&#10;<p>Thank you, Thesis Office</p>"
+    }
+  ],
+  "submission":[
+    {
+      "submit_license":"<p>I grant the Texas Digital Library (hereafter called \"TDL\"), my home institution (hereafter called \"Institution\"), and my academic department (hereafter called \"Department\") the non-exclusive rights to copy, display, perform, distribute and publish the content I submit to this repository (hereafter called \"Work\") and to make the Work available in any format in perpetuity as part of a TDL, Institution or Department repository communication or distribution effort.</p>
 <p></p>
 <p>I understand that once the Work is submitted, a bibliographic citation to the Work can remain visible in perpetuity, even if the Work is updated or removed.</p>
 <p></p>
@@ -110,72 +141,74 @@
 <p></p>
 <p>I agree to hold TDL, Institution, Department, and their agents harmless for any liability arising from any breach of the above warranties or any claim of intellectual property infringement arising from the exercise of these non-exclusive granted rights.</p>
 <p></p>"
-  }],
-  "shibboleth": [{
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID": "netid"
+    }
+  ],
+  "shibboleth":[
+    {
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID":"netid"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL": "email"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL":"email"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME": "firstName"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME":"firstName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME": "lastName"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME":"lastName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER": "institutionid"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER":"institutionid"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER": "uin"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER":"uin"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME": "middleName"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME":"middleName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR": "birthYear"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR":"birthYear"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS": "affiliations"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS":"affiliations"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER": "currentPhoneNumber"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER":"currentPhoneNumber"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS": "currentPostalAddress"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS":"currentPostalAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS": "currentEmailAddress"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS":"currentEmailAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER": "permanentPhoneNumber"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER":"permanentPhoneNumber"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS": "permanentPostalAddress"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS":"permanentPostalAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS": "permanentEmailAddress"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS":"permanentEmailAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE": "currentDegree"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE":"currentDegree"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT": "currentDepartment"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT":"currentDepartment"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE": "currentCollege"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE":"currentCollege"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR": "currentMajor"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR":"currentMajor"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR": "currentGraduationYear"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR":"currentGraduationYear"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH": "currentGraduationMonth"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH":"currentGraduationMonth"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID": "orcid"
+      "APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID":"orcid"
     }
   ]
 }

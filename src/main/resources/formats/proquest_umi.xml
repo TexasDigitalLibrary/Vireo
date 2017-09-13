@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--/*
+    The Proquest/UMI export format. Use this format when publishing records to
+    Proquest for inclusion in their database of Thesis and Dissertations. There 
+    are a mirad of options at the top of this fale that you can use to 
+    customise the export generated metadata. This ranges from embargo settings,
+    publication identifiers, and whether to release contact information for the
+    student.
+
+    //Configure UMI export options
+
+    // #### Third Party Search
+    // Indicates the author would like to have his or her metadata indexed by
+    // external search engines.
+    boolean third_party_search = true;
+    if (settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INDEXING) == "false")
+       third_party_search = false;
+    
+    // #### Third Party Sales
+    // Indicates the author would like to have his or her work sold by 3rd
+    // party retailers in addition to ProQuest / UMI.
+    boolean third_party_sales = false;
+    
+    // #### Release Student Contact
+    // In addition to the student's name should their phone, mailing address,
+    // and email address be released to ProQuest. Turning this on may violate
+    // FERPA regulations.
+    boolean release_student_contact_information = true;
+
+    // #### Apply for Copyright
+    // Indicate if the author wants us proquest to apply for copyright. There 
+    // is an additional $65 fee for copyright registration, and for FTP sites,
+    // the author must submit a signed paper form with the additional payment.
+    boolean apply_for_copyright = false;
+    
+    // #### External ID
+    // Each record exported to UMI has an 'external_id' which records with
+    // vireo submission generated this record. Proquest suggests it should
+    // begin with a lower case school identifier such as khust or emory,
+    // followed by a colon, and then the school's own unique identifier. In 
+    // this case the vireo submission id will be appended to this prefix.
+    String external_id_prefix = "vireo:";
+
+    // #### Institutional Code
+    // Proquest assignes each instutition a code, supply that code on the
+    // Application Settings tab.
+    String institution_code = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.PROQUEST_INSTITUTION_CODE);
+    
+    // #### Institutional Name
+    // The name of the institution, we use the grantor field established under
+    // the application settings tab.
+    String institution_name = settingRepo.getConfigValue(org.tdl.vireo.constant.AppConfig.GRANTOR);
+
+    // #### Embargo Code
+    // The embargo code can be one of the following values
+    // 0 - No embargo
+    // 1 - 6 months embargo
+    // 2 - 1 year embargo
+    // 3 - 2 year embargo
+    // 4 - flexible delayed release
+    // 
+    // If you choose the #4, flexible delayed release, then you also need to
+    // place sales and format restrictions using the parameters below.
+    int embargoCode = 0;
+    
+    def embargoType = sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.PROQUEST) != null ? sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.PROQUEST): sub.getEmbargoTypeByGuarantor(org.tdl.vireo.model.EmbargoGuarantor.DEFAULT);
+    
+    if (embargoCode != 4 && embargoType != null) {
+        if (embargoType.getDuration() != null) {
+            if (embargoType.getDuration() == 0)
+                // No duration
+                embargoCode = 0;
+            else if (embargoType.getDuration() <= 6 )
+                // 6 months or under
+                embargoCode = 1;
+            else if (embargoType.getDuration() <= 12)
+                // 6 months to 1 year
+                embargoCode = 2;
+            else
+                // 1 year or greater
+                embargoCode = 3;
+        } else {
+            // The vireo embargo is tagged as indefinite, so the best we can do
+            // with UMI is 2 years. 
+            embargoCode = 3;
+        }
+    }
+    
+    // #### Sales Restrictions (embargo = 4)
+    // 0 - No sales restriction
+    // 1 - Not available for sale
+    // 2 - Sell to author only/copyright
+    // 4 - Sell to author only
+    int sale_restriction_code = 0;
+    String sale_restriction_remove = "";
+    
+    // #### Format Restrictions (embargo = 4)
+    // 0 - no format restriction
+    // X - Xerographic not available
+    // F - Microfiche not available
+    // M - Microfilm not available
+    // C - CD-ROM not available
+    // E - Electronic not available
+    // XF - Xerographic and Microfiche not available
+    // XM - Xerographic and Microfilm not available
+    // XC - Xerographic and CD-ROM not available
+    // XE - Xerographic and Electronic not available
+    // FM - Microform not available
+    // FC - Microfiche and CD-ROM not available
+    // FE - Microfiche and Electronic not available
+    // MC - Microfilm and CD-ROM not available
+    // ME - Microfilm and Electronic not available
+    // CE - CD-ROM and Electronic not available
+    // XFM - Only CD-ROM and Electronic available
+    // XFC - Only Microfilm and Electronic available
+    // XFE - Only Microfilm and CD-ROM available
+    // XMC - Only Microfiche and Electronic available
+    // XME - Only Microfiche and CD-ROM available
+    // XCE - Only Microform available
+    // FMC - Only Xerographic and electronic available
+    // FCE - Only Xerographic and Microfilm available
+    // FME - Only Xerographic and CD-ROM available
+    // MCE - Only Xerographic and Microfiche available
+    // XFMC - Only Electronic available
+    // XFME - Only CD-ROM available
+    // XFCE - Only Microfilm available
+    // XMCE - Only Microfiche available
+    // FMCE - Only Xerographic available
+    String format_restriction_code ="0";
+    String format_restriction_remove = "";
+    
+    
+    def proquestUtils = play.modules.spring.Spring.getBeanOfType(org.tdl.vireo.proquest.ProquestUtilityService.class);
+
+ */-->
+<DISS_submission publishing_option="0" th:attr="embargo_code=${EMBARGO_CODE},third_party_search=${PROQUEST_INDEXING}">
+    
+    <DISS_authorship>
+        <DISS_author type="primary">
+            <DISS_name>
+                <DISS_surname th:text="${SUBMITTER_LAST_NAME}"></DISS_surname>
+                <DISS_fname th:text="${SUBMITTER_FIRST_NAME}"></DISS_fname>
+                <DISS_middle th:text="${SUBMITTER_MIDDLE_NAME}"></DISS_middle>
+                <DISS_affiliation th:text="${APPLICATION_GRANTOR}"></DISS_affiliation>
+            </DISS_name>
+
+            <DISS_contact th:if="${EXPORT_RELEASE_STUDENT_CONTACT_INFORMATION}" type="current">
+                <DISS_contact_effdt th:text="${FORMATTED_SUBMISSION_DATE}"></DISS_contact_effdt>
+                <DISS_phone_fax th:with="phoneNumber = ${SUBMITTER_CURRENT_PHONE_NUMBER}" th:if="${SUBMITTER_CURRENT_PHONE_NUMBER.length() > 0}" type="P">
+                    <DISS_cntry_cd th:text="${SUBMISSION_HELPER.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
+                    <DISS_area_code th:text="${SUBMISSION_HELPER.getAreaCode(phoneNumber)}"></DISS_area_code>
+                    <DISS_phone_num th:text="${SUBMISSION_HELPER.getNumber(phoneNumber)}"></DISS_phone_num>
+                    <DISS_phone_ext th:text="${SUBMISSION_HELPER.getExt(phoneNumber)}"></DISS_phone_ext>
+                </DISS_phone_fax>
+                <DISS_address th:with="address = ${SUBMITTER_CURRENT_ADDRESS}" th:if="${SUBMITTER_CURRENT_ADDRESS.length() > 0}">
+                    <DISS_addrline th:text="${SUBMISSION_HELPER.getStreet(address)}"></DISS_addrline>
+                    <DISS_city th:text="${SUBMISSION_HELPER.getCity(address)}"></DISS_city>
+                    <DISS_st th:text="${SUBMISSION_HELPER.getState(address)}"></DISS_st>
+                    <DISS_pcode th:text="${SUBMISSION_HELPER.getZip(address)}"></DISS_pcode>
+                    <DISS_country th:text="${SUBMISSION_HELPER.getCountry(address)}"></DISS_country>
+                </DISS_address>
+                <DISS_email th:text="${SUBMITTER_EMAIL}"></DISS_email>
+            </DISS_contact>
+            
+            <DISS_contact th:if="${EXPORT_RELEASE_STUDENT_CONTACT_INFORMATION}" type="future">
+                <DISS_contact_effdt th:text="${SUBMITTER_GRADUATION_DATE}"></DISS_contact_effdt>
+                <DISS_contact_effdt th:text="${FORMATTED_SUBMISSION_DATE}"></DISS_contact_effdt>
+                <DISS_phone_fax th:with="phoneNumber = ${SUBMITTER_PERMANENT_PHONE_NUMBER}" th:if="${SUBMITTER_PERMANENT_PHONE_NUMBER.length() > 0}" type="P">
+                    <DISS_cntry_cd th:text="${SUBMISSION_HELPER.getCountryCode(phoneNumber)}"></DISS_cntry_cd>
+                    <DISS_area_code th:text="${SUBMISSION_HELPER.getAreaCode(phoneNumber)}"></DISS_area_code>
+                    <DISS_phone_num th:text="${SUBMISSION_HELPER.getNumber(phoneNumber)}"></DISS_phone_num>
+                    <DISS_phone_ext th:text="${SUBMISSION_HELPER.getExt(phoneNumber)}"></DISS_phone_ext>
+                </DISS_phone_fax>
+                <DISS_address th:with="address = ${SUBMITTER_PERMANENT_ADDRESS}" th:if="${SUBMITTER_PERMANENT_ADDRESS.length() > 0}">
+                    <DISS_addrline th:text="${SUBMISSION_HELPER.getStreet(address)}"></DISS_addrline>
+                    <DISS_city th:text="${SUBMISSION_HELPER.getCity(address)}"></DISS_city>
+                    <DISS_st th:text="${SUBMISSION_HELPER.getState(address)}"></DISS_st>
+                    <DISS_pcode th:text="${SUBMISSION_HELPER.getZip(address)}"></DISS_pcode>
+                    <DISS_country th:text="${SUBMISSION_HELPER.getCountry(address)}"></DISS_country>
+                </DISS_address>
+                <DISS_email th:text="${SUBMITTER_PERMANENT_EMAIL}"></DISS_email>
+            </DISS_contact>
+
+        </DISS_author>
+    </DISS_authorship>
+     
+    <DISS_description page_count="" th:attr="type=${DEGREE_LEVEL},external_id=${PROQUEST_EXTERNAL_ID},apply_for_copyright=${PROQUEST_APPLY_FOR_COPYRIGHT}">
+        <DISS_title th:text="${TITLE}"></DISS_title>
+        
+        <DISS_dates th:if="${SUBMITTER_GRADUATION_DATE.length() > 0}">
+            <DISS_comp_date th:text="${SUBMITTER_GRADUATION_YEAR}"></DISS_comp_date>
+            <DISS_accept_date th:text="${SUBMITTER_GRADUATION_DATE}"></DISS_accept_date>
+        </DISS_dates>
+
+        <DISS_degree th:text="${PROQUEST_DEGREE_CODE}"></DISS_degree>
+
+        <DISS_institution>
+            <DISS_inst_code th:text="${PROQUEST_INSTITUTION_CODE}"></DISS_inst_code>
+            <DISS_inst_name th:text="${APPLICATION_GRANTOR}"></DISS_inst_name>
+            <DISS_inst_contact th:text="${DEPARTMENT}"></DISS_inst_contact>
+            <DISS_processing_code th:text="${DEGREE_LEVEL}"></DISS_processing_code>
+        </DISS_institution>
+
+        <DISS_advisor th:if="${COMMITTEE_CHAIR.length() > 0}">
+            <DISS_name th:with="name=${COMMITTEE_CHAIR}">
+                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
+                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
+                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
+            </DISS_name>
+        </DISS_advisor>
+
+        <DISS_cmte_member th:each="committeeMemberFieldValue : ${COMMITTEE_MEMBER_FIELD_VALUES}" th:if="${committeeMemberFieldValue.getValue().length() > 0}">
+            <DISS_name th:with="name=${committeeMemberFieldValue.getValue()}">
+                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
+                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
+                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
+            </DISS_name>
+        </DISS_cmte_member>
+
+        <DISS_categorization>
+            <DISS_category th:each="subjectFieldValue : ${SUBJECT_FIELD_VALUES}" th:if="${SUBMISSION_HELPER.isProQuestSubject(subjectFieldValue)}">
+                <DISS_cat_code th:text="${subjectFieldValue.getIdentifier()}"></DISS_cat_code>
+                <DISS_cat_desc th:text="${subjectFieldValue.getValue()}"></DISS_cat_desc>
+            </DISS_category>
+            <DISS_keyword th:each="keywordFieldValue : ${KEYWORD_FIELD_VALUES}" th:text="${keywordFieldValue.getValue().trim()}"></DISS_keyword>
+            <DISS_language th:if="${PROQUEST_LANGUAGE_CODE.length() > 0}" th:text="${PROQUEST_LANGUAGE_CODE}"></DISS_language>
+        </DISS_categorization>
+
+    </DISS_description>
+    
+    <DISS_content>
+        <DISS_abstract>
+            <DISS_para th:each="line : ${ABSTRACT_LINES}" th:text="${line}"></DISS_para>
+        </DISS_abstract>
+        <DISS_binary th:if="${PRIMARY_DOCUMENT_FIELD_VALUE != null }" th:text="${PRIMARY_DOCUMENT_FIELD_VALUE.getFileName()}" th:attr="type=${PRIMARY_DOCUMENT_MIMETYPE}"></DISS_binary>
+        <DISS_attachment th:each="fv,iter : ${SUPPLEMENTAL_DOCUMENT_FIELD_VALUES}">
+            <DISS_file_name th:text="${fv.getFileName()}"></DISS_file_name>
+            <DISS_file_category th:text="${SUBMISSION_HELPER.categorize(FILE_HELPER.getMimeType(fv.getValue()))}"></DISS_file_category>
+            <DISS_file_descr>Supplemental File</DISS_file_descr>
+        </DISS_attachment>
+
+    </DISS_content>
+    
+    <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
+        <DISS_sales_restriction th:attr="code=${PROQUEST_SALE_RESTRICTION_CODE},remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
+        <DISS_format_restriction  th:attr="code=${PROQUEST_FORMAT_RESTRICTION_CODE},remove=${PROQUEST_FORMAT_RESTRICTION_REMOVE}"/>
+        <DISS_note/>
+    </DISS_restriction>
+
+</DISS_submission>

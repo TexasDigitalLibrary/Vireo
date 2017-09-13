@@ -7,6 +7,8 @@ public interface Formatter {
 
     public String getName();
 
-    public Context craftContext(Submission submission);
+    public String getTemplate();
+
+    public void populateContext(Context context, Submission submission);
 
 }

@@ -22,22 +22,43 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.errorMessage = "";
 
-            $scope.save = function (fieldValue) {
-                if ($scope.fieldProfileForm.$dirty) {
-                    fieldValue.updating = true;
-                    return $q(function (resolve) {
-                        // give typeahead time to set the value
-                        $timeout(function () {
-                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
-                                delete fieldValue.updating;
-                                if ($scope.fieldProfileForm !== undefined) {
-                                    $scope.fieldProfileForm.$setPristine();
-                                }
-                                resolve();
-                            });
-                        }, 500);
+            var save = function(fieldValue) {
+                return $q(function (resolve) {
+                    $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
+                        delete fieldValue.updating;
+                        if ($scope.fieldProfileForm !== undefined) {
+                            $scope.fieldProfileForm.$setPristine();
+                        }
+                        resolve();
                     });
-                }
+                });
+            };
+
+            $scope.save = function (fieldValue) {
+                // give typeahead select time to save the value
+                $timeout(function () {
+                    // if the fieldProfileForm is undefined we have changed view, save the field value if not already updating
+                    if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty) && !fieldValue.updating) {
+                        fieldValue.updating = true;
+                        return save(fieldValue);
+                    }
+                }, 250);
+            };
+
+            $scope.saveWithCV = function (fieldValue, item) {
+                fieldValue.updating = true;
+                fieldValue.identifier = item.identifier;
+                fieldValue.definition = item.definition;
+                fieldValue.contacts = item.contacts;
+                save(fieldValue);
+            };
+
+            $scope.saveContacts = function (fieldValue) {
+                fieldValue.updating = true;
+                if(typeof fieldValue.contacts === 'string') {
+                  fieldValue.contacts = fieldValue.contacts.split(",");
+                }                
+                save(fieldValue);
             };
 
             $scope.datepickerOptions = {};

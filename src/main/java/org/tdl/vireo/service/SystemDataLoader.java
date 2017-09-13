@@ -1,7 +1,6 @@
 package org.tdl.vireo.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +49,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
@@ -72,6 +72,7 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+import org.tdl.vireo.util.FileIOUtility;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -91,6 +92,9 @@ public class SystemDataLoader {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
+
+    @Autowired
+    private FileIOUtility fileIOUtility;
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -159,6 +163,9 @@ public class SystemDataLoader {
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
 
     @Autowired
+    DefaultFiltersService defaultFiltersService;
+
+    @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
@@ -214,8 +221,14 @@ public class SystemDataLoader {
         logger.info("Loading default Proquest degree codes");
         loadProquestDegreeCodes();
 
+        logger.info("Loading default Proquest subject codes");
+        loadProquestSubjectCodes();
+
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumns();
+
+        logger.info("Loading default Submission List Columns");
+        loadSubmissionListColumnsFilters();
 
         logger.info("Loading default Packagers");
         loadPackagers();
@@ -431,9 +444,7 @@ public class SystemDataLoader {
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
-
                 organization = organizationRepo.findOne(organization.getId());
-
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
 
@@ -544,6 +555,8 @@ public class SystemDataLoader {
             }
 
             newWorkflowStep.setOriginalNotes(notes);
+
+            newWorkflowStep.setInstructions(workflowStep.getInstructions());
 
             newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
 
@@ -861,6 +874,23 @@ public class SystemDataLoader {
 
     }
 
+    private void loadSubmissionListColumnsFilters() {
+
+        List<SubmissionListColumn> defaultFilterColumns = null;
+        try {
+            defaultFilterColumns = objectMapper.readValue(fileIOUtility.getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
+            SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
+            defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+        }
+
+    }
+
     private List<String> getAllSystemEmailTemplateNames() {
         try {
 
@@ -986,6 +1016,49 @@ public class SystemDataLoader {
         proquesteCodesService.setCodes("degrees", getProquestCodes("degree_codes.xls"));
     }
 
+    private void loadProquestSubjectCodes() {
+        Map<String, String> subjectCodes = getProquestCodes("umi_subjects.xls");
+
+        proquesteCodesService.setCodes("subjects", subjectCodes);
+
+        createSubjectControlledVocabulary(subjectCodes);
+    }
+
+    private void createSubjectControlledVocabulary(Map<String, String> subjectCodes) {
+
+        // check to see if the Language exists
+        Language language = languageRepo.findByName("English");
+
+        // create new Language if not already exists
+        if (language == null) {
+            language = languageRepo.create("English");
+        }
+
+        // check to see if Controlled Vocabulary exists, and if so, merge up with it
+        ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+
+        if (persistedCV == null) {
+            persistedCV = controlledVocabularyRepo.create("Subjects", language);
+        }
+
+        for (Map.Entry<String, String> entry : subjectCodes.entrySet()) {
+            String code = entry.getKey();
+            String description = entry.getValue();
+
+            VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(description, persistedCV);
+
+            if (persistedVW == null) {
+                persistedVW = vocabularyRepo.create(persistedCV, description, "", code, new ArrayList<String>());
+                persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+            } else {
+                persistedVW.setDefinition("");
+                persistedVW.setIdentifier(code);
+                persistedVW = vocabularyRepo.save(persistedVW);
+            }
+        }
+
+    }
+
     private Map<String, String> getProquestCodes(String xslFileName) {
         Map<String, String> proquestCodes = new HashMap<String, String>();
         Resource resource = resourcePatternResolver.getResource("classpath:/proquest/" + xslFileName);
@@ -1046,7 +1119,12 @@ public class SystemDataLoader {
     }
 
     private void loadPackagers() {
-        abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
+        if (abstractPackagerRepo.findByName("DSpaceMETS") == null) {
+            abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
+        }
+        if (abstractPackagerRepo.findByName("ProQuest") == null) {
+            abstractPackagerRepo.createProQuestUmiPackager("ProQuest", new ProQuestUmiFormatter());
+        }
     }
 
     private void loadDepositors() {
@@ -1065,14 +1143,7 @@ public class SystemDataLoader {
     }
 
     private File getFileFromResource(String resourcePath) throws IOException {
-        Resource resource = resourcePatternResolver.getResource(resourcePath);
-        if (!resource.getURL().toString().startsWith("jar:")) {
-            return resource.getFile();
-        } // else (we're inside a war/jar)
-        File resourceFile = File.createTempFile("temp", ".tmp");
-        resourceFile.deleteOnExit();
-        IOUtils.copy(resource.getInputStream(), new FileOutputStream(resourceFile));
-        return resourceFile;
+        return fileIOUtility.getFileFromResource(resourcePath);
     }
 
 }

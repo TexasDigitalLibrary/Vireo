@@ -114,6 +114,15 @@ public class OrganizationController {
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
+    
+    @ApiMapping(value = "/restore-defaults", method = POST)
+    @Auth(role = "MANAGER")
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
+    public ApiResponse restoreOrganizationDefaults(@ApiValidatedModel Organization organization) {
+    	organization = organizationRepo.restoreDefaults(organization);
+        simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organization));
+        return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been restored to defaults!");
+    }
 
     @Transactional
     @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")

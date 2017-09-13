@@ -11,7 +11,7 @@ public class DepositLocationTest extends AbstractEntityTest {
 
     @Before
     public void setup() {
-        packager = abstractPackagerRepo.createDSpaceMetsPackager(new DSpaceMetsFormatter());
+        packager = abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
     }
 
     @Override

@@ -29,4 +29,5 @@ public class DegreeLevel extends BaseOrderedEntity {
     public void setName(String name) {
         this.name = name;
     }
+
 }

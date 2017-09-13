@@ -22,16 +22,16 @@
  */-->
 <mets
   ID="vireo-mets-1"
-  th:attr="OBJID=${ 'vireo-submission-' + submission.id }"
+  th:attr="OBJID=${ 'vireo-submission-' + SUBMISSION_ID }"
   LABEL="DSpace Item"
   PROFILE="DSpace METS SIP Profile 1.0"
   xmlns="http://www.loc.gov/METS/"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
-    <metsHdr th:attr="CREATEDATE=${ time }">
+    <metsHdr th:attr="CREATEDATE=${ TIME }">
         <agent ROLE="CREATOR" TYPE="OTHER">
-            <name th:text="${ agent }"></name>
+            <name th:text="${ AGENT }"></name>
         </agent>
     </metsHdr>
     <dmdSec ID="vireo-mets-dmd-1" GROUPID="vireo-mets-dmd-1">
@@ -42,27 +42,21 @@
                     <!-- Metadata -->
                 
                     <!-- dc.creator = Student -->
-                    <dim:field mdschema="dc" element="creator" th:text="
-                      ${submission.getFieldValuesByPredicateValue('last_name').size() > 0 ? submission.getFieldValuesByPredicateValue('last_name').get(0).value + ', ' : '' } +
-                      ${submission.getFieldValuesByPredicateValue('first_name').size() > 0 ? submission.getFieldValuesByPredicateValue('first_name').get(0).value + ' ' : ''} +
-                      ${submission.getFieldValuesByPredicateValue('middle_name').size() > 0 ? (submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('middle_name').get(0).value + ' ' : submission.getFieldValuesByPredicateValue('middle_name').get(0).value) : ''} +
-                      ${submission.getFieldValuesByPredicateValue('birth_year').size() > 0 ? submission.getFieldValuesByPredicateValue('birth_year').get(0).value + '-' : ''}">
+                    <dim:field mdschema="dc" element="creator" th:text="${STUDENT_FULL_NAME_WITH_BIRTH_YEAR}">
                     </dim:field>
                     
                     <!-- dc, thesis, and local schema -->
                     <dim:field
-                      th:each="fv : ${ submission.fieldValues }"
-                      th:if="${ fv.fieldPredicate.getSchema() == 'dc' or fv.fieldPredicate.getSchema() == 'thesis' or fv.fieldPredicate.getSchema() == 'local' }"
-                      th:attr="mdschema=${ fv.fieldPredicate.getSchema() },
-                               element=${ fv.fieldPredicate.getElement() },
-                               qualifier=${ fv.fieldPredicate.getQualifier() }"
+                      th:each="fv : ${ METS_FIELD_VALUES }"
+                      th:attr="mdschema=${ fv.getFieldPredicate().getSchema() },
+                               element=${ fv.getFieldPredicate().getElement() },
+                               qualifier=${ fv.getFieldPredicate().getQualifier() }"
                       th:text="${ fv.value }">
                     </dim:field>
                     
                     <!-- TODO -->
                 
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
-                    
                 
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
                     
@@ -75,72 +69,68 @@
                     
                     
                     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
-                    <dim:field mdschema="dc" element="format" qualifier="mimetype" th:text="${ submission.getPrimaryDocumentFieldValue() != null ? fileHelper.getMimeType(submission.getPrimaryDocumentFieldValue().value) : 'application/pdf' }"></dim:field>
+                    <dim:field mdschema="dc" element="format" qualifier="mimetype" th:text="${ PRIMARY_DOCUMENT_MIMETYPE }"></dim:field>
                 
 
                     <!-- TODO: complete the following with adding accessor methods to submission -->
                 
                     <!-- dc.description.provenance = License Agreement Date -->
-                    <!--/* 
+                    <!--/*
                     <dim:field
-                      th:if="${ submission.getLicenseAgreementDate() }"
+                      th:if="${ LICENSE_AGREEMENT_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The student, ' + submission.getStudentShortName() + ', accepted the attached license on ' + submission.getLicenseAgreementDate() + '.' }">                         
+                      th:text="${ 'The student, ' + STUDENT_SHORT_NAME + ', accepted the attached license on ' + FORMATTED_LICENSE_AGREEMENT_DATE + '.' }">                         
                     </dim:field>
                     */-->
                      
                     <!-- dc.description.provenance = Submission Date -->
-                    <!--/* 
                     <dim:field
-                      th:if="${ submission.getSubmissionDate() }"
+                      th:if="${ SUBMISSION_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The student, ' + submission.getStudentShortName() + ', submitted this ' + submission.getSubmissionType() + ' for approval of ' + submission.getSubmissionDate() + '.' }">                         
+                      th:text="${ 'The student, ' + STUDENT_SHORT_NAME + ', submitted this ' + SUBMISSION_TYPE + ' for approval of ' + FORMATTED_SUBMISSION_DATE + '.' }">                         
                     </dim:field>
-                    */-->
                     
                     <!-- dc.description.provenance = Committee Approval Date -->
                     <!--/*
                     <dim:field
-                      th:if="${ submission.getCommitteeApprovalDate() }"
+                      th:if="${ COMMITTEE_APPROVAL_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The committee advisor approved this ' + submission.getSubmissionType() + ' on ' + submission.getCommitteeApprovalDate() + '.' }">                         
+                      th:text="${ 'The committee advisor approved this ' + SUBMISSION_TYPE + ' on ' + FORMATTED_COMMITTEE_APPROVAL_DATE + '.' }">                         
                     </dim:field>
                     */-->
                     
                     <!-- dc.description.provenance = Committee Embargo Approval Date -->
-                    <!--/*
                     <dim:field
-                      th:if="${ submission.getCommitteeEmbargoApprovalDate() }"
+                      th:if="${ EMBARGO_APPROVAL_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The committee advisor approved the embargo selection for this ' + submission.getSubmissionType() + ' on ' + submission.getCommitteeEmbargoApprovalDate() + '.' }">                         
+                      th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE + ' on ' + FORMATTED_EMBARGO_APPROVAL_DATE + '.' }">                         
                     </dim:field> 
-                    */-->
                     
                     <!-- dc.description.provenance = Approval Date -->
-                    <!--/*
+                    
                     <dim:field
-                      th:if="${ submission.getApprovalDate() }"
+                      th:if="${ APPROVAL_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'This ' + submission.getSubmissionType() + ' was approved for publication on ' + submission.getApprovalDate() + '.' }">                         
+                      th:text="${ 'This ' + SUBMISSION_TYPE + ' was approved for publication on ' + FORMATTED_APPROVAL_DATE + '.' }">                         
                     </dim:field> 
-                    */-->
+                    
                     
                     <!-- dc.description.provenance = Statement about when this package was generated. -->
                     <dim:field
                         mdschema="dc"
                         element="description"
                         qualifier="provenance"
-                        th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission' + submission.id + ' on ' + time }">
+                        th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission ' + SUBMISSION_ID + ' on ' + time }">
                     </dim:field>
                     
                 </dim:dim>
@@ -152,22 +142,22 @@
             
             <!-- Primary Document -->
             <file 
-              th:if="${ submission.getPrimaryDocumentFieldValue() != null }"
+              th:if="${ PRIMARY_DOCUMENT_FIELD_VALUE != null }"
               SEQ="1"
-              th:attr="GROUPID=${ 'piper-mets-file-group-' + submission.getPrimaryDocumentFieldValue().fieldPredicate.id }, 
-                       ID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id },
-                       MIMETYPE=${ fileHelper.getMimeType(submission.getPrimaryDocumentFieldValue().value) }">
+              th:attr="GROUPID=${ 'piper-mets-file-group-' + PRIMARY_DOCUMENT_FIELD_VALUE.fieldPredicate.id }, 
+                       ID=${ 'piper-mets-file-' + PRIMARY_DOCUMENT_FIELD_VALUE.id },
+                       MIMETYPE=${ PRIMARY_DOCUMENT_MIMETYPE }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ submission.getPrimaryDocumentFieldValue().getFileName() }"/>
+                    th:attr="'xlink:href'=${ PRIMARY_DOCUMENT_FIELD_VALUE.getFileName() }"/>
             </file>
             
             <!-- Supplemental And Source Documents -->
             <file 
-              th:each="fv,iter : ${ submission.getSupplementalAndSourceDocumentFieldValues() }"
+              th:each="fv,iter : ${ SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES }"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id }, 
                        ID=${ 'piper-mets-file-' + fv.id },
-                       MIMETYPE=${ fileHelper.getMimeType(fv.value) },
+                       MIMETYPE=${ FILE_HELPER.getMimeType(fv.value) },
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
@@ -178,7 +168,16 @@
         <fileGrp ID="vireo-mets-fgrp-2" USE="LICENSE">
             
             <!-- Licence Documents -->
-            <!--  TODO: generate file from license agreement -->
+            <file 
+              th:each="fv,iter : ${ LICENSE_DOCUMENT_FIELD_VALUES }"
+              th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id }, 
+                       ID=${ 'piper-mets-file-' + fv.id },
+                       MIMETYPE=${ FILE_HELPER.getMimeType(fv.value) },
+                       SEQ=${ iter.index + 2 }">
+                <FLocat
+                    LOCTYPE="URL"
+                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
+            </file>
             
         </fileGrp>
     </fileSec>
@@ -186,19 +185,27 @@
         <div ID="vireo-mets-div-1" DMDID="vireo-mets-dmd-1" TYPE="DSpace Item">
             
             <!-- Set the primary bitstream to the primary document -->
-            <fptr th:if="${ submission.getPrimaryDocumentFieldValue() != null }" th:attr="FILEID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id }"/>
+            <fptr th:if="${ PRIMARY_DOCUMENT_FIELD_VALUE != null }" th:attr="FILEID=${ 'piper-mets-file-' + PRIMARY_DOCUMENT_FIELD_VALUE.id }"/>
             
             <!-- Bitstream div for the primary document -->
             <div
-              th:if="${ submission.getPrimaryDocumentFieldValue() != null }"
-              th:attr="ID=${ 'piper-mets-div-' + submission.getPrimaryDocumentFieldValue().id }" 
+              th:if="${ PRIMARY_DOCUMENT_FIELD_VALUE != null }"
+              th:attr="ID=${ 'piper-mets-div-' + PRIMARY_DOCUMENT_FIELD_VALUE.id }" 
               TYPE="DSpace Content Bitstream">
-                <ftpr th:attr="FILEID=${ 'piper-mets-file-' + submission.getPrimaryDocumentFieldValue().id }"/>
+                <ftpr th:attr="FILEID=${ 'piper-mets-file-' + PRIMARY_DOCUMENT_FIELD_VALUE.id }"/>
             </div>
             
             <!-- Bitstream divs for each supplemental and source document -->
             <div 
-                th:each="fv : ${ submission.getSupplementalAndSourceDocumentFieldValues() }"
+                th:each="fv : ${ SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES }"
+                th:attr="ID=${ 'piper-mets-div-' + fv.id }" 
+                TYPE="DSpace Content Bitstream">
+                <ftpr th:attr="FILEID=${ 'piper-mets-file-' + fv.id }"/>
+            </div>
+            
+            <!-- Bitstream divs for each license document -->
+            <div 
+                th:each="fv : ${ LICENSE_DOCUMENT_FIELD_VALUES }"
                 th:attr="ID=${ 'piper-mets-div-' + fv.id }" 
                 TYPE="DSpace Content Bitstream">
                 <ftpr th:attr="FILEID=${ 'piper-mets-file-' + fv.id }"/>
