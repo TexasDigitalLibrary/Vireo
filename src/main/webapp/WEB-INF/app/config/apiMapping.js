@@ -702,54 +702,54 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'all',
-            useWebSockets: true,
+            useWebSockets: true
         },
         addComment: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'add-comment',
-            useWebSockets: true,
+            useWebSockets: true
         },
         sendEmail: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'send-email',
-            useWebSockets: true,
+            useWebSockets: true
         },
         assignTo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'assign',
-            useWebSockets: true,
+            useWebSockets: true
         },
         changeStatus: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'change-status',
-            useWebSockets: true,
+            useWebSockets: true
         },
         publish: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'publish',
-            useWebSockets: true,
+            useWebSockets: true
         },
         submitDate: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'submit-date',
-            useWebSockets: true,
+            useWebSockets: true
         },
         one: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         remove: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'delete',
-            useWebSockets: true,
+            useWebSockets: true
         },
         listen: {
             'endpoint': '/channel',
@@ -771,105 +771,105 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'create',
-            useWebSockets: true,
+            useWebSockets: true
         },
         query: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'query',
-            useWebSockets: true,
+            useWebSockets: true
         },
         saveFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         saveReviewerNotes: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         sendAdvisorEmail: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         batchExport: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'batch-export',
-            useWebSockets: true,
+            useWebSockets: true
         },
         batchPublish: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'batch-publish',
-            useWebSockets: true,
+            useWebSockets: true
         },
         batchUpdateSubmissionStatus: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'batch-update-status',
-            useWebSockets: true,
+            useWebSockets: true
         },
         batchAssignTo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'batch-assign-to',
-            useWebSockets: true,
+            useWebSockets: true
         },
         fileInfo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file-info',
-            useWebSockets: true,
+            useWebSockets: true
         },
         file: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         renameFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'rename-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         removeFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'remove-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         archiveFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'archive-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         needsCorrection: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'needs-correction',
-            useWebSockets: true,
+            useWebSockets: true
         },
         updateAdvisorApproval: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'update-advisor-approval',
-            useWebSockets: true,
+            useWebSockets: true
         },
         updateCustomActionValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'update-custom-action-value',
-            useWebSockets: true,
+            useWebSockets: true
         }
     },
     StudentSubmission: {
@@ -879,18 +879,18 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'all-by-user',
-            useWebSockets: true,
+            useWebSockets: true
         },
         changeStatus: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'change-status',
-            useWebSockets: true,
+            useWebSockets: true
         },
         one: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         listen: {
             'endpoint': '/channel',
@@ -901,64 +901,64 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'create',
-            useWebSockets: true,
+            useWebSockets: true
         },
         submitCorrections: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'submit-corrections',
-            useWebSockets: true,
+            useWebSockets: true
         },
         saveFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         validateFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         removeFieldValue: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            useWebSockets: true,
+            useWebSockets: true
         },
         fileInfo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file-info',
-            useWebSockets: true,
+            useWebSockets: true
         },
         file: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         renameFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'rename-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         removeFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'remove-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         archiveFile: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'archive-file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         addMessage: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'add-message',
-            useWebSockets: true,
+            useWebSockets: true
         }
     },
     AdvisorSubmission: {
@@ -968,31 +968,31 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'advisor-review',
-            useWebSockets: true,
+            useWebSockets: true
         },
         listen: {
             'endpoint': '/channel',
             'controller': 'submission',
             'method': 'advisor',
-            useWebSockets: true,
+            useWebSockets: true
         },
         file: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file',
-            useWebSockets: true,
+            useWebSockets: true
         },
         updateAdvisorApproval: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'update-advisor-approval',
-            useWebSockets: true,
+            useWebSockets: true
         },
         fileInfo: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'file-info',
-            useWebSockets: true,
+            useWebSockets: true
         }
     },
     SubmissionListColumn: {
