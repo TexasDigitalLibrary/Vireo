@@ -61,7 +61,7 @@ public class FieldGlossController {
      * @return ApiResponse with all input types.
      */
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/cerate", method = POST)
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
