@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,8 @@ public class DegreeController {
         return new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createDegree(@ApiValidatedModel Degree degree) {
         logger.info("Creating degree with name " + degree.getName());
@@ -56,8 +57,8 @@ public class DegreeController {
         return new ApiResponse(SUCCESS, degree);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateDegree(@ApiValidatedModel Degree degree) {
         logger.info("Updating degree with name " + degree.getName());
@@ -66,8 +67,8 @@ public class DegreeController {
         return new ApiResponse(SUCCESS, degree);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeDegree(@ApiValidatedModel Degree degree) {
         logger.info("Removing graduation month with id " + degree.getId());

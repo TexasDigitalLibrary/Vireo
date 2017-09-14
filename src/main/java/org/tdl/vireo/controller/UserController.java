@@ -5,6 +5,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Map;
 
@@ -73,8 +74,8 @@ public class UserController {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateRole(@ApiValidatedModel User updatedUser) {
 
@@ -98,8 +99,8 @@ public class UserController {
         return new ApiResponse(SUCCESS, user.getSettings());
     }
 
-    @ApiMapping("/settings/update")
     @Auth(role = "STUDENT")
+    @ApiMapping(value = "/settings/update", method = POST)
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
         User user = userRepo.findByEmail(shib.getEmail());
         user.setSettings(userSettings);

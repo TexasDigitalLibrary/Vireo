@@ -3,6 +3,7 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configurationRepo.getCurrentConfigurations());
     }
 
-    @ApiMapping("/update")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateSetting(@ApiValidatedModel ManagedConfiguration configuration) {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
@@ -45,7 +46,7 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configuration);
     }
 
-    @ApiMapping("/reset")
+    @ApiMapping(value = "/reset", method = POST)
     public ApiResponse resetSetting(@ApiModel ManagedConfiguration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         Configuration defaultConfiguration = configurationRepo.reset(configuration);

@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,8 @@ public class DocumentTypeController {
         return new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Creating document type with name " + documentType.getName());
@@ -53,8 +54,8 @@ public class DocumentTypeController {
         return new ApiResponse(SUCCESS, documentType);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Updating document type with name " + documentType.getName());
@@ -63,8 +64,8 @@ public class DocumentTypeController {
         return new ApiResponse(SUCCESS, documentType);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());

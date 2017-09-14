@@ -6,6 +6,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +68,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
@@ -82,8 +83,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
@@ -97,8 +98,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS)})
     public ApiResponse updateFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());

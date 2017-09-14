@@ -1,6 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +89,8 @@ public class SubmissionListController {
     }
 
     @Transactional
-    @ApiMapping("/update-user-columns/{pageSize}")
     @Auth(role = "STUDENT")
+    @ApiMapping(value = "/update-user-columns/{pageSize}", method = POST)
     public ApiResponse updateUserSubmissionViewColumns(@ApiCredentials Credentials credentials, @ApiVariable Integer pageSize, @ApiModel List<SubmissionListColumn> submissionViewColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.setPageSize(pageSize);
@@ -110,8 +111,8 @@ public class SubmissionListController {
     }
 
     @Transactional
-    @ApiMapping("/update-user-filter-columns")
     @Auth(role = "STUDENT")
+    @ApiMapping(value = "/update-user-filter-columns", method = POST)
     public ApiResponse updateUserFilterColumns(@ApiCredentials Credentials credentials, @ApiModel List<SubmissionListColumn> filterColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.setFilterColumns(filterColumns);
@@ -119,8 +120,8 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
 
-    @ApiMapping("/set-active-filter")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/set-active-filter", method = POST)
     public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
@@ -169,8 +170,8 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
-    @ApiMapping("/remove-saved-filter")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove-saved-filter", method = POST)
     public ApiResponse removeSavedFilter(@ApiCredentials Credentials credentials, @ApiModel NamedSearchFilter savedFilter) {
         User user = userRepo.findByEmail(credentials.getEmail());
         user.getSavedFilters().remove(savedFilter);
@@ -179,8 +180,8 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
-    @ApiMapping("/add-filter-criterion")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/add-filter-criterion", method = POST)
     public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
 
         String criterionName = data.get("criterionName").asText();
@@ -227,8 +228,8 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/remove-filter-criterion/{namedSearchFilterName}")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove-filter-criterion/{namedSearchFilterName}", method = POST)
     public ApiResponse removeFilterCriterion(@ApiCredentials Credentials credentials, @ApiVariable String namedSearchFilterName, @ApiModel FilterCriterion filterCriterion) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
@@ -292,8 +293,8 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, userSavedFilters);
     }
 
-    @ApiMapping("/save-filter-criteria")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/save-filter-criteria", method = POST)
     public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         User user = userRepo.findByEmail(credentials.getEmail());

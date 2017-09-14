@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.LIST_REORDER;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -99,7 +100,7 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-field-profile")
+    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
@@ -133,7 +134,7 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/add-note")
+    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/add-note", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse addNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
@@ -153,8 +154,8 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/update-note")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/update-note", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
@@ -165,8 +166,8 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/remove-note")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-note", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @ApiValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 

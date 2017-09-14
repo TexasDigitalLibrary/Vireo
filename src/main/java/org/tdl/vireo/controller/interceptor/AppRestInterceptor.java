@@ -21,6 +21,7 @@ public class AppRestInterceptor extends CoreRestInterceptor<User> {
 
     @Override
     public User confirmCreateUser(Credentials credentials) {
+        System.out.println("\n\n\nINTERCEPTED REST REQUEST\n\n\n");
         return userCredentialsService.updateUserByCredentials(credentials);
     }
 }

@@ -21,6 +21,7 @@ public class AppStompInterceptor extends CoreStompInterceptor<User> {
 
     @Override
     public User confirmCreateUser(Credentials credentials) {
+        System.out.println("\n\n\nINTERCEPTED STOMP REQUEST\n\n\n");
         return userCredentialsService.updateUserByCredentials(credentials);
     }
 }

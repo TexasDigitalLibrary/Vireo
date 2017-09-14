@@ -85,7 +85,7 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org);
     }
 
-    @ApiMapping("/create/{parentOrgID}")
+    @ApiMapping(value = "/create/{parentOrgID}", method = POST)
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
@@ -125,8 +125,8 @@ public class OrganizationController {
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgID}/add-email-workflow-rule", method = POST)
     public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
 
         ApiResponse response = new ApiResponse(SUCCESS);
@@ -217,8 +217,8 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
 
-    @ApiMapping("/{requestingOrgID}/create-workflow-step")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgID}/create-workflow-step", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
         Organization org = organizationRepo.findOne(requestingOrgID);
@@ -227,8 +227,8 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
 
-    @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);

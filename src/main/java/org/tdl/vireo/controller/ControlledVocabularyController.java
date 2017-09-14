@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -103,8 +104,8 @@ public class ControlledVocabularyController {
      *            Json input data from request
      * @return ApiResponse with indicating success or error
      */
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
@@ -121,8 +122,8 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
@@ -139,8 +140,8 @@ public class ControlledVocabularyController {
      *            Json input data with request
      * @return ApiResponse indicating success or error
      */
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
@@ -310,8 +311,8 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value = "/add-vocabulary-word/{cvId}")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/add-vocabulary-word/{cvId}", method = POST)    
     public ApiResponse addVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vocabularyWord) {
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
 

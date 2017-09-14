@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.RESET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +64,8 @@ public class LookAndFeelController {
         return new ApiResponse(SUCCESS, newLogoConfig);
     }
 
-    @ApiMapping("/logo/reset")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/logo/reset", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
