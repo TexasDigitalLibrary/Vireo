@@ -8,7 +8,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
+    console.log('new submission');
+
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (data) {
+        console.log(data);
 
         $timeout(function () {
             $anchorScroll();

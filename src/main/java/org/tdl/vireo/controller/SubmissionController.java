@@ -3,7 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.framework.enums.ApiResponseType.ERROR;
 import static edu.tamu.framework.enums.ApiResponseType.INVALID;
 import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.File;
 import java.io.IOException;
@@ -177,8 +176,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/create")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/create", method = POST)
     public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) throws OrganizationDoesNotAcceptSubmissionsExcception {
         Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.findOne(dataNode.get("organizationId").asLong()), submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
         simpMessagingTemplate.convertAndSend("/channel/submission", new ApiResponse(SUCCESS, submissionRepo.findAll()));
@@ -203,8 +202,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/add-comment")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/add-comment", method = POST)
     public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
@@ -223,8 +222,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/send-email")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/send-email", method = POST)
     public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
         System.out.println("\n\n\n" + dataNode + "\n\n\n");
         sendEmail(credentials, submissionRepo.findOne(submissionId), dataNode);
@@ -252,11 +251,11 @@ public class SubmissionController {
             }
             
             User user = userRepo.findByEmail(credentials.getEmail());
-			String preferedEmail = user.getSetting("preferedEmail");
-			user.getSetting("ccEmail");
-			if(user.getSetting("ccEmail").equals("true")) {
-				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
-			}
+            String preferedEmail = user.getSetting("preferedEmail");
+            user.getSetting("ccEmail");
+            if(user.getSetting("ccEmail").equals("true")) {
+                 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+            }
 
             smm.setSubject(subject);
             smm.setText(templatedMessage);
@@ -270,8 +269,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = POST)
     public ApiResponse updateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
         ApiResponse apiResponse = null;
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
@@ -321,8 +320,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = POST)
     public ApiResponse validateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
         ApiResponse apiResponse = null;
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
@@ -345,8 +344,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/update-custom-action-value")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{submissionId}/update-custom-action-value", method = POST)
     public ApiResponse updateCustomActionValue(@ApiVariable("submissionId") Long submissionId, @ApiModel CustomActionValue customActionValue) {
         return new ApiResponse(SUCCESS, submissionRepo.findOne(submissionId).editCustomActionValue(customActionValue));
     }
@@ -377,8 +376,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/batch-update-status")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/batch-update-status", method = POST)
     public ApiResponse batchUpdateSubmissionStatuses(@ApiCredentials Credentials credentials, @ApiModel SubmissionStatus submissionStatus) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
@@ -467,8 +466,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/batch-assign-to")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/batch-assign-to", method = POST)
     public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
         User user = userRepo.findByEmail(credentials.getEmail());
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
@@ -521,8 +520,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/submit-date")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/submit-date", method = POST)
     public ApiResponse submitDate(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
 
         Submission submission = submissionRepo.findOne(submissionId);
@@ -547,8 +546,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/assign-to")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/assign-to", method = POST)
     public ApiResponse assign(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
         Submission submission = submissionRepo.findOne(submissionId);
 
@@ -573,8 +572,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/remove-field-value")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/remove-field-value", method = POST)
     public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
         Submission submission = submissionRepo.findOne(submissionId);
         submission.removeFieldValue(fieldValue);
@@ -584,8 +583,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/update-reviewer-notes")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{submissionId}/update-reviewer-notes", method = POST)
     public ApiResponse updateReviewerNotes(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
         Submission submission = submissionRepo.findOne(submissionId);
         String reviewerNotes = requestData.get("reviewerNotes");
@@ -626,8 +625,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/{submissionId}/add-message")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/add-message", method = POST)
     public ApiResponse addMessage(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData String message) {
         Submission submission = submissionRepo.findOne(submissionId);
         actionLogRepo.createPublicLog(submission, credentials, message);
@@ -635,14 +634,14 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping("/query/{page}/{size}")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/query/{page}/{size}", method = POST)
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
-    @ApiMapping(value = "/file", method = POST)
+    @ApiMapping(value = "/file")
     public void submissionFile(HttpServletResponse response, @ApiData Map<String, String> requestData) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
         String uri = requestData.get("uri");
@@ -651,7 +650,7 @@ public class SubmissionController {
         response.getOutputStream().flush();
     }
 
-    @ApiMapping(value = "/file-info", method = POST)
+    @ApiMapping(value = "/file-info")
     public ApiResponse submissionFileInfo(@ApiData Map<String, String> requestData) throws IOException {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
@@ -672,8 +671,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/rename-file")
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{submissionId}/{documentType}/rename-file", method = POST)
     public ApiResponse renameFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
@@ -688,8 +687,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/remove-file")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/{documentType}/remove-file", method = POST)
     public ApiResponse removeFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         ApiResponse apiResponse = null;
         int hash = credentials.getEmail().hashCode();
@@ -710,8 +709,8 @@ public class SubmissionController {
     }
 
     @Transactional
+    @ApiMapping(value = "/{submissionId}/{documentType}/archive-file")
     @Auth(role = "STUDENT")
-    @ApiMapping(value = "/{submissionId}/{documentType}/archive-file", method = POST)    
     public ApiResponse archiveFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
@@ -741,23 +740,23 @@ public class SubmissionController {
 
         // TODO: this needs to only send email to the advisor not any field value that is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-        	 
-        	SimpleMailMessage smm = new SimpleMailMessage();
-        	
-			smm.setTo(String.join(",", fv.getContacts()));
-			 
-			User user = userRepo.findByEmail(credentials.getEmail());
-			String preferedEmail = user.getSetting("preferedEmail");
-			user.getSetting("ccEmail");
-			if(user.getSetting("ccEmail").equals("true")) {
-				 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
-			}
-			 
-			smm.setSubject(subject);
-			smm.setText(content);
-        	
-			emailSender.send(smm);
-			
+             
+            SimpleMailMessage smm = new SimpleMailMessage();
+            
+            smm.setTo(String.join(",", fv.getContacts()));
+             
+            User user = userRepo.findByEmail(credentials.getEmail());
+            String preferedEmail = user.getSetting("preferedEmail");
+            user.getSetting("ccEmail");
+            if(user.getSetting("ccEmail").equals("true")) {
+                 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+            }
+             
+            smm.setSubject(subject);
+            smm.setText(content);
+            
+            emailSender.send(smm);
+            
         });
 
         actionLogRepo.createPublicLog(submission, credentials, "Advisor review email manually generated.");
@@ -766,8 +765,8 @@ public class SubmissionController {
     }
 
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
+    @ApiMapping("/{submissionId}/update-advisor-approval")
     @Transactional
-    @ApiMapping(value = "/{submissionId}/update-advisor-approval", method = POST)
     public ApiResponse updateAdvisorApproval(@ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
 
         Submission submission = submissionRepo.findOne(submissionId);
@@ -808,33 +807,33 @@ public class SubmissionController {
     }
 
     private void processEmailWorkflowRules(Credentials credentials, Submission submission) {
-    	
-    	SimpleMailMessage smm = new SimpleMailMessage();
+        
+        SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
 
         rules.forEach(rule -> {
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
-            	
+                
                 // TODO: Not all variables are currently being replaced.
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
                 rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-                	
-                	smm.setTo(email);
+                    
+                    smm.setTo(email);
 
-                	User user = userRepo.findByEmail(credentials.getEmail());
-					String preferedEmail = user.getSetting("preferedEmail");
-					user.getSetting("ccEmail");
-					if(user.getSetting("ccEmail").equals("true")) {
-						 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
-					}
+                    User user = userRepo.findByEmail(credentials.getEmail());
+                    String preferedEmail = user.getSetting("preferedEmail");
+                    user.getSetting("ccEmail");
+                    if(user.getSetting("ccEmail").equals("true")) {
+                         smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+                    }
 
                     smm.setSubject(subject);
                     smm.setText(content);
-                	
+                    
                     emailSender.send(smm);
                 });
 
