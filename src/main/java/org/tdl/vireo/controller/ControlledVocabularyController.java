@@ -354,7 +354,7 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @ApiMapping(value = "/update-vocabulary-word/{cvId}")
+    @ApiMapping(value = "/update-vocabulary-word/{cvId}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse updateVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vw) {
         vw = vocabularyWordRepo.save(vw);
