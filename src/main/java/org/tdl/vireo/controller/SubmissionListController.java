@@ -5,6 +5,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,6 +23,7 @@ import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
@@ -56,6 +58,9 @@ public class SubmissionListController {
 
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @ApiMapping("/all-columns")
     @Auth(role = "STUDENT")
@@ -182,13 +187,13 @@ public class SubmissionListController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/add-filter-criterion", method = POST)
-    public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData JsonNode data) {
+    public ApiResponse addFilterCriterion(@ApiCredentials Credentials credentials, @ApiData Map<String, Object> data) {
 
-        String criterionName = data.get("criterionName").asText();
-        String filterValue = data.get("filterValue").asText();
-        Boolean exactMatch = data.get("exactMatch").asBoolean();
+        String criterionName = (String) data.get("criterionName");
+        String filterValue = (String) data.get("filterValue");
+        Boolean exactMatch = Boolean.valueOf((String) data.get("exactMatch"));
 
-        JsonNode filterGlossNode = data.get("filterGloss");
+        JsonNode filterGlossNode = objectMapper.convertValue(data, JsonNode.class).get("filterGloss");
 
         String filterGloss = null;
 

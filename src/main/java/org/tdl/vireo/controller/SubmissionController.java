@@ -249,12 +249,12 @@ public class SubmissionController {
             if (sendCCRecipientEmail) {
                 smm.setCc(dataNode.get("ccRecipientEmail").asText().split(";"));
             }
-            
+
             User user = userRepo.findByEmail(credentials.getEmail());
             String preferedEmail = user.getSetting("preferedEmail");
             user.getSetting("ccEmail");
-            if(user.getSetting("ccEmail").equals("true")) {
-                 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+            if (user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferedEmail == null ? credentials.getEmail() : preferedEmail);
             }
 
             smm.setSubject(subject);
@@ -386,7 +386,7 @@ public class SubmissionController {
         });
         return new ApiResponse(SUCCESS);
     }
-  
+
     @Transactional
     @ApiMapping("/{submissionId}/publish/{depositLocationId}")
     @Auth(role = "STUDENT")
@@ -740,23 +740,23 @@ public class SubmissionController {
 
         // TODO: this needs to only send email to the advisor not any field value that is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-             
+
             SimpleMailMessage smm = new SimpleMailMessage();
-            
+
             smm.setTo(String.join(",", fv.getContacts()));
-             
+
             User user = userRepo.findByEmail(credentials.getEmail());
             String preferedEmail = user.getSetting("preferedEmail");
             user.getSetting("ccEmail");
-            if(user.getSetting("ccEmail").equals("true")) {
-                 smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+            if (user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferedEmail == null ? credentials.getEmail() : preferedEmail);
             }
-             
+
             smm.setSubject(subject);
             smm.setText(content);
-            
+
             emailSender.send(smm);
-            
+
         });
 
         actionLogRepo.createPublicLog(submission, credentials, "Advisor review email manually generated.");
@@ -807,7 +807,7 @@ public class SubmissionController {
     }
 
     private void processEmailWorkflowRules(Credentials credentials, Submission submission) {
-        
+
         SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
@@ -815,25 +815,25 @@ public class SubmissionController {
         rules.forEach(rule -> {
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
-                
+
                 // TODO: Not all variables are currently being replaced.
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
                 rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-                    
+
                     smm.setTo(email);
 
                     User user = userRepo.findByEmail(credentials.getEmail());
                     String preferedEmail = user.getSetting("preferedEmail");
                     user.getSetting("ccEmail");
-                    if(user.getSetting("ccEmail").equals("true")) {
-                         smm.setBcc(preferedEmail==null?credentials.getEmail():preferedEmail);
+                    if (user.getSetting("ccEmail").equals("true")) {
+                        smm.setBcc(preferedEmail == null ? credentials.getEmail() : preferedEmail);
                     }
 
                     smm.setSubject(subject);
                     smm.setText(content);
-                    
+
                     emailSender.send(smm);
                 });
 

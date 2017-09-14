@@ -9,6 +9,8 @@ import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,6 @@ import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.service.DepositorService;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -53,7 +53,7 @@ public class DepositLocationController {
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDepositLocation(@ApiData JsonNode depositLocationJson) {
+    public ApiResponse createDepositLocation(@ApiData Map<String, Object> depositLocationJson) {
         DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, depositLocation);
@@ -93,7 +93,7 @@ public class DepositLocationController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/test-connection", method = POST)
-    public ApiResponse testConnection(@ApiData JsonNode depositLocationJson) {
+    public ApiResponse testConnection(@ApiData Map<String, Object> depositLocationJson) {
         DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
         Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
         return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));

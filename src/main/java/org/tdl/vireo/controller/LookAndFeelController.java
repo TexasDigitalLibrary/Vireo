@@ -41,7 +41,7 @@ public class LookAndFeelController {
 
     @Autowired
     private FileIOUtility fileIOUtility;
-    
+
     private String lookAndFeelType = "lookAndFeel";
 
     @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
@@ -52,7 +52,7 @@ public class LookAndFeelController {
         String logoFileName = logoName + "." + lfModel.getFileType();
 
         // TODO: folder should be a configuration
-        String path = "public/" + configurationRepo.getByNameAndType(ConfigurationName.THEME_PATH,lookAndFeelType).getValue() + logoFileName;
+        String path = "public/" + configurationRepo.getByNameAndType(ConfigurationName.THEME_PATH, lookAndFeelType).getValue() + logoFileName;
 
         logger.info("Changing logo " + logoName);
 
@@ -69,7 +69,7 @@ public class LookAndFeelController {
     @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
-        Configuration systemLogo = configurationRepo.getByNameAndType(lfModel.getSetting(),lookAndFeelType);
+        Configuration systemLogo = configurationRepo.getByNameAndType(lfModel.getSetting(), lookAndFeelType);
         Configuration defaultLogoConfig = configurationRepo.reset((ManagedConfiguration) systemLogo);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configurationRepo.findAll()));
         return new ApiResponse(SUCCESS, defaultLogoConfig);

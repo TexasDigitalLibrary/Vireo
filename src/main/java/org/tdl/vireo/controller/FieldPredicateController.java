@@ -32,12 +32,12 @@ import edu.tamu.framework.model.ApiResponse;
 @RestController
 @ApiMapping("/settings/field-predicates")
 public class FieldPredicateController {
-	
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-    
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -73,11 +73,11 @@ public class FieldPredicateController {
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
-    	FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
+        FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
         return new ApiResponse(SUCCESS, fp);
     }
-    
+
     /**
      * Endpoint to remove a field predicate
      *
@@ -92,7 +92,7 @@ public class FieldPredicateController {
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
         return new ApiResponse(SUCCESS);
     }
-    
+
     /**
      * Endpoint to update a field predicate
      *
@@ -100,10 +100,10 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS)})
+    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());
-    	fieldPredicateRepo.save(fieldPredicate);
+        fieldPredicateRepo.save(fieldPredicate);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
         return new ApiResponse(SUCCESS);
     }

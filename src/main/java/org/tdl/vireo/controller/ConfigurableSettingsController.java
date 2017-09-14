@@ -31,7 +31,7 @@ public class ConfigurableSettingsController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @ApiMapping("/all")
     public ApiResponse getSettings() {
         return new ApiResponse(SUCCESS, configurationRepo.getCurrentConfigurations());

@@ -58,7 +58,7 @@ public class EmailTemplateController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Updating email template with name " + emailTemplate.getName());
-        if(emailTemplate.getSystemRequired()) {
+        if (emailTemplate.getSystemRequired()) {
             emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
         } else {
             emailTemplate = emailTemplateRepo.save(emailTemplate);

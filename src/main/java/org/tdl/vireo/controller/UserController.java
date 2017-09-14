@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.UserCredentialsService;
 
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
@@ -40,19 +41,8 @@ public class UserController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    // TODO: make global static method, redundant method in interceptors and here
-    public Credentials getAnonymousCredentials() {
-        Credentials anonymousCredentials = new Credentials();
-        anonymousCredentials.setAffiliation("NA");
-        anonymousCredentials.setLastName("Anonymous");
-        anonymousCredentials.setFirstName("Role");
-        anonymousCredentials.setNetid("anonymous-" + Math.round(Math.random() * 100000));
-        anonymousCredentials.setUin("000000000");
-        anonymousCredentials.setExp("1436982214754");
-        anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
-        anonymousCredentials.setRole("NONE");
-        return anonymousCredentials;
-    }
+    @Autowired
+    private UserCredentialsService userCredentialsService;
 
     @ApiMapping("/credentials")
     @Auth(role = "NONE")
@@ -60,7 +50,7 @@ public class UserController {
         User user = userRepo.findByEmail(credentials.getEmail());
         if (user == null) {
             logger.debug("User not registered! Responding with anonymous credentials!");
-            return new ApiResponse(SUCCESS, getAnonymousCredentials());
+            return new ApiResponse(SUCCESS, userCredentialsService.buildAnonymousCredentials());
         }
         credentials.setRole(user.getRole().toString());
         credentials.setModelValidator(user.getModelValidator());

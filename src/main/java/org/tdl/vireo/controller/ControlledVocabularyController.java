@@ -312,7 +312,7 @@ public class ControlledVocabularyController {
      */
     @Transactional
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/add-vocabulary-word/{cvId}", method = POST)    
+    @ApiMapping(value = "/add-vocabulary-word/{cvId}", method = POST)
     public ApiResponse addVocabularyWord(@ApiVariable Long cvId, @ApiModel VocabularyWord vocabularyWord) {
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
 
