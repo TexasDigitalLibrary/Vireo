@@ -99,7 +99,7 @@ public class DepositLocationController {
         return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));
     }
 
-    @ApiMapping(value = "/find-coolections", method = POST)
+    @ApiMapping(value = "/find-collections", method = POST)
     public ApiResponse findCollection(@ApiValidatedModel DepositLocation depositLocation) {
         System.out.println(depositLocation);
         return new ApiResponse(SUCCESS);
