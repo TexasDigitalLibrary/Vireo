@@ -6,6 +6,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
@@ -74,8 +75,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all field glosses.
      */
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse RemoveFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
@@ -89,8 +90,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all field glosses.
      */
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse UpdateFieldGloss(@ApiValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());

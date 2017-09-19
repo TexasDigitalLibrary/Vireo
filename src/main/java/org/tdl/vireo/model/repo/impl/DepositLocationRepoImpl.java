@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.packager.Packager;
@@ -8,6 +10,7 @@ import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.service.OrderedEntityService;
 
@@ -22,26 +25,20 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     @Autowired
     private AbstractPackagerRepo packagerRepo;
 
-    @Override
-    public DepositLocation create(JsonNode depositLocationJson) {
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        Packager packager = (Packager) packagerRepo.findOne(depositLocationJson.get("packager").get("id").asLong());
+    @Override
+    public DepositLocation create(Map<String, Object> depositLocationJson) {
+
+        Packager packager = (Packager) packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
 
         String onBehalfOf = null;
-        if (depositLocationJson.has("onBehalfOf")) {
-            onBehalfOf = depositLocationJson.get("onBehalfOf").asText();
+        if (depositLocationJson.get("onBehalfOf") != null) {
+            onBehalfOf = (String) depositLocationJson.get("onBehalfOf");
         }
 
-        DepositLocation depositLocation = create(
-                depositLocationJson.get("name").asText(),
-                depositLocationJson.get("repository").asText(),
-                depositLocationJson.get("collection").asText(),
-                depositLocationJson.get("username").asText(),
-                depositLocationJson.get("password").asText(),
-                onBehalfOf,
-                packager,
-                depositLocationJson.get("depositor").asText(),
-                depositLocationJson.get("timeout").asInt());
+        DepositLocation depositLocation = create((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), (String) depositLocationJson.get("collection"), (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositor"), (Integer) depositLocationJson.get("timeout"));
         return depositLocation;
     }
 
@@ -53,31 +50,23 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     }
 
     @Override
-    public DepositLocation createDetached(JsonNode depositLocationJson) {
+    public DepositLocation createDetached(Map<String, Object> depositLocationJson) {
         Packager packager = null;
-        if (depositLocationJson.has("packager")) {
-            packager = (Packager) packagerRepo.getOne(depositLocationJson.get("packager").get("id").asLong());
+        if (depositLocationJson.get("packager") != null) {
+            packager = (Packager) packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
         }
 
         String onBehalfOf = null;
-        if (depositLocationJson.has("onBehalfOf")) {
-            onBehalfOf = depositLocationJson.get("onBehalfOf").asText();
+        if (depositLocationJson.get("onBehalfOf") != null) {
+            onBehalfOf = (String) depositLocationJson.get("onBehalfOf");
         }
 
         Integer timeout = null;
-        if (depositLocationJson.has("timeout")) {
-            timeout = depositLocationJson.get("timeout").asInt();
+        if (depositLocationJson.get("timeout") != null) {
+            timeout = (Integer) depositLocationJson.get("timeout");
         }
 
-        DepositLocation depositLocation = createDetached(
-                depositLocationJson.get("name").asText(),
-                depositLocationJson.get("repository").asText(),
-                null,
-                depositLocationJson.get("username").asText(),
-                depositLocationJson.get("password").asText(),
-                onBehalfOf,
-                packager,
-                depositLocationJson.get("depositor").asText(), timeout);
+        DepositLocation depositLocation = createDetached((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), null, (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositor"), timeout);
         return depositLocation;
     }
 

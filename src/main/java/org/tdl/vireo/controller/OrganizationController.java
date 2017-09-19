@@ -10,6 +10,8 @@ import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
@@ -70,6 +73,9 @@ public class OrganizationController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Transactional
     @ApiMapping("/all")
     @Auth(role = "STUDENT")
@@ -85,7 +91,7 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org);
     }
 
-    @ApiMapping("/create/{parentOrgID}")
+    @ApiMapping(value = "/create/{parentOrgID}", method = POST)
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
@@ -114,27 +120,27 @@ public class OrganizationController {
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
-    
+
     @ApiMapping(value = "/restore-defaults", method = POST)
     @Auth(role = "MANAGER")
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse restoreOrganizationDefaults(@ApiValidatedModel Organization organization) {
-    	organization = organizationRepo.restoreDefaults(organization);
+        organization = organizationRepo.restoreDefaults(organization);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organization));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been restored to defaults!");
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/add-email-workflow-rule")
     @Auth(role = "MANAGER")
-    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData JsonNode dataNode) {
+    @ApiMapping(value = "/{requestingOrgID}/add-email-workflow-rule", method = POST)
+    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData Map<String, Object> data) {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
         Organization org = organizationRepo.findOne(requestingOrgID);
-        SubmissionStatus submissionStatus = submissionStatusRepo.findOne(dataNode.get("submissionStatusId").asLong());
-        JsonNode recipientNode = dataNode.get("recipient");
-        EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
+        SubmissionStatus submissionStatus = submissionStatusRepo.findOne(Long.valueOf((Integer) data.get("submissionStatusId")));
+        JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findOne(Long.valueOf((Integer) data.get("templateId")));
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
@@ -154,12 +160,12 @@ public class OrganizationController {
     @Transactional
     @ApiMapping("/{requestingOrgID}/edit-email-workflow-rule/{emailWorkflowRuleId}")
     @Auth(role = "MANAGER")
-    public ApiResponse editEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId, @ApiData JsonNode dataNode) {
+    public ApiResponse editEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId, @ApiData Map<String, Object> data) {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
-        JsonNode recipientNode = dataNode.get("recipient");
-        EmailTemplate emailTemplate = emailTemplateRepo.findOne(dataNode.get("templateId").asLong());
+        JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findOne(Long.valueOf((Integer) data.get("templateId")));
 
         EmailWorkflowRule emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
 
@@ -217,8 +223,8 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
 
-    @ApiMapping("/{requestingOrgID}/create-workflow-step")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgID}/create-workflow-step", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
         Organization org = organizationRepo.findOne(requestingOrgID);
@@ -227,8 +233,8 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
 
-    @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
