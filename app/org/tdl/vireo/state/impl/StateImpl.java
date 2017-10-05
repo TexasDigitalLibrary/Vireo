@@ -27,6 +27,7 @@ public class StateImpl implements State, BeanNameAware {
 	public boolean inProgress = false;
 	public boolean active = false;
 	public boolean archived = false;
+	public boolean metadataEditable = false;
 	public boolean editableByStudent = false;
 	public boolean editableByReviewer = false;
 	public boolean depositable = false;
@@ -109,6 +110,18 @@ public class StateImpl implements State, BeanNameAware {
 		this.archived = archived;
 	}
 
+	@Override
+	public boolean isMetadataEditable() {
+		return metadataEditable;
+	}
+	
+	/**
+	 * @param editable Whether the metadata may be edited in this state.
+	 */
+	public void setMetadataEditable(boolean editable) {
+		this.metadataEditable = editable;
+	}
+	
 	@Override
 	public boolean isEditableByStudent() {
 		return editableByStudent;
