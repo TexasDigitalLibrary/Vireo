@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,8 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createEmbargo(@ApiValidatedModel Embargo embargo) {
         logger.info("Creating embargo with name " + embargo.getName());
@@ -53,8 +54,8 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS, embargo);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateEmbargo(@ApiValidatedModel Embargo embargo) {
         logger.info("Updating embargo with name " + embargo.getName());
@@ -63,8 +64,8 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS, embargo);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeEmbargo(@ApiValidatedModel Embargo embargo) {
         logger.info("Removing Embargo:  " + embargo.getName());

@@ -6,6 +6,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,8 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Creating organization category with name " + organizationCategory.getName());
@@ -51,8 +52,8 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategory);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Updating organization category with name " + organizationCategory.getName());
@@ -61,8 +62,8 @@ public class OrganizationCategoryController {
         return new ApiResponse(SUCCESS, organizationCategory);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "organizations" }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Removing organization category with name " + organizationCategory.getName());

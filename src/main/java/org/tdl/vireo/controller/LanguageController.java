@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +63,8 @@ public class LanguageController {
      *
      * @return
      */
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createLanguage(@ApiValidatedModel Language language) {
         logger.info("Creating language with name " + language.getName());
@@ -76,8 +77,8 @@ public class LanguageController {
      *
      * @return
      */
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateLanguage(@ApiValidatedModel Language language) {
         logger.info("Updating language with name " + language.getName());
@@ -90,8 +91,8 @@ public class LanguageController {
      *
      * @return
      */
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeLanguage(@ApiValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());

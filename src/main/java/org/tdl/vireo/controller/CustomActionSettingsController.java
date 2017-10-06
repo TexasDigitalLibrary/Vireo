@@ -7,6 +7,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,8 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
@@ -50,8 +51,8 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
@@ -60,8 +61,8 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeCustomAction(@ApiValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());

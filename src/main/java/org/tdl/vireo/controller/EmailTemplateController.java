@@ -8,6 +8,7 @@ import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
 import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
 import static edu.tamu.framework.enums.MethodValidationType.REORDER;
 import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,8 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc());
     }
 
-    @ApiMapping("/create")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/create", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
     public ApiResponse createEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Creating email template with name " + emailTemplate.getName());
@@ -52,12 +53,12 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplate);
     }
 
-    @ApiMapping("/update")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/update", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Updating email template with name " + emailTemplate.getName());
-        if(emailTemplate.getSystemRequired()) {
+        if (emailTemplate.getSystemRequired()) {
             emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
         } else {
             emailTemplate = emailTemplateRepo.save(emailTemplate);
@@ -66,8 +67,8 @@ public class EmailTemplateController {
         return new ApiResponse(SUCCESS, emailTemplate);
     }
 
-    @ApiMapping("/remove")
     @Auth(role = "MANAGER")
+    @ApiMapping(value = "/remove", method = POST)
     @ApiValidation(business = { @ApiValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse removeEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
         logger.info("Removing email template with name " + emailTemplate.getName());
