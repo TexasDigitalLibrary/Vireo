@@ -1,5 +1,7 @@
 # Vireo 4
-Vireo 4 is a turnkey Electronic Thesis and Dissertation (ETD) Management System.
+Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.  
+
+The software is presently in a Beta release.  If you want to help with testing or development, GitHub issues and pull requests are encouraged!
 
 ## Building Vireo 4
 
@@ -61,7 +63,7 @@ drwxr-xr-x 2 root root 4096 Nov 11 11:54 attachments
 drwxr-xr-x 2 root root 4096 Oct  2 15:36 conf
 drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 ```
-* attachments -- where pdf's will be uploaded to
+* attachments -- where the server stores uploaded files
 * conf -- where the external config files reside
 * webapp -- the extracted WAR file
 
