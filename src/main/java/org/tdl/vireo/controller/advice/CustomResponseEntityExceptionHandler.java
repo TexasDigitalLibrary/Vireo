@@ -1,6 +1,6 @@
 package org.tdl.vireo.controller.advice;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 
 @ControllerAdvice
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {

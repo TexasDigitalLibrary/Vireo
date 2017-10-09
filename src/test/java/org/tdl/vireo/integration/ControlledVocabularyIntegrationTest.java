@@ -101,9 +101,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        System.out.println("\n\n\n" + meta + "\n\n\n");
-
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME4);
 
@@ -127,7 +125,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         controlledVocabulary = controlledVocabularyRepo.findOne(controlledVocabulary.getId());
 
@@ -148,7 +146,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         assertNull(controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1));
     }
@@ -170,7 +168,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         assertEquals(order1, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
         assertEquals(order2, controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME1).getPosition());
@@ -186,7 +184,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         assertEquals(Long.valueOf(1), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME3).getPosition());
         assertEquals(Long.valueOf(2), controlledVocabularyRepo.findByName(TEST_CONTROLLED_VOCABULARY_NAME2).getPosition());
@@ -212,7 +210,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         Map<String, Object> payload = (Map<String, Object>) responseObject.get("payload");
 

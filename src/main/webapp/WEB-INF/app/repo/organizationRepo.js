@@ -46,7 +46,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.create);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -131,7 +131,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.children);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }
@@ -147,7 +147,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.addWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }
@@ -159,7 +159,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
 			angular.extend(this.mapping.restoreDefaults, {'data': organization});
 			var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
       promise.then(function (res) {
-        if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.type === "INVALID") {
+        if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.status === "INVALID") {
             angular.extend(organizationRepo, angular.fromJson(res.body).payload);
             console.log(organizationRepo);
         }
@@ -175,7 +175,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = RestApi.post(this.mapping.updateWorkflowStep);
         promise.then(function (res) {
-            if (res.meta.type === "INVALID") {
+            if (res.meta.status === "INVALID") {
                 angular.extend(organizationRepo, res.payload);
                 console.log(organizationRepo);
             }
@@ -191,7 +191,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = RestApi.post(this.mapping.deleteWorkflowStep);
         promise.then(function (res) {
-            if (res.meta.type === "INVALID") {
+            if (res.meta.status === "INVALID") {
                 angular.extend(organizationRepo, res.payload);
                 console.log(organizationRepo);
             }
@@ -206,7 +206,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(organizationRepo, angular.fromJson(res.body).payload);
                 console.log(organizationRepo);
             }

@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
 

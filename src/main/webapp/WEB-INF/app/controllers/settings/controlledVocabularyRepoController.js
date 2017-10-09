@@ -355,7 +355,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
         $scope.createControlledVocabulary = function () {
             ControlledVocabularyRepo.create($scope.modalData).then(function (res) {
-                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                if (angular.fromJson(res.body).meta.status === 'SUCCESS') {
                     $scope.resetControlledVocabulary(true);
                 }
             });
@@ -380,7 +380,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
         $scope.updateControlledVocabulary = function () {
             $scope.modalData.save().then(function (res) {
-                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                if (angular.fromJson(res.body).meta.status === 'SUCCESS') {
                     $scope.resetControlledVocabulary(true);
                 }
             });
@@ -388,7 +388,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
         $scope.removeControlledVocabulary = function () {
             $scope.modalData.delete().then(function (res) {
-                if (angular.fromJson(res.body).meta.type === 'SUCCESS') {
+                if (angular.fromJson(res.body).meta.status === 'SUCCESS') {
                     $scope.resetControlledVocabulary(true);
                 }
             });
@@ -460,8 +460,8 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                     definition += '<span class="glyphicon glyphicon-arrow-right cv-change"></span><span>' + words[1].definition + '</span>';
                 }
             }
-            
-            
+
+
             var identifier = "";
             if(words[0].identifier === words[1].identifier) {
                 identifier += '<span>' + words[0].identifier + '</span>';

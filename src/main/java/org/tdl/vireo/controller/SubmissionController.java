@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.ERROR;
-import static edu.tamu.framework.enums.ApiResponseType.INVALID;
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
+import static edu.tamu.weaver.response.ApiStatus.INVALID;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +73,7 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.service.RoleService;
 import edu.tamu.framework.util.EmailSender;

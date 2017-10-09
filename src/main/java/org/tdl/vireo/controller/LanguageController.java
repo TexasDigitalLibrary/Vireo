@@ -1,6 +1,6 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
 import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
 import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
@@ -27,7 +27,7 @@ import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 
 /**
  * Controller in which to manage langauges.
