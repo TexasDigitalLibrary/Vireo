@@ -1,0 +1,35 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetLanguages()" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Edit Language</h3>
+</div>
+
+<form ng-submit="updateLanguage()" name="forms.update" novalidate>
+
+	<validationmessage results="modalData.ValidationResults"></validationmessage>
+
+	<div class="modal-body">
+		<validatedinput
+			model="modalData"
+			property="name"
+			label="Name"
+			placeholder="Name of the language"
+            form="forms.update"
+            validations="languageRepo.getValidations()"
+			results="modalData.ValidationResults">
+		</validatedinput>		
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-default" 
+			ng-click="resetLanguages()">Cancel</button>
+		<button 
+			id="languages-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.update.$invalid">Update</button>
+	</div>
+</form>

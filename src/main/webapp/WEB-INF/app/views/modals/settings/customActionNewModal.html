@@ -1,0 +1,49 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+	<button type="button" class="close" ng-click="resetCustomAction()" aria-label="Close">
+		<span class="modal-close" aria-hidden="true">&times;</span>
+	</button>
+	<h3 class="modal-title">Add Custom Action Checklist</h3>
+</div>
+
+<form ng-submit="createCustomAction()" name="forms.create" novalidate>
+
+	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
+
+	<div class="modal-body">
+		
+		<validatedinput
+			type="text"
+			model="modalData"
+			property="label"
+			label="Custom Action"
+			placeholder="Label of the new custom action"
+			form="forms.create"
+			validations="customActionRepo.getValidations()"
+			results="customActionRepo.getValidationResults()">
+		</validatedinput>
+		
+		<validatedinput
+			type="checkbox"
+			model="modalData"
+			property="isStudentVisible"
+			label="Is Student Visible"
+			placeholder="Is this action visible to the student?"
+			form="forms.create"
+			validations="customActionRepo.getValidations()"
+			results="customActionRepo.getValidationResults()">
+		</validatedinput>
+		
+	</div>
+
+	<div class="modal-footer">
+		<button 
+			type="button" 
+			class="btn btn-default" 
+			ng-click="resetCustomAction()">Cancel</button>
+		<button 
+			id="customAction-save" 
+			type="submit" 
+			class="btn btn-primary"
+			ng-disabled="forms.create.$invalid">Create</button>
+	</div>
+</form>

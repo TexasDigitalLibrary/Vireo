@@ -1,0 +1,22 @@
+<div ng-show="submission" class="dialog state" ng-class="{'immutable': submission.submissionStatus.name != 'Needs Correction', 'needs-correction': submission.submissionStatus.name == 'Needs Correction'}">
+  <span class="dialog-close toggle-href" ng-click="show.reverse()">[{{show[0]}}]</span>
+  <h4 class="dialog-header">Current Submission State:</h4>
+  <span class="submission-state">{{submission.submissionStatus.name}}</span>
+  <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
+    <span ng-if="submission.submissionStatus.name != 'Needs Correction'">
+      <strong>Your Submission cannot be changed at this time.</strong>
+    </span>
+    <div ng-if="submission.submissionStatus.name == 'Needs Correction'">
+      <p>
+        <strong>The application requires you to make corrections.</strong>
+        Please make the indicated corrections and upload the new manuscript. After clicking the "Corrections Completed" button you will no longer be able to edit the application.</p>
+      <span class="needs-correction-link toggle-href" ng-click="jumpToUploadFiles()">Click here to jump down to replace manuscript</span>
+      <div class="needs-correction-action row center">
+        <p class="dialog-confirm" ng-class="{'dialog-open': submitGloss[0] === 'Are you sure?', 'dialog-closed': submitGloss[0] === 'Submit Corrections'}">After completing your corrections you will no longer be able to edit this application. Did you complete all the required changes, and upload a new manuscript?</p>
+        <button class="btn btn-default" ng-click="submitCorrections()" ng-disabled="submittingCorrections">{{submitGloss[0]}}
+          <span ng-if="submittingCorrections" class="glyphicon glyphicon-refresh spinning"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,605 @@
+{
+  "name":"Departments",
+  "isEntityProperty":false,
+  "isEnum":false,
+  "language":{
+    "name":"English"
+  },
+  "dictionary":[
+    {
+      "name":"Obstetrics and Gynecology",
+      "definition":"Academic Department",
+      "identifier":"fa66af82-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Surgery",
+      "definition":"Academic Department",
+      "identifier":"fa66b306-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Pediatrics",
+      "definition":"Academic Department",
+      "identifier":"fa66b037-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"International Studies",
+      "definition":"Academic Department",
+      "identifier":"fa66b351-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Teaching, Learning and Culture",
+      "definition":"Academic Department",
+      "identifier":"fa66b877-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"IP and Technology Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b626f-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Civil Engineering",
+      "definition":"Academic Department",
+      "identifier":"c695101f-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Landscape Architecture and Urban Planning",
+      "definition":"Academic Department",
+      "identifier":"c6950807-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Entomology",
+      "definition":"Academic Department",
+      "identifier":"c6950496-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Veterinary Integrative Biosciences",
+      "definition":"Academic Department",
+      "identifier":"c6961eb2-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Veterinary Pathobiology",
+      "definition":"Academic Department",
+      "identifier":"c695fe19-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Sociology",
+      "definition":"Academic Department",
+      "identifier":"c695217c-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Soil and Crop Sciences",
+      "definition":"Academic Department",
+      "identifier":"c6950674-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Neuroscience and Experimental Therapeutics",
+      "definition":"Academic Department",
+      "identifier":"c6962a0c-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Environmental and Occupational Health",
+      "definition":"Academic Department",
+      "identifier":"c16f12be-40c2-11e6-aff6-00059a3c7a00"
+    },
+    {
+      "name":"Nuclear Engineering",
+      "definition":"Academic Department",
+      "identifier":"c6951666-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Management",
+      "definition":"Academic Department",
+      "identifier":"c6950b63-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Large Animal Clinical Sciences",
+      "definition":"Academic Department",
+      "identifier":"c6961f58-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Ocean Engineering",
+      "definition":"Academic Department",
+      "identifier":"fa66b935-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Environmental Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b1d08-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Statistics",
+      "definition":"Academic Department",
+      "identifier":"c695fbe9-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Performance Studies",
+      "definition":"Academic Department",
+      "identifier":"fa66ba02-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Information and Operations Management",
+      "definition":"Academic Department",
+      "identifier":"c69623b9-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Environmental Programs in Geosciences",
+      "definition":"Academic Department",
+      "identifier":"fa66b97c-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Nutrition and Food Science",
+      "definition":"Academic Department",
+      "identifier":"c6950538-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Oceanography",
+      "definition":"Academic Department",
+      "identifier":"c69518fd-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Civil Litigation",
+      "definition":"Academic Department",
+      "identifier":"fa6b1858-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Oil and Gas Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b62e2-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Marketing",
+      "definition":"Academic Department",
+      "identifier":"c6950b97-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Health Policy and Management",
+      "definition":"Academic Department",
+      "identifier":"c16f13af-40c2-11e6-aff6-00059a3c7a00"
+    },
+    {
+      "name":"Material Sciences and Engineering",
+      "definition":"Academic Department",
+      "identifier":"fa66b8f9-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Commercial Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b18ea-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Mathematics",
+      "definition":"Academic Department",
+      "identifier":"c695faad-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Anthropology",
+      "definition":"Academic Department",
+      "identifier":"c69519be-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Wildlife and Fisheries Sciences",
+      "definition":"Academic Department",
+      "identifier":"c69506db-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Mechanical Engineering",
+      "definition":"Academic Department",
+      "identifier":"c6951211-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Workplace Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b63c3-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Internal Medicine",
+      "definition":"Academic Department",
+      "identifier":"c6962cbe-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Periodontics",
+      "definition":"Academic Department",
+      "identifier":"fa66b7ae-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Medical Physiology",
+      "definition":"Academic Department",
+      "identifier":"c6962a7e-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Communication",
+      "definition":"Academic Department",
+      "identifier":"c6962433-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Health Promotion and Community Health Science",
+      "definition":"Academic Department",
+      "identifier":"fa6be3c7-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Business Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b1730-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Hispanic Studies",
+      "definition":"Academic Department",
+      "identifier":"c6951d2f-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Chemical Engineering",
+      "definition":"Academic Department",
+      "identifier":"c6950ee7-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Epidemiology and Biostatics",
+      "definition":"Academic Department",
+      "identifier":"c16f1439-40c2-11e6-aff6-00059a3c7a00"
+    },
+    {
+      "name":"Microbial Pathogenesis and Immunology",
+      "definition":"Academic Department",
+      "identifier":"c6962ab9-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Petroleum Engineering",
+      "definition":"Academic Department",
+      "identifier":"c69516e0-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Office of Scholarly Communications",
+      "definition":"Department            ",
+      "identifier":"fa6b6431-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"International Affairs",
+      "definition":"Academic Department",
+      "identifier":"c69626da-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Oral and Maxillofacial Surgery",
+      "definition":"Academic Department",
+      "identifier":"fa66b6ad-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Estate Planning",
+      "definition":"Academic Department",
+      "identifier":"fa6b2035-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Chemistry",
+      "definition":"Academic Department",
+      "identifier":"c695f5c2-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"History",
+      "definition":"Academic Department",
+      "identifier":"c6951d91-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Architecture",
+      "definition":"Academic Department",
+      "identifier":"c695070a-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Horticultural Science",
+      "definition":"Academic Department",
+      "identifier":"c6962126-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Orthodontics",
+      "definition":"Academic Department",
+      "identifier":"fa66b6fc-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Humanities in Medicine",
+      "definition":"Academic Department",
+      "identifier":"c69629cc-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Agricultural Leadership, Education, and Communications",
+      "definition":"Academic Department",
+      "identifier":"fa66b390-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Family and Community Medicine",
+      "definition":"Academic Department",
+      "identifier":"fa66af13-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Alternative Dispute Resolution",
+      "definition":"Academic Department",
+      "identifier":"fa66bbb4-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Immigration Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b6163-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Family Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b258b-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Diagnostic Science",
+      "definition":"Academic Department",
+      "identifier":"fa66b5b8-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Molecular and Cellular Medicine",
+      "definition":"Academic Department",
+      "identifier":"c6962a47-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Endodontics",
+      "definition":"Academic Department",
+      "identifier":"fa66b63b-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Pathology",
+      "definition":"Academic Department",
+      "identifier":"fa66aff4-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Industrial and Systems Engineering",
+      "definition":"Academic Department",
+      "identifier":"fa66b8ca-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Energy Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b1c8d-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Atmospheric Sciences",
+      "definition":"Academic Department",
+      "identifier":"c696246b-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Pediatric Dentistry",
+      "definition":"Academic Department",
+      "identifier":"fa66b75b-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Anesthesiology",
+      "definition":"Academic Department",
+      "identifier":"fa66ae3a-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Geography",
+      "definition":"Academic Department",
+      "identifier":"c695183c-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Biological and Agricultural Engineering",
+      "definition":"Academic Department",
+      "identifier":"c69620eb-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Economics",
+      "definition":"Academic Department",
+      "identifier":"c6951b1a-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Biochemistry and Biophysics",
+      "definition":"Academic Department",
+      "identifier":"c69503f5-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Public Health Sciences",
+      "definition":"Academic Department",
+      "identifier":"fa66b7fd-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Veterinary Physiology and Pharmacology",
+      "definition":"Academic Department",
+      "identifier":"c695fe8c-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Geology and Geophysics",
+      "definition":"Academic Department",
+      "identifier":"c69623f8-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Accounting",
+      "definition":"Academic Department",
+      "identifier":"c6950871-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Public Health Studies",
+      "definition":"Academic Department",
+      "identifier":"fa66adc4-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Engineering Technology and Industrial Distribution",
+      "definition":"Academic Department",
+      "identifier":"c69510f8-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Animal Science",
+      "definition":"Academic Department",
+      "identifier":"c69503bd-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Ecosystem Science and Management",
+      "definition":"Academic Department",
+      "identifier":"c69504ca-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Health and Kinesiology",
+      "definition":"Academic Department",
+      "identifier":"c6950d02-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Aerospace Engineering",
+      "definition":"Academic Department",
+      "identifier":"c6950d64-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Health Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b608e-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Biology ",
+      "definition":"Academic Department",
+      "identifier":"c695f48a-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Public Service and Administration",
+      "definition":"Academic Department",
+      "identifier":"c69626a3-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Computer Science and Engineering",
+      "definition":"Academic Department",
+      "identifier":"c69625b6-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Finance",
+      "definition":"Academic Department",
+      "identifier":"c6950ad5-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"English",
+      "definition":"Academic Department",
+      "identifier":"c6951c07-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Construction Science",
+      "definition":"Academic Department",
+      "identifier":"c69507d3-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Visualization",
+      "definition":"Academic Department",
+      "identifier":"c695083e-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Biomedical Engineering",
+      "definition":"Academic Department",
+      "identifier":"c6950e71-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Radiology",
+      "definition":"Academic Department",
+      "identifier":"fa66b2c3-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"General Dentistry",
+      "definition":"Academic Department",
+      "identifier":"fa66b67a-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Criminal Law and Procedure",
+      "definition":"Academic Department",
+      "identifier":"fa6b1958-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Real Estate Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b6325-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Agricultural Economics",
+      "definition":"Academic Department",
+      "identifier":"c6950382-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Recreation, Park and Tourism Science",
+      "definition":"Academic Department",
+      "identifier":"fa66b3fe-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Educational Administration and Human Resource Development",
+      "definition":"Academic Department",
+      "identifier":"c6950c97-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Dental Hygiene",
+      "definition":"Academic Department",
+      "identifier":"fa66b546-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Educational Psychology",
+      "definition":"Academic Department",
+      "identifier":"c6950cce-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Water Law",
+      "definition":"Academic Department",
+      "identifier":"fa6b636c-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"General Practice",
+      "definition":"Academic Department",
+      "identifier":"fa6b28e3-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Biomedical Science",
+      "definition":"Academic Department",
+      "identifier":"fa66b4d0-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Electrical and Computer Engineering",
+      "definition":"Academic Department",
+      "identifier":"c696257f-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Restorative Sciences",
+      "definition":"Academic Department",
+      "identifier":"fa66b838-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Political Science",
+      "definition":"Academic Department",
+      "identifier":"c6951f18-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Water Program",
+      "definition":"Academic Department",
+      "identifier":"fa66b9ab-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Philosophy",
+      "definition":"Academic Department",
+      "identifier":"fa66ba84-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Emergency Medicine",
+      "definition":"Academic Department",
+      "identifier":"fa66aea9-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Small Animal Clinical Sciences",
+      "definition":"Academic Department",
+      "identifier":"c6961f97-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Poultry Science",
+      "definition":"Academic Department",
+      "identifier":"c69505d2-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Physics and Astronomy",
+      "definition":"Academic Department",
+      "identifier":"c695fb82-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Psychiatry and Behavioral Science",
+      "definition":"Academic Department",
+      "identifier":"fa66b06b-91b1-11e6-99e2-00059a3c7a00"
+    },
+    {
+      "name":"Plant Pathology and Microbiology",
+      "definition":"Academic Department",
+      "identifier":"c695059f-3430-11e6-934e-5ce0c5308215"
+    },
+    {
+      "name":"Psychology",
+      "definition":"Academic Department",
+      "identifier":"c695200d-3430-11e6-934e-5ce0c5308215"
+    }
+  ]
+}

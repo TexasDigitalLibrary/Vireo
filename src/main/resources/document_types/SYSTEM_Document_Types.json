@@ -1,0 +1,58 @@
+[ 
+  {
+    "name":"Administrative Files",
+    "fieldPredicate":{
+      "value":"_doctype_administrative",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Source Files",
+    "fieldPredicate":{
+      "value":"_doctype_source",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Supplemental Files",
+    "fieldPredicate":{
+      "value":"_doctype_supplemental",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Manuscript in PDF",
+    "fieldPredicate":{
+      "value":"_doctype_primary",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"License Files",
+    "fieldPredicate":{
+      "value":"_doctype_license",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Feedback",
+    "fieldPredicate":{
+      "value":"_doctype_feedback",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Archived Files",
+    "fieldPredicate":{
+      "value":"_doctype_archived",
+      "documentTypePredicate":true
+    }
+  },
+  {
+    "name":"Unknown Files",
+    "fieldPredicate":{
+      "value":"_doctype_unknown",
+      "documentTypePredicate":true
+    }
+  }
+]

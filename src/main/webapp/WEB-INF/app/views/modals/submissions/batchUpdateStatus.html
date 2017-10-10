@@ -1,0 +1,42 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="box.resetBatchUpdateStatus()" aria-title="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Batch Update Status</h3>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-xs-12">
+      <p>This batch operation will modify the status of all the submissions selected by the currently active filter. If the new state is for publishing, then the items will be deposited into a remote repository.</p>
+
+      <p>This operation may take quite some time depending on how many submissions are currently selected.</p>
+
+      <form class="form-inline">
+        <div class="form-group">
+          <label class="control-title" for="newStatus">
+            <strong>New Status</strong>:</label>
+          <select class="form-control" name="newStatus" ng-model="box.newStatus" ng-options="ss.name for ss in box.submissionStatuses"></select>
+        </div>
+      </form>
+      <form class="form-inline">
+        <div ng-if="box.newStatus.name=='Published'" class="form-group">
+          <label for="Deposit Location">
+            <strong>Deposit Location</strong>:</label>
+          <select class="form-control" id="depositLocation" name="depositLocation" ng-model="box.depositLocation" ng-options="dl.name for dl in box.depositLocations"></select>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="box.resetBatchUpdateStatus()">Cancel</button>
+  <button ng-if="box.newStatus.name!='Published'" type="button" class="btn btn-primary" ng-click="box.batchUpdateStatus(box.newStatus)" ng-disabled="box.processing">Update Statuses
+    <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
+  </button>
+  <button ng-if="box.newStatus.name=='Published'" type="button" class="btn btn-primary" ng-click="box.batchPublish(box.newStatus)" ng-disabled="!box.depositLocation || box.processing">Batch Publish
+    <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
+  </button>
+</div>
+</div>

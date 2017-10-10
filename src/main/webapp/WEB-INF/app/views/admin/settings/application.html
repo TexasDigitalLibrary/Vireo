@@ -1,0 +1,25 @@
+<div class="row" ng-controller="ApplicationSettingsController">
+  <div class="col-xs-12">
+    <h1>APPLICATION SETTINGS</h1>
+    <p>Customize application wide settings</p>
+    <vireo-accordion single-expand="false">
+      <vireo-pane query="submissionAvailability" html="views/admin/settings/application/submissionAvailability.html">SUBMISSION AVAILABILITY</vireo-pane>
+      <vireo-pane query="organizationSettings" html="views/admin/settings/application/organizationSettings.html">ORGANIZATION SETTINGS</vireo-pane>
+      <vireo-pane query="orcidSettings" html="views/admin/settings/application/orcidSettings.html">ORCID SETTINGS</vireo-pane>
+      <vireo-pane query="proquestUmiSettings" html="views/admin/settings/application/proquestUmiDegreeCodeSettings.html">PROQUEST SETTINGS</vireo-pane>
+      <vireo-pane query="submissionLicense" html="views/admin/settings/application/submissionLicense.html">SUBMISSION LICENSE</vireo-pane>
+      <vireo-pane query="customActionsChecklist" html="views/admin/settings/application/customActionsChecklist.html">CUSTOM ACTIONS CHECKLIST</vireo-pane>
+      <vireo-pane query="depositLocations" html="views/admin/settings/application/depositLocations.html">DEPOSIT LOCATIONS</vireo-pane>
+      <vireo-pane query="whoHasAccess" html="views/admin/settings/application/whoHasAccess.html">WHO HAS ACCESS</vireo-pane>
+      <vireo-pane query="lookAndFeel" html="views/admin/settings/application/lookAndFeel.html">LOOK AND FEEL</vireo-pane>
+      <vireo-pane query="emailTemplates" html="views/admin/settings/application/emailTemplates.html">EMAIL TEMPLATES</vireo-pane>
+      <vireo-pane query="controlledVocabularyManagement" html="views/admin/settings/application/controlledVocabularyManagement.html">CONTROLLED VOCABULARY MANAGEMENT</vireo-pane>
+      <vireo-pane query="embargoTypes" html="views/admin/settings/application/embargoTypes.html">EMBARGO TYPES</vireo-pane>
+      <vireo-pane query="documentTypes" html="views/admin/settings/application/documentTypes.html">FILE TYPES</vireo-pane>
+      <vireo-pane query="degrees" html="views/admin/settings/application/degrees.html">DEGREES</vireo-pane>
+      <vireo-pane query="graduationMonths" html="views/admin/settings/application/graduationMonths.html">GRADUATION MONTHS</vireo-pane>
+      <vireo-pane query="languages" html="views/admin/settings/application/languages.html">LANGUAGES</vireo-pane>
+      <vireo-pane query="shibbolethAttributes" html="views/admin/settings/application/shibbolethAttributes.html">SHIBBOLETH ATTRIBUTES</vireo-pane>
+    </vireo-accordion>
+  </div>
+</div>

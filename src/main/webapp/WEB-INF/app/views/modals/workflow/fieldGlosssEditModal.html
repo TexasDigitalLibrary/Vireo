@@ -1,0 +1,21 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+  <button type="button" class="close" ng-click="resetFieldGlosses()" aria-label="Close">
+    <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Edit Label</h3>
+</div>
+
+<form ng-submit="updateFieldGloss()" name="forms.update" novalidate>
+
+  <validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
+
+  <div class="modal-body">
+    <validatedinput model="modalData" property="value" label="Label Name" placeholder="Rename the label" form="forms.update" validations="fieldGlossRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="resetFieldGlosses()">Cancel</button>
+    <button id="fieldGloss-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Update</button>
+  </div>
+
+</form>

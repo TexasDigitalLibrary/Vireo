@@ -1,0 +1,63 @@
+<div id="field-predicates" class="row" ng-controller="FieldGlossController">
+
+    <validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <button
+                class="btn btn-default modal-add-btn"
+                ng-click="openModal('#fieldGlossNewModal')">
+                Add New Label
+            </button>
+
+            <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new email template."></div>
+
+            <draganddroplist
+                dragging="dragging"
+                scope-value="fieldGlosses"
+                properties='["value"]'
+                item-view='views/directives/dragAndDropFieldGloss.html'
+                listeners='dragControlListeners'
+                edit='launchEditModal(index)'
+                text-filter='true'
+                text-filter-value='dragAndDropTextFilterValue'
+                selected-filter="dragAndDropSelectedFilter">
+            </draganddroplist>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <trashcan
+                id="{{trashCanId}}"
+                dragging="dragging"
+                listeners='dragControlListeners'>
+            </trashcan>
+        </div>
+    </div>
+
+    <modal
+        modal-id="fieldGlossNewModal"
+        modal-view="views/modals/workflow/fieldGlossNewModal.html"
+        modal-header-class="modal-header-primary"
+        wvr-modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="fieldGlossEditModal"
+        modal-view="views/modals/workflow/fieldGlosssEditModal.html"
+        modal-header-class="modal-header-primary"
+        wvr-modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="fieldGlossConfirmRemoveModal"
+        modal-view="views/modals/workflow/fieldGlossConfirmRemoveModal.html"
+        modal-header-class="modal-header-danger"
+        wvr-modal-backdrop="static">
+    </modal>
+
+</div>

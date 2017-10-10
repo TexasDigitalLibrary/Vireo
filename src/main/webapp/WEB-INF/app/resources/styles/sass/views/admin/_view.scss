@@ -1,0 +1,198 @@
+.item-view ul.info-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item-view ul.info-list span.glyphicon {
+  margin-right: 5px;
+}
+
+.item-view ul.info-list span.glyphicon.glyphicon-plus {
+  margin-left: 25px;
+}
+
+.item-view ul.info-list span.glyphicon.glyphicon-minus {
+  margin-left: 25px;
+}
+
+.item-view ul.info-list .input-group .glyphicon {
+  top: 0;
+  margin-right: 0;
+}
+
+.item-view ul.info-list .info-conteiner {
+  display: inline-flex;
+}
+
+.item-view ul.info-list .info-label {
+  text-align: right;
+}
+
+.item-view ul.info-list .info-data {
+  text-align: left;
+  margin-left: -20px;
+}
+
+.item-view ul.info-list .info-form {
+  text-align: left;
+  margin-left: -20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  bottom: 5px;
+}
+@media screen and (max-width: 775px) {
+  .item-view ul.info-list .info-label {
+    text-align: left;
+  }
+
+  .item-view ul.info-list .info-data {
+    margin-left: 0;
+    margin-bottom: 5px;
+  }
+
+  .item-view ul.info-list .info-form {
+    margin: 0;
+    bottom: 0;
+  }
+}
+
+.item-view .info-empty {
+  color: #cccccc;
+}
+
+.item-view ul.info-list .form-inline {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.item-view ul.info-list .form-inline input.form-control {
+  height: 30px;
+}
+
+.item-view ul.info-list .form-inline input.info-checkbox {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.item-view ul.info-list .form-inline textarea.form-control {
+  height: 46px;
+  margin-bottom: 4px;
+}
+
+.item-view .reviewer-notes {
+  padding: 15px;
+  margin-left: 5px;
+  margin-right: 5px;
+  max-height: 250px;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+}
+
+.item-view .advisor-review-url {
+  margin-left: -12px;
+  padding-top: 18px;
+  line-height: 25px;
+}
+
+.item-view .reviewer-notes textarea {
+  width: 99%;
+  min-height: 180px;
+  max-height: 250px;
+}
+
+.active-documents .primary-file-title {
+  margin-top: 10px;
+}
+
+.all-files-action {
+  text-align: center;
+}
+
+.add-file-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  overflow: hidden;
+  margin: auto;
+  width: 80%;
+}
+
+.advanced-section,
+.email-section {
+  -webkit-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -moz-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  -o-transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+}
+
+.section-closed {
+  opacity: 0;
+  max-height: 0;
+}
+
+.section-open {
+  opacity: 1;
+  max-height: 1000px;
+}
+
+.submission-status .sidebar-btn:hover {
+  cursor: pointer;
+}
+
+.action-log-table .private-flag {
+  font-weight: bold;
+}
+
+.action-log-table .message-cell {
+  max-width: 350px;
+}
+
+.action-log-more-less {
+  font-weight: bold;
+}
+
+.action-log-more-less:hover {
+  cursor: pointer;
+}
+
+.comment-body textarea {
+  height: 250px;
+}
+
+.email-element {
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+  transition: max-height 0.35s linear, margin 0.35s linear;
+}
+
+.recipient-options .checkbox {
+  margin-left: 25px;
+}
+
+.email-cc.email-active,
+.email-element.email-active,
+.email-to.email-active {
+  max-height: 100px;
+  overflow: hidden;
+  margin: 18px 0;
+  transition: max-height 0.35s linear, margin 0.35s linear;
+}
+
+div .item-view div.row h1 span.spinning {
+  font-size: 32px;
+}
+
+.view-section-header {
+  position: relative;
+}
+
+.view-action-button {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}

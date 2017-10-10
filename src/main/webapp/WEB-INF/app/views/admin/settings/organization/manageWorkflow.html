@@ -1,0 +1,42 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+    <h3 class="panel-title">Manage {{getSelectedOrganization().name}} Workflow</h3>
+	</div>
+	<div class="panel-body">
+
+    <div class="col-md-12">
+
+      <button class="btn btn-default modal-add-btn" ng-click="openModal('#addWorkflowStepModal')">
+        Add Workflow Step
+      </button>
+      <div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create workflow step."></div>
+      <modal  modal-id="addWorkflowStepModal"
+          modal-view="views/modals/organization/workflowStepCreateModal.html"
+          modal-header-class="modal-header-primary"
+          wvr-modal-backdrop="static">
+      </modal>
+      <vireo-accordion single-expand="false">
+              <vireo-pane ng-repeat="step in getSelectedOrganization().aggregateWorkflowSteps track by $index" bar-view="views/admin/settings/organization/workflowsteps/workflowStep.html" query="{{step.name}}" html="views/admin/settings/organization/workflowsteps/workflowStepContent.html">{{$index+1}}. {{step.name}}</vireo-pane>
+      </vireo-accordion>
+      
+      <hr />
+      
+      <div class="row">
+        <div class="pull-right">
+          <button
+            ng-if="getSelectedOrganization().id !== 1"
+            type="button"
+            class="btn btn-warning"
+            ng-click="openModal('#organizationConfirmRestoreDefaultsModal')">Sync with Parent</button>
+        </div>
+      </div>
+      
+      <modal modal-id="organizationConfirmRestoreDefaultsModal"
+        modal-view="views/modals/organization/organizationConfirmRestoreDefaultsModal.html"
+        modal-header-class="modal-header-warning"
+        wvr-modal-backdrop="static">
+      </modal>
+
+    </div>
+  </div>
+</div>

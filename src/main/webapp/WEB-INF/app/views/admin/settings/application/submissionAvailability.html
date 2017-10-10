@@ -1,0 +1,56 @@
+<div class="row">
+
+	<div class="col-md-6">
+
+		<div class="col-md-10 col-md-offset-1">
+
+			<toggleButton
+				ng-click="updateConfiguration('application', 'submissions_open')"
+				label="Submissions are currently:"
+				scope-value="settings.configurable.application.submissions_open.value"
+				toggle-options="{{submissionsOpenOptions}}">
+			</toggleButton>
+
+			<toggleButton
+				ng-click="updateConfiguration('application', 'allow_multiple_submissions')"
+				label="Multiple Submissions:"
+				scope-value="settings.configurable.application.allow_multiple_submissions.value"
+				toggle-options="{{allowMultipleSubmissionsOptions}}">
+			</toggleButton>
+
+		</div>
+
+	</div>
+
+	<div class="col-md-6">
+
+		<div class="col-md-10 col-md-offset-1">
+
+			<validatedinput
+	            type="text"
+	            label="Current submission semester"
+	            model="settings.configurable.application.current_semester"
+	            property="value"
+	            validations="settings.configurable.application.current_semester.getValidations()"
+	            confirm="updateConfiguration('application', 'current_semester')"
+	            form-view="true"
+	            tool-tip="todo">
+	        </validatedinput>
+
+			<validatedinput
+	            type="text"
+	            label="Degree Granting School"
+	            model="settings.configurable.application.grantor"
+	            property="value"
+	            validations="settings.configurable.application.grantor.getValidations()"
+	            confirm="updateConfiguration('application', 'grantor')"
+	            form-view="true"
+	            hint="The full name of the institution awarding degrees."
+	            tool-tip="todo">
+	        </validatedinput>
+
+	    </div>
+
+	</div>
+
+</div>

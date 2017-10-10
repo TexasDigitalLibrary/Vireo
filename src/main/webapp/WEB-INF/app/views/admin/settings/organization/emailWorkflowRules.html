@@ -1,0 +1,27 @@
+<div class="panel panel-default" ng-controller="EmailWorkflowRulesController">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+		Manage {{selectedOrganization.name}} Email Workflow Rules</h3>
+	</div>
+	<div class="panel-body">
+
+		<vireo-accordion single-expand="false">
+			<vireo-pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{status.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{status.name}}</vireo-pane>
+		</vireo-accordion>
+
+		<modal 
+			modal-id="editEmailWorkflowRule" 
+			modal-view="views/modals/organization/emailWorkflowRuleEdit.html" 
+			modal-header-class="modal-header-primary"
+			wvr-modal-backdrop="static">
+		</modal>
+
+		<modal 
+			modal-id="confirmEmailWorkflowRuleDelete" 
+			modal-view="views/modals/organization/emailWorkflowRuleDelete.html" 
+			modal-header-class="modal-header-danger"
+			wvr-modal-backdrop="static">
+		</modal>
+
+	</div>
+</div>

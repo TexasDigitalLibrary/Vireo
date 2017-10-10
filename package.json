@@ -1,0 +1,49 @@
+{
+  "name": "vireo",
+  "private": false,
+  "version": "4.0.0",
+  "description": "Vireo 4",
+  "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TexasDigitalLibrary/Vireo"
+  },
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "preinstall": "npm install -g grunt-cli",
+    "pretest": "npm install",
+    "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js --single-run",
+    "preupdate-webdriver": "npm install",
+    "update-webdriver": "webdriver-manager update",
+    "preprotractor": "npm run update-webdriver",
+    "protractor": "protractor src/main/webapp/WEB-INF/tests/protractor.conf.js"
+  },
+  "dependencies": {
+    "angular-ui-tinymce": "0.0.19",
+    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#1.4.x",
+    "file-saver": "1.3.3",
+    "ng-csv": "0.3.6",
+    "ng-sortable": "1.3.8",
+    "ng-table": "3.0.1",
+    "tinymce": "4.6.6"
+  },
+  "devDependencies": {
+    "grunt": "1.0.1",
+    "grunt-contrib-clean": "1.1.0",
+    "grunt-contrib-concat": "1.0.1",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-contrib-symlink": "1.0.0",
+    "grunt-contrib-uglify": "3.0.1",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-sass": "2.0.0",
+    "grunt-usemin": "3.1.1",
+    "jshint-stylish": "2.2.1",
+    "karma": "1.7.1",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-firefox-launcher": "1.0",
+    "karma-jasmine": "1.1.0",
+    "karma-junit-reporter": "1.2.0",
+    "protractor": "5.1.2"
+  }
+}

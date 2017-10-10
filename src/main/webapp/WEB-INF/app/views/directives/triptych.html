@@ -1,0 +1,83 @@
+<div class="col-xs-12 triptych">
+	<h1 ng-if="attr.header">{{attr.header}}</h1>
+	<div class="triptych-wrapper" ng-class="{'collapse': !navigation.expanded}">
+		<div class="row triptych-navigation">
+			<div class="row">
+				<div class="col-xs-12">
+					<ul class="breadcrumb">
+						<li ng-click="selectOrganization(organizations[0])">
+							<a href="#">{{organizations[0].name}}</a>
+							<span ng-if="getBreadcrumbs().length == 0" class="glyphicon glyphicon-arrow-down"></span>
+						</li>
+						<li ng-repeat="panel in getBreadcrumbs()" ng-click="selectOrganization(panel.selected.organization)">
+							<a href="#">{{panel.selected.organization.name}} ({{panel.selected.organization.category.name}})</a>
+							<span ng-if="$last" class="glyphicon glyphicon-arrow-down"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row" ng-if="organizations.length == 1">
+			<div class="col-xs-12">
+				<p>Your Institution has no child organizations. Use the 'Create Organization' side module to create your first organization.</p>
+			</div>
+		</div>
+		<div class="row triptych-panels">
+		
+			<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper" ng-repeat="panel in navigation.panels | filter:{visible:true}" ng-class="{'opening': panel.opening, 'closing': panel.closing, 'showing': panel.showing, 'back': navigation.backward}">
+
+				<div class="panel panel-default triptych-panel" ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}" ng-if="organizations.length > 1">
+					<div class="panel-heading" ng-click="navigation.expanded = true">
+						<span ng-repeat="category in panel.categories" ng-click="panel.filter = category">
+							<span class="multiple category-heading">{{category}}</span>
+							<span ng-if="!$last"> / </span>
+						</span>
+						<span ng-if="panel.filter"> / <span class="category-heading" ng-click="panel.filter = ''" ng-class="{'active': category == panel.filter, 'multiple': panel.categories.length}">All</span></span>
+						<span class="glyphicon glyphicon-arrow-right pull-right" ng-if="selectedOrganization.childrenOrganizations.length > 0 || panel.previouslyActive"></span>
+					</div>
+					<div class="panel-body">
+						<ul class="list-group">
+							<li class="list-group-item triptych-panel-entry"
+								ng-repeat="organization in panel.organization.childrenOrganizations | filter:{category: {name: panel.filter}} | orderBy:['category.name','name']"
+								ng-click="selectOrganization(organization)" 
+								ng-class="{'selected': panel.selected.organization.id == organization.id}">
+								<ul class="inline-list pull-right" ng-if="attr.managed">
+									<li ng-click="activateManagementPane('edit')">
+										<span class="context-icons glyphicon glyphicon-cog pull-right" ng-class="{'active': managementPaneIsActive('edit')}" tooltip="Manage organization"></span>
+									</li>
+									<li ng-click="activateManagementPane('workflow')">
+										<span class="context-icons glyphicon glyphicon-list-alt pull-right" ng-class="{'active': managementPaneIsActive('workflow')}" tooltip="Manage workflow"></span>
+									</li>
+									<li ng-click="activateManagementPane('email')">
+										<span class="context-icons glyphicon glyphicon-envelope pull-right" ng-class="{'active': managementPaneIsActive('email')}" tooltip="Manage email workflow rules"></span>
+									</li>
+								</ul>
+								<ul class="inline-list pull-right" ng-if="!attr.managed">
+									<li ng-if="hasSubmission(organization)" ng-click="gotoSubmission(organization)">
+										<span class="context-icons glyphicon glyphicon-list-alt pull-right" tooltip="Continue submission"></span>
+									</li>
+								</ul>
+								<span>
+									{{organization.name}}
+									<span class="badge" ng-if="organization.childrenOrganizations.length">{{organization.childrenOrganizations.length}}</span>
+									<span class="category-label" ng-if="panel.categories.length > 1">{{organization.category.name}}</span>
+								</span>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="attr.expcol">
+		<div class="divider-wrapper col-xs-12" ng-click="navigation.expanded = !navigation.expanded">
+			<span class="collapse-btn glyphicon glyphicon-chevron-up" ng-if="navigation.expanded"></span>
+			<span ng-if="!navigation.expanded">EXPAND NAVIGATION</span>
+			<hr class="divider">
+			<span class="collapse-btn glyphicon glyphicon-chevron-down" ng-if="!navigation.expanded"></span>
+		</div>
+	</div>
+	<ng-transclude></ng-transclude>
+</div>
