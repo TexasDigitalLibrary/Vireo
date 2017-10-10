@@ -24,7 +24,7 @@ import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 
-import edu.tamu.framework.util.EntityUtility;
+import edu.tamu.weaver.utility.EntityUtility;
 
 @Service
 public class EntityControlledVocabularyService {
