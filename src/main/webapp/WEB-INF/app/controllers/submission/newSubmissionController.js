@@ -46,7 +46,7 @@ vireo.controller('NewSubmissionController', function($controller, $location, $q,
     $scope.createSubmission = function() {
         StudentSubmissionRepo.create({'organizationId': $scope.getSelectedOrganization().id}).then(function(response) {
             var obj = angular.fromJson(response.body);
-            if (obj.meta.type === 'SUCCESS') {
+            if (obj.meta.status === 'SUCCESS') {
                 var submission = obj.payload.Submission;
                 StudentSubmissionRepo.add(submission);
                 $location.path("/submission/" + submission.id);

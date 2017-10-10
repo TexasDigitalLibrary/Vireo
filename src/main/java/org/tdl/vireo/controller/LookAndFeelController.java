@@ -1,6 +1,6 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.framework.enums.BusinessValidationType.RESET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -25,7 +25,7 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 
 @Controller
 @ApiMapping("/settings/look-and-feel")

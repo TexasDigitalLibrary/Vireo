@@ -49,11 +49,13 @@
 
   <dependencies>
 
+    <!-- has weaver-legacy-core dependency -->
     <dependency>
       <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-legacy-core</artifactId>
+      <artifactId>weaver-core</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
+
 
     <dependency>
       <groupId>org.codehaus.mojo</groupId>

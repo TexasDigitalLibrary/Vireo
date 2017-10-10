@@ -79,7 +79,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void testUserCredentialsOverRest() throws Exception {
-        mockMvc.perform(get("/user/credentials").contentType(MediaType.APPLICATION_JSON).header("jwt", jwtString)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.type").value("SUCCESS")).andExpect(jsonPath("$.payload.Credentials.firstName").value("Jack")).andExpect(jsonPath("$.payload.Credentials.lastName").value("Daniels")).andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack")).andExpect(jsonPath("$.payload.Credentials.uin").value("123456789")).andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu")).andExpect(jsonPath("$.payload.Credentials.role").value("ADMINISTRATOR")).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(get("/user/credentials").contentType(MediaType.APPLICATION_JSON).header("jwt", jwtString)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS")).andExpect(jsonPath("$.payload.Credentials.firstName").value("Jack")).andExpect(jsonPath("$.payload.Credentials.lastName").value("Daniels")).andExpect(jsonPath("$.payload.Credentials.netid").value("aggieJack")).andExpect(jsonPath("$.payload.Credentials.uin").value("123456789")).andExpect(jsonPath("$.payload.Credentials.email").value("aggieJack@tamu.edu")).andExpect(jsonPath("$.payload.Credentials.role").value("ADMINISTRATOR")).andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         @SuppressWarnings("unchecked")
         Map<String, String> meta = (Map<String, String>) responseObject.get("meta");
 
-        assertEquals("SUCCESS", meta.get("type"));
+        assertEquals("SUCCESS", meta.get("status"));
 
         User testUser = userRepo.findByEmail(TEST_USER_EMAIL);
 

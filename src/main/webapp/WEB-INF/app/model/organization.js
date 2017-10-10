@@ -32,7 +32,7 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 			angular.extend(apiMapping.Organization.remove, {'data': organization});
 			var promise = RestApi.post(apiMapping.Organization.remove);
 			promise.then(function(res) {
-				if(res.meta.type == "INVALID") {
+				if(res.meta.status == "INVALID") {
 					organization.setValidationResults(res.payload.ValidationResults);
 				}
 			});
@@ -49,9 +49,9 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 					submissionStatus: submissionStatus
 				}
 			});
-			
+
 			var promise = WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
-			
+
 			return promise;
 		};
 
@@ -60,9 +60,9 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 			angular.extend(apiMapping.Organization.removeEmailWorkflowRule, {
 				'method': organization.id + "/remove-email-workflow-rule/" + rule.id,
 			});
-			
+
 			var promise = WsApi.fetch(apiMapping.Organization.removeEmailWorkflowRule);
-			
+
 			return promise;
 		};
 
@@ -77,8 +77,8 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 			});
 
 			var promise = WsApi.fetch(apiMapping.Organization.editEmailWorkflowRule);
-			
-			return promise;	
+
+			return promise;
 		};
 
 		this.changeEmailWorkflowRuleActivation = function(rule) {
@@ -87,8 +87,8 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 				'method': organization.id + "/change-email-workflow-rule-activation/" + rule.id,
 			});
 			var promise = WsApi.fetch(apiMapping.Organization.changeEmailWorkflowRuleActivation);
-			
-			return promise;	
+
+			return promise;
 		};
 
 		return this;

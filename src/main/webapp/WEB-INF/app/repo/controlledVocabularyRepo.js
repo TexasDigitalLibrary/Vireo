@@ -13,7 +13,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
         var promise = WsApi.fetch(this.mapping.downloadCSV);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
                 console.log(controlledVocabularyRepo);
             }
@@ -28,7 +28,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
         var promise = WsApi.fetch(this.mapping.uploadCSV);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
                 console.log(controlledVocabularyRepo);
             }
@@ -44,7 +44,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
         var promise = RestApi.post(this.mapping.confirmCSV);
         promise.then(function (res) {
-            if (res.meta.type == "INVALID") {
+            if (res.meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -58,7 +58,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
         var promise = WsApi.fetch(this.mapping.cancel);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -74,7 +74,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
 
         var promise = WsApi.fetch(this.mapping.addVocabularyWord);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -90,7 +90,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
 
         var promise = WsApi.fetch(this.mapping.removeVocabularyWord);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -107,7 +107,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
 
         var promise = WsApi.fetch(this.mapping.updateVocabularyWord);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -122,7 +122,7 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
         });
         var promise = WsApi.fetch(this.mapping.status);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type == "INVALID") {
+            if (angular.fromJson(res.body).meta.status == "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
                 console.log(controlledVocabularyRepo);
             }
