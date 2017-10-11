@@ -13,7 +13,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.repo.DegreeRepo;
@@ -36,9 +35,6 @@ public class DegreeController {
     private DegreeRepo degreeRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private ProquestCodesService proquestCodesService;
 
     @ApiMapping("/all")
@@ -53,7 +49,6 @@ public class DegreeController {
     public ApiResponse createDegree(@ApiValidatedModel Degree degree) {
         logger.info("Creating degree with name " + degree.getName());
         degree = degreeRepo.create(degree.getName(), degree.getLevel());
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, degree);
     }
 
@@ -62,8 +57,7 @@ public class DegreeController {
     @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
     public ApiResponse updateDegree(@ApiValidatedModel Degree degree) {
         logger.info("Updating degree with name " + degree.getName());
-        degree = degreeRepo.save(degree);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
+        degree = degreeRepo.update(degree);
         return new ApiResponse(SUCCESS, degree);
     }
 
@@ -73,7 +67,6 @@ public class DegreeController {
     public ApiResponse removeDegree(@ApiValidatedModel Degree degree) {
         logger.info("Removing graduation month with id " + degree.getId());
         degreeRepo.remove(degree);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -83,7 +76,6 @@ public class DegreeController {
     public ApiResponse reorderDegrees(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering degree");
         degreeRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -93,7 +85,6 @@ public class DegreeController {
     public ApiResponse sortDegrees(@ApiVariable String column) {
         logger.info("Sorting degree by " + column);
         degreeRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
