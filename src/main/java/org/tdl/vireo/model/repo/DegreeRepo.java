@@ -12,6 +12,4 @@ public interface DegreeRepo extends WeaverOrderedRepo<Degree>, EntityControlledV
 
     public Degree findByNameAndLevel(String name, DegreeLevel level);
 
-    public Degree findByPosition(Long position);
-
 }
