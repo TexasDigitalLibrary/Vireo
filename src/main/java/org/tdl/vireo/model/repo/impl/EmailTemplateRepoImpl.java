@@ -5,7 +5,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
 

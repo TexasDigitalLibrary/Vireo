@@ -9,9 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "edu.tamu.framework", "edu.tamu.auth", "org.tdl.vireo" })
+@ComponentScan(
+	basePackages = { "edu.tamu.*", "org.tdl.*" }
+)
 public class Application extends SpringBootServletInitializer {
 
     private final static Logger logger = LoggerFactory.getLogger(Application.class);

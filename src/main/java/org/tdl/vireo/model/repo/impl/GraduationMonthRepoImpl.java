@@ -5,7 +5,7 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
 

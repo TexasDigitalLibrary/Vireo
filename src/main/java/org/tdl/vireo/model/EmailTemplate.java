@@ -9,6 +9,8 @@ import org.tdl.vireo.model.validation.EmailTemplateValidator;
 
 import edu.tamu.framework.model.BaseOrderedEntity;
 
+import edu.tamu.weaver.data.model.OrderedBaseEntity;
+
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "systemRequired" }) })
 public class EmailTemplate extends BaseOrderedEntity {

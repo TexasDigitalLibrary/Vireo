@@ -11,11 +11,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.DegreeValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "level_id" }) })
-public class Degree extends BaseOrderedEntity implements EntityControlledVocabulary {
+public class Degree extends ValidatingOderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
     private String name;
