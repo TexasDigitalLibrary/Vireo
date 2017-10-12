@@ -11,6 +11,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.DegreeValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.tamu.weaver.validation.model.ValidatingOderedBaseEntity;
 
 @Entity
@@ -66,21 +68,25 @@ public class Degree extends ValidatingOderedBaseEntity implements EntityControll
     }
 
     @Override
+    @JsonIgnore
     public String getControlledName() {
         return name;
     }
 
     @Override
+    @JsonIgnore
     public String getControlledDefinition() {
         return degreeCode;
     }
 
     @Override
+    @JsonIgnore
     public String getControlledIdentifier() {
         return level.getName();
     }
 
     @Override
+    @JsonIgnore
     public List<String> getControlledContacts() {
         return new ArrayList<String>();
     }
