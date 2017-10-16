@@ -31,16 +31,6 @@ vireo.directive("vireoPane", function($location, $timeout, $routeParams, Accordi
 
 			count++;
 
-            var panelBody = element.find(".panel-body:first");
-
-            var panelRow = element.closest(".row");
-
-            panelBody.scroll(function(event) {
-                if(panelBody.scrollTop() <= panelRow.offset().top) {
-                    panelBody.find(".trash-drop-zone").css('margin-top', panelBody.scrollTop());
-                }
-            });
-
 			angular.extend($scope, parent);
 
 			var getPanes = function() {
