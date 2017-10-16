@@ -1,9 +1,9 @@
-<div id="graduation-month" class="row" ng-controller="GraduationMonthRepoController">
-	
+<div id="graduation-months" class="row" ng-controller="GraduationMonthRepoController">
+
 	<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
 	<div class="col-md-6">
-		<div class="col-md-10 col-md-offset-1">	
+		<div class="col-md-10 col-md-offset-1">
 			<button class="btn btn-default modal-add-btn" ng-click="openModal('#graduationMonthNewModal')">
 				Add Graduation Month
 			</button>
@@ -11,7 +11,7 @@
 			<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new graduation month."></div>
 
 			<p ng-if="graduationMonths.length == 0">Add new Graduation Month</p>
-			
+
 			<draganddroplist dragging="dragging"
 							 scope-value="graduationMonths"
 							 properties='["month"]'
@@ -26,7 +26,7 @@
 			</draganddroplist>
 		</div>
 	</div>
-	
+
 	<div class="col-md-6">
 		<div class="col-md-10 col-md-offset-1">
 			<trashcan id="{{trashCanId}}"
@@ -36,27 +36,25 @@
 		</div>
 	</div>
 
-	<modal modal-id="graduationMonthNewModal" 
-		   modal-view="views/modals/settings/graduationMonthNewModal.html" 
+	<modal modal-id="graduationMonthNewModal"
+		   modal-view="views/modals/settings/graduationMonthNewModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="graduationMonthEditModal" 
-		   modal-view="views/modals/settings/graduationMonthEditModal.html" 
+	<modal modal-id="graduationMonthEditModal"
+		   modal-view="views/modals/settings/graduationMonthEditModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="graduationMonthConfirmRemoveModal" 
-		   modal-view="views/modals/settings/graduationMonthConfirmRemoveModal.html" 
+	<modal modal-id="graduationMonthConfirmRemoveModal"
+		   modal-view="views/modals/settings/graduationMonthConfirmRemoveModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
 	</modal>
-	
+
 </div>
-
-

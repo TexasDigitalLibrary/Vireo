@@ -1,7 +1,7 @@
-<div id="embargo" class="row" ng-controller="EmbargoRepoController">
+<div id="embargoes" class="row" ng-controller="EmbargoRepoController">
 
 	<validationmessage results="embargoRepo.getValidationResults()"></validationmessage>
-	
+
 	<div class="row">
 
 		<div class="col-md-12">
@@ -22,7 +22,7 @@
 				sort-method='sortEmbargoesDefault(column)'>
 			</draganddroplist>
 
-			<button 
+			<button
 				class="btn btn-default modal-add-btn"
 				ng-click="modalData.guarantor='DEFAULT'; openModal('#embargoNewModal')">
 				Add Default Embaro
@@ -30,7 +30,7 @@
 
 		</div>
 	</div>
-	
+
 	<div class="row">
 
 		<div class="col-md-12">
@@ -51,7 +51,7 @@
 				sort-method='sortEmbargoesProquest(column)'>
 			</draganddroplist>
 
-			<button 
+			<button
 				class="btn btn-default modal-add-btn"
 				ng-click="modalData.guarantor='PROQUEST'; openModal('#embargoNewModal')">
 				Add Proquest Embargo
@@ -59,23 +59,23 @@
 
 		</div>
 	</div>
-	
-	<modal modal-id="embargoNewModal" 
-		   modal-view="views/modals/settings/embargoNewModal.html" 
+
+	<modal modal-id="embargoNewModal"
+		   modal-view="views/modals/settings/embargoNewModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="embargoEditModal" 
-		   modal-view="views/modals/settings/embargoEditModal.html" 
+	<modal modal-id="embargoEditModal"
+		   modal-view="views/modals/settings/embargoEditModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
 	</modal>
 
-	<modal modal-id="embargoConfirmRemoveModal" 
-		   modal-view="views/modals/settings/embargoConfirmRemoveModal.html" 
+	<modal modal-id="embargoConfirmRemoveModal"
+		   modal-view="views/modals/settings/embargoConfirmRemoveModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">

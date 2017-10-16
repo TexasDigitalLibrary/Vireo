@@ -105,7 +105,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
             model: $scope.languages,
             confirm: '#languagesConfirmRemoveModal',
             reorder: $scope.reorderLanguages,
-            container: '#languages'
+            container: '#languages-container'
         });
 
     });

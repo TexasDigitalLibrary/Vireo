@@ -209,7 +209,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             model: $scope.step.aggregateFieldProfiles,
             confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
             reorder: $scope.reorderFieldProfiles,
-            container: '#fieldProfiles'
+            container: '#field-profiles'
         });
 
         $scope.buildFilteredPredicateList = function () {
