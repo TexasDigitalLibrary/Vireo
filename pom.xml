@@ -30,6 +30,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <production>false</production>
     <failIfNoTests>false</failIfNoTests>
+    <link>weaver-ui-core</link>
   </properties>
 
   <packaging>war</packaging>
@@ -304,7 +305,7 @@
     <pluginManagement>
       <plugins>
 
-        <!--This plugin's configuration is used to store Eclipse m2e settings
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
           only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -395,6 +396,23 @@
             <version>1.6.0</version>
             <executions>
 
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
               <!-- NPM Install -->
               <execution>
                 <id>exec-npm-install</id>
@@ -422,6 +440,7 @@
                 </goals>
               </execution>
 
+              <!-- NPM Link -->
               <execution>
                 <id>exec-npm-link</id>
                 <phase>process-classes</phase>
@@ -457,6 +476,23 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>1.6.0</version>
             <executions>
+
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
 
               <!-- NPM Install -->
               <execution>
@@ -508,6 +544,23 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>1.6.0</version>
             <executions>
+
+              <!-- NPM Unlink -->
+              <execution>
+                <id>exec-npm-unlink</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>unlink</argument>
+                    <argument>${link}</argument>
+                    <argument>--no-save</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
 
               <!-- NPM Install -->
               <execution>
