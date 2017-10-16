@@ -19,12 +19,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-import edu.tamu.framework.SpringContext;
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.context.SpringContext;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Configurable
-public class ControlledVocabulary extends BaseOrderedEntity {
+public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
 
     final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
 

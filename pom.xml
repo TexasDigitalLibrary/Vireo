@@ -52,7 +52,25 @@
     <!-- has weaver-legacy-core dependency -->
     <dependency>
       <groupId>edu.tamu.framework</groupId>
+      <artifactId>weaver-shim-core</artifactId>
+      <version>1.3.x-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.framework</groupId>
       <artifactId>weaver-core</artifactId>
+      <version>1.3.x-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.framework</groupId>
+      <artifactId>weaver-data</artifactId>
+      <version>1.3.x-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.framework</groupId>
+      <artifactId>weaver-validation</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
 

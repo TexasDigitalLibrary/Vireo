@@ -11,11 +11,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.FieldGlossValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "value", "language_id" }))
-public class FieldGloss extends BaseEntity {
+public class FieldGloss extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private String value;

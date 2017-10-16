@@ -12,8 +12,8 @@ import org.tdl.vireo.model.validation.SubmissionWorkflowStepValidator;
 public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkflowStep, SubmissionFieldProfile, SubmissionNote> {
 
     public SubmissionWorkflowStep() {
-        setOverrideable(true);
         setModelValidator(new SubmissionWorkflowStepValidator());
+        setOverrideable(true);
         setAggregateFieldProfiles(new ArrayList<SubmissionFieldProfile>());
         setAggregateNotes(new ArrayList<SubmissionNote>());
     }

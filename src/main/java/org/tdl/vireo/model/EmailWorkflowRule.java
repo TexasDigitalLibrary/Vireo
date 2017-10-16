@@ -15,10 +15,10 @@ import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class EmailWorkflowRule extends BaseEntity {
+public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     @Column
     @JsonProperty("isSystem")

@@ -29,11 +29,11 @@ import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 
 @Controller
 @ApiMapping("/submission-list")
@@ -127,7 +127,7 @@ public class SubmissionListController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/set-active-filter", method = POST)
-    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
+    public ApiResponse setActiveFilter(@ApiCredentials Credentials credentials, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -300,7 +300,7 @@ public class SubmissionListController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/save-filter-criteria", method = POST)
-    public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @ApiValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
+    public ApiResponse saveFilterCriteria(@ApiCredentials Credentials credentials, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 

@@ -7,7 +7,7 @@ import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.custom.DocumentTypeRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class DocumentTypeRepoImpl implements DocumentTypeRepoCustom {
 

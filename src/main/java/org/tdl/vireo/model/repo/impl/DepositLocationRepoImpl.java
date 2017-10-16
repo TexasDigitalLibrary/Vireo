@@ -12,7 +12,7 @@ import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
 

@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.InputTypeValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class InputType extends BaseEntity {
+public class InputType extends ValidatingBaseEntity {
 
     @Column(unique = true, nullable = false)
     private String name;

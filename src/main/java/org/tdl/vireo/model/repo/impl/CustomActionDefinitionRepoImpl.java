@@ -5,7 +5,7 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.custom.CustomActionDefinitionRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRepoCustom {
 

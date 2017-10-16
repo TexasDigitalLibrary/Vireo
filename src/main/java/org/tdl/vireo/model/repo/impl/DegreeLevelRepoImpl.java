@@ -5,7 +5,7 @@ import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.custom.DegreeLevelRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class DegreeLevelRepoImpl implements DegreeLevelRepoCustom {
 

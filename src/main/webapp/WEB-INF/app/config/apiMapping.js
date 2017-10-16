@@ -172,6 +172,7 @@ var apiMapping = {
     Degree: {
         validations: true,
         modelListeners: false,
+        channel: '/channel/degree',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/degree',
