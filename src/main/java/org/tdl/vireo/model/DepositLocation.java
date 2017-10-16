@@ -9,10 +9,10 @@ import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.validation.DepositLocationValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-public class DepositLocation extends BaseOrderedEntity {
+public class DepositLocation extends ValidatingOrderedBaseEntity {
 
     @Transient
     public static final Integer DEFAULT_TIMEOUT = 60;

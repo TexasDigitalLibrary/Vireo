@@ -7,13 +7,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.EmailTemplateValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
-
-import edu.tamu.weaver.data.model.OrderedBaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "systemRequired" }) })
-public class EmailTemplate extends BaseOrderedEntity {
+public class EmailTemplate extends ValidatingOrderedBaseEntity {
 
     @Column(nullable = false)
     private String name;

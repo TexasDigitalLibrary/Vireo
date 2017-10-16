@@ -73,11 +73,11 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.framework.service.RoleService;
 import edu.tamu.framework.util.EmailSender;
-import edu.tamu.framework.validation.ValidationResults;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.results.ValidationResults;
 
 @Controller
 @ApiMapping("/submission")

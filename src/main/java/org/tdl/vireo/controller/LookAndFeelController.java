@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.RESET;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.RESET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ import org.tdl.vireo.util.FileIOUtility;
 import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/settings/look-and-feel")
@@ -66,7 +66,7 @@ public class LookAndFeelController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/logo/reset", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = RESET) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = RESET) })
     public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
         Configuration systemLogo = configurationRepo.getByNameAndType(lfModel.getSetting(), lookAndFeelType);

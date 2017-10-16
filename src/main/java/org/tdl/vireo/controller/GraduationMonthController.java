@@ -1,13 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
@@ -19,11 +19,11 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/settings/graduation-month")
@@ -45,8 +45,8 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    public ApiResponse createGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Creating graduation month with month " + graduationMonth.getMonth());
         graduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
@@ -55,8 +55,8 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Updating graduation month with month " + graduationMonth.getMonth());
         graduationMonth = graduationMonthRepo.save(graduationMonth);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
@@ -65,8 +65,8 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeGraduationMonth(@ApiValidatedModel GraduationMonth graduationMonth) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse removeGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Removing graduation month with id " + graduationMonth.getId());
         graduationMonthRepo.remove(graduationMonth);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
@@ -75,7 +75,7 @@ public class GraduationMonthController {
 
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
     public ApiResponse reorderGraduationMonths(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering graduation months");
         graduationMonthRepo.reorder(src, dest);
@@ -85,7 +85,7 @@ public class GraduationMonthController {
 
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = GraduationMonth.class, params = { "0" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = GraduationMonth.class, params = { "0" }) })
     public ApiResponse sortGraduationMonths(@ApiVariable String column) {
         logger.info("Sorting graduation months by " + column);
         graduationMonthRepo.sort(column);

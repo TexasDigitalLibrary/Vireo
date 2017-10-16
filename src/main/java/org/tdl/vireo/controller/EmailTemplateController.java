@@ -1,13 +1,13 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
@@ -19,11 +19,11 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/settings/email-template")
@@ -45,8 +45,8 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    public ApiResponse createEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Creating email template with name " + emailTemplate.getName());
         emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
@@ -55,8 +55,8 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Updating email template with name " + emailTemplate.getName());
         if (emailTemplate.getSystemRequired()) {
             emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
@@ -69,8 +69,8 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeEmailTemplate(@ApiValidatedModel EmailTemplate emailTemplate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true"), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse removeEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Removing email template with name " + emailTemplate.getName());
         emailTemplateRepo.remove(emailTemplate);
         simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
@@ -79,7 +79,7 @@ public class EmailTemplateController {
 
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = EmailTemplate.class, params = { "0", "1" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = EmailTemplate.class, params = { "0", "1" }) })
     public ApiResponse reorderEmailTemplates(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering document types");
         emailTemplateRepo.reorder(src, dest);
@@ -89,7 +89,7 @@ public class EmailTemplateController {
 
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = EmailTemplate.class, params = { "0" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = EmailTemplate.class, params = { "0" }) })
     public ApiResponse sortEmailTemplates(@ApiVariable String column) {
         logger.info("Sorting email templates by " + column);
         emailTemplateRepo.sort(column);

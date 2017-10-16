@@ -2,11 +2,11 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -39,11 +39,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/organization")
@@ -93,8 +93,8 @@ public class OrganizationController {
 
     @ApiMapping(value = "/create/{parentOrgID}", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @ApiValidatedModel Organization organization) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @WeaverValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.findOne(parentOrgID);
         organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
@@ -103,8 +103,8 @@ public class OrganizationController {
 
     @ApiMapping(value = "/update", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateOrganization(@ApiValidatedModel Organization organization) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateOrganization(@WeaverValidatedModel Organization organization) {
         Organization persistedOrg = organizationRepo.findOne(organization.getId());
         copyProperties(organization, persistedOrg, "originalWorkflowSteps", "aggregateWorkflowSteps", "parentOrganization", "childrenOrganizations", "emailWorkflowRules");
         persistedOrg = organizationRepo.save(persistedOrg);
@@ -114,8 +114,8 @@ public class OrganizationController {
 
     @ApiMapping(value = "/delete", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @ApiValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
-    public ApiResponse deleteOrganization(@ApiValidatedModel Organization organization) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @WeaverValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
+    public ApiResponse deleteOrganization(@WeaverValidatedModel Organization organization) {
         organizationRepo.delete(organization);
         simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc()));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
@@ -123,8 +123,8 @@ public class OrganizationController {
 
     @ApiMapping(value = "/restore-defaults", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse restoreOrganizationDefaults(@ApiValidatedModel Organization organization) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse restoreOrganizationDefaults(@WeaverValidatedModel Organization organization) {
         organization = organizationRepo.restoreDefaults(organization);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organization));
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been restored to defaults!");
@@ -225,8 +225,8 @@ public class OrganizationController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/{requestingOrgID}/create-workflow-step", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
         Organization org = organizationRepo.findOne(requestingOrgID);
         WorkflowStep newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), org);
         simpMessagingTemplate.convertAndSend("/channel/organization", new ApiResponse(SUCCESS, organizationRepo.findOne(requestingOrgID)));
@@ -235,8 +235,8 @@ public class OrganizationController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
 
         workflowStepRepo.update(workflowStep, requestingOrg);
@@ -247,8 +247,8 @@ public class OrganizationController {
 
     @ApiMapping(value = "/{requestingOrgID}/delete-workflow-step", method = POST)
     @Auth(role = "MANAGER")
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @ApiValidatedModel WorkflowStep workflowStep) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
         Organization requestingOrg = organizationRepo.findOne(requestingOrgID);
         WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStep.getId());
 

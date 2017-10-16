@@ -13,11 +13,11 @@ import org.tdl.vireo.model.validation.DegreeValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.tamu.weaver.validation.model.ValidatingOderedBaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "level_id" }) })
-public class Degree extends ValidatingOderedBaseEntity implements EntityControlledVocabulary {
+public class Degree extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
     private String name;

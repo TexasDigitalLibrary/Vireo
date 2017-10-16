@@ -22,7 +22,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.tupilabs.human_name_parser.HumanNameParserParser;
 
-import edu.tamu.framework.SpringContext;
+import edu.tamu.weaver.context.SpringContext;
 
 public class SubmissionHelperUtility {
 

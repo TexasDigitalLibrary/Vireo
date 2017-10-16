@@ -12,10 +12,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class NamedSearchFilter extends BaseEntity {
+public class NamedSearchFilter extends ValidatingBaseEntity {
 
     private String name;
 

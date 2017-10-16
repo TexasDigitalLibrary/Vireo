@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +38,8 @@ import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiParameters;
 import edu.tamu.framework.controller.CoreAuthController;
 import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.framework.util.ValidationUtility;
-import edu.tamu.framework.validation.ValidationResults;
+import edu.tamu.weaver.validation.results.ValidationResults;
+import edu.tamu.weaver.validation.utility.ValidationUtility;
 
 @Controller
 @ApiMapping("/auth")
@@ -94,7 +93,7 @@ public class AppAuthController extends CoreAuthController {
 
             try {
                 emailSender.sendEmail(email, emailTemplate.getSubject(), content);
-            } catch (MessagingException e) {
+            } catch (javax.mail.MessagingException e) {
                 logger.debug("Unable to send email! " + email);
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
             }
