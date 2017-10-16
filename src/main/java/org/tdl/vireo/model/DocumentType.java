@@ -10,11 +10,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.DocumentTypeValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "field_predicate_id" }) })
-public class DocumentType extends BaseOrderedEntity {
+public class DocumentType extends ValidatingOrderedBaseEntity {
 
     @Column(nullable = false, length = 255)
     private String name;

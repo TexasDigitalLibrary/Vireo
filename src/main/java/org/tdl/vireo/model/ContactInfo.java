@@ -12,10 +12,10 @@ import javax.persistence.OneToOne;
 
 import org.tdl.vireo.model.validation.ContactInfoValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class ContactInfo extends BaseEntity {
+public class ContactInfo extends ValidatingBaseEntity {
 
     @OneToOne(cascade = { DETACH, MERGE, REFRESH, REMOVE }, optional = true, orphanRemoval = true, fetch = LAZY)
     private Address address;

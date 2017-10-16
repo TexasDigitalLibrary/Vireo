@@ -11,7 +11,7 @@ vireo.directive("vireoAccordion", function () {
 
 		},
 		link: function($scope, element, attr) {
-			
+
 		}
 	};
 });
@@ -31,8 +31,18 @@ vireo.directive("vireoPane", function($location, $timeout, $routeParams, Accordi
 
 			count++;
 
+            var panelBody = element.find(".panel-body:first");
+
+            var panelRow = element.closest(".row");
+
+            panelBody.scroll(function(event) {
+                if(panelBody.scrollTop() <= panelRow.offset().top) {
+                    panelBody.find(".trash-drop-zone").css('margin-top', panelBody.scrollTop());
+                }
+            });
+
 			angular.extend($scope, parent);
-			
+
 			var getPanes = function() {
 				var panes = [];
 				if($routeParams.pane !== undefined) {
@@ -47,7 +57,7 @@ vireo.directive("vireoPane", function($location, $timeout, $routeParams, Accordi
 			};
 
 			$scope.query = typeof attr.query != "undefined" ? attr.query : "pane" + count;
-			
+
 			$scope.expanded = false;
 
 			$scope.toggleExpanded = function() {
@@ -89,15 +99,15 @@ vireo.directive("vireoPane", function($location, $timeout, $routeParams, Accordi
 
 			$scope.loaded = function() {
 				$timeout(function(){
-					$scope.loading = false;	
+					$scope.loading = false;
 				}, 500);
 			};
-			
+
 			AccordionService.add($scope.query, {
 				'open': $scope.open,
 				'close': $scope.close
 			});
-			
+
 			if(getPanes().indexOf($scope.query) >= 0) {
 				$scope.open();
 			}
@@ -126,7 +136,7 @@ vireo.service("AccordionService", function() {
 			console.log('No pane with id:', id);
 		}
 	};
-	
+
 	AccordionService.open = function(id) {
 		if(panes[id] !== undefined) {
 			panes[id].open();
@@ -135,7 +145,7 @@ vireo.service("AccordionService", function() {
 			console.log('No pane with id:', id);
 		}
 	};
-	
+
 	AccordionService.close = function(id) {
 		if(panes[id] !== undefined) {
 			panes[id].close();
@@ -144,13 +154,13 @@ vireo.service("AccordionService", function() {
 			console.log('No pane with id:', id);
 		}
 	};
-	
+
 	AccordionService.closeAll = function() {
 		for(var i in panes) {
 			panes[i].close();
 		}
 	};
-	
+
 	AccordionService.openAll = function() {
 		for(var i in panes) {
 			panes[i].open();
@@ -160,4 +170,3 @@ vireo.service("AccordionService", function() {
 	return AccordionService;
 
 });
-

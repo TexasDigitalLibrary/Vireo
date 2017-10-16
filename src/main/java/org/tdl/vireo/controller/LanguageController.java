@@ -1,13 +1,11 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
@@ -23,11 +21,11 @@ import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 /**
  * Controller in which to manage langauges.
@@ -65,8 +63,8 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createLanguage(@ApiValidatedModel Language language) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createLanguage(@WeaverValidatedModel Language language) {
         logger.info("Creating language with name " + language.getName());
         language = languageRepo.create(language.getName());
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
@@ -79,8 +77,8 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateLanguage(@ApiValidatedModel Language language) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateLanguage(@WeaverValidatedModel Language language) {
         logger.info("Updating language with name " + language.getName());
         language = languageRepo.save(language);
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
@@ -93,8 +91,8 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeLanguage(@ApiValidatedModel Language language) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }) })
+    public ApiResponse removeLanguage(@WeaverValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);
         simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
@@ -112,7 +110,7 @@ public class LanguageController {
      */
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Language.class, params = { "0", "1" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = Language.class, params = { "0", "1" }) })
     public ApiResponse reorderLanguage(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering languages");
         languageRepo.reorder(src, dest);
@@ -129,7 +127,7 @@ public class LanguageController {
      */
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = Language.class, params = { "0" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = Language.class, params = { "0" }) })
     public ApiResponse sortLanguage(@ApiVariable String column) {
         logger.info("Sorting languages by " + column);
         languageRepo.sort(column);

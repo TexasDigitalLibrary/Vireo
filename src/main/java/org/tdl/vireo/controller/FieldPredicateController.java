@@ -1,11 +1,9 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
@@ -19,11 +17,11 @@ import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -70,8 +68,8 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
         FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
@@ -85,8 +83,8 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }) })
+    public ApiResponse removeFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.delete(fieldPredicate);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
@@ -100,8 +98,8 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateFieldPredicate(@ApiValidatedModel FieldPredicate fieldPredicate) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.save(fieldPredicate);
         simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));

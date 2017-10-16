@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.DegreeLevelValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-public class DegreeLevel extends BaseOrderedEntity {
+public class DegreeLevel extends ValidatingOrderedBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;

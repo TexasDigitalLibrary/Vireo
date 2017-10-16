@@ -6,12 +6,9 @@ import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.custom.DegreeRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class DegreeRepoImpl implements DegreeRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class DegreeRepoImpl extends AbstractWeaverOrderedRepoImpl<Degree, DegreeRepo> implements DegreeRepoCustom {
 
     @Autowired
     private DegreeRepo degreeRepo;
@@ -23,22 +20,17 @@ public class DegreeRepoImpl implements DegreeRepoCustom {
             degree = new Degree(name, level);
         }
         degree.setPosition(degreeRepo.count() + 1);
-        return degreeRepo.save(degree);
+        return super.create(degree);
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(Degree.class, src, dest);
+    protected String getChannel() {
+        return "/channel/degree";
     }
 
     @Override
-    public void sort(String column) {
-        orderedEntityService.sort(Degree.class, column);
-    }
-
-    @Override
-    public void remove(Degree degree) {
-        orderedEntityService.remove(degreeRepo, Degree.class, degree.getPosition());
+    public Class<?> getModelClass() {
+        return Degree.class;
     }
 
 }

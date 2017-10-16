@@ -1,13 +1,11 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.ByteArrayInputStream;
@@ -44,11 +42,11 @@ import org.tdl.vireo.service.ControlledVocabularyCachingService;
 import edu.tamu.framework.aspect.annotation.ApiInputStream;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
 import edu.tamu.framework.aspect.annotation.ApiModel;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -106,8 +104,8 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
@@ -124,8 +122,8 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
@@ -142,8 +140,8 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @ApiValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeControlledVocabulary(@ApiValidatedModel ControlledVocabulary controlledVocabulary) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @WeaverValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true") })
+    public ApiResponse removeControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
@@ -162,7 +160,7 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = ControlledVocabulary.class, params = { "0", "1" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = ControlledVocabulary.class, params = { "0", "1" }) })
     public ApiResponse reorderControlledVocabulary(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering controlled vocabularies");
         controlledVocabularyRepo.reorder(src, dest);
@@ -180,7 +178,7 @@ public class ControlledVocabularyController {
      */
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = ControlledVocabulary.class, params = { "0" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = ControlledVocabulary.class, params = { "0" }) })
     public ApiResponse sortControlledVocabulary(@ApiVariable String column) {
         logger.info("Sorting controlled vocabularies by " + column);
         controlledVocabularyRepo.sort(column);

@@ -19,11 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
-public class OrganizationCategory extends BaseEntity {
+public class OrganizationCategory extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private String name;

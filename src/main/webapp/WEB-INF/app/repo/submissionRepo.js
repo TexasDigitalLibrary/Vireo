@@ -17,7 +17,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submiss
             });
             var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
             fetchPromise.then(function(res) {
-                if (angular.fromJson(res.body).meta.type !== "ERROR") {
+                if (angular.fromJson(res.body).meta.status !== "ERROR") {
                     submissionRepo.add(angular.fromJson(res.body).payload.Submission);
                     defer.resolve(submissionRepo.findById(id));
                 }
@@ -36,7 +36,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submiss
         });
         var promise = WsApi.fetch(submissionRepo.mapping.query);
         promise.then(function(res) {
-            if (angular.fromJson(res.body).meta.type !== "ERROR") {
+            if (angular.fromJson(res.body).meta.status !== "ERROR") {
                 angular.extend(submissionRepo, angular.fromJson(res.body).payload);
             }
         });

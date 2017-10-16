@@ -1,9 +1,7 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -11,7 +9,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -23,11 +20,11 @@ import org.tdl.vireo.service.UserCredentialsService;
 import edu.tamu.framework.aspect.annotation.ApiCredentials;
 import edu.tamu.framework.aspect.annotation.ApiData;
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/user")
@@ -53,7 +50,6 @@ public class UserController {
             return new ApiResponse(SUCCESS, userCredentialsService.buildAnonymousCredentials());
         }
         credentials.setRole(user.getRole().toString());
-        credentials.setModelValidator(user.getModelValidator());
         return new ApiResponse(SUCCESS, credentials);
     }
 
@@ -66,8 +62,8 @@ public class UserController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateRole(@ApiValidatedModel User updatedUser) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateRole(@WeaverValidatedModel User updatedUser) {
 
         User persistedUser = userRepo.findOne(updatedUser.getId());
         // Awesome BeanUtils from Apache commons, included with Spring

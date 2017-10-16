@@ -8,7 +8,7 @@ vireo.repo("LanguageRepo", function LanguageRepo(WsApi) {
         languageRepo.clearValidationResults();
         var promise = WsApi.fetch(this.mapping.proquest);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(languageRepo, angular.fromJson(res.body).payload);
                 console.log(languageRepo);
             }

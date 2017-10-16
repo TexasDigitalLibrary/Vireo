@@ -10,14 +10,14 @@ import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.model.validation.CustomActionValueValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  * The value of a custom action associated with a particular submission.
  *
  */
 @Entity
-public class CustomActionValue extends BaseEntity {
+public class CustomActionValue extends ValidatingBaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private CustomActionDefinition definition;

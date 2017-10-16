@@ -27,8 +27,8 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
-import edu.tamu.framework.enums.ApiResponseType;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
 public class AuthControllerTest extends AbstractControllerTest {
@@ -147,7 +147,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ApiResponse response = authController.registration(null, parameters);
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         assertEquals(TEST_EMAIL, ((String[]) ((Map<String, String[]>) response.getPayload().get("HashMap")).get("email"))[0]);
     }
@@ -167,7 +167,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         User user = (User) response.getPayload().get("User");
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
         assertEquals(TEST_USER_LAST_NAME, user.getLastName());
@@ -186,7 +186,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ApiResponse response = authController.login(data);
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
     }
 
 }

@@ -5,7 +5,7 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.custom.LanguageRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.service.OrderedEntityService;
 
 public class LanguageRepoImpl implements LanguageRepoCustom {
 

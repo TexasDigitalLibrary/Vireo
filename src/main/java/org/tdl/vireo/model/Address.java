@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.AddressValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class Address extends BaseEntity {
+public class Address extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     private String address1;

@@ -20,11 +20,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }))
-public class VocabularyWord extends BaseEntity {
+public class VocabularyWord extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private String name;

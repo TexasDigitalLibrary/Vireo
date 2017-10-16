@@ -1,13 +1,11 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
@@ -20,11 +18,11 @@ import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
 import edu.tamu.framework.aspect.annotation.ApiVariable;
 import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @Controller
 @ApiMapping("/settings/document-type")
@@ -46,8 +44,8 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDocumentType(@ApiValidatedModel DocumentType documentType) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Creating document type with name " + documentType.getName());
         documentType = documentTypeRepo.create(documentType.getName());
         simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
@@ -56,8 +54,8 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateDocumentType(@ApiValidatedModel DocumentType documentType) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Updating document type with name " + documentType.getName());
         documentType = documentTypeRepo.save(documentType);
         simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
@@ -66,8 +64,8 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true"), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeDocumentType(@ApiValidatedModel DocumentType documentType) {
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true") })
+    public ApiResponse removeDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
         documentTypeRepo.remove(documentType);
         simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
@@ -76,7 +74,7 @@ public class DocumentTypeController {
 
     @ApiMapping("/reorder/{src}/{dest}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DocumentType.class, params = { "0", "1" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = DocumentType.class, params = { "0", "1" }) })
     public ApiResponse reorderDocumentTypes(@ApiVariable Long src, @ApiVariable Long dest) {
         logger.info("Reordering document types");
         documentTypeRepo.reorder(src, dest);
@@ -86,7 +84,7 @@ public class DocumentTypeController {
 
     @ApiMapping("/sort/{column}")
     @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = DocumentType.class, params = { "0" }) })
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = DocumentType.class, params = { "0" }) })
     public ApiResponse sortDocumentTypes(@ApiVariable String column) {
         logger.info("Sorting document types by " + column);
         documentTypeRepo.sort(column);

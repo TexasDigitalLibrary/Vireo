@@ -8,10 +8,10 @@ import org.tdl.vireo.model.validation.CustomActionDefinitionValidator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-public class CustomActionDefinition extends BaseOrderedEntity {
+public class CustomActionDefinition extends ValidatingOrderedBaseEntity {
 
     @Column(nullable = false, unique = true, length = 255)
     private String label;

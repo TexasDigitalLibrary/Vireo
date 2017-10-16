@@ -16,7 +16,7 @@ import org.tdl.vireo.util.FileHelperUtility;
 import org.tdl.vireo.util.SubmissionHelperUtility;
 import org.thymeleaf.context.Context;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.data.model.BaseEntity;
 
 @Entity
 @Inheritance

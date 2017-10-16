@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.util.Calendar;
 
@@ -14,7 +14,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.framework.model.Credentials;
 
 public class ActionLogRepoImpl implements ActionLogRepoCustom {

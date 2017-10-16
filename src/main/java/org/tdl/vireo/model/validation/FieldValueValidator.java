@@ -3,9 +3,9 @@ package org.tdl.vireo.model.validation;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 
-import edu.tamu.framework.enums.InputValidationType;
-import edu.tamu.framework.validation.BaseModelValidator;
-import edu.tamu.framework.validation.InputValidator;
+import edu.tamu.weaver.validation.model.InputValidationType;
+import edu.tamu.weaver.validation.validators.BaseModelValidator;
+import edu.tamu.weaver.validation.validators.InputValidator;
 
 public class FieldValueValidator extends BaseModelValidator {
 
