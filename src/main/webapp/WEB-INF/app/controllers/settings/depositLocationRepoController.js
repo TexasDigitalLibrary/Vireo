@@ -105,7 +105,7 @@ vireo.controller("DepositLocationRepoController", function($controller, $scope, 
             model: $scope.depositLocations,
             confirm: '#depositLocationConfirmRemoveModal',
             reorder: $scope.reorderDepositLocation,
-            container: '#deposit-location'
+            container: '#deposit-locations'
         });
 
     });

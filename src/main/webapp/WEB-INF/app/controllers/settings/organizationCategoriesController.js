@@ -61,11 +61,11 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
         $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
             trashId: $scope.trashCanId,
             dragging: $scope.dragging,
-            select: $scope.selectOrganizationCategory,     
+            select: $scope.selectOrganizationCategory,
             model: $scope.organizationCategories,
             confirm: '#organizationCategoryConfirmRemoveModal',
             reorder: null,
-            container: '#organization-categories'
+            container: '#organization-settings'
         });
 
         var listener = $scope.dragControlListeners.getListener();
@@ -88,7 +88,7 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
     });
 
     $scope.organizationHierarchicalOptions = [
-        {"true": "On"}, 
+        {"true": "On"},
         {"false": "Off"}
     ];
 

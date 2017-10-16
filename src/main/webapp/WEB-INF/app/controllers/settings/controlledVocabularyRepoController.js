@@ -508,7 +508,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             model: $scope.controlledVocabulary,
             confirm: '#controlledVocabularyConfirmRemoveModal',
             reorder: $scope.reorderControlledVocabulary,
-            container: '#controlled-vocabulary'
+            container: '#controlled-vocabularies'
         });
 
     });
