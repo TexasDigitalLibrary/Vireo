@@ -1,7 +1,6 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -63,7 +62,7 @@ public class UserController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateRole(@WeaverValidatedModel User updatedUser) {
 
         User persistedUser = userRepo.findOne(updatedUser.getId());

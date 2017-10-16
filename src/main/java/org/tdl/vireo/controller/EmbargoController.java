@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -46,7 +44,7 @@ public class EmbargoController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Creating embargo with name " + embargo.getName());
         embargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
@@ -56,7 +54,7 @@ public class EmbargoController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Updating embargo with name " + embargo.getName());
         embargo = embargoRepo.save(embargo);
@@ -66,7 +64,7 @@ public class EmbargoController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Removing Embargo:  " + embargo.getName());
         embargoRepo.remove(embargo);

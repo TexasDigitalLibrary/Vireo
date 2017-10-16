@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -45,7 +43,7 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Creating email template with name " + emailTemplate.getName());
         emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
@@ -55,7 +53,7 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Updating email template with name " + emailTemplate.getName());
         if (emailTemplate.getSystemRequired()) {
@@ -69,7 +67,7 @@ public class EmailTemplateController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true"), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true") })
     public ApiResponse removeEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Removing email template with name " + emailTemplate.getName());
         emailTemplateRepo.remove(emailTemplate);

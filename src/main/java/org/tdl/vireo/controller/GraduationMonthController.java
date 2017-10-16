@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -45,7 +43,7 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Creating graduation month with month " + graduationMonth.getMonth());
         graduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
@@ -55,7 +53,7 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Updating graduation month with month " + graduationMonth.getMonth());
         graduationMonth = graduationMonthRepo.save(graduationMonth);
@@ -65,7 +63,7 @@ public class GraduationMonthController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Removing graduation month with id " + graduationMonth.getId());
         graduationMonthRepo.remove(graduationMonth);

@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -44,7 +42,7 @@ public class OrganizationCategoryController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Creating organization category with name " + organizationCategory.getName());
         organizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
@@ -54,7 +52,7 @@ public class OrganizationCategoryController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Updating organization category with name " + organizationCategory.getName());
         organizationCategory = organizationCategoryRepo.save(organizationCategory);
@@ -64,7 +62,7 @@ public class OrganizationCategoryController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "organizations" }), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "organizations" }) })
     public ApiResponse removeOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Removing organization category with name " + organizationCategory.getName());
         organizationCategoryRepo.remove(organizationCategory);

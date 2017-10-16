@@ -1,7 +1,6 @@
 package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -38,7 +37,7 @@ public class ConfigurableSettingsController {
     }
 
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSetting(@WeaverValidatedModel ManagedConfiguration configuration) {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.save(configuration);

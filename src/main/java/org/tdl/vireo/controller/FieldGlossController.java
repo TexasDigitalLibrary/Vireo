@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -62,7 +60,7 @@ public class FieldGlossController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
         FieldGloss fg = fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage);
@@ -77,7 +75,7 @@ public class FieldGlossController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }) })
     public ApiResponse RemoveFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
         fieldGlossRepo.delete(fieldGloss);
@@ -92,7 +90,7 @@ public class FieldGlossController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse UpdateFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
         fieldGlossRepo.save(fieldGloss);

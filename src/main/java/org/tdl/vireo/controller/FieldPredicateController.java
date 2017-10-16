@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -70,7 +68,7 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
         FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
@@ -85,7 +83,7 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }) })
     public ApiResponse removeFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.delete(fieldPredicate);
@@ -100,7 +98,7 @@ public class FieldPredicateController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.save(fieldPredicate);

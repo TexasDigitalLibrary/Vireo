@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -46,7 +44,7 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Creating document type with name " + documentType.getName());
         documentType = documentTypeRepo.create(documentType.getName());
@@ -56,7 +54,7 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Updating document type with name " + documentType.getName());
         documentType = documentTypeRepo.save(documentType);
@@ -66,7 +64,7 @@ public class DocumentTypeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true"), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true") })
     public ApiResponse removeDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
         documentTypeRepo.remove(documentType);

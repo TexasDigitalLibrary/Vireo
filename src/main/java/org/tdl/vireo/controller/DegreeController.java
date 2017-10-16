@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -45,7 +43,7 @@ public class DegreeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Creating degree with name " + degree.getName());
         degree = degreeRepo.create(degree.getName(), degree.getLevel());
@@ -54,7 +52,7 @@ public class DegreeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Updating degree with name " + degree.getName());
         degree = degreeRepo.update(degree);
@@ -63,7 +61,7 @@ public class DegreeController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Removing graduation month with id " + degree.getId());
         degreeRepo.remove(degree);

@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -43,7 +41,7 @@ public class CustomActionSettingsController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
         customActionDefinition = customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
@@ -53,7 +51,7 @@ public class CustomActionSettingsController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
         customActionDefinition = customActionDefinitionRepo.save(customActionDefinition);
@@ -63,7 +61,7 @@ public class CustomActionSettingsController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());
         customActionDefinitionRepo.remove(customActionDefinition);

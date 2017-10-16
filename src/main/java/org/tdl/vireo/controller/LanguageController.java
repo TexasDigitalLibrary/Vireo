@@ -65,7 +65,7 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createLanguage(@WeaverValidatedModel Language language) {
         logger.info("Creating language with name " + language.getName());
         language = languageRepo.create(language.getName());
@@ -79,7 +79,7 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateLanguage(@WeaverValidatedModel Language language) {
         logger.info("Updating language with name " + language.getName());
         language = languageRepo.save(language);
@@ -93,7 +93,7 @@ public class LanguageController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }) })
     public ApiResponse removeLanguage(@WeaverValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);

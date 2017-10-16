@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -106,7 +104,7 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
@@ -124,7 +122,7 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
@@ -142,7 +140,7 @@ public class ControlledVocabularyController {
      */
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @WeaverValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true"), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @WeaverValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true") })
     public ApiResponse removeControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);

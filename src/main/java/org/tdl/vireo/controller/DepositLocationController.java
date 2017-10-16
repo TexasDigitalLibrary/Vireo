@@ -3,8 +3,6 @@ package org.tdl.vireo.controller;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -52,7 +50,7 @@ public class DepositLocationController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/create", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createDepositLocation(@ApiData Map<String, Object> depositLocationJson) {
         DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
         simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
@@ -62,7 +60,7 @@ public class DepositLocationController {
     // This endpoint is broken. Unable to deserialize Packager interface!!
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Updating deposit location with name " + depositLocation.getName());
         depositLocation = depositLocationRepo.save(depositLocation);
@@ -73,7 +71,7 @@ public class DepositLocationController {
     // This endpoint is broken. Unable to deserialize Packager interface!!
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Removing deposit location with name " + depositLocation.getName());
         depositLocationRepo.remove(depositLocation);

@@ -4,8 +4,6 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.EXISTS;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.NONEXISTS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.LIST_REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -70,7 +68,7 @@ public class WorkflowStepController {
 
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/add-field-profile", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) }) // , path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // This was an incorrect assumption to validate restricting create of field profile when predicate is a document type field predicate
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) }) // , path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // This was an incorrect assumption to validate restricting create of field profile when predicate is a document type field predicate
     public ApiResponse createFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -90,7 +88,7 @@ public class WorkflowStepController {
 
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/update-field-profile", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
@@ -102,7 +100,7 @@ public class WorkflowStepController {
 
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -136,7 +134,7 @@ public class WorkflowStepController {
 
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/add-note", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE), @WeaverValidation.Business(value = EXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse addNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
@@ -156,7 +154,7 @@ public class WorkflowStepController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/update-note", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         noteRepo.update(note, organizationRepo.findOne(requestingOrgId));
@@ -168,7 +166,7 @@ public class WorkflowStepController {
 
     @Auth(role = "MANAGER")
     @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-note", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE), @WeaverValidation.Business(value = NONEXISTS) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @WeaverValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
