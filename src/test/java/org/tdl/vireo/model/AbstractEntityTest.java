@@ -9,11 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
-import org.tdl.vireo.config.TestConfig;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.enums.EmbargoGuarantor;
@@ -57,7 +55,6 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 import edu.tamu.framework.model.Credentials;
 
 @ActiveProfiles("test")
-@Import(TestConfig.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
 public abstract class AbstractEntityTest {
