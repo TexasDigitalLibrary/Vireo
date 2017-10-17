@@ -46,12 +46,12 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void testAllUser() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testUpdateRole() throws Exception {
-
+        // TODO
     }
 
     @Override
