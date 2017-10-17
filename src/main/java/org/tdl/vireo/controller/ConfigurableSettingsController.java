@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
@@ -19,7 +19,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
+@RestController
 @ApiMapping("/settings/configurable")
 public class ConfigurableSettingsController {
 
