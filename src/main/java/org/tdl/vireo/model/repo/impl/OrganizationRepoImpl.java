@@ -17,7 +17,9 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
-public class OrganizationRepoImpl implements OrganizationRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -33,10 +35,11 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
 
     @Override
     public Organization create(String name, OrganizationCategory category) {
-        Organization organization = organizationRepo.save(new Organization(name, category));
+        Organization organization = super.create(new Organization(name, category));
         category.addOrganization(organization);
+        // TODO: replace next line with organizationCategoryRepo.update(category);
         organizationCategoryRepo.save(category);
-        return organizationRepo.findOne(organization.getId());
+        return super.update(organizationRepo.findOne(organization.getId()));
     }
 
     @Override
@@ -174,6 +177,11 @@ public class OrganizationRepoImpl implements OrganizationRepoCustom {
         }
 
         return descendants;
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/organization";
     }
 
 }

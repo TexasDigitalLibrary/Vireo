@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.enums.AppRole;
-import org.tdl.vireo.mock.interceptor.MockChannelInterceptor;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -50,12 +49,6 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         emailTemplateRepo.create(TEST_REGISTRATION_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-
-        brokerChannelInterceptor = new MockChannelInterceptor();
-
-        brokerChannel.addInterceptor(brokerChannelInterceptor);
-
-        StompConnect();
     }
 
     @Test
