@@ -648,15 +648,11 @@ var apiMapping = {
     },
     OrganizationCategory: {
         validations: true,
-        modelListeners: false,
+        channel: '/channel/organization-category',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/organization-category',
             'method': 'all'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'settings/organization-category'
         },
         create: {
             'endpoint': '/private/queue',

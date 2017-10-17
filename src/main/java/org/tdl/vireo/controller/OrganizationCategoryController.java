@@ -9,7 +9,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -30,9 +29,6 @@ public class OrganizationCategoryController {
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @Transactional
     @ApiMapping("/all")
     @Auth(role = "MANAGER")
@@ -45,9 +41,7 @@ public class OrganizationCategoryController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Creating organization category with name " + organizationCategory.getName());
-        organizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
-        return new ApiResponse(SUCCESS, organizationCategory);
+        return new ApiResponse(SUCCESS, organizationCategoryRepo.create(organizationCategory.getName()));
     }
 
     @Auth(role = "MANAGER")
@@ -55,9 +49,7 @@ public class OrganizationCategoryController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Updating organization category with name " + organizationCategory.getName());
-        organizationCategory = organizationCategoryRepo.save(organizationCategory);
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
-        return new ApiResponse(SUCCESS, organizationCategory);
+        return new ApiResponse(SUCCESS, organizationCategoryRepo.update(organizationCategory));
     }
 
     @Auth(role = "MANAGER")
@@ -65,8 +57,7 @@ public class OrganizationCategoryController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "organizations" }) })
     public ApiResponse removeOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Removing organization category with name " + organizationCategory.getName());
-        organizationCategoryRepo.remove(organizationCategory);
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
+        organizationCategoryRepo.delete(organizationCategory);
         return new ApiResponse(SUCCESS);
     }
 
