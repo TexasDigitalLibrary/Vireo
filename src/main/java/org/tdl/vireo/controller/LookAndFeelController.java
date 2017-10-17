@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.ManagedConfiguration;
@@ -27,7 +27,7 @@ import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
+@RestController
 @ApiMapping("/settings/look-and-feel")
 public class LookAndFeelController {
 

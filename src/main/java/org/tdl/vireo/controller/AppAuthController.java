@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
@@ -41,7 +41,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.results.ValidationResults;
 import edu.tamu.weaver.validation.utility.ValidationUtility;
 
-@Controller
+@RestController
 @ApiMapping("/auth")
 public class AppAuthController extends CoreAuthController {
 
