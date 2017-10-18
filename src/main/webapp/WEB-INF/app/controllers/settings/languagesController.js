@@ -86,7 +86,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
         };
 
         $scope.reorderLanguages = function (src, dest) {
-            LanguageRepo.reorder(src + 10, dest);
+            LanguageRepo.reorder(src, dest);
         };
 
         $scope.sortLanguages = function (column) {
