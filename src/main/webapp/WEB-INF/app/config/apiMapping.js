@@ -564,7 +564,7 @@ var apiMapping = {
     },
     Organization: {
         validations: true,
-        modelListeners: false,
+        channel: "/channel/organization",
         all: {
             'endpoint': '/private/queue',
             'controller': 'organization',
@@ -604,14 +604,6 @@ var apiMapping = {
             'controller': 'organization',
             'method': 'change-email-workflow-rule-activation'
         },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'organizations'
-        },
-        selectiveListen: {
-            'endpoint': '/channel',
-            'controller': 'organization'
-        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'organization'
@@ -648,15 +640,11 @@ var apiMapping = {
     },
     OrganizationCategory: {
         validations: true,
-        modelListeners: false,
+        channel: '/channel/organization-category',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/organization-category',
             'method': 'all'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'settings/organization-category'
         },
         create: {
             'endpoint': '/private/queue',

@@ -22,10 +22,10 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
 
     @Autowired
-    private OrganizationRepo organizationRepo;
+    private OrganizationCategoryRepo organizationCategoryRepo;
 
     @Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
+    private OrganizationRepo organizationRepo;
 
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
@@ -35,11 +35,11 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
     @Override
     public Organization create(String name, OrganizationCategory category) {
-        Organization organization = super.create(new Organization(name, category));
+        Organization organization = organizationRepo.save(new Organization(name, category));
         category.addOrganization(organization);
-        // TODO: replace next line with organizationCategoryRepo.update(category);
         organizationCategoryRepo.save(category);
-        return super.update(organizationRepo.findOne(organization.getId()));
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return super.read(organization.getId());
     }
 
     @Override
@@ -54,12 +54,16 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
                 organization.addAggregateWorkflowStep(ws);
             });
         }
-        return organizationRepo.save(organization);
+        Organization newOrg = organizationRepo.save(organization);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return newOrg;
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
         organization.swapAggregateWorkflowStep(ws1, ws2);
-        return organizationRepo.save(organization);
+        organization = organizationRepo.save(organization);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return organization;
     }
 
     @Override
@@ -140,6 +144,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         }
 
         organizationRepo.delete(orgId);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
     }
 
     @Override
@@ -153,7 +158,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             persistedOrg.addAggregateWorkflowStep(ws);
         });
 
-        return organizationRepo.save(persistedOrg);
+        organization = organizationRepo.save(persistedOrg);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return organization;
     }
 
     @Override

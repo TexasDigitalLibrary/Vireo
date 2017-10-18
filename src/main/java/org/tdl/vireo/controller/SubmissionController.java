@@ -25,11 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
@@ -79,7 +79,7 @@ import edu.tamu.framework.util.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.results.ValidationResults;
 
-@Controller
+@RestController
 @ApiMapping("/submission")
 public class SubmissionController {
 

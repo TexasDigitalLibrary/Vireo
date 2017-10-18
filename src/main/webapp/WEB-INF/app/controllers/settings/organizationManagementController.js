@@ -4,7 +4,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $q, 
 
 	$scope.organizationRepo = OrganizationRepo;
 
-	OrganizationRepo.listenSelectively(function() {
+	OrganizationRepo.listen(function() {
 		$scope.resetWorkflowSteps();
 	});
 

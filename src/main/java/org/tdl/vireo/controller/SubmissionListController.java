@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.FilterCriterion;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
@@ -35,7 +35,7 @@ import edu.tamu.framework.model.Credentials;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 
-@Controller
+@RestController
 @ApiMapping("/submission-list")
 public class SubmissionListController {
 
