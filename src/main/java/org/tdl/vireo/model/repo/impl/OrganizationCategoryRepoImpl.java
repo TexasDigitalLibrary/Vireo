@@ -14,11 +14,6 @@ public class OrganizationCategoryRepoImpl extends AbstractWeaverRepoImpl<Organiz
     }
 
     @Override
-    public void delete(OrganizationCategory organizationCategory) {
-        super.delete(organizationCategory);
-    }
-
-    @Override
     protected String getChannel() {
         return "/channel/organization-category";
     }
