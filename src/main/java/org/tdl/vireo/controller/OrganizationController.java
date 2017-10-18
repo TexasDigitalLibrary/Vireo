@@ -81,8 +81,7 @@ public class OrganizationController {
     @ApiMapping("/get/{id}")
     @Auth(role = "STUDENT")
     public ApiResponse getOrganization(@ApiVariable Long id) {
-        Organization org = organizationRepo.read(id);
-        return new ApiResponse(SUCCESS, org);
+        return new ApiResponse(SUCCESS, organizationRepo.read(id));
     }
 
     @ApiMapping(value = "/create/{parentOrgID}", method = POST)
@@ -91,7 +90,7 @@ public class OrganizationController {
     public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @WeaverValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.read(parentOrgID);
         organization = organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, organization);
     }
 
     @ApiMapping(value = "/update", method = POST)
