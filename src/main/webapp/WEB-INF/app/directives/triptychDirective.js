@@ -149,28 +149,26 @@ vireo.directive("triptych", function () {
                     }
                     setVisibility(panel2);
                 }
+                console.log('set selected', organization);
                 $scope.setSelectedOrganization(organization);
             };
 
             $scope.refreshPanels = function () {
                 var selectedOrganization;
                 var newVisiblePanel;
-                console.log($scope.navigation.panels);
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
                     var updatedOrganization = OrganizationRepo.findById(panel.organization.id);
-                    var previousPanelChildrenCount = panel.organization.childrenOrganizations.length;
                     if (updatedOrganization !== undefined) {
                         setOrganzization(panel, updatedOrganization);
                         if (panel.organization.childrenOrganizations.length === 0) {
                             clear(panel);
                         } else {
-                            if (previousPanelChildrenCount === 0) {
-                                newVisiblePanel = panel;
-                            }
+                            newVisiblePanel = panel;
                         }
                     } else {
                         if (panel.parent !== undefined) {
+                            console.log(panel.parent);
                             selectedOrganization = panel.parent.organization;
                         } else {
                             selectedOrganization = $scope.organizations[0];
@@ -182,6 +180,7 @@ vireo.directive("triptych", function () {
                     setVisibility(newVisiblePanel);
                 }
                 if (selectedOrganization !== undefined) {
+                  console.log('refresh', selectedOrganization);
                     $scope.selectOrganization(selectedOrganization);
                 }
             };
@@ -234,6 +233,7 @@ vireo.directive("triptych", function () {
             $scope.ready = $q.all([OrganizationRepo.ready()]);
 
             $scope.ready.then(function () {
+                console.log('ready', $scope.organizations[0]);
                 $scope.selectOrganization($scope.organizations[0]);
             });
 

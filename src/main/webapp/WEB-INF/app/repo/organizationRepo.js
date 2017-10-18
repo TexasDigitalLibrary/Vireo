@@ -30,7 +30,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
         workflowStepsPromise.then(function (response) {
-            var aggregateWorkflowSteps = JSON.parse(response.body).payload.PersistentList;
+            var aggregateWorkflowSteps = angular.fromJson(response.body).payload.PersistentList;
             if (aggregateWorkflowSteps !== undefined) {
                 org.extend({
                   aggregateWorkflowSteps: aggregateWorkflowSteps
@@ -118,7 +118,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             });
             var orgPromise = WsApi.fetch(this.mapping.get);
             orgPromise.then(function (rawApiResponse) {
-                var fetchedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
+                var fetchedOrg = new Organization(angular.fromJson(rawApiResponse.body).payload.Organization);
                 organizationRepo.add(fetchedOrg);
                 fetchAggregateWorkflow(fetchedOrg, orgDefer);
             });

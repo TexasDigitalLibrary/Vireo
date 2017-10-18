@@ -25,6 +25,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     private OrganizationCategoryRepo organizationCategoryRepo;
 
     @Autowired
+    private OrganizationRepo organizationRepo;
+    
+    @Autowired
     private WorkflowStepRepo workflowStepRepo;
 
     @Autowired
@@ -41,21 +44,26 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     @Override
     @Transactional // this transactional is required to persist parent child relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
-        Organization organization = create(name, category);
+        Organization organization = organizationRepo.save(new Organization(name, category));
         if (parent != null) {
             System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
-            parent = super.update(parent);
+            parent = organizationRepo.save(parent);
             parent.getAggregateWorkflowSteps().forEach(ws -> {
                 organization.addAggregateWorkflowStep(ws);
             });
         }
-        return super.update(organization);
+
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+
+        return organizationRepo.read(organization.getId());
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
         organization.swapAggregateWorkflowStep(ws1, ws2);
-        return super.update(organization);
+        organization = organizationRepo.save(organization);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return organization;
     }
 
     @Override
@@ -74,7 +82,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         // Have all the parent organizations not have this one as their child anymore
         if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
-            parentOrganization = super.update(parentOrganization);
+            parentOrganization = organizationRepo.save(parentOrganization);
             organization = super.read(orgId);
         }
 
@@ -87,14 +95,14 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
         for (Organization childOrganization : childrenToRemove) {
             organization.removeChildOrganization(childOrganization);
-            organization = super.update(organization);
+            organization = organizationRepo.save(organization);
             if (parentOrganization != null) {
-                childOrganization = super.update(childOrganization);
+                childOrganization = organizationRepo.save(childOrganization);
                 parentOrganization.addChildOrganization(childOrganization);
-                parentOrganization = super.update(parentOrganization);
+                parentOrganization = organizationRepo.save(parentOrganization);
             } else {
                 childOrganization.setParentOrganization(null);
-                childOrganization = super.update(childOrganization);
+                childOrganization = organizationRepo.save(childOrganization);
             }
         }
 
@@ -135,7 +143,8 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             workflowStepRepo.delete(ws);
         }
 
-        super.delete(organization);
+        organizationRepo.delete(orgId);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
     }
 
     @Override
@@ -149,7 +158,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             persistedOrg.addAggregateWorkflowStep(ws);
         });
 
-        return super.update(persistedOrg);
+        organization = organizationRepo.save(persistedOrg);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return organization;
     }
 
     @Override
