@@ -18,7 +18,7 @@ var appConfig = {
 		'debug': true
 	},
 	
-	'stompDebug': false,
+	'stompDebug': true,
 
 	/*
 		Determines the type of connection stomp will attempt to make with the service.

@@ -24,7 +24,7 @@ vireo.directive("validatedinput", function ($timeout) {
         link: function ($scope, element, attr) {
 
             $scope.inProgress = false;
-
+            
             if ($scope.formView) {
                 $scope.view = 'node_modules/weaver-ui-core/app/views/directives/validatedInputForm.html';
             } else {
@@ -50,6 +50,10 @@ vireo.directive("validatedinput", function ($timeout) {
                         }, 500);
                     });
                 }
+            };
+
+            $scope.getValues = function(property) {
+              return property && property.length === 0 ? [""] : property;
             };
 
             $scope.keydown = function ($event) {

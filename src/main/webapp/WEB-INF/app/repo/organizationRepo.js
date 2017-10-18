@@ -32,7 +32,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         workflowStepsPromise.then(function (response) {
             var aggregateWorkflowSteps = JSON.parse(response.body).payload.PersistentList;
             if (aggregateWorkflowSteps !== undefined) {
-                org.aggregateWorkflowSteps = aggregateWorkflowSteps;
+                org.extend({
+                  aggregateWorkflowSteps: aggregateWorkflowSteps
+                });
             }
             defer.resolve(org);
         });
@@ -53,23 +55,23 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return promise;
     };
 
-    this.selectiveListen = function () {
-        WsApi.listen(this.mapping.selectiveListen).then(null, null, function (rawApiResponse) {
-            var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
-            if (broadcastedOrg.id == selectedOrganization.id) {
-                organizationRepo.setSelectedOrganization(broadcastedOrg, true, true);
-                angular.forEach(selectiveListenCallbacks, function (cb) {
-                    cb(broadcastedOrg);
-                });
-            }
-        });
-    };
+    // this.selectiveListen = function () {
+    //     WsApi.listen(this.mapping.selectiveListen).then(null, null, function (rawApiResponse) {
+    //         var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
+    //         if (broadcastedOrg.id == selectedOrganization.id) {
+    //             organizationRepo.setSelectedOrganization(broadcastedOrg, true, true);
+    //             angular.forEach(selectiveListenCallbacks, function (cb) {
+    //                 cb(broadcastedOrg);
+    //             });
+    //         }
+    //     });
+    // };
 
-    this.selectiveListen();
+    // this.selectiveListen();
 
-    this.listenSelectively = function (cb) {
-        selectiveListenCallbacks.push(cb);
-    };
+    // this.listenSelectively = function (cb) {
+    //     selectiveListenCallbacks.push(cb);
+    // };
 
     this.resetNewOrganization = function () {
         for (var key in this.newOrganization) {

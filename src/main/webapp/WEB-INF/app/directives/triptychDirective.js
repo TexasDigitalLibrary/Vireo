@@ -155,6 +155,7 @@ vireo.directive("triptych", function () {
             $scope.refreshPanels = function () {
                 var selectedOrganization;
                 var newVisiblePanel;
+                console.log($scope.navigation.panels);
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
                     var updatedOrganization = OrganizationRepo.findById(panel.organization.id);

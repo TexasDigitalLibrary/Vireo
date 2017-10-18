@@ -564,7 +564,7 @@ var apiMapping = {
     },
     Organization: {
         validations: true,
-        modelListeners: false,
+        channel: "/channel/organization",
         all: {
             'endpoint': '/private/queue',
             'controller': 'organization',
@@ -603,14 +603,6 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization',
             'method': 'change-email-workflow-rule-activation'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'organizations'
-        },
-        selectiveListen: {
-            'endpoint': '/channel',
-            'controller': 'organization'
         },
         create: {
             'endpoint': '/private/queue',

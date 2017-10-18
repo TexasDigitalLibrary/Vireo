@@ -22,9 +22,6 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
 
     @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
 
     @Autowired
@@ -37,9 +34,8 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     public Organization create(String name, OrganizationCategory category) {
         Organization organization = super.create(new Organization(name, category));
         category.addOrganization(organization);
-        // TODO: replace next line with organizationCategoryRepo.update(category);
-        organizationCategoryRepo.save(category);
-        return super.update(organizationRepo.findOne(organization.getId()));
+        organizationCategoryRepo.update(category);
+        return organization;
     }
 
     @Override
@@ -49,17 +45,17 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         if (parent != null) {
             System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
-            parent = organizationRepo.save(parent);
+            parent = super.update(parent);
             parent.getAggregateWorkflowSteps().forEach(ws -> {
                 organization.addAggregateWorkflowStep(ws);
             });
         }
-        return organizationRepo.save(organization);
+        return super.update(organization);
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
         organization.swapAggregateWorkflowStep(ws1, ws2);
-        return organizationRepo.save(organization);
+        return super.update(organization);
     }
 
     @Override
@@ -78,8 +74,8 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         // Have all the parent organizations not have this one as their child anymore
         if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
-            parentOrganization = organizationRepo.save(parentOrganization);
-            organization = organizationRepo.findOne(orgId);
+            parentOrganization = super.update(parentOrganization);
+            organization = super.read(orgId);
         }
 
         Set<Organization> childrenToRemove = new HashSet<Organization>();
@@ -91,14 +87,14 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
         for (Organization childOrganization : childrenToRemove) {
             organization.removeChildOrganization(childOrganization);
-            organization = organizationRepo.save(organization);
+            organization = super.update(organization);
             if (parentOrganization != null) {
-                childOrganization = organizationRepo.save(childOrganization);
+                childOrganization = super.update(childOrganization);
                 parentOrganization.addChildOrganization(childOrganization);
-                parentOrganization = organizationRepo.save(parentOrganization);
+                parentOrganization = super.update(parentOrganization);
             } else {
                 childOrganization.setParentOrganization(null);
-                childOrganization = organizationRepo.save(childOrganization);
+                childOrganization = super.update(childOrganization);
             }
         }
 
@@ -139,13 +135,13 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             workflowStepRepo.delete(ws);
         }
 
-        organizationRepo.delete(orgId);
+        super.delete(organization);
     }
 
     @Override
     public Organization restoreDefaults(Organization organization) {
-        Organization persistedOrg = organizationRepo.findOne(organization.getId());
-        Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
+        Organization persistedOrg = super.read(organization.getId());
+        Organization parentOrg = super.read(organization.getParentOrganization().getId());
 
         persistedOrg.clearAggregatedWorkflowStepsFromHiarchy();
 
@@ -153,7 +149,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             persistedOrg.addAggregateWorkflowStep(ws);
         });
 
-        return organizationRepo.save(persistedOrg);
+        return super.update(persistedOrg);
     }
 
     @Override
