@@ -26,7 +26,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
     @Autowired
     private OrganizationRepo organizationRepo;
-    
+
     @Autowired
     private WorkflowStepRepo workflowStepRepo;
 
@@ -35,16 +35,17 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
     @Override
     public Organization create(String name, OrganizationCategory category) {
-        Organization organization = super.create(new Organization(name, category));
+        Organization organization = organizationRepo.save(new Organization(name, category));
         category.addOrganization(organization);
-        organizationCategoryRepo.update(category);
-        return organization;
+        organizationCategoryRepo.save(category);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return super.read(organization.getId());
     }
 
     @Override
     @Transactional // this transactional is required to persist parent child relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
-        Organization organization = organizationRepo.save(new Organization(name, category));
+        Organization organization = create(name, category);
         if (parent != null) {
             System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
@@ -53,10 +54,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
                 organization.addAggregateWorkflowStep(ws);
             });
         }
-
+        Organization newOrg = organizationRepo.save(organization);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-
-        return organizationRepo.read(organization.getId());
+        return newOrg;
     }
 
     public Organization reorderWorkflowSteps(Organization organization, WorkflowStep ws1, WorkflowStep ws2) {
@@ -83,7 +83,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
             parentOrganization = organizationRepo.save(parentOrganization);
-            organization = super.read(orgId);
+            organization = organizationRepo.findOne(orgId);
         }
 
         Set<Organization> childrenToRemove = new HashSet<Organization>();
@@ -149,8 +149,8 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
     @Override
     public Organization restoreDefaults(Organization organization) {
-        Organization persistedOrg = super.read(organization.getId());
-        Organization parentOrg = super.read(organization.getParentOrganization().getId());
+        Organization persistedOrg = organizationRepo.findOne(organization.getId());
+        Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
 
         persistedOrg.clearAggregatedWorkflowStepsFromHiarchy();
 
