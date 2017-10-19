@@ -1,9 +1,9 @@
-vireo.service("FileUploadService", function($q, FileApi) {
+vireo.service("FileUploadService", function($q, FileService) {
 
     var FileUploadService = this;
 
     FileUploadService.uploadFile = function(submission, fieldValue) {
-        return FileApi.upload({
+        return FileService.upload({
             'endpoint': '',
             'controller': 'submission',
             'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload',

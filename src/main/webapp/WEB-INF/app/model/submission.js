@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
     return function Submission() {
 
@@ -446,7 +446,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
                     'uri': uri
                 }
             });
-            var promise = FileApi.download(this.getMapping().file);
+            var promise = FileService.download(this.getMapping().file);
             return promise;
         };
 
