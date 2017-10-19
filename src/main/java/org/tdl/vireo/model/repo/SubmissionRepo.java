@@ -20,5 +20,7 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
     public List<Submission> findAllBySubmitter(User submitter);
 
     public Submission findOneByAdvisorAccessHash(String hash);
+    
+    public Submission findByCustomActionValuesDefinitionLabel(String label);
 
 }

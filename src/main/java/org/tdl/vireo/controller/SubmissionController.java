@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -172,10 +171,10 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/create")
+    @ApiMapping(value = "/create", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData JsonNode dataNode) throws OrganizationDoesNotAcceptSubmissionsExcception {
-        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.read(dataNode.get("organizationId").asLong()), submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
+    public ApiResponse createSubmission(@ApiCredentials Credentials credentials, @ApiData Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
+        Submission submission = submissionRepo.create(userRepo.findByEmail(credentials.getEmail()), organizationRepo.read(Long.valueOf(data.get("organizationId"))), submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
         actionLogRepo.createPublicLog(submission, credentials, "Submission created.");
         return new ApiResponse(SUCCESS, submission);
     }
@@ -197,19 +196,19 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/add-comment")
+    @ApiMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, String> data) {
 
         Submission submission = submissionRepo.read(submissionId);
 
-        String commentVisibility = dataNode.get("commentVisiblity") != null ? dataNode.get("commentVisiblity").asText() : "public";
+        String commentVisibility = data.get("commentVisiblity") != null ? data.get("commentVisiblity") : "public";
 
         if (commentVisibility.equals("public")) {
-            sendEmail(credentials, submission, dataNode);
+            sendEmail(credentials, submission, data);
         } else {
-            String subject = dataNode.get("subject").asText();
-            String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+            String subject = data.get("subject");
+            String templatedMessage = templateUtility.compileString(data.get("message"), submission);
             actionLogRepo.createPrivateLog(submission, credentials, subject + ": " + templatedMessage);
         }
 
@@ -217,31 +216,31 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/send-email")
+    @ApiMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
-        sendEmail(credentials, submissionRepo.read(submissionId), dataNode);
+    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, String> data) {
+        sendEmail(credentials, submissionRepo.read(submissionId), data);
         return new ApiResponse(SUCCESS);
     }
 
-    private void sendEmail(Credentials credentials, Submission submission, JsonNode dataNode) {
+    private void sendEmail(Credentials credentials, Submission submission, Map<String, String> data) {
 
-        String subject = dataNode.get("subject").asText();
+        String subject = data.get("subject");
 
-        String templatedMessage = templateUtility.compileString(dataNode.get("message").asText(), submission);
+        String templatedMessage = templateUtility.compileString(data.get("message"), submission);
 
-        boolean sendRecipientEmail = dataNode.get("sendEmailToRecipient").asBoolean();
+        boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
 
         if (sendRecipientEmail) {
 
-            boolean sendCCRecipientEmail = dataNode.get("sendEmailToCCRecipient").asBoolean();
+            boolean sendCCRecipientEmail = data.get("sendEmailToCCRecipient").equals("true");
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(dataNode.get("recipientEmail").asText().split(";"));
+            smm.setTo(data.get("recipientEmail").split(";"));
 
             if (sendCCRecipientEmail) {
-                smm.setCc(dataNode.get("ccRecipientEmail").asText().split(";"));
+                smm.setCc(data.get("ccRecipientEmail").split(";"));
             }
 
             User user = userRepo.findByEmail(credentials.getEmail());
@@ -263,7 +262,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-field-value/{fieldProfileId}")
+    @ApiMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse updateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
         ApiResponse apiResponse = null;
@@ -312,7 +311,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/validate-field-value/{fieldProfileId}")
+    @ApiMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse validateFieldValue(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String fieldProfileId, @ApiModel FieldValue fieldValue) {
         ApiResponse apiResponse = null;
@@ -336,7 +335,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-custom-action-value")
+    @ApiMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse updateCustomActionValue(@ApiVariable("submissionId") Long submissionId, @ApiModel CustomActionValue customActionValue) {
         return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
@@ -367,7 +366,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/batch-update-status")
+    @ApiMapping(value = "/batch-update-status", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse batchUpdateSubmissionStatuses(@ApiCredentials Credentials credentials, @ApiModel SubmissionStatus submissionStatus) {
         User user = userRepo.findByEmail(credentials.getEmail());
@@ -427,8 +426,8 @@ public class SubmissionController {
 
     @Transactional
     @Auth(role = "MANAGER")
-    @ApiMapping(value = "/batch-export/{packagerName}", method = RequestMethod.GET)
-    public void batchExport(HttpServletResponse response, @ApiCredentials Credentials credentials, @PathVariable String packagerName) throws Exception {
+    @ApiMapping("/batch-export/{packagerName}")
+    public void batchExport(HttpServletResponse response, @ApiCredentials Credentials credentials, @ApiVariable String packagerName) throws Exception {
 
         User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -456,7 +455,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/batch-assign-to")
+    @ApiMapping(value = "/batch-assign-to", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse batchAssignTo(@ApiCredentials Credentials credentials, @ApiModel User assignee) {
         User user = userRepo.findByEmail(credentials.getEmail());
@@ -509,7 +508,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/submit-date")
+    @ApiMapping(value = "/{submissionId}/submit-date", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse submitDate(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData String newDate) throws ParseException {
 
@@ -534,7 +533,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/assign-to")
+    @ApiMapping(value = "/{submissionId}/assign-to", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse assign(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiModel User assignee) {
         Submission submission = submissionRepo.read(submissionId);
@@ -558,7 +557,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/remove-field-value")
+    @ApiMapping(value = "/{submissionId}/remove-field-value", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse removeFieldValue(@ApiVariable("submissionId") Long submissionId, @ApiModel FieldValue fieldValue) {
         Submission submission = submissionRepo.read(submissionId);
@@ -568,7 +567,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/update-reviewer-notes")
+    @ApiMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse updateReviewerNotes(@ApiCredentials Credentials credentials, @ApiVariable("submissionId") Long submissionId, @ApiData Map<String, String> requestData) {
         Submission submission = submissionRepo.read(submissionId);
@@ -606,7 +605,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/{submissionId}/add-message")
+    @ApiMapping(value = "/{submissionId}/add-message", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse addMessage(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData String message) {
         Submission submission = submissionRepo.read(submissionId);
@@ -614,14 +613,14 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping("/query/{page}/{size}")
+    @ApiMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse querySubmission(@ApiCredentials Credentials credentials, @ApiVariable Integer page, @ApiVariable Integer size, @ApiModel List<SubmissionListColumn> submissionListColumns) {
         User user = userRepo.findByEmail(credentials.getEmail());
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
-    @ApiMapping(value = "/file")
+    @ApiMapping(value = "/file", method = RequestMethod.POST)
     public void submissionFile(HttpServletResponse response, @ApiData Map<String, String> requestData) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
         String uri = requestData.get("uri");
@@ -630,7 +629,7 @@ public class SubmissionController {
         response.getOutputStream().flush();
     }
 
-    @ApiMapping(value = "/file-info")
+    @ApiMapping(value = "/file-info", method = RequestMethod.POST)
     public ApiResponse submissionFileInfo(@ApiData Map<String, String> requestData) throws IOException {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
@@ -651,7 +650,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping(value = "/{submissionId}/{documentType}/rename-file")
+    @ApiMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
     @Auth(role = "MANAGER")
     public ApiResponse renameFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         String newName = requestData.get("newName");
@@ -667,7 +666,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping(value = "/{submissionId}/{documentType}/remove-file")
+    @ApiMapping(value = "/{submissionId}/{documentType}/remove-file", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse removeFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         ApiResponse apiResponse = null;
@@ -689,7 +688,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @ApiMapping(value = "/{submissionId}/{documentType}/archive-file")
+    @ApiMapping(value = "/{submissionId}/{documentType}/archive-file", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
     public ApiResponse archiveFile(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiVariable String documentType, @ApiData Map<String, String> requestData) throws IOException {
         String name = requestData.get("name");
@@ -745,42 +744,42 @@ public class SubmissionController {
     }
 
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
-    @ApiMapping("/{submissionId}/update-advisor-approval")
+    @ApiMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
     @Transactional
-    public ApiResponse updateAdvisorApproval(@ApiVariable Long submissionId, @ApiData JsonNode dataNode) {
+    public ApiResponse updateAdvisorApproval(@ApiVariable Long submissionId, @ApiData Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
 
-        JsonNode approveApplicationNode = dataNode.get("approveApplication");
-        JsonNode approveEmbargoNode = dataNode.get("approveEmbargo");
-        JsonNode messageNode = dataNode.get("message");
-        JsonNode clearApproveEmbargoNode = dataNode.get("clearApproveEmbargo");
-        JsonNode clearApproveApplicationNode = dataNode.get("clearApproveApplication");
+        Boolean approveApplicationNode = (Boolean) data.get("approveApplication");
+        Boolean approveEmbargoNode = (Boolean) data.get("approveEmbargo");
+        String messageNode = (String) data.get("message");
+        Boolean clearApproveEmbargoNode = (Boolean) data.get("clearApproveEmbargo");
+        Boolean clearApproveApplicationNode = (Boolean) data.get("clearApproveApplication");
 
         if (approveApplicationNode != null) {
-            submission.setApproveApplication(approveApplicationNode.asBoolean());
-            String approveApplicationMessage = approveApplicationNode.asBoolean() ? "The committee approved the application" : "The committee rejected the Application";
+            submission.setApproveApplication(approveApplicationNode);
+            String approveApplicationMessage = approveApplicationNode ? "The committee approved the application" : "The committee rejected the Application";
             actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
         }
 
         if (approveEmbargoNode != null) {
-            submission.setApproveEmbargo(approveEmbargoNode.asBoolean());
-            String approveEmbargoMessage = approveEmbargoNode.asBoolean() ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
+            submission.setApproveEmbargo(approveEmbargoNode);
+            String approveEmbargoMessage = approveEmbargoNode ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
             actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
         }
 
-        if (clearApproveEmbargoNode != null && clearApproveEmbargoNode.asBoolean()) {
+        if (clearApproveEmbargoNode != null && clearApproveEmbargoNode) {
             submission.clearApproveEmbargo();
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
         }
 
-        if (clearApproveApplicationNode != null && clearApproveApplicationNode.asBoolean()) {
+        if (clearApproveApplicationNode != null && clearApproveApplicationNode) {
             submission.clearApproveApplication();
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 
         if (messageNode != null)
-            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + messageNode.asText());
+            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + messageNode);
 
         return new ApiResponse(SUCCESS, submission);
 
