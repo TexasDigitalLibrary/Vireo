@@ -877,8 +877,7 @@ var apiMapping = {
         file: {
             'endpoint': '/private/queue',
             'controller': 'submission',
-            'method': 'file',
-            useWebSockets: true
+            'method': 'file'
         },
         renameFile: {
             'endpoint': '/private/queue',

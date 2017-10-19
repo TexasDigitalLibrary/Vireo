@@ -198,17 +198,17 @@ public class SubmissionController {
     @Transactional
     @ApiMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, String> data) {
+    public ApiResponse addComment(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
 
-        String commentVisibility = data.get("commentVisiblity") != null ? data.get("commentVisiblity") : "public";
+        String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
 
         if (commentVisibility.equals("public")) {
             sendEmail(credentials, submission, data);
         } else {
-            String subject = data.get("subject");
-            String templatedMessage = templateUtility.compileString(data.get("message"), submission);
+            String subject = (String) data.get("subject");
+            String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
             actionLogRepo.createPrivateLog(submission, credentials, subject + ": " + templatedMessage);
         }
 
@@ -218,16 +218,16 @@ public class SubmissionController {
     @Transactional
     @ApiMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
     @Auth(role = "STUDENT")
-    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, String> data) {
+    public ApiResponse sendEmail(@ApiCredentials Credentials credentials, @ApiVariable Long submissionId, @ApiData Map<String, Object> data) {
         sendEmail(credentials, submissionRepo.read(submissionId), data);
         return new ApiResponse(SUCCESS);
     }
 
-    private void sendEmail(Credentials credentials, Submission submission, Map<String, String> data) {
+    private void sendEmail(Credentials credentials, Submission submission, Map<String, Object> data) {
 
-        String subject = data.get("subject");
+        String subject = (String) data.get("subject");
 
-        String templatedMessage = templateUtility.compileString(data.get("message"), submission);
+        String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
         boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
 
@@ -237,10 +237,10 @@ public class SubmissionController {
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(data.get("recipientEmail").split(";"));
+            smm.setTo(((String) data.get("recipientEmail")).split(";"));
 
             if (sendCCRecipientEmail) {
-                smm.setCc(data.get("ccRecipientEmail").split(";"));
+                smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
             User user = userRepo.findByEmail(credentials.getEmail());
