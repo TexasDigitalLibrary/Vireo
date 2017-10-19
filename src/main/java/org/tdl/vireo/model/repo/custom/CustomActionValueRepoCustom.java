@@ -8,4 +8,6 @@ public interface CustomActionValueRepoCustom {
 
     public CustomActionValue create(Submission submission, CustomActionDefinition definition, Boolean value);
 
+    public void delete(CustomActionValue value);
+
 }

@@ -6,4 +6,7 @@ import org.tdl.vireo.model.repo.custom.CustomActionValueRepoCustom;
 
 public interface CustomActionValueRepo extends JpaRepository<CustomActionValue, Long>, CustomActionValueRepoCustom {
 
+    @Override
+    public void delete(CustomActionValue value);
+
 }
