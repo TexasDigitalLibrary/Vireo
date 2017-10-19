@@ -24,10 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
-import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -49,8 +49,9 @@ import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.util.FileIOUtility;
 
 import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-public class SubmissionRepoImpl implements SubmissionRepoCustom {
+public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
     final static Logger logger = LoggerFactory.getLogger(SubmissionRepoImpl.class);
 
@@ -138,7 +139,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         setCheckboxDefaultValue(submission, "INPUT_LICENSE");
         setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
 
-        return submissionRepo.save(submission);
+        return super.create(submission);
     }
 
     private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
@@ -225,7 +226,10 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             break;
         }
 
+        // TODO: reduce multiple redundent saves
         submission = submissionRepo.saveAndFlush(submission);
+
+        super.update(submission);
 
         actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
@@ -300,9 +304,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         });
         List<Submission> actualResults = new ArrayList<Submission>();
 
+        List<Submission> submissions = submissionRepo.findAll(ids);
+
         // order them
         for (Long id : ids) {
-            for (Submission ps : submissionRepo.findAll(ids)) {
+            for (Submission ps : submissions) {
                 if (ps.getId().equals(id)) {
                     actualResults.add(ps);
                 }
@@ -644,6 +650,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         default:
             break;
         }
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/submission";
     }
 
 }
