@@ -41,7 +41,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
-        var organization = $scope.submission.organization.name;
+        var organization = $scope.submission.organization;
 
         var firstAssignable = function () {
             var firstAssignable;
