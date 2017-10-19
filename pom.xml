@@ -30,7 +30,6 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <production>false</production>
     <failIfNoTests>false</failIfNoTests>
-    <link>weaver-ui-core</link>
   </properties>
 
   <packaging>war</packaging>
@@ -363,7 +362,7 @@
       </activation>
       <properties>
         <npm-extension>.cmd</npm-extension>
-        <compass-extension>.bat</compass-extension>
+        <grunt-extension>.cmd</grunt-extension>
       </properties>
     </profile>
 
@@ -376,7 +375,7 @@
       </activation>
       <properties>
         <npm-extension></npm-extension>
-        <compass-extension></compass-extension>
+        <grunt-extension></grunt-extension>
       </properties>
     </profile>
 
@@ -432,7 +431,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -513,7 +512,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                   <arguments>
                     <argument>deploy</argument>
                   </arguments>
@@ -581,7 +580,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -593,7 +592,7 @@
                 <id>exec-npm-run-test</id>
                 <phase>test</phase>
                 <configuration>
-                  <executable>npm</executable>
+                  <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
                     <argument>test</argument>
