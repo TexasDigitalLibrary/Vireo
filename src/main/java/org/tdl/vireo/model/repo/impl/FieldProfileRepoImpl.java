@@ -16,14 +16,14 @@ import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.inheritance.HeritableRepo;
+import org.tdl.vireo.model.inheritance.HeritableRepoImpl;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
-public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
+public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
 
     private static final List<String> PREDICATE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "fieldPredicate", "value" }));
 
@@ -83,11 +83,17 @@ public class FieldProfileRepoImpl extends HeritableRepo<FieldProfile, FieldProfi
         workflowStepRepo.save(originatingWorkflowStep);
         fieldGlosses.forEach(fieldGloss -> {
             Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(fieldGloss.getValue(), fieldPredicate.getValue(), inputType);
-            if(!slc.isPresent()) {
+            if (!slc.isPresent()) {
                 submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
             }
         });
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return fieldProfileRepo.findOne(fieldProfile.getId());
     }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/field-profile";
+    }
+
 }

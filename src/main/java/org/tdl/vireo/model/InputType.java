@@ -14,7 +14,7 @@ public class InputType extends ValidatingBaseEntity {
     private String name;
 
     @Column
-    private String validationPatern;
+    private String validationPattern;
 
     @Column
     private String validationMessage;
@@ -47,12 +47,12 @@ public class InputType extends ValidatingBaseEntity {
         this.name = name;
     }
 
-    public String getValidationPatern() {
-        return validationPatern;
+    public String getValidationPattern() {
+        return validationPattern;
     }
 
-    public void setValidationPatern(String patern) {
-        validationPatern = patern;
+    public void setValidationPattern(String patern) {
+        validationPattern = patern;
     }
 
     public String getValidationMessage() {

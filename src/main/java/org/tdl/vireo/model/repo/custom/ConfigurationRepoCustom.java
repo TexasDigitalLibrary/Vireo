@@ -3,8 +3,8 @@ package org.tdl.vireo.model.repo.custom;
 import java.util.List;
 import java.util.Map;
 
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
-import org.tdl.vireo.model.interfaces.Configuration;
 
 public interface ConfigurationRepoCustom {
 

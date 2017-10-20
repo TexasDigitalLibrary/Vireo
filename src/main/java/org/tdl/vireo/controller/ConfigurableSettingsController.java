@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 import edu.tamu.framework.aspect.annotation.ApiMapping;

@@ -5,7 +5,9 @@ import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.custom.InputTypeRepoCustom;
 
-public class InputTypeRepoImpl implements InputTypeRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class InputTypeRepoImpl extends AbstractWeaverRepoImpl<InputType, InputTypeRepo> implements InputTypeRepoCustom {
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -15,11 +17,9 @@ public class InputTypeRepoImpl implements InputTypeRepoCustom {
         return inputTypeRepo.save(new InputType(name));
     }
 
-    public InputType create(InputType inputType) {
-        InputType newInputType = create(inputType.getName());
-        newInputType.setValidationPatern(inputType.getValidationPatern());
-        newInputType.setValidationMessage(inputType.getValidationMessage());
-        return inputTypeRepo.save(newInputType);
+    @Override
+    protected String getChannel() {
+        return "/channel/input-type";
     }
 
 }

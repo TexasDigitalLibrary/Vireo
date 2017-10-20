@@ -5,15 +5,12 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.custom.EmailTemplateRepoCustom;
 
-import edu.tamu.weaver.data.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
+public class EmailTemplateRepoImpl extends AbstractWeaverOrderedRepoImpl<EmailTemplate, EmailTemplateRepo> implements EmailTemplateRepoCustom {
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
 
     @Override
     public EmailTemplate create(String name, String subject, String message) {
@@ -32,18 +29,13 @@ public class EmailTemplateRepoImpl implements EmailTemplateRepoCustom {
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(EmailTemplate.class, src, dest);
+    public Class<?> getModelClass() {
+        return EmailTemplate.class;
     }
 
     @Override
-    public void sort(String column) {
-        orderedEntityService.sort(EmailTemplate.class, column);
-    }
-
-    @Override
-    public void remove(EmailTemplate emailTemplate) {
-        orderedEntityService.remove(emailTemplateRepo, EmailTemplate.class, emailTemplate.getPosition());
+    protected String getChannel() {
+        return "/channel/email-template";
     }
 
 }

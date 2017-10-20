@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import org.tdl.vireo.model.interfaces.Configuration;
-
 public class DefaultConfiguration implements Configuration {
 	private String name;
 	private String value;

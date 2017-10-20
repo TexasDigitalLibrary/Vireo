@@ -11,6 +11,4 @@ public interface EmbargoRepoCustom {
 
     public void sort(String column, EmbargoGuarantor guarantor);
 
-    public void remove(Embargo embargo);
-
 }

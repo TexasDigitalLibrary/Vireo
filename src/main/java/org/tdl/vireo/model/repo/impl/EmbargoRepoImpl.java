@@ -6,9 +6,10 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 import edu.tamu.weaver.data.service.OrderedEntityService;
 
-public class EmbargoRepoImpl implements EmbargoRepoCustom {
+public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, EmbargoRepo> implements EmbargoRepoCustom {
 
     @Autowired
     private OrderedEntityService orderedEntityService;
@@ -34,8 +35,13 @@ public class EmbargoRepoImpl implements EmbargoRepoCustom {
     }
 
     @Override
-    public void remove(Embargo embargo) {
-        orderedEntityService.remove(embargoRepo, Embargo.class, embargo.getPosition(), "guarantor", embargo.getGuarantor());
+    public Class<?> getModelClass() {
+        return Embargo.class;
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/embargo";
     }
 
 }

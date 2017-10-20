@@ -21,7 +21,9 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
-public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, WorkflowStepRepo>implements WorkflowStepRepoCustom {
     
     final static Logger logger = LoggerFactory.getLogger(WorkflowStepRepoImpl.class);
 
@@ -419,6 +421,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         } else {
             return new ArrayList<WorkflowStep>();
         }
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/workflow-step";
     }
 
 }

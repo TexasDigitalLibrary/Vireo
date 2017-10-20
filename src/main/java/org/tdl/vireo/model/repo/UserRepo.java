@@ -1,13 +1,12 @@
 package org.tdl.vireo.model.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 
-public interface UserRepo extends JpaRepository<User, Long>, UserRepoCustom {
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
+
+public interface UserRepo extends WeaverRepo<User>, UserRepoCustom {
 
     public User findByEmail(String email);
-
-    public void delete(User user);
 
 }

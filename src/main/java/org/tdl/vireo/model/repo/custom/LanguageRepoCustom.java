@@ -6,10 +6,4 @@ public interface LanguageRepoCustom {
 
     public Language create(String name);
 
-    public void reorder(Long src, Long dest);
-
-    public void sort(String column);
-
-    public void remove(Language language);
-
 }

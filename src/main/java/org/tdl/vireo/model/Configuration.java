@@ -1,4 +1,4 @@
-package org.tdl.vireo.model.interfaces;
+package org.tdl.vireo.model;
 
 public interface Configuration {
 	public String getName();

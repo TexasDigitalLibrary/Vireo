@@ -10,7 +10,9 @@ import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 import org.tdl.vireo.service.DefaultFiltersService;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
-public class UserRepoImpl implements UserRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> implements UserRepoCustom {
 
     @Autowired
     private UserRepo userRepo;
@@ -19,7 +21,7 @@ public class UserRepoImpl implements UserRepoCustom {
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
-    DefaultFiltersService defaultFiltersService;
+    private DefaultFiltersService defaultFiltersService;
 
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
@@ -47,6 +49,11 @@ public class UserRepoImpl implements UserRepoCustom {
     public void delete(User user) {
         namedSearchFilterRepo.delete(user.getActiveFilter());
         userRepo.delete(user.getId());
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/user";
     }
 
 }

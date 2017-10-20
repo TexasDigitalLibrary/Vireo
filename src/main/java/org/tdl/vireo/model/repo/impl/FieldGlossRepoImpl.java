@@ -6,7 +6,9 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.custom.FieldGlossRepoCustom;
 
-public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class FieldGlossRepoImpl extends AbstractWeaverRepoImpl<FieldGloss, FieldGlossRepo> implements FieldGlossRepoCustom {
 
     @Autowired
     private FieldGlossRepo fieldGlossRepo;
@@ -14,6 +16,11 @@ public class FieldGlossRepoImpl implements FieldGlossRepoCustom {
     @Override
     public FieldGloss create(String value, Language language) {
         return fieldGlossRepo.save(new FieldGloss(value, language));
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/field-gloss";
     }
 
 }

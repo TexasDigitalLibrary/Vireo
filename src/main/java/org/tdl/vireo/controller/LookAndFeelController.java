@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.util.FileIOUtility;
 

@@ -7,14 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.ManagedConfiguration;
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.custom.ConfigurationRepoCustom;
 import org.tdl.vireo.service.DefaultSettingsService;
 
-public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class ConfigurationRepoImpl extends AbstractWeaverRepoImpl<ManagedConfiguration, ConfigurationRepo> implements ConfigurationRepoCustom {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
@@ -103,6 +105,11 @@ public class ConfigurationRepoImpl implements ConfigurationRepoCustom {
             }
         });
         return settings;
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/configuration";
     }
 
 }

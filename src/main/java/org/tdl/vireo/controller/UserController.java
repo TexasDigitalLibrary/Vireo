@@ -10,7 +10,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.User;
@@ -34,9 +33,6 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
     private UserCredentialsService userCredentialsService;
@@ -73,7 +69,7 @@ public class UserController {
         logger.info("Updating role for " + persistedUser.getEmail());
         persistedUser = userRepo.save(persistedUser);
 
-        simpMessagingTemplate.convertAndSend("/channel/user", new ApiResponse(SUCCESS, userRepo.findAll()));
+        userRepo.broadcast(userRepo.findAll());
 
         return new ApiResponse(SUCCESS, persistedUser);
     }
@@ -90,7 +86,10 @@ public class UserController {
     public ApiResponse updateSetting(@ApiCredentials Credentials shib, @ApiData Map<String, String> userSettings) {
         User user = userRepo.findByEmail(shib.getEmail());
         user.setSettings(userSettings);
-        simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
+
+        userRepo.update(user);
+
+        // simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
         return new ApiResponse(SUCCESS);
     }
 
