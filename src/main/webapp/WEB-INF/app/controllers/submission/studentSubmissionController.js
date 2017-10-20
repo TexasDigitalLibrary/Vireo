@@ -15,7 +15,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
         $scope.studentSubmissionRepoReady = true;
 
-        $scope.submission = new StudentSubmission(submission);
+        $scope.submission = submission;
 
         $scope.onLastStep = function () {
             var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);

@@ -57,7 +57,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 fieldValue.updating = true;
                 if(typeof fieldValue.contacts === 'string') {
                   fieldValue.contacts = fieldValue.contacts.split(",");
-                }                
+                }
                 save(fieldValue);
             };
 
