@@ -832,7 +832,7 @@ var apiMapping = {
     },
     StudentSubmission: {
         lazy: true,
-        channel: '/channel/submission',
+        modelListeners: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission',
@@ -846,6 +846,11 @@ var apiMapping = {
         one: {
             'endpoint': '/private/queue',
             'controller': 'submission'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'submission',
+            'method': 'user'
         },
         create: {
             'endpoint': '/private/queue',
@@ -902,11 +907,16 @@ var apiMapping = {
     },
     AdvisorSubmission: {
         lazy: true,
-        channel: '/channel/submission',
+        modelListeners: true,
         getByHash: {
             'endpoint': '/private/queue',
             'controller': 'submission',
             'method': 'advisor-review'
+        },
+        listen: {
+            'endpoint': '/channel',
+            'controller': 'submission',
+            'method': 'advisor'
         },
         file: {
             'endpoint': '/private/queue',

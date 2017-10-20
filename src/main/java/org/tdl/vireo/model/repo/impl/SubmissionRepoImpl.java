@@ -1,5 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiAction.UPDATE;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ import org.tdl.vireo.util.FileIOUtility;
 
 import edu.tamu.framework.model.Credentials;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
@@ -149,6 +153,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             fieldValue.setValue("false");
             submission.addFieldValue(fieldValue);
         });
+    }
+
+    @Override
+    public Submission update(Submission submission) {
+        submission = super.update(submission);
+        simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
+        return submission;
     }
 
     @Override

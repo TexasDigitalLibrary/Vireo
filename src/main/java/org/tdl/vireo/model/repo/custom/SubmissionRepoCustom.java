@@ -17,7 +17,9 @@ import edu.tamu.framework.model.Credentials;
 public interface SubmissionRepoCustom {
 
     public Submission create(User submitter, Organization organization, SubmissionStatus submissionStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception;
-    
+
+    public Submission update(Submission submission);
+
     public Submission updateStatus(Submission submission, SubmissionStatus status, Credentials credentials);
 
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable);
