@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -140,6 +141,9 @@ public class SubmissionController {
 
     @Autowired
     private RoleService roleService;
+    
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Transactional
     @ApiMapping("/all")
@@ -297,6 +301,9 @@ public class SubmissionController {
 
                 }
                 apiResponse = new ApiResponse(SUCCESS, fieldValue);
+                
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/field-values", apiResponse);
+
 
             } else {
                 Map<String, Map<String, String>> orcidErrorsMap = new HashMap<String, Map<String, String>>();
@@ -353,6 +360,7 @@ public class SubmissionController {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, credentials);
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
@@ -563,6 +571,7 @@ public class SubmissionController {
         Submission submission = submissionRepo.read(submissionId);
         submission.removeFieldValue(fieldValue);
         submission = submissionRepo.update(submission);
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/removed-field-value", new ApiResponse(SUCCESS, fieldValue));
         return new ApiResponse(SUCCESS, submission);
     }
 
