@@ -191,7 +191,7 @@ public class SubmissionListController {
 
         String criterionName = (String) data.get("criterionName");
         String filterValue = (String) data.get("filterValue");
-        Boolean exactMatch = Boolean.valueOf((String) data.get("exactMatch"));
+        Boolean exactMatch = (Boolean) data.get("exactMatch");
 
         JsonNode filterGlossNode = objectMapper.convertValue(data, JsonNode.class).get("filterGloss");
 
