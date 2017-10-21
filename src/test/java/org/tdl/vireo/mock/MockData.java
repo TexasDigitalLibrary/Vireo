@@ -42,14 +42,14 @@ public abstract class MockData {
     protected final static String TEST_VOCABULARY_WORD_IDENTIFIER2 = "http://nasa.gov";
     protected final static String TEST_VOCABULARY_WORD_IDENTIFIER3 = "http://library.tamu.edu";
 
-    protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.STUDENT);
+    protected User TEST_USER = new User(TEST_USER_EMAIL, TEST_USER_FIRST_NAME, TEST_USER_LAST_NAME, Role.ROLE_STUDENT);
 
     protected final static String TEST_USER2_EMAIL = "aggieJack@tamu.edu";
     protected final static String TEST_USER3_EMAIL = "aggieJill@tamu.edu";
     protected final static String TEST_USER4_EMAIL = "jimInny@tdl.org";
 
-    protected User TEST_USER2 = new User(TEST_USER2_EMAIL, "Jack", "Daniels", Role.ADMINISTRATOR);
-    protected User TEST_USER3 = new User(TEST_USER3_EMAIL, "Jill", "Daniels", Role.MANAGER);
-    protected User TEST_USER4 = new User(TEST_USER4_EMAIL, "Jim", "Inny", Role.STUDENT);
+    protected User TEST_USER2 = new User(TEST_USER2_EMAIL, "Jack", "Daniels", Role.ROLE_ADMIN);
+    protected User TEST_USER3 = new User(TEST_USER3_EMAIL, "Jill", "Daniels", Role.ROLE_MANAGER);
+    protected User TEST_USER4 = new User(TEST_USER4_EMAIL, "Jim", "Inny", Role.ROLE_STUDENT);
 
 }

@@ -3,7 +3,7 @@ var appConfig = {
 	'version': '4.0.x',
 
 	'allowAnonymous': true,
-	'anonymousRole': 'NONE',
+	'anonymousRole': 'ROLE_NONE',
 
 	'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
 	'webService': window.location.protocol + '//' + window.location.host + window.location.base,

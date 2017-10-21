@@ -21,7 +21,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
     private ConfigurationRepo configurationRepo;
 
     @Override
-    public User updateUserByCredentials(Credentials credentials) {
+    public synchronized User updateUserByCredentials(Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
 
         Map<String, String> shibSettings = new HashMap<String, String>();
@@ -46,7 +46,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         // do not create new user from basic login credentials that have no user!
         if (user == null) {
 
-            Role role = Role.STUDENT;
+            Role role = Role.ROLE_STUDENT;
 
             if (credentials.getRole() == null) {
                 credentials.setRole(role.toString());
@@ -56,7 +56,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
-                    role = Role.ADMINISTRATOR;
+                    role = Role.ROLE_ADMIN;
                     credentials.setRole(role.toString());
                 }
             }
@@ -96,7 +96,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
     @Override
     public String getAnonymousRole() {
-        return Role.NONE.toString();
+        return Role.ROLE_NONE.toString();
     }
 
 }

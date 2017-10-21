@@ -182,7 +182,7 @@ public class SubmissionController {
         Submission submissionToDelete = submissionRepo.read(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() >= Role.MANAGER.ordinal()) {
+        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() >= Role.ROLE_MANAGER.ordinal()) {
             submissionRepo.delete(submissionId);
         } else {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");

@@ -6,37 +6,37 @@ vireo.config(function($locationProvider, $routeProvider) {
 		when('/myprofile', {
 			templateUrl: 'views/myprofile.html',
 			controller: 'SettingsController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/history', {
 			templateUrl: 'views/submission/submissionHistory.html',
 			controller: 'SubmissionHistoryController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/new', {
 			templateUrl: 'views/submission/submissionNew.html',
 			controller: 'NewSubmissionController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/complete', {
 			templateUrl: 'views/submission/submissionComplete.html',
 			controller: 'CompleteSubmissionController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/:submissionId', {
 			templateUrl: 'views/submission/submission.html',
 			controller: 'StudentSubmissionController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/:submissionId/step/:stepNum', {
 			templateUrl: 'views/submission/submission.html',
 			controller: 'StudentSubmissionController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/submission/:submissionId/view', {
 			templateUrl: 'views/submission/submissionView.html',
 			controller: 'SubmissionViewController',
-			access: ["ADMINISTRATOR", "MANAGER", "STUDENT"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
 		}).
 		when('/review/:advisorAccessHash', {
 			templateUrl: 'views/submission/advisorReview.html',
@@ -44,35 +44,35 @@ vireo.config(function($locationProvider, $routeProvider) {
 		}).
 		when('/users', {
 			templateUrl: 'views/users.html',
-			access: ["ADMINISTRATOR", "MANAGER"]
+			access: ["ROLE_ADMIN", "ROLE_MANAGER"]
 		}).
 		when('/register', {
 			templateUrl: 'views/register.html'
 		}).
 		when('/admin', {
 			redirectTo: '/admin/list',
-			access: ["ADMINISTRATOR"]
+			access: ["ROLE_ADMIN"]
 		}).
 		when('/admin/list', {
 			templateUrl: 'views/admin/admin.html',
-			access: ["ADMINISTRATOR"]
+			access: ["ROLE_ADMIN"]
 		}).
 		when('/admin/view/:tab/:id', {
 			templateUrl: 'views/admin/admin.html',
-			access: ["ADMINISTRATOR"],
+			access: ["ROLE_ADMIN"],
 			reloadOnSearch: false
 		}).
 		when('/admin/log', {
 			templateUrl: 'views/admin/admin.html',
-			access: ["ADMINISTRATOR"]
+			access: ["ROLE_ADMIN"]
 		}).
 		when('/admin/settings', {
 			redirectTo: '/admin/settings/application',
-			access: ["ADMINISTRATOR"]
+			access: ["ROLE_ADMIN"]
 		}).
 		when('/admin/settings/:tab', {
 			templateUrl: 'views/admin/admin.html',
-			access: ["ADMINISTRATOR"],
+			access: ["ROLE_ADMIN"],
 			controller: 'SettingsController',
 			reloadOnSearch: false
 		}).

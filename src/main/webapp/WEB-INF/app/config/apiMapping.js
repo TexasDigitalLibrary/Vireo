@@ -903,6 +903,7 @@ var apiMapping = {
     },
     User: {
         validations: true,
+        lazy: true,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',

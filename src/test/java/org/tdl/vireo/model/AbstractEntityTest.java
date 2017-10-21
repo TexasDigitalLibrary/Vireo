@@ -191,17 +191,17 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SUBMISSION_SUBMITTER_EMAIL = "admin@tdl.org";
     protected static final String TEST_SUBMISSION_SUBMITTER_FIRSTNAME = "TDL";
     protected static final String TEST_SUBMISSION_SUBMITTER_LASTNAME = "Admin";
-    protected static final Role TEST_SUBMISSION_SUBMITTER_ROLE = Role.ADMINISTRATOR;
+    protected static final Role TEST_SUBMISSION_SUBMITTER_ROLE = Role.ROLE_ADMIN;
 
     protected static final String TEST_SUBMISSION_REVIEWER1_EMAIL = "reviewer1@tdl.org";
     protected static final String TEST_SUBMISSION_REVIEWER1_FIRSTNAME = "Ronald";
     protected static final String TEST_SUBMISSION_REVIEWER1_LASTNAME = "Reviewer";
-    protected static final Role TEST_SUBMISSION_REVIEWER1_ROLE = Role.REVIEWER;
+    protected static final Role TEST_SUBMISSION_REVIEWER1_ROLE = Role.ROLE_REVIEWER;
 
     protected static final String TEST_SUBMISSION_REVIEWER2_EMAIL = "reviewer2@tdl.org";
     protected static final String TEST_SUBMISSION_REVIEWER2_FIRSTNAME = "Roger";
     protected static final String TEST_SUBMISSION_REVIEWER2_LASTNAME = "Reviewer";
-    protected static final Role TEST_SUBMISSION_REVIEWER2_ROLE = Role.REVIEWER;
+    protected static final Role TEST_SUBMISSION_REVIEWER2_ROLE = Role.ROLE_REVIEWER;
 
     protected static final String TEST_SEVERABLE_FIELD_PREDICATE_VALUE = "dc.detachable";
 
@@ -280,12 +280,12 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_EXCLUDED_SUBMITTER_EMAIL = "excludedSubmitter@tdl.org";
     protected static final String TEST_EXCLUDED_SUBMITTER_FIRSTNAME = "Included Submitter First Name";
     protected static final String TEST_EXCLUDED_SUBMITTER_LASTNAME = "Included Submitter Last Name";
-    protected static final Role TEST_SUBMITTER_ROLE = Role.STUDENT;
+    protected static final Role TEST_SUBMITTER_ROLE = Role.ROLE_STUDENT;
 
     protected static final String TEST_ASSIGNEE_EMAIL = "assignee@tdl.org";
     protected static final String TEST_ASSIGNEE_FIRSTNAME = "TDL";
     protected static final String TEST_ASSIGNEE_LASTNAME = "Admin";
-    protected static final Role TEST_ASSIGNEE_ROLE = Role.MANAGER;
+    protected static final Role TEST_ASSIGNEE_ROLE = Role.ROLE_MANAGER;
 
     protected static final String TEST_EMBARGO_NAME = "Test Embargo Name";
     protected static final String TEST_EMBARGO_NAME_2 = "Test Embargo 2 Name";
@@ -309,7 +309,7 @@ public abstract class AbstractEntityTest {
     protected static final String TEST_SEVERABLE_NOTE_NAME = "Test Severable Note Name";
     protected static final String TEST_SEVERABLE_NOTE_TEXT = "Test Severable Note Text";
 
-    protected static final Role TEST_USER_ROLE = Role.STUDENT;
+    protected static final Role TEST_USER_ROLE = Role.ROLE_STUDENT;
 
     protected static final Calendar TEST_ACTION_LOG_ACTION_DATE = Calendar.getInstance();
     protected static final UUID TEST_UUID = UUID.randomUUID();

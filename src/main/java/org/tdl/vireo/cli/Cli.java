@@ -103,7 +103,7 @@ public class Cli implements CommandLineRunner {
                     }
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
-                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.STUDENT);
+                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.ROLE_STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
                         credentials.setLastName("Boring");

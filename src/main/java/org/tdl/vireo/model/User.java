@@ -143,6 +143,10 @@ public class User extends AbstractWeaverUserDetails {
         setSubmissionViewColumns(displayedSubmissionColumns);
     }
 
+    public User(User user) {
+        this(user.getEmail(), user.getFirstName(), user.getLastName(), (Role) user.getRole());
+    }
+
     /**
      * @return the netid
      */

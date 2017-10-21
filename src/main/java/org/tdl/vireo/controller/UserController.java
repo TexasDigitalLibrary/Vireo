@@ -21,7 +21,6 @@ import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.auth.service.UserCredentialsService;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
@@ -36,31 +35,22 @@ public class UserController {
     private UserRepo userRepo;
 
     @Autowired
-    private UserCredentialsService<User, UserRepo> userCredentialsService;
-
-    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @RequestMapping("/credentials")
-    @PreAuthorize("hasRole('NONE')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ApiResponse credentials(@WeaverCredentials Credentials credentials) {
-        User user = userRepo.findByEmail(credentials.getEmail());
-        if (user == null) {
-            LOG.debug("User not registered! Responding with anonymous credentials!");
-            return new ApiResponse(SUCCESS, userCredentialsService.buildAnonymousCredentials());
-        }
-        credentials.setRole(user.getRole().toString());
         return new ApiResponse(SUCCESS, credentials);
     }
 
     @Transactional
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateRole(@WeaverValidatedModel User updatedUser) {
@@ -85,7 +75,7 @@ public class UserController {
         return new ApiResponse(SUCCESS, user.getSettings());
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('ROLE_STUDENT')")
     @RequestMapping(value = "/settings/update", method = POST)
     public ApiResponse updateSetting(@WeaverCredentials Credentials shib, @RequestBody Map<String, String> userSettings) {
         User user = userRepo.findByEmail(shib.getEmail());
