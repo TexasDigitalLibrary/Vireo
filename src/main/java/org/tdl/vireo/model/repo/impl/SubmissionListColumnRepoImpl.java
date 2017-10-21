@@ -3,8 +3,8 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionListColumnRepoCustom;

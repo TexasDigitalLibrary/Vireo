@@ -12,7 +12,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.auth.model.Credentials;
 
 public interface SubmissionRepoCustom {
 
@@ -20,7 +20,7 @@ public interface SubmissionRepoCustom {
 
     public Submission update(Submission submission);
 
-    public Submission updateStatus(Submission submission, SubmissionStatus status, Credentials credentials);
+    public Submission updateStatus(Submission submission, SubmissionStatus status, User user);
 
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable);
 

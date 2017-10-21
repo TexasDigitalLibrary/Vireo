@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Profile;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
-import edu.tamu.framework.config.CoreEmailConfig;
-import edu.tamu.framework.util.CoreEmailUtility;
-import edu.tamu.framework.util.EmailSender;
+import edu.tamu.weaver.email.config.WeaverEmailConfig;
+import edu.tamu.weaver.email.service.EmailSender;
+import edu.tamu.weaver.email.service.WeaverEmailService;
 
 @Configuration
 @Profile(value = { "!test" })
-public class AppEmailConfig extends CoreEmailConfig {
+public class AppEmailConfig extends WeaverEmailConfig {
 
     @Value("${app.email.host}")
     private String defaultHost;
@@ -28,13 +28,13 @@ public class AppEmailConfig extends CoreEmailConfig {
     @Autowired
     private ConfigurationRepo configurationRepo;
 
-    @Override
     @Bean
+    @Override
     public EmailSender emailSender() {
-        CoreEmailUtility emailUtility = new CoreEmailUtility();
+        WeaverEmailService emailUtility = new WeaverEmailService();
 
         emailUtility.setDefaultEncoding("UTF-8");
-        
+
         emailUtility.setFrom(getConfigValue(ConfigurationName.APPLICATION_MAIL_FROM, defaultFrom));
         emailUtility.setReplyTo(getConfigValue(ConfigurationName.APPLICATION_MAIL_REPLYTO, defaultReplyTo));
 
@@ -52,11 +52,12 @@ public class AppEmailConfig extends CoreEmailConfig {
 
     private String getConfigValue(String name, String defaultValue) {
         String value = configurationRepo.getValueByName(name);
-        return (value != null) ? value:defaultValue;
+        return (value != null) ? value : defaultValue;
     }
 
     private Integer getConfigValue(String name, Integer defaultValue) {
-        Integer value =  Integer.getInteger(configurationRepo.getValueByName(name));
-        return (value != null) ? value:defaultValue;
+        Integer value = Integer.getInteger(configurationRepo.getValueByName(name));
+        return (value != null) ? value : defaultValue;
     }
+
 }

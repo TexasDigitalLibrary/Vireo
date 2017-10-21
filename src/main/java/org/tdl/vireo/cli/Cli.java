@@ -7,7 +7,7 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
@@ -22,7 +22,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.auth.model.Credentials;
 
 @Component
 public class Cli implements CommandLineRunner {
@@ -103,7 +103,7 @@ public class Cli implements CommandLineRunner {
                     }
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
-                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", AppRole.STUDENT);
+                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
                         credentials.setLastName("Boring");

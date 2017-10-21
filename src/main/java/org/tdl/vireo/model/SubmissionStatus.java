@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

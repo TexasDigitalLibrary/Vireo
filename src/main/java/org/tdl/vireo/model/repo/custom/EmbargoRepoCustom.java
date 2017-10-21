@@ -1,7 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
 
 public interface EmbargoRepoCustom {
 

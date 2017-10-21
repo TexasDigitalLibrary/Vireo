@@ -1,7 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.SubmissionState;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionStatusRepoCustom;

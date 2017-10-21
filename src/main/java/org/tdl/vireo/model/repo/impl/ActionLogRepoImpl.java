@@ -11,10 +11,8 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
-import edu.tamu.framework.model.Credentials;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -25,9 +23,6 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
 
     @Autowired
     private SubmissionRepo submissionRepo;
-
-    @Autowired
-    private UserRepo userRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -51,8 +46,7 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     }
 
     @Override
-    public ActionLog createPublicLog(Submission submission, Credentials credentials, String entry) {
-        User user = userRepo.findByEmail(credentials.getEmail());
+    public ActionLog createPublicLog(Submission submission, User user, String entry) {
         return create(submission, user, Calendar.getInstance(), entry, false);
     }
 
@@ -62,8 +56,7 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     }
 
     @Override
-    public ActionLog createPrivateLog(Submission submission, Credentials credentials, String entry) {
-        User user = userRepo.findByEmail(credentials.getEmail());
+    public ActionLog createPrivateLog(Submission submission, User user, String entry) {
         return create(submission, user, Calendar.getInstance(), entry, true);
     }
 

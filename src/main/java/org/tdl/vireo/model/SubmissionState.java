@@ -1,4 +1,4 @@
-package org.tdl.vireo.enums;
+package org.tdl.vireo.model;
 
 public enum SubmissionState {
 	NONE(0), 

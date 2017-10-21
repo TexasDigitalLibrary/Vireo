@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.AbstractFieldProfile;
 import org.tdl.vireo.model.FieldGloss;
@@ -17,8 +19,6 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
@@ -28,7 +28,7 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
  *
  */
 @RestController
-@ApiMapping("/settings/field-gloss")
+@RequestMapping("/settings/field-gloss")
 public class FieldGlossController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -47,8 +47,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAllFieldGlosses() {
         return new ApiResponse(SUCCESS, fieldGlossRepo.findAll());
     }
@@ -58,8 +58,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all input types.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
@@ -73,8 +73,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all field glosses.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "fieldGlosses", "id" }) })
     public ApiResponse RemoveFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
@@ -88,8 +88,8 @@ public class FieldGlossController {
      *
      * @return ApiResponse with all field glosses.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse UpdateFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());

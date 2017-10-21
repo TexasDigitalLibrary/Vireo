@@ -11,7 +11,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
@@ -34,16 +38,12 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.framework.aspect.annotation.ApiData;
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
-@ApiMapping("/organization")
+@RequestMapping("/organization")
 public class OrganizationController {
 
     @Autowired
@@ -71,30 +71,30 @@ public class OrganizationController {
     private ObjectMapper objectMapper;
 
     @Transactional
-    @ApiMapping("/all")
-    @Auth(role = "STUDENT")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse allOrganizations() {
         return new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc());
     }
 
     @Transactional
-    @ApiMapping("/get/{id}")
-    @Auth(role = "STUDENT")
-    public ApiResponse getOrganization(@ApiVariable Long id) {
+    @RequestMapping("/get/{id}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getOrganization(@PathVariable Long id) {
         return new ApiResponse(SUCCESS, organizationRepo.read(id));
     }
 
-    @ApiMapping(value = "/create/{parentOrgID}", method = POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/create/{parentOrgID}", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-    public ApiResponse createOrganization(@ApiVariable Long parentOrgID, @WeaverValidatedModel Organization organization) {
+    public ApiResponse createOrganization(@PathVariable Long parentOrgID, @WeaverValidatedModel Organization organization) {
         Organization parentOrganization = organizationRepo.read(parentOrgID);
         organization = organizationRepo.create(organization.getName(), parentOrganization, organization.getCategory());
         return new ApiResponse(SUCCESS, organization);
     }
 
-    @ApiMapping(value = "/update", method = POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateOrganization(@WeaverValidatedModel Organization organization) {
         Organization persistedOrg = organizationRepo.read(organization.getId());
@@ -103,16 +103,16 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, persistedOrg);
     }
 
-    @ApiMapping(value = "/delete", method = POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/delete", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "originalWorkflowSteps" }, joins = { Submission.class }), @WeaverValidation.Business(value = DELETE, path = { "id" }, restrict = "1") })
     public ApiResponse deleteOrganization(@WeaverValidatedModel Organization organization) {
         organizationRepo.delete(organization);
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been deleted!");
     }
 
-    @ApiMapping(value = "/restore-defaults", method = POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/restore-defaults", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse restoreOrganizationDefaults(@WeaverValidatedModel Organization organization) {
         organization = organizationRepo.restoreDefaults(organization);
@@ -120,9 +120,9 @@ public class OrganizationController {
     }
 
     @Transactional
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{requestingOrgID}/add-email-workflow-rule", method = POST)
-    public ApiResponse addEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiData Map<String, Object> data) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgID}/add-email-workflow-rule", method = POST)
+    public ApiResponse addEmailWorkflowRule(@PathVariable Long requestingOrgID, @RequestBody Map<String, Object> data) {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
@@ -145,9 +145,9 @@ public class OrganizationController {
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/edit-email-workflow-rule/{emailWorkflowRuleId}")
-    @Auth(role = "MANAGER")
-    public ApiResponse editEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId, @ApiData Map<String, Object> data) {
+    @RequestMapping("/{requestingOrgID}/edit-email-workflow-rule/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse editEmailWorkflowRule(@PathVariable Long requestingOrgID, @PathVariable Long emailWorkflowRuleId, @RequestBody Map<String, Object> data) {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
@@ -176,9 +176,9 @@ public class OrganizationController {
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/remove-email-workflow-rule/{emailWorkflowRuleId}")
-    @Auth(role = "MANAGER")
-    public ApiResponse removeEmailWorkflowRule(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId) {
+    @RequestMapping("/{requestingOrgID}/remove-email-workflow-rule/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgID, @PathVariable Long emailWorkflowRuleId) {
 
         Organization org = organizationRepo.read(requestingOrgID);
         EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
@@ -186,14 +186,14 @@ public class OrganizationController {
         org.removeEmailWorkflowRule(rule);
 
         organizationRepo.update(org);
-        
+
         return new ApiResponse(SUCCESS);
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
-    @Auth(role = "MANAGER")
-    public ApiResponse changeEmailWorkflowRuleActivation(@ApiVariable Long requestingOrgID, @ApiVariable Long emailWorkflowRuleId) {
+    @RequestMapping("/{requestingOrgID}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse changeEmailWorkflowRuleActivation(@PathVariable Long requestingOrgID, @PathVariable Long emailWorkflowRuleId) {
 
         EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
 
@@ -202,44 +202,44 @@ public class OrganizationController {
         emailWorkflowRuleRepo.save(rule);
 
         organizationRepo.broadcast(requestingOrgID);
-        
+
         return new ApiResponse(SUCCESS);
     }
 
     @Transactional
-    @ApiMapping("/{requestingOrgID}/workflow")
-    @Auth(role = "STUDENT")
-    public ApiResponse getWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID) {
+    @RequestMapping("/{requestingOrgID}/workflow")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getWorkflowStepsForOrganization(@PathVariable Long requestingOrgID) {
         Organization org = organizationRepo.read(requestingOrgID);
         return new ApiResponse(SUCCESS, org.getAggregateWorkflowSteps());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{requestingOrgID}/create-workflow-step", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgID}/create-workflow-step", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-    public ApiResponse createWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
+    public ApiResponse createWorkflowStepsForOrganization(@PathVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
         Organization org = organizationRepo.read(requestingOrgID);
         WorkflowStep newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), org);
         organizationRepo.broadcast(requestingOrgID);
         return new ApiResponse(SUCCESS, newWorkflowStep);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgID}/update-workflow-step", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateWorkflowStepsForOrganization(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse updateWorkflowStepsForOrganization(@PathVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.read(requestingOrgID);
 
         workflowStepRepo.update(workflowStep, requestingOrg);
         organizationRepo.broadcast(requestingOrgID);
-        
+
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping(value = "/{requestingOrgID}/delete-workflow-step", method = POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/{requestingOrgID}/delete-workflow-step", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-    public ApiResponse deleteWorkflowStep(@ApiVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
+    public ApiResponse deleteWorkflowStep(@PathVariable Long requestingOrgID, @WeaverValidatedModel WorkflowStep workflowStep) {
         Organization requestingOrg = organizationRepo.read(requestingOrgID);
         WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStep.getId());
 
@@ -250,9 +250,9 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgID}/shift-workflow-step-up/{workflowStepID}")
-    @Auth(role = "MANAGER")
-    public ApiResponse shiftWorkflowStepUp(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+    @RequestMapping("/{requestingOrgID}/shift-workflow-step-up/{workflowStepID}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse shiftWorkflowStepUp(@PathVariable Long requestingOrgID, @PathVariable Long workflowStepID) {
         Organization requestingOrg = organizationRepo.read(requestingOrgID);
         WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
 
@@ -269,9 +269,9 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgID}/shift-workflow-step-down/{workflowStepID}")
-    @Auth(role = "MANAGER")
-    public ApiResponse shiftWorkflowStepDown(@ApiVariable Long requestingOrgID, @ApiVariable Long workflowStepID) {
+    @RequestMapping("/{requestingOrgID}/shift-workflow-step-down/{workflowStepID}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse shiftWorkflowStepDown(@PathVariable Long requestingOrgID, @PathVariable Long workflowStepID) {
         Organization requestingOrg = organizationRepo.read(requestingOrgID);
         WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
 

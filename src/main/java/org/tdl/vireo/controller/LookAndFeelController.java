@@ -7,10 +7,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.config.constant.ConfigurationName;
@@ -18,17 +23,13 @@ import org.tdl.vireo.controller.model.LookAndFeelControllerModel;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.utility.FileIOUtility;
 
-import edu.tamu.framework.aspect.annotation.ApiInputStream;
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiModel;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
-@ApiMapping("/settings/look-and-feel")
+@RequestMapping("/settings/look-and-feel")
 public class LookAndFeelController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -44,9 +45,11 @@ public class LookAndFeelController {
 
     private String lookAndFeelType = "lookAndFeel";
 
-    @ApiMapping(value = "/logo/upload", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
-    public ApiResponse uploadLogo(@ApiModel LookAndFeelControllerModel lfModel, @ApiInputStream InputStream inputStream) throws IOException {
+    @RequestMapping(value = "/logo/upload", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse uploadLogo(@RequestBody LookAndFeelControllerModel lfModel, HttpServletRequest request) throws IOException {
+
+        InputStream inputStream = request.getInputStream();
 
         String logoName = lfModel.getSetting();
         String logoFileName = logoName + "." + lfModel.getFileType();
@@ -64,10 +67,10 @@ public class LookAndFeelController {
         return new ApiResponse(SUCCESS, newLogoConfig);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/logo/reset", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/logo/reset", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = RESET) })
-    public ApiResponse resetLogo(@ApiModel LookAndFeelControllerModel lfModel) {
+    public ApiResponse resetLogo(@RequestBody LookAndFeelControllerModel lfModel) {
         logger.info("Resetting logo " + lfModel.getSetting());
         Configuration systemLogo = configurationRepo.getByNameAndType(lfModel.getSetting(), lookAndFeelType);
         Configuration defaultLogoConfig = configurationRepo.reset((ManagedConfiguration) systemLogo);

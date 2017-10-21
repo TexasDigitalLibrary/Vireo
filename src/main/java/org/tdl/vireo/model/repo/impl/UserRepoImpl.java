@@ -1,7 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
@@ -27,7 +27,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @Override
-    public User create(String email, String firstName, String lastName, AppRole role) {
+    public User create(String email, String firstName, String lastName, Role role) {
 
         User newUser = new User(email, firstName, lastName, role);
 

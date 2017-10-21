@@ -1,7 +1,7 @@
 vireo.controller('UserRepoController', function ($controller, $location, $route, $q, $scope, $timeout, StorageService, User, UserRepo, UserService) {
-    
+
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-    
+
     $scope.user = UserService.getCurrentUser();
 
     $scope.users = UserRepo.getAll();
@@ -10,7 +10,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     	$scope.modalData = {};
 		$scope.closeModal();
 	});
-    
+
     $scope.ready = $q.all([$scope.user.ready(), UserRepo.ready()]);
 
     $scope.roles = {
@@ -21,16 +21,16 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     };
 
     $scope.modalData = {};
-    
+
     $scope.ready.then(function() {
 
 		$scope.updateRole = function(user, role) {
 			user.role = role !== undefined ? role : user.role;
 			user.save();
 		};
-		
+
 		$scope.allowableRoles = function(userRole) {
-			if(sessionStorage.role == 'ADMINISTRATOR') {				
+			if(sessionStorage.role == 'ADMINISTRATOR') {
 				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
 			}
 			else if(sessionStorage.role == 'MANAGER') {
@@ -53,7 +53,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 		$scope.selectUser = function (selectedUser) {
             $scope.modalData = selectedUser;
         };
-		
+
 		UserRepo.listen(function() {
 	    	$scope.user = new User();
 	    	$timeout(function() {
@@ -61,7 +61,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 					$location.path('/myprofile');
 				}
 	    	}, 250);
-	    	
+
 		});
 
     });

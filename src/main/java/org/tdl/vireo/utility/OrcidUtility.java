@@ -1,4 +1,4 @@
-package org.tdl.vireo.util;
+package org.tdl.vireo.utility;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,38 +8,35 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import edu.tamu.framework.model.Credentials;
-
-@Service
 public class OrcidUtility {
 
     private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
 
-    public Map<String, String> verifyOrcid(Credentials credentials, FieldValue fieldValue) {
+    public static Map<String, String> verifyOrcid(User user, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
         if (fieldValue.getValue() == "") {
             errors.put("orcid-no-orcid", "Field must be a valid ORCID");
         } else {
-            Document doc = this.getDocument(fieldValue.getValue());
+            Document doc = getDocument(fieldValue.getValue());
             if (doc == null) {
                 errors.put("orcid-no-document", "No public profile was found for this ORCID");
             } else {
                 if (doc.getElementsByTagName("orcid-message") == null) {
                     errors.put("orcid-no-document", "No public profile was found for this ORCID");
                 }
-                if (!tagMatchesCredentials(credentials.getFirstName(), doc.getElementsByTagName("given-names"))) {
+                if (!tagMatchesCredentials(user.getFirstName(), doc.getElementsByTagName("given-names"))) {
                     errors.put("orcid-invalid-first-name", "The first name you registered with does not match this ORCID profile");
                 }
-                if (!tagMatchesCredentials(credentials.getLastName(), doc.getElementsByTagName("family-name"))) {
+                if (!tagMatchesCredentials(user.getLastName(), doc.getElementsByTagName("family-name"))) {
                     errors.put("orcid-invalid-last-name", "The last name you registered with does not match this ORCID profile");
                 }
-                if (!tagMatchesCredentials(credentials.getEmail(), doc.getElementsByTagName("email"))) {
+                if (!tagMatchesCredentials(user.getEmail(), doc.getElementsByTagName("email"))) {
                     errors.put("orcid-no-invalid-email", "The email you registered with does not match this ORCID profile");
                 }
             }
@@ -47,7 +44,7 @@ public class OrcidUtility {
         return errors;
     }
 
-    private boolean tagMatchesCredentials(String credential, NodeList tags) {
+    private static boolean tagMatchesCredentials(String credential, NodeList tags) {
         boolean hasMatch = false;
         for (int i = 0; i < tags.getLength(); i++) {
             if (tags.item(i).getTextContent().equals(credential)) {
@@ -57,8 +54,8 @@ public class OrcidUtility {
         return hasMatch;
     }
 
-    private Document getDocument(String orcid) {
-        DocumentBuilder builder = this.getBuilder();
+    private static Document getDocument(String orcid) {
+        DocumentBuilder builder = getBuilder();
         Document doc = null;
         try {
             doc = builder.parse(ORCID_API.replace("#", orcid));
@@ -72,7 +69,7 @@ public class OrcidUtility {
         return doc;
     }
 
-    private DocumentBuilder getBuilder() {
+    private static DocumentBuilder getBuilder() {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
         try {

@@ -25,7 +25,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -34,6 +33,7 @@ import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
@@ -49,9 +49,9 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
-import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.utility.FileIOUtility;
 
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -163,7 +163,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
-    public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
+    public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, User user) {
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
@@ -200,11 +200,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
 
             if (attachProquestLicense) {
-                writeLicenseFile(credentials, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
+                writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
             }
 
             if (attachDefaultLicenseFieldValues) {
-                writeLicenseFile(credentials, submission, "submit_license", "license", "submission");
+                writeLicenseFile(user, submission, "submit_license", "license", "submission");
             }
             break;
         case APPROVED:
@@ -242,11 +242,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         super.update(submission);
 
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
+        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
 
-    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
+    private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {
 
         byte[] licenseBytes = null;
 
@@ -274,7 +274,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         licenseBytes = proquestLicenseStringBuilder.toString().getBytes();
 
         if (licenseBytes != null) {
-            int hash = credentials.getEmail().hashCode();
+            int hash = user.getEmail().hashCode();
             String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
 
             try {

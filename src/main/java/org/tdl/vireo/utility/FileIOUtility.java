@@ -1,4 +1,4 @@
-package org.tdl.vireo.util;
+package org.tdl.vireo.utility;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

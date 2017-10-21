@@ -1,4 +1,4 @@
-package org.tdl.vireo.controller.ui;
+package org.tdl.vireo.ui.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+// TODO: this most likely can move into the framework
 @Controller
 public class ViewController {
 
@@ -15,9 +16,9 @@ public class ViewController {
     }
 
     public static ModelAndView index(HttpServletRequest request) {
-		ModelAndView index = new ModelAndView("index");
-		index.addObject("base", request.getServletContext().getContextPath());
+        ModelAndView index = new ModelAndView("index");
+        index.addObject("base", request.getServletContext().getContextPath());
         return index;
-	}
+    }
 
 }

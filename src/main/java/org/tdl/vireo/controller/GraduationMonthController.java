@@ -12,19 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
-@ApiMapping("/settings/graduation-month")
+@RequestMapping("/settings/graduation-month")
 public class GraduationMonthController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -35,14 +35,14 @@ public class GraduationMonthController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allGraduationMonths() {
         return new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Creating graduation month with month " + graduationMonth.getMonth());
@@ -51,8 +51,8 @@ public class GraduationMonthController {
         return new ApiResponse(SUCCESS, graduationMonth);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Updating graduation month with month " + graduationMonth.getMonth());
@@ -61,8 +61,8 @@ public class GraduationMonthController {
         return new ApiResponse(SUCCESS, graduationMonth);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeGraduationMonth(@WeaverValidatedModel GraduationMonth graduationMonth) {
         logger.info("Removing graduation month with id " + graduationMonth.getId());
@@ -71,20 +71,20 @@ public class GraduationMonthController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/reorder/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = GraduationMonth.class, params = { "0", "1" }) })
-    public ApiResponse reorderGraduationMonths(@ApiVariable Long src, @ApiVariable Long dest) {
+    public ApiResponse reorderGraduationMonths(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering graduation months");
         graduationMonthRepo.reorder(src, dest);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/sort/{column}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/sort/{column}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = GraduationMonth.class, params = { "0" }) })
-    public ApiResponse sortGraduationMonths(@ApiVariable String column) {
+    public ApiResponse sortGraduationMonths(@PathVariable String column) {
         logger.info("Sorting graduation months by " + column);
         graduationMonthRepo.sort(column);
         simpMessagingTemplate.convertAndSend("/channel/settings/graduation-month", new ApiResponse(SUCCESS, graduationMonthRepo.findAllByOrderByPositionAsc()));

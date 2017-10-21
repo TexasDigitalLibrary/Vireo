@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

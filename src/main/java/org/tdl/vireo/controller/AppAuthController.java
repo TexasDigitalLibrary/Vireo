@@ -6,7 +6,6 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -22,28 +21,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
-import org.tdl.vireo.util.TemplateUtility;
+import org.tdl.vireo.utility.TemplateUtility;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.tamu.framework.aspect.annotation.ApiData;
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiParameters;
-import edu.tamu.framework.controller.CoreAuthController;
+import edu.tamu.weaver.auth.controller.WeaverAuthController;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.results.ValidationResults;
 import edu.tamu.weaver.validation.utility.ValidationUtility;
 
 @RestController
-@ApiMapping("/auth")
-public class AppAuthController extends CoreAuthController {
+@RequestMapping("/auth")
+public class AppAuthController extends WeaverAuthController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -66,12 +63,12 @@ public class AppAuthController extends CoreAuthController {
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
-    @ApiMapping(value = "/register", method = { POST, GET })
-    public ApiResponse registration(@ApiData Map<String, String> dataMap, @ApiParameters Map<String, String[]> parameters) {
+    @RequestMapping(value = "/register", method = { POST, GET })
+    public ApiResponse registration(@RequestBody Map<String, String> dataMap, @RequestParam Map<String, String> parameters) {
 
         if (parameters.get("email") != null) {
 
-            String email = parameters.get("email")[0];
+            String email = parameters.get("email");
 
             if (userRepo.findByEmail(email) != null) {
                 logger.debug("Account with email " + email + " already exists!");
@@ -85,7 +82,7 @@ public class AppAuthController extends CoreAuthController {
             String content = "";
 
             try {
-                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", url + "/register?token=" + authUtility.generateToken(email, EMAIL_VERIFICATION_TYPE) } });
+                content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", url + "/register?token=" + cryptoService.generateGenericToken(email, EMAIL_VERIFICATION_TYPE) } });
             } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
                 logger.debug("Unable to generate token! " + email);
                 return new ApiResponse(ERROR, "Unable to generate token! " + email);
@@ -129,7 +126,7 @@ public class AppAuthController extends CoreAuthController {
 
         String[] content = null;
         try {
-            content = authUtility.validateToken(token, EMAIL_VERIFICATION_TYPE);
+            content = cryptoService.validateGenericToken(token, EMAIL_VERIFICATION_TYPE);
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
             logger.debug("Unable to validate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");
@@ -145,11 +142,11 @@ public class AppAuthController extends CoreAuthController {
             return new ApiResponse(ERROR, "Token has expired! Please begin registration again.");
         }
 
-        User user = userRepo.create(email, firstName, lastName, AppRole.STUDENT);
+        User user = userRepo.create(email, firstName, lastName, Role.STUDENT);
 
-        user.setUin(email);
+        user.setUsername(email);
 
-        user.setPassword(authUtility.encodePassword(password));
+        user.setPassword(cryptoService.encodePassword(password));
 
         user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
@@ -158,8 +155,8 @@ public class AppAuthController extends CoreAuthController {
         return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }
 
-    @ApiMapping(value = "/login", method = POST)
-    public ApiResponse login(@ApiData Map<String, String> dataMap) {
+    @RequestMapping(value = "/login", method = POST)
+    public ApiResponse login(@RequestBody Map<String, String> dataMap) {
 
         String email = dataMap.get("email");
         String password = dataMap.get("password");
@@ -173,7 +170,7 @@ public class AppAuthController extends CoreAuthController {
             return new ApiResponse(INVALID, invalidEmail);
         }
 
-        if (!authUtility.validatePassword(password, user.getPassword())) {
+        if (!cryptoService.validatePassword(password, user.getPassword())) {
             logger.debug("Authentication failed!");
             ValidationResults failedAuthenticationResults = new ValidationResults();
             failedAuthenticationResults.addMessage(ValidationUtility.BUSINESS_MESSAGE_KEY, "login", "Authentication failed!");
@@ -187,8 +184,8 @@ public class AppAuthController extends CoreAuthController {
             userMap.put("netid", user.getNetid());
             userMap.put("uin", user.getEmail());
             userMap.put("email", user.getEmail());
-            return new ApiResponse(SUCCESS, jwtUtility.makeToken(userMap));
-        } catch (InvalidKeyException | JsonProcessingException | NoSuchAlgorithmException | IllegalStateException | UnsupportedEncodingException e) {
+            return new ApiResponse(SUCCESS, tokenService.makeToken(userMap));
+        } catch (Exception e) {
             logger.debug("Unable to generate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");
         }

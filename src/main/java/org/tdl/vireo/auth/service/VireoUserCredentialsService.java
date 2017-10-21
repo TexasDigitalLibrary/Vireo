@@ -1,43 +1,26 @@
-package org.tdl.vireo.service;
+package org.tdl.vireo.auth.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.config.constant.ConfigurationName;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.auth.service.UserCredentialsService;
 
 @Service
-public class UserCredentialsService {
-    @Autowired
-    UserRepo userRepo;
+public class VireoUserCredentialsService extends UserCredentialsService<User, UserRepo> {
 
     @Autowired
-    ConfigurationRepo configurationRepo;
+    private ConfigurationRepo configurationRepo;
 
-    @Value("${app.authority.admins}")
-    private String[] admins;
-
-    public Credentials buildAnonymousCredentials() {
-        Credentials anonymousCredentials = new Credentials();
-        anonymousCredentials.setAffiliation("NA");
-        anonymousCredentials.setLastName("Anonymous");
-        anonymousCredentials.setFirstName("Role");
-        anonymousCredentials.setNetid("anonymous-" + Math.round(Math.random() * 100000));
-        anonymousCredentials.setUin("000000000");
-        anonymousCredentials.setExp("1436982214754");
-        anonymousCredentials.setEmail("helpdesk@library.tamu.edu");
-        anonymousCredentials.setRole("NONE");
-        return anonymousCredentials;
-    }
-
+    @Override
     public User updateUserByCredentials(Credentials credentials) {
         User user = userRepo.findByEmail(credentials.getEmail());
 
@@ -63,7 +46,7 @@ public class UserCredentialsService {
         // do not create new user from basic login credentials that have no user!
         if (user == null) {
 
-            AppRole role = AppRole.STUDENT;
+            Role role = Role.STUDENT;
 
             if (credentials.getRole() == null) {
                 credentials.setRole(role.toString());
@@ -73,7 +56,7 @@ public class UserCredentialsService {
 
             for (String email : admins) {
                 if (email.equals(shibEmail)) {
-                    role = AppRole.ADMINISTRATOR;
+                    role = Role.ADMINISTRATOR;
                     credentials.setRole(role.toString());
                 }
             }
@@ -86,7 +69,7 @@ public class UserCredentialsService {
             }
             user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
             user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
-            user.setUin(uin);
+            user.setUsername(uin);
 
             user = userRepo.save(user);
         } else {
@@ -99,14 +82,21 @@ public class UserCredentialsService {
             }
             user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
             user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
-            user.setUin(uin);
+            user.setUsername(uin);
 
             user = userRepo.save(user);
         }
 
         credentials.setRole(user.getRole().toString());
-        credentials.setUin(user.getUin());
+        credentials.setUin(user.getUsername());
 
         return user;
+
     }
+
+    @Override
+    public String getAnonymousRole() {
+        return Role.NONE.toString();
+    }
+
 }

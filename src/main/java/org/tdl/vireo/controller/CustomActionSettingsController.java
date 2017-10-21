@@ -11,19 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
-@ApiMapping("/settings/custom-action")
+@RequestMapping("/settings/custom-action")
 public class CustomActionSettingsController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,13 +34,13 @@ public class CustomActionSettingsController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @ApiMapping("/all")
+    @RequestMapping("/all")
     public ApiResponse getCustomActions() {
         return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
@@ -49,8 +49,8 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
@@ -59,8 +59,8 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS, customActionDefinition);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());
@@ -69,10 +69,10 @@ public class CustomActionSettingsController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/reorder/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = CustomActionDefinition.class, params = { "0", "1" }) })
-    public ApiResponse reorderCustomActions(@ApiVariable Long src, @ApiVariable Long dest) {
+    public ApiResponse reorderCustomActions(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering custom action definitions");
         customActionDefinitionRepo.reorder(src, dest);
         simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));

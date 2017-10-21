@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.validation.EmbargoValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

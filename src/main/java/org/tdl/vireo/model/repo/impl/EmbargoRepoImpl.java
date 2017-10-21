@@ -1,8 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 

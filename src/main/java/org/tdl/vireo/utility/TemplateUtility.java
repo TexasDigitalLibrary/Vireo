@@ -1,4 +1,4 @@
-package org.tdl.vireo.util;
+package org.tdl.vireo.utility;
 
 import java.util.Map;
 import java.util.stream.Collectors;
