@@ -20,6 +20,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.model.Role;
+import org.tdl.vireo.auth.controller.AuthController;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
