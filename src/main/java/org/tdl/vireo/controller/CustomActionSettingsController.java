@@ -29,7 +29,7 @@ public class CustomActionSettingsController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    CustomActionDefinitionRepo customActionDefinitionRepo;
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
