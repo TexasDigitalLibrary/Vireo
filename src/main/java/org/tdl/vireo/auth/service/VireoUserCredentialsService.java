@@ -96,7 +96,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
     @Override
     public String getAnonymousRole() {
-        return Role.ROLE_NONE.toString();
+        return Role.ROLE_ANONYMOUS.toString();
     }
 
 }

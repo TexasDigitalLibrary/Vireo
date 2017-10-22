@@ -31,19 +31,19 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 
 		$scope.allowableRoles = function(userRole) {
 			if(sessionStorage.role == 'ROLE_ADMIN') {
-				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
+				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
 			else if(sessionStorage.role == 'ROLE_MANAGER') {
 				if(userRole == 'ROLE_ADMIN') {
 					return ['ROLE_ADMIN'];
 				}
-				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
+				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
 			else if(sessionStorage.role == 'ROLE_REVIEWER') {
 				if(userRole == 'ROLE_ADMIN') {
 					return ['ROLE_ADMIN'];
 				}
-				return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
+				return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
 			else {
 				return [userRole];
