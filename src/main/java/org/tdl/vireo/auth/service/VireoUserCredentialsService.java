@@ -69,7 +69,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             }
             user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
             user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
-            user.setUsername(uin);
+            user.setUsername(credentials.getEmail());
 
             user = userRepo.save(user);
         } else {
@@ -82,7 +82,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             }
             user.setMiddleName(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME)));
             user.setOrcid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID)));
-            user.setUsername(uin);
+            user.setUsername(credentials.getEmail());
 
             user = userRepo.save(user);
         }

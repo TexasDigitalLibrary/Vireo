@@ -553,7 +553,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                 case "assignee.email":
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN core_users a ON a.id=s.assignee_id");
+                    sqlJoinsBuilder.append("\nLEFT JOIN weaver_users a ON a.id=s.assignee_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
