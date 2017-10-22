@@ -46,7 +46,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var firstAssignable = function () {
             var firstAssignable;
             for (var i in users) {
-                if (users[i].role === "ADMINISTRATOR" || users[i].role === "MANAGER") {
+                if (users[i].role === "ROLE_ADMIN" || users[i].role === "ROLE_MANAGER") {
                     firstAssignable = users[i];
                     break;
                 }

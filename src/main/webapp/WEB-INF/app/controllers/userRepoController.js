@@ -14,10 +14,10 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     $scope.ready = $q.all([$scope.user.ready(), UserRepo.ready()]);
 
     $scope.roles = {
-    	'ADMINISTRATOR' : 'Administrator',
-        'MANAGER' : 'Manager' ,
-        'REVIEWER': 'Reviewer',
-        'STUDENT' : 'Student'
+    	'ROLE_ADMIN' : 'Administrator',
+        'ROLE_MANAGER' : 'Manager' ,
+        'ROLE_REVIEWER': 'Reviewer',
+        'ROLE_STUDENT' : 'Student'
     };
 
     $scope.modalData = {};
@@ -30,20 +30,20 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 		};
 
 		$scope.allowableRoles = function(userRole) {
-			if(sessionStorage.role == 'ADMINISTRATOR') {
-				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
+			if(sessionStorage.role == 'ROLE_ADMIN') {
+				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
 			}
-			else if(sessionStorage.role == 'MANAGER') {
-				if(userRole == 'ADMINISTRATOR') {
-					return ['ADMINISTRATOR'];
+			else if(sessionStorage.role == 'ROLE_MANAGER') {
+				if(userRole == 'ROLE_ADMIN') {
+					return ['ROLE_ADMIN'];
 				}
-				return ['MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
+				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
 			}
-			else if(sessionStorage.role == 'REVIEWER') {
-				if(userRole == 'ADMINISTRATOR') {
-					return ['ADMINISTRATOR'];
+			else if(sessionStorage.role == 'ROLE_REVIEWER') {
+				if(userRole == 'ROLE_ADMIN') {
+					return ['ROLE_ADMIN'];
 				}
-				return ['REVIEWER', 'STUDENT', 'NONE'];
+				return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_NONE'];
 			}
 			else {
 				return [userRole];
@@ -57,7 +57,7 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 		UserRepo.listen(function() {
 	    	$scope.user = new User();
 	    	$timeout(function() {
-		    	if($scope.user.role == 'STUDENT' || $scope.user.role == 'REVIEWER') {
+		    	if($scope.user.role == 'ROLE_STUDENT' || $scope.user.role == 'ROLE_REVIEWER') {
 					$location.path('/myprofile');
 				}
 	    	}, 250);

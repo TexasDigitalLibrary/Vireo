@@ -41,7 +41,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     var findFirstAssignable = function () {
         var firstAssignable;
         for (var i in allUsers) {
-            if (allUsers[i].role === "ADMINISTRATOR" || allUsers[i].role === "MANAGER") {
+            if (allUsers[i].role === "ROLE_ADMIN" || allUsers[i].role === "ROLE_MANAGER") {
                 firstAssignable = allUsers[i];
                 break;
             }
@@ -91,7 +91,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     };
 
     var assignable = function (user) {
-        return user.role === "MANAGER" || user.role === "ADMINISTRATOR";
+        return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
     };
 
     var resetBatchCommentEmail = function () {
