@@ -43,6 +43,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import edu.tamu.weaver.auth.resolver.WeaverCredentialsArgumentResolver;
 import edu.tamu.weaver.auth.resolver.WeaverUserArgumentResolver;
+import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 
 @Configuration
 @EnableWebMvc
@@ -58,6 +59,9 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private List<HttpMessageConverter<?>> converters;
 
     /**
      * Resource url encoding filter bean.
@@ -169,6 +173,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new WeaverValidatedModelMethodProcessor(converters));
         argumentResolvers.add(new WeaverCredentialsArgumentResolver());
         argumentResolvers.add(new WeaverUserArgumentResolver<User, UserRepo>(userRepo));
     }

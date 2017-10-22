@@ -45,7 +45,7 @@ public class AppWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
      */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.taskExecutor().corePoolSize(8).maxPoolSize(Integer.MAX_VALUE);
+        registration.taskExecutor().corePoolSize(16).maxPoolSize(Integer.MAX_VALUE);
     }
 
 }
