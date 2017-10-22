@@ -15,7 +15,7 @@ import edu.tamu.weaver.WeaverInitializer;
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
 public class Application extends WeaverInitializer {
 
-    private final static Logger logger = LoggerFactory.getLogger(Application.class);
+    private final static Logger LOG = LoggerFactory.getLogger(Application.class);
 
     public static String BASE_PATH = "/var/lib/vireo/";
 
@@ -53,7 +53,7 @@ public class Application extends WeaverInitializer {
             BASE_PATH = applicationClassPathRoot + (isSpringBoot ? "../../" : "../../../");
             File customProps = new File(BASE_PATH + "conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
-                logger.info("Loading application.properties from " + BASE_PATH + "conf directory relative to our classpath");
+                LOG.info("Loading application.properties from " + BASE_PATH + "conf directory relative to our classpath");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
         }
@@ -62,11 +62,11 @@ public class Application extends WeaverInitializer {
             BASE_PATH = applicationClassPath.getParent();
             File customProps = new File(BASE_PATH + "/conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
-                logger.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
+                LOG.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
             }
         } else {
-            logger.info("Couldn't discern how we're running to be able to load an external application.properties file!");
+            LOG.info("Couldn't discern how we're running to be able to load an external application.properties file!");
         }
     }
 }

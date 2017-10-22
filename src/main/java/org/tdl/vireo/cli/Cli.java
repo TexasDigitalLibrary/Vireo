@@ -7,10 +7,10 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionStatus;
@@ -27,20 +27,20 @@ import edu.tamu.weaver.auth.model.Credentials;
 @Component
 public class Cli implements CommandLineRunner {
 
-	@Autowired
-	SubmissionRepo submissionRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-	@Autowired
-	UserRepo userRepo;
+    @Autowired
+    private FieldValueRepo fieldValueRepo;
 
-	@Autowired
-	OrganizationRepo organizationRepo;
+    @Autowired
+    private SubmissionRepo submissionRepo;
 
-	@Autowired
-	SubmissionStatusRepo submissionStatusRepo;
+    @Autowired
+    private OrganizationRepo organizationRepo;
 
-	@Autowired
-	FieldValueRepo fieldValueRepo;
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Override
     public void run(String... arg0) throws Exception {

@@ -47,7 +47,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @InjectMocks
-    private AppAuthController authController;
+    private AuthController authController;
 
     private static List<User> mockUsers;
 

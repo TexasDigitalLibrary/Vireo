@@ -52,9 +52,9 @@ public class AppWebSecurityConfig extends WeaverWebSecurityConfiguration<User, U
     protected String buildRoleHierarchy() {
         StringBuilder roleHeirarchy = new StringBuilder();
         Role[] roles = Role.values();
-        for(int i = 0; i <= roles.length - 2; i++) {
-            roleHeirarchy.append(roles[i] + " > " + roles[i + 1]);            
-            if(i < roles.length - 2) {
+        for (int i = 0; i <= roles.length - 2; i++) {
+            roleHeirarchy.append(roles[i] + " > " + roles[i + 1]);
+            if (i < roles.length - 2) {
                 roleHeirarchy.append(" ");
             }
         }
@@ -62,4 +62,3 @@ public class AppWebSecurityConfig extends WeaverWebSecurityConfiguration<User, U
     }
 
 }
-
