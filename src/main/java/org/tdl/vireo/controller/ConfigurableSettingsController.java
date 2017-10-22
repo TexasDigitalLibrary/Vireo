@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +37,7 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configurationRepo.getCurrentConfigurations());
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSetting(@WeaverValidatedModel ManagedConfiguration configuration) {
@@ -45,6 +47,7 @@ public class ConfigurableSettingsController {
         return new ApiResponse(SUCCESS, configuration);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/reset", method = POST)
     public ApiResponse resetSetting(@RequestBody ManagedConfiguration configuration) {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
