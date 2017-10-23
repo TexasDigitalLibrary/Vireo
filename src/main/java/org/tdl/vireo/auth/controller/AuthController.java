@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -178,13 +178,14 @@ public class AuthController extends WeaverAuthController {
         }
 
         try {
-            Map<String, String> userMap = new HashMap<String, String>();
-            userMap.put("lastName", user.getLastName());
-            userMap.put("firstName", user.getFirstName());
-            userMap.put("netid", user.getNetid());
-            userMap.put("uin", user.getEmail());
-            userMap.put("email", user.getEmail());
-            return new ApiResponse(SUCCESS, tokenService.makeToken(userMap));
+            Map<String, Object> claims = new HashMap<String, Object>();
+            claims.put("lastName", user.getLastName());
+            claims.put("firstName", user.getFirstName());
+            claims.put("netid", user.getNetid());
+            claims.put("uin", user.getEmail());
+            claims.put("email", user.getEmail());
+            String subject = user.getEmail();
+            return new ApiResponse(SUCCESS, tokenService.createToken(subject, claims));
         } catch (Exception e) {
             logger.debug("Unable to generate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");

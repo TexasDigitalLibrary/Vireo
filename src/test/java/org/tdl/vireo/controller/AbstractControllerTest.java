@@ -27,14 +27,19 @@ public abstract class AbstractControllerTest extends MockData {
     protected static final String SECRET_PROPERTY_NAME = "secret";
     protected static final String SECRET_VALUE = "verysecretsecret";
 
-    protected static final String JWT_SECRET_KEY_PROPERTY_NAME = "secretKey";
+    protected static final String JWT_SECRET_KEY_PROPERTY_NAME = "secret";
     protected static final String JWT_SECRET_KEY_VALUE = "verysecretsecret";
+    
+    protected static final String JWT_ISSUER_KEY_PROPERTY_NAME = "issuer";
+    protected static final String JWT_ISSUER_KEY_VALUE = "localhost";
 
-    protected static final String JWT_EXPIRATION_PROPERTY_NAME = "expiration";
-    protected static final Long JWT_EXPIRATION_VALUE = 120000L;
+    protected static final String JWT_DURATION_PROPERTY_NAME = "duration";
+    protected static final int JWT_DURATION_VALUE = 2;
 
     protected static final String SHIB_KEYS_PROPERTY_NAME = "shibKeys";
     protected static final String[] SHIB_KEYS = new String[] { "netid", "uin", "lastName", "firstName", "email" };
+    
+    protected static final String SHIB_SUBJECT_PROPERTY_NAME = "email";
 
     protected static final String EMAIL_HOST_PROPERTY_NAME = "host";
     protected static final String EMAIL_HOST_VALUE = "relay.tamu.edu";

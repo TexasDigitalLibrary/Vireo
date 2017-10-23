@@ -490,17 +490,16 @@ public abstract class AbstractEntityTest {
 
     protected Credentials getCredentials() {
         if (credentials == null) {
-            Map<String, String> token = new HashMap<String, String>();
-            token.put("lastName", TEST_USER_LASTNAME);
-            token.put("firstName", TEST_USER_FIRSTNAME);
-            token.put("netid", "netid");
-            token.put("uin", "uin");
-            token.put("exp", "expires");
-            token.put("email", TEST_USER_EMAIL);
-            token.put("role", TEST_USER_ROLE.toString());
-            token.put("affiliation", TEST_SHIBBOLETH_AFFILIATION);
-
-            credentials = new Credentials(token);
+            Map<String, Object> claims = new HashMap<String, Object>();
+            claims.put("lastName", TEST_USER_LASTNAME);
+            claims.put("firstName", TEST_USER_FIRSTNAME);
+            claims.put("netid", "netid");
+            claims.put("uin", "uin");
+            claims.put("exp", "expires");
+            claims.put("email", TEST_USER_EMAIL);
+            claims.put("role", TEST_USER_ROLE.toString());
+            claims.put("affiliation", TEST_SHIBBOLETH_AFFILIATION);
+            credentials = new Credentials(claims);
         }
         return credentials;
     }
