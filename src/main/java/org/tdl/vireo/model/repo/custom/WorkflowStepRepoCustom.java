@@ -26,8 +26,6 @@ public interface WorkflowStepRepoCustom {
 
     public WorkflowStep update(WorkflowStep workflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
 
-    public void delete(WorkflowStep workflowStep);
-
     public List<WorkflowStep> getDescendantsOfStep(WorkflowStep workflowStep);
 
     public List<Organization> getContainingDescendantOrganization(Organization organization, WorkflowStep workflowStep);

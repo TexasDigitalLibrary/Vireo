@@ -11,37 +11,33 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 /**
- * Controller in which to manage langauges.
+ * Controller in which to manage languages.
  *
  */
-@Controller
-@ApiMapping("/settings/language")
+@RestController
+@RequestMapping("/settings/language")
 public class LanguageController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private LanguageRepo languageRepo;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
     private ProquestCodesService proquestCodesService;
@@ -51,8 +47,8 @@ public class LanguageController {
      * @return
      */
     @Transactional
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAllLanguages() {
         return new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc());
     }
@@ -61,41 +57,36 @@ public class LanguageController {
      *
      * @return
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createLanguage(@WeaverValidatedModel Language language) {
         logger.info("Creating language with name " + language.getName());
-        language = languageRepo.create(language.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, language);
+        return new ApiResponse(SUCCESS, languageRepo.create(language.getName()));
     }
 
     /**
      *
      * @return
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateLanguage(@WeaverValidatedModel Language language) {
         logger.info("Updating language with name " + language.getName());
-        language = languageRepo.save(language);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, language);
+        return new ApiResponse(SUCCESS, languageRepo.update(language));
     }
 
     /**
      *
      * @return
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }) })
     public ApiResponse removeLanguage(@WeaverValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -108,13 +99,12 @@ public class LanguageController {
      *            destination position
      * @return ApiResponse indicating success
      */
-    @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/reorder/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = Language.class, params = { "0", "1" }) })
-    public ApiResponse reorderLanguage(@ApiVariable Long src, @ApiVariable Long dest) {
+    public ApiResponse reorderLanguage(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering languages");
         languageRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -125,13 +115,12 @@ public class LanguageController {
      *            column to sort by
      * @return ApiResponse indicating success
      */
-    @ApiMapping("/sort/{column}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/sort/{column}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = Language.class, params = { "0" }) })
-    public ApiResponse sortLanguage(@ApiVariable String column) {
+    public ApiResponse sortLanguage(@PathVariable String column) {
         logger.info("Sorting languages by " + column);
         languageRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -139,8 +128,8 @@ public class LanguageController {
      *
      * @return
      */
-    @ApiMapping("/proquest")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/proquest")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getProquestLanguageCodes() {
         return new ApiResponse(SUCCESS, proquestCodesService.getCodes("languages"));
     }

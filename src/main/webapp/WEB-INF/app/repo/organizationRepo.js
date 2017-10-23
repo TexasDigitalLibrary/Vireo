@@ -30,9 +30,11 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
         workflowStepsPromise.then(function (response) {
-            var aggregateWorkflowSteps = JSON.parse(response.body).payload.PersistentList;
+            var aggregateWorkflowSteps = angular.fromJson(response.body).payload.PersistentList;
             if (aggregateWorkflowSteps !== undefined) {
-                org.aggregateWorkflowSteps = aggregateWorkflowSteps;
+                org.extend({
+                  aggregateWorkflowSteps: aggregateWorkflowSteps
+                });
             }
             defer.resolve(org);
         });
@@ -51,24 +53,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             }
         });
         return promise;
-    };
-
-    this.selectiveListen = function () {
-        WsApi.listen(this.mapping.selectiveListen).then(null, null, function (rawApiResponse) {
-            var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
-            if (broadcastedOrg.id == selectedOrganization.id) {
-                organizationRepo.setSelectedOrganization(broadcastedOrg, true, true);
-                angular.forEach(selectiveListenCallbacks, function (cb) {
-                    cb(broadcastedOrg);
-                });
-            }
-        });
-    };
-
-    this.selectiveListen();
-
-    this.listenSelectively = function (cb) {
-        selectiveListenCallbacks.push(cb);
     };
 
     this.resetNewOrganization = function () {
@@ -116,7 +100,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             });
             var orgPromise = WsApi.fetch(this.mapping.get);
             orgPromise.then(function (rawApiResponse) {
-                var fetchedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
+                var fetchedOrg = new Organization(angular.fromJson(rawApiResponse.body).payload.Organization);
                 organizationRepo.add(fetchedOrg);
                 fetchAggregateWorkflow(fetchedOrg, orgDefer);
             });
@@ -156,16 +140,16 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.restoreDefaults = function(organization) {
-			angular.extend(this.mapping.restoreDefaults, {'data': organization});
-			var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
-      promise.then(function (res) {
-        if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.status === "INVALID") {
-            angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-            console.log(organizationRepo);
-        }
-      });
-			return promise;
-		};
+    	angular.extend(this.mapping.restoreDefaults, {'data': organization});
+    	var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
+        promise.then(function (res) {
+            if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.status === "INVALID") {
+                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+                console.log(organizationRepo);
+            }
+        });
+		return promise;
+	};
 
     this.updateWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();

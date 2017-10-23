@@ -32,6 +32,4 @@ public interface FieldProfileRepoCustom {
 
     public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
 
-    public void delete(FieldProfile fieldProfile);
-
 }

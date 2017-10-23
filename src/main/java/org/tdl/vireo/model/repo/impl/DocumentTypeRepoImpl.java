@@ -7,33 +7,15 @@ import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.custom.DocumentTypeRepoCustom;
 
-import edu.tamu.weaver.data.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class DocumentTypeRepoImpl implements DocumentTypeRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class DocumentTypeRepoImpl extends AbstractWeaverOrderedRepoImpl<DocumentType, DocumentTypeRepo> implements DocumentTypeRepoCustom {
 
     @Autowired
     private DocumentTypeRepo documentTypeRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-
-    @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(DocumentType.class, src, dest);
-    }
-
-    @Override
-    public void sort(String column) {
-        orderedEntityService.sort(DocumentType.class, column);
-    }
-
-    @Override
-    public void remove(DocumentType documentType) {
-        orderedEntityService.remove(documentTypeRepo, DocumentType.class, documentType.getPosition());
-    }
 
     @Override
     public DocumentType create(String name) {
@@ -45,6 +27,16 @@ public class DocumentTypeRepoImpl implements DocumentTypeRepoCustom {
         DocumentType documentType = new DocumentType(name, fieldPredicate);
         documentType.setPosition(documentTypeRepo.count() + 1);
         return documentTypeRepo.save(documentType);
+    }
+
+    @Override
+    public Class<?> getModelClass() {
+        return DocumentType.class;
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/document-type";
     }
 
 }

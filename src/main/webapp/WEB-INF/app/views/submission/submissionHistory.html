@@ -12,7 +12,7 @@
 	<div class="col-xs-12 history-table">
 		<table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped etd-table">
 	 	  <tr ng-repeat="row in $data track by row.id">
-			<td title="'Organization'">{{row.organization.name}}</td>
+			<td title="'Organization'">{{row.organization}}</td>
 			<td title="'Status'">{{row.submissionStatus.name}}</td>
 			<td title="'Date Submitted'">{{row.submissionDate || "Not Submitted" | date: M/d/yyyy}}</td>
 			<td title="'Assigned To'">{{row.assignee.settings.displayName || "Not Assigned"}}</td>

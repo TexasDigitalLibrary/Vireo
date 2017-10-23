@@ -10,9 +10,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
@@ -27,15 +30,12 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
-@ApiMapping("/workflow-step")
+@RestController
+@RequestMapping("/workflow-step")
 public class WorkflowStepController {
 
     @Autowired
@@ -53,23 +53,24 @@ public class WorkflowStepController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, workflowStepRepo.findAll());
     }
 
     @Transactional
-    @ApiMapping("/get/{workflowStepId}")
-    public ApiResponse getStepById(@ApiVariable Long workflowStepId) {
+    @RequestMapping("/get/{workflowStepId}")
+    public ApiResponse getStepById(@PathVariable Long workflowStepId) {
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         return (workflowStep != null) ? new ApiResponse(SUCCESS, workflowStep) : new ApiResponse(ERROR, "No workflow step for id [" + workflowStepId.toString() + "]");
     }
 
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/add-field-profile", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
-    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) }) // , path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // This was an incorrect assumption to validate restricting create of field profile when predicate is a document type field predicate
-    public ApiResponse createFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/add-field-profile", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) }) // , path = {"fieldPredicate", "documentTypePredicate"}, restrict = "true" // This was an incorrect assumption to validate restricting create of field profile when
+                                                                                 // predicate is a document type field predicate
+    public ApiResponse createFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
 
@@ -86,10 +87,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/update-field-profile", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/update-field-profile", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse updateFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
 
@@ -98,10 +99,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-    public ApiResponse removeFieldProfile(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
         FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
@@ -118,10 +119,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/{requestingOrgId}/{workflowStepId}/reorder-field-profiles/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = LIST_REORDER, model = FieldProfile.class, params = { "2", "3", "1", "aggregateFieldProfiles" }) })
-    public ApiResponse reorderFieldProfiles(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse reorderFieldProfiles(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Integer src, @PathVariable Integer dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
 
@@ -132,10 +133,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/add-note", method = RequestMethod.POST)
-    @Auth(role = "MANAGER")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/add-note", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
-    public ApiResponse addNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse addNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
 
@@ -152,10 +153,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/update-note", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/update-note", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse updateNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         noteRepo.update(note, organizationRepo.findOne(requestingOrgId));
 
@@ -164,10 +165,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-note", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-note", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-    public ApiResponse removeNote(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Long noteId, @WeaverValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse removeNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Long noteId, @WeaverValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
 
@@ -184,10 +185,10 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/{requestingOrgId}/{workflowStepId}/reorder-notes/{src}/{dest}")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/{requestingOrgId}/{workflowStepId}/reorder-notes/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = LIST_REORDER, model = WorkflowStep.class, params = { "2", "3", "1", "aggregateNotes" }) })
-    public ApiResponse reorderNotes(@ApiVariable Long requestingOrgId, @ApiVariable Long workflowStepId, @ApiVariable Integer src, @ApiVariable Integer dest) throws NumberFormatException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse reorderNotes(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Integer src, @PathVariable Integer dest) throws NumberFormatException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
 

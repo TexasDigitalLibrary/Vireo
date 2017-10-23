@@ -41,12 +41,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
-        var organization = $scope.submission.organization.name;
+        var organization = $scope.submission.organization;
 
         var firstAssignable = function () {
             var firstAssignable;
             for (var i in users) {
-                if (users[i].role === "ADMINISTRATOR" || users[i].role === "MANAGER") {
+                if (users[i].role === "ROLE_ADMIN" || users[i].role === "ROLE_MANAGER") {
                     firstAssignable = users[i];
                     break;
                 }

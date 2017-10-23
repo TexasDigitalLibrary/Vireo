@@ -6,7 +6,9 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterRepoCustom;
 
-public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearchFilter, NamedSearchFilterRepo> implements NamedSearchFilterRepoCustom {
 
     @Autowired
     private NamedSearchFilterRepo filterCriterionRepo;
@@ -28,6 +30,11 @@ public class NamedSearchFilterRepoImpl implements NamedSearchFilterRepoCustom {
         });
 
         return filterCriterionRepo.save(newFilterCriterion);
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/named-search-filter";
     }
 
 }

@@ -5,12 +5,9 @@ import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.custom.CustomActionDefinitionRepoCustom;
 
-import edu.tamu.weaver.data.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class CustomActionDefinitionRepoImpl extends AbstractWeaverOrderedRepoImpl<CustomActionDefinition, CustomActionDefinitionRepo> implements CustomActionDefinitionRepoCustom {
 
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;
@@ -19,17 +16,17 @@ public class CustomActionDefinitionRepoImpl implements CustomActionDefinitionRep
     public CustomActionDefinition create(String label, Boolean isStudentVisible) {
         CustomActionDefinition customActionDefinition = new CustomActionDefinition(label, isStudentVisible);
         customActionDefinition.setPosition(customActionDefinitionRepo.count() + 1);
-        return customActionDefinitionRepo.save(customActionDefinition);
+        return super.create(customActionDefinition);
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(CustomActionDefinition.class, src, dest);
+    public Class<?> getModelClass() {
+        return CustomActionDefinition.class;
     }
 
     @Override
-    public void remove(CustomActionDefinition customActionDefinition) {
-        orderedEntityService.remove(customActionDefinitionRepo, CustomActionDefinition.class, customActionDefinition.getPosition());
+    protected String getChannel() {
+        return "/channel/custom-action-definition";
     }
 
 }

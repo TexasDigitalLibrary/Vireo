@@ -15,6 +15,7 @@ public class OrganizationTest extends AbstractEntityTest {
 
     @Before
     public void setUp() {
+
         assertEquals("The organization repository was not empty!", 0, organizationRepo.count());
 
         parentCategory = organizationCategoryRepo.create(TEST_PARENT_CATEGORY_NAME);
@@ -357,65 +358,65 @@ public class OrganizationTest extends AbstractEntityTest {
 
         assertEquals("Hierarchy was not preserved when middle was deleted.  Leaf node " + leafOrganization.getName() + " (" + leafOrganization.getId() + ") didn't get it's grandparent " + topOrganization.getName() + " (" + topOrganization.getId() + ") as new parent.", topOrganization, leafOrganization.getParentOrganization());
     }
-    
+
     @Test
     @Transactional
     public void syncWithParent() {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        
+
         childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
 
         WorkflowStep parentWSOne = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
-        
+
         FieldProfile fieldProfileOne = fieldProfileRepo.create(parentWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
         parentWSOne.addAggregateFieldProfile(fieldProfileOne);
         parentWSOne = workflowStepRepo.save(parentWSOne);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        
+
         WorkflowStep parentWSTwo = workflowStepRepo.create("Parent Step 2", parentOrganization);
         FieldProfile fieldProfileTwo = fieldProfileRepo.create(parentWSTwo, fieldPredicate, inputType, false, false, false, false, false, false, null);
         parentWSOne.addAggregateFieldProfile(fieldProfileTwo);
         parentWSOne = workflowStepRepo.save(parentWSOne);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
-        
+
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, childCategory);
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, childOrganization, childCategory);
-        
+
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         childOrganization = organizationRepo.findOne(childOrganization.getId());
-        
+
         WorkflowStep childWSOne = workflowStepRepo.create("Child Step 1", childOrganization);
         FieldProfile fieldProfileThree = fieldProfileRepo.create(childWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
         childWSOne.addAggregateFieldProfile(fieldProfileThree);
         childWSOne = workflowStepRepo.save(childWSOne);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
-        
+
         WorkflowStep childWSTwo = workflowStepRepo.create("Child Step 2", childOrganization);
         FieldProfile fieldProfileFour = fieldProfileRepo.create(childWSTwo, fieldPredicate, inputType, false, false, false, false, false, false, null);
         childWSTwo.addAggregateFieldProfile(fieldProfileFour);
         childWSTwo = workflowStepRepo.save(childWSTwo);
-        
+
         childOrganization = organizationRepo.findOne(childOrganization.getId());
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
-        
+
         WorkflowStep grandChildWSOne = workflowStepRepo.create("Grand Child Step 1", grandChildOrganization);
         FieldProfile fieldProfileFive = fieldProfileRepo.create(grandChildWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
         grandChildWSOne.addAggregateFieldProfile(fieldProfileFive);
         grandChildWSOne.removeAggregateFieldProfile(fieldProfileOne);
         grandChildWSOne = workflowStepRepo.save(grandChildWSOne);
-        
+
         childOrganization = organizationRepo.restoreDefaults(childOrganization);
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
 
         assertEquals("childOrganization's original workflow steps are not empty!", 0, childOrganization.getOriginalWorkflowSteps().size());
         assertEquals("childOrganization's aggregated workflow steps do not equal parents!", parentOrganization.getAggregateWorkflowSteps(), childOrganization.getAggregateWorkflowSteps());
-        
+
         assertEquals("grandChildOrganization's original workflow steps are not empty!", 0, grandChildOrganization.getOriginalWorkflowSteps().size());
         assertEquals("grandChildOrganization's aggregated workflow steps do not equal parents!", parentOrganization.getAggregateWorkflowSteps(), grandChildOrganization.getAggregateWorkflowSteps());
- 
+
     }
 
     @Test

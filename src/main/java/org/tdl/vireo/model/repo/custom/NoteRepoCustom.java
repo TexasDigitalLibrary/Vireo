@@ -17,6 +17,4 @@ public interface NoteRepoCustom {
 
 	public Note update(Note note, Organization requestingOrganization) throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException;
 
-	public void delete(Note note);
-
 }

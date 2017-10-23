@@ -10,15 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.AbstractFieldProfile;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
@@ -28,7 +28,7 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
  *
  */
 @RestController
-@ApiMapping("/settings/field-predicates")
+@RequestMapping("/settings/field-predicates")
 public class FieldPredicateController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -44,8 +44,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/all")
-    @Auth(role = "STUDENT")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getAllFieldPredicates() {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findAll());
     }
@@ -55,9 +55,9 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/{value}")
-    @Auth(role = "STUDENT")
-    public ApiResponse getFieldPredicateByValue(@ApiVariable String value) {
+    @RequestMapping("/{value}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getFieldPredicateByValue(@PathVariable String value) {
         return new ApiResponse(SUCCESS, fieldPredicateRepo.findByValue(value));
     }
 
@@ -66,8 +66,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
@@ -81,8 +81,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class, FieldValue.class }) })
     public ApiResponse removeFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
@@ -96,8 +96,8 @@ public class FieldPredicateController {
      *
      * @return ApiResponse with all input types.
      */
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());

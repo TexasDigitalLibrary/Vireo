@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.validation.ManagedConfigurationValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;

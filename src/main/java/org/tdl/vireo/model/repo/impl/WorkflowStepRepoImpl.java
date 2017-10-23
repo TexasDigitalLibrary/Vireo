@@ -1,7 +1,5 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +8,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.FieldProfile;
@@ -24,9 +21,9 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
-import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
+public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, WorkflowStepRepo>implements WorkflowStepRepoCustom {
     
     final static Logger logger = LoggerFactory.getLogger(WorkflowStepRepoImpl.class);
 
@@ -41,16 +38,13 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
 
     @Autowired
     private OrganizationRepo organizationRepo;
-    
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public WorkflowStep create(String name, Organization originatingOrganization) {
         WorkflowStep workflowStep = workflowStepRepo.save(new WorkflowStep(name, originatingOrganization));
         originatingOrganization.addOriginalWorkflowStep(workflowStep);
         organizationRepo.save(originatingOrganization);
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return workflowStepRepo.findOne(workflowStep.getId());
     }
 
@@ -307,7 +301,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             }
 
         }
-        simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return resultingWorkflowStep;
     }
 
@@ -357,7 +351,7 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
             deleteDescendantsOfStep(workflowStep);
 
             workflowStepRepo.delete(workflowStep.getId());
-            simpMessagingTemplate.convertAndSend("/channel/organizations", new ApiResponse(SUCCESS, organizationRepo.findAll()));
+            organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         }
         
     }
@@ -427,6 +421,11 @@ public class WorkflowStepRepoImpl implements WorkflowStepRepoCustom {
         } else {
             return new ArrayList<WorkflowStep>();
         }
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/workflow-step";
     }
 
 }

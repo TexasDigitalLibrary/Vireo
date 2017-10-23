@@ -8,15 +8,14 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
-    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (data) {
-
+    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
         $timeout(function () {
             $anchorScroll();
         });
 
         $scope.studentSubmissionRepoReady = true;
 
-        $scope.submission = new StudentSubmission(angular.fromJson(data.body).payload.Submission);
+        $scope.submission = submission;
 
         $scope.onLastStep = function () {
             var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
@@ -26,7 +25,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         var currentStep = $routeParams.stepNum ? $scope.submission.submissionWorkflowSteps[$routeParams.stepNum - 1] : $scope.submission.submissionWorkflowSteps[0];
 
         $scope.setActiveStep(currentStep);
-
     });
 
     $scope.setActiveStep = function (step, hash) {

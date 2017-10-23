@@ -28,20 +28,19 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.tdl.vireo.enums.AppRole;
 import org.tdl.vireo.model.validation.UserValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import edu.tamu.framework.model.AbstractCoreUser;
-import edu.tamu.framework.model.IRole;
+import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
+import edu.tamu.weaver.user.model.IRole;
 
 @Entity
-public class User extends AbstractCoreUser {
+public class User extends AbstractWeaverUserDetails {
 
-    private static final long serialVersionUID = 3346475543238946319L;
+    private static final long serialVersionUID = -614285536644750464L;
 
     @Column(nullable = true)
     private String netid;
@@ -81,7 +80,7 @@ public class User extends AbstractCoreUser {
     private ContactInfo permanentContactInfo;
 
     @Column(nullable = false)
-    private AppRole role;
+    private Role role;
 
     @Column
     private String orcid;
@@ -97,12 +96,12 @@ public class User extends AbstractCoreUser {
     @OrderColumn
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH, MERGE  }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
     // TODO: should this be a OneToMany?
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = { REFRESH, MERGE  }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {
@@ -122,10 +121,10 @@ public class User extends AbstractCoreUser {
      * @param lastName
      * @param role
      */
-    public User(String email, String firstName, String lastName, AppRole role) {
+    public User(String email, String firstName, String lastName, Role role) {
         this();
         setEmail(email);
-        setUin(email);
+        setUsername(email);
         setFirstName(firstName);
         setLastName(lastName);
         setRole(role);
@@ -139,9 +138,13 @@ public class User extends AbstractCoreUser {
      * @param role
      * @param displayedSubmissionColumns
      */
-    public User(String email, String firstName, String lastName, AppRole role, List<SubmissionListColumn> displayedSubmissionColumns) {
+    public User(String email, String firstName, String lastName, Role role, List<SubmissionListColumn> displayedSubmissionColumns) {
         this(email, firstName, lastName, role);
         setSubmissionViewColumns(displayedSubmissionColumns);
+    }
+
+    public User(User user) {
+        this(user.getEmail(), user.getFirstName(), user.getLastName(), (Role) user.getRole());
     }
 
     /**
@@ -351,13 +354,13 @@ public class User extends AbstractCoreUser {
     }
 
     @Override
-    @JsonDeserialize(as = AppRole.class)
+    @JsonDeserialize(as = Role.class)
     public void setRole(IRole role) {
-        this.role = (AppRole) role;
+        this.role = (Role) role;
     }
 
     @Override
-    @JsonSerialize(as = AppRole.class)
+    @JsonSerialize(as = Role.class)
     public IRole getRole() {
         return role;
     }
@@ -478,30 +481,6 @@ public class User extends AbstractCoreUser {
     @JsonIgnore
     public String getUsername() {
         return getEmail();
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
     }
 
 }

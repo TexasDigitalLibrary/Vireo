@@ -30,7 +30,6 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <production>false</production>
     <failIfNoTests>false</failIfNoTests>
-    <link>weaver-ui-core</link>
   </properties>
 
   <packaging>war</packaging>
@@ -50,16 +49,21 @@
 
   <dependencies>
 
-    <!-- has weaver-legacy-core dependency -->
     <dependency>
       <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-shim-core</artifactId>
+      <artifactId>weaver-initializer</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-core</artifactId>
+      <artifactId>weaver-auth</artifactId>
+      <version>1.3.x-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.framework</groupId>
+      <artifactId>weaver-token-provider</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
 
@@ -71,10 +75,15 @@
 
     <dependency>
       <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-validation</artifactId>
+      <artifactId>weaver-wro</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>edu.tamu.framework</groupId>
+      <artifactId>weaver-reporting</artifactId>
+      <version>1.3.x-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
@@ -98,6 +107,51 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path-assert</artifactId>
+      <version>2.2.0</version><!--$NO-MVN-MAN-VER$ -->
+      <scope>test</scope>
+    </dependency>
+
 
     <dependency>
       <groupId>net.sourceforge.nekohtml</groupId>
@@ -364,7 +418,7 @@
       </activation>
       <properties>
         <npm-extension>.cmd</npm-extension>
-        <compass-extension>.bat</compass-extension>
+        <grunt-extension>.cmd</grunt-extension>
       </properties>
     </profile>
 
@@ -377,7 +431,7 @@
       </activation>
       <properties>
         <npm-extension></npm-extension>
-        <compass-extension></compass-extension>
+        <grunt-extension></grunt-extension>
       </properties>
     </profile>
 
@@ -433,7 +487,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -514,7 +568,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                   <arguments>
                     <argument>deploy</argument>
                   </arguments>
@@ -582,7 +636,7 @@
                 <id>exec-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt</executable>
+                  <executable>grunt${grunt-extension}</executable>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -594,7 +648,7 @@
                 <id>exec-npm-run-test</id>
                 <phase>test</phase>
                 <configuration>
-                  <executable>npm</executable>
+                  <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
                     <argument>test</argument>

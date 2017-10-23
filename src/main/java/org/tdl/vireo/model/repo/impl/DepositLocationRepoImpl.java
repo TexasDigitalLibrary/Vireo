@@ -12,12 +12,9 @@ import org.tdl.vireo.model.repo.custom.DepositLocationRepoCustom;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.weaver.data.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<DepositLocation, DepositLocationRepo> implements DepositLocationRepoCustom {
 
     @Autowired
     private DepositLocationRepo depositLocationRepo;
@@ -77,13 +74,13 @@ public class DepositLocationRepoImpl implements DepositLocationRepoCustom {
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(DepositLocation.class, src, dest);
+    public Class<?> getModelClass() {
+        return DepositLocation.class;
     }
 
     @Override
-    public void remove(DepositLocation depositLocation) {
-        orderedEntityService.remove(depositLocationRepo, DepositLocation.class, depositLocation.getPosition());
+    protected String getChannel() {
+        return "/channel/deposit-location";
     }
 
 }

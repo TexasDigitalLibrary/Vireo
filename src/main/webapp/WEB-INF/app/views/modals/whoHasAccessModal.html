@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="toggle-href" ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in users | filter:search | filter:{role: 'STUDENT'}" ng-click="selectUser(userToAdd)">
+                        <tr class="toggle-href" ng-class="{'active': userToAdd.id == modalData.id}" ng-repeat="userToAdd in users | filter:search | filter:{role: 'ROLE_STUDENT'}" ng-click="selectUser(userToAdd)">
                             <td>{{userToAdd.firstName}} {{userToAdd.lastName}}</td>
                             <td>{{userToAdd.email}}</td>
                         </tr>
@@ -44,5 +44,5 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="closeModal()">Close</button>
-    <button ng-click="updateRole(modalData, 'REVIEWER')" type="button" class="btn btn-primary">Add</button>    
+    <button ng-click="updateRole(modalData, 'ROLE_REVIEWER')" type="button" class="btn btn-primary">Add</button>    
 </div>

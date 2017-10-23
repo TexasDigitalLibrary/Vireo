@@ -6,12 +6,9 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 
-import edu.tamu.weaver.data.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<ControlledVocabulary, ControlledVocabularyRepo> implements ControlledVocabularyRepoCustom {
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
@@ -22,7 +19,7 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
         }
         return controlledVocabulary;
     }
@@ -33,24 +30,19 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
         }
         return controlledVocabulary;
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(ControlledVocabulary.class, src, dest);
+    public Class<?> getModelClass() {
+        return ControlledVocabulary.class;
     }
 
     @Override
-    public void sort(String column) {
-        orderedEntityService.sort(ControlledVocabulary.class, column);
-    }
-
-    @Override
-    public void remove(ControlledVocabulary controlledVocabulary) {
-        orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, controlledVocabulary.getPosition());
+    protected String getChannel() {
+        return "/channel/controlled-vocabulary";
     }
 
 }

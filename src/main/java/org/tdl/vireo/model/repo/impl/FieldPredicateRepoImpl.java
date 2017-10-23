@@ -5,7 +5,9 @@ import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.custom.FieldPredicateRepoCustom;
 
-public class FieldPredicateRepoImpl implements FieldPredicateRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class FieldPredicateRepoImpl extends AbstractWeaverRepoImpl<FieldPredicate, FieldPredicateRepo> implements FieldPredicateRepoCustom {
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
@@ -13,6 +15,11 @@ public class FieldPredicateRepoImpl implements FieldPredicateRepoCustom {
     @Override
     public FieldPredicate create(String value, Boolean documentTypePredicate) {
         return fieldPredicateRepo.save(new FieldPredicate(value, documentTypePredicate));
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/field-predicate";
     }
 
 }
