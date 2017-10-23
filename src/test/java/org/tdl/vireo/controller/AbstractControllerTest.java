@@ -1,5 +1,9 @@
 package org.tdl.vireo.controller;
 
+import java.security.Key;
+
+import javax.crypto.spec.SecretKeySpec;
+
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,14 +31,17 @@ public abstract class AbstractControllerTest extends MockData {
     protected static final String SECRET_PROPERTY_NAME = "secret";
     protected static final String SECRET_VALUE = "verysecretsecret";
 
-    protected static final String JWT_SECRET_KEY_PROPERTY_NAME = "secret";
-    protected static final String JWT_SECRET_KEY_VALUE = "verysecretsecret";
+    protected static final String AUTH_SECRET_KEY_PROPERTY_NAME = "secret";
+    protected static final String AUTH_SECRET_KEY_VALUE = "verysecretsecret";
     
-    protected static final String JWT_ISSUER_KEY_PROPERTY_NAME = "issuer";
-    protected static final String JWT_ISSUER_KEY_VALUE = "localhost";
+    protected static final String AUTH_ISSUER_KEY_PROPERTY_NAME = "issuer";
+    protected static final String AUTH_ISSUER_KEY_VALUE = "localhost";
 
-    protected static final String JWT_DURATION_PROPERTY_NAME = "duration";
-    protected static final int JWT_DURATION_VALUE = 2;
+    protected static final String AUTH_DURATION_PROPERTY_NAME = "duration";
+    protected static final int AUTH_DURATION_VALUE = 2;
+    
+    protected static final String AUTH_KEY_PROPERTY_NAME = "key";
+    protected static final Key AUTH_KEY_VALUE = new SecretKeySpec(SECRET_VALUE.getBytes(), "AES");
 
     protected static final String SHIB_KEYS_PROPERTY_NAME = "shibKeys";
     protected static final String[] SHIB_KEYS = new String[] { "netid", "uin", "lastName", "firstName", "email" };
