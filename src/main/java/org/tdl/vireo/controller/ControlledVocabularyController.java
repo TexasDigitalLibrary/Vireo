@@ -108,7 +108,6 @@ public class ControlledVocabularyController {
     public ApiResponse createControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
@@ -125,8 +124,7 @@ public class ControlledVocabularyController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
-        controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        controlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
@@ -144,7 +142,6 @@ public class ControlledVocabularyController {
     public ApiResponse removeControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
@@ -164,7 +161,6 @@ public class ControlledVocabularyController {
     public ApiResponse reorderControlledVocabulary(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering controlled vocabularies");
         controlledVocabularyRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
@@ -182,7 +178,6 @@ public class ControlledVocabularyController {
     public ApiResponse sortControlledVocabulary(@PathVariable String column) {
         logger.info("Sorting controlled vocabularies by " + column);
         controlledVocabularyRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
@@ -213,7 +208,7 @@ public class ControlledVocabularyController {
             rows.add(row);
         });
         map.put("rows", rows);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
+        // simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, map);
     }
 
@@ -224,7 +219,7 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiResponse with a boolean whether import in progress or not
      */
-    @RequestMapping(value = "/status/{name}", method = RequestMethod.POST)
+    @RequestMapping("/status/{name}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse importControlledVocabularyStatus(@PathVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyCachingService.doesControlledVocabularyExist(name));
@@ -237,7 +232,7 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiResponse indicating success
      */
-    @RequestMapping(value = "/cancel/{name}", method = RequestMethod.POST)
+    @RequestMapping("/cancel/{name}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse cancelImportControlledVocabulary(@PathVariable String name) {
         logger.info("Cancelling import for cached controlled vocabulary " + name);
@@ -258,8 +253,8 @@ public class ControlledVocabularyController {
      */
     // TODO: implement controller advice to catch exception and handle gracefully
     @Transactional
-    @RequestMapping(value = "/compare/{name}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/compare/{name}", method = RequestMethod.POST)
     public ApiResponse compareControlledVocabulary(@PathVariable String name, HttpServletRequest request) throws IOException {
         InputStream inputStream = request.getInputStream();
         logger.info("Comparing controlled vocabulary " + name);
@@ -295,10 +290,9 @@ public class ControlledVocabularyController {
             updatedVocabularyWord.setContacts(updatingVocabularyWord[1].getContacts());
             updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
         }
-        ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+        ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
         controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
 
@@ -331,8 +325,8 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @RequestMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     public ApiResponse removeVocabularyWord(@PathVariable Long cvId, @PathVariable Long vwId) {
 
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
@@ -353,11 +347,12 @@ public class ControlledVocabularyController {
      * @return ApiReponse indicating success
      */
     @Transactional
-    @RequestMapping(value = "/update-vocabulary-word/{cvId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update-vocabulary-word/{cvId}", method = RequestMethod.POST)
     public ApiResponse updateVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vw) {
-        vw = vocabularyWordRepo.save(vw);
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+        vw.setControlledVocabulary(cv);
+        vw = vocabularyWordRepo.save(vw);
         simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
         return new ApiResponse(SUCCESS, vw);
     }

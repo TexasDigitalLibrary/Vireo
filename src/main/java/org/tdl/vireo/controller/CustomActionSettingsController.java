@@ -10,7 +10,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +30,6 @@ public class CustomActionSettingsController {
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @RequestMapping("/all")
     public ApiResponse getCustomActions() {
         return new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc());
@@ -44,9 +40,7 @@ public class CustomActionSettingsController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Creating custom action definition with label " + customActionDefinition.getLabel());
-        customActionDefinition = customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible());
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, customActionDefinition);
+        return new ApiResponse(SUCCESS, customActionDefinitionRepo.create(customActionDefinition.getLabel(), customActionDefinition.isStudentVisible()));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -54,9 +48,7 @@ public class CustomActionSettingsController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Updating custom action definition with label " + customActionDefinition.getLabel());
-        customActionDefinition = customActionDefinitionRepo.save(customActionDefinition);
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, customActionDefinition);
+        return new ApiResponse(SUCCESS, customActionDefinitionRepo.update(customActionDefinition));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -65,7 +57,6 @@ public class CustomActionSettingsController {
     public ApiResponse removeCustomAction(@WeaverValidatedModel CustomActionDefinition customActionDefinition) {
         logger.info("Removing custom action definition with label " + customActionDefinition.getLabel());
         customActionDefinitionRepo.remove(customActionDefinition);
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -75,7 +66,6 @@ public class CustomActionSettingsController {
     public ApiResponse reorderCustomActions(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering custom action definitions");
         customActionDefinitionRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/custom-action", new ApiResponse(SUCCESS, customActionDefinitionRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 

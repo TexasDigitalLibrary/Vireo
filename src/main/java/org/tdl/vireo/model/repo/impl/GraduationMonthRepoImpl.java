@@ -16,7 +16,7 @@ public class GraduationMonthRepoImpl extends AbstractWeaverOrderedRepoImpl<Gradu
     public GraduationMonth create(int month) {
         GraduationMonth graduationMonth = new GraduationMonth(month);
         graduationMonth.setPosition(graduationMonthRepo.count() + 1);
-        return graduationMonthRepo.save(graduationMonth);
+        return super.create(graduationMonth);
     }
 
     @Override

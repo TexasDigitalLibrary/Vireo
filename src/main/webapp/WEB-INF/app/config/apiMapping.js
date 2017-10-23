@@ -4,6 +4,7 @@ var apiMapping = {
     ControlledVocabulary: {
         validations: true,
         modelListeners: true,
+        channel: '/channel/controlled-vocabulary',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
@@ -85,6 +86,7 @@ var apiMapping = {
     },
     CustomActionDefinition: {
         validations: true,
+        channel: '/channel/custom-action-definition',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/custom-action',
@@ -125,6 +127,7 @@ var apiMapping = {
     ManagedConfiguration: {
         lazy: true,
         validations: true,
+        channel: '/channel/configuration',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/configurable',
@@ -194,6 +197,7 @@ var apiMapping = {
     },
     DegreeLevel: {
         validations: true,
+        channel: '/channel/degree-level',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/degree-level',
@@ -388,6 +392,7 @@ var apiMapping = {
     },
     GraduationMonth: {
         validations: true,
+        channel: '/channel/graduation-month',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/graduation-month',
@@ -427,6 +432,7 @@ var apiMapping = {
     },
     InputType: {
         validations: true,
+        channel: '/channel/input-type',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/input-types',
@@ -440,6 +446,7 @@ var apiMapping = {
     },
     Language: {
         validations: true,
+        channel: '/channel/language',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/language',

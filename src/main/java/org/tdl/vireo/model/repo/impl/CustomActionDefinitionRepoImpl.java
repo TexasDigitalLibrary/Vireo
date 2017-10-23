@@ -16,7 +16,7 @@ public class CustomActionDefinitionRepoImpl extends AbstractWeaverOrderedRepoImp
     public CustomActionDefinition create(String label, Boolean isStudentVisible) {
         CustomActionDefinition customActionDefinition = new CustomActionDefinition(label, isStudentVisible);
         customActionDefinition.setPosition(customActionDefinitionRepo.count() + 1);
-        return customActionDefinitionRepo.save(customActionDefinition);
+        return super.create(customActionDefinition);
     }
 
     @Override

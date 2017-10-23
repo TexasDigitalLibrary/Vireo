@@ -19,7 +19,7 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
         }
         return controlledVocabulary;
     }
@@ -30,7 +30,7 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
         }
         return controlledVocabulary;
     }

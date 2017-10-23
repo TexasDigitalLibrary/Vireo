@@ -47,6 +47,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
                     if ($scope.proquestLanguageCodes.hasOwnProperty(k)) {
                         if ($scope.proquestLanguageCodes[k] === $scope.languages[j].name) {
                             $scope.languages[j].proquestCode = k;
+                            $scope.languages[j]._syncShadow();
                             break;
                         }
                     }

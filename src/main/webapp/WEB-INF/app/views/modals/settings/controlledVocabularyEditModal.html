@@ -7,7 +7,7 @@
 
 <form ng-submit="updateControlledVocabulary()" name="forms.update" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="controlledVocabularyRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 		<validatedinput model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">

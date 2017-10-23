@@ -14,12 +14,12 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.tamu.weaver.auth.config.WeaverWebSecurityConfiguration;
+import edu.tamu.weaver.auth.config.AuthWebSecurityConfig;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class AppWebSecurityConfig extends WeaverWebSecurityConfiguration<User, UserRepo, VireoUserDetailsService> {
+public class AppWebSecurityConfig extends AuthWebSecurityConfig<User, UserRepo, VireoUserDetailsService> {
 
     @Bean
     public PasswordEncoder passwordEncoder() {

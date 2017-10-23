@@ -16,7 +16,7 @@ public class LanguageRepoImpl extends AbstractWeaverOrderedRepoImpl<Language, La
     public Language create(String name) {
         Language language = new Language(name);
         language.setPosition(languageRepo.count() + 1);
-        return languageRepo.save(language);
+        return languageRepo.create(language);
     }
 
     @Override

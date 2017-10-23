@@ -8,4 +8,5 @@ import edu.tamu.weaver.data.model.repo.WeaverOrderedRepo;
 public interface CustomActionDefinitionRepo extends WeaverOrderedRepo<CustomActionDefinition>, CustomActionDefinitionRepoCustom {
 
     public CustomActionDefinition findByLabel(String label);
+
 }

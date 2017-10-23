@@ -19,7 +19,7 @@ public class DegreeLevelRepoImpl extends AbstractWeaverOrderedRepoImpl<DegreeLev
             degreeLevel = new DegreeLevel(name);
         }
         degreeLevel.setPosition(degreeLevelRepo.count() + 1);
-        return degreeLevelRepo.save(degreeLevel);
+        return degreeLevelRepo.create(degreeLevel);
     }
 
     @Override

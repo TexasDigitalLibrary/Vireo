@@ -11,7 +11,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,9 +40,6 @@ public class LanguageController {
     private LanguageRepo languageRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private ProquestCodesService proquestCodesService;
 
     /**
@@ -66,9 +62,7 @@ public class LanguageController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createLanguage(@WeaverValidatedModel Language language) {
         logger.info("Creating language with name " + language.getName());
-        language = languageRepo.create(language.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, language);
+        return new ApiResponse(SUCCESS, languageRepo.create(language.getName()));
     }
 
     /**
@@ -80,9 +74,7 @@ public class LanguageController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateLanguage(@WeaverValidatedModel Language language) {
         logger.info("Updating language with name " + language.getName());
-        language = languageRepo.save(language);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, language);
+        return new ApiResponse(SUCCESS, languageRepo.update(language));
     }
 
     /**
@@ -95,7 +87,6 @@ public class LanguageController {
     public ApiResponse removeLanguage(@WeaverValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -114,7 +105,6 @@ public class LanguageController {
     public ApiResponse reorderLanguage(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering languages");
         languageRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -131,7 +121,6 @@ public class LanguageController {
     public ApiResponse sortLanguage(@PathVariable String column) {
         logger.info("Sorting languages by " + column);
         languageRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/language", new ApiResponse(SUCCESS, languageRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 

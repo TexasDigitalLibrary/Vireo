@@ -365,6 +365,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             if ($scope.uploadModalData.cv !== undefined) {
                 ControlledVocabularyRepo.status($scope.uploadModalData.cv.name).then(function (data) {
                     $scope.uploadModalData.cv.inProgress = angular.fromJson(data.body).payload.Boolean;
+                    $scope.uploadModalData.cv._syncShadow();
                 });
             }
         };

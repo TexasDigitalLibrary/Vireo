@@ -26,7 +26,7 @@ public class ConfigurationRepoImpl extends AbstractWeaverRepoImpl<ManagedConfigu
 
     @Override
     public ManagedConfiguration create(String name, String value, String type) {
-        return configurationRepo.save(new ManagedConfiguration(name, value, type));
+        return super.create(new ManagedConfiguration(name, value, type));
     }
 
     @Override
