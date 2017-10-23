@@ -185,7 +185,7 @@ public class AuthController extends WeaverAuthController {
             claims.put("uin", user.getEmail());
             claims.put("email", user.getEmail());
             String subject = user.getEmail();
-            return new ApiResponse(SUCCESS, tokenService.createToken(subject, claims));
+            return new ApiResponse(SUCCESS, "Login successful", tokenService.createToken(subject, claims));
         } catch (Exception e) {
             logger.debug("Unable to generate token!");
             return new ApiResponse(ERROR, "Unable to generate token!");
