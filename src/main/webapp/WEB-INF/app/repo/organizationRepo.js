@@ -140,16 +140,16 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.restoreDefaults = function(organization) {
-			angular.extend(this.mapping.restoreDefaults, {'data': organization});
-			var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
-      promise.then(function (res) {
-        if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.status === "INVALID") {
-            angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-            console.log(organizationRepo);
-        }
-      });
-			return promise;
-		};
+    	angular.extend(this.mapping.restoreDefaults, {'data': organization});
+    	var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
+        promise.then(function (res) {
+            if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.status === "INVALID") {
+                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+                console.log(organizationRepo);
+            }
+        });
+		return promise;
+	};
 
     this.updateWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();

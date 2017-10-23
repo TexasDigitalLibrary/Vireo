@@ -20,6 +20,9 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -57,6 +60,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     private List<FieldGloss> fieldGlosses;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = ControlledVocabulary.class, property = "id")
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
 
