@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.config.constant.ConfigurationName;
@@ -15,6 +16,7 @@ import edu.tamu.weaver.token.provider.controller.WeaverMockTokenController;
 
 @RestController
 @RequestMapping("/mock/auth")
+@Profile(value = { "development" })
 public class MockTokenController extends WeaverMockTokenController {
 
     @Autowired
