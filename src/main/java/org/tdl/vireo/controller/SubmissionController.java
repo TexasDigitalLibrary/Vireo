@@ -29,19 +29,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -613,10 +614,9 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
 
-    @RequestMapping(value = "/file", method = RequestMethod.POST)
-    public void submissionFile(HttpServletResponse response, @RequestBody Map<String, String> requestData) throws IOException {
+    @RequestMapping("/file")
+    public void submissionFile(HttpServletResponse response, @RequestHeader String uri) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
-        String uri = requestData.get("uri");
         Path path = fileIOUtility.getAbsolutePath(uri);
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
@@ -630,7 +630,7 @@ public class SubmissionController {
     @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/upload", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam("file") MultipartFile file) throws IOException {
+    public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
         String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;

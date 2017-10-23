@@ -22,7 +22,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.errorMessage = "";
 
-            var save = function(fieldValue) {
+            var save = function (fieldValue) {
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
                         delete fieldValue.updating;
@@ -55,8 +55,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.saveContacts = function (fieldValue) {
                 fieldValue.updating = true;
-                if(typeof fieldValue.contacts === 'string') {
-                  fieldValue.contacts = fieldValue.contacts.split(",");
+                if (typeof fieldValue.contacts === 'string') {
+                    fieldValue.contacts = fieldValue.contacts.split(",");
                 }
                 save(fieldValue);
             };

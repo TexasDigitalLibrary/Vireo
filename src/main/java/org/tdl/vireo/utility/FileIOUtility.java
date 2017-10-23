@@ -32,8 +32,8 @@ public class FileIOUtility {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
-	@Autowired
+
+    @Autowired
     private ResourcePatternResolver resourcePatternResolver;
 
     private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
@@ -115,7 +115,7 @@ public class FileIOUtility {
         }
         return path;
     }
-    
+
     public File getFileFromResource(String resourcePath) throws IOException {
         Resource resource = resourcePatternResolver.getResource(resourcePath);
         if (!resource.getURL().toString().startsWith("jar:")) {
