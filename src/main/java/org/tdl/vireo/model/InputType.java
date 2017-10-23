@@ -51,8 +51,8 @@ public class InputType extends ValidatingBaseEntity {
         return validationPattern;
     }
 
-    public void setValidationPattern(String patern) {
-        validationPattern = patern;
+    public void setValidationPattern(String pattern) {
+        validationPattern = pattern;
     }
 
     public String getValidationMessage() {
