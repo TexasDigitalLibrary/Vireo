@@ -37,12 +37,9 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     @Column(nullable = true)
     private String onBehalfOf;
 
-    // This will not deserialize!! Remove and Update method breaks!
-    // TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
     @OneToOne(targetEntity = AbstractPackager.class, orphanRemoval = true, optional = true)
     private Packager packager;
 
-    // TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
     @Column(nullable = false)
     private String depositorName;
 
