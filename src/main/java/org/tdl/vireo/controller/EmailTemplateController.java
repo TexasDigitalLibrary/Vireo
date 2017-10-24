@@ -11,7 +11,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +31,6 @@ public class EmailTemplateController {
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allEmailTemplates() {
@@ -46,9 +42,7 @@ public class EmailTemplateController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Creating email template with name " + emailTemplate.getName());
-        emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
-        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, emailTemplate);
+        return new ApiResponse(SUCCESS, emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage()));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -59,9 +53,8 @@ public class EmailTemplateController {
         if (emailTemplate.getSystemRequired()) {
             emailTemplate = emailTemplateRepo.create(emailTemplate.getName(), emailTemplate.getSubject(), emailTemplate.getMessage());
         } else {
-            emailTemplate = emailTemplateRepo.save(emailTemplate);
+            emailTemplate = emailTemplateRepo.update(emailTemplate);
         }
-        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, emailTemplate);
     }
 
@@ -71,7 +64,6 @@ public class EmailTemplateController {
     public ApiResponse removeEmailTemplate(@WeaverValidatedModel EmailTemplate emailTemplate) {
         logger.info("Removing email template with name " + emailTemplate.getName());
         emailTemplateRepo.remove(emailTemplate);
-        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -81,7 +73,6 @@ public class EmailTemplateController {
     public ApiResponse reorderEmailTemplates(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering document types");
         emailTemplateRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -91,7 +82,6 @@ public class EmailTemplateController {
     public ApiResponse sortEmailTemplates(@PathVariable String column) {
         logger.info("Sorting email templates by " + column);
         emailTemplateRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/email-template", new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 

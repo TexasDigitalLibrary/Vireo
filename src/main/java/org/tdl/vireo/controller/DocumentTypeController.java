@@ -11,7 +11,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +32,6 @@ public class DocumentTypeController {
     @Autowired
     private DocumentTypeRepo documentTypeRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allDocumentTypes() {
@@ -47,9 +43,7 @@ public class DocumentTypeController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Creating document type with name " + documentType.getName());
-        documentType = documentTypeRepo.create(documentType.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, documentType);
+        return new ApiResponse(SUCCESS, documentTypeRepo.create(documentType.getName()));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -57,9 +51,7 @@ public class DocumentTypeController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Updating document type with name " + documentType.getName());
-        documentType = documentTypeRepo.save(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, documentType);
+        return new ApiResponse(SUCCESS, documentTypeRepo.update(documentType));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -68,7 +60,6 @@ public class DocumentTypeController {
     public ApiResponse removeDocumentType(@WeaverValidatedModel DocumentType documentType) {
         logger.info("Removing document type with name " + documentType.getName());
         documentTypeRepo.remove(documentType);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -78,7 +69,6 @@ public class DocumentTypeController {
     public ApiResponse reorderDocumentTypes(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering document types");
         documentTypeRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -88,7 +78,6 @@ public class DocumentTypeController {
     public ApiResponse sortDocumentTypes(@PathVariable String column) {
         logger.info("Sorting document types by " + column);
         documentTypeRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/document-type", new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 

@@ -233,6 +233,7 @@ var apiMapping = {
     },
     DocumentType: {
         validations: true,
+        channel: '/channel/document-type',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/document-type',
@@ -264,6 +265,7 @@ var apiMapping = {
     },
     Embargo: {
         validations: true,
+        channel: '/channel/embargo',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/embargo',
@@ -295,6 +297,7 @@ var apiMapping = {
     },
     EmailTemplate: {
         validations: true,
+        channel: '/channel/email-template',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/email-template',

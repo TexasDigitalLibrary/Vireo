@@ -16,7 +16,7 @@ public class EmailTemplateRepoImpl extends AbstractWeaverOrderedRepoImpl<EmailTe
     public EmailTemplate create(String name, String subject, String message) {
         EmailTemplate emailTemplate = new EmailTemplate(name, subject, message);
         emailTemplate.setPosition(emailTemplateRepo.count() + 1);
-        return emailTemplateRepo.save(emailTemplate);
+        return super.create(emailTemplate);
     }
 
     @Override

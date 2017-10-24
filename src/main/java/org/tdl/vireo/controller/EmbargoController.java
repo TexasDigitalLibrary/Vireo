@@ -11,8 +11,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +33,6 @@ public class EmbargoController {
     @Autowired
     private EmbargoRepo embargoRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getEmbargoes() {
@@ -47,19 +44,16 @@ public class EmbargoController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Creating embargo with name " + embargo.getName());
-        embargo = embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive());
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
-        return new ApiResponse(SUCCESS, embargo);
+        return new ApiResponse(SUCCESS, embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive()));
     }
 
+    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Updating embargo with name " + embargo.getName());
-        embargo = embargoRepo.save(embargo);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
-        return new ApiResponse(SUCCESS, embargo);
+        return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -68,7 +62,6 @@ public class EmbargoController {
     public ApiResponse removeEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Removing Embargo:  " + embargo.getName());
         embargoRepo.remove(embargo);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -79,7 +72,6 @@ public class EmbargoController {
         logger.info("Reordering Embargoes with guarantor " + guarantorString);
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
         embargoRepo.reorder(src, dest, guarantor);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -90,7 +82,6 @@ public class EmbargoController {
         logger.info("Sorting Embargoes with guarantor " + guarantorString + " by " + column);
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
         embargoRepo.sort(column, guarantor);
-        simpMessagingTemplate.convertAndSend("/channel/settings/embargo", new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
