@@ -15,20 +15,20 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the new language"
-            form="forms.create"
-            validations="languageRepo.getValidations()"
+      form="forms.create"
+      validations="languageRepo.getValidations()"
 			results="languageRepo.getValidationResults()">
 		</validatedinput>
 	</div>
 
 	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-default" 
+		<button
+			type="button"
+			class="btn btn-default"
 			ng-click="resetLanguages()">Cancel</button>
-		<button 
-			id="languages-save" 
-			type="submit" 
+		<button
+			id="languages-save"
+			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.create.$invalid">Create</button>
 	</div>

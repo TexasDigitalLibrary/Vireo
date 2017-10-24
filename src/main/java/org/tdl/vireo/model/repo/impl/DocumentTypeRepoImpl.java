@@ -26,7 +26,7 @@ public class DocumentTypeRepoImpl extends AbstractWeaverOrderedRepoImpl<Document
     public DocumentType create(String name, FieldPredicate fieldPredicate) {
         DocumentType documentType = new DocumentType(name, fieldPredicate);
         documentType.setPosition(documentTypeRepo.count() + 1);
-        return documentTypeRepo.save(documentType);
+        return super.create(documentType);
     }
 
     @Override

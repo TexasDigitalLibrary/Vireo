@@ -8,7 +8,7 @@
 <form ng-submit="updateGraduationMonth()" name="forms.update" novalidate>
 	<div class="modal-body">
 
-		<validationmessage results="modalData.ValidationResults"></validationmessage>
+		<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
 		<validatedselect
             options="monthOptions"
@@ -23,13 +23,13 @@
 	</div>
 
 	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-default" 
+		<button
+			type="button"
+			class="btn btn-default"
 			ng-click="resetGraduationMonth()">Cancel</button>
-		<button 
-			id="graduationMonth-save" 
-			type="submit" 
+		<button
+			id="graduationMonth-save"
+			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.update.$invalid">Update</button>
 	</div>
