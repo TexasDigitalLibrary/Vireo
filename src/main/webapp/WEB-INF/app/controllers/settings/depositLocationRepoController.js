@@ -93,12 +93,10 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
         };
 
         $scope.updateDepositLocation = function () {
-            console.log('update');
             $scope.modalData.save();
         };
 
         $scope.removeDepositLocation = function () {
-            console.log('delete');
             $scope.modalData.delete();
         };
 
