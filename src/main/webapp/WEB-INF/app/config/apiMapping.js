@@ -3,16 +3,11 @@ var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
         validations: true,
-        modelListeners: true,
         channel: '/channel/controlled-vocabulary',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
             'method': 'all'
-        },
-        listen: {
-            'endpoint': '/channel',
-            'controller': 'settings/controlled-vocabulary'
         },
         create: {
             'endpoint': '/private/queue',
@@ -36,11 +31,6 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary'
-        },
-        change: {
-            'endpoint': '/channel',
-            'controller': 'settings/controlled-vocabulary',
-            'method': 'change'
         },
         downloadCSV: {
             'endpoint': '/private/queue',

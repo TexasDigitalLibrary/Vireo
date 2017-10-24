@@ -1,10 +1,8 @@
-vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi, WsApi) {
+vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(FileService, RestApi, WsApi) {
 
     var controlledVocabularyRepo = this;
 
     // additional repo methods and variables
-
-    this.change = WsApi.listen(this.mapping.change);
 
     this.downloadCSV = function (controlledVocabulary) {
         controlledVocabularyRepo.clearValidationResults();
@@ -39,13 +37,13 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(RestApi
     this.confirmCSV = function (file, controlledVocabulary) {
         controlledVocabularyRepo.clearValidationResults();
         angular.extend(this.mapping.confirmCSV, {
-            'method': 'compare/' + controlledVocabulary,
-            'file': file
+            method: 'compare/' + controlledVocabulary,
+            file: file
         });
-        var promise = RestApi.post(this.mapping.confirmCSV);
+        var promise = FileService.upload(this.mapping.confirmCSV);
         promise.then(function (res) {
-            if (res.meta.status === "INVALID") {
-                angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
+            if (res.data.meta.status === "INVALID") {
+                angular.extend(controlledVocabularyRepo, res.data.payload);
             }
         });
         return promise;

@@ -8,34 +8,29 @@ import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.model.AbstractFieldProfile;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.ControlledVocabularyCache;
@@ -66,9 +61,6 @@ public class ControlledVocabularyController {
 
     @Autowired
     private VocabularyWordRepo vocabularyWordRepo;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * Endpoint to request all controlled vocabulary.
@@ -108,7 +100,6 @@ public class ControlledVocabularyController {
     public ApiResponse createControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
 
@@ -125,7 +116,6 @@ public class ControlledVocabularyController {
     public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
 
@@ -142,7 +132,6 @@ public class ControlledVocabularyController {
     public ApiResponse removeControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
 
@@ -161,7 +150,6 @@ public class ControlledVocabularyController {
     public ApiResponse reorderControlledVocabulary(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering controlled vocabularies");
         controlledVocabularyRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
 
@@ -178,7 +166,6 @@ public class ControlledVocabularyController {
     public ApiResponse sortControlledVocabulary(@PathVariable String column) {
         logger.info("Sorting controlled vocabularies by " + column);
         controlledVocabularyRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
 
@@ -208,7 +195,6 @@ public class ControlledVocabularyController {
             rows.add(row);
         });
         map.put("rows", rows);
-        // simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary", new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, map);
     }
 
@@ -237,7 +223,6 @@ public class ControlledVocabularyController {
     public ApiResponse cancelImportControlledVocabulary(@PathVariable String name) {
         logger.info("Cancelling import for cached controlled vocabulary " + name);
         controlledVocabularyCachingService.removeControlledVocabularyCache(name);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS);
     }
 
@@ -255,12 +240,10 @@ public class ControlledVocabularyController {
     @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/compare/{name}", method = RequestMethod.POST)
-    public ApiResponse compareControlledVocabulary(@PathVariable String name, HttpServletRequest request) throws IOException {
-        InputStream inputStream = request.getInputStream();
+    public ApiResponse compareControlledVocabulary(@PathVariable String name, @RequestParam MultipartFile file) throws IOException {
         logger.info("Comparing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
-        Map<String, Object> wordsMap = cacheImport(controlledVocabulary, inputStreamToString(inputStream));
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
+        Map<String, Object> wordsMap = cacheImport(controlledVocabulary, file);
         return new ApiResponse(SUCCESS, wordsMap);
     }
 
@@ -292,7 +275,6 @@ public class ControlledVocabularyController {
         }
         ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
         controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/change", new ApiResponse(SUCCESS));
         return new ApiResponse(SUCCESS, savedControlledVocabulary);
     }
 
@@ -308,12 +290,8 @@ public class ControlledVocabularyController {
     @RequestMapping(value = "/add-vocabulary-word/{cvId}", method = POST)
     public ApiResponse addVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vocabularyWord) {
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
-
         vocabularyWord = vocabularyWordRepo.create(cv, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier(), vocabularyWord.getContacts());
-
-        cv = controlledVocabularyRepo.findOne(cv.getId());
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
+        controlledVocabularyRepo.broadcast(cv.getId());
         return new ApiResponse(SUCCESS, vocabularyWord);
     }
 
@@ -328,14 +306,10 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     public ApiResponse removeVocabularyWord(@PathVariable Long cvId, @PathVariable Long vwId) {
-
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
         VocabularyWord vw = vocabularyWordRepo.findOne(vwId);
-
         cv.removeValue(vw);
-        cv = controlledVocabularyRepo.save(cv);
-
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
+        cv = controlledVocabularyRepo.update(cv);
         return new ApiResponse(SUCCESS, cv);
     }
 
@@ -352,14 +326,14 @@ public class ControlledVocabularyController {
     public ApiResponse updateVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vw) {
         ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
         vw.setControlledVocabulary(cv);
-        vw = vocabularyWordRepo.save(vw);
-        simpMessagingTemplate.convertAndSend("/channel/settings/controlled-vocabulary/" + cv.getId(), new ApiResponse(SUCCESS, cv));
+        vw = vocabularyWordRepo.update(vw);
+        controlledVocabularyRepo.broadcast(cv.getId());
         return new ApiResponse(SUCCESS, vw);
     }
 
-    private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, String csvString) throws IOException {
+    private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, MultipartFile file) throws IOException {
 
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier", "contacts").parse(new InputStreamReader(new ByteArrayInputStream(csvString.getBytes(StandardCharsets.UTF_8))));
+        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier", "contacts").parse(new InputStreamReader(file.getInputStream()));
 
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
@@ -446,20 +420,6 @@ public class ControlledVocabularyController {
         controlledVocabularyCachingService.addControlledVocabularyCache(cvCache);
 
         return wordsMap;
-    }
-
-    /**
-     * Converts input stream to a string which represents the csv
-     *
-     * @param ServletInputStream
-     *            csv bitstream
-     * @return string array of the csv rows
-     * @throws IOException
-     */
-    private String inputStreamToString(java.io.InputStream bufferedIn) throws IOException {
-        String[] imageData = IOUtils.toString(bufferedIn, StandardCharsets.UTF_8.displayName()).split(";");
-        String[] encodedData = imageData[1].split(",");
-        return new String(Base64.getDecoder().decode(encodedData[1]));
     }
 
 }
