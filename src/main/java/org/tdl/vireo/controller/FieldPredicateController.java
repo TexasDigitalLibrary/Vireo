@@ -9,7 +9,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +34,6 @@ public class FieldPredicateController {
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * Endpoint to request all field predicates.
@@ -71,9 +67,7 @@ public class FieldPredicateController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
-        FieldPredicate fp = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false));
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
-        return new ApiResponse(SUCCESS, fp);
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false)));
     }
 
     /**
@@ -87,7 +81,6 @@ public class FieldPredicateController {
     public ApiResponse removeFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Deleting Field Predicate:  " + fieldPredicate.getValue());
         fieldPredicateRepo.delete(fieldPredicate);
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -101,9 +94,7 @@ public class FieldPredicateController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Updating Field Predicate:  " + fieldPredicate.getValue());
-        fieldPredicateRepo.save(fieldPredicate);
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-predicates", new ApiResponse(SUCCESS, fieldPredicateRepo.findAll()));
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.update(fieldPredicate));
     }
 
 }

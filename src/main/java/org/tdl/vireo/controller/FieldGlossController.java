@@ -9,7 +9,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +36,6 @@ public class FieldGlossController {
     private FieldGlossRepo fieldGlossRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private LanguageRepo languageRepo;
 
     /**
@@ -63,9 +59,7 @@ public class FieldGlossController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         Language alreadyPersistedLanguage = languageRepo.findByName(fieldGloss.getLanguage().getName());
-        FieldGloss fg = fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage);
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
-        return new ApiResponse(SUCCESS, fg);
+        return new ApiResponse(SUCCESS, fieldGlossRepo.create(fieldGloss.getValue(), alreadyPersistedLanguage));
     }
 
     /**
@@ -79,7 +73,6 @@ public class FieldGlossController {
     public ApiResponse RemoveFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
         fieldGlossRepo.delete(fieldGloss);
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -93,9 +86,7 @@ public class FieldGlossController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse UpdateFieldGloss(@WeaverValidatedModel FieldGloss fieldGloss) {
         logger.info("Deleting Field Gloss:  " + fieldGloss.getValue());
-        fieldGlossRepo.save(fieldGloss);
-        simpMessagingTemplate.convertAndSend("/channel/settings/field-gloss", new ApiResponse(SUCCESS, fieldGlossRepo.findAll()));
-        return new ApiResponse(SUCCESS);
+        return new ApiResponse(SUCCESS, fieldGlossRepo.update(fieldGloss));
     }
 
 }
