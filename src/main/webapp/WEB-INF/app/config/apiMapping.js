@@ -325,6 +325,7 @@ var apiMapping = {
     },
     FieldGloss: {
         validations: true,
+        channel: '/channel/field-gloss',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/field-gloss',
@@ -348,6 +349,7 @@ var apiMapping = {
     },
     FieldPredicate: {
         validations: true,
+        channel: '/channel/field-predicate',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/field-predicates',
@@ -371,6 +373,14 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/field-predicates',
             'method': 'remove'
+        }
+    },
+    FieldProfile: {
+        validations: true,
+        all: {
+            'endpoint': '/private/queue',
+            'controller': 'field-profile',
+            'method': 'all'
         }
     },
     FieldValue: {
@@ -410,14 +420,6 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/graduation-month'
-        }
-    },
-    FieldProfile: {
-        validations: true,
-        all: {
-            'endpoint': '/private/queue',
-            'controller': 'field-profile',
-            'method': 'all'
         }
     },
     InputType: {

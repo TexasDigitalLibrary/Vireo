@@ -1,6 +1,5 @@
 package org.tdl.vireo.model.repo.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.FieldGlossRepo;
@@ -10,12 +9,9 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
 public class FieldGlossRepoImpl extends AbstractWeaverRepoImpl<FieldGloss, FieldGlossRepo> implements FieldGlossRepoCustom {
 
-    @Autowired
-    private FieldGlossRepo fieldGlossRepo;
-
     @Override
     public FieldGloss create(String value, Language language) {
-        return fieldGlossRepo.save(new FieldGloss(value, language));
+        return super.create(new FieldGloss(value, language));
     }
 
     @Override
