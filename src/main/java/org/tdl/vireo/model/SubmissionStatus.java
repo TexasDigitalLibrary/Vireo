@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,10 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class SubmissionStatus extends BaseEntity {
+public class SubmissionStatus extends ValidatingBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;

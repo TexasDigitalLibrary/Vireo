@@ -41,12 +41,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
-        var organization = $scope.submission.organization.name;
+        var organization = $scope.submission.organization;
 
         var firstAssignable = function () {
             var firstAssignable;
             for (var i in users) {
-                if (users[i].role === "ADMINISTRATOR" || users[i].role === "MANAGER") {
+                if (users[i].role === "ROLE_ADMIN" || users[i].role === "ROLE_MANAGER") {
                     firstAssignable = users[i];
                     break;
                 }
@@ -171,7 +171,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
-                    if (angular.fromJson(response.body).meta.type === "INVALID") {
+                    if (angular.fromJson(response.body).meta.status === "INVALID") {
                         fieldValue.refresh();
                     }
                     fieldValue.updating = false;
@@ -239,7 +239,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                             archivedDocumentFieldValue.updating = true;
 
                             $scope.submission.saveFieldValue(archivedDocumentFieldValue, archivedDocumentFieldProfile).then(function (response) {
-                                if (angular.fromJson(response.body).meta.type === "INVALID") {
+                                if (angular.fromJson(response.body).meta.status === "INVALID") {
                                     fieldValue.refresh();
                                 }
                                 archivedDocumentFieldValue.updating = false;
@@ -253,7 +253,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 fieldValue.value = response.data.meta.message;
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
-                    if (angular.fromJson(response.body).meta.type === "INVALID") {
+                    if (angular.fromJson(response.body).meta.status === "INVALID") {
                         fieldValue.refresh();
                     } else {
                         if ($scope.addFileData.sendEmailToRecipient) {

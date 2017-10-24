@@ -2,11 +2,9 @@ package org.tdl.vireo.model.inheritance;
 
 import org.tdl.vireo.model.WorkflowStep;
 
-public interface HeritableComponent<M> {
+import edu.tamu.weaver.data.model.WeaverEntity;
 
-    public Long getId();
-
-    public void setId(Long id);
+public interface HeritableComponent<M> extends WeaverEntity {
 
     public void setOriginating(M originatingHeritableModel);
 

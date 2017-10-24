@@ -8,10 +8,4 @@ public interface EmailTemplateRepoCustom {
 
     public EmailTemplate findByNameOverride(String name);
 
-    public void reorder(Long src, Long dest);
-
-    public void sort(String column);
-
-    public void remove(EmailTemplate emailTemplate);
-
 }

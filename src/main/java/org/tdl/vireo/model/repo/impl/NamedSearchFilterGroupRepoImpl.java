@@ -8,7 +8,9 @@ import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterGroupRepoCustom;
 
-public class NamedSearchFilterGroupRepoImpl implements NamedSearchFilterGroupRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<NamedSearchFilterGroup, NamedSearchFilterGroupRepo> implements NamedSearchFilterGroupRepoCustom {
 
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
@@ -68,6 +70,11 @@ public class NamedSearchFilterGroupRepoImpl implements NamedSearchFilterGroupRep
         namedSearchFilterGroup.setNamedSearchFilters(null);
         namedSearchFilterGroup.setSavedColumns(null);
         namedSearchFilterRepo.delete(namedSearchFilterGroup.getId());
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/named-search-filter-group";
     }
 
 }

@@ -8,7 +8,9 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 
-public class EmailWorkflowRuleRepoImpl implements EmailWorkflowRuleRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class EmailWorkflowRuleRepoImpl extends AbstractWeaverRepoImpl<EmailWorkflowRule, EmailWorkflowRuleRepo> implements EmailWorkflowRuleRepoCustom {
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -21,6 +23,11 @@ public class EmailWorkflowRuleRepoImpl implements EmailWorkflowRuleRepoCustom {
     @Override
     public EmailWorkflowRule create(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
         return emailWorkflowRuleRepo.save(new EmailWorkflowRule(submissionStatus, emailRecipient, emailTemplate, isSystem));
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/embargo-workflow-rule";
     }
 
 }

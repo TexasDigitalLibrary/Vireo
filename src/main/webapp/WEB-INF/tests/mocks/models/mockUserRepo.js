@@ -3,7 +3,7 @@ var mockUserRepo1 = [
         "uin": "123456789",
         "lastName": "Daniels",
         "firstName": "Jack",
-        "role": "ADMINISTRATOR"
+        "role": "ROLE_ADMIN"
     },
     {
         "uin": "987654321",
@@ -24,7 +24,7 @@ var mockUserRepo2 = [
         "uin": "321654987",
         "lastName": "Daniels",
         "firstName": "John",
-        "role": "ADMINISTRATOR"
+        "role": "ROLE_ADMIN"
     },
     {
         "uin": "789456123",
@@ -45,7 +45,7 @@ var mockUserRepo3 = [
         "uin": "111111111",
         "lastName": "User1",
         "firstName": "Test",
-        "role": "ADMINISTRATOR"
+        "role": "ROLE_ADMIN"
     },
     {
         "uin": "222222222",

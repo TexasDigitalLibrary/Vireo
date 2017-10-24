@@ -5,7 +5,9 @@ import org.tdl.vireo.model.CommitteeMember;
 import org.tdl.vireo.model.repo.CommitteeMemberRepo;
 import org.tdl.vireo.model.repo.custom.CommitteeMemberRepoCustom;
 
-public class CommitteeMemberRepoImpl implements CommitteeMemberRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class CommitteeMemberRepoImpl extends AbstractWeaverRepoImpl<CommitteeMember, CommitteeMemberRepo> implements CommitteeMemberRepoCustom {
 
     @Autowired
     private CommitteeMemberRepo committeeMemberRepo;
@@ -13,6 +15,11 @@ public class CommitteeMemberRepoImpl implements CommitteeMemberRepoCustom {
     @Override
     public CommitteeMember create(String firstName, String lastName, String email) {
         return committeeMemberRepo.save(new CommitteeMember(firstName, lastName, email));
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/committee-member";
     }
 
 }

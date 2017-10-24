@@ -6,12 +6,12 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Inheritance
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "originating_workflow_step_id", "overrideable" }))
-public abstract class AbstractNote<N> extends BaseEntity {
+public abstract class AbstractNote<N> extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private String name;

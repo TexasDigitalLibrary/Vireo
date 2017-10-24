@@ -19,12 +19,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-import edu.tamu.framework.SpringContext;
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.context.SpringContext;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Configurable
-public class ControlledVocabulary extends BaseOrderedEntity {
+public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
 
     final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
 
@@ -72,7 +72,8 @@ public class ControlledVocabulary extends BaseOrderedEntity {
     }
 
     /**
-     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
+     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of
+     * SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
      *
      * @return the values
      */

@@ -132,7 +132,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             };
             FieldGlossRepo.create($scope.modalData.fieldGlosses[0]).then(function (response) {
                 var body = angular.fromJson(response.body);
-                if (body.meta.type == 'SUCCESS') {
+                if (body.meta.status == 'SUCCESS') {
                     angular.extend($scope.modalData.fieldGlosses[0], body.payload.FieldGloss);
                     if (!$scope.advanced && !preservePredicate) {
                         $scope.modalData.fieldPredicate = body.payload.FieldGloss.value.toLowerCase();
@@ -148,7 +148,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 documentTypePredicate: false
             }).then(function (response) {
                 var body = angular.fromJson(response.body);
-                if (body.meta.type == "SUCCESS") {
+                if (body.meta.status == "SUCCESS") {
                     $scope.modalData.fieldPredicate = body.payload.FieldPredicate;
                 }
             });
@@ -209,7 +209,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             model: $scope.step.aggregateFieldProfiles,
             confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
             reorder: $scope.reorderFieldProfiles,
-            container: '#fieldProfiles'
+            container: '#field-profiles'
         });
 
         $scope.buildFilteredPredicateList = function () {

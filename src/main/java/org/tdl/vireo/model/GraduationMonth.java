@@ -8,14 +8,14 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.GraduationMonthValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 /**
  *
  * @author gad
  */
 @Entity
-public class GraduationMonth extends BaseOrderedEntity implements EntityControlledVocabulary {
+public class GraduationMonth extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false, unique = true)
     private int month;

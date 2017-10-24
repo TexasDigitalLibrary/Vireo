@@ -72,7 +72,7 @@ vireo.controller('FieldGlossController', function ($controller, $scope, $q, $fil
             model: $scope.fieldGlosses,
             confirm: '#fieldGlossConfirmRemoveModal',
             reorder: null,
-            container: '#field-predicates'
+            container: '#field-glosses'
         });
 
         var listener = $scope.dragControlListeners.getListener();

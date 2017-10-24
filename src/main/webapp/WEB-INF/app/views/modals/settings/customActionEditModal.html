@@ -7,10 +7,10 @@
 
 <form ng-submit="updateCustomAction()" name="forms.update" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		
+
 		<validatedinput
 			type="text"
 			model="modalData"
@@ -21,7 +21,7 @@
 			validations="customActionRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
-	
+
 		<validatedinput
 			type="checkbox"
 			model="modalData"
@@ -32,17 +32,17 @@
 			validations="customActionRepo.getValidations()"
 			results="modalData.ValidationResults">
 		</validatedinput>
-		
+
 	</div>
 
 	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-default" 
+		<button
+			type="button"
+			class="btn btn-default"
 			ng-click="resetCustomAction()">Cancel</button>
-		<button 
-			id="customAction-save" 
-			type="submit" 
+		<button
+			id="customAction-save"
+			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.update.$invalid">Update</button>
 	</div>

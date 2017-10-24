@@ -1,7 +1,7 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
 
 public interface EmbargoRepoCustom {
 
@@ -10,7 +10,5 @@ public interface EmbargoRepoCustom {
     public void reorder(Long srcPosition, Long destPosition, EmbargoGuarantor guarantor);
 
     public void sort(String column, EmbargoGuarantor guarantor);
-
-    public void remove(Embargo embargo);
 
 }

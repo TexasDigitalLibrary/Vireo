@@ -8,17 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.enums.EmbargoGuarantor;
 import org.tdl.vireo.model.validation.EmbargoValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
-public class Embargo extends BaseOrderedEntity implements EntityControlledVocabulary {
+public class Embargo extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
     private String name;

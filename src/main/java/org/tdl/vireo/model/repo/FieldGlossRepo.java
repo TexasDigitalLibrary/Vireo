@@ -2,12 +2,13 @@ package org.tdl.vireo.model.repo;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.custom.FieldGlossRepoCustom;
 
-public interface FieldGlossRepo extends JpaRepository<FieldGloss, Long>, FieldGlossRepoCustom {
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
+
+public interface FieldGlossRepo extends WeaverRepo<FieldGloss>, FieldGlossRepoCustom {
 
     public List<FieldGloss> findByValue(String value);
 

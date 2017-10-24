@@ -1,21 +1,21 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
 
 /**
  * Controller in which to manage controlled vocabulary.
  *
  */
 @RestController
-@ApiMapping("/settings/input-types")
+@RequestMapping("/settings/input-types")
 public class InputTypeController {
 
     @Autowired
@@ -26,8 +26,8 @@ public class InputTypeController {
      *
      * @return ApiResponse with all input types.
      */
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAllInputTypes() {
         return new ApiResponse(SUCCESS, inputTypeRepo.findAll());
     }

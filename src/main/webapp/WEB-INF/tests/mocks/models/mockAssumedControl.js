@@ -3,7 +3,7 @@ var mockAssumedControl1 = {
 		"uin": "123456789",
 	    "lastName": "Daniels",
 	    "firstName": "Jack",
-	    "role": "ADMINISTRATOR"
+	    "role": "ROLE_ADMIN"
 	},
 	'netid': '',
 	'button': 'Unassume',

@@ -1,15 +1,12 @@
-vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submission) {
+vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Submission) {
 
     var submissionRepo = this;
 
     // additional repo methods and variables
 
     submissionRepo.findSubmissionById = function(id) {
-
         var submission = submissionRepo.findById(id);
-
         var defer = $q.defer();
-
         if (!submission) {
             submissionRepo.clearValidationResults();
             angular.extend(submissionRepo.mapping.one, {
@@ -17,15 +14,15 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submiss
             });
             var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
             fetchPromise.then(function(res) {
-                if (angular.fromJson(res.body).meta.type !== "ERROR") {
-                    submissionRepo.add(angular.fromJson(res.body).payload.Submission);
+                var resObj = angular.fromJson(res.body);
+                if (resObj.meta.status !== "ERROR") {
+                    submissionRepo.add(resObj.payload.Submission);
                     defer.resolve(submissionRepo.findById(id));
                 }
             });
         } else {
             defer.resolve(submission);
         }
-
         return defer.promise;
     };
 
@@ -36,7 +33,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submiss
         });
         var promise = WsApi.fetch(submissionRepo.mapping.query);
         promise.then(function(res) {
-            if (angular.fromJson(res.body).meta.type !== "ERROR") {
+            if (angular.fromJson(res.body).meta.status !== "ERROR") {
                 angular.extend(submissionRepo, angular.fromJson(res.body).payload);
             }
         });
@@ -47,7 +44,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileApi, WsApi, Submiss
         angular.extend(submissionRepo.mapping.batchExport, {
             'method': 'batch-export/' + packager.name
         });
-        var promise = FileApi.download(submissionRepo.mapping.batchExport);
+        var promise = FileService.download(submissionRepo.mapping.batchExport);
         return promise;
     };
 
