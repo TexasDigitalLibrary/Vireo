@@ -7,12 +7,12 @@
 
 <form ng-submit="updateDepositLocation()" name="forms.update" novalidate>
 
-  <validationmessage results="modalData.ValidationResults"></validationmessage>
+  <validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
   <div class="modal-body">
     <validatedinput model="modalData" property="name" label="Location Name" placeholder="Location Name" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
-    <validatedselect options="protocols" model="modalData" property="depositor" label="Protocol" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedselect>
+    <validatedselect options="protocols" model="modalData" property="depositorName" label="Protocol" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedselect>
 
     <validatedselect options="packagers" optionproperty="name" model="modalData" property="packager" label="Format" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedselect>
 

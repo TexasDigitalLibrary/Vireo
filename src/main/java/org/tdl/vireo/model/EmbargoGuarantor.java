@@ -2,9 +2,7 @@ package org.tdl.vireo.model;
 
 public enum EmbargoGuarantor {
 
-    // NEVER CHANGE THE VALUES OR YOU'LL RUIN THE DB
-    DEFAULT(0),
-    PROQUEST(1);
+    DEFAULT(0), PROQUEST(1);
 
     private int value;
 
@@ -37,4 +35,5 @@ public enum EmbargoGuarantor {
         }
         return null;
     }
+
 }

@@ -12,7 +12,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,9 +36,6 @@ public class DepositLocationController {
     private DepositLocationRepo depositLocationRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private DepositorService depositorService;
 
     @RequestMapping("/all")
@@ -52,9 +48,7 @@ public class DepositLocationController {
     @RequestMapping(value = "/create", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createDepositLocation(@RequestBody Map<String, Object> depositLocationJson) {
-        DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, depositLocation);
+        return new ApiResponse(SUCCESS, depositLocationRepo.create(depositLocationJson));
     }
 
     // This endpoint is broken. Unable to deserialize Packager interface!!
@@ -63,9 +57,7 @@ public class DepositLocationController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Updating deposit location with name " + depositLocation.getName());
-        depositLocation = depositLocationRepo.save(depositLocation);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, depositLocation);
+        return new ApiResponse(SUCCESS, depositLocationRepo.update(depositLocation));
     }
 
     // This endpoint is broken. Unable to deserialize Packager interface!!
@@ -75,7 +67,6 @@ public class DepositLocationController {
     public ApiResponse removeDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Removing deposit location with name " + depositLocation.getName());
         depositLocationRepo.remove(depositLocation);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -85,7 +76,6 @@ public class DepositLocationController {
     public ApiResponse reorderDepositLocations(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering custom action definitions");
         depositLocationRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -95,12 +85,6 @@ public class DepositLocationController {
         DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
         Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
         return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));
-    }
-
-    @RequestMapping(value = "/find-collections", method = POST)
-    public ApiResponse findCollection(@WeaverValidatedModel DepositLocation depositLocation) {
-        System.out.println(depositLocation);
-        return new ApiResponse(SUCCESS);
     }
 
 }
