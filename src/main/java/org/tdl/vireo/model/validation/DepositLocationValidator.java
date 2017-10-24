@@ -39,7 +39,7 @@ public class DepositLocationValidator extends BaseModelValidator {
         String packagerProperty = "packager";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Deposit Location requires a packager", packagerProperty, true));
 
-        String depositorProperty = "depositor";
+        String depositorProperty = "depositorName";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Deposit Location requires a depositor", depositorProperty, true));
         this.addInputValidator(new InputValidator(InputValidationType.minlength, "Deposit Location depositor must be at least 2 characters", depositorProperty, 2));
         this.addInputValidator(new InputValidator(InputValidationType.maxlength, "Deposit Location depositor cannot be more than 255 characters", depositorProperty, 255));

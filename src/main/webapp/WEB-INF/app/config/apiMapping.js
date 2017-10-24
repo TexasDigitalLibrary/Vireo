@@ -196,6 +196,7 @@ var apiMapping = {
     },
     DepositLocation: {
         validations: true,
+        channel: '/channel/deposit-location',
         all: {
             'endpoint': '/private/queue',
             'controller': 'settings/deposit-location',

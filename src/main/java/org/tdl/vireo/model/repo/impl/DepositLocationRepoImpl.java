@@ -35,15 +35,14 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
             onBehalfOf = (String) depositLocationJson.get("onBehalfOf");
         }
 
-        DepositLocation depositLocation = create((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), (String) depositLocationJson.get("collection"), (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositor"), (Integer) depositLocationJson.get("timeout"));
-        return depositLocation;
+        return create((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), (String) depositLocationJson.get("collection"), (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositorName"), (Integer) depositLocationJson.get("timeout"));
     }
 
     @Override
     public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
         DepositLocation depositLocation = createDetached(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
         depositLocation.setPosition(depositLocationRepo.count() + 1);
-        return depositLocationRepo.save(depositLocation);
+        return super.create(depositLocation);
     }
 
     @Override
@@ -63,14 +62,12 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
             timeout = (Integer) depositLocationJson.get("timeout");
         }
 
-        DepositLocation depositLocation = createDetached((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), null, (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositor"), timeout);
-        return depositLocation;
+        return createDetached((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), null, (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositorName"), timeout);
     }
 
     @Override
     public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
-        DepositLocation depositLocation = new DepositLocation(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
-        return depositLocation;
+        return new DepositLocation(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
     }
 
     @Override
