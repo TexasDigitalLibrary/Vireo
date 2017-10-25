@@ -938,6 +938,7 @@ var apiMapping = {
     },
     WorkflowStep: {
         validations: true,
+        channel: '/channel/workflow-step',
         all: {
             'endpoint': '/private/queue',
             'controller': 'workflow-step',

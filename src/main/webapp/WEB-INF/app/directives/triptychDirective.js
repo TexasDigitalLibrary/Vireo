@@ -120,7 +120,7 @@ vireo.directive("triptych", function () {
 
             $scope.selectOrganization = function (organization) {
                 var selectedOrganization = $scope.getSelectedOrganization();
-                if (organization.id != selectedOrganization.id || selectedOrganization.id == $scope.organizations[0].id) {
+                if (selectedOrganization !== undefined && (organization.id !== selectedOrganization.id || selectedOrganization.id === $scope.organizations[0].id)) {
                     var parent;
                     for (var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
                         var panel1 = $scope.navigation.panels[i];
