@@ -35,7 +35,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
 
     this.resetNewOrganization = function () {
         for (var key in this.newOrganization) {
-            if (key != 'category' && key != 'parent') {
+            if (key !== 'category' && key !== 'parent') {
                 delete this.newOrganization[key];
             }
         }
@@ -50,45 +50,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return organizationRepo.findById(selectedId);
     };
 
-    this.setSelectedOrganization = function (organization, fetchWorkflow, ignoreOrgCache) {
+    this.setSelectedOrganization = function (organization) {
         selectedId = organization.id;
-        this.lazyFetch(organization.id, fetchWorkflow, false, ignoreOrgCache).then(function (fetchedOrg) {
-            angular.extend(organization, fetchedOrg);
-            var childOrgs = {};
-            for (var i in organization.childrenOrganizations) {
-                childOrgs[i] = organizationRepo.findById(organization.childrenOrganizations[i].id);
-            }
-            angular.extend(organization.childrenOrganizations, childOrgs);
-        });
         return organizationRepo.getSelectedOrganization();
-    };
-
-    this.lazyFetch = function (orgId, fetchWorkflow, ignoreWorkflowCache, ignoreOrgCache) {
-        var orgDefer = $q.defer();
-        var cachedOrg = ignoreOrgCache ? undefined : organizationRepo.findById(orgId);
-        if (cachedOrg !== undefined) {
-            if (fetchWorkflow) {
-                if (ignoreWorkflowCache || (cachedOrg.aggregateWorkflowSteps.length > 0 && typeof cachedOrg.aggregateWorkflowSteps[0] === 'number')) {
-                    fetchAggregateWorkflow(cachedOrg, orgDefer);
-                } else {
-                    orgDefer.resolve(cachedOrg);
-                }
-            } else {
-                orgDefer.resolve(cachedOrg);
-            }
-        } else {
-            angular.extend(this.mapping.get, {
-                'method': 'get/' + orgId
-            });
-            var orgPromise = WsApi.fetch(this.mapping.get);
-            orgPromise.then(function (res) {
-                var resObj = angular.fromJson(res.body);
-                var fetchedOrg = new Organization(resObj.payload.Organization);
-                organizationRepo.add(fetchedOrg);
-                fetchAggregateWorkflow(fetchedOrg, orgDefer);
-            });
-        }
-        return orgDefer.promise;
     };
 
     this.getChildren = function (id) {
@@ -101,7 +65,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             var resObj = angular.fromJson(res.body);
             if (resObj.meta.status === "INVALID") {
                 angular.extend(organizationRepo, resObj.payload);
-                console.log(organizationRepo);
             }
         });
         return promise;
@@ -179,36 +142,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             }
         });
         return promise;
-    };
-
-    var extendWithOverwrite = function (targetObj, srcObj) {
-        var srcKeys = Object.keys(srcObj);
-        angular.forEach(srcKeys, function (key) {
-            targetObj[key] = srcObj[key];
-        });
-
-        var targetKeys = Object.keys(targetObj);
-        angular.forEach(targetKeys, function (key) {
-            if (typeof srcObj[key] === undefined) {
-                delete targetObj[key];
-            }
-        });
-    };
-
-    var fetchAggregateWorkflow = function (org, defer) {
-        angular.extend(organizationRepo.mapping.workflow, {
-            'method': org.id + '/workflow'
-        });
-        var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
-        workflowStepsPromise.then(function (response) {
-            var aggregateWorkflowSteps = angular.fromJson(response.body).payload.PersistentList;
-            if (aggregateWorkflowSteps !== undefined) {
-                org.extend({
-                    aggregateWorkflowSteps: aggregateWorkflowSteps
-                });
-            }
-            defer.resolve(org);
-        });
     };
 
     return this;

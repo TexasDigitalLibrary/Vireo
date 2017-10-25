@@ -105,6 +105,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         };
 
         $scope.updateWorkflowStep = function (workflowStep) {
+            OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
             return OrganizationRepo.updateWorkflowStep(workflowStep);
         };
 

@@ -30,11 +30,13 @@ import org.tdl.vireo.model.validation.OrganizationValidator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
 public class Organization extends ValidatingBaseEntity {
 
@@ -43,7 +45,7 @@ public class Organization extends ValidatingBaseEntity {
 
     @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = false)
     private OrganizationCategory category;
-    
+
     private Boolean acceptsSubmissions = true;
 
     @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
@@ -53,8 +55,6 @@ public class Organization extends ValidatingBaseEntity {
     private List<WorkflowStep> originalWorkflowSteps;
 
     @ManyToMany(cascade = REFRESH, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
@@ -143,7 +143,8 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @param acceptsSubmissions whether or not this Organization can accept submissions
+     * @param acceptsSubmissions
+     *            whether or not this Organization can accept submissions
      */
     public void setAcceptsSubmissions(Boolean acceptsSubmissions) {
         this.acceptsSubmissions = acceptsSubmissions;
@@ -459,30 +460,29 @@ public class Organization extends ValidatingBaseEntity {
 
         return parentOrganizationHiarchy;
     }
-    
-    
+
     public void clearAllWorkflowSteps() {
-    	
-    	List<WorkflowStep> originals = new ArrayList<WorkflowStep>(getOriginalWorkflowSteps());
-    	List<WorkflowStep> aggregets = new ArrayList<WorkflowStep>(getAggregateWorkflowSteps());
-    	
-    	originals.forEach(owfs->{
-    		removeOriginalWorkflowStep(owfs);
-    	});
-    	
-    	aggregets.forEach(awfs->{
-    		removeAggregateWorkflowStep(awfs);
-    	});
+
+        List<WorkflowStep> originals = new ArrayList<WorkflowStep>(getOriginalWorkflowSteps());
+        List<WorkflowStep> aggregets = new ArrayList<WorkflowStep>(getAggregateWorkflowSteps());
+
+        originals.forEach(owfs -> {
+            removeOriginalWorkflowStep(owfs);
+        });
+
+        aggregets.forEach(awfs -> {
+            removeAggregateWorkflowStep(awfs);
+        });
     }
 
-	public void clearAggregatedWorkflowStepsFromHiarchy() {
-		//Clear this organization's worlkflow steps
-		clearAllWorkflowSteps();
-		
-		// Clear all steps from the children organization
-		this.getChildrenOrganizations().forEach(childOrg->{
-			childOrg.clearAggregatedWorkflowStepsFromHiarchy();
-		});
-	}
+    public void clearAggregatedWorkflowStepsFromHiarchy() {
+        // Clear this organization's worlkflow steps
+        clearAllWorkflowSteps();
+
+        // Clear all steps from the children organization
+        this.getChildrenOrganizations().forEach(childOrg -> {
+            childOrg.clearAggregatedWorkflowStepsFromHiarchy();
+        });
+    }
 
 }
