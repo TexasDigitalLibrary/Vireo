@@ -2,46 +2,6 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 
     return function Organization() {
 
-        //Overrride
-        this.save = function () {
-            var organization = this;
-            var promise = $q(function (resolve) {
-                if (organization.dirty()) {
-                    angular.extend(organization.getMapping().update, {
-                        data: organization
-                    });
-                    RestApi.post(organization.getMapping().update).then(function (res) {
-                        resolve(res);
-                    });
-                } else {
-                    var payload = {};
-                    payload[organization.constructor.name] = organization;
-                    resolve({
-                        payload: payload,
-                        meta: {
-                            type: "SUCCESS"
-                        }
-                    });
-                }
-            });
-            return promise;
-        };
-
-        //Override
-        this.delete = function () {
-            var organization = this;
-            angular.extend(apiMapping.Organization.remove, {
-                'data': organization
-            });
-            var promise = RestApi.post(apiMapping.Organization.remove);
-            promise.then(function (res) {
-                if (res.meta.status == "INVALID") {
-                    organization.setValidationResults(res.payload.ValidationResults);
-                }
-            });
-            return promise;
-        };
-
         this.addEmailWorkflowRule = function (templateId, recipient, submissionStatus) {
             var organization = this;
             angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
@@ -50,6 +10,22 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
                     templateId: templateId,
                     recipient: recipient,
                     submissionStatus: submissionStatus
+                }
+            });
+
+            var promise = WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
+
+            return promise;
+        };
+
+        this.addEmailWorkflowRule = function (templateId, recipient, submissionStatusId) {
+            var organization = this;
+            angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
+                'method': organization.id + "/add-email-workflow-rule",
+                'data': {
+                    templateId: templateId,
+                    recipient: recipient,
+                    submissionStatusId: submissionStatusId
                 }
             });
 

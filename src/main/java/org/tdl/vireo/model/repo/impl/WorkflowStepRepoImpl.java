@@ -135,6 +135,8 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
             requestingOrg.removeAggregateWorkflowStep(workflowStepToRemove);
             organizationRepo.save(requestingOrg);
         }
+        
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
     }
 
     public WorkflowStep update(WorkflowStep pendingWorkflowStep, Organization requestingOrganization) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
@@ -351,7 +353,6 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
             deleteDescendantsOfStep(workflowStep);
 
             workflowStepRepo.delete(workflowStep.getId());
-            organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         }
         
     }

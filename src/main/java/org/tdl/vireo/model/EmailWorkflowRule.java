@@ -13,7 +13,9 @@ import javax.persistence.OneToOne;
 
 import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -32,6 +34,7 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
     private EmailRecipient emailRecipient;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
     private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
