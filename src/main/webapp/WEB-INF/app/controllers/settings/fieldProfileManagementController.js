@@ -60,7 +60,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         });
 
         $scope.inputTypeChanged = function () {
-            if ($scope.modalData.inputType.name == "INPUT_FILE") {
+            if ($scope.modalData.inputType.name === "INPUT_FILE") {
                 $scope.inputFile = true;
                 $scope.modalData.fieldPredicate = $scope.documentData.documentType.fieldPredicate;
             } else {
