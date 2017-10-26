@@ -6,7 +6,7 @@
           <button ng-if="!hasSubmission(getSelectedOrganization()) && getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission form-control" ng-click="createSubmission(getSelectedOrganization())">
             <span>Start {{getSelectedOrganization().name}} Submission</span>
           </button>
-          <button ng-if="hasSubmission(getSelectedOrganization())" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission()">
+          <button ng-if="hasSubmission(getSelectedOrganization())" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission(getSelectedOrganization())">
             <span>Continue {{getSelectedOrganization().name}} Submission</span>
           </button>
           <button ng-if="!getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission disabled form-control">
