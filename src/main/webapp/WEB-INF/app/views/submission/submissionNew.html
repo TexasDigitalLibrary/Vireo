@@ -2,14 +2,14 @@
   <triptych header="{{configuration.application.new_submission_header_text.value}}">
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
-        <form name="newSubmission" ng-if="selectedOrganization.id">
-          <button ng-if="!hasSubmission(selectedOrganization) && selectedOrganization.acceptsSubmissions" class="btn btn-primary triptych-start-submission form-control" ng-click="createSubmission()">
-            <span>Start {{selectedOrganization.name}} Submission</span>
+        <form name="newSubmission" ng-if="ready">
+          <button ng-if="!hasSubmission() && getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission form-control" ng-click="createSubmission()">
+            <span>Start {{getSelectedOrganization().name}} Submission</span>
           </button>
-          <button ng-if="hasSubmission(selectedOrganization)" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission(selectedOrganization)">
-            <span>Continue {{selectedOrganization.name}} Submission</span>
+          <button ng-if="hasSubmission()" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission()">
+            <span>Continue {{getSelectedOrganization().name}} Submission</span>
           </button>
-          <button ng-if="!selectedOrganization.acceptsSubmissions" class="btn btn-primary triptych-start-submission disabled form-control">
+          <button ng-if="!getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission disabled form-control">
             <span>Choose an Organiztion that allows Submissions</span>
           </button>
         </form>

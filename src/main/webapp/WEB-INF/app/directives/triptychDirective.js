@@ -12,6 +12,7 @@ vireo.directive("triptych", function () {
             }));
 
             OrganizationRepo.listen(function (data) {
+                console.log(data);
                 $timeout(function () {
                     $scope.refreshPanels();
                 }, 250);

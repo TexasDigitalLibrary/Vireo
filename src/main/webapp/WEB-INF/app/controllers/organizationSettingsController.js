@@ -40,8 +40,8 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.ready = $q.all([OrganizationRepo.ready()]);
 
-    $scope.ready.then(function () {
-        $scope.newOrganization.parent = $scope.organizations[0];
-    });
+$scope.ready.then(function () {
+    $scope.newOrganization.parent = $scope.organizations[0];
+});
 
 });

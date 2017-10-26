@@ -28,14 +28,13 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends ValidatingBaseEntity {
 
@@ -49,8 +48,6 @@ public class Submission extends ValidatingBaseEntity {
     private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "name")
-    @JsonIdentityReference(alwaysAsId = true)
     private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
@@ -463,7 +460,7 @@ public class Submission extends ValidatingBaseEntity {
     public void addCustomActionValue(CustomActionValue customActionValue) {
         this.customActionValues.add(customActionValue);
     }
-    
+
     /**
      * 
      * @param customActionValue
@@ -488,20 +485,20 @@ public class Submission extends ValidatingBaseEntity {
         this.customActionValues.add(customActionValue);
         return customActionValue;
     }
-    
+
     /**
-    *
-    * @param customActionValue
-    * @return
-    */
-   public CustomActionValue getCustomActionValue(CustomActionValue customActionValue) {
-       for (CustomActionValue cav : this.customActionValues) {
-           if (cav.getDefinition().getLabel().equals(customActionValue.getDefinition().getLabel())) {               
-               return cav;
-           }
-       }
-       return null;
-   }
+     *
+     * @param customActionValue
+     * @return
+     */
+    public CustomActionValue getCustomActionValue(CustomActionValue customActionValue) {
+        for (CustomActionValue cav : this.customActionValues) {
+            if (cav.getDefinition().getLabel().equals(customActionValue.getDefinition().getLabel())) {
+                return cav;
+            }
+        }
+        return null;
+    }
 
     @JsonIgnore
     public List<FieldValue> getFieldValuesByPredicate(FieldPredicate fieldPredicate) {

@@ -1,57 +1,69 @@
-vireo.controller('NewSubmissionController', function($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ManagedConfigurationRepo, SubmissionStates) {
+vireo.controller('NewSubmissionController', function ($controller, $location, $q, $scope, OrganizationRepo, StudentSubmissionRepo, ManagedConfigurationRepo, SubmissionStates) {
 
-    angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+    angular.extend(this, $controller('AbstractController', {
+        $scope: $scope
+    }));
 
     $scope.organizations = OrganizationRepo.getAll();
 
-    $scope.selectedOrganization = OrganizationRepo.getSelectedOrganization();
-
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
-    var studentSubmissions = StudentSubmissionRepo.getAll();
+    $scope.studentSubmissions = StudentSubmissionRepo.getAll();
 
-    $scope.getSelectedOrganization = function() {
-        return $scope.selectedOrganization;
-    };
+    $scope.ready = false;
 
-    $scope.setSelectedOrganization = function(organization) {
-        OrganizationRepo.setSelectedOrganization(organization);
-    };
+    $q.all([OrganizationRepo.ready(), ManagedConfigurationRepo.getAll(), StudentSubmissionRepo.getAll()]).then(function () {
 
-    $scope.hasSubmission = function(organization) {
-        var hasSubmission = false;
-        for (var i in studentSubmissions) {
-            var submission = studentSubmissions[i];
-            if (submission.organization.id === organization.id) {
-                hasSubmission = true;
-                break;
-            }
-        }
-        return hasSubmission;
-    };
+        $scope.ready = true;
 
-    $scope.gotoSubmission = function(organization) {
-        for (var i in studentSubmissions) {
-            var submission = studentSubmissions[i];
-            if (submission.organization.id === organization.id) {
-                if (submission.submissionStatus.submissionState === SubmissionStates.IN_PROGRESS) {
-                    $location.path("/submission/" + submission.id);
-                } else {
-                    $location.path("/submission/" + submission.id + "/view");
+        $scope.getSelectedOrganization = function () {
+            return OrganizationRepo.getSelectedOrganization();
+        };
+
+        $scope.setSelectedOrganization = function (organization) {
+            OrganizationRepo.setSelectedOrganization(organization);
+        };
+
+        $scope.hasSubmission = function () {
+            var hasSubmission = false;
+            var selectedOrganization = OrganizationRepo.getSelectedOrganization();
+            for (var i in $scope.studentSubmissions) {
+                var submission = $scope.studentSubmissions[i];
+                if (submission.organization.id === selectedOrganization.id) {
+                    hasSubmission = true;
+                    break;
                 }
             }
-        }
-    };
+            return hasSubmission;
+        };
 
-    $scope.createSubmission = function() {
-        StudentSubmissionRepo.create({'organizationId': $scope.getSelectedOrganization().id}).then(function(response) {
-            var obj = angular.fromJson(response.body);
-            if (obj.meta.status === 'SUCCESS') {
-                var submission = obj.payload.Submission;
-                StudentSubmissionRepo.add(submission);
-                $location.path("/submission/" + submission.id);
+        $scope.gotoSubmission = function () {
+            var selectedOrganization = OrganizationRepo.getSelectedOrganization();
+            for (var i in $scope.studentSubmissions) {
+                var submission = $scope.studentSubmissions[i];
+                if (submission.organization.id === selectedOrganization.id) {
+                    if (submission.submissionStatus.submissionState === SubmissionStates.IN_PROGRESS) {
+                        $location.path("/submission/" + submission.id);
+                    } else {
+                        $location.path("/submission/" + submission.id + "/view");
+                    }
+                }
             }
-        });
-    };
+        };
+
+        $scope.createSubmission = function () {
+            StudentSubmissionRepo.create({
+                'organizationId': $scope.getSelectedOrganization().id
+            }).then(function (response) {
+                var obj = angular.fromJson(response.body);
+                if (obj.meta.status === 'SUCCESS') {
+                    var submission = obj.payload.Submission;
+                    StudentSubmissionRepo.add(submission);
+                    $location.path("/submission/" + submission.id);
+                }
+            });
+        };
+
+    });
 
 });
