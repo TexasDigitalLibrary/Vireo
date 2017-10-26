@@ -24,12 +24,11 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
             OrganizationRepo.setSelectedOrganization(organization);
         };
 
-        $scope.hasSubmission = function () {
+        $scope.hasSubmission = function (organization) {
             var hasSubmission = false;
-            var selectedOrganization = OrganizationRepo.getSelectedOrganization();
             for (var i in $scope.studentSubmissions) {
                 var submission = $scope.studentSubmissions[i];
-                if (submission.organization.id === selectedOrganization.id) {
+                if (submission.organization.id === organization.id) {
                     hasSubmission = true;
                     break;
                 }
@@ -37,11 +36,10 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
             return hasSubmission;
         };
 
-        $scope.gotoSubmission = function () {
-            var selectedOrganization = OrganizationRepo.getSelectedOrganization();
+        $scope.gotoSubmission = function (organization) {
             for (var i in $scope.studentSubmissions) {
                 var submission = $scope.studentSubmissions[i];
-                if (submission.organization.id === selectedOrganization.id) {
+                if (submission.organization.id === organization.id) {
                     if (submission.submissionStatus.submissionState === SubmissionStates.IN_PROGRESS) {
                         $location.path("/submission/" + submission.id);
                     } else {
