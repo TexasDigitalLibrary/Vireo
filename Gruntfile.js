@@ -123,7 +123,7 @@ module.exports = function (grunt) {
                     'node_modules/weaver-ui-core/app/services/validationStore.js',
                     'node_modules/weaver-ui-core/app/services/userService.js',
                     'node_modules/weaver-ui-core/app/services/modalService.js',
-                    'node_modules/weaver-ui-core/app/services/modelcache.js',
+                    'node_modules/weaver-ui-core/app/services/modelCache.js',
                     'node_modules/weaver-ui-core/app/services/modelUpdateService.js',
 
                     'node_modules/weaver-ui-core/app/repo/abstractRepo.js',
