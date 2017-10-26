@@ -8,7 +8,7 @@ vireo.model("UserSettings", function UserSettings(UserService) {
 
         UserService.userEvents().then(null, null, function () {
             userSettings.fetch();
-        })
+        });
 
         return this;
     };
