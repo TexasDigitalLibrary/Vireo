@@ -2,8 +2,7 @@ vireo.config(function ($locationProvider, $routeProvider) {
 
     $locationProvider.html5Mode(true);
 
-    $routeProvider.
-    when('/myprofile', {
+    $routeProvider.when('/myprofile', {
         templateUrl: 'views/myprofile.html',
         controller: 'SettingsController',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
