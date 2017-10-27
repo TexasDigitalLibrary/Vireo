@@ -69,7 +69,7 @@
 
     <dependency>
       <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-data</artifactId>
+      <artifactId>weaver-validation</artifactId>
       <version>1.3.x-SNAPSHOT</version>
     </dependency>
 
