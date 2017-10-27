@@ -42,7 +42,9 @@ public class ConfigurableSettingsController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateSetting(@WeaverValidatedModel ManagedConfiguration configuration) {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
-        return new ApiResponse(SUCCESS, configurationRepo.create(configuration));
+        configuration = configurationRepo.save(configuration);
+        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
+        return new ApiResponse(SUCCESS, configuration);
     }
 
     @PreAuthorize("hasRole('MANAGER')")
