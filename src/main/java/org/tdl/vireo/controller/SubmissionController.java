@@ -275,7 +275,7 @@ public class SubmissionController {
 
                     fieldValue = fieldValueRepo.save(fieldValue);
                     submission.addFieldValue(fieldValue);
-                    submission = submissionRepo.update(submission);
+                    submission = submissionRepo.save(submission);
 
                     if (submissionFieldProfile.getLogged()) {
                         actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
@@ -556,7 +556,7 @@ public class SubmissionController {
     public ApiResponse removeFieldValue(@PathVariable("submissionId") Long submissionId, @RequestBody FieldValue fieldValue) {
         Submission submission = submissionRepo.read(submissionId);
         submission.removeFieldValue(fieldValue);
-        submission = submissionRepo.update(submission);
+        submission = submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/removed-field-value", new ApiResponse(SUCCESS, fieldValue));
         return new ApiResponse(SUCCESS, submission);
     }
