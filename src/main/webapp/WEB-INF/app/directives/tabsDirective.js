@@ -9,7 +9,7 @@ vireo.directive("vireoTabs", function() {
 			this.activeTab = function(path) {
 				var active = false;
 				if($routeParams.id !== undefined) {
-					active = path.includes('/' + $routeParams.tab + '/' + $routeParams.id);
+					active = path.includes('/' + $routeParams.id + '/' + $routeParams.tab);
 				}
 				else {
 					active = path.includes('/' + $routeParams.tab);

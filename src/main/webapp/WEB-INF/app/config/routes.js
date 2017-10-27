@@ -56,9 +56,10 @@ vireo.config(function ($locationProvider, $routeProvider) {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN"]
     }).
-    when('/admin/view/:tab/:id', {
+    when('/admin/view/:id/:tab', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN"],
+        controller: 'AdminSubmissionViewController',
         reloadOnSearch: false
     }).
     when('/admin/log', {
