@@ -365,10 +365,11 @@ public class SubmissionController {
     }
 
     @Transactional
-    @RequestMapping(value = "/batch-update-status", method = RequestMethod.POST)
+    @RequestMapping("/batch-update-status/{submissionStatusName}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @RequestBody SubmissionStatus submissionStatus) {
+    public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
+            SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
             processEmailWorkflowRules(user, submission);
         });
