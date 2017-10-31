@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.enums.EmbargoGuarantor;
 
 public class ControlledVocabularyTest extends AbstractEntityTest {
 

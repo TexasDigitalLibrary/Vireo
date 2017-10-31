@@ -1,17 +1,17 @@
 package org.tdl.vireo.service;
 
 import org.springframework.stereotype.Service;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
 
-import edu.tamu.framework.model.IRole;
-import edu.tamu.framework.service.CoreRoleService;
+import edu.tamu.weaver.user.model.IRole;
+import edu.tamu.weaver.user.role.service.WeaverRoleService;
 
 @Service
-public class AppRoleService extends CoreRoleService {
+public class AppRoleService extends WeaverRoleService {
 
     @Override
     public IRole valueOf(String role) {
-        return AppRole.valueOf(AppRole.class, role);
+        return Role.valueOf(Role.class, role);
     }
 
 }

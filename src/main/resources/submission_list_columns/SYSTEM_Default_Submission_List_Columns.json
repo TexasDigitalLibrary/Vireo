@@ -19,7 +19,7 @@
   {
     "title": "Organization",
     "sort": "NONE",
-    "valuePath": ["organization", "name"],
+    "valuePath": ["organization"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

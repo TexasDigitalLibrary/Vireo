@@ -1,12 +1,10 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Map;
@@ -14,23 +12,22 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.service.DepositorService;
 
-import edu.tamu.framework.aspect.annotation.ApiData;
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
-@ApiMapping("/settings/deposit-location")
+@RestController
+@RequestMapping("/settings/deposit-location")
 public class DepositLocationController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -39,70 +36,55 @@ public class DepositLocationController {
     private DepositLocationRepo depositLocationRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private DepositorService depositorService;
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allDepositLocations() {
         return new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDepositLocation(@ApiData Map<String, Object> depositLocationJson) {
-        DepositLocation depositLocation = depositLocationRepo.create(depositLocationJson);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, depositLocation);
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createDepositLocation(@RequestBody Map<String, Object> depositLocationJson) {
+        return new ApiResponse(SUCCESS, depositLocationRepo.create(depositLocationJson));
     }
 
     // This endpoint is broken. Unable to deserialize Packager interface!!
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Updating deposit location with name " + depositLocation.getName());
-        depositLocation = depositLocationRepo.save(depositLocation);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
-        return new ApiResponse(SUCCESS, depositLocation);
+        return new ApiResponse(SUCCESS, depositLocationRepo.update(depositLocation));
     }
 
     // This endpoint is broken. Unable to deserialize Packager interface!!
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeDepositLocation(@ApiValidatedModel DepositLocation depositLocation) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    public ApiResponse removeDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Removing deposit location with name " + depositLocation.getName());
         depositLocationRepo.remove(depositLocation);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = DepositLocation.class, params = { "0", "1" }) })
-    public ApiResponse reorderDepositLocations(@ApiVariable Long src, @ApiVariable Long dest) {
+    @RequestMapping("/reorder/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = DepositLocation.class, params = { "0", "1" }) })
+    public ApiResponse reorderDepositLocations(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering custom action definitions");
         depositLocationRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/deposit-location", new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/test-connection", method = POST)
-    public ApiResponse testConnection(@ApiData Map<String, Object> depositLocationJson) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/test-connection", method = POST)
+    public ApiResponse testConnection(@RequestBody Map<String, Object> depositLocationJson) {
         DepositLocation depositLocation = depositLocationRepo.createDetached(depositLocationJson);
         Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
         return new ApiResponse(SUCCESS, depositor.getCollections(depositLocation));
-    }
-
-    @ApiMapping(value = "/find-collections", method = POST)
-    public ApiResponse findCollection(@ApiValidatedModel DepositLocation depositLocation) {
-        System.out.println(depositLocation);
-        return new ApiResponse(SUCCESS);
     }
 
 }

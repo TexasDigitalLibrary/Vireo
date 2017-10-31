@@ -11,11 +11,13 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.DegreeValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "level_id" }) })
-public class Degree extends BaseOrderedEntity implements EntityControlledVocabulary {
+public class Degree extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
     private String name;
@@ -66,21 +68,25 @@ public class Degree extends BaseOrderedEntity implements EntityControlledVocabul
     }
 
     @Override
+    @JsonIgnore
     public String getControlledName() {
         return name;
     }
 
     @Override
+    @JsonIgnore
     public String getControlledDefinition() {
         return degreeCode;
     }
 
     @Override
+    @JsonIgnore
     public String getControlledIdentifier() {
         return level.getName();
     }
 
     @Override
+    @JsonIgnore
     public List<String> getControlledContacts() {
         return new ArrayList<String>();
     }

@@ -12,11 +12,11 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.enums.DefaultSettingKey;
 import org.tdl.vireo.model.export.enums.GeneralKey;
 import org.tdl.vireo.model.export.enums.SubmissionPropertyKey;
-import org.tdl.vireo.util.FileHelperUtility;
-import org.tdl.vireo.util.SubmissionHelperUtility;
+import org.tdl.vireo.utility.FileHelperUtility;
+import org.tdl.vireo.utility.SubmissionHelperUtility;
 import org.thymeleaf.context.Context;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.data.model.BaseEntity;
 
 @Entity
 @Inheritance

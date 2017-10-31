@@ -2,7 +2,6 @@ package org.tdl.vireo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.ViewResolver;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -17,7 +16,6 @@ public class AppTemplateConfig {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.addTemplateResolver(xmlTemplateResolver());
         templateEngine.addTemplateResolver(jspTemplateResolver());
-        templateEngine.setTemplateEngineMessageSource(messageSource());
         return templateEngine;
     }
 
@@ -45,13 +43,6 @@ public class AppTemplateConfig {
         resolver.setTemplateEngine(templateEngine());
         resolver.setCharacterEncoding("UTF-8");
         return resolver;
-    }
-
-    @Bean
-    public ResourceBundleMessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
-        return messageSource;
     }
 
 }

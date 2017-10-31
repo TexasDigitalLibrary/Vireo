@@ -12,7 +12,7 @@
   <div class="modal-body">
     <validatedinput model="modalData" property="name" label="Location Name" placeholder="Location Name" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    <validatedselect options="protocols" model="modalData" property="depositor" label="Protocol" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
+    <validatedselect options="protocols" model="modalData" property="depositorName" label="Protocol" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 
     <validatedselect options="packagers" optionproperty="name" model="modalData" property="packager" label="Format" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 

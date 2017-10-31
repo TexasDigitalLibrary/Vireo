@@ -72,12 +72,15 @@ public class SubmissionTest extends AbstractEntityTest {
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
+        
+        submission = submissionRepo.save(submission);
 
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
 
         organization = organizationRepo.findOne(organization.getId());
-        submission = submissionRepo.save(submission);
+        
+        submission = submissionRepo.read(submission.getId());
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
         assertEquals("Saved submission did not contain the correct state!", submissionStatus, submission.getSubmissionStatus());
@@ -94,7 +97,7 @@ public class SubmissionTest extends AbstractEntityTest {
         organization.setAcceptsSubmissions(false);
 
         // expect an exception when creating Submission on the Organization that doesn't accept them
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
     }
 
     @Override

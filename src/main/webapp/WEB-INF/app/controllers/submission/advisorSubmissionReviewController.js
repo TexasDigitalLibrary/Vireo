@@ -1,4 +1,4 @@
-vireo.controller("AdvisorSubmissionReviewController", function($controller, $scope, $routeParams, AdvisorSubmissionRepo, AdvisorSubmission, Submission) {
+vireo.controller("AdvisorSubmissionReviewController", function($controller, $scope, $routeParams, AdvisorSubmissionRepo, Submission) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -10,9 +10,9 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
 
     $scope.advisorSubmissionRepoReady = false;
 
-    AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function(data) {
+    AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function(submissions) {
         $scope.advisorSubmissionRepoReady = true;
-        $scope.submission = new AdvisorSubmission(angular.fromJson(data.body).payload.Submission);
+        $scope.submission = submissions;
     });
 
     $scope.required = function(aggregateFieldProfile) {

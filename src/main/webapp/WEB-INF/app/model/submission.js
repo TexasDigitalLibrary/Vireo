@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
     return function Submission() {
 
@@ -154,7 +154,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             });
             var promise = WsApi.fetch(apiMapping.Submission.addComment);
             promise.then(function (res) {
-                if (res.meta && res.meta.type == "INVALID") {
+                if (res.meta && res.meta.status == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
             });
@@ -169,7 +169,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             });
             var promise = WsApi.fetch(apiMapping.Submission.sendEmail);
             promise.then(function (res) {
-                if (res.meta && res.meta.type == "INVALID") {
+                if (res.meta && res.meta.status == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
             });
@@ -183,7 +183,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             });
             var promise = WsApi.fetch(apiMapping.Submission.remove);
             promise.then(function (res) {
-                if (res.meta && res.meta.type == "INVALID") {
+                if (res.meta && res.meta.status == "INVALID") {
                     submission.setValidationResults(res.payload.ValidationResults);
                 }
             });
@@ -297,7 +297,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
             var promise = WsApi.fetch(this.getMapping().validateFieldValue);
             promise.then(function (response) {
                 var responseObj = angular.fromJson(response.body);
-                if (responseObj.meta.type === "INVALID") {
+                if (responseObj.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
                     angular.forEach(responseObj.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
@@ -329,7 +329,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
 
             promise.then(function (response) {
                 var responseObj = angular.fromJson(response.body);
-                if (responseObj.meta.type === "INVALID") {
+                if (responseObj.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
                     angular.forEach(responseObj.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
@@ -446,7 +446,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
                     'uri': uri
                 }
             });
-            var promise = FileApi.download(this.getMapping().file);
+            var promise = FileService.download(this.getMapping().file);
             return promise;
         };
 
@@ -606,14 +606,14 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileApi, WsApi) {
         };
 
         submission.getContactEmails = function() {
-          
+
           var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
           var emails = [];
 
           angular.forEach(fieldValues, function(fv) {
             angular.extend(emails, fv.contacts);
           });
-          
+
           return emails;
         };
 

@@ -9,10 +9,10 @@ import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.validation.DepositLocationValidator;
 
-import edu.tamu.framework.model.BaseOrderedEntity;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-public class DepositLocation extends BaseOrderedEntity {
+public class DepositLocation extends ValidatingOrderedBaseEntity {
 
     @Transient
     public static final Integer DEFAULT_TIMEOUT = 60;
@@ -37,12 +37,9 @@ public class DepositLocation extends BaseOrderedEntity {
     @Column(nullable = true)
     private String onBehalfOf;
 
-    // This will not deserialize!! Remove and Update method breaks!
-    // TODO, this used to be a Bean name in Vireo 3. (Deposit Format -- DSPace METS)
     @OneToOne(targetEntity = AbstractPackager.class, orphanRemoval = true, optional = true)
     private Packager packager;
 
-    // TODO, this used to be a Bean name in Vireo 3. (Deposit Protocol -- SWORDv1)
     @Column(nullable = false)
     private String depositorName;
 

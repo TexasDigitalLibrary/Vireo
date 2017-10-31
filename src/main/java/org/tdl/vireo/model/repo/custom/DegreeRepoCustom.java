@@ -7,10 +7,4 @@ public interface DegreeRepoCustom {
 
     public Degree create(String name, DegreeLevel level);
 
-    public void reorder(Long src, Long dest);
-
-    public void sort(String column);
-
-    public void remove(Degree degree);
-
 }

@@ -1,9 +1,10 @@
 package org.tdl.vireo.model.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.repo.custom.CustomActionValueRepoCustom;
 
-public interface CustomActionValueRepo extends JpaRepository<CustomActionValue, Long>, CustomActionValueRepoCustom {
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
+
+public interface CustomActionValueRepo extends WeaverRepo<CustomActionValue>, CustomActionValueRepoCustom {
 
 }

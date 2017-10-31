@@ -1,33 +1,30 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
-import static edu.tamu.framework.enums.MethodValidationType.REORDER;
-import static edu.tamu.framework.enums.MethodValidationType.SORT;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
+import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
-import edu.tamu.framework.aspect.annotation.ApiVariable;
-import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
-@ApiMapping("/settings/degree")
+@RestController
+@RequestMapping("/settings/degree")
 public class DegreeController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,64 +33,56 @@ public class DegreeController {
     private DegreeRepo degreeRepo;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private ProquestCodesService proquestCodesService;
 
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse allDegrees() {
         return new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createDegree(@ApiValidatedModel Degree degree) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Creating degree with name " + degree.getName());
         degree = degreeRepo.create(degree.getName(), degree.getLevel());
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS, degree);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateDegree(@ApiValidatedModel Degree degree) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Updating degree with name " + degree.getName());
-        degree = degreeRepo.save(degree);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
+        degree = degreeRepo.update(degree);
         return new ApiResponse(SUCCESS, degree);
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeDegree(@ApiValidatedModel Degree degree) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    public ApiResponse removeDegree(@WeaverValidatedModel Degree degree) {
         logger.info("Removing graduation month with id " + degree.getId());
         degreeRepo.remove(degree);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/reorder/{src}/{dest}")
-    @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = REORDER, model = Degree.class, params = { "0", "1" }) })
-    public ApiResponse reorderDegrees(@ApiVariable Long src, @ApiVariable Long dest) {
+    @RequestMapping("/reorder/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
+    @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = Degree.class, params = { "0", "1" }) })
+    public ApiResponse reorderDegrees(@PathVariable Long src, @PathVariable Long dest) {
         logger.info("Reordering degree");
         degreeRepo.reorder(src, dest);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
-    @ApiMapping("/sort/{column}")
-    @Auth(role = "MANAGER")
-    @ApiValidation(method = { @ApiValidation.Method(value = SORT, model = Degree.class, params = { "0" }) })
-    public ApiResponse sortDegrees(@ApiVariable String column) {
+    @RequestMapping("/sort/{column}")
+    @PreAuthorize("hasRole('MANAGER')")
+    @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = Degree.class, params = { "0" }) })
+    public ApiResponse sortDegrees(@PathVariable String column) {
         logger.info("Sorting degree by " + column);
         degreeRepo.sort(column);
-        simpMessagingTemplate.convertAndSend("/channel/settings/degree", new ApiResponse(SUCCESS, degreeRepo.findAllByOrderByPositionAsc()));
         return new ApiResponse(SUCCESS);
     }
 
@@ -101,8 +90,8 @@ public class DegreeController {
      *
      * @return
      */
-    @ApiMapping("/proquest")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/proquest")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getProquestLanguageCodes() {
         return new ApiResponse(SUCCESS, proquestCodesService.getCodes("degrees"));
     }

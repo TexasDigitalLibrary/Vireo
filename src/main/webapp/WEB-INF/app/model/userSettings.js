@@ -1,10 +1,16 @@
-vireo.model("UserSettings", function UserSettings() {
+vireo.model("UserSettings", function UserSettings(UserService) {
 
-	return function UserSettings() {
+    return function UserSettings() {
 
-		// additional model methods and variables
+        var userSettings = this;
 
-		return this;
-	};
+        // additional model methods and variables
+
+        UserService.userEvents().then(null, null, function () {
+            userSettings.fetch();
+        });
+
+        return this;
+    };
 
 });

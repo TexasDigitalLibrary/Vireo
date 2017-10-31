@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.custom;
 
-import org.tdl.vireo.enums.SubmissionState;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionStatus;
 
 public interface SubmissionStatusRepoCustom {

@@ -7,7 +7,7 @@
 
 <form ng-submit="updateLanguage()" name="forms.update" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="languageRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 		<validatedinput
@@ -15,20 +15,20 @@
 			property="name"
 			label="Name"
 			placeholder="Name of the language"
-            form="forms.update"
-            validations="languageRepo.getValidations()"
+      form="forms.update"
+      validations="languageRepo.getValidations()"
 			results="modalData.ValidationResults">
-		</validatedinput>		
+		</validatedinput>
 	</div>
 
 	<div class="modal-footer">
-		<button 
-			type="button" 
-			class="btn btn-default" 
+		<button
+			type="button"
+			class="btn btn-default"
 			ng-click="resetLanguages()">Cancel</button>
-		<button 
-			id="languages-save" 
-			type="submit" 
+		<button
+			id="languages-save"
+			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.update.$invalid">Update</button>
 	</div>

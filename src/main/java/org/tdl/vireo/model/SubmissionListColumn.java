@@ -17,16 +17,15 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
-public class SubmissionListColumn extends BaseEntity {
+public class SubmissionListColumn extends ValidatingBaseEntity {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
     private InputType inputType;

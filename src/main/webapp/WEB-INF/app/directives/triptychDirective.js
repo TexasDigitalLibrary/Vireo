@@ -120,7 +120,7 @@ vireo.directive("triptych", function () {
 
             $scope.selectOrganization = function (organization) {
                 var selectedOrganization = $scope.getSelectedOrganization();
-                if (organization.id != selectedOrganization.id || selectedOrganization.id == $scope.organizations[0].id) {
+                if (selectedOrganization !== undefined && (organization.id !== selectedOrganization.id || selectedOrganization.id === $scope.organizations[0].id)) {
                     var parent;
                     for (var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
                         var panel1 = $scope.navigation.panels[i];
@@ -158,15 +158,12 @@ vireo.directive("triptych", function () {
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
                     var updatedOrganization = OrganizationRepo.findById(panel.organization.id);
-                    var previousPanelChildrenCount = panel.organization.childrenOrganizations.length;
                     if (updatedOrganization !== undefined) {
                         setOrganzization(panel, updatedOrganization);
                         if (panel.organization.childrenOrganizations.length === 0) {
                             clear(panel);
                         } else {
-                            if (previousPanelChildrenCount === 0) {
-                                newVisiblePanel = panel;
-                            }
+                            newVisiblePanel = panel;
                         }
                     } else {
                         if (panel.parent !== undefined) {

@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="user in users | filter:{role: '!STUDENT'}">
+                    <tr ng-repeat="user in users | filter:{role: '!ROLE_STUDENT'}">
                         <td>{{user.firstName}} {{user.lastName}}</td>
                         <td>{{user.email}}</td>
                         <td>

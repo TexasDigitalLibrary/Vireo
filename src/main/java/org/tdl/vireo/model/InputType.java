@@ -5,16 +5,16 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.InputTypeValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class InputType extends BaseEntity {
+public class InputType extends ValidatingBaseEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
 
     @Column
-    private String validationPatern;
+    private String validationPattern;
 
     @Column
     private String validationMessage;
@@ -47,12 +47,12 @@ public class InputType extends BaseEntity {
         this.name = name;
     }
 
-    public String getValidationPatern() {
-        return validationPatern;
+    public String getValidationPattern() {
+        return validationPattern;
     }
 
-    public void setValidationPatern(String patern) {
-        validationPatern = patern;
+    public void setValidationPattern(String pattern) {
+        validationPattern = pattern;
     }
 
     public String getValidationMessage() {

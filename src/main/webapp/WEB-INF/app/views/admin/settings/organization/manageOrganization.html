@@ -65,7 +65,7 @@
 					<div class="row">
 						<div class="pull-right">
 							<button
-							    ng-if="getSelectedOrganization().id !== 1"
+							  ng-if="getSelectedOrganization().id !== 1"
 								type="button"
 								class="btn btn-danger"
                 ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
@@ -82,13 +82,13 @@
 
 				</div>
 
-				<modal modal-id="organizationConfirmDeleteModal"
-					modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
-					modal-header-class="modal-header-danger"
-					wvr-modal-backdrop="static">
-        </modal>
-        
 		</form>
+
+		<modal modal-id="organizationConfirmDeleteModal"
+			modal-view="views/modals/organization/organizationConfirmDeleteModal.html"
+			modal-header-class="modal-header-danger"
+			wvr-modal-backdrop="static">
+		</modal>
 
 	</div>
 

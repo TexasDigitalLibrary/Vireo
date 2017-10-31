@@ -2,6 +2,7 @@ package org.tdl.vireo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.DefaultConfiguration;
@@ -40,7 +41,8 @@ public class DefaultSettingsService {
     }
 
     public List<DefaultConfiguration> getSettingsByType(String type) {
-        return defaultSettings.stream().filter(preferences -> preferences.getType().equals(type)).findFirst().orElse(null).getPreferences();
+        Optional<DefaultPreferences> defaultConfiguration = defaultSettings.stream().filter(preferences -> preferences.getType().equals(type)).findFirst();
+        return defaultConfiguration.isPresent() ? defaultConfiguration.get().getPreferences() : new ArrayList<DefaultConfiguration>();
     }
 
     public void addSettings(String type, List<DefaultConfiguration> preferences) {

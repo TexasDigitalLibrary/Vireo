@@ -7,7 +7,7 @@
 
 <form ng-submit="removeOrganizationCategory()" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="organizationCategoryRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the organization category "{{modalData.name}}"</b></h4>

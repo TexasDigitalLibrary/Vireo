@@ -1,5 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiAction.UPDATE;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -22,19 +25,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
-import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
@@ -46,11 +49,13 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
-import org.tdl.vireo.util.FileIOUtility;
+import org.tdl.vireo.utility.FileIOUtility;
 
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
-public class SubmissionRepoImpl implements SubmissionRepoCustom {
+public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
     final static Logger logger = LoggerFactory.getLogger(SubmissionRepoImpl.class);
 
@@ -138,7 +143,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         setCheckboxDefaultValue(submission, "INPUT_LICENSE");
         setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
 
-        return submissionRepo.save(submission);
+        return super.create(submission);
     }
 
     private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
@@ -151,7 +156,14 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
     }
 
     @Override
-    public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, Credentials credentials) {
+    public Submission update(Submission submission) {
+        submission = super.update(submission);
+        simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
+        return submission;
+    }
+
+    @Override
+    public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, User user) {
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
@@ -188,11 +200,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             }
 
             if (attachProquestLicense) {
-                writeLicenseFile(credentials, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
+                writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
             }
 
             if (attachDefaultLicenseFieldValues) {
-                writeLicenseFile(credentials, submission, "submit_license", "license", "submission");
+                writeLicenseFile(user, submission, "submit_license", "license", "submission");
             }
             break;
         case APPROVED:
@@ -225,13 +237,16 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
             break;
         }
 
+        // TODO: reduce multiple redundent saves
         submission = submissionRepo.saveAndFlush(submission);
 
-        actionLogRepo.createPublicLog(submission, credentials, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
+        super.update(submission);
+
+        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
 
-    private void writeLicenseFile(Credentials credentials, Submission submission, String licenseName, String fileName, String configurationType) {
+    private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {
 
         byte[] licenseBytes = null;
 
@@ -259,7 +274,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         licenseBytes = proquestLicenseStringBuilder.toString().getBytes();
 
         if (licenseBytes != null) {
-            int hash = credentials.getEmail().hashCode();
+            int hash = user.getEmail().hashCode();
             String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
 
             try {
@@ -300,9 +315,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         });
         List<Submission> actualResults = new ArrayList<Submission>();
 
+        List<Submission> submissions = submissionRepo.findAll(ids);
+
         // order them
         for (Long id : ids) {
-            for (Submission ps : submissionRepo.findAll(ids)) {
+            for (Submission ps : submissions) {
                 if (ps.getId().equals(id)) {
                     actualResults.add(ps);
                 }
@@ -536,7 +553,7 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
 
                 case "assignee.email":
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN core_users a ON a.id=s.assignee_id");
+                    sqlJoinsBuilder.append("\nLEFT JOIN weaver_users a ON a.id=s.assignee_id");
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
@@ -644,6 +661,11 @@ public class SubmissionRepoImpl implements SubmissionRepoCustom {
         default:
             break;
         }
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/submission";
     }
 
 }

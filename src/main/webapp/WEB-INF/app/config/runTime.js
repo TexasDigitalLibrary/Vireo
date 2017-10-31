@@ -4,7 +4,7 @@ vireo.run(function($route, $rootScope, $location) {
 
 	// Add runtime tasks here
 
-	// Allow the passing of an additional parameter which 
+	// Allow the passing of an additional parameter which
 	// Will allow the path to be changed with out route reload
 	var original = $location.path;
     $location.path = function (path, reload) {
@@ -17,5 +17,5 @@ vireo.run(function($route, $rootScope, $location) {
         }
         return original.apply($location, [path]);
     };
-	
+
 });

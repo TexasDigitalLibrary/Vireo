@@ -5,12 +5,9 @@ import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.custom.GraduationMonthRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 
-public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class GraduationMonthRepoImpl extends AbstractWeaverOrderedRepoImpl<GraduationMonth, GraduationMonthRepo> implements GraduationMonthRepoCustom {
 
     @Autowired
     private GraduationMonthRepo graduationMonthRepo;
@@ -19,22 +16,17 @@ public class GraduationMonthRepoImpl implements GraduationMonthRepoCustom {
     public GraduationMonth create(int month) {
         GraduationMonth graduationMonth = new GraduationMonth(month);
         graduationMonth.setPosition(graduationMonthRepo.count() + 1);
-        return graduationMonthRepo.save(graduationMonth);
+        return super.create(graduationMonth);
     }
 
     @Override
-    public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(GraduationMonth.class, src, dest);
+    public Class<?> getModelClass() {
+        return GraduationMonth.class;
     }
 
     @Override
-    public void sort(String column) {
-        orderedEntityService.sort(GraduationMonth.class, column);
-    }
-
-    @Override
-    public void remove(GraduationMonth graduationMonth) {
-        orderedEntityService.remove(graduationMonthRepo, GraduationMonth.class, graduationMonth.getPosition());
+    protected String getChannel() {
+        return "/channel/graduation-month";
     }
 
 }

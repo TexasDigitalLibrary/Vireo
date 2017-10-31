@@ -7,7 +7,7 @@
 
 <form ng-submit="removeCustomAction()" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="customActionRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the Custom Action:</b></h4>

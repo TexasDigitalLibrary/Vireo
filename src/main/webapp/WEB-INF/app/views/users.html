@@ -15,13 +15,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="thisUser in users track by thisUser.email">
-							<td>{{thisUser.email}}</td>
-							<td>{{thisUser.firstName}}</td>
-							<td>{{thisUser.lastName}}</td>
+						<tr ng-repeat="user in users track by user.email">
+							<td>{{user.email}}</td>
+							<td>{{user.firstName}}</td>
+							<td>{{user.lastName}}</td>
 							<td>
-								<select ng-if="(isAdmin() || isManager())" ng-model="thisUser.role" ng-change="updateRole(thisUser)" class="form-control">
-									<option ng-repeat="role in allowableRoles(thisUser.role)">{{role}}</option>
+								<select ng-if="(isAdmin() || isManager())" ng-model="user.role" ng-change="updateRole(user)" class="form-control">
+									<option ng-repeat="role in allowableRoles(user.role)">{{role}}</option>
 								</select>
 							</td>
 						</tr>

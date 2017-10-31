@@ -7,7 +7,7 @@
 
 <form ng-submit="removeDepositLocation()" novalidate>
 
-	<validationmessage results="modalData.ValidationResults"></validationmessage>
+	<validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
 		<h4><b>Click confirm to remove the Deposit Location:</b></h4>

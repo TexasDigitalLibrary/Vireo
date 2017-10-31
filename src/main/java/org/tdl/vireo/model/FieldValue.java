@@ -14,10 +14,10 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class FieldValue extends BaseEntity {
+public class FieldValue extends ValidatingBaseEntity {
 
     @Column(columnDefinition = "text", nullable = true)
     private String value;

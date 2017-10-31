@@ -5,10 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.tdl.vireo.model.interfaces.Configuration;
 import org.tdl.vireo.model.validation.ManagedConfigurationValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  * Jpa specific implementation of Vireo's Configuration interface
@@ -16,7 +15,7 @@ import edu.tamu.framework.model.BaseEntity;
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
-public class ManagedConfiguration extends BaseEntity implements Configuration {
+public class ManagedConfiguration extends ValidatingBaseEntity implements Configuration {
 
     @Column(nullable = false, length = 255)
     private String name;

@@ -15,8 +15,4 @@ public interface DepositLocationRepoCustom {
 
     public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout);
 
-    public void reorder(Long src, Long dest);
-
-    public void remove(DepositLocation depositLocation);
-
 }

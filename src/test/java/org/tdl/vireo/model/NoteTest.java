@@ -712,13 +712,13 @@ public class NoteTest extends AbstractEntityTest {
 
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
-        Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
+        /* Note n1 = */ noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
+        /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
         n2.setName("Updated Name!");
@@ -778,13 +778,13 @@ public class NoteTest extends AbstractEntityTest {
         /////////////////////////////////////////////////////////////////////////
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
-        Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
+        /* Note n1 = */ noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
+        /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
@@ -888,17 +888,17 @@ public class NoteTest extends AbstractEntityTest {
         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
+        /* Note n2 = */ noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
+        /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
         organization = organizationRepo.findOne(organization.getId());
 
         // override the note at the child
         n1.setName("Updated Name!");
-        Note nPrime = noteRepo.update(n1, organization);
+        /* Note nPrime = */ noteRepo.update(n1, organization);
 
         // TODO: make note non-overrideable, check that fpPrime goes away and the new derivative step goes away
 

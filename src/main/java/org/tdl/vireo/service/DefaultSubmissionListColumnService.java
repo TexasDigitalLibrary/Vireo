@@ -6,17 +6,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 @Service
 public class DefaultSubmissionListColumnService {
 
-    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
+    private final static Logger logger = LoggerFactory.getLogger(DefaultSubmissionListColumnService.class);
 
     private List<SubmissionListColumn> defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
 
     public DefaultSubmissionListColumnService() {
+
     }
 
     public void setDefaultSubmissionListColumns(List<SubmissionListColumn> defaultSubmissionListColumns) {

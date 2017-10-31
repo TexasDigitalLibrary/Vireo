@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.tdl.vireo.enums.SubmissionState;
 import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,10 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class SubmissionStatus extends BaseEntity {
+public class SubmissionStatus extends ValidatingBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -51,10 +50,11 @@ public class SubmissionStatus extends BaseEntity {
     @Column(nullable = true)
     @JsonProperty("isActive")
     private Boolean isActive;
-    
+
+    @Column(nullable = false)
     private SubmissionState submissionState;
 
-	@ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private List<SubmissionStatus> transitionSubmissionStatuses;
@@ -73,7 +73,7 @@ public class SubmissionStatus extends BaseEntity {
      * @param isEditableByStudent
      * @param isActive
      */
-    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionStatus) {
+    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionState) {
         this();
         setName(name);
         isArchived(isArchived);
@@ -82,7 +82,7 @@ public class SubmissionStatus extends BaseEntity {
         isEditableByReviewer(isEditableByReviewer);
         isEditableByStudent(isEditableByStudent);
         isActive(isActive);
-        setSubmissionState(submissionStatus);
+        setSubmissionState(submissionState);
     }
 
     /**
@@ -220,12 +220,12 @@ public class SubmissionStatus extends BaseEntity {
     public void removeTransitionSubmissionStatus(SubmissionStatus transitionSubmissionState) {
         getTransitionSubmissionStatuses().remove(transitionSubmissionState);
     }
-    
-    public SubmissionState getSubmissionState() {
-		return submissionState;
-	}
 
-	public void setSubmissionState(SubmissionState submissionState) {
-		this.submissionState = submissionState;
-	}
+    public SubmissionState getSubmissionState() {
+        return submissionState;
+    }
+
+    public void setSubmissionState(SubmissionState submissionState) {
+        this.submissionState = submissionState;
+    }
 }

@@ -1,30 +1,27 @@
 package org.tdl.vireo.controller;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
-import static edu.tamu.framework.enums.BusinessValidationType.CREATE;
-import static edu.tamu.framework.enums.BusinessValidationType.DELETE;
-import static edu.tamu.framework.enums.BusinessValidationType.EXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.NONEXISTS;
-import static edu.tamu.framework.enums.BusinessValidationType.UPDATE;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
+import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 
-import edu.tamu.framework.aspect.annotation.ApiMapping;
-import edu.tamu.framework.aspect.annotation.ApiValidatedModel;
-import edu.tamu.framework.aspect.annotation.ApiValidation;
-import edu.tamu.framework.aspect.annotation.Auth;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
-@Controller
-@ApiMapping("/settings/organization-category")
+@RestController
+@RequestMapping("/settings/organization-category")
 public class OrganizationCategoryController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -32,43 +29,35 @@ public class OrganizationCategoryController {
     @Autowired
     private OrganizationCategoryRepo organizationCategoryRepo;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     @Transactional
-    @ApiMapping("/all")
-    @Auth(role = "MANAGER")
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getOrganizationCategories() {
         return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/create", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = CREATE), @ApiValidation.Business(value = EXISTS) })
-    public ApiResponse createOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/create", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
+    public ApiResponse createOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Creating organization category with name " + organizationCategory.getName());
-        organizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
-        return new ApiResponse(SUCCESS, organizationCategory);
+        return new ApiResponse(SUCCESS, organizationCategoryRepo.create(organizationCategory.getName()));
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/update", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = UPDATE), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse updateOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/update", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    public ApiResponse updateOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Updating organization category with name " + organizationCategory.getName());
-        organizationCategory = organizationCategoryRepo.save(organizationCategory);
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
-        return new ApiResponse(SUCCESS, organizationCategory);
+        return new ApiResponse(SUCCESS, organizationCategoryRepo.update(organizationCategory));
     }
 
-    @Auth(role = "MANAGER")
-    @ApiMapping(value = "/remove", method = POST)
-    @ApiValidation(business = { @ApiValidation.Business(value = DELETE, params = { "organizations" }), @ApiValidation.Business(value = NONEXISTS) })
-    public ApiResponse removeOrganizationCategory(@ApiValidatedModel OrganizationCategory organizationCategory) {
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove", method = POST)
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, params = { "organizations" }) })
+    public ApiResponse removeOrganizationCategory(@WeaverValidatedModel OrganizationCategory organizationCategory) {
         logger.info("Removing organization category with name " + organizationCategory.getName());
-        organizationCategoryRepo.remove(organizationCategory);
-        simpMessagingTemplate.convertAndSend("/channel/settings/organization-category", new ApiResponse(SUCCESS, organizationCategoryRepo.findAll()));
+        organizationCategoryRepo.delete(organizationCategory);
         return new ApiResponse(SUCCESS);
     }
 
