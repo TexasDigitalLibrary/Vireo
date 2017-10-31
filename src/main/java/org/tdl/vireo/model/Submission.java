@@ -3,7 +3,6 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +15,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,15 +24,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
-public class Submission extends BaseEntity {
+public class Submission extends ValidatingBaseEntity {
 
     @ManyToOne(optional = false)
     private User submitter;
@@ -48,10 +50,11 @@ public class Submission extends BaseEntity {
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
     private Organization organization;
 
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
@@ -74,14 +77,16 @@ public class Submission extends BaseEntity {
     @Column(nullable = true)
     private boolean approveApplication;
 
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private List<CustomActionValue> customActionValues;
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
+    private Set<CustomActionValue> customActionValues;
 
     @JoinColumn
-    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private List<ActionLog> actionLogs;
+    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
+    private Set<ActionLog> actionLogs;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String reviewerNotes;
 
     @Column(nullable = true)
@@ -97,10 +102,10 @@ public class Submission extends BaseEntity {
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
         setSubmissionWorkflowSteps(new ArrayList<SubmissionWorkflowStep>());
-        setActionLogs(new ArrayList<ActionLog>());
+        setActionLogs(new HashSet<ActionLog>());
         setApproveApplication(false);
         setApproveEmbargo(false);
-        setCustomActionValues(new ArrayList<CustomActionValue>());
+        setCustomActionValues(new HashSet<CustomActionValue>());
     }
 
     /**
@@ -350,7 +355,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the actionLog
      */
-    public List<ActionLog> getActionLogs() {
+    public Set<ActionLog> getActionLogs() {
         return actionLogs;
     }
 
@@ -358,7 +363,7 @@ public class Submission extends BaseEntity {
      * @param actionLog
      *            the actionLog to set
      */
-    public void setActionLogs(List<ActionLog> actionLogs) {
+    public void setActionLogs(Set<ActionLog> actionLogs) {
         this.actionLogs = actionLogs;
     }
 
@@ -436,7 +441,7 @@ public class Submission extends BaseEntity {
     /**
      * @return the customActionValues
      */
-    public List<CustomActionValue> getCustomActionValues() {
+    public Set<CustomActionValue> getCustomActionValues() {
         return customActionValues;
     }
 
@@ -444,7 +449,7 @@ public class Submission extends BaseEntity {
      * @param customActionValues
      *            the customActionValues to set
      */
-    public void setCustomActionValues(List<CustomActionValue> customActionValues) {
+    public void setCustomActionValues(Set<CustomActionValue> customActionValues) {
         this.customActionValues = customActionValues;
     }
 
@@ -454,6 +459,14 @@ public class Submission extends BaseEntity {
      */
     public void addCustomActionValue(CustomActionValue customActionValue) {
         this.customActionValues.add(customActionValue);
+    }
+
+    /**
+     * 
+     * @param customActionValue
+     */
+    public void removeCustomActionValue(CustomActionValue customActionValue) {
+        this.customActionValues.remove(customActionValue);
     }
 
     /**
@@ -471,6 +484,20 @@ public class Submission extends BaseEntity {
         }
         this.customActionValues.add(customActionValue);
         return customActionValue;
+    }
+
+    /**
+     *
+     * @param customActionValue
+     * @return
+     */
+    public CustomActionValue getCustomActionValue(CustomActionValue customActionValue) {
+        for (CustomActionValue cav : this.customActionValues) {
+            if (cav.getDefinition().getLabel().equals(customActionValue.getDefinition().getLabel())) {
+                return cav;
+            }
+        }
+        return null;
     }
 
     @JsonIgnore

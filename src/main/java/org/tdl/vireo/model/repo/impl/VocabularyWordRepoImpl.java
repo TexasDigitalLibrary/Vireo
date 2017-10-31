@@ -9,7 +9,9 @@ import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.custom.VocabularyWordRepoCustom;
 
-public class VocabularyWordRepoImpl implements VocabularyWordRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class VocabularyWordRepoImpl extends AbstractWeaverRepoImpl<VocabularyWord, VocabularyWordRepo> implements VocabularyWordRepoCustom {
 
     @Autowired
     private VocabularyWordRepo vocabularyWordRepo;
@@ -34,10 +36,13 @@ public class VocabularyWordRepoImpl implements VocabularyWordRepoCustom {
     @Override
     public void delete(VocabularyWord vocabularyWord) {
         ControlledVocabulary cv = vocabularyWord.getControlledVocabulary();
-
         cv.removeValue(vocabularyWord);
-
         cv = controlledVocabularyRepo.save(cv);
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/vocabulary-word";
     }
 
 }

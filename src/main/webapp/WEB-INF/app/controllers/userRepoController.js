@@ -1,7 +1,7 @@
 vireo.controller('UserRepoController', function ($controller, $location, $route, $q, $scope, $timeout, StorageService, User, UserRepo, UserService) {
-    
+
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
-    
+
     $scope.user = UserService.getCurrentUser();
 
     $scope.users = UserRepo.getAll();
@@ -10,58 +10,58 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     	$scope.modalData = {};
 		$scope.closeModal();
 	});
-    
-    $scope.ready = $q.all([$scope.user.ready(), UserRepo.ready()]);
+
+    $scope.ready = $q.all([UserRepo.ready()]);
 
     $scope.roles = {
-    	'ADMINISTRATOR' : 'Administrator',
-        'MANAGER' : 'Manager' ,
-        'REVIEWER': 'Reviewer',
-        'STUDENT' : 'Student'
+    	'ROLE_ADMIN' : 'Administrator',
+        'ROLE_MANAGER' : 'Manager' ,
+        'ROLE_REVIEWER': 'Reviewer',
+        'ROLE_STUDENT' : 'Student'
     };
 
     $scope.modalData = {};
-    
+
     $scope.ready.then(function() {
 
 		$scope.updateRole = function(user, role) {
 			user.role = role !== undefined ? role : user.role;
 			user.save();
 		};
-		
-		$scope.allowableRoles = function(userRole) {
-			if(sessionStorage.role == 'ADMINISTRATOR') {				
-				return ['ADMINISTRATOR','MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
+
+		$scope.allowableRoles = function(role) {
+			if(sessionStorage.role === 'ROLE_ADMIN') {
+				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
-			else if(sessionStorage.role == 'MANAGER') {
-				if(userRole == 'ADMINISTRATOR') {
-					return ['ADMINISTRATOR'];
+			else if(sessionStorage.role === 'ROLE_MANAGER') {
+				if(role === 'ROLE_ADMIN') {
+					return ['ROLE_ADMIN'];
 				}
-				return ['MANAGER', 'REVIEWER', 'STUDENT', 'NONE'];
+				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
-			else if(sessionStorage.role == 'REVIEWER') {
-				if(userRole == 'ADMINISTRATOR') {
-					return ['ADMINISTRATOR'];
+			else if(sessionStorage.role === 'ROLE_REVIEWER') {
+				if(role === 'ROLE_ADMIN') {
+					return ['ROLE_ADMIN'];
 				}
-				return ['REVIEWER', 'STUDENT', 'NONE'];
+				return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
 			}
 			else {
-				return [userRole];
+				return [role];
 			}
 		};
 
 		$scope.selectUser = function (selectedUser) {
             $scope.modalData = selectedUser;
         };
-		
+
 		UserRepo.listen(function() {
 	    	$scope.user = new User();
 	    	$timeout(function() {
-		    	if($scope.user.role == 'STUDENT' || $scope.user.role == 'REVIEWER') {
+		    	if($scope.user.role === 'ROLE_STUDENT' || $scope.user.role === 'ROLE_REVIEWER') {
 					$location.path('/myprofile');
 				}
 	    	}, 250);
-	    	
+
 		});
 
     });

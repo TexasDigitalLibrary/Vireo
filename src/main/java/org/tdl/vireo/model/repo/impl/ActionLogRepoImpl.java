@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static edu.tamu.framework.enums.ApiResponseType.SUCCESS;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.util.Calendar;
 
@@ -11,22 +11,18 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.ActionLogRepoCustom;
 
-import edu.tamu.framework.model.ApiResponse;
-import edu.tamu.framework.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
-public class ActionLogRepoImpl implements ActionLogRepoCustom {
+public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionLogRepo> implements ActionLogRepoCustom {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
 
     @Autowired
     private SubmissionRepo submissionRepo;
-
-    @Autowired
-    private UserRepo userRepo;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -39,7 +35,7 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
         return log;
     }
-    
+
     @Override
     public ActionLog create(Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
         ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), actionDate, entry, privateFlag));
@@ -50,19 +46,17 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
     }
 
     @Override
-    public ActionLog createPublicLog(Submission submission, Credentials credentials, String entry) {
-        User user = userRepo.findByEmail(credentials.getEmail());
+    public ActionLog createPublicLog(Submission submission, User user, String entry) {
         return create(submission, user, Calendar.getInstance(), entry, false);
     }
-    
+
     @Override
     public ActionLog createAdvisorPublicLog(Submission submission, String entry) {
         return create(submission, Calendar.getInstance(), entry, false);
     }
 
     @Override
-    public ActionLog createPrivateLog(Submission submission, Credentials credentials, String entry) {
-        User user = userRepo.findByEmail(credentials.getEmail());
+    public ActionLog createPrivateLog(Submission submission, User user, String entry) {
         return create(submission, user, Calendar.getInstance(), entry, true);
     }
 
@@ -72,6 +66,11 @@ public class ActionLogRepoImpl implements ActionLogRepoCustom {
             submission.removeActionLog(actionLog);
             submissionRepo.save(submission);
         }
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/action-log";
     }
 
 }

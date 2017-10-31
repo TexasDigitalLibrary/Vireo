@@ -1,10 +1,11 @@
 package org.tdl.vireo.model.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.repo.custom.SubmissionStatusRepoCustom;
 
-public interface SubmissionStatusRepo extends JpaRepository<SubmissionStatus, Long>, SubmissionStatusRepoCustom {
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
+
+public interface SubmissionStatusRepo extends WeaverRepo<SubmissionStatus>, SubmissionStatusRepoCustom {
 
     public SubmissionStatus findByName(String name);
 

@@ -9,10 +9,4 @@ public interface ControlledVocabularyRepoCustom {
 
     public ControlledVocabulary create(String name, Language language, Boolean isEntityProperty);
 
-    public void reorder(Long src, Long dest);
-
-    public void sort(String column);
-
-    public void remove(ControlledVocabulary controlledVocabulary);
-
 }

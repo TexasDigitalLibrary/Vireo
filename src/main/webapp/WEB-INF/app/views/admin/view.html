@@ -1,8 +1,8 @@
-<div class="item-view" ng-controller="AdminSubmissionViewController">
+<div class="item-view">
 
-  <modal modal-id="addFileModal" 
-    modal-view="views/modals/view/addFileModal.html" 
-    modal-header-class="modal-header-primary" 
+  <modal modal-id="addFileModal"
+    modal-view="views/modals/view/addFileModal.html"
+    modal-header-class="modal-header-primary"
     wvr-modal-backdrop="static">
   </modal>
 
@@ -13,9 +13,10 @@
         Loading Submission...</span>
       <span ng-if="submission">{{title}}</span>
     </h1>
-    <hr>
+    <hr />
+
     <vireo-tabs ng-show="loaded">
-      <vireo-tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{workflowStep.id}}/{{submission.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
+      <vireo-tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{submission.id}}/{{workflowStep.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
     </vireo-tabs>
 
   </div>

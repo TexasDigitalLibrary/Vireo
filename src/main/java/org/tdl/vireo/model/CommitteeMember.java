@@ -5,14 +5,14 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.CommitteeMemberValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  *
  * @author gad
  */
 @Entity
-public class CommitteeMember extends BaseEntity {
+public class CommitteeMember extends ValidatingBaseEntity {
 
     @Column(length = 255, nullable = false)
     private String firstName;

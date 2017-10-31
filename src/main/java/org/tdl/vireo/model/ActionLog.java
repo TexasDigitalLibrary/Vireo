@@ -14,13 +14,13 @@ import javax.persistence.TemporalType;
 
 import org.tdl.vireo.model.validation.ActionLogValidator;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  *
  */
 @Entity
-public class ActionLog extends BaseEntity {
+public class ActionLog extends ValidatingBaseEntity {
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
     private SubmissionStatus submissionStatus;

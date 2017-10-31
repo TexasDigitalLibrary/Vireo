@@ -14,16 +14,18 @@ import org.tdl.vireo.model.repo.SubmissionNoteRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionWorkflowStepRepoCustom;
 
-public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class SubmissionWorkflowStepRepoImpl extends AbstractWeaverRepoImpl<SubmissionWorkflowStep, SubmissionWorkflowStepRepo> implements SubmissionWorkflowStepRepoCustom {
 
     @Autowired
-    SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
+    private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
 
     @Autowired
-    SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
     @Autowired
-    SubmissionNoteRepo submissionNoteStepRepo;
+    private SubmissionNoteRepo submissionNoteStepRepo;
 
     @Override
     public List<SubmissionWorkflowStep> cloneWorkflow(Organization organization) {
@@ -49,10 +51,15 @@ public class SubmissionWorkflowStepRepoImpl implements SubmissionWorkflowStepRep
         for (Note note : workflowStep.getAggregateNotes()) {
             submissionWorkflowStep.addAggregateNote(submissionNoteStepRepo.create(note));
         }
-        
+
         submissionWorkflowStep.setInstructions(workflowStep.getInstructions());
-        
+
         return submissionWorkflowStepRepo.save(submissionWorkflowStep);
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/submission-workflow-step";
     }
 
 }

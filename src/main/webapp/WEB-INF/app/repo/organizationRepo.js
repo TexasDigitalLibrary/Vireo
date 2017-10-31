@@ -2,41 +2,20 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
 
     var organizationRepo = this;
 
-    var selectedOrganization = new Organization({});
-
     var selectiveListenCallbacks = [];
+
+    var selectedId;
 
     // additional repo methods and variables
 
     this.newOrganization = {};
 
-    var extendWithOverwrite = function (targetObj, srcObj) {
-        var srcKeys = Object.keys(srcObj);
-        angular.forEach(srcKeys, function (key) {
-            targetObj[key] = srcObj[key];
-        });
-
-        var targetKeys = Object.keys(targetObj);
-        angular.forEach(targetKeys, function (key) {
-            if (typeof srcObj[key] === undefined) {
-                delete targetObj[key];
-            }
-        });
-    };
-
-    var fetchAggregateWorkflow = function (org, defer) {
-        angular.extend(organizationRepo.mapping.workflow, {
-            'method': org.id + '/workflow'
-        });
-        var workflowStepsPromise = WsApi.fetch(organizationRepo.mapping.workflow);
-        workflowStepsPromise.then(function (response) {
-            var aggregateWorkflowSteps = JSON.parse(response.body).payload.PersistentList;
-            if (aggregateWorkflowSteps !== undefined) {
-                org.aggregateWorkflowSteps = aggregateWorkflowSteps;
-            }
-            defer.resolve(org);
-        });
-    };
+    this.ready().then(function () {
+        var organizations = organizationRepo.getAll();
+        if (selectedId === undefined && organizations.length > 0) {
+            organizationRepo.setSelectedOrganization(organizations[0]);
+        }
+    });
 
     this.create = function (organization, parentOrganization) {
         organizationRepo.clearValidationResults();
@@ -46,34 +25,17 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.create);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
+            var resObj = angular.fromJson(res.body);
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;
     };
 
-    this.selectiveListen = function () {
-        WsApi.listen(this.mapping.selectiveListen).then(null, null, function (rawApiResponse) {
-            var broadcastedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
-            if (broadcastedOrg.id == selectedOrganization.id) {
-                organizationRepo.setSelectedOrganization(broadcastedOrg, true, true);
-                angular.forEach(selectiveListenCallbacks, function (cb) {
-                    cb(broadcastedOrg);
-                });
-            }
-        });
-    };
-
-    this.selectiveListen();
-
-    this.listenSelectively = function (cb) {
-        selectiveListenCallbacks.push(cb);
-    };
-
     this.resetNewOrganization = function () {
         for (var key in this.newOrganization) {
-            if (key != 'category' && key != 'parent') {
+            if (key !== 'category' && key !== 'parent') {
                 delete this.newOrganization[key];
             }
         }
@@ -85,43 +47,12 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.getSelectedOrganization = function () {
-        return selectedOrganization;
+        return organizationRepo.findById(selectedId);
     };
 
-    // TODO: simplify
-    this.setSelectedOrganization = function (organization, fetchWorkflow, ignoreOrgCache) {
-        this.lazyFetch(organization.id, fetchWorkflow, false, ignoreOrgCache).then(function (fetchedOrg) {
-            extendWithOverwrite(selectedOrganization, fetchedOrg);
-        });
-        return selectedOrganization;
-    };
-
-    // TODO: simplify
-    this.lazyFetch = function (orgId, fetchWorkflow, ignoreWorkflowCache, ignoreOrgCache) {
-        var orgDefer = $q.defer();
-        var cachedOrg = ignoreOrgCache ? undefined : organizationRepo.findById(orgId);
-        if (cachedOrg !== undefined) {
-            if (fetchWorkflow) {
-                if (ignoreWorkflowCache || (cachedOrg.aggregateWorkflowSteps.length > 0 && typeof cachedOrg.aggregateWorkflowSteps[0] === 'number')) {
-                    fetchAggregateWorkflow(cachedOrg, orgDefer);
-                } else {
-                    orgDefer.resolve(cachedOrg);
-                }
-            } else {
-                orgDefer.resolve(cachedOrg);
-            }
-        } else {
-            angular.extend(this.mapping.get, {
-                'method': 'get/' + orgId
-            });
-            var orgPromise = WsApi.fetch(this.mapping.get);
-            orgPromise.then(function (rawApiResponse) {
-                var fetchedOrg = new Organization(JSON.parse(rawApiResponse.body).payload.Organization);
-                organizationRepo.add(fetchedOrg);
-                fetchAggregateWorkflow(fetchedOrg, orgDefer);
-            });
-        }
-        return orgDefer.promise;
+    this.setSelectedOrganization = function (organization) {
+        selectedId = organization.id;
+        return organizationRepo.getSelectedOrganization();
     };
 
     this.getChildren = function (id) {
@@ -131,9 +62,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.children);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-                console.log(organizationRepo);
+            var resObj = angular.fromJson(res.body);
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;
@@ -147,25 +78,26 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.addWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-                console.log(organizationRepo);
+            var resObj = angular.fromJson(res.body);
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;
     };
 
-    this.restoreDefaults = function(organization) {
-			angular.extend(this.mapping.restoreDefaults, {'data': organization});
-			var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
-      promise.then(function (res) {
-        if (angular.fromJson(res.body)&&angular.fromJson(res.body).meta.type === "INVALID") {
-            angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-            console.log(organizationRepo);
-        }
-      });
-			return promise;
-		};
+    this.restoreDefaults = function (organization) {
+        angular.extend(this.mapping.restoreDefaults, {
+            'data': organization
+        });
+        var promise = RestApi.post(apiMapping.Organization.restoreDefaults);
+        promise.then(function (resObj) {
+            if (resObj && resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
+            }
+        });
+        return promise;
+    };
 
     this.updateWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();
@@ -174,10 +106,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             'data': workflowStep
         });
         var promise = RestApi.post(this.mapping.updateWorkflowStep);
-        promise.then(function (res) {
-            if (res.meta.type === "INVALID") {
-                angular.extend(organizationRepo, res.payload);
-                console.log(organizationRepo);
+        promise.then(function (resObj) {
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;
@@ -190,10 +121,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             'data': workflowStep
         });
         var promise = RestApi.post(this.mapping.deleteWorkflowStep);
-        promise.then(function (res) {
-            if (res.meta.type === "INVALID") {
-                angular.extend(organizationRepo, res.payload);
-                console.log(organizationRepo);
+        promise.then(function (resObj) {
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;
@@ -206,9 +136,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
-                angular.extend(organizationRepo, angular.fromJson(res.body).payload);
-                console.log(organizationRepo);
+            var resObj = angular.fromJson(res.body);
+            if (resObj.meta.status === "INVALID") {
+                angular.extend(organizationRepo, resObj.payload);
             }
         });
         return promise;

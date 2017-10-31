@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.data.model.BaseEntity;
 
 @Entity
 @Inheritance

@@ -11,6 +11,4 @@ public interface VocabularyWordRepoCustom {
 
     public VocabularyWord create(ControlledVocabulary controlledVocabulary, String name, String definition, String identifier, List<String> contacts);
 
-    public void delete(VocabularyWord vocabularyWord);
-
 }

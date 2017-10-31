@@ -1,17 +1,19 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiAction.CHANGE;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 
-import edu.tamu.framework.service.OrderedEntityService;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
-public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCustom {
-
-    @Autowired
-    private OrderedEntityService orderedEntityService;
+public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<ControlledVocabulary, ControlledVocabularyRepo> implements ControlledVocabularyRepoCustom {
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
@@ -22,7 +24,8 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
+            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
         }
         return controlledVocabulary;
     }
@@ -33,24 +36,55 @@ public class ControlledVocabularyRepoImpl implements ControlledVocabularyRepoCus
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, language, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
-            controlledVocabulary = controlledVocabularyRepo.save(controlledVocabulary);
+            controlledVocabulary = super.create(controlledVocabulary);
+            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
         }
+
         return controlledVocabulary;
     }
 
     @Override
+    public ControlledVocabulary update(ControlledVocabulary cv) {
+        cv = super.update(cv);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
+        return cv;
+    }
+
+    @Override
+    public void delete(ControlledVocabulary cv) {
+        super.delete(cv);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
+    }
+
+    @Override
+    @Transactional
     public void reorder(Long src, Long dest) {
-        orderedEntityService.reorder(ControlledVocabulary.class, src, dest);
+        super.reorder(src, dest);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
     }
 
     @Override
+    @Transactional
     public void sort(String column) {
-        orderedEntityService.sort(ControlledVocabulary.class, column);
+        super.sort(column);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
     }
 
     @Override
-    public void remove(ControlledVocabulary controlledVocabulary) {
-        orderedEntityService.remove(controlledVocabularyRepo, ControlledVocabulary.class, controlledVocabulary.getPosition());
+    @Transactional
+    public void remove(ControlledVocabulary cv) {
+        super.remove(cv);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
+    }
+
+    @Override
+    public Class<?> getModelClass() {
+        return ControlledVocabulary.class;
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/controlled-vocabulary";
     }
 
 }

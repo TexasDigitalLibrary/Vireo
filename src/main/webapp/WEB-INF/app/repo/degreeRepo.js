@@ -8,7 +8,7 @@ vireo.repo("DegreeRepo", function DegreeRepo(WsApi) {
         degreeRepo.clearValidationResults();
         var promise = WsApi.fetch(this.mapping.proquest);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.type === "INVALID") {
+            if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(degreeRepo, angular.fromJson(res.body).payload);
                 console.log(degreeRepo);
             }

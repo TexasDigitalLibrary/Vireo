@@ -9,16 +9,16 @@
 			<vireo-pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{status.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{status.name}}</vireo-pane>
 		</vireo-accordion>
 
-		<modal 
-			modal-id="editEmailWorkflowRule" 
-			modal-view="views/modals/organization/emailWorkflowRuleEdit.html" 
+		<modal
+			modal-id="editEmailWorkflowRule"
+			modal-view="views/modals/organization/emailWorkflowRuleEdit.html"
 			modal-header-class="modal-header-primary"
 			wvr-modal-backdrop="static">
 		</modal>
 
-		<modal 
-			modal-id="confirmEmailWorkflowRuleDelete" 
-			modal-view="views/modals/organization/emailWorkflowRuleDelete.html" 
+		<modal
+			modal-id="confirmEmailWorkflowRuleDelete"
+			modal-view="views/modals/organization/emailWorkflowRuleDelete.html"
 			modal-header-class="modal-header-danger"
 			wvr-modal-backdrop="static">
 		</modal>

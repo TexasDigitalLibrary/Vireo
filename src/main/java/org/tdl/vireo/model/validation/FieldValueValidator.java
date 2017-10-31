@@ -3,9 +3,9 @@ package org.tdl.vireo.model.validation;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 
-import edu.tamu.framework.enums.InputValidationType;
-import edu.tamu.framework.validation.BaseModelValidator;
-import edu.tamu.framework.validation.InputValidator;
+import edu.tamu.weaver.validation.model.InputValidationType;
+import edu.tamu.weaver.validation.validators.BaseModelValidator;
+import edu.tamu.weaver.validation.validators.InputValidator;
 
 public class FieldValueValidator extends BaseModelValidator {
 
@@ -17,9 +17,9 @@ public class FieldValueValidator extends BaseModelValidator {
         InputType inputType = submissionFieldProfile.getInputType();
         String valueProperty = "value";
 
-        if (inputType.getValidationPatern() != null) {
+        if (inputType.getValidationPattern() != null) {
             String validationMessage = inputType.getValidationMessage() != null ? inputType.getValidationMessage() : "Field is not a valid format";
-            this.addInputValidator(new InputValidator(InputValidationType.pattern, validationMessage, valueProperty, submissionFieldProfile.getInputType().getValidationPatern()));
+            this.addInputValidator(new InputValidator(InputValidationType.pattern, validationMessage, valueProperty, submissionFieldProfile.getInputType().getValidationPattern()));
         }
         if (!submissionFieldProfile.getOptional()) {
             this.addInputValidator(new InputValidator(InputValidationType.minlength, "Required fields cannot be empty", valueProperty, 1));

@@ -9,7 +9,7 @@ vireo.directive("vireoTabs", function() {
 			this.activeTab = function(path) {
 				var active = false;
 				if($routeParams.id !== undefined) {
-					active = path.includes('/' + $routeParams.tab + '/' + $routeParams.id);
+					active = path.includes('/' + $routeParams.id + '/' + $routeParams.tab);
 				}
 				else {
 					active = path.includes('/' + $routeParams.tab);
@@ -17,7 +17,7 @@ vireo.directive("vireoTabs", function() {
 				return active;
 			};
 			this.setActive = function(path) {
-				$location.url(path);
+				$location.path(path);
 			};
 		}
 	};
@@ -34,15 +34,15 @@ vireo.directive("vireoTab", function($compile) {
 		link: function ($scope, element, attr, parent) {
 			angular.extend($scope, parent);
 			angular.extend($scope, attr);
-			
-			var span = angular.element('<span id="'+($scope.path.replace(/\//g, "-"))+'" ng-if="activeTab(path)">');			
+
+			var span = angular.element('<span id="'+($scope.path.replace(/\//g, "-"))+'" ng-if="activeTab(path)">');
 			span.html("<ng-include src='view'></ng-include>");
 
 			if(angular.element("#"+$scope.path.replace(/\//g, "-")).length!==0) {
 				angular.element("#"+$scope.path.replace(/\//g, "-")).remove();
-			} 
+			}
 			angular.element('#tabs-directive').after($compile(span)($scope));
-			
+
 	    }
 	};
 });

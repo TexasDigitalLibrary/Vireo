@@ -33,6 +33,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
     public void testCreate() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals("The custom action value was not created in the repository", 1, customActionValueRepo.count());
+        testSubmission = submissionRepo.read(testSubmission.getId());
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(testCustomActionValue));
         // assertEquals("Saved custom Action Value does not contain the correct submitter first name", TEST_USER_FIRSTNAME, testCustomActionValue.getSubmission().getSubmitter().getFirstName());
         // TODO - similar tests for custom action definition
@@ -41,7 +42,9 @@ public class CustomActionValueTest extends AbstractEntityTest {
     @Override
     public void testDuplication() {
         CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        testSubmission = submissionRepo.read(testSubmission.getId());
         CustomActionValue cav2 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
+        testSubmission = submissionRepo.read(testSubmission.getId());
         assertEquals("The action log entry was not duplicated", 2, customActionValueRepo.count());
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav1));
         assertTrue("The submission didn't get the created custom action value!", testSubmission.getCustomActionValues().contains(cav2));

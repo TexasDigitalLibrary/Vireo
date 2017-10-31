@@ -19,7 +19,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.tdl.vireo.enums.AppRole;
+import org.tdl.vireo.model.Role;
+import org.tdl.vireo.auth.controller.AuthController;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
@@ -27,8 +28,8 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
-import edu.tamu.framework.enums.ApiResponseType;
-import edu.tamu.framework.model.ApiResponse;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
 public class AuthControllerTest extends AbstractControllerTest {
@@ -47,7 +48,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @InjectMocks
-    private AppAuthController authController;
+    private AuthController authController;
 
     private static List<User> mockUsers;
 
@@ -82,13 +83,15 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
 
-        ReflectionTestUtils.setField(authUtility, SECRET_PROPERTY_NAME, SECRET_VALUE);
+        ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
 
-        ReflectionTestUtils.setField(jwtUtility, JWT_SECRET_KEY_PROPERTY_NAME, JWT_SECRET_KEY_VALUE);
+        ReflectionTestUtils.setField(tokenService, AUTH_SECRET_KEY_PROPERTY_NAME, AUTH_SECRET_KEY_VALUE);
+        
+        ReflectionTestUtils.setField(tokenService, AUTH_ISSUER_KEY_PROPERTY_NAME, AUTH_ISSUER_KEY_VALUE);
 
-        ReflectionTestUtils.setField(jwtUtility, JWT_EXPIRATION_PROPERTY_NAME, JWT_EXPIRATION_VALUE);
-
-        ReflectionTestUtils.setField(jwtUtility, SHIB_KEYS_PROPERTY_NAME, SHIB_KEYS);
+        ReflectionTestUtils.setField(tokenService, AUTH_DURATION_PROPERTY_NAME, AUTH_DURATION_VALUE);
+        
+        ReflectionTestUtils.setField(tokenService, AUTH_KEY_PROPERTY_NAME, AUTH_KEY_VALUE);
 
         TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
         TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
@@ -99,10 +102,10 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ReflectionTestUtils.setField(authController, "url", "localhost:9000");
 
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(AppRole.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (AppRole) invocation.getArguments()[3]));
+                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (Role) invocation.getArguments()[3]));
             }
         });
 
@@ -141,20 +144,20 @@ public class AuthControllerTest extends AbstractControllerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testRegisterEmail() {
-        Map<String, String[]> parameters = new HashMap<String, String[]>();
+        Map<String, String> parameters = new HashMap<String, String>();
 
-        parameters.put("email", new String[] { TEST_EMAIL });
+        parameters.put("email", TEST_EMAIL);
 
         ApiResponse response = authController.registration(null, parameters);
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        assertEquals(TEST_EMAIL, ((String[]) ((Map<String, String[]>) response.getPayload().get("HashMap")).get("email"))[0]);
+        assertEquals(TEST_EMAIL, ((String) ((Map<String, String>) response.getPayload().get("HashMap")).get("email")));
     }
 
     @Test
     public void testRegister() throws Exception {
-        String token = authUtility.generateToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);
+        String token = cryptoService.generateGenericToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);
         Map<String, String> data = new HashMap<String, String>();
         data.put("token", token);
         data.put("email", TEST_USER_EMAIL);
@@ -163,11 +166,11 @@ public class AuthControllerTest extends AbstractControllerTest {
         data.put("password", TEST_USER_PASSWORD);
         data.put("confirm", TEST_USER_CONFIRM);
 
-        ApiResponse response = authController.registration(data, new HashMap<String, String[]>());
+        ApiResponse response = authController.registration(data, new HashMap<String, String>());
 
         User user = (User) response.getPayload().get("User");
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
         assertEquals(TEST_USER_LAST_NAME, user.getLastName());
@@ -186,7 +189,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ApiResponse response = authController.login(data);
 
-        assertEquals(ApiResponseType.SUCCESS, response.getMeta().getType());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
     }
 
 }

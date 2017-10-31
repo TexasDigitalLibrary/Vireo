@@ -1,123 +1,143 @@
-vireo.controller("OrganizationManagementController", function ($controller, $q, $route, $scope, $timeout, AlertService, Organization, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
-	
-	angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+vireo.controller("OrganizationManagementController", function ($controller, $location, $q, $route, $scope, $timeout, AccordionService, AlertService, ApiResponseActions, Organization, OrganizationRepo, OrganizationCategoryRepo, WorkflowStepRepo) {
 
-	$scope.organizationRepo = OrganizationRepo;
+    angular.extend(this, $controller('AbstractController', {
+        $scope: $scope
+    }));
 
-	OrganizationRepo.listenSelectively(function() {
-		$scope.resetWorkflowSteps();
-	});
+    OrganizationRepo.listen(function () {
+        $scope.resetWorkflowSteps();
+    });
 
-	$scope.workflowStepRepo = WorkflowStepRepo;
+    OrganizationRepo.listen(ApiResponseActions.READ, function () {
+        $scope.resetManageOrganization();
+    });
 
-	$scope.organizationCategories = OrganizationCategoryRepo.getAll();
+    OrganizationRepo.listen(ApiResponseActions.BROADCAST, function () {
+        $scope.resetManageOrganization();
+    });
 
-	$scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
+    $scope.organizationRepo = OrganizationRepo;
 
-	$scope.forms = {};
+    $scope.workflowStepRepo = WorkflowStepRepo;
 
-	$scope.ready.then(function() {
+    $scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
-		$scope.resetWorkflowSteps = function() {
-			$scope.organizationRepo.clearValidationResults();
-			for(var key in $scope.forms) {
-    			if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-    				$scope.forms[key].$setPristine();
-    			}
-    		}
-			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
-    			$scope.modalData.refresh();
-    		}
-			$scope.modalData = {
-				overrideable: true
-			};
-			$scope.closeModal();
-		};
+    $scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
 
-		$scope.resetWorkflowSteps();
+    $scope.forms = {};
 
-		$scope.showOrganizationManagement = function() {
-			return $scope.getSelectedOrganization().id !== undefined;
-		};
+    $scope.ready.then(function () {
 
-		$scope.updateOrganization = function(organization) {
-			organization.save().then(function() {
-				// update the parent scoped selected organization
-				$scope.setSelectedOrganization(organization);
-			});
-		};
+        $scope.resetWorkflowSteps = function () {
+            $scope.organizationRepo.clearValidationResults();
+            for (var key in $scope.forms) {
+                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+                    $scope.forms[key].$setPristine();
+                }
+            }
+            if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+                $scope.modalData.refresh();
+            }
+            $scope.modalData = {
+                overrideable: true
+            };
+            $scope.closeModal();
+        };
 
-		$scope.deleteOrganization = function(organization) {
-			organization.delete().then(function(data) {
-				if(data.meta.type != 'INVALID') {
-					$scope.closeModal();
-					$timeout(function() {
-						AlertService.add(data.meta, 'organization/delete');
-					}, 300);
-				}
-			});
-		};
+        $scope.resetWorkflowSteps();
 
-		$scope.cancelDeleteOrganization = function() {
-			$scope.closeModal();
-			$scope.getSelectedOrganization().clearValidationResults();
-    };
-    
-    $scope.restoreOrganizationDefaults = function(organization) {
-			OrganizationRepo.restoreDefaults(organization).then(function(data) {
-				if(data.meta.type != 'INVALID') {
-					$scope.closeModal();
-					$timeout(function() {
-						AlertService.add(data.meta, 'organization/restore-defaults');
-					}, 300);
-				}
-			});
-		};
+        $scope.showOrganizationManagement = function () {
+            var selectedOrg = $scope.getSelectedOrganization();
+            return selectedOrg !== undefined && selectedOrg.id !== undefined;
+        };
 
-		$scope.cancelRestoreOrganizationDefaults = function() {
-			$scope.closeModal();
-			$scope.getSelectedOrganization().clearValidationResults();
-    };
+        $scope.updateOrganization = function (organization) {
+            organization.save().then(function () {
+                // update the parent scoped selected organization
+                $scope.setSelectedOrganization(organization);
+            });
+        };
 
-		$scope.addWorkflowStep = function() {
-			OrganizationRepo.addWorkflowStep($scope.modalData);
-		};
+        $scope.deleteOrganization = function (organization) {
+            organization.delete().then(function (res) {
+                var resObj = angular.fromJson(res.body);
+                if (resObj.meta.status !== 'INVALID') {
+                    $scope.closeModal();
+                    $timeout(function () {
+                        AlertService.add(resObj.meta, 'organization/delete');
+                    }, 300);
+                }
+            });
+        };
 
-		$scope.deleteWorkflowStep = function(workflowStep) {
-			OrganizationRepo.deleteWorkflowStep(workflowStep);
-		};
-		
-		$scope.updateWorkflowStep = function(workflowStep) {
-			return OrganizationRepo.updateWorkflowStep(workflowStep);
-		};
+        $scope.cancelDeleteOrganization = function () {
+            $scope.closeModal();
+            $scope.getSelectedOrganization().clearValidationResults();
+        };
 
-		$scope.reorderWorkflowStepUp = function(workflowStepID) {
-			OrganizationRepo.reorderWorkflowStep("up", workflowStepID);
-		};
+        $scope.restoreOrganizationDefaults = function (organization) {
+            OrganizationRepo.restoreDefaults(organization).then(function (data) {
+                if (data.meta.status !== 'INVALID') {
+                    $scope.closeModal();
+                    $timeout(function () {
+                        AlertService.add(data.meta, 'organization/restore-defaults');
+                    }, 300);
+                }
+            });
+        };
 
-		$scope.reorderWorkflowStepDown = function(workflowStepID) {
-			OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
-		};
+        $scope.cancelRestoreOrganizationDefaults = function () {
+            $scope.closeModal();
+            $scope.getSelectedOrganization().clearValidationResults();
+        };
 
-		$scope.openConfirmDeleteModal = function(step) {
-	        $scope.openModal('#workflow-step-delete-confirm-' + step.id);
-	    };
+        $scope.addWorkflowStep = function () {
+            var name = $scope.modalData.name;
+            OrganizationRepo.addWorkflowStep($scope.modalData);
+        };
 
-	    $scope.resetManageOrganization = function() {
-			$scope.getSelectedOrganization().clearValidationResults();
-			$scope.setSelectedOrganization($scope.getSelectedOrganization());
-	  };
+        $scope.deleteWorkflowStep = function (workflowStep) {
+            OrganizationRepo.deleteWorkflowStep(workflowStep).then(function (resObj) {
+                if (resObj.meta.status === 'SUCCESS') {
+                    AccordionService.close(workflowStep.name);
+                }
+            });
+        };
 
-	  $scope.testBoolean = true;
+        $scope.updateWorkflowStep = function (workflowStep) {
+            OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+            return OrganizationRepo.updateWorkflowStep(workflowStep);
+        };
 
-	});
+        $scope.reorderWorkflowStepUp = function (workflowStepID) {
+            AccordionService.closeAll();
+            OrganizationRepo.reorderWorkflowStep("up", workflowStepID);
+        };
 
-	$scope.acceptsSubmissions = [
-        {
-            "true": "Yes"
-        }, {
-            "false": "No"
-        }
-    ];
+        $scope.reorderWorkflowStepDown = function (workflowStepID) {
+            AccordionService.closeAll();
+            OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
+        };
+
+        $scope.openConfirmDeleteModal = function (step) {
+            $scope.openModal('#workflow-step-delete-confirm-' + step.id);
+        };
+
+        $scope.resetManageOrganization = function () {
+            if ($scope.getSelectedOrganization() !== undefined && $scope.getSelectedOrganization().id !== undefined) {
+                $scope.setSelectedOrganization($scope.getSelectedOrganization());
+                $scope.getSelectedOrganization().clearValidationResults();
+            }
+        };
+
+        $scope.testBoolean = true;
+
+    });
+
+    $scope.acceptsSubmissions = [{
+        "true": "Yes"
+    }, {
+        "false": "No"
+    }];
 
 });

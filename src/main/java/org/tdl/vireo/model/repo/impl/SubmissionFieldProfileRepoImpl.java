@@ -11,7 +11,9 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionFieldProfileRepoCustom;
 
-public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<SubmissionFieldProfile, SubmissionFieldProfileRepo> implements SubmissionFieldProfileRepoCustom {
 
     @Autowired
     private SubmissionFieldProfileRepo submissionFieldProfileRepo;
@@ -46,4 +48,10 @@ public class SubmissionFieldProfileRepoImpl implements SubmissionFieldProfileRep
 
         return submissionfieldProfile;
     }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/submission-field-profile";
+    }
+
 }

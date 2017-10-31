@@ -1,23 +1,21 @@
 package org.tdl.vireo.model.repo.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationCategoryRepoCustom;
 
-public class OrganizationCategoryRepoImpl implements OrganizationCategoryRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-    @Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
+public class OrganizationCategoryRepoImpl extends AbstractWeaverRepoImpl<OrganizationCategory, OrganizationCategoryRepo> implements OrganizationCategoryRepoCustom {
 
     @Override
     public OrganizationCategory create(String name) {
-        return organizationCategoryRepo.save(new OrganizationCategory(name));
+        return super.create(new OrganizationCategory(name));
     }
 
     @Override
-    public void remove(OrganizationCategory organizationCategory) {
-        organizationCategoryRepo.delete(organizationCategory);
+    protected String getChannel() {
+        return "/channel/organization-category";
     }
 
 }

@@ -3,13 +3,15 @@ package org.tdl.vireo.model.repo.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.enums.Sort;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionListColumnRepoCustom;
 
-public class SubmissionListColumnRepoImpl implements SubmissionListColumnRepoCustom {
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+
+public class SubmissionListColumnRepoImpl extends AbstractWeaverRepoImpl<SubmissionListColumn, SubmissionListColumnRepo> implements SubmissionListColumnRepoCustom {
 
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
@@ -32,6 +34,11 @@ public class SubmissionListColumnRepoImpl implements SubmissionListColumnRepoCus
     @Override
     public SubmissionListColumn create(String label, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
         return submissionListColumnRepo.save(new SubmissionListColumn(label, sort, predicate, predicatePath, valuePath, inputType));
+    }
+
+    @Override
+    protected String getChannel() {
+        return "/channel/submission-list-column";
     }
 
 }

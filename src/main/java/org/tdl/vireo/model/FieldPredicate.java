@@ -10,10 +10,10 @@ import org.tdl.vireo.model.validation.FieldPredicateValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class FieldPredicate extends BaseEntity {
+public class FieldPredicate extends ValidatingBaseEntity {
 
     @Transient
     private static String period = Pattern.quote(".");

@@ -6,17 +6,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.tdl.vireo.AppContextInitializedHandler;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 @Service
 public class DefaultFiltersService {
 
-    final static Logger logger = LoggerFactory.getLogger(AppContextInitializedHandler.class);
+    private final static Logger logger = LoggerFactory.getLogger(DefaultFiltersService.class);
 
     private List<SubmissionListColumn> defaultFilters = new ArrayList<SubmissionListColumn>();
 
     public DefaultFiltersService() {
+
     }
 
     public void setDefaultFilter(List<SubmissionListColumn> defaultFilter) {

@@ -11,10 +11,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OrderColumn;
 
-import edu.tamu.framework.model.BaseEntity;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @MappedSuperclass
-public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, FP, N>, FP extends AbstractFieldProfile<FP>, N extends AbstractNote<N>> extends BaseEntity {
+public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, FP, N>, FP extends AbstractFieldProfile<FP>, N extends AbstractNote<N>> extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private String name;

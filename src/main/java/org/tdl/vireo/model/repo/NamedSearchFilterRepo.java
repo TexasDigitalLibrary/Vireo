@@ -1,9 +1,10 @@
 package org.tdl.vireo.model.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterRepoCustom;
 
-public interface NamedSearchFilterRepo extends JpaRepository<NamedSearchFilter, Long>, NamedSearchFilterRepoCustom {
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
+
+public interface NamedSearchFilterRepo extends WeaverRepo<NamedSearchFilter>, NamedSearchFilterRepoCustom {
 
 }

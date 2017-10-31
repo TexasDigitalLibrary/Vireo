@@ -7,9 +7,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Documented
 @Target({ TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface EntityCV {
 
     String name();
@@ -25,7 +25,7 @@ public @interface EntityCV {
 
         Filter[] filters();
     }
-    
+
     @Target({ TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @Documented

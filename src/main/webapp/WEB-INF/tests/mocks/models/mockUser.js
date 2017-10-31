@@ -4,7 +4,7 @@ var mockUser1 = {
     "uin": "123456789",
     "exp": "1425393875282",
     "email": "aggieJack@library.tamu.edu",
-    "role": "ADMINISTRATOR",
+    "role": "ROLE_ADMIN",
     "netId": "aggieJack"
 };
 

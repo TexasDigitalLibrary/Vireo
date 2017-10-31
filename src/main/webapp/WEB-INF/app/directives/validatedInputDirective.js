@@ -52,6 +52,10 @@ vireo.directive("validatedinput", function ($timeout) {
                 }
             };
 
+            $scope.getValues = function(property) {
+              return property && property.length === 0 ? [""] : property;
+            };
+
             $scope.keydown = function ($event) {
                 // enter(13): submit value to be persisted
                 if ($event.which == 13 && $scope.formView && getForm().$valid) {

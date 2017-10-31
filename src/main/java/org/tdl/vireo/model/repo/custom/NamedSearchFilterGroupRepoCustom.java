@@ -13,6 +13,4 @@ public interface NamedSearchFilterGroupRepoCustom {
 
     public NamedSearchFilterGroup createFromFilter(NamedSearchFilterGroup namedSearchFilterGroup);
 
-    public void delete(NamedSearchFilterGroup namedSearchFilterGroup);
-
 }

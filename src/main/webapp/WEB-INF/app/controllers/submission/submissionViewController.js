@@ -8,9 +8,9 @@ vireo.controller("SubmissionViewController", function($controller, $filter, $q, 
 
     $scope.SubmissionStates = SubmissionStates;
 
-    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(response) {
+    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function(submission) {
         $scope.loaded = true;
-        $scope.submission = new StudentSubmission(angular.fromJson(response.body).payload.Submission);
+        $scope.submission = new StudentSubmission(submission);
     });
 
     var deleteFieldValue = function(fieldValue) {

@@ -12,22 +12,22 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
 	$scope.dragging = false;
-	
+
 	$scope.trashCanId = 'graduation-month-trash';
-	
+
 	$scope.monthOptions = {};
 
 	$scope.sortAction = "confirm";
-	
+
 	var months = [
 		'January', 'February', 'March', 'April', 'May', 'June',
 	    'July', 'August', 'September', 'October', 'November', 'December'
 	];
-	
+
 	$scope.toMonthString = function(month) {
 		return months[month];
-	};	
-	
+	};
+
 	$scope.resetMonthOptions = function() {
 		$scope.monthOptions = {};
 		for(var i in months) {
@@ -39,7 +39,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 	};
 
 	$scope.forms = {};
-		
+
 	$scope.ready.then(function() {
 
 		$scope.resetGraduationMonth = function() {
@@ -66,24 +66,24 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 			$scope.closeModal();
 		};
-				
+
 		$scope.resetGraduationMonth();
 
 		$scope.createGraduationMonth = function() {
 			GraduationMonthRepo.create($scope.modalData);
 		};
-		
+
 		$scope.selectGraduationMonth = function(index) {
 			$scope.resetMonthOptions();
 			$scope.modalData = $scope.graduationMonths[index];
 			$scope.modalData.month = $scope.modalData.month.toString();
 		};
-		
+
 		$scope.editGraduationMonth = function(index) {
 			$scope.selectGraduationMonth(index - 1);
 			$scope.openModal('#graduationMonthEditModal');
 		};
-		
+
 		$scope.updateGraduationMonth = function() {
 			$scope.modalData.save();
 		};
@@ -103,19 +103,19 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			else if($scope.sortAction == 'sort') {
 				GraduationMonthRepo.sort(column);
 				$scope.sortAction = 'confirm';
-			}	    	
+			}
 		};
 
 		$scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({
 			trashId: $scope.trashCanId,
 			dragging: $scope.dragging,
-			select: $scope.selectGraduationMonth,			
+			select: $scope.selectGraduationMonth,
 			model: $scope.graduationMonths,
 			confirm: '#graduationMonthConfirmRemoveModal',
 			reorder: $scope.reorderGraduationMonth,
-			container: '#graduation-month'
+			container: '#graduation-months'
 		});
 
-	});	
+	});
 
 });
