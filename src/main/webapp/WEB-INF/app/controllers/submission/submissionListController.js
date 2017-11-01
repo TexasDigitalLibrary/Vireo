@@ -564,7 +564,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     };
 
     $scope.viewSubmission = function (submission) {
-        $location.path("/admin/view/" + submission.submissionWorkflowSteps[0].id + "/" + submission.id);
+        $location.path("/admin/view/" + submission.id + "/" + submission.submissionWorkflowSteps[0].id);
     };
 
 });

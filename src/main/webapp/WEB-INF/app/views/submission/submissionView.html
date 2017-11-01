@@ -21,7 +21,7 @@
 
       <submissiondialog submission="submission" type="actions"></submissiondialog>
       <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
-      <div id="upload-files" class="row" ng-if="loaded && submission.submissionStatus.submissionState == SubmissionState.NEEDS_CORRECTIONS">
+      <div id="upload-files" class="row" ng-if="loaded && submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS">
         <span class="text-danger">
           <h3>Upload Files</h3>
           <hr class="submission-view-upload-files-hr"/>
@@ -32,8 +32,7 @@
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
               <div class="col-sm-6">
                 <div ng-if="submission.primaryDocumentFieldValue">{{submission.primaryDocumentFieldValue.fileInfo.name}}
-                  <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}}
-                    KB)</strong>
+                  <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}} KB)</strong>
                 </div>
               </div>
               <div class="col-sm-2">
