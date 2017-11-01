@@ -16,7 +16,7 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
-    private NamedSearchFilterRepo filterCriterionRepo;
+    private NamedSearchFilterRepo namedSerachFilterRepo;
 
     @Autowired
     private UserRepo userRepo;
@@ -37,21 +37,21 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
         return namedSearchFilterRepo.save(newNamedSearchFilter);
     }
 
-    public NamedSearchFilterGroup clone(NamedSearchFilterGroup newNamedSearchFilter, NamedSearchFilterGroup namedSearchFilterGroup) {
-        newNamedSearchFilter.setPublicFlag(namedSearchFilterGroup.getPublicFlag());
-        newNamedSearchFilter.setUmiRelease(namedSearchFilterGroup.getUmiRelease());
-        newNamedSearchFilter.setColumnsFlag(namedSearchFilterGroup.getColumnsFlag());
+    public NamedSearchFilterGroup clone(NamedSearchFilterGroup newNamedSearchFilterGroup, NamedSearchFilterGroup namedSearchFilterGroup) {
+        newNamedSearchFilterGroup.setPublicFlag(namedSearchFilterGroup.getPublicFlag());
+        newNamedSearchFilterGroup.setUmiRelease(namedSearchFilterGroup.getUmiRelease());
+        newNamedSearchFilterGroup.setColumnsFlag(namedSearchFilterGroup.getColumnsFlag());
         namedSearchFilterGroup.getNamedSearchFilters().forEach(filterCriterion -> {
-            newNamedSearchFilter.addFilterCriterion(filterCriterionRepo.cloneFilterCriterion(filterCriterion));
+            newNamedSearchFilterGroup.addFilterCriterion(namedSerachFilterRepo.cloneFilterCriterion(filterCriterion));
         });
 
-        if (newNamedSearchFilter.getColumnsFlag()) {
+        if (newNamedSearchFilterGroup.getColumnsFlag()) {
             namedSearchFilterGroup.getSavedColumns().forEach(column -> {
-                newNamedSearchFilter.addSavedColumn(column);
+                newNamedSearchFilterGroup.addSavedColumn(column);
             });
         }
 
-        return newNamedSearchFilter;
+        return newNamedSearchFilterGroup;
     }
 
     public NamedSearchFilterGroup createFromFilter(NamedSearchFilterGroup namedSearchFilterGroup) {
