@@ -66,14 +66,14 @@
 								<input name="definition" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.definition" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='definition'">
 							</div>
 						</td>
-						<td title="'Identifier'">
-							<div class="form-group">
-								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='identifier'">
-							</div>
-						</td>
 						<td title="'Contacts'">
 							<div class="form-group">
 								<input name="contacts" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.contacts" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='contacts'">
+							</div>
+						</td>
+						<td title="'Identifier'">
+							<div class="form-group">
+								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='identifier'">
 							</div>
 						</td>
 						<td title="'Actions'" class="actions">
@@ -111,16 +111,16 @@
 								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.definition" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='definition'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
-						<td title="'Identifier'" ng-dblclick="startEditVWMode(vocabularyWord, 'identifier')">
-							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.identifier}}</span>
-							<div class="form-group">
-								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
-							</div>
-						</td>
 						<td title="'Contacts'" ng-dblclick="startEditVWMode(vocabularyWord, 'contacts')">
 							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.contacts}}</span>
 							<div class="form-group">
 								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.contacts" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='contacts'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
+							</div>
+						</td>
+						<td title="'Identifier'" ng-dblclick="startEditVWMode(vocabularyWord, 'identifier')">
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.identifier}}</span>
+							<div class="form-group">
+								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
 						<td title="'Actions'" >
