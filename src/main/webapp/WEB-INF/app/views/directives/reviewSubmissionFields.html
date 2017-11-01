@@ -17,7 +17,7 @@
             <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST">
               {{fv.value}}
               <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
-                ({{fv.identifier}})</span>
+                {{fv.contacts}}</span>
             </span>
             <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
               <a href ng-click="getFile(fv)">{{fv.value}}</a>
