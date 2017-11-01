@@ -14,7 +14,7 @@
         <ul class="list-unstyled">
           <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
             <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
-            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST">
+            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_DATETIME">
               {{fv.value}}
               <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
                 ({{fv.identifier}})</span>
@@ -25,6 +25,7 @@
             <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_LICENSE||aggregateFieldProfile.inputType.name==InputTypes.INPUT_PROQUEST">
               {{fv.value=='true' ? 'yes' : 'no'}}
             </span>
+            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_DATETIME">{{fv.value | date:'MMMM yyyy'}}</span>
           </li>
         </ul>
       </div>
