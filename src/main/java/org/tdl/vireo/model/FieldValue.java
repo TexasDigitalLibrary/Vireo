@@ -12,6 +12,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
@@ -29,13 +32,14 @@ public class FieldValue extends ValidatingBaseEntity {
     private String definition;
 
     @ElementCollection(fetch = EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<String> contacts;
 
     @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
-
+    	contacts = new ArrayList<String>();
     }
 
     /**
