@@ -21,15 +21,18 @@ public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearc
         return filterCriterionRepo.save(fc);
     }
 
-    public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter filterCriterion) {
-        NamedSearchFilter newFilterCriterion = filterCriterionRepo.create(filterCriterion.getSubmissionListColumn());
+    public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter namedSearchFilter) {
+        NamedSearchFilter newNamedSearchFilter = filterCriterionRepo.create(namedSearchFilter.getSubmissionListColumn());
 
-        newFilterCriterion.setName(filterCriterion.getName());
-        filterCriterion.getFilters().forEach(filter -> {
-            newFilterCriterion.addFilter(filter);
+        newNamedSearchFilter.setName(namedSearchFilter.getName());
+        newNamedSearchFilter.setAllColumnSearch(namedSearchFilter.getAllColumnSearch());        
+        newNamedSearchFilter.setExactMatch(namedSearchFilter.getExactMatch());
+        
+        namedSearchFilter.getFilters().forEach(filter -> {
+            newNamedSearchFilter.addFilter(filter);
         });
 
-        return filterCriterionRepo.save(newFilterCriterion);
+        return filterCriterionRepo.save(newNamedSearchFilter);
     }
 
     @Override
