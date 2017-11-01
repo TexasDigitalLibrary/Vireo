@@ -1,6 +1,8 @@
-vireo.controller("AdvisorSubmissionReviewController", function($controller, $scope, $routeParams, AdvisorSubmissionRepo, Submission) {
+vireo.controller("AdvisorSubmissionReviewController", function ($controller, $scope, $routeParams, AdvisorSubmissionRepo, Submission) {
 
-    angular.extend(this, $controller('AbstractController', {$scope: $scope}));
+    angular.extend(this, $controller('AbstractController', {
+        $scope: $scope
+    }));
 
     var message = "You may return to this page to follow the application's progress, or provide additional input in the future.";
 
@@ -10,26 +12,25 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
 
     $scope.advisorSubmissionRepoReady = false;
 
-    AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function(submissions) {
+    AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function (submissions) {
         $scope.advisorSubmissionRepoReady = true;
         $scope.submission = submissions;
     });
 
-    $scope.required = function(aggregateFieldProfile) {
+    $scope.required = function (aggregateFieldProfile) {
         return !aggregateFieldProfile.optional;
     };
 
-    $scope.predicateMatch = function(fv) {
-        return function(aggregateFieldProfile) {
+    $scope.predicateMatch = function (fv) {
+        return function (aggregateFieldProfile) {
             return aggregateFieldProfile.fieldPredicate.id == fv.fieldPredicate.id;
         };
     };
 
-    $scope.addComment = function(approval) {
+    $scope.addComment = function () {
         $scope.approval.updating = true;
-        $scope.submission.updateAdvisorApproval(approval).then(function(res) {
-
-            var responseSubmission = JSON.parse(res.body).payload.Submission;
+        $scope.submission.updateAdvisorApproval($scope.approval).then(function (res) {
+            var responseSubmission = angular.fromJson(res.body).payload.Submission;
 
             // This should be done through a broadcast and not explicitly like this.
             $scope.submission.approveApplicationDate = responseSubmission.approveApplicationDate;
@@ -45,7 +46,7 @@ vireo.controller("AdvisorSubmissionReviewController", function($controller, $sco
         });
     };
 
-    $scope.disableCheck = function(approval) {
+    $scope.disableCheck = function (approval) {
         var disabled = true;
 
         if (approval.approveEmbargo && (approval.approveApplication === undefined || approval.approveApplication)) {
