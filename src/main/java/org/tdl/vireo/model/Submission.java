@@ -65,6 +65,10 @@ public class Submission extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
+    private Calendar approveApplicationDate;
+
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
     @Column(nullable = true)
@@ -287,6 +291,22 @@ public class Submission extends ValidatingBaseEntity {
      * 
      * @return
      */
+    public Calendar getApproveApplicationDate() {
+        return approveApplicationDate;
+    }
+
+    /**
+     * 
+     * @param approveApplicationDate
+     */
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+        this.approveApplicationDate = approveApplicationDate;
+    }
+
+    /**
+     * 
+     * @return
+     */
     public Calendar getApprovalDate() {
         return approvalDate;
     }
@@ -312,11 +332,6 @@ public class Submission extends ValidatingBaseEntity {
      * @param approveEmbargo
      */
     public void setApproveEmbargo(boolean approveEmbargo) {
-        if (approveEmbargo) {
-            this.approveEmbargoDate = Calendar.getInstance();
-        } else {
-            this.approveEmbargoDate = null;
-        }
         this.approveEmbargo = approveEmbargo;
     }
 
@@ -348,7 +363,7 @@ public class Submission extends ValidatingBaseEntity {
      * 
      */
     public void clearApproveApplication() {
-        this.approvalDate = null;
+        this.approveApplicationDate = null;
         this.approveApplication = false;
     }
 

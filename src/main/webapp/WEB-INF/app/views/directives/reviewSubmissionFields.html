@@ -8,7 +8,7 @@
   <hr/>
 
   <form class="form-horizontal">
-    <div class="form-group" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:required | filter:{enabled: true} | filter:{hidden: false}">
+    <div class="form-group" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
       <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.fieldGlosses[0].value}}:</label>
       <div class="col-sm-9 field-values">
         <ul class="list-unstyled">
