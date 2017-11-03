@@ -114,9 +114,9 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
         };
 
         $scope.deleteEmailWorkflowRule = function () {
-            $scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = true;
+            $scope.emailWorkflowRuleDeleteWorking = true;
             $scope.selectedOrganization.removeEmailWorkflowRule($scope.emailWorkflowRuleToDelete).then(function () {
-                $scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = false;
+                $scope.emailWorkflowRuleDeleteWorking = false;
             });
         };
 
