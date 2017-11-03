@@ -415,15 +415,58 @@ public class Organization extends ValidatingBaseEntity {
 
     @JsonIgnore
     public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+        
+        
 
         List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+        List<EmailWorkflowRule> newRules = new ArrayList<EmailWorkflowRule>();
+        
+        aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
+        
+        
+        
+        if(getParentOrganization() != null) {
+            for(EmailWorkflowRule potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
+                
+                boolean rejectTheRule = false;
+                for(EmailWorkflowRule currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
+                        String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
+                        String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
+    
+                        String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+                        String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+    
+                        System.out.println("Current email recepient name: " + currentEmailRecipientName);
+                        System.out.println("Potential email recepient name: " + potentialEmailRecipientName);
+    
+                        System.out.println("Current email template name: " + currentEmailTemplateName);
+                        System.out.println("Potential email template name: " + potentialEmailTemplateName);
+                        
+                        if( !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
+                            rejectTheRule = true;
+                        }
+                    }
+                if( !rejectTheRule )
+                    newRules.add(potentialEmailWorkflowRule);
+            }            
+            aggregateEmailWorkflowRules.addAll(newRules);            
+        }
+      
+        
+        
+        
+        /*
 
         aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
-
+        System.out.println("Here we are in organization " + getName() + " trying to get the aggregate email workflow rules.  Of our own, we have exactly " + getEmailWorkflowRules().size());
         getAncestorOrganizations().forEach(parentOrg -> {
-
+            System.out.println("So how about ancestor organization " + parentOrg.getName() + " and its " + parentOrg.getEmailWorkflowRules().size() + " particular rules?");
             parentOrg.getEmailWorkflowRules().stream().filter(potentialEmailWorkflowRule -> {
-                return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
+                System.out.println("Endeavoring to filter the potential email workflow rule " + potentialEmailWorkflowRule);
+                if(aggregateEmailWorkflowRules.isEmpty()) {
+                    System.out.println("No aggregates to compare against yet, just let it in by returning true.");
+                    return true;
+                } else return aggregateEmailWorkflowRules.stream().anyMatch(currentEmailWorkflowRule -> {
 
                     String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                     String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
@@ -442,6 +485,7 @@ public class Organization extends ValidatingBaseEntity {
             }).collect(Collectors.toList()).forEach(aggregateEmailWorkflowRules::add);
 
         });
+        */
 
         return aggregateEmailWorkflowRules;
     }

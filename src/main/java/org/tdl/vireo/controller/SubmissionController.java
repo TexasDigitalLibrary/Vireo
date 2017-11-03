@@ -784,7 +784,9 @@ public class SubmissionController {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
 
-        rules.forEach(rule -> {
+        for(EmailWorkflowRule rule : rules) {
+            
+            System.out.println("Rule " + rule + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
@@ -792,13 +794,15 @@ public class SubmissionController {
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
-                rule.getEmailRecipient().getEmails(submission).forEach(email -> {
+                System.out.println("The recipient is " + rule.getEmailRecipient());
+                
+                for(String email : rule.getEmailRecipient().getEmails(submission)){
 
                     smm.setTo(email);
 
                     String preferedEmail = user.getSetting("preferedEmail");
-                    user.getSetting("ccEmail");
-                    if (user.getSetting("ccEmail").equals("true")) {
+                    
+                    if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
                         smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                     }
 
@@ -806,11 +810,9 @@ public class SubmissionController {
                     smm.setText(content);
 
                     emailSender.send(smm);
-                });
-
+                }
             }
-        });
-
+        }
     }
-
+    
 }
