@@ -427,8 +427,9 @@ public class Organization extends ValidatingBaseEntity {
         
         if(getParentOrganization() != null) {
             for(EmailWorkflowRule potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
+                System.out.println("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
                 
-                boolean rejectTheRule = false;
+                boolean rejectDuplicateRule = false;
                 for(EmailWorkflowRule currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
                         String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                         String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
@@ -442,12 +443,20 @@ public class Organization extends ValidatingBaseEntity {
                         System.out.println("Current email template name: " + currentEmailTemplateName);
                         System.out.println("Potential email template name: " + potentialEmailTemplateName);
                         
-                        if( !(currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
-                            rejectTheRule = true;
+                        if((currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
+                            System.out.println("Potential matches a current one for both recipient and template - must reject");
+                            rejectDuplicateRule = true;
                         }
                     }
-                if( !rejectTheRule )
+                if( !rejectDuplicateRule ) {
+                    System.out.println("\tThe rule was not a duplicate - adding rule " + potentialEmailWorkflowRule);
                     newRules.add(potentialEmailWorkflowRule);
+                }
+                else
+                {
+                    System.out.println("\tThe rule was a duplicate - ignoring rule " + potentialEmailWorkflowRule);
+                }
+                    
             }            
             aggregateEmailWorkflowRules.addAll(newRules);            
         }

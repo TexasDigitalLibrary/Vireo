@@ -21,8 +21,10 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -783,6 +785,8 @@ public class SubmissionController {
         SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
+        
+        System.out.println("\n\n***\nTotal of " + rules.size() + " rules accumulated for processing of submission " + submission.getId()+ "\n\n***");
 
         for(EmailWorkflowRule rule : rules) {
             
@@ -797,20 +801,30 @@ public class SubmissionController {
                 System.out.println("The recipient is " + rule.getEmailRecipient());
                 
                 for(String email : rule.getEmailRecipient().getEmails(submission)){
-
-                    smm.setTo(email);
-
-                    String preferedEmail = user.getSetting("preferedEmail");
                     
-                    if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
-                        smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                    try {
+                        System.out.println("Sending email to recipient at address " + email);
+                        
+                        
+                        smm.setTo(email);
+    
+                        String preferedEmail = user.getSetting("preferedEmail");
+                        
+                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                        }
+    
+                        smm.setSubject(subject);
+                        smm.setText(content);
+    
+                        emailSender.send(smm);
+                    } catch (MailException me) {
+                        System.err.println("Problem sending email: " + me.getMessage());
                     }
-
-                    smm.setSubject(subject);
-                    smm.setText(content);
-
-                    emailSender.send(smm);
                 }
+            }
+            else {
+                System.out.println("\nRule disabled or of irrelevant status condition.");
             }
         }
     }
