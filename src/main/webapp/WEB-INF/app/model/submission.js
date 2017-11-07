@@ -309,6 +309,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.saveFieldValue = function (fieldValue, fieldProfile) {
+            var route = "/update-field-value/" + fieldProfile.id;
             fieldValue.setIsValid(true);
             fieldValue.setValidationMessages([]);
 
@@ -318,10 +319,12 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     fieldValue.addValidationMessage("This field is required");
                     resolve();
                 });
+            } else if (!fieldValue.value || fieldValue.value === "" && fieldProfile.optional && !fieldProfile.enabled) {
+                route = "/remove-field-value/";
             }
 
             angular.extend(this.getMapping().saveFieldValue, {
-                method: submission.id + "/update-field-value/" + fieldProfile.id,
+                method: submission.id + route,
                 data: fieldValue
             });
 
@@ -336,8 +339,14 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     });
 
                 } else {
+                    var updatedFieldValue = null;
+                    
+                    if (route === "/remove-field-value/") {
+                        updatedFieldValue = submission.addFieldValue(fieldProfile.fieldPredicate);
+                    } else {
+                        updatedFieldValue = responseObj.payload.FieldValue;
+                    }
                     fieldValue.setIsValid(true);
-                    var updatedFieldValue = responseObj.payload.FieldValue;
                     var matchingFieldValues = {};
                     for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                         var currentFieldValue = submission.fieldValues[i];
