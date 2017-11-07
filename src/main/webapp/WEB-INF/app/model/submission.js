@@ -319,7 +319,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     fieldValue.addValidationMessage("This field is required");
                     resolve();
                 });
-            } else if (!fieldValue.value || fieldValue.value === "" && fieldProfile.optional && !fieldProfile.enabled) {
+            } else if ((!fieldValue.value || fieldValue.value === "") && fieldProfile.optional && fieldProfile.enabled) {
                 route = "/remove-field-value/";
             }
 
