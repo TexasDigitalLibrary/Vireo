@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
@@ -43,6 +44,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 public class Organization extends ValidatingBaseEntity {
     
+    @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Column(nullable = false)

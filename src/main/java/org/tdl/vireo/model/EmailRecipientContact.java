@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 @Entity
 public class EmailRecipientContact extends AbstractEmailRecipient implements EmailRecipient {
     
+    @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @ManyToOne
