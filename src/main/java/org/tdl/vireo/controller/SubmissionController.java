@@ -22,6 +22,8 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.MailException;
@@ -83,6 +85,8 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 @RestController
 @RequestMapping("/submission")
 public class SubmissionController {
+    
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
@@ -786,11 +790,9 @@ public class SubmissionController {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         
-        System.out.println("\n\n***\nTotal of " + rules.size() + " rules accumulated for processing of submission " + submission.getId()+ "\n\n***");
-
         for(EmailWorkflowRule rule : rules) {
             
-            System.out.println("Rule " + rule + " firing for submission " + submission.getId());
+            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
@@ -798,12 +800,10 @@ public class SubmissionController {
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
-                System.out.println("The recipient is " + rule.getEmailRecipient());
-                
                 for(String email : rule.getEmailRecipient().getEmails(submission)){
                     
                     try {
-                        System.out.println("Sending email to recipient at address " + email);
+                        LOG.debug("\tSending email to recipient at address " + email);
                         
                         
                         smm.setTo(email);
@@ -819,12 +819,12 @@ public class SubmissionController {
     
                         emailSender.send(smm);
                     } catch (MailException me) {
-                        System.err.println("Problem sending email: " + me.getMessage());
+                        LOG.error("Problem sending email: " + me.getMessage());
                     }
                 }
             }
             else {
-                System.out.println("\nRule disabled or of irrelevant status condition.");
+                LOG.debug("\tRule disabled or of irrelevant status condition.");
             }
         }
     }
