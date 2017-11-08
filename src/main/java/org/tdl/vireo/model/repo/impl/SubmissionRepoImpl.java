@@ -199,7 +199,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     break;
             }
             
-            clearLicenseFile(submission);
+            clearLicenseFiles(submission);
 
             if (attachProquestLicense) {
                 writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
@@ -248,7 +248,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         return submission;
     }
     
-    private void clearLicenseFile(Submission submission) {
+    private void clearLicenseFiles(Submission submission) {
     	FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
     	List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
     	
