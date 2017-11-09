@@ -248,6 +248,7 @@ public class OrganizationController {
         EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
 
         org.removeEmailWorkflowRule(rule);
+        emailWorkflowRuleRepo.delete(rule);
 
         organizationRepo.update(org);
 
