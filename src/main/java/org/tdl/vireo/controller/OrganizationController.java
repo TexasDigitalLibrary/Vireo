@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
+import org.tdl.vireo.exception.SystemEmailRuleNotDeleteableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
@@ -242,17 +243,23 @@ public class OrganizationController {
     @Transactional
     @RequestMapping("/{requestingOrgId}/remove-email-workflow-rule/{emailWorkflowRuleId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) {
+    public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId,
+            @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
 
         Organization org = organizationRepo.read(requestingOrgId);
         EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
 
-        org.removeEmailWorkflowRule(rule);
-        emailWorkflowRuleRepo.delete(rule);
+        if (rule.isSystem()) {
+            throw new SystemEmailRuleNotDeleteableException();
+        } else {
 
-        organizationRepo.update(org);
+            org.removeEmailWorkflowRule(rule);
+            emailWorkflowRuleRepo.delete(rule);
 
-        return new ApiResponse(SUCCESS);
+            organizationRepo.update(org);
+
+            return new ApiResponse(SUCCESS);
+        }
     }
 
     @Transactional
