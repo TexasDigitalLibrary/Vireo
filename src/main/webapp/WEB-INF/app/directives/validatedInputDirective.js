@@ -24,7 +24,7 @@ vireo.directive("validatedinput", function ($timeout) {
         link: function ($scope, element, attr) {
 
             $scope.inProgress = false;
-
+            
             if ($scope.formView) {
                 $scope.view = 'node_modules/weaver-ui-core/app/views/directives/validatedInputForm.html';
             } else {
@@ -53,7 +53,8 @@ vireo.directive("validatedinput", function ($timeout) {
             };
 
             $scope.getValues = function(property) {
-              return property && property.length === 0 ? [""] : property;
+                // console.log(property);
+                return property && property.length === 0 ? [""] : property;
             };
 
             $scope.keydown = function ($event) {
@@ -63,6 +64,7 @@ vireo.directive("validatedinput", function ($timeout) {
                         update();
                     }
                 }
+
                 // escape(27): reset value using shadow
                 if ($event.which == 27) {
                     $scope.model.refresh();
@@ -85,12 +87,23 @@ vireo.directive("validatedinput", function ($timeout) {
                 }
             };
 
+            $scope.showAdd = function (isFirst) {
+                return $scope.repeatable && isFirst;
+            };
+
+            $scope.showRemove = function (isFirst) {
+                return $scope.repeatable && !isFirst;
+            };
+
             $scope.addMember = function (member) {
                 $scope.model[$scope.property].push(member ? member : "");
+                console.log(member);
             };
 
             $scope.removeMember = function (i) {
                 $scope.model[$scope.property].splice(i, 1);
+                console.log(i);
+                console.log($scope.model[$scope.property]);
             };
 
         }
