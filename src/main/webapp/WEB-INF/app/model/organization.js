@@ -2,22 +2,6 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
 
     return function Organization() {
 
-        this.addEmailWorkflowRule = function (templateId, recipient, submissionStatus) {
-            var organization = this;
-            angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
-                'method': organization.id + "/add-email-workflow-rule",
-                'data': {
-                    templateId: templateId,
-                    recipient: recipient,
-                    submissionStatus: submissionStatus
-                }
-            });
-
-            var promise = WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
-
-            return promise;
-        };
-
         this.addEmailWorkflowRule = function (templateId, recipient, submissionStatusId) {
             var organization = this;
             angular.extend(apiMapping.Organization.addEmailWorkflowRule, {

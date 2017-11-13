@@ -21,8 +21,12 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,6 +85,8 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 @RestController
 @RequestMapping("/submission")
 public class SubmissionController {
+    
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
@@ -798,8 +804,10 @@ public class SubmissionController {
         SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
-
-        rules.forEach(rule -> {
+        
+        for(EmailWorkflowRule rule : rules) {
+            
+            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
@@ -807,25 +815,33 @@ public class SubmissionController {
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
-                rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-
-                    smm.setTo(email);
-
-                    String preferedEmail = user.getSetting("preferedEmail");
-                    user.getSetting("ccEmail");
-                    if (user.getSetting("ccEmail").equals("true")) {
-                        smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                for(String email : rule.getEmailRecipient().getEmails(submission)){
+                    
+                    try {
+                        LOG.debug("\tSending email to recipient at address " + email);
+                        
+                        
+                        smm.setTo(email);
+    
+                        String preferedEmail = user.getSetting("preferedEmail");
+                        
+                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                        }
+    
+                        smm.setSubject(subject);
+                        smm.setText(content);
+    
+                        emailSender.send(smm);
+                    } catch (MailException me) {
+                        LOG.error("Problem sending email: " + me.getMessage());
                     }
-
-                    smm.setSubject(subject);
-                    smm.setText(content);
-
-                    emailSender.send(smm);
-                });
-
+                }
             }
-        });
-
+            else {
+                LOG.debug("\tRule disabled or of irrelevant status condition.");
+            }
+        }
     }
-
+    
 }

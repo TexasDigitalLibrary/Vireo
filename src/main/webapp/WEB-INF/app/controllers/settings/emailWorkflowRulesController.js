@@ -23,13 +23,13 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 data: "Assignee"
             },
             {
-                name: "Oranization",
+                name: "Organization",
                 type: EmailRecipientType.ORGANIZATION,
                 data: null
             }
         ];
 
-        angular.forEach($scope.selectedOrganization.aggregateWorkflowSteps, function (aggregateWorkflowStep) {
+        angular.forEach(OrganizationRepo.getSelectedOrganization().aggregateWorkflowSteps, function (aggregateWorkflowStep) {
             angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
                 if (aggregateFieldProfile.inputType.name === InputTypes.INPUT_CONTACT) {
                     $scope.recipients.push({
@@ -61,13 +61,14 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
         };
 
         $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, submissionStatus) {
+            console.log("ewrc controller: adding wf rule to recipient " + newRecipient);
             var recipient = angular.copy(newRecipient);
 
             if (recipient.type === EmailRecipientType.ORGANIZATION) {
                 recipient.data = recipient.data.id;
             }
 
-            $scope.selectedOrganization.addEmailWorkflowRule(newTemplate.id, recipient, submissionStatus.id).then(function () {
+            OrganizationRepo.getSelectedOrganization().addEmailWorkflowRule(newTemplate.id, recipient, submissionStatus.id).then(function () {
                 $scope.resetEmailWorkflowRule();
             });
 
@@ -99,7 +100,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
 
             if ($scope.emailWorkflowRuleToEdit.emailRecipient.type == EmailRecipientType.ORGANIZATION) $scope.emailWorkflowRuleToEdit.emailRecipient.data = $scope.emailWorkflowRuleToEdit.emailRecipient.data.id;
 
-            $scope.selectedOrganization.editEmailWorkflowRule($scope.emailWorkflowRuleToEdit).then(function () {
+            OrganizationRepo.getSelectedOrganization().editEmailWorkflowRule($scope.emailWorkflowRuleToEdit).then(function () {
                 $scope.resetEditEmailWorkflowRule();
             });
         };
@@ -114,20 +115,20 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
         };
 
         $scope.deleteEmailWorkflowRule = function () {
-            $scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = true;
-            $scope.selectedOrganization.removeEmailWorkflowRule($scope.emailWorkflowRuleToDelete).then(function () {
-                $scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = false;
+            $scope.emailWorkflowRuleDeleteWorking = true;
+            OrganizationRepo.getSelectedOrganization().removeEmailWorkflowRule($scope.emailWorkflowRuleToDelete).then(function () {
+                $scope.emailWorkflowRuleDeleteWorking = false;
             });
         };
 
         $scope.changeEmailWorkflowRuleActivation = function (rule, changeEmailWorkflowRuleActivation) {
-            $scope.selectedOrganization.changeEmailWorkflowRuleActivation(rule).then(function () {
+            OrganizationRepo.getSelectedOrganization().changeEmailWorkflowRuleActivation(rule).then(function () {
                 changeEmailWorkflowRuleActivation = false;
             });
         };
 
         $scope.cancelDeleteEmailWorkflowRule = function () {
-            $scope.emailWorkflowRuleToDelete.emailWorkflowRuleDeleteWorking = false;
+            $scope.emailWorkflowRuleDeleteWorking = false;
             $scope.closeModal();
         };
 
