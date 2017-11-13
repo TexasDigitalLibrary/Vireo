@@ -264,7 +264,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
     
                 });
             }
-        }
+        };
     
         if (!UserService.getCurrentUser().anonymous) {
             updateScope();
