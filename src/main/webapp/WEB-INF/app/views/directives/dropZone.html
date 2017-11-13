@@ -1,6 +1,6 @@
 <div id="{{ id }}" class="upload-drop-zone" ng-class="{'reject': fileValidationError}" ng-model="fileModel" ngf-drag-over-class="dragging($event)" ngf-pattern="{{ patterns }}" accept="{{ patterns }}" ngf-drop="dropMethodWrapper({files:$files})" ngf-multiple="{{ allowMultiple }}">
 	<div class="col-sm-6">
-		<span class="glyphicon glyphicon-upload" ng-if="!fileValidationError" ngf-pattern="{{ patterns }}"  accept="{{ patterns }}" ng-model="fileModel" ngf-select="dropMethodWrapper({files:$files})" ngf-multiple="{{ allowMultiple }}"></span>
+		<span class="glyphicon glyphicon-upload" ng-if="!fileValidationError" ngf-pattern="{{ patterns }}" accept="{{ patterns }}" ng-model="fileModel" ngf-select="dropMethodWrapper({files:$files})" ngf-multiple="{{ allowMultiple }}"></span>
 		<span class="glyphicon glyphicon-ban-circle" ng-if="fileValidationError"></span>
 	</div>
 	<div class="col-sm-6">
