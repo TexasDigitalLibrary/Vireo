@@ -21,8 +21,12 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,6 +85,8 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 @RestController
 @RequestMapping("/submission")
 public class SubmissionController {
+    
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
@@ -743,36 +749,51 @@ public class SubmissionController {
 
         Submission submission = submissionRepo.read(submissionId);
 
-        Boolean approveApplicationNode = (Boolean) data.get("approveApplication");
-        Boolean approveEmbargoNode = (Boolean) data.get("approveEmbargo");
-        String messageNode = (String) data.get("message");
-        Boolean clearApproveEmbargoNode = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveApplicationNode = (Boolean) data.get("clearApproveApplication");
+        Boolean approveApplication = (Boolean) data.get("approveApplication");
+        Boolean approveEmbargo = (Boolean) data.get("approveEmbargo");
+        String message = (String) data.get("message");
+        Boolean clearApproveEmbargo = (Boolean) data.get("clearApproveEmbargo");
+        Boolean clearApproveApplication = (Boolean) data.get("clearApproveApplication");
 
-        if (approveApplicationNode != null) {
-            submission.setApproveApplication(approveApplicationNode);
-            String approveApplicationMessage = approveApplicationNode ? "The committee approved the application" : "The committee rejected the Application";
+        if (approveApplication != null) {
+            submission.setApproveApplication(approveApplication);
+            String approveApplicationMessage;
+            if (approveApplication) {
+                approveApplicationMessage = "The committee approved the application";
+                submission.setApproveApplicationDate(Calendar.getInstance());
+            } else {
+                approveApplicationMessage = "The committee rejected the Application";
+                submission.setApproveApplicationDate(null);
+            }
             actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
         }
 
-        if (approveEmbargoNode != null) {
-            submission.setApproveEmbargo(approveEmbargoNode);
-            String approveEmbargoMessage = approveEmbargoNode ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
+        if (approveEmbargo != null) {
+            submission.setApproveEmbargo(approveEmbargo);
+            String approveEmbargoMessage;
+            if (approveEmbargo) {
+                approveEmbargoMessage = "The committee approved the Embargo Options";
+                submission.setApproveEmbargoDate(Calendar.getInstance());
+            } else {
+                approveEmbargoMessage = "The committee rejected the Embargo Options";
+                submission.setApproveEmbargoDate(null);
+            }
             actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
         }
 
-        if (clearApproveEmbargoNode != null && clearApproveEmbargoNode) {
+        if (clearApproveEmbargo != null && clearApproveEmbargo) {
             submission.clearApproveEmbargo();
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
         }
 
-        if (clearApproveApplicationNode != null && clearApproveApplicationNode) {
+        if (clearApproveApplication != null && clearApproveApplication) {
             submission.clearApproveApplication();
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 
-        if (messageNode != null)
-            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + messageNode);
+        if (message != null) {
+            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + message);
+        }
 
         return new ApiResponse(SUCCESS, submission);
 
@@ -783,8 +804,10 @@ public class SubmissionController {
         SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
-
-        rules.forEach(rule -> {
+        
+        for(EmailWorkflowRule rule : rules) {
+            
+            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
@@ -792,25 +815,33 @@ public class SubmissionController {
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
-                rule.getEmailRecipient().getEmails(submission).forEach(email -> {
-
-                    smm.setTo(email);
-
-                    String preferedEmail = user.getSetting("preferedEmail");
-                    user.getSetting("ccEmail");
-                    if (user.getSetting("ccEmail").equals("true")) {
-                        smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                for(String email : rule.getEmailRecipient().getEmails(submission)){
+                    
+                    try {
+                        LOG.debug("\tSending email to recipient at address " + email);
+                        
+                        
+                        smm.setTo(email);
+    
+                        String preferedEmail = user.getSetting("preferedEmail");
+                        
+                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                        }
+    
+                        smm.setSubject(subject);
+                        smm.setText(content);
+    
+                        emailSender.send(smm);
+                    } catch (MailException me) {
+                        LOG.error("Problem sending email: " + me.getMessage());
                     }
-
-                    smm.setSubject(subject);
-                    smm.setText(content);
-
-                    emailSender.send(smm);
-                });
-
+                }
             }
-        });
-
+            else {
+                LOG.debug("\tRule disabled or of irrelevant status condition.");
+            }
+        }
     }
-
+    
 }

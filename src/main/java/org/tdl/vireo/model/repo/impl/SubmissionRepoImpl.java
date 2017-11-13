@@ -198,6 +198,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 if (!attachDefaultLicenseFieldValues)
                     break;
             }
+            
+            clearLicenseFiles(submission);
 
             if (attachProquestLicense) {
                 writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
@@ -244,6 +246,20 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
+    }
+    
+    private void clearLicenseFiles(Submission submission) {
+    	FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+    	List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
+    	
+    	for (FieldValue fieldValue : fieldValues) {
+    		try {
+    			fileIOUtility.delete(fieldValue.getValue());
+    			submission.removeFieldValue(fieldValue);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
     }
 
     private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {

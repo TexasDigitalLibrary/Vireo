@@ -46,12 +46,14 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         var enrichDocumentTypeFieldValue = function (fieldValue) {
-            submission.fileInfo(fieldValue).then(function (response) {
-                fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
-                fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
-            });
-            if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
-                submission.primaryDocumentFieldValue = fieldValue;
+            if (fieldValue.value !== undefined && fieldValue.value.length > 0) {
+                submission.fileInfo(fieldValue).then(function (response) {
+                    fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
+                    fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
+                });
+                if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
+                    submission.primaryDocumentFieldValue = fieldValue;
+                }
             }
         };
 
@@ -605,16 +607,16 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
         };
 
-        submission.getContactEmails = function() {
+        submission.getContactEmails = function () {
 
-          var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
-          var emails = [];
+            var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
+            var emails = [];
 
-          angular.forEach(fieldValues, function(fv) {
-            angular.extend(emails, fv.contacts);
-          });
+            angular.forEach(fieldValues, function (fv) {
+                angular.extend(emails, fv.contacts);
+            });
 
-          return emails;
+            return emails;
         };
 
         submission.addMessage = function (message) {
