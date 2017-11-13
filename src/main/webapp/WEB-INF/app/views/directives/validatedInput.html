@@ -46,8 +46,8 @@
 
         <div class="col-xs-2">
           <div>
-            <button ng-if="showRemove($first)" ng-click="removeMember($index)" class="btn btn-danger"> - </button>
-            <button ng-if="showAdd($first)" ng-click="addMember()" class="btn btn-primary"> + </button>
+            <button ng-if="repeatable && !$first" ng-click="removeMember($index)" class="btn btn-danger"> - </button>
+            <button ng-if="repeatable && $first" ng-click="addMember()" class="btn btn-primary"> + </button>
           </div>
         </div>
 
