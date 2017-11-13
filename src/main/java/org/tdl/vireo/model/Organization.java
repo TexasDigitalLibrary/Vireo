@@ -78,7 +78,7 @@ public class Organization extends ValidatingBaseEntity {
     @ElementCollection(fetch = EAGER)
     private List<String> emails;
 
-    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, orphanRemoval = true, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
     public Organization() {

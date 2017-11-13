@@ -7,6 +7,7 @@
 				<th></th>
 				<th>Email template</th>
 				<th>Recipient</th>
+				<th>Is System Required?</th>
 				<th></th>
 				<th>
 					<span class="glyphicon glyphicon-play"></span>/
@@ -25,10 +26,15 @@
 				<td ng-click="openEditEmailWorkflowRule(rule)">
 					{{rule.emailRecipient.name}}
 				</td>
-				<td ng-click="confirmEmailWorkflowRuleDelete(rule);">
-					<span ng-if="rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-refresh spinning"></span>
-					<span ng-if="!rule.emailWorkflowRuleDeleteWorking" class="glyphicon glyphicon-trash"></span>
+				<td ng-click="openEditEmailWorkflowRule(rule)">
+					{{rule.isSystem}}
 				</td>
+				<span>
+					<td ng-click="confirmEmailWorkflowRuleDelete(rule);">
+						<span ng-if="rule.emailWorkflowRuleDeleteWorking && !(rule.isSystem) " class="glyphicon glyphicon-refresh spinning"></span>
+						<span ng-if="!rule.emailWorkflowRuleDeleteWorking && !(rule.isSystem)" class="glyphicon glyphicon-trash"></span>
+					</td>
+				</span>
 				<td ng-click="changeEmailWorkflowRuleActivationWorking=true;changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
 					<span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>
 					<span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
