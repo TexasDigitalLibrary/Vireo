@@ -45,8 +45,8 @@
   },
   {
     "name": "INPUT_TEL",
-    "validationPattern": "^\\(*\\+*[1-9]{0,3}\\)*-*[1-9]{0,3}[-. /]*\\(*[2-9]\\d{2}\\)*[-. /]*\\d{3}[-. /]*\\d{4} *e*x*t*\\.* *\\d{0,4}$",
-    "validationMessage": "Field must contain a ten-digit phone number with area code"
+    "validationPattern": null,
+    "validationMessage": null
   },
   {
     "name": "INPUT_URL",
