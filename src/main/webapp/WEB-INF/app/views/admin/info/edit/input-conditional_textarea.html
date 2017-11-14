@@ -1,0 +1,23 @@
+<div class="input-group">
+    <input  
+        ng-init="checked = field.value && field.value !== ''"
+        type="checkbox" 
+        ng-model="checked"
+        ng-true-value="true" 
+        ng-false-value="false"
+        ng-click="setConditionalTextArea(field, checked)"/>
+        
+        <span ng-if="checked !== true" class="glyphicon glyphicon-ok pull-right toggle-href" ng-click="save(field)"></span>
+        <span ng-if="checked !== true" class="glyphicon glyphicon-remove pull-right toggle-href" ng-click="cancel(field)"></span>
+    <div ng-if="checked === true">
+        <textarea
+            class="form-control"
+            name="profile.fieldPredicate.value"
+            ng-required="!profile.optional"
+            ng-model="field.value">
+        </textarea>
+        <span class="glyphicon glyphicon-ok pull-right toggle-href" ng-click="save(field)"></span>
+        <span class="glyphicon glyphicon-remove pull-right toggle-href" ng-click="cancel(field)"></span>
+    </div>
+    
+</div>
