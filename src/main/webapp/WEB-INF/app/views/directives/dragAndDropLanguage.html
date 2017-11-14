@@ -1,7 +1,6 @@
 <div class="languages" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.position }}. </span>
 	
-	<span ng-if="item.proquestCode" class="glyphicon glyphicon-tag"></span> 
 	<span ng-repeat="property in properties" class="repeated-span">	
 		{{ item[property] }}
 	</span>

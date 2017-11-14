@@ -94,7 +94,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             addCommentModal.adding = true;
             $scope.submission.addComment(addCommentModal).then(function () {
                 if (addCommentModal.needsCorrection) {
-                    $scope.submission.changeStatus(SubmissionStatuses.NEEDS_CORRECTION);
+                    $scope.submission.changeStatus(SubmissionStatuses.NEEDS_CORRECTIONS);
                 }
                 $scope.resetCommentModal(addCommentModal);
             });

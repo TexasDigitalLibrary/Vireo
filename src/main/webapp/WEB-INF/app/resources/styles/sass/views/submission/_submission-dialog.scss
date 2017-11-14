@@ -12,7 +12,6 @@ submissiondialog div.dialog {
 }
 @media (max-width: 1540px) {
   submissiondialog div.dialog {
-    opacity: 0.9;
     padding: 10px 20px;
     z-index: 1;
   }
@@ -37,7 +36,7 @@ submissiondialog div.dialog.state {
 }
 
 submissiondialog div.dialog.state.immutable {
-  background-color: #fcf8e3;
+  background-color: #f5e49d;
   border: 1px solid #fbeed5;
   color: #584521;
 }

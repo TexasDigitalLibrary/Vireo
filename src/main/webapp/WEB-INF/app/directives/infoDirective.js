@@ -76,6 +76,9 @@ vireo.directive("info", function (FieldValue) {
                 return !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
             };
 
+            $scope.setConditionalTextArea = function (fieldValue, checked) {
+                fieldValue.value = checked ? fieldValue.value : null;
+            };
         }
     };
 });
