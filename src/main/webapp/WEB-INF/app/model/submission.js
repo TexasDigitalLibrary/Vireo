@@ -60,7 +60,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     enrichDocumentTypeFieldValue(fieldValue);
                 }
             });
-        }
+        };
 
         submission.listen(function () {
             instantiateFieldValues();
