@@ -18,9 +18,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             }
             angular.forEach(fieldValues, function (fieldValue) {
                 fieldValue = new FieldValue(fieldValue);
-                if (fieldValue.fieldPredicate.documentTypePredicate) {
-                    enrichDocumentTypeFieldValue(fieldValue);
-                }
                 submission.fieldValues.push(fieldValue);
             });
         };
@@ -46,7 +43,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         var enrichDocumentTypeFieldValue = function (fieldValue) {
-            if (fieldValue.value !== undefined && fieldValue.value.length > 0) {
+            if (fieldValue.fileInfo === undefined && fieldValue.value !== undefined && fieldValue.value.length > 0) {
                 submission.fileInfo(fieldValue).then(function (response) {
                     fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
                     fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
@@ -56,6 +53,14 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                 }
             }
         };
+
+        submission.fetchDocumentTypeFileInfo = function () {
+            angular.forEach(submission.fieldValues, function (fieldValue) {
+                if (fieldValue.fieldPredicate.documentTypePredicate) {
+                    enrichDocumentTypeFieldValue(fieldValue);
+                }
+            });
+        }
 
         submission.listen(function () {
             instantiateFieldValues();
@@ -164,7 +169,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.sendEmail = function (data) {
-            console.log(data);
             angular.extend(apiMapping.Submission.sendEmail, {
                 'method': submission.id + "/send-email",
                 'data': data
@@ -342,7 +346,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
                 } else {
                     var updatedFieldValue = null;
-                    
+
                     if (route === "/remove-field-value/") {
                         updatedFieldValue = submission.addFieldValue(fieldProfile.fieldPredicate);
                     } else {
