@@ -23,8 +23,8 @@ import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
 
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, WorkflowStepRepo>implements WorkflowStepRepoCustom {
-    
+public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, WorkflowStepRepo> implements WorkflowStepRepoCustom {
+
     final static Logger logger = LoggerFactory.getLogger(WorkflowStepRepoImpl.class);
 
     @Autowired
@@ -135,7 +135,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
             requestingOrg.removeAggregateWorkflowStep(workflowStepToRemove);
             organizationRepo.save(requestingOrg);
         }
-        
+
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
     }
 
@@ -154,8 +154,8 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
 
         // if the requestingOrganization originates the workflowStep, make the change directly
         if (requestingOrganization.getId().equals(persistedWorkflowStep.getOriginatingOrganization().getId())) {
-            
-            logger.info("Requesting organization " + requestingOrganization.getName() + " originates step " + persistedWorkflowStep.getId() );
+
+            logger.info("Requesting organization " + requestingOrganization.getName() + " originates step " + persistedWorkflowStep.getId());
 
             if (!pendingWorkflowStep.getOverrideable() && overridabilityOfPersistedWorkflowStep) {
 
@@ -227,8 +227,8 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
         // if the requestingOrganization is not originator of workflowStep, make
         // a new workflow step to override the original
         else {
-            
-            logger.info("Requesting organization " + requestingOrganization.getName() + " does not originate step " + persistedWorkflowStep.getId() + " ... making a new step." );
+
+            logger.info("Requesting organization " + requestingOrganization.getName() + " does not originate step " + persistedWorkflowStep.getId() + " ... making a new step.");
 
             if (overridabilityOfPersistedWorkflowStep) {
 
@@ -239,9 +239,8 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
                 clonedWorkflowStep.setOriginatingWorkflowStep(persistedWorkflowStep);
                 clonedWorkflowStep.setOriginatingOrganization(requestingOrganization);
 
-                
-                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep); 
-                logger.info("Created new Workflow Step " + newWorkflowStep.getName() + "(" + newWorkflowStep.getId() + ")" + " originating at Org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")"); 
+                WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
+                logger.info("Created new Workflow Step " + newWorkflowStep.getName() + "(" + newWorkflowStep.getId() + ")" + " originating at Org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")");
 
                 requestingOrganization = organizationRepo.findOne(requestingOrganizationId);
 
@@ -354,7 +353,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
 
             workflowStepRepo.delete(workflowStep.getId());
         }
-        
+
     }
 
     private void deleteDescendantsOfStep(WorkflowStep workflowStep) {
