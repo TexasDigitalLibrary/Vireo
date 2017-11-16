@@ -34,6 +34,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.loaded = true;
 
         $scope.submission = submission;
+        $scope.submission.fetchDocumentTypeFileInfo();
 
         $scope.emailTemplates = emailTemplates;
 

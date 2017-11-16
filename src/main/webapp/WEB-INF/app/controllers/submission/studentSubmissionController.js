@@ -17,6 +17,8 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
         $scope.submission = submission;
 
+        $scope.submission.fetchDocumentTypeFileInfo();
+
         $scope.onLastStep = function () {
             var currentStepIndex = $scope.submission.submissionWorkflowSteps.indexOf($scope.nextStep);
             return currentStepIndex === -1;

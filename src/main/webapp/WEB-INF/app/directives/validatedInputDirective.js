@@ -52,7 +52,7 @@ vireo.directive("validatedinput", function ($timeout) {
                 }
             };
 
-            $scope.getValues = function(property) {
+            $scope.getValues = function (property) {
                 return property && property.length === 0 ? [""] : property;
             };
 
@@ -63,11 +63,17 @@ vireo.directive("validatedinput", function ($timeout) {
                         update();
                     }
                 }
-
                 // escape(27): reset value using shadow
-                if ($event.which == 27) {
+                else if ($event.which == 27) {
                     $scope.model.refresh();
                 }
+                // else set model dirty
+                else {
+                    if ($scope.model.dirty) {
+                        $scope.model.dirty(true);
+                    }
+                }
+
             };
 
             $scope.blur = function ($event) {
@@ -88,10 +94,12 @@ vireo.directive("validatedinput", function ($timeout) {
 
             $scope.addMember = function (member) {
                 $scope.model[$scope.property].push(member ? member : "");
+
             };
 
             $scope.removeMember = function (i) {
                 $scope.model[$scope.property].splice(i, 1);
+                $scope.model.dirty(true);
             };
 
         }
