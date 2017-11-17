@@ -12,7 +12,8 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
         $scope.loaded = true;
-        $scope.submission = new StudentSubmission(submission);
+        $scope.submission = submission;
+        $scope.submission.fetchDocumentTypeFileInfo();
     });
 
     var deleteFieldValue = function (fieldValue) {
