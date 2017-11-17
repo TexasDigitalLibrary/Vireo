@@ -15,6 +15,7 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
     AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function (submissions) {
         $scope.advisorSubmissionRepoReady = true;
         $scope.submission = submissions;
+        $scope.submission.fetchDocumentTypeFileInfo();
     });
 
     $scope.required = function (aggregateFieldProfile) {

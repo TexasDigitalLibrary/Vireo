@@ -142,9 +142,7 @@ public class OrganizationController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateWorkflowStepsForOrganization(@PathVariable Long requestingOrgId, @WeaverValidatedModel WorkflowStep workflowStep) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         Organization requestingOrg = organizationRepo.read(requestingOrgId);
-        WorkflowStep persistedWorkflowStep = workflowStepRepo.read(workflowStep.getId());
-        copyProperties(workflowStep, persistedWorkflowStep, "aggregateFieldProfiles", "aggregateNotes", "originatingOrganization", "originatingWorkflowStep", "originalFieldProfiles", "originalNotes");
-        workflowStepRepo.update(persistedWorkflowStep, requestingOrg);
+        workflowStepRepo.update(workflowStep, requestingOrg);
         return new ApiResponse(SUCCESS);
     }
 
@@ -243,8 +241,7 @@ public class OrganizationController {
     @Transactional
     @RequestMapping("/{requestingOrgId}/remove-email-workflow-rule/{emailWorkflowRuleId}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId,
-            @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
+    public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
 
         Organization org = organizationRepo.read(requestingOrgId);
         EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
