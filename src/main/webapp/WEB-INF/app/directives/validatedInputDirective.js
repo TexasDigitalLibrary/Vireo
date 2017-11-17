@@ -53,7 +53,7 @@ vireo.directive("validatedinput", function ($timeout) {
             };
 
             $scope.getValues = function (property) {
-                return property && property.length === 0 ? [""] : property;
+                return property && property.length === 0 ? property.push("") : property;
             };
 
             $scope.keydown = function ($event) {
@@ -66,14 +66,9 @@ vireo.directive("validatedinput", function ($timeout) {
                 // escape(27): reset value using shadow
                 else if ($event.which == 27) {
                     $scope.model.refresh();
-                }
-                // else set model dirty
-                else {
-                    if ($scope.model.dirty) {
-                        $scope.model.dirty(true);
-                    }
-                }
+                } else {
 
+                }
             };
 
             $scope.blur = function ($event) {
