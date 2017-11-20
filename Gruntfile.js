@@ -2,7 +2,7 @@ module.exports = function (grunt) {
 
     // Configurable paths
     var build = {
-        app: 'src/main/webapp/WEB-INF/app'
+        app: 'src/main/resources/static/app'
     };
 
 
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             },
             explicit: {
                 src: 'node_modules',
-                dest: 'src/main/webapp/WEB-INF/app/node_modules'
+                dest: 'src/main/resources/static/app/node_modules'
             }
         },
 
@@ -187,9 +187,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: 'src/main/webapp/WEB-INF/app/resources/styles/sass',
+                    cwd: 'src/main/resources/static/app/resources/styles/sass',
                     src: ['*.scss'],
-                    dest: 'src/main/webapp/WEB-INF/app/resources/styles',
+                    dest: 'src/main/resources/static/app/resources/styles',
                     ext: '.css'
                 }]
             }

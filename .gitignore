@@ -23,5 +23,5 @@ node_modules/
 
 package-lock.json
 
-src/main/resources/static/angular/app/
-
+src/main/resources/static/app/node_modules
+src/main/resources/static/app/resources/styles/*.css
