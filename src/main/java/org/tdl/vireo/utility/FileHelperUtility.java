@@ -12,12 +12,16 @@ public class FileHelperUtility {
 
     // TODO: fix problems on Windows!!!
     public String getMimeType(String relativePath) {
-        String safePath = Application.BASE_PATH + relativePath;
-        if (safePath.contains(":") && safePath.charAt(0) == '/') {
-            safePath = safePath.substring(1, safePath.length());
-        }
-        Path path = Paths.get(safePath);
+        Path path = Paths.get(getPath(relativePath));
         return tika.detect(path.toString());
+    }
+    
+    public static String getPath(String relativePath) {
+        String path = Application.BASE_PATH + relativePath;
+        if (path.contains(":") && path.charAt(0) == '/') {
+            path = path.substring(1, path.length());
+        }
+        return path;
     }
 
 }

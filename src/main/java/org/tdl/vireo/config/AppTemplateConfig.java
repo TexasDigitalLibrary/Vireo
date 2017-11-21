@@ -1,47 +1,32 @@
 package org.tdl.vireo.config;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.ViewResolver;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 @Configuration
-public class AppTemplateConfig {
+public class AppTemplateConfig implements ApplicationContextAware {
 
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.addTemplateResolver(xmlTemplateResolver());
-        templateEngine.addTemplateResolver(jspTemplateResolver());
-        return templateEngine;
-    }
+    private ApplicationContext applicationContext;
 
-    @Bean
-    public ServletContextTemplateResolver jspTemplateResolver() {
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        templateResolver.setPrefix("/WEB-INF/app/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("LEGACYHTML5");
-        return templateResolver;
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     @Bean
     public SpringResourceTemplateResolver xmlTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("classpath:/formats/");
-        templateResolver.setSuffix(".xml");
-        templateResolver.setTemplateMode("XML");
-        return templateResolver;
-    }
-
-    @Bean
-    public ViewResolver viewResolver() {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine(templateEngine());
-        resolver.setCharacterEncoding("UTF-8");
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setApplicationContext(applicationContext);
+        resolver.setPrefix("classpath:/formats/");
+        resolver.setSuffix(".xml");
+        resolver.setTemplateMode("XML");
+        resolver.setCharacterEncoding(UTF_8.name());
+        resolver.setCheckExistence(true);
+        resolver.setCacheable(false);
         return resolver;
     }
 
