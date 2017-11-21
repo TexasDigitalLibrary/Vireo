@@ -52,7 +52,7 @@ public class Application extends WeaverInitializer {
         // if we're running in an expanded war
         if (applicationClassPath.exists() && applicationClassPath.isDirectory()) {
             BASE_PATH = applicationClassPathRoot + (isSpringBoot ? "../../" : "../../../");
-            File customProps = new File(BASE_PATH + "/conf/application.properties");
+            File customProps = new File(BASE_PATH + "conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 LOG.info("Loading application.properties from " + BASE_PATH + "conf directory relative to our classpath");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
