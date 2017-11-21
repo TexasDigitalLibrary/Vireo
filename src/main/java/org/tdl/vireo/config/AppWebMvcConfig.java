@@ -71,6 +71,7 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
             registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
         }
         registry.addResourceHandler("/**").addResourceLocations("classpath:/webapp/" + path + "/");
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 
