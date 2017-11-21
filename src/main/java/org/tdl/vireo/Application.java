@@ -61,7 +61,7 @@ public class Application extends WeaverInitializer {
         // if we're a jar or a war
         else if (applicationClassPath.exists() && applicationClassPath.isFile() && (applicationClassPathRoot.endsWith(".jar") || applicationClassPathRoot.endsWith(".war"))) {
             BASE_PATH = applicationClassPath.getParent();
-            File customProps = new File(BASE_PATH + "conf/application.properties");
+            File customProps = new File(BASE_PATH + "/conf/application.properties");
             if (customProps.exists() && customProps.isFile()) {
                 LOG.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
                 System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
