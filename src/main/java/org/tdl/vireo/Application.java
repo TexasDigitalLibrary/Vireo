@@ -6,13 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
 import edu.tamu.weaver.WeaverInitializer;
 
-@SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
+@SpringBootApplication(exclude = { ThymeleafAutoConfiguration.class})
 public class Application extends WeaverInitializer {
 
     private final static Logger LOG = LoggerFactory.getLogger(Application.class);
