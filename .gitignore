@@ -25,3 +25,4 @@ package-lock.json
 
 src/main/resources/static/app/node_modules
 src/main/resources/static/app/resources/styles/*.css
+src/main/resources/static/app/resources/scripts/
