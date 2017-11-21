@@ -23,6 +23,6 @@ node_modules/
 
 package-lock.json
 
-src/main/resources/static/app/node_modules
-src/main/resources/static/app/resources/styles/*.css
-src/main/resources/static/app/resources/scripts/
+src/main/resources/webapp/app/node_modules
+src/main/resources/webapp/app/resources/styles/*.css
+src/main/resources/webapp/app/resources/scripts/

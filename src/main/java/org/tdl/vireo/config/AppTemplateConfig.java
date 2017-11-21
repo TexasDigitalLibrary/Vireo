@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 
 @Configuration
-public class XmlTemplateConfig implements ApplicationContextAware {
+public class AppTemplateConfig implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
