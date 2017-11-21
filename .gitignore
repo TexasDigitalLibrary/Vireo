@@ -20,9 +20,3 @@ node_modules/
 
 
 *.log*
-
-package-lock.json
-
-src/main/resources/webapp/app/node_modules
-src/main/resources/webapp/app/resources/styles/*.css
-src/main/resources/webapp/app/resources/scripts/
