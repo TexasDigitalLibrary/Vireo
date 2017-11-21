@@ -26,6 +26,28 @@ $ mvn clean package -DskipTests -Dproduction
 ```
 If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
 
+#### Apache Reverse Proxy Config
+
+```
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+
+<VirtualHost *:80>
+  ServerName localhost
+
+  ProxyPreserveHost On
+  ProxyPass / http://127.0.0.1:8080/
+  ProxyPassReverse / http://127.0.0.1:8080/
+  ProxyRequests Off
+  RewriteEngine on
+  RewriteCond %{HTTP:UPGRADE} ^WebSocket$ [NC]
+  RewriteCond %{HTTP:CONNECTION} Upgrade$ [NC]
+  RewriteRule .* ws://localhost:8080%{REQUEST_URI} [P]
+
+</VirtualHost>
+```
+
 ## Testing Vireo 4
 
 ### Server
