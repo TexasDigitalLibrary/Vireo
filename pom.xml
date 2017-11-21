@@ -403,6 +403,9 @@
       <resource>
         <directory>src/main/resources</directory>
       </resource>
+      <resource>
+        <directory>src/main/webapp/WEB-INF/app</directory>
+      </resource>
     </resources>
 
   </build>
