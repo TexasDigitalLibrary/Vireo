@@ -1,20 +1,25 @@
 package org.tdl.vireo.service;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+import edu.tamu.weaver.utility.HttpUtility;
 import edu.tamu.weaver.wro.service.ThemeManagerService;
 
 @Service
 public class VireoThemeManagerService extends ThemeManagerService {
 	@Autowired
 	ConfigurationRepo configurationRepo;
+	
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
     public String getFormattedProperties() {
@@ -46,6 +51,17 @@ public class VireoThemeManagerService extends ThemeManagerService {
         });
         
         return formattedComments.toString() + " \n*/\n"+ formattedProperties.toString()+"\n"+customCss;
-    }	
+    }
+	
+    // tell WRO to reset its resource cache
+    public void reloadCache() {
+        // TODO This string should be crafted using configuration values.
+        String urlString = "http://localhost:9000/wro/wroAPI/reloadCache";
+        try {
+            HttpUtility.makeHttpRequest(urlString, "GET");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
