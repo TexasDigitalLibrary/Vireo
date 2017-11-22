@@ -2,18 +2,16 @@ package org.tdl.vireo.config;
 
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.tdl.vireo.service.VireoThemeManagerService;
 import org.tdl.vireo.utility.FileIOUtility;
 import org.tdl.vireo.wro.manager.factory.VireoConfigurableWroManagerFactory;
 
 import edu.tamu.weaver.wro.config.WroConfiguration;
-import edu.tamu.weaver.wro.service.ThemeManagerService;
 import ro.isdc.wro.config.jmx.ConfigConstants;
 import ro.isdc.wro.http.ConfigurableWroFilter;
 import ro.isdc.wro.http.handler.factory.SimpleRequestHandlerFactory;
@@ -25,7 +23,7 @@ public class VireoWroConfiguration extends WroConfiguration {
     private static final String[] OTHER_WRO_PROP = new String[] { ConfigurableProcessorsFactory.PARAM_PRE_PROCESSORS, ConfigurableProcessorsFactory.PARAM_POST_PROCESSORS };
     
     @Autowired
-    private ThemeManagerService themeManagerService;
+    private VireoThemeManagerService themeManagerService;
     
     @Autowired
     private FileIOUtility fileIOUtility;

@@ -81,6 +81,8 @@ public class SassClassPathUriLocator implements UriLocator {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        } else {
+        	LOG.debug("SASS Resource unreadable: "+resource.getFilename());
         }
         return null;
     }
