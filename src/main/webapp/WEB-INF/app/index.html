@@ -28,7 +28,7 @@
 
   <link rel="stylesheet" href="resources/styles/ng-sortable.min.css" />
 
-  <link rel="stylesheet" href="http://localhost:9000/wro/app.css" />
+  <link rel="stylesheet" th:href="${@environment.getProperty('app.url')+'/wro/app.css'}" />
 
 </head>
 
