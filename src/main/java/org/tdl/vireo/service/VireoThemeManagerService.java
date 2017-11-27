@@ -29,7 +29,6 @@ public class VireoThemeManagerService extends ThemeManagerService {
     public String getFormattedProperties() {
         StringBuilder formattedProperties = new StringBuilder();
         StringBuilder formattedComments = new StringBuilder();
-        StringBuilder customCss = new StringBuilder();
         String[] themePropertyNames = {"background_main_color","background_highlight_color","button_main_color_on","button_highlight_color_on","button_main_color_off","button_highlight_color_off"};
         List<String> themeProperties = Arrays.asList(themePropertyNames);
 
@@ -40,13 +39,15 @@ public class VireoThemeManagerService extends ThemeManagerService {
         		formattedProperties.append("$" + c.getName() + ": " + c.getValue() + ";\n");
         		formattedComments.append("* $" + c.getName() + ": " + c.getValue() + ";\n");
         	}
-        	if (c.getName().equals("custom_css")) {
-        		customCss.append("/* Custom CSS */\n\n"+c.getValue()+"\n\n/* End Custom CSS */\n");
-        	}
         });
         
-        return formattedComments.toString() + " \n*/\n"+ formattedProperties.toString()+"\n"+customCss;
+        return formattedComments.toString() + " \n*/\n"+ formattedProperties.toString()+"\n";
     }
+	
+	public String getCustomCss() {
+        Configuration cssConfiguration = configurationRepo.getByNameAndType("custom_css", "lookAndFeel");
+        return "/* The Vireo ThemeManagerService added the following custom CSS: */\n\n"+cssConfiguration.getValue()+"\n\n /* End custom CSS */";
+	}
 	
     // tell WRO to reset its resource cache
     public void reloadCache() {
