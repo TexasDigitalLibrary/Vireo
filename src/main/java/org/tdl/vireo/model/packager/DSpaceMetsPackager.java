@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -13,7 +11,6 @@ import java.util.zip.ZipOutputStream;
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
-import org.tdl.vireo.Application;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.ExportPackage;
@@ -82,18 +79,6 @@ public class DSpaceMetsPackager extends AbstractPackager {
         }
 
         return new TemplateExportPackage(submission, "application/zip", "http://purl.org/net/sword-types/METSDSpaceSIP", pkg, null);
-    }
-
-    public Path getAbsolutePath(String relativePath) {
-        return Paths.get(getPath(relativePath));
-    }
-
-    private String getPath(String relativePath) {
-        String path = Application.BASE_PATH + relativePath;
-        if (path.contains(":") && path.charAt(0) == '/') {
-            path = path.substring(1, path.length());
-        }
-        return path;
     }
 
 }
