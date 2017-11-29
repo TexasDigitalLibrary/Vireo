@@ -123,12 +123,6 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
@@ -267,28 +261,52 @@
           </archive>
           <webResources>
             <webResource>
-              <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <targetPath>WEB-INF</targetPath>
-                <includes>
-                  <include>application.properties</include>
-                </includes>
-                <excludes>
-                  <exclude>**/*.xls</exclude>
-                </excludes>
-              </resource>
-            </webResource>
-            <webResource>
-              <filtering>false</filtering>
+              <filtering>true</filtering>
               <directory>src/main/resources</directory>
-              <targetPath>WEB-INF/classes</targetPath>
+              <targetPath>WEB-INF</targetPath>
               <includes>
-                <include>*/**</include>
+                <include>application.properties</include>
               </includes>
-              <exclude>application.properties</exclude>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
             </webResource>
           </webResources>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>src/main/resources</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <includes>
+              <include>*/**</include>
+            </includes>
+            <exclude>application.properties</exclude>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>src/main/webapp/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/bootstrap-sass/assets</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>fonts/**</exclude>
+              <exclude>images/**</exclude>
+              <exclude>javascript/**</exclude>
+            </excludes>
+          </webResource>
         </configuration>
       </plugin>
 
@@ -331,6 +349,32 @@
                 <include>*/**</include>
               </includes>
               <exclude>application.properties</exclude>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/bootstrap-sass/assets</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>fonts/**</exclude>
+                <exclude>images/**</exclude>
+                <exclude>javascript/**</exclude>
+              </excludes>
             </webResource>
           </webResources>
         </configuration>
@@ -411,16 +455,39 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
+        <filtering>true</filtering>
         <includes>
           <include>application.properties</include>
         </includes>
-        <filtering>true</filtering>
         <excludes>
           <exclude>**/*.jks</exclude>
         </excludes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/bootstrap-sass/assets</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>fonts/**</exclude>
+          <exclude>images/**</exclude>
+          <exclude>javascript/**</exclude>
+        </excludes>
       </resource>
     </resources>
 

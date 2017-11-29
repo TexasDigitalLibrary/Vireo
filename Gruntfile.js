@@ -181,21 +181,6 @@ module.exports = function (grunt) {
             }
         },
 
-        sass: {
-            options: {
-                sourceMap: false
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'src/main/webapp/app/resources/styles/sass',
-                    src: ['*.scss'],
-                    dest: 'src/main/webapp/app/resources/styles',
-                    ext: '.css'
-                }]
-            }
-        },
-
         clean: {
             development: [
                 '<%= build.app %>/node_modules'
@@ -247,18 +232,10 @@ module.exports = function (grunt) {
                     expand: true
                 }],
             }
-        },
-
-        watch: {
-            css: {
-                files: '**/*.scss',
-                tasks: ['sass']
-            }
         }
 
     });
 
-    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -268,12 +245,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-symlink');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'copy:styles', 'clean', 'symlink']);
+    grunt.registerTask('default', ['jshint', 'copy:styles', 'clean', 'symlink']);
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'sass', 'clean', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
 
 };

@@ -46,21 +46,21 @@
 .submission-workflow-step-navigation a {
   width: 95%;
   color: white;
-  background: rgb(31, 58, 71);
-  background: -moz-linear-gradient linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: -webkit-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: -ms-linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
-  background: linear-gradient(to right, rgba(146, 170, 156, 0.95), rgba(173, 189, 170, 0.95));
+  background: $button_main_color_off;
+  background: -moz-linear-gradient linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: -webkit-linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: -ms-linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
 }
 
 .submission-workflow-step-navigation a:hover,
 .submission-workflow-step-navigation.active a {
   cursor: pointer;
   background: rgb(31, 58, 71);
-  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -moz-linear-gradient linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: -webkit-linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: -ms-linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
 }
 
 .field-value-input:not(:last-of-type) {

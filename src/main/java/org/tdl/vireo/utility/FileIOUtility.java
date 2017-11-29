@@ -106,11 +106,15 @@ public class FileIOUtility {
         }
         return path;
     }
+    
+    public Resource getResource(String resourcePath) {
+    	return resourcePatternResolver.getResource(resourcePath);
+    }
 
     public File getFileFromResource(String resourcePath) throws IOException {
         Resource resource = resourcePatternResolver.getResource(resourcePath);
         if (!resource.getURL().toString().startsWith("jar:")) {
-            return resource.getFile();
+            return getResource(resourcePath).getFile();
         } // else (we're inside a war/jar)
         File resourceFile = File.createTempFile("temp", ".tmp");
         resourceFile.deleteOnExit();
