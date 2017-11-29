@@ -259,6 +259,27 @@
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
           </archive>
+          <webResources>
+            <webResource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <includes>
+                <include>application.properties</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
+            </webResource>
+          </webResources>
+          <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>*/**</include>
+              </includes>
+              <exclude>application.properties</exclude>
+            </webResource>
         </configuration>
       </plugin>
 
@@ -281,6 +302,27 @@
             </manifest>
           </archive>
           <archiveClasses>true</archiveClasses>
+          <webResources>
+            <webResource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <includes>
+                <include>application.properties</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.xls</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>*/**</include>
+              </includes>
+              <exclude>application.properties</exclude>
+            </webResource>
+          </webResources>
         </configuration>
       </plugin>
 
