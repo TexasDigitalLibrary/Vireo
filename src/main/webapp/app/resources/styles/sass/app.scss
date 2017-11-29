@@ -1,10 +1,10 @@
-@import "../node_modules/weaver-ui-core/app/resources/styles/sass/main.scss";
+@import "./main";
 
-@import "./overrides/all";
-@import "./imports";
-@import "./views/all";
-@import "./directives/all";
-@import "./sideboxes/all";
+@import "overrides/all";
+@import "imports";
+@import "views/all";
+@import "directives/all";
+@import "sideboxes/all";
 
 body {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
@@ -321,13 +321,13 @@ main footer {
 }
 
 .global-nav li {
-  border-right: 1px solid $background_main_color;
+  border-right: 1px solid $background_highlight_color;
   margin-left: 0;
   display: inline-block;
 }
 
 .global-nav li:last-child {
-  border-right: 0 solid $background_main_color;
+  border-right: 0 solid $background_highlight_color;
 }
 
 .global-nav li a {
@@ -345,13 +345,13 @@ main footer {
 
 .site-title {
   background: $background_highlight_color;
-  background: -moz-linear-gradient(top, $background_highlight_color 0%, $background_main_color 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$background_highlight_color), color-stop(100%,$background_main_color));
-  background: -webkit-linear-gradient(top, $background_highlight_color 0%,$background_main_color 100%);
-  background: -o-linear-gradient(top, $background_highlight_color 0%,$background_main_color 100%);
-  background: -ms-linear-gradient(top, $background_highlight_color 0%,$background_main_color 100%);
-  background: linear-gradient(top, $background_highlight_color 0%,$background_main_color 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=  '$background_highlight_color', endColorstr='$background_main_color');
+  background: -moz-linear-gradient(top, $background_highlight_color 0%, $background_highlight_color 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$background_highlight_color), color-stop(100%,$background_highlight_color));
+  background: -webkit-linear-gradient(top, $background_highlight_color 0%,$background_highlight_color 100%);
+  background: -o-linear-gradient(top, $background_highlight_color 0%,$background_highlight_color 100%);
+  background: -ms-linear-gradient(top, $background_highlight_color 0%,$background_highlight_color 100%);
+  background: linear-gradient(top, $background_highlight_color 0%,$background_highlight_color 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=  '$background_highlight_color', endColorstr='$background_highlight_color');
   border-top: 1px solid #8d8d8d;
   height: 65px;
   padding-top: 7px;
@@ -812,7 +812,7 @@ legend.legendborder {
 .footer {
   color: #777;
   border-top: 1px solid #ccc;
-  background: $background_main_color;
+  background: $background_highlight_color;
   padding: 0;
   width: 100%;
   bottom: 0;

@@ -2,13 +2,10 @@ package org.tdl.vireo.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.tdl.vireo.auth.service.VireoUserDetailsService;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
@@ -20,11 +17,6 @@ import edu.tamu.weaver.auth.config.AuthWebSecurityConfig;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class AppWebSecurityConfig extends AuthWebSecurityConfig<User, UserRepo, VireoUserDetailsService> {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

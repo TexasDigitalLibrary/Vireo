@@ -2,7 +2,8 @@ module.exports = function (grunt) {
 
     // Configurable paths
     var build = {
-        app: 'src/main/webapp/WEB-INF/app'
+        app: 'src/main/webapp/app',
+        templates: 'src/main/resources/templates'
     };
 
 
@@ -18,7 +19,7 @@ module.exports = function (grunt) {
             },
             explicit: {
                 src: 'node_modules',
-                dest: 'src/main/webapp/WEB-INF/app/node_modules'
+                dest: 'src/main/webapp/app/node_modules'
             }
         },
 
@@ -174,7 +175,7 @@ module.exports = function (grunt) {
         },
 
         usemin: {
-            html: '<%= build.app %>/index.html',
+            html: '<%= build.templates %>/index.html',
             options: {
                 assetsDirs: ['<%= build.app %>/resources/scripts']
             }
