@@ -1,10 +1,10 @@
-@import "../node_modules/weaver-ui-core/app/resources/styles/sass/main.scss";
+@import "./main";
 
-@import "./overrides/all";
-@import "./imports";
-@import "./views/all";
-@import "./directives/all";
-@import "./sideboxes/all";
+@import "overrides/all";
+@import "imports";
+@import "views/all";
+@import "directives/all";
+@import "sideboxes/all";
 
 body {
   font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
