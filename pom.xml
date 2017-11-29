@@ -263,6 +263,7 @@
             <webResource>
               <filtering>true</filtering>
               <directory>src/main/resources</directory>
+              <targetPath>WEB-INF</targetPath>
               <includes>
                 <include>application.properties</include>
               </includes>
@@ -272,14 +273,40 @@
             </webResource>
           </webResources>
           <webResource>
-              <filtering>false</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF/classes</targetPath>
-              <includes>
-                <include>*/**</include>
-              </includes>
-              <exclude>application.properties</exclude>
-            </webResource>
+            <filtering>false</filtering>
+            <directory>src/main/resources</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <includes>
+              <include>*/**</include>
+            </includes>
+            <exclude>application.properties</exclude>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>src/main/webapp/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>**/*.css</exclude>
+            </excludes>
+          </webResource>
+          <webResource>
+            <filtering>false</filtering>
+            <directory>node_modules/bootstrap-sass/assets</directory>
+            <targetPath>WEB-INF/classes</targetPath>
+            <excludes>
+              <exclude>fonts/**</exclude>
+              <exclude>images/**</exclude>
+              <exclude>javascript/**</exclude>
+            </excludes>
+          </webResource>
         </configuration>
       </plugin>
 
@@ -306,6 +333,7 @@
             <webResource>
               <filtering>true</filtering>
               <directory>src/main/resources</directory>
+              <targetPath>WEB-INF</targetPath>
               <includes>
                 <include>application.properties</include>
               </includes>
@@ -321,6 +349,32 @@
                 <include>*/**</include>
               </includes>
               <exclude>application.properties</exclude>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/bootstrap-sass/assets</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>fonts/**</exclude>
+                <exclude>images/**</exclude>
+                <exclude>javascript/**</exclude>
+              </excludes>
             </webResource>
           </webResources>
         </configuration>
@@ -420,14 +474,14 @@
         </excludes>
       </resource>
       <resource>
-        <directory>src/main/webapp/app/node_modules/weaver-ui-core/app/resources/styles</directory>
+        <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.css</exclude>
         </excludes>
       </resource>
       <resource>
-        <directory>src/main/webapp/app/node_modules/bootstrap-sass/assets</directory>
+        <directory>node_modules/bootstrap-sass/assets</directory>
         <filtering>false</filtering>
         <excludes>
           <exclude>fonts/**</exclude>
