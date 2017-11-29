@@ -70,6 +70,10 @@ public class SassClassPathUriLocator implements UriLocator {
             url += ".scss";
         }
 
+        if (url.startsWith("file:")) {
+            url = url.replace("file:", "");
+        }
+
         Resource resource = fileIOUtility.getResource(url);
 
         if (!resource.exists()) {
