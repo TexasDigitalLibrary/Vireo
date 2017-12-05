@@ -61,7 +61,7 @@ main footer {
 }
 
 .tab-nav li {
-  background: #92aa9c;
+  background: $button_highlight_color_off;
   padding: 0 10px;
   margin-right: 15px;
   min-width: 75px;
@@ -1284,10 +1284,10 @@ input[type=color]:focus {
   width: 0;
   overflow: hidden;
   background: rgb(31, 58, 71);
-  background: -moz-linear-gradient linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -webkit-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -ms-linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: linear-gradient(to right, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
+  background: -moz-linear-gradient linear-gradient(to right, $background_main_color, $background_highlight_color);
+  background: -webkit-linear-gradient(to right, $background_main_color, $background_highlight_color);
+  background: -ms-linear-gradient(to right, $background_main_color, $background_highlight_color);
+  background: linear-gradient(to right, $background_main_color, $background_highlight_color);
   border-top-left-radius: 3px;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;

@@ -16,7 +16,7 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 			}
 
 			if($scope.activeAdminSection()) {
-				$scope.logoPath = "resources/images/logo.gif";
+				$scope.logoPath = "resources/images/logo.png";
 			}
 
 			return $scope.logoPath;
