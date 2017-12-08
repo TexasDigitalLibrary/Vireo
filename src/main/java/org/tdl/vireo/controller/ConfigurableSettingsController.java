@@ -63,7 +63,7 @@ public class ConfigurableSettingsController {
     
     protected void updateTheming(String type) {
     	if (type.equals("lookAndFeel")) {
-    		themeManagerService.reloadCache();
+    		themeManagerService.refreshCurrentTheme();
     	}
     }
 

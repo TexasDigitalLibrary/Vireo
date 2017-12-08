@@ -5,14 +5,14 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
-import org.tdl.vireo.service.VireoThemeManagerService;
+import org.tdl.vireo.service.VireoThemeManagerServiceI;
 
 import ro.isdc.wro.model.resource.processor.ResourcePostProcessor;
 
 public class VireoPostProcessor implements ResourcePostProcessor {
-	private VireoThemeManagerService themeManagerService;
+	private VireoThemeManagerServiceI themeManagerService;
 	
-	public VireoPostProcessor(VireoThemeManagerService themeManagerService) {
+	public VireoPostProcessor(VireoThemeManagerServiceI themeManagerService) {
 		super();
 		this.themeManagerService = themeManagerService;
 	}
