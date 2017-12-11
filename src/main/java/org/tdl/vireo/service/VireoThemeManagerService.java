@@ -13,7 +13,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.wro.service.RepoThemeManagerService;
 
 @Service
-public class VireoThemeManagerService extends RepoThemeManagerService implements VireoThemeManagerServiceI  {
+public class VireoThemeManagerService extends RepoThemeManagerService implements VireoThemeManager  {
 
     @Autowired
     private ConfigurationRepo configurationRepo;

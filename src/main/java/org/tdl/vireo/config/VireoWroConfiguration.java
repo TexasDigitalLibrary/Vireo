@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.tdl.vireo.service.VireoThemeManagerServiceI;
+import org.tdl.vireo.service.VireoThemeManager;
 import org.tdl.vireo.wro.manager.factory.VireoConfigurableWroManagerFactory;
 
 import edu.tamu.weaver.wro.config.WeaverWroConfiguration;
@@ -13,7 +13,8 @@ import ro.isdc.wro.manager.factory.WroManagerFactory;
 @Configuration
 public class VireoWroConfiguration extends WeaverWroConfiguration {
     @Autowired
-    VireoThemeManagerServiceI vireoThemeManagerService;
+    VireoThemeManager vireoThemeManagerService;
+
     
     @Override
     protected WroManagerFactory getWroManagerFactory(Properties properties) {
