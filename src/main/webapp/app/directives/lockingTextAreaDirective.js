@@ -56,7 +56,7 @@ vireo.directive("lockingtextarea", function ($timeout) {
                         save();
                     });
                 },
-                toolbar1: "formatselect,bold,italic,separator,bullist,numlist,undo,redo",
+                toolbar1: "formatselect,bold,italic,underline,separator,bullist,numlist,undo,redo",
                 theme: "modern",
                 plugins: $scope.plugins,
                 menubar: false,
