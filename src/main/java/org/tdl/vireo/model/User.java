@@ -21,6 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
@@ -99,9 +100,8 @@ public class User extends AbstractWeaverUserDetails {
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
-    // TODO: should this be a OneToMany?
+    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {

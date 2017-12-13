@@ -6,19 +6,21 @@ import javax.persistence.Embeddable;
 public class FilterCriterion {
 
     private String value;
+
     private String gloss;
 
     public FilterCriterion() {
+
     }
 
     public FilterCriterion(String value, String gloss) {
+        this();
         setValue(value);
         setGloss(gloss);
     }
 
     public FilterCriterion(String value) {
-        setValue(value);
-        setGloss(value);
+        this(value, value);
     }
 
     public String getValue() {
