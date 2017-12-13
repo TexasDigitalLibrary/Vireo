@@ -748,23 +748,22 @@ public class SubmissionController {
 
         Submission submission = submissionRepo.read(submissionId);
 
-        Boolean approveApplication = (Boolean) data.get("approveApplication");
+        Boolean approveAdvisor = (Boolean) data.get("approveAdvisor");
         Boolean approveEmbargo = (Boolean) data.get("approveEmbargo");
         String message = (String) data.get("message");
         Boolean clearApproveEmbargo = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveApplication = (Boolean) data.get("clearApproveApplication");
+        Boolean clearApproveAdvisor = (Boolean) data.get("clearApproveAdvisor");
 
-        if (approveApplication != null) {
-            submission.setApproveApplication(approveApplication);
-            String approveApplicationMessage;
-            if (approveApplication) {
-                approveApplicationMessage = "The committee approved the application";
-                submission.setApproveApplicationDate(Calendar.getInstance());
+        if (approveAdvisor != null) {
+            submission.setApproveAdvisor(approveAdvisor);
+            String approveAdvisorMessage;
+            if (approveAdvisor) {
+                approveAdvisorMessage = "The committee approved the application";
             } else {
-                approveApplicationMessage = "The committee rejected the Application";
-                submission.setApproveApplicationDate(null);
+                approveAdvisorMessage = "The committee rejected the Application";
             }
-            actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
+            submission.setApproveAdvisorDate(Calendar.getInstance());            
+            actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
         }
 
         if (approveEmbargo != null) {
@@ -772,11 +771,10 @@ public class SubmissionController {
             String approveEmbargoMessage;
             if (approveEmbargo) {
                 approveEmbargoMessage = "The committee approved the Embargo Options";
-                submission.setApproveEmbargoDate(Calendar.getInstance());
             } else {
                 approveEmbargoMessage = "The committee rejected the Embargo Options";
-                submission.setApproveEmbargoDate(null);
             }
+            submission.setApproveEmbargoDate(Calendar.getInstance());
             actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
         }
 
@@ -785,8 +783,8 @@ public class SubmissionController {
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
         }
 
-        if (clearApproveApplication != null && clearApproveApplication) {
-            submission.clearApproveApplication();
+        if (clearApproveAdvisor != null && clearApproveAdvisor) {
+            submission.clearApproveAdvisor();
             actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 

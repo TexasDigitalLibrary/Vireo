@@ -15,8 +15,25 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
     AdvisorSubmissionRepo.findSubmissionByhash($routeParams.advisorAccessHash).then(function (submissions) {
         $scope.advisorSubmissionRepoReady = true;
         $scope.submission = submissions;
+        resetApproveProxy();
         $scope.submission.fetchDocumentTypeFileInfo();
     });
+
+    var getApproveStatus = function (statusName) {
+        if ($scope.submission[statusName+"Date"]) {
+            return $scope.submission[statusName];
+        }
+        return null;
+    };
+
+    var resetApproveProxy = function () {
+        $scope.approval.message = "";
+        $scope.approval.clearApproveAdvisor = false;
+        $scope.approval.clearApproveEmbargo = false;
+        $scope.approval.approveEmbargo = getApproveStatus("approveEmbargo");
+        $scope.approval.approveAdvisor = getApproveStatus("approveAdvisor");
+        $scope.approval.updating = false;
+    };
 
     $scope.required = function (aggregateFieldProfile) {
         return !aggregateFieldProfile.optional;
@@ -31,30 +48,27 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
     $scope.addComment = function () {
         $scope.approval.updating = true;
         $scope.submission.updateAdvisorApproval($scope.approval).then(function (res) {
-            var responseSubmission = angular.fromJson(res.body).payload.Submission;
+        var responseSubmission = angular.fromJson(res.body).payload.Submission;
 
-            // This should be done through a broadcast and not explicitly like this.
-            $scope.submission.approveApplicationDate = responseSubmission.approveApplicationDate;
-            $scope.submission.approveEmbargoDate = responseSubmission.approveEmbargoDate;
+        // This should be done through a broadcast and not explicitly like this.
+        $scope.submission.approveAdvisorDate = responseSubmission.approveAdvisorDate;
+        $scope.submission.approveEmbargoDate = responseSubmission.approveEmbargoDate;
+        $scope.submission.approveAdvisor = responseSubmission.approveAdvisor;
+        $scope.submission.approveEmbargo = responseSubmission.approveEmbargo;
 
-            $scope.approval.message = "";
-            $scope.approval.clearApproveApplication = false;
-            $scope.approval.clearApproveEmbargo = false;
-            $scope.approval.approveEmbargo = undefined;
-            $scope.approval.approveApplication = undefined;
-            $scope.approval.updating = false;
-            $scope.messages.push(message);
+        resetApproveProxy();
+        $scope.messages.push(message);
         });
     };
 
     $scope.disableCheck = function (approval) {
         var disabled = true;
 
-        if (approval.approveEmbargo && (approval.approveApplication === undefined || approval.approveApplication)) {
+        if (approval.approveEmbargo && (approval.approveAdvisor === undefined || approval.approveAdvisor)) {
             disabled = false;
         }
 
-        if (approval.approveApplication && (approval.approveEmbargo === undefined || approval.approveEmbargo)) {
+        if (approval.approveAdvisor && (approval.approveEmbargo === undefined || approval.approveEmbargo)) {
             disabled = false;
         }
 

@@ -218,7 +218,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         case APPROVED:
             submission.setApproveApplication(true);
-            submission.setApprovalDate(Calendar.getInstance());
+            submission.setApproveApplicationDate(Calendar.getInstance());
             break;
         case CANCELED:
             break;

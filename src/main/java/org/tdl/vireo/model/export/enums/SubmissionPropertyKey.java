@@ -3,7 +3,7 @@ package org.tdl.vireo.model.export.enums;
 public enum SubmissionPropertyKey {
     SUBMISSION_ID,
     FIELD_VALUES,
-    APPROVAL_DATE,
+    ADVISOR_APPROVAL_DATE,
     COMMITTEE_APPROVAL_DATE,
     EMBARGO_APPROVAL_DATE,
     LICENSE_AGREEMENT_DATE,

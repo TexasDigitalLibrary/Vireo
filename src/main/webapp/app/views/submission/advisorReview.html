@@ -27,11 +27,11 @@
                 <span ng-if="approval.approveEmbargo===false||approval.approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Embargo:</label>
             </div>
             <div class="col-sm-9 col-xs-12">
-              <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
+              <!--This conditions on the data of the approval to allow the ui to mutate approveEmbargo without incurring display changes-->
               <div class="form-group" ng-if="submission.approveEmbargoDate">
-                <p>Application was approved on {{submission.approveEmbargoDate | date:'MMM dd, yyyy HH:mm'}}</p>
+                <p>Embargo was {{submission.approveEmbargo == true ? 'approved':'rejected'}} on {{submission.approveEmbargoDate | date:'MMM dd, yyyy HH:mm'}}</p>
                 <div class="checkbox" ng-init="approval.clearApproveEmbargo=false">
-                  <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveEmbargo" ngTrueValue="true" ngFalseValue="false">I unapprove this embargo.</label>
+                  <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveEmbargo" ngTrueValue="true" ngFalseValue="false">I {{submission.approveEmbargo == true ? ' unapprove this embargo.':' remove this embargo rejection.'}}</label>
                 </div>
               </div>
               <div class="form-group" ng-if="!submission.approveEmbargoDate">
@@ -48,27 +48,26 @@
           <div class="row">
             <div class="col-sm-2 col-sm-offset-1 col-xs-12">
               <label>
-                <span ng-if="approval.approveApplication===false||approval.approveApplication===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:</label>
+                <span ng-if="approval.approveAdvisor===false||approval.approveAdvisor===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve Application:</label>
             </div>
             <div class="col-sm-9 col-xs-12">
-              <!--This conditions on the data of the approval to allow the ui to mutate pproveEmbargo without incurring display changes-->
-              <div class="form-group" ng-if="submission.approveApplicationDate">
-                <p>Application was approved on {{submission.approveApplicationDate | date:'MMM dd, yyyy HH:mm'}}</p>
-                <div class="checkbox" ng-init="approval.clearApproveApplication=false">
-                  <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveApplication" ngTrueValue="true" ngFalseValue="false">I unapprove this application.</label>
+              <!--This conditions on the data of the approval to allow the ui to mutate approveAdvisor without incurring display changes-->
+              <div class="form-group" ng-if="submission.approveAdvisorDate">
+                <p>Application was {{submission.approveAdvisor == true ? 'approved':'rejected'}} on {{submission.approveAdvisorDate | date:'MMM dd, yyyy HH:mm'}}</p>
+                <div class="checkbox" ng-init="approval.clearApproveAdvisor=false">
+                  <label class="bg-warning"><input type="checkbox" ng-model="approval.clearApproveAdvisor" ngTrueValue="true" ngFalseValue="false">I {{submission.approveAdvisor == true ? ' unapprove this application.':' remove this rejection.'}}</label>
                 </div>
               </div>
-              <div class="form-group" ng-if="!submission.approveApplicationDate">
+              <div class="form-group" ng-if="!submission.approveAdvisorDate">
                 <div class="radio">
-                  <label><input type="radio" ng-value="true" ng-dblclick="approval.approveApplication=undefined" ng-model="approval.approveApplication">I approve this application.</label>
+                  <label><input type="radio" ng-value="true" ng-dblclick="approval.approveAdvisor=undefined" ng-model="approval.approveAdvisor">I approve this application.</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" ng-value="false" ng-dblclick="approval.approveApplication=undefined" ng-model="approval.approveApplication">I reject this application. (Please leave a comment explaining why below)</label>
+                  <label><input type="radio" ng-value="false" ng-dblclick="approval.approveAdvisor=undefined" ng-model="approval.approveAdvisor">I reject this application. (Please leave a comment explaining why below)</label>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-sm-2 col-sm-offset-1 col-xs-12">
               <label>Comments:</label>
