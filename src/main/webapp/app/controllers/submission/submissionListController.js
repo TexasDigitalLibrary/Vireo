@@ -419,22 +419,17 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     var getValueFromArray = function (array, col) {
         var value = "";
         for (var j in array) {
-
             var member = array[j];
-
             if (member.fieldPredicate !== undefined) {
                 if (member.fieldPredicate.value == col.predicate) {
                     value += value.length > 0 ? ", " + member.value : member.value;
                 }
             } else {
                 var path = col.valuePath;
-
                 var curr = member;
-
                 for (var p = 1; p < path.length; p++) {
                     curr = curr[path[p]];
                 }
-
                 value += value.length > 0 ? ", " + curr : curr;
             }
         }
@@ -443,17 +438,17 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.getSubmissionProperty = function (row, col) {
         var value;
-
         for (var i in col.valuePath) {
-
-            if (value === undefined) {
-                value = row[col.valuePath[i]];
-            } else {
-                if (value instanceof Array) {
-                    return getValueFromArray(value, col);
+            if(typeof col.valuePath[i] !== 'function') {
+                if (value === undefined) {
+                    value = row[col.valuePath[i]];
                 } else {
-                    if (value !== null) {
-                        value = value[col.valuePath[i]];
+                    if (value instanceof Array) {
+                        return getValueFromArray(value, col);
+                    } else {
+                        if (value !== null) {
+                            value = value[col.valuePath[i]];
+                        }
                     }
                 }
             }
@@ -463,7 +458,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.displaySubmissionProperty = function (row, col) {
         var value = $scope.getSubmissionProperty(row, col);
-
         if ($scope.isDateColumn(col)) {
             value = $filter('date')(value, 'MMM dd, yyyy');
         }
