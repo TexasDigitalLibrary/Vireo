@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -21,7 +20,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
@@ -89,19 +87,19 @@ public class User extends AbstractWeaverUserDetails {
     @Column(nullable = false)
     private Integer pageSize;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionListColumn> displayedSubmissionColumns;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
-    @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {
