@@ -28,10 +28,8 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
 
     var resetApproveProxy = function () {
         $scope.approval.message = "";
-        $scope.approval.clearApproveAdvisor = false;
-        $scope.approval.clearApproveEmbargo = false;
-        $scope.approval.approveEmbargo = getApproveStatus("approveEmbargo");
-        $scope.approval.approveAdvisor = getApproveStatus("approveAdvisor");
+        $scope.approval.embargo = {"clearApproval":false,"approve":getApproveStatus("approveEmbargo")};
+        $scope.approval.advisor = {"clearApproval":false,"approve":getApproveStatus("approveAdvisor")};
         $scope.approval.updating = false;
     };
 
@@ -63,23 +61,23 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
 
     $scope.disableCheck = function (approval) {
         var disabled = true;
+        if (approval.embargo !== undefined && approval.advisor !== undefined) {
+            if (approval.embargo.approve && (approval.advisor.approve === undefined || approval.advisor.approve)) {
+                disabled = false;
+            }
 
-        if (approval.approveEmbargo && (approval.approveAdvisor === undefined || approval.approveAdvisor)) {
-            disabled = false;
+            if (approval.advisor.approve && (approval.embargo.approve === undefined || approval.embargo.approve)) {
+                disabled = false;
+            }
+
+            if (approval.message) {
+                disabled = false;
+            }
+
+            if (approval.updating) {
+                disabled = true;
+            }
         }
-
-        if (approval.approveAdvisor && (approval.approveEmbargo === undefined || approval.approveEmbargo)) {
-            disabled = false;
-        }
-
-        if (approval.message) {
-            disabled = false;
-        }
-
-        if (approval.updating) {
-            disabled = true;
-        }
-
         return disabled;
 
     };

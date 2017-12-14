@@ -747,12 +747,13 @@ public class SubmissionController {
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
-
-        Boolean approveAdvisor = (Boolean) data.get("approveAdvisor");
-        Boolean approveEmbargo = (Boolean) data.get("approveEmbargo");
+        HashMap<String,Object> embargoData = (HashMap<String,Object>) data.get("embargo");
+        HashMap<String,Object> advisorData = (HashMap<String,Object>) data.get("advisor");
+        Boolean approveAdvisor = (Boolean) advisorData.get("approve");
+        Boolean approveEmbargo = (Boolean) embargoData.get("approve");
         String message = (String) data.get("message");
-        Boolean clearApproveEmbargo = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveAdvisor = (Boolean) data.get("clearApproveAdvisor");
+        Boolean clearApproveEmbargo = (Boolean) embargoData.get("clearApproval");
+        Boolean clearApproveAdvisor = (Boolean) advisorData.get("clearApproval");
 
         if (approveAdvisor != null) {
             submission.setApproveAdvisor(approveAdvisor);
