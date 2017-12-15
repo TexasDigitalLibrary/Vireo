@@ -371,7 +371,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-update-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
@@ -429,7 +429,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
     public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
 
@@ -458,7 +458,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
@@ -470,7 +470,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-publish/{depositLocationId}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchPublish(@WeaverUser User user, @PathVariable Long depositLocationId) {
         ApiResponse response = new ApiResponse(SUCCESS);
         SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
@@ -569,7 +569,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateReviewerNotes(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody Map<String, String> requestData) {
         Submission submission = submissionRepo.read(submissionId);
         String reviewerNotes = requestData.get("reviewerNotes");
@@ -615,7 +615,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
@@ -650,7 +650,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
@@ -703,7 +703,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/send-advisor-email")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @Transactional
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
 

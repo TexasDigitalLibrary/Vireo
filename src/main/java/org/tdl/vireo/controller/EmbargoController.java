@@ -34,7 +34,7 @@ public class EmbargoController {
     private EmbargoRepo embargoRepo;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getEmbargoes() {
         return new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
     }

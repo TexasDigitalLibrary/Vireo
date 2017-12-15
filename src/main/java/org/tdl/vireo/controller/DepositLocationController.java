@@ -39,7 +39,7 @@ public class DepositLocationController {
     private DepositorService depositorService;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse allDepositLocations() {
         return new ApiResponse(SUCCESS, depositLocationRepo.findAllByOrderByPositionAsc());
     }
