@@ -5,37 +5,37 @@ vireo.config(function ($locationProvider, $routeProvider) {
     $routeProvider.when('/myprofile', {
         templateUrl: 'views/myprofile.html',
         controller: 'SettingsController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/history', {
         templateUrl: 'views/submission/submissionHistory.html',
         controller: 'SubmissionHistoryController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/new', {
         templateUrl: 'views/submission/submissionNew.html',
         controller: 'NewSubmissionController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/complete', {
         templateUrl: 'views/submission/submissionComplete.html',
         controller: 'CompleteSubmissionController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/:submissionId', {
         templateUrl: 'views/submission/submission.html',
         controller: 'StudentSubmissionController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/:submissionId/step/:stepNum', {
         templateUrl: 'views/submission/submission.html',
         controller: 'StudentSubmissionController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/submission/:submissionId/view', {
         templateUrl: 'views/submission/submissionView.html',
         controller: 'SubmissionViewController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
     when('/review/:advisorAccessHash', {
         templateUrl: 'views/submission/advisorReview.html',
@@ -50,29 +50,29 @@ vireo.config(function ($locationProvider, $routeProvider) {
     }).
     when('/admin', {
         redirectTo: '/admin/list',
-        access: ["ROLE_ADMIN"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
     }).
     when('/admin/list', {
         templateUrl: 'views/admin/admin.html',
-        access: ["ROLE_ADMIN"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
     }).
     when('/admin/view/:id/:tab', {
         templateUrl: 'views/admin/admin.html',
-        access: ["ROLE_ADMIN"],
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
         controller: 'AdminSubmissionViewController',
         reloadOnSearch: false
     }).
     when('/admin/log', {
         templateUrl: 'views/admin/admin.html',
-        access: ["ROLE_ADMIN"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
     }).
     when('/admin/settings', {
         redirectTo: '/admin/settings/application',
-        access: ["ROLE_ADMIN"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER"]
     }).
     when('/admin/settings/:tab', {
         templateUrl: 'views/admin/admin.html',
-        access: ["ROLE_ADMIN"],
+        access: ["ROLE_ADMIN", "ROLE_MANAGER"],
         controller: 'SettingsController',
         reloadOnSearch: false
     }).
