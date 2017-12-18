@@ -299,7 +299,7 @@
             "name":"Verify Personal Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -336,7 +336,7 @@
             "name":"Verify Personal Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -371,7 +371,7 @@
             "name":"Verify Personal Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -446,7 +446,7 @@
             "name":"Verify Personal Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -951,7 +951,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":true,
           "overrideable":true,
@@ -1023,7 +1023,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_CONTACT"
+            "name":"INPUT_SELECT"
           },
           "repeatable":false,
           "overrideable":true,
