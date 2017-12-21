@@ -781,12 +781,25 @@ public class SubmissionController {
 
         if (clearApproveEmbargo != null && clearApproveEmbargo) {
             submission.clearApproveEmbargo();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
+            String clearMessage = "The committee has withdrawn its Embargo ";
+            if (approveEmbargo == true) {
+                clearMessage += " Approval.";
+            } else {
+                clearMessage += " Rejection.";                
+            }
+            actionLogRepo.createAdvisorPublicLog(submission, clearMessage);
         }
 
         if (clearApproveAdvisor != null && clearApproveAdvisor) {
             submission.clearApproveAdvisor();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
+            String clearAdvisorMessage = "The committee has withdrawn its Advisor ";
+            if (approveAdvisor == true) {
+                clearAdvisorMessage += " Approval.";
+            } else {
+                clearAdvisorMessage += " Rejection.";                
+            }
+
+            actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
         }
 
         if (message != null) {
