@@ -1,4 +1,4 @@
-vireo.directive("lockingtextarea", function ($timeout) {
+vireo.directive("lockingtextarea", function ($timeout, $sce) {
     return {
         templateUrl: 'views/directives/lockingTextArea.html',
         restrict: 'E',
@@ -73,6 +73,10 @@ vireo.directive("lockingtextarea", function ($timeout) {
             $scope.nonWysiwygBlur = function ($event) {
                 save();
             };
+
+            $scope.trustAsHtml = function (htmlString) {
+                return $sce.trustAsHtml(htmlString);
+            }
 
         }
     };
