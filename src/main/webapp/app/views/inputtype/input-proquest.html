@@ -1,5 +1,5 @@
 <div>
-  <div class="well" ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value"></div>
+  <div class="well" ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value|trusted"></div>
   <div>
     <input  type="checkbox" 
         ng-model="fieldValue.value" 
