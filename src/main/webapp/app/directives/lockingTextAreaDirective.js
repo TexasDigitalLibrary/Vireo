@@ -76,7 +76,7 @@ vireo.directive("lockingtextarea", function ($timeout, $sce) {
 
             $scope.trustAsHtml = function (htmlString) {
                 return $sce.trustAsHtml(htmlString);
-            }
+            };
 
         }
     };
