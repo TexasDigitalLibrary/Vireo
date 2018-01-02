@@ -32,7 +32,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, optional = false)
+    @ManyToOne(cascade = { REFRESH }, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
