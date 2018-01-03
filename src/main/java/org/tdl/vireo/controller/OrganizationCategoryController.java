@@ -31,7 +31,7 @@ public class OrganizationCategoryController {
 
     @Transactional
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getOrganizationCategories() {
         return new ApiResponse(SUCCESS, organizationCategoryRepo.findAll());
     }

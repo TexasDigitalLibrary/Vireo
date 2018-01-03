@@ -45,7 +45,7 @@ public class UserController {
 
     @Transactional
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PreAuthorize("hasRole('ROLE_REVIEWER')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
     }

@@ -18,7 +18,7 @@ public class PackagerController {
     private AbstractPackagerRepo packagerRepo;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse allPackagers() {
         return new ApiResponse(SUCCESS, packagerRepo.findAll());
     }
