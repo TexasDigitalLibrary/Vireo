@@ -81,6 +81,10 @@ vireo.config(function ($locationProvider, $routeProvider) {
     }).
 
     // Error Routes
+    when('/error/401', {
+        templateUrl: 'views/errors/401.html',
+        controller: 'ErrorPageController'
+    }).
     when('/error/403', {
         templateUrl: 'views/errors/403.html',
         controller: 'ErrorPageController'
