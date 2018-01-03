@@ -79,6 +79,7 @@ import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.email.service.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.user.model.IRole;
 import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
@@ -161,8 +162,17 @@ public class SubmissionController {
     @Transactional
     @RequestMapping("/get-one/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse getOne(@PathVariable Long submissionId) {
-        return new ApiResponse(SUCCESS, submissionRepo.read(submissionId));
+    public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
+        Submission submission = null;
+        if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+            submission = submissionRepo.read(submissionId);
+        } else {
+            submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
+        }
+        if (submission == null) {
+            return new ApiResponse(ERROR,"Submission not found");
+        }
+        return new ApiResponse(SUCCESS, submission);
     }
 
     @Transactional
@@ -188,7 +198,7 @@ public class SubmissionController {
         Submission submissionToDelete = submissionRepo.read(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() >= Role.ROLE_MANAGER.ordinal()) {
+        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
             submissionRepo.delete(submissionId);
         } else {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
