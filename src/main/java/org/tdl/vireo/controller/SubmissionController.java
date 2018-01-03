@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -143,6 +144,9 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Value("${app.document.path:private/}")
+    private String documentPath;
 
     @Transactional
     @RequestMapping("/all")
@@ -639,7 +643,7 @@ public class SubmissionController {
     public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
-        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
+        String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
 
         JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
