@@ -751,47 +751,37 @@ public class SubmissionController {
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
+        HashMap<String,Object> embargoData = (HashMap<String,Object>) data.get("embargo");
+        HashMap<String,Object> advisorData = (HashMap<String,Object>) data.get("advisor");
+        
+        Boolean approveAdvisor = (Boolean) advisorData.get("approve");
+        Boolean approveEmbargo = (Boolean) embargoData.get("approve");
 
-        Boolean approveApplication = (Boolean) data.get("approveApplication");
-        Boolean approveEmbargo = (Boolean) data.get("approveEmbargo");
+        Boolean clearApproveEmbargo = (Boolean) embargoData.get("clearApproval");
+        Boolean clearApproveAdvisor = (Boolean) advisorData.get("clearApproval");
+        
         String message = (String) data.get("message");
-        Boolean clearApproveEmbargo = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveApplication = (Boolean) data.get("clearApproveApplication");
 
-        if (approveApplication != null) {
-            submission.setApproveApplication(approveApplication);
-            String approveApplicationMessage;
-            if (approveApplication) {
-                approveApplicationMessage = "The committee approved the application";
-                submission.setApproveApplicationDate(Calendar.getInstance());
-            } else {
-                approveApplicationMessage = "The committee rejected the Application";
-                submission.setApproveApplicationDate(null);
-            }
-            actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
+        if (approveAdvisor != null && !clearApproveAdvisor) {
+            processAdvisorAction("Application", approveAdvisor, submission);
+            submission.setApproveAdvisor(approveAdvisor);
+            submission.setApproveAdvisorDate(Calendar.getInstance());            
+        }
+        
+        if (clearApproveAdvisor != null && clearApproveAdvisor) {
+            processAdvisorStatusClear("Application", submission.getApproveAdvisor(), submission);
+            submission.clearApproveAdvisor();
         }
 
-        if (approveEmbargo != null) {
+        if (approveEmbargo != null && !clearApproveEmbargo) {
+            processAdvisorAction("Embargo", approveEmbargo,submission);
             submission.setApproveEmbargo(approveEmbargo);
-            String approveEmbargoMessage;
-            if (approveEmbargo) {
-                approveEmbargoMessage = "The committee approved the Embargo Options";
-                submission.setApproveEmbargoDate(Calendar.getInstance());
-            } else {
-                approveEmbargoMessage = "The committee rejected the Embargo Options";
-                submission.setApproveEmbargoDate(null);
-            }
-            actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
+            submission.setApproveEmbargoDate(Calendar.getInstance());
         }
-
+        
         if (clearApproveEmbargo != null && clearApproveEmbargo) {
+            processAdvisorStatusClear("Embargo", submission.getApproveEmbargo(), submission);
             submission.clearApproveEmbargo();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
-        }
-
-        if (clearApproveApplication != null && clearApproveApplication) {
-            submission.clearApproveApplication();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 
         if (message != null) {
@@ -800,6 +790,26 @@ public class SubmissionController {
 
         return new ApiResponse(SUCCESS, submission);
 
+    }
+    
+    private void processAdvisorAction(String type, Boolean approveStatus, Submission submission) {
+        String approveAdvisorMessage;
+        if (approveStatus == true) {
+            approveAdvisorMessage = "The committee approved the "+type+".";
+        } else {
+            approveAdvisorMessage = "The committee rejected the "+type+".";
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
+    }
+    
+    private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
+        String clearAdvisorMessage = "The committee has withdrawn its "+type;
+        if (approvalState == true) {
+            clearAdvisorMessage += " Approval.";
+        } else {
+            clearAdvisorMessage += " Rejection.";                
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);        
     }
 
     private void processEmailWorkflowRules(User user, Submission submission) {
