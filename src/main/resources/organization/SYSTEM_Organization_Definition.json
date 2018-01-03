@@ -725,7 +725,7 @@
         },
         {
           "name":"multipleKeywords",
-          "text":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+          "text":"You can enter multiple keywords.",
           "originatingWorkflowStep":{
             "name":"Verify Personal Information"
           }
@@ -913,7 +913,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"keywords",
+            "value":"dc.subject",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
@@ -929,7 +929,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+          "help":"You can enter multiple keywords.",
           "fieldGlosses":[
             {
               "value":"Keywords",
@@ -944,7 +944,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"dc.subject",
+            "value":"proquest_subject",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
