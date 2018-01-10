@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -26,117 +26,203 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.change = false;
 
-    SubmissionStatusRepo.ready().then(function () {
-        $scope.advancedfeaturesBox.newStatus = submissionStatuses[0];
-    });
+    $scope.batchCommentEmailModal = {};
 
-    var documentTypes = DocumentTypeRepo.getAll();
-    var embargos = EmbargoRepo.getAll();
-    var customActionDefinitions = CustomActionDefinitionRepo.getAll();
-    var organizations = OrganizationRepo.getAll();
-    var organizationCategories = OrganizationCategoryRepo.getAll();
-    var submissionStatuses = SubmissionStatusRepo.getAll();
-    var depositLocations = DepositLocationRepo.getAll();
-
-    var findFirstAssignable = function () {
-        var firstAssignable;
-        for (var i in allUsers) {
-            if (allUsers[i].role === "ROLE_ADMIN" || allUsers[i].role === "ROLE_MANAGER") {
-                firstAssignable = allUsers[i];
-                break;
-            }
-        }
-        return firstAssignable;
-    };
-
-    UserRepo.ready().then(function () {
-        $scope.advancedfeaturesBox.assignee = findFirstAssignable();
-    });
-
-    var allUsers = UserRepo.getAll();
-
-    var resetBatchUpdateStatus = function () {
-        $scope.advancedfeaturesBox.processing = false;
-        $scope.advancedfeaturesBox.assignee = findFirstAssignable();
-        $scope.closeModal();
-    };
-
-    var batchUpdateStatus = function (newStatus) {
-        $scope.advancedfeaturesBox.processing = true;
-        SubmissionRepo.batchUpdateStatus(newStatus).then(function () {
-            resetBatchUpdateStatus();
-            query();
-        });
-    };
-
-    var batchPublish = function (newStatus) {
-        $scope.advancedfeaturesBox.processing = true;
-        SubmissionRepo.batchPublish($scope.advancedfeaturesBox.depositLocation).then(function () {
-            resetBatchUpdateStatus();
-            query();
-        });
-    };
-
-    var resetBatchAssignTo = function () {
-        $scope.advancedfeaturesBox.assignee = allUsers[0];
-        $scope.closeModal();
-    };
-
-    var batchAssignTo = function (assignee) {
-        $scope.advancedfeaturesBox.processing = true;
-        SubmissionRepo.batchAssignTo(assignee).then(function () {
-            resetBatchUpdateStatus();
-            query();
-        });
-    };
-
-    var assignable = function (user) {
-        return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
-    };
-
-    var resetBatchCommentEmail = function () {
-        $scope.closeModal();
-    };
-
-    var batchCommentEmail = function () {
-        console.log("batchCommentEmail");
-    };
+    var userSettingsUnfetched = new UserSettings();
+    userSettingsUnfetched.fetch();
 
     var packagers = PackagerRepo.getAll();
 
-    var resetBatchDownloadExport = function () {
-        $scope.closeModal();
-    };
+    var ready = $q.all([
+        CustomActionDefinitionRepo.getAll(),
+        DepositLocationRepo.getAll(),
+        DocumentTypeRepo.getAll(),
+        EmbargoRepo.getAll(),
+        EmailTemplateRepo.getAll(),
+        OrganizationCategoryRepo.getAll(),
+        OrganizationRepo.getAll(),
+        PackagerRepo.getAll(),
+        SubmissionStatusRepo.getAll(),
+        UserRepo.getAll(),
+        userSettingsUnfetched.ready()
+    ]);
 
-    var batchDownloadExport = function (packager) {
-        $scope.advancedfeaturesBox.exporting = true;
-        SubmissionRepo.batchExport(packager).then(function (data) {
-            saveAs(new Blob([data], {
-                type: 'application/zip'
-            }), packager.name + '.zip');
-            resetBatchUpdateStatus();
-        });
-    };
+    ready.then(function (resolved) {
+        var customActionDefinitions = resolved[0];
+        var depositLocations = resolved[1];
+        var documentTypes = resolved[2];
+        var embargos = resolved[3];
+        var emailTemplates = resolved[4]
+        var organizationCategories = resolved[5];
+        var organizations = resolved[6];
+        var packagers = resolved[7];
+        var submissionStatuses = resolved[8];
+        var allUsers = resolved[9];
+        var userSettings = resolved[10];
 
-    $scope.advancedfeaturesBox = {
-        "title": "Advanced Features:",
-        "processing": false,
-        "depositLocations": depositLocations,
-        "viewUrl": "views/sideboxes/advancedFeatures.html",
-        "resetBatchUpdateStatus": resetBatchUpdateStatus,
-        "batchUpdateStatus": batchUpdateStatus,
-        "submissionStatuses": submissionStatuses,
-        "allUsers": allUsers,
-        "resetBatchAssignTo": resetBatchAssignTo,
-        "assignable": assignable,
-        "batchAssignTo": batchAssignTo,
-        "batchPublish": batchPublish,
-        "resetBatchCommentEmail": resetBatchCommentEmail,
-        "batchCommentEmail": batchCommentEmail,
-        "resetBatchDownloadExport": resetBatchDownloadExport,
-        "batchDownloadExport": batchDownloadExport,
-        "packagers": packagers
-    };
+        resetBatchCommentEmailModal = function (batchCommentEmailModal) {
+            console.log("closing");
+            $scope.closeModal();
+            batchCommentEmailModal.adding = false;
+            batchCommentEmailModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+            batchCommentEmailModal.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
+            batchCommentEmailModal.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "";
+            batchCommentEmailModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+            batchCommentEmailModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
+            batchCommentEmailModal.subject = "";
+            batchCommentEmailModal.message = "";
+            batchCommentEmailModal.actionLogCurrentLimit = $scope.actionLogLimit;
+            batchCommentEmailModal.selectedTemplate = emailTemplates[0];
+        };
+
+        resetBatchCommentEmailModal($scope.batchCommentEmailModal);
+
+        $scope.clearCommentEmailModal = function (commentEmailModal) {
+            resetBatchCommentEmailModal(commentEmailModal);
+        };
+
+        var batchCommentEmail = function () {
+            console.log("batchCommentEmail");
+        };
+
+        $scope.getFilterColumns = function () {
+            return $scope.filterColumns;
+        };
+
+        var addFilter = function (column, gloss) {
+            $scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss, column.exactMatch).then(function () {
+                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                query();
+            });
+        };
+
+        var addExactMatchFilter = function (column, gloss) {
+            column.exactMatch = true;
+            addFilter(column, gloss);
+        };
+
+        var addDateFilter = function (column) {
+
+            var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
+            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, "MM/dd/yyyy");
+    
+            dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
+            dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
+    
+            $scope.activeFilters.addFilter(column.title, dateValue, dateGloss).then(function () {
+                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                query();
+            });
+    
+        };
+
+        var assignable = function (user) {
+            return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
+        };
+
+        var findFirstAssignable = function () {
+            var firstAssignable;
+            for (var i in allUsers) {
+                if (allUsers[i].role === "ROLE_ADMIN" || allUsers[i].role === "ROLE_MANAGER") {
+                    firstAssignable = allUsers[i];
+                    break;
+                }
+            }
+            return firstAssignable;
+        };
+
+        var resetBatchUpdateStatus = function () {
+            $scope.advancedfeaturesBox.processing = false;
+            $scope.advancedfeaturesBox.assignee = findFirstAssignable();
+            $scope.closeModal();
+        };
+
+        var batchUpdateStatus = function (newStatus) {
+            $scope.advancedfeaturesBox.processing = true;
+            SubmissionRepo.batchUpdateStatus(newStatus).then(function () {
+                resetBatchUpdateStatus();
+                query();
+            });
+        };
+
+        var resetBatchAssignTo = function () {
+            $scope.advancedfeaturesBox.assignee = allUsers[0];
+            $scope.closeModal();
+        };
+
+        var batchAssignTo = function (assignee) {
+            $scope.advancedfeaturesBox.processing = true;
+            SubmissionRepo.batchAssignTo(assignee).then(function () {
+                resetBatchUpdateStatus();
+                query();
+            });
+        };
+
+        var batchPublish = function (newStatus) {
+            $scope.advancedfeaturesBox.processing = true;
+            SubmissionRepo.batchPublish($scope.advancedfeaturesBox.depositLocation).then(function () {
+                resetBatchUpdateStatus();
+                query();
+            });
+        };
+
+        var resetBatchDownloadExport = function () {
+            $scope.closeModal();
+        };
+
+        var batchDownloadExport = function (packager) {
+            $scope.advancedfeaturesBox.exporting = true;
+            SubmissionRepo.batchExport(packager).then(function (data) {
+                saveAs(new Blob([data], {
+                    type: 'application/zip'
+                }), packager.name + '.zip');
+                resetBatchUpdateStatus();
+            });
+        };
+
+        $scope.furtherFilterBy = {
+            "title": "Further Filter By:",
+            "viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
+            "getFilterColumns": $scope.getFilterColumns,
+            "addFilter": addFilter,
+            "addExactMatchFilter": addExactMatchFilter,
+            "addDateFilter": addDateFilter,
+            "submissionStatuses": submissionStatuses,
+            "customActionDefinitions": customActionDefinitions,
+            "organizations": organizations,
+            "organizationCategories": organizationCategories,
+            "documentTypes": documentTypes,
+            "embargos": embargos,
+            "allUsers": allUsers,
+            "assignable": assignable,
+            "defaultLimit": 3
+        };
+
+        $scope.advancedfeaturesBox = {
+            "title": "Advanced Features:",
+            "processing": false,
+            "depositLocations": depositLocations,
+            "viewUrl": "views/sideboxes/advancedFeatures.html",
+            "resetBatchUpdateStatus": resetBatchUpdateStatus,
+            "batchUpdateStatus": batchUpdateStatus,
+            "submissionStatuses": submissionStatuses,
+            "allUsers": allUsers,
+            "resetBatchAssignTo": resetBatchAssignTo,
+            "assignable": assignable,
+            "batchAssignTo": batchAssignTo,
+            "batchPublish": batchPublish,
+            "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
+            "batchCommentEmail": batchCommentEmail,
+            "resetBatchDownloadExport": resetBatchDownloadExport,
+            "batchDownloadExport": batchDownloadExport,
+            "packagers": packagers
+        };
+
+        $scope.advancedfeaturesBox.newStatus = submissionStatuses[0];
+        $scope.advancedfeaturesBox.assignee = findFirstAssignable();
+
+        update();
+    });
 
     $scope.filterChange = false;
 
@@ -219,61 +305,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.closeModal();
     };
 
-    $scope.getFilterColumns = function () {
-        return $scope.filterColumns;
-    };
-
     $scope.getFilterColumnOptions = function () {
         return $scope.filterColumnOptions;
     };
 
     $scope.getFilterChange = function () {
         return $scope.filterChange;
-    };
-
-    var addDateFilter = function (column) {
-
-        var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-        var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, "MM/dd/yyyy");
-
-        dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
-        dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
-
-        $scope.activeFilters.addFilter(column.title, dateValue, dateGloss).then(function () {
-            $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
-            query();
-        });
-
-    };
-
-    var addFilter = function (column, gloss) {
-        $scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss, column.exactMatch).then(function () {
-            $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
-            query();
-        });
-    };
-
-    var addExactMatchFilter = function (column, gloss) {
-        column.exactMatch = true;
-        addFilter(column, gloss);
-    };
-
-    $scope.furtherFilterBy = {
-        "title": "Further Filter By:",
-        "viewUrl": "views/sideboxes/furtherFilterBy/furtherFilterBy.html",
-        "getFilterColumns": $scope.getFilterColumns,
-        "addFilter": addFilter,
-        "addExactMatchFilter": addExactMatchFilter,
-        "addDateFilter": addDateFilter,
-        "submissionStatuses": submissionStatuses,
-        "customActionDefinitions": customActionDefinitions,
-        "organizations": organizations,
-        "organizationCategories": organizationCategories,
-        "documentTypes": documentTypes,
-        "embargos": embargos,
-        "allUsers": allUsers,
-        "assignable": assignable,
-        "defaultLimit": 3
     };
 
     var query = function () {
@@ -359,9 +396,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     SubmissionRepo.listen(function () {
         update();
-    });
-
-    update();
+    });  
 
     var listenForManagersSubmissionColumns = function () {
         return $q(function (resolve) {
