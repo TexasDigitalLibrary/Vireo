@@ -309,6 +309,28 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
         };
 
+        $scope.getEmailAddresses = function() {
+            var emailAddresses = [];
+            for (var i in $scope.submission.submissionWorkflowSteps) {
+                var wfs = $scope.submission.submissionWorkflowSteps[i];
+                for (j in wfs.aggregateFieldProfiles) {
+                    var afp = wfs.aggregateFieldProfiles[j];
+                    if (afp.inputType.name == 'INPUT_CONTACT') {
+                        for (k in afp.controlledVocabularies) {
+                            var cv = afp.controlledVocabularies[k];
+                            for (l in cv.dictionary) {
+                                var entry = cv.dictionary[l];
+                                for (m in entry.contacts) {
+                                    emailAddresses.push(entry.contacts[m]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return emailAddresses;
+        }
+
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",

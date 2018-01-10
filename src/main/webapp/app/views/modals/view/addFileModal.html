@@ -68,12 +68,12 @@
 
         <div class="form-group">
           <label for="recipientEmail">To:</label>
-          <input class="form-control" type="email" ng-model="addFileData.recipientEmail" name="recipientEmail">
+          <input class="form-control" type="email" ng-model="addFileData.recipientEmail" name="recipientEmail" uib-typeahead="entry for entry in getEmailAddresses() | filter:$viewValue" />
         </div>
 
         <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
           <label for="ccRecipientEmail">CC:</label>
-          <input class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" name="ccRecipientEmail">
+          <input class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" name="ccRecipientEmail" uib-typeahead="entry for entry in getEmailAddresses() | filter:$viewValue" />
         </div>
 
         <div class="form-group">
