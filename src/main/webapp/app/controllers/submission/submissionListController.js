@@ -26,10 +26,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.change = false;
 
-    $scope.batchCommentEmailModal = {};
+    
 
     var userSettingsUnfetched = new UserSettings();
     userSettingsUnfetched.fetch();
+
 
     var packagers = PackagerRepo.getAll();
 
@@ -44,7 +45,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         PackagerRepo.getAll(),
         SubmissionStatusRepo.getAll(),
         UserRepo.getAll(),
-        userSettingsUnfetched.ready()
+        userSettingsUnfetched
     ]);
 
     ready.then(function (resolved) {
@@ -52,7 +53,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var depositLocations = resolved[1];
         var documentTypes = resolved[2];
         var embargos = resolved[3];
-        var emailTemplates = resolved[4]
+        var emailTemplates = resolved[4];
         var organizationCategories = resolved[5];
         var organizations = resolved[6];
         var packagers = resolved[7];
@@ -60,28 +61,25 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var allUsers = resolved[9];
         var userSettings = resolved[10];
 
-        resetBatchCommentEmailModal = function (batchCommentEmailModal) {
-            console.log("closing");
+        var batchCommentEmail = {};
+
+        var resetBatchCommentEmailModal = function (batchCommentEmail) {
             $scope.closeModal();
-            batchCommentEmailModal.adding = false;
-            batchCommentEmailModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
-            batchCommentEmailModal.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
-            batchCommentEmailModal.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "";
-            batchCommentEmailModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
-            batchCommentEmailModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
-            batchCommentEmailModal.subject = "";
-            batchCommentEmailModal.message = "";
-            batchCommentEmailModal.actionLogCurrentLimit = $scope.actionLogLimit;
-            batchCommentEmailModal.selectedTemplate = emailTemplates[0];
+            batchCommentEmail.adding = false;
+            batchCommentEmail.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+            batchCommentEmail.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
+            batchCommentEmail.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "";
+            batchCommentEmail.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+            batchCommentEmail.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
+            batchCommentEmail.subject = "";
+            batchCommentEmail.message = "";
+            batchCommentEmail.actionLogCurrentLimit = $scope.actionLogLimit;
+            batchCommentEmail.selectedTemplate = emailTemplates[0];
         };
 
-        resetBatchCommentEmailModal($scope.batchCommentEmailModal);
+        resetBatchCommentEmailModal(batchCommentEmail);
 
-        $scope.clearCommentEmailModal = function (commentEmailModal) {
-            resetBatchCommentEmailModal(commentEmailModal);
-        };
-
-        var batchCommentEmail = function () {
+        var addBatchCommentEmail = function () {
             console.log("batchCommentEmail");
         };
 
