@@ -261,8 +261,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                             $scope.submission.sendEmail({
                                 subject: $scope.addFileData.subject,
                                 message: $scope.addFileData.message,
-                                recipientEmail: $scope.addFileData.recipientEmail,
-                                ccRecipientEmail: $scope.addFileData.ccRecipientEmail,
+                                recipientEmail: $scope.recipientEmails.join(';'),
+                                ccRecipientEmail: $scope.ccRecipientEmails.join(';'),
                                 sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                 sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                             }).then(function () {
@@ -307,6 +307,20 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.hasPrimaryDocument = function () {
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+        };
+
+        $scope.recipientEmails = [];
+        $scope.ccRecipientEmails = [];
+
+
+
+        $scope.clearEmailInput = function(model) {
+            $scope[model] = "";
+        };
+
+        $scope.addEmailAddressee = function ($item,$model,$label,$event,destinationModel) {
+console.log("work: "+destinationModel);
+            $scope[destinationModel].push($item);
         };
 
         $scope.activeDocumentBox = {
