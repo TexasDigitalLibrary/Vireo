@@ -235,11 +235,10 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
-        boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
+        boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
-
-            boolean sendCCRecipientEmail = data.get("sendEmailToCCRecipient").equals("true");
+            boolean sendCCRecipientEmail = (boolean) data.get("sendEmailToCCRecipient");
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
@@ -249,10 +248,10 @@ public class SubmissionController {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
-            String preferedEmail = user.getSetting("preferedEmail");
+            String preferredEmail = user.getSetting("preferedEmail");
             user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
             smm.setSubject(subject);
@@ -272,7 +271,7 @@ public class SubmissionController {
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
     	submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
     		Map<String, Object> subMessage = new HashMap<String, Object>(data);
-    		if (data.get("sendEmailToRecipient").equals("true") || data.get("sendEmailToCCRecipient").equals("true")) {
+    		if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
     			subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
     			subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
 			}
