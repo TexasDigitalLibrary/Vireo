@@ -315,12 +315,16 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
 
         $scope.clearEmailInput = function(model) {
-            $scope[model] = "";
+            model = "";
         };
 
         $scope.addEmailAddressee = function ($item,$model,$label,$event,destinationModel) {
-console.log("work: "+destinationModel);
-            $scope[destinationModel].push($item);
+            destinationModel.push($item);
+        };
+
+        $scope.removeEmailAddressee = function (email,destinationModel) {
+            var removeIndex = destinationModel.indexOf(email);
+            destinationModel.splice(removeIndex,1);
         };
 
         $scope.activeDocumentBox = {
