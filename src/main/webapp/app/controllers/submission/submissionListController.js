@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -79,8 +79,20 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         resetBatchCommentEmailModal(batchCommentEmail);
 
-        var addBatchCommentEmail = function () {
-            console.log("batchCommentEmail");
+        var addBatchCommentEmail = function (message) {
+            batchCommentEmail.adding = true;
+            angular.extend(apiMapping.Submission.batchComment, {
+                'data': message
+            });
+            var promise = WsApi.fetch(apiMapping.Submission.batchComment);
+            promise.then(function (res) {
+                if (res.meta && res.meta.status == "INVALID") {
+                    submission.setValidationResults(res.payload.ValidationResults);
+                } else {
+                    resetBatchCommentEmailModal(batchCommentEmail);
+                }
+            });
+            return promise;
         };
 
         var updateTemplate = function (template) {
@@ -216,6 +228,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
             "batchCommentEmail": batchCommentEmail,
+            "addBatchCommentEmail": addBatchCommentEmail,
             "emailTemplates": emailTemplates,
             "updateTemplate": updateTemplate,
             "resetBatchDownloadExport": resetBatchDownloadExport,
