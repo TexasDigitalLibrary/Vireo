@@ -4,7 +4,6 @@
             <span class="modal-close" aria-hidden="true">&times;</span>
         </button>
         <h3 class="modal-title">Batch Comment/Email</h3>
-        {{box.batchCommentEmail}}
     </div>
 
     <div class="modal-body">
@@ -13,12 +12,20 @@
 
                 <div class="form-group email-element email-to" ng-class="{'email-active':box.batchCommentEmail.sendEmailToRecipient&&box.batchCommentEmail.commentVisiblity==='public'}">
                     <label>To:</label>
-                    <input type="text" class="form-control" ng-model="box.batchCommentEmail.recipientEmail" />
+                    <select class="form-control" ng-model="box.batchCommentEmail.recipientEmail">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="advisor">Advisor</option>
+                    </select>
                 </div>
 
                 <div class="form-group email-element email-cc" ng-class="{'email-active': box.batchCommentEmail.sendEmailToCCRecipient&&box.batchCommentEmail.commentVisiblity==='public'}">
                     <label>CC:</label>
-                    <input type="text" class="form-control" ng-model="box.batchCommentEmail.ccRecipientEmail" />
+                    <select class="form-control" ng-model="box.batchCommentEmail.ccRecipientEmail">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="advisor">Advisor</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -31,7 +38,7 @@
                 </div>
 
                 <div class="form-group email-template">
-                    <select class="form-control" ng-model="box.batchCommentEmail.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="box.batchCommentEmail.message=box.batchCommentEmail.selectedTemplate.message">
+                    <select class="form-control" ng-model="box.batchCommentEmail.selectedTemplate" ng-options="template as template.name for template in box.emailTemplates track by template.id" ng-change="box.updateTemplate(box.batchCommentEmail.selectedTemplate)">
                     </select>
                 </div>
 

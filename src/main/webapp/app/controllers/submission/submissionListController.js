@@ -83,6 +83,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             console.log("batchCommentEmail");
         };
 
+        var updateTemplate = function (template) {
+            batchCommentEmail.message = template.message;
+            batchCommentEmail.subject = template.subject;
+        };
+
         $scope.getFilterColumns = function () {
             return $scope.filterColumns;
         };
@@ -211,6 +216,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
             "batchCommentEmail": batchCommentEmail,
+            "emailTemplates": emailTemplates,
+            "updateTemplate": updateTemplate,
             "resetBatchDownloadExport": resetBatchDownloadExport,
             "batchDownloadExport": batchDownloadExport,
             "packagers": packagers
