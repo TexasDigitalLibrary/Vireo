@@ -235,24 +235,23 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
-        boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
-
+        boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
+        
         if (sendRecipientEmail) {
-
-            boolean sendCCRecipientEmail = data.get("sendEmailToCCRecipient").equals("true");
+            boolean sendCCRecipientEmail = (boolean) data.get("sendEmailToCCRecipient");
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(((String) data.get("recipientEmail")).split(";"));
-
+            
             if (sendCCRecipientEmail) {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
-            String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            String preferredEmail = user.getSetting("preferedEmail");
+
+            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
             smm.setSubject(subject);
