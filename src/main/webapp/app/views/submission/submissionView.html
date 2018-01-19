@@ -74,7 +74,7 @@
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
               <div class="col-sm-4">
-                <select class="form-control" ng-model="fieldPredicate" ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' }) track by documentFieldPredicate.value">
+                <select class="form-control" ng-model="fieldPredicate" ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' } | filter: { value: '!LICENSE' }) track by documentFieldPredicate.value">
                   <option value="">-- select document type --</option>
                 </select>
               </div>

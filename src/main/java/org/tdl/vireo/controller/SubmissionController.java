@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -144,6 +145,9 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+    
+    @Value("${app.document.path:private/}")
+    private String documentPath;
 
     @Transactional
     @RequestMapping("/all")
@@ -241,24 +245,23 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
-        boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
+        boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
-
-            boolean sendCCRecipientEmail = data.get("sendEmailToCCRecipient").equals("true");
+            boolean sendCCRecipientEmail = (boolean) data.get("sendEmailToCCRecipient");
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(((String) data.get("recipientEmail")).split(";"));
-
+            
             if (sendCCRecipientEmail) {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
-            String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            String preferredEmail = user.getSetting("preferedEmail");
+            
+            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
             smm.setSubject(subject);
@@ -270,6 +273,33 @@ public class SubmissionController {
 
         actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
 
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/batch-comment")
+    @PreAuthorize("hasRole('REVIEWER')")
+    public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
+    	submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
+    		Map<String, Object> subMessage = new HashMap<String, Object>(data);
+    		if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
+    			subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
+    			subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
+			}
+    		addComment(user, sub.getId(), subMessage);
+        });
+        return new ApiResponse(SUCCESS);
+    }
+    
+    private String findEmailValue(Submission submission, String recipient) {
+    	if (recipient.equals("student")) {
+//    		data.put("recipientEmail", )
+    		return submission.getSubmitter().getSetting("preferedEmail");
+    		
+    	} else if (recipient.equals("advisor")) {
+    		return submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_CONTACT")).get(0).getContacts().get(0);
+    	} else {
+    		return "";
+    	}
     }
 
     @Transactional
@@ -381,7 +411,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-update-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
@@ -439,7 +469,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
     public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
 
@@ -468,7 +498,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
@@ -480,7 +510,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-publish/{depositLocationId}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchPublish(@WeaverUser User user, @PathVariable Long depositLocationId) {
         ApiResponse response = new ApiResponse(SUCCESS);
         SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
@@ -579,7 +609,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateReviewerNotes(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody Map<String, String> requestData) {
         Submission submission = submissionRepo.read(submissionId);
         String reviewerNotes = requestData.get("reviewerNotes");
@@ -625,7 +655,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
@@ -649,7 +679,7 @@ public class SubmissionController {
     public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
-        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
+        String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
 
         JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
@@ -660,7 +690,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
@@ -713,7 +743,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/send-advisor-email")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @Transactional
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
 
@@ -757,47 +787,37 @@ public class SubmissionController {
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
+        HashMap<String,Object> embargoData = (HashMap<String,Object>) data.get("embargo");
+        HashMap<String,Object> advisorData = (HashMap<String,Object>) data.get("advisor");
+        
+        Boolean approveAdvisor = (Boolean) advisorData.get("approve");
+        Boolean approveEmbargo = (Boolean) embargoData.get("approve");
 
-        Boolean approveApplication = (Boolean) data.get("approveApplication");
-        Boolean approveEmbargo = (Boolean) data.get("approveEmbargo");
+        Boolean clearApproveEmbargo = (Boolean) embargoData.get("clearApproval");
+        Boolean clearApproveAdvisor = (Boolean) advisorData.get("clearApproval");
+        
         String message = (String) data.get("message");
-        Boolean clearApproveEmbargo = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveApplication = (Boolean) data.get("clearApproveApplication");
 
-        if (approveApplication != null) {
-            submission.setApproveApplication(approveApplication);
-            String approveApplicationMessage;
-            if (approveApplication) {
-                approveApplicationMessage = "The committee approved the application";
-                submission.setApproveApplicationDate(Calendar.getInstance());
-            } else {
-                approveApplicationMessage = "The committee rejected the Application";
-                submission.setApproveApplicationDate(null);
-            }
-            actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
+        if (approveAdvisor != null && !clearApproveAdvisor) {
+            processAdvisorAction("Application", approveAdvisor, submission);
+            submission.setApproveAdvisor(approveAdvisor);
+            submission.setApproveAdvisorDate(Calendar.getInstance());            
+        }
+        
+        if (clearApproveAdvisor != null && clearApproveAdvisor) {
+            processAdvisorStatusClear("Application", submission.getApproveAdvisor(), submission);
+            submission.clearApproveAdvisor();
         }
 
-        if (approveEmbargo != null) {
+        if (approveEmbargo != null && !clearApproveEmbargo) {
+            processAdvisorAction("Embargo", approveEmbargo,submission);
             submission.setApproveEmbargo(approveEmbargo);
-            String approveEmbargoMessage;
-            if (approveEmbargo) {
-                approveEmbargoMessage = "The committee approved the Embargo Options";
-                submission.setApproveEmbargoDate(Calendar.getInstance());
-            } else {
-                approveEmbargoMessage = "The committee rejected the Embargo Options";
-                submission.setApproveEmbargoDate(null);
-            }
-            actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
+            submission.setApproveEmbargoDate(Calendar.getInstance());
         }
-
+        
         if (clearApproveEmbargo != null && clearApproveEmbargo) {
+            processAdvisorStatusClear("Embargo", submission.getApproveEmbargo(), submission);
             submission.clearApproveEmbargo();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
-        }
-
-        if (clearApproveApplication != null && clearApproveApplication) {
-            submission.clearApproveApplication();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
         }
 
         if (message != null) {
@@ -806,6 +826,26 @@ public class SubmissionController {
 
         return new ApiResponse(SUCCESS, submission);
 
+    }
+    
+    private void processAdvisorAction(String type, Boolean approveStatus, Submission submission) {
+        String approveAdvisorMessage;
+        if (approveStatus == true) {
+            approveAdvisorMessage = "The committee approved the "+type+".";
+        } else {
+            approveAdvisorMessage = "The committee rejected the "+type+".";
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
+    }
+    
+    private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
+        String clearAdvisorMessage = "The committee has withdrawn its "+type;
+        if (approvalState == true) {
+            clearAdvisorMessage += " Approval.";
+        } else {
+            clearAdvisorMessage += " Rejection.";                
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);        
     }
 
     private void processEmailWorkflowRules(User user, Submission submission) {

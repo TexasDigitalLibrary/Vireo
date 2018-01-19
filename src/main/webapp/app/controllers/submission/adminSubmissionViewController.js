@@ -18,7 +18,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
         DepositLocationRepo.getAll(),
-        userSettingsUnfetched.ready()
+        userSettingsUnfetched
     ]);
 
     ready.then(function (resolved) {
@@ -261,8 +261,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                             $scope.submission.sendEmail({
                                 subject: $scope.addFileData.subject,
                                 message: $scope.addFileData.message,
-                                recipientEmail: $scope.addFileData.recipientEmail,
-                                ccRecipientEmail: $scope.addFileData.ccRecipientEmail,
+                                recipientEmail: $scope.recipientEmails.join(';'),
+                                ccRecipientEmail: $scope.ccRecipientEmails.join(';'),
                                 sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                 sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                             }).then(function () {
@@ -307,6 +307,24 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.hasPrimaryDocument = function () {
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+        };
+
+        $scope.recipientEmails = [];
+        $scope.ccRecipientEmails = [];
+
+
+
+        $scope.clearEmailInput = function(model) {
+            model = "";
+        };
+
+        $scope.addEmailAddressee = function ($item,$model,$label,$event,destinationModel) {
+            destinationModel.push($item);
+        };
+
+        $scope.removeEmailAddressee = function (email,destinationModel) {
+            var removeIndex = destinationModel.indexOf(email);
+            destinationModel.splice(removeIndex,1);
         };
 
         $scope.activeDocumentBox = {

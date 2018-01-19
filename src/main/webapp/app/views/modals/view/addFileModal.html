@@ -68,12 +68,14 @@
 
         <div class="form-group">
           <label for="recipientEmail">To:</label>
-          <input class="form-control" type="email" ng-model="addFileData.recipientEmail" name="recipientEmail">
+          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+          <input class="form-control" type="email" ng-model="recipientEmail" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" typeahead-on-select="addEmailAddressee($item,$model,$label,$event,recipientEmails)" typeahead-input-formatter="clearEmailInput(recipientEmail)" />
         </div>
 
         <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
           <label for="ccRecipientEmail">CC:</label>
-          <input class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" name="ccRecipientEmail">
+          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+          <input class="form-control" type="email" ng-model="ccRecipientEmail" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" typeahead-on-select="addEmailAddressee($item,$model,$label,$event,ccRecipientEmails)" typeahead-input-formatter="clearEmailInput(ccRecipientEmail)" />
         </div>
 
         <div class="form-group">

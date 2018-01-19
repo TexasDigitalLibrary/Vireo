@@ -24,7 +24,7 @@
 				</textarea>
 			</div>
 		</div>
-		<div ng-show="locked" class="locking-text-area" ng-bind-html="scopeValue" disabled></div>
+		<div ng-show="locked" class="locking-text-area" ng-bind-html="scopeValue|trusted" disabled></div>
 
 		<div class="hint">{{ hint }}</div>
 	</div>

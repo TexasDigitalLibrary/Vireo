@@ -4,7 +4,16 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope: $scope
     }));
 
-    $scope.shibbolethAttributes = ManagedConfigurationRepo.getAll().shibboleth;
+    $scope.shibbolethAttributes = {
+        UI_SHIBBOLETH_SELECT: {
+            id: 0,
+            name: "UI_SHIBBOLETH_SELECT",
+            value: "Select a Shibboleth Attribute",
+            type: "select"
+        }
+    };
+
+    angular.extend($scope.shibbolethAttributes, ManagedConfigurationRepo.getAll().shibboleth);
 
     $scope.organizationRepo = OrganizationRepo;
 
@@ -43,6 +52,29 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
     $scope.ready = $q.all([ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), FieldGlossRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
 
     $scope.ready.then(function () {
+
+        var resetModalData = function(data) {
+            $scope.modalData = {
+                enabled: true,
+                overrideable: true,
+                inputType: {
+                    "id": 1,
+                    "name": "INPUT_TEXT"
+                },
+                optional: true,
+                repeatable: false,
+                flagged: false,
+                logged: false,
+                hidden: false,
+                fieldGlosses: [],
+                mappedShibAttribute: $scope.shibbolethAttributes.UI_SHIBBOLETH_SELECT,
+                controlledVocabularies: []
+            };
+            if(data !== undefined) {
+                angular.extend($scope.modalData, data);
+                console.log($scope.modalData);
+            }
+        };
 
         $scope.$watch("step", function handleStepChanged(newStep, oldStep) {
             $scope.resetFieldProfiles();
@@ -96,21 +128,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
             $scope.inputFile = false;
 
-            $scope.modalData = {
-                enabled: true,
-                overrideable: true,
-                inputType: {
-                    "id": 1,
-                    "name": "INPUT_TEXT"
-                },
-                optional: true,
-                repeatable: false,
-                flagged: false,
-                logged: false,
-                hidden: false,
-                fieldGlosses: [],
-                controlledVocabularies: []
-            };
+            resetModalData();
+
             angular.extend($scope.documentData.documentType, $scope.documentTypes[0]);
 
             $scope.closeModal();
@@ -160,8 +179,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
         $scope.selectFieldProfile = function (index) {
             var fieldProfile = $scope.step.aggregateFieldProfiles[index];
-            angular.extend($scope.modalData, fieldProfile);
-
+            resetModalData(fieldProfile);
             if ($scope.modalData.fieldPredicate.documentTypePredicate) {
                 angular.forEach($scope.documentTypes, function (documentType) {
                     if (documentType.fieldPredicate.id == $scope.modalData.fieldPredicate.id) {
@@ -170,7 +188,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                     }
                 });
             }
-
         };
 
         $scope.editFieldProfile = function (index) {
@@ -179,7 +196,12 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
-            WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData);
+            if($scope.modalData.mappedShibAttribute.id === 0) {
+                $scope.modalData.mappedShibAttribute = undefined;
+            }
+            WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
+                resetModalData();
+            });
         };
 
         $scope.removeFieldProfile = function () {

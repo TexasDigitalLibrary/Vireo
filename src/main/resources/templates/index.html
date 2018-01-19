@@ -39,7 +39,7 @@
   <!-- Content placed here will appear on every page -->
   <main>
     <nav class="navbar navbar-default">
-      <div class="container-fluid" ng-controller="AuthenticationController">
+      <div class="container-fluid" ng-controller="ApplicationAuthenticationController">
 
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
@@ -86,15 +86,15 @@
                   <a role="menuitem" href="users">Manage Users</a>
                 </li>
 
-                <li ng-if="isAdmin()" role="presentation" class="divider"></li>
-                <li ng-if="isAdmin()" role="presentation" class="dropdown-header">Admin Actions</li>
-                <li ng-if="isAdmin()">
+                <li ng-if="isAdmin() || isManager() || isReviewer()" role="presentation" class="divider"></li>
+                <li ng-if="isAdmin() || isManager() || isReviewer()" role="presentation" class="dropdown-header">Admin Actions</li>
+                <li ng-if="isAdmin() || isManager() || isReviewer()">
                   <a role="menuitem" href="admin/list">List</a>
                 </li>
-                <li ng-if="isAdmin()">
+                <li ng-if="isAdmin() || isManager() || isReviewer()">
                   <a role="menuitem" href="admin/log">Log</a>
                 </li>
-                <li ng-if="isAdmin()">
+                <li ng-if="isAdmin() || isManager()">
                   <a role="menuitem" href="admin/settings">Settings</a>
                 </li>
                 <li role="presentation" class="divider"></li>
@@ -125,7 +125,7 @@
             <li ng-class="{'active': activeTab('/admin/log')}">
               <a href="admin/log">Log</a>
             </li>
-            <li ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
+            <li ng-if="!isReviewer()" ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
               <a href="admin/settings">Settings</a>
             </li>
           </ul>
@@ -228,6 +228,7 @@
 
   <!-- App Constants -->
   <script src="node_modules/weaver-ui-core/app/constants/apiResponseActions.js"></script>
+  <script src="node_modules/weaver-ui-core/app/constants/httpMethodVerbs.js"></script>
 
   <!-- Directives -->
   <script src="node_modules/weaver-ui-core/app/directives/headerDirective.js"></script>
@@ -285,6 +286,7 @@
   <!-- Directives -->
   <script src="directives/accordionDirective.js"></script>
   <script src="directives/actionLogDirective.js"></script>
+  <script src="directives/approvalBlockDirective.js"></script>
   <script src="directives/deHashColorDirective.js"></script>
   <script src="directives/tabsDirective.js"></script>
   <script src="directives/sideBoxDirective.js"></script>
@@ -331,6 +333,7 @@
   <script src="repo/workflowStepRepo.js"></script>
   <script src="repo/embargoRepo.js"></script>
   <script src="repo/userRepo.js"></script>
+  <script src="repo/userSettingsRepo.js"></script>
   <script src="repo/organizationRepo.js"></script>
   <script src="repo/organizationCategoryRepo.js"></script>
   <script src="repo/inputTypeRepo.js"></script>
@@ -390,10 +393,11 @@
   <script src="factories/dragAndDropListenerFactory.js"></script>
 
   <!-- filters -->
-  <script src="filters/fieldValuePerProfile.js"></script>
+  <script src="filters/byDocumentTypePredicate.js"></script>
   <script src="filters/documentFieldValuePerProfile.js"></script>
   <script src="filters/byPrefix.js"></script>
-  <script src="filters/byDocumentTypePredicate.js"></script>
+  <script src="filters/fieldValuePerProfile.js"></script>
+  <script src="filters/trustHtml.js"></script>
 
   <!-- Controllers -->
   <script src="controllers/abstractController.js"></script>
@@ -410,6 +414,7 @@
   <script src="controllers/settingsController.js"></script>
   <script src="controllers/sidebarController.js"></script>
   <script src="controllers/userRepoController.js"></script>
+  <script src="controllers/applicationAuthenticationController.js"></script>
   <script src="controllers/settings/customActionSettingsController.js"></script>
   <script src="controllers/settings/depositLocationRepoController.js"></script>
   <script src="controllers/settings/embargoRepoController.js"></script>
