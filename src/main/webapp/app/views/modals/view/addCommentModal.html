@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="form-group email-template">
-                    <select class="form-control" ng-model="addCommentModal.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addCommentModal.message=addCommentModal.selectedTemplate.message">
+                    <select class="form-control" ng-model="addCommentModal.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addCommentModal.message=addCommentModal.selectedTemplate.message;addCommentModal.subject=addCommentModal.selectedTemplate.subject">
                     </select>
                 </div>
 
