@@ -18,7 +18,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
         DepositLocationRepo.getAll(),
-        userSettingsUnfetched.ready()
+        userSettingsUnfetched
     ]);
 
     ready.then(function (resolved) {
