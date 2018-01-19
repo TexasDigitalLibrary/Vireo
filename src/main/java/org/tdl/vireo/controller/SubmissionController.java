@@ -243,13 +243,13 @@ public class SubmissionController {
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(((String) data.get("recipientEmail")).split(";"));
-
+            
             if (sendCCRecipientEmail) {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
             String preferredEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
+            
             if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
