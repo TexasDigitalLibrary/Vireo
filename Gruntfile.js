@@ -102,6 +102,7 @@ module.exports = function (grunt) {
                     'node_modules/weaver-ui-core/app/config/logging.js',
 
                     'node_modules/weaver-ui-core/app/constants/apiResponseActions.js',
+                    'node_modules/weaver-ui-core/app/constants/httpMethodVerbs.js',
 
                     'node_modules/weaver-ui-core/app/directives/headerDirective.js',
                     'node_modules/weaver-ui-core/app/directives/footerDirective.js',
