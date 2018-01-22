@@ -131,6 +131,31 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     
         };
 
+        var getTypeAheadByPredicateName = function(predicateValue) {
+            var words = [];
+            for (var h in organizations) {
+                var organization = organizations[h];
+                for (var i in organization.aggregateWorkflowSteps) {
+                    var aggWorkflowStep = organization.aggregateWorkflowSteps[i];
+                    for (var j in aggWorkflowStep.aggregateFieldProfiles) {
+                        var currentFieldProfile = aggWorkflowStep.aggregateFieldProfiles[j];
+                        if (currentFieldProfile.fieldPredicate.value === predicateValue) {
+                            for (var k in currentFieldProfile.controlledVocabularies) {
+                                var cv = currentFieldProfile.controlledVocabularies[k];
+                                for (var l in cv.dictionary) {
+                                    var dictionary = cv.dictionary[l];
+                                    if (words.indexOf(cv.dictionary[l].name) == -1) {
+                                        words.push(cv.dictionary[l].name);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return words;
+        };
+
         var assignable = function (user) {
             return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
         };
@@ -210,7 +235,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "embargos": embargos,
             "allUsers": allUsers,
             "assignable": assignable,
-            "defaultLimit": 3
+            "defaultLimit": 3,
+            "getTypeAheadByPredicateName": getTypeAheadByPredicateName
         };
 
         $scope.advancedfeaturesBox = {
