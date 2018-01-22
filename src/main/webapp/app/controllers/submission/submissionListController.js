@@ -270,7 +270,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         for (var k in currentFieldProfile.controlledVocabularies) {
                             var cv = currentFieldProfile.controlledVocabularies[k];
                             for (var l in cv.dictionary) {
-                                words.push(cv.dictionary[l]);
+                                var dictionary = cv.dictionary[l];
+                                if (words.indexOf(cv.dictionary[l].name) == -1) {
+                                    words.push(cv.dictionary[l].name);
+                                }
                             }
                         }
                     }
