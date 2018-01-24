@@ -71,15 +71,6 @@
     }
   },
   {
-    "title": "Graduation semester",
-    "sort": "NONE",
-    "valuePath": [],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_DATE"
-    }
-  },
-  {
     "title": "Primary document",
     "sort": "NONE",
     "valuePath": [],
@@ -126,15 +117,6 @@
   },
   {
     "title": "Committee contact email",
-    "sort": "NONE",
-    "valuePath": [],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_TEXT"
-    }
-  },
-  {
-    "title": "Degree level",
     "sort": "NONE",
     "valuePath": [],
     "status": null,
