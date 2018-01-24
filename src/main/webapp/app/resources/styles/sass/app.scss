@@ -1669,3 +1669,11 @@ input[type=color]:focus {
 .disable-strike-through {
   text-decoration: line-through;
 }
+
+.add-file-section .glyphicon {
+  top: 0;
+}
+
+.add-file-section .input-group-addon.glyphicon.disabled {
+  color: #ababab;
+}

@@ -40,6 +40,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.fieldPredicates = fieldPredicates;
 
+
+        var initializeEmailRecipients = function() {
+            $scope.recipientEmails = [];
+            $scope.ccRecipientEmails = [];
+        };
+
+        initializeEmailRecipients();
+
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
         var organization = $scope.submission.organization;
@@ -192,6 +200,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var resetFileData = function () {
+            initializeEmailRecipients();
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0],
                 sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
@@ -309,17 +318,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
         };
 
-        $scope.recipientEmails = [];
-        $scope.ccRecipientEmails = [];
-
-
-
-        $scope.clearEmailInput = function(model) {
-            model = "";
-        };
-
-        $scope.addEmailAddressee = function ($item,$model,$label,$event,destinationModel) {
-            destinationModel.push($item);
+        $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+            if (emailAddress) {
+                destinationModel.push(emailAddress);
+            }
         };
 
         $scope.removeEmailAddressee = function (email,destinationModel) {
