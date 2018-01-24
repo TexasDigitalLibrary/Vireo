@@ -40,6 +40,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.fieldPredicates = fieldPredicates;
 
+        $scope.recipientEmails = [];
+        $scope.ccRecipientEmails = [];
+
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
         var organization = $scope.submission.organization;
@@ -309,17 +312,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
         };
 
-        $scope.recipientEmails = [];
-        $scope.ccRecipientEmails = [];
-
-
-
-        $scope.clearEmailInput = function(model) {
-            model = "";
-        };
-
-        $scope.addEmailAddressee = function ($item,$model,$label,$event,destinationModel) {
-            destinationModel.push($item);
+        $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+            if (emailAddress) {
+                destinationModel.push(emailAddress);
+            }
         };
 
         $scope.removeEmailAddressee = function (email,destinationModel) {
