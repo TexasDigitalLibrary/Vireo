@@ -12,7 +12,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
     });
 
     $scope.protocols = {
-        "SWORDv1Depositor": "SWORD Version 1",
+        "SWORDv1Depositor": "SWORDv1Depositor",
         "FileDeposit": "File Deposit"
     };
 
