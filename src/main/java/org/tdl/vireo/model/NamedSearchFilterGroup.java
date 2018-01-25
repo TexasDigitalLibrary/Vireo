@@ -4,8 +4,8 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,18 +51,18 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
-    private List<SubmissionListColumn> savedColumns;
+    private Set<SubmissionListColumn> savedColumns;
 
     @Fetch(FetchMode.SELECT)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
-    private List<NamedSearchFilter> namedSearchFilters;
+    private Set<NamedSearchFilter> namedSearchFilters;
 
     public NamedSearchFilterGroup() {
         setPublicFlag(false);
         setColumnsFlag(false);
         setUmiRelease(false);
-        setNamedSearchFilters(new ArrayList<NamedSearchFilter>());
-        setSavedColumns(new ArrayList<SubmissionListColumn>());
+        setNamedSearchFilters(new HashSet<NamedSearchFilter>());
+        setSavedColumns(new HashSet<SubmissionListColumn>());
         setModelValidator(new NamedSearchFilterValidator());
     }
 
@@ -126,11 +126,11 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
         return umiRelease;
     }
 
-    public List<SubmissionListColumn> getSavedColumns() {
+    public Set<SubmissionListColumn> getSavedColumns() {
         return savedColumns;
     }
 
-    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
+    public void setSavedColumns(Set<SubmissionListColumn> savedColumns) {
         this.savedColumns = savedColumns;
     }
 
@@ -155,7 +155,7 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
     /**
      * @return the filterCriteria
      */
-    public List<NamedSearchFilter> getNamedSearchFilters() {
+    public Set<NamedSearchFilter> getNamedSearchFilters() {
         return namedSearchFilters;
     }
 
@@ -163,7 +163,7 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
      * @param namedSearchFilters
      *            the filterCriteria to set
      */
-    public void setNamedSearchFilters(List<NamedSearchFilter> namedSearchFilters) {
+    public void setNamedSearchFilters(Set<NamedSearchFilter> namedSearchFilters) {
         this.namedSearchFilters = namedSearchFilters;
     }
 
