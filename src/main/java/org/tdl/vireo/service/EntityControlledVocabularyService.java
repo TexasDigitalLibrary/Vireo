@@ -99,7 +99,7 @@ public class EntityControlledVocabularyService {
                 }
             }
         } else {
-            logger.warn("No entity controlled vocabulary " + name);
+            logger.debug("No entity controlled vocabulary " + name);
         }
         return dictionary;
     }

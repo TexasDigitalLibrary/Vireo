@@ -24,6 +24,14 @@ import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.weaver.auth.model.Credentials;
 
+
+/**
+ * Activate the Vireo command line interface by passing the console argument to Maven thusly:
+ * mvn clean spring-boot:run –Drun.arguments="console"
+ * @author James Creel
+ * @author Jeremy Huff
+ *
+ */
 @Component
 public class Cli implements CommandLineRunner {
 
