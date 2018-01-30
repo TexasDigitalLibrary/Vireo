@@ -69,6 +69,10 @@ public class UserTest extends AbstractEntityTest {
         namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
             namedSearchFilterGroupRepo.delete(nsf);
         });
+        namedSearchFilterRepo.findAll().forEach(nsf -> {
+            namedSearchFilterRepo.delete(nsf);
+        });
+        filterCriterionRepo.deleteAll();
         userRepo.deleteAll();
         organizationRepo.findAll().forEach(organization -> {
             organizationRepo.delete(organization);

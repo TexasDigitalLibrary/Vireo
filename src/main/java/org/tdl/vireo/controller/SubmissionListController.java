@@ -20,6 +20,7 @@ import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.FilterCriterionRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
@@ -47,6 +48,9 @@ public class SubmissionListController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private FilterCriterionRepo filterCriterionRepo;
 
     @Autowired
     private NamedSearchFilterRepo namedSearchFilterRepo;
@@ -188,7 +192,7 @@ public class SubmissionListController {
             namedSearchFilter = namedSearchFilterRepo.create(submissionListColumnRepo.findByTitle(criterionName));
         }
 
-        namedSearchFilter.addFilter(filterValue, filterGloss);
+        namedSearchFilter.addFilter(filterCriterionRepo.create(filterValue, filterGloss));
 
         namedSearchFilter.setExactMatch(exactMatch);
 

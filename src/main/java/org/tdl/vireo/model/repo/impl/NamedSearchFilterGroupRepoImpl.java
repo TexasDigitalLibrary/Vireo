@@ -23,15 +23,13 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
 
     @Override
     public NamedSearchFilterGroup create(User user) {
-        NamedSearchFilterGroup newNamedSearchFilterGroup = new NamedSearchFilterGroup();
-        newNamedSearchFilterGroup.setUser(user);
+        NamedSearchFilterGroup newNamedSearchFilterGroup = createInMemory(user);
         return namedSearchFilterGroupRepo.save(newNamedSearchFilterGroup);
     }
 
     @Override
     public NamedSearchFilterGroup create(User user, String name) {
-        NamedSearchFilterGroup newNamedSearchFilterGroup = new NamedSearchFilterGroup();
-        newNamedSearchFilterGroup.setUser(user);
+        NamedSearchFilterGroup newNamedSearchFilterGroup = createInMemory(user);
         newNamedSearchFilterGroup.setName(name);
         return namedSearchFilterGroupRepo.save(newNamedSearchFilterGroup);
     }
@@ -52,7 +50,7 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
     }
 
     public NamedSearchFilterGroup createFromFilter(NamedSearchFilterGroup namedSearchFilterGroup) {
-        NamedSearchFilterGroup newNamedSearchFilterGroup = namedSearchFilterGroupRepo.create(namedSearchFilterGroup.getUser());
+        NamedSearchFilterGroup newNamedSearchFilterGroup = createInMemory(namedSearchFilterGroup.getUser());
         newNamedSearchFilterGroup.setName(namedSearchFilterGroup.getName());
         return namedSearchFilterGroupRepo.save(clone(newNamedSearchFilterGroup, namedSearchFilterGroup));
     }
@@ -66,6 +64,12 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
         namedSearchFilterGroup.setNamedSearchFilters(null);
         namedSearchFilterGroup.setSavedColumns(null);
         namedSearchFilterGroupRepo.delete(namedSearchFilterGroup.getId());
+    }
+
+    private NamedSearchFilterGroup createInMemory(User user) {
+        NamedSearchFilterGroup newNamedSearchFilterGroup = new NamedSearchFilterGroup();
+        newNamedSearchFilterGroup.setUser(user);
+        return newNamedSearchFilterGroup;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
@@ -8,8 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
@@ -22,7 +23,7 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private SubmissionListColumn submissionListColumn;
 
-    @ElementCollection(fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE, DETACH }, fetch = EAGER)
     private Set<FilterCriterion> filterCriteria;
 
     @Column(nullable = false)
@@ -80,10 +81,6 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
 
     public void addFilter(FilterCriterion filterCriterion) {
         filterCriteria.add(filterCriterion);
-    }
-
-    public void addFilter(String filterValue, String filterGloss) {
-        addFilter(filterGloss == null ? new FilterCriterion(filterValue) : new FilterCriterion(filterValue, filterGloss));
     }
 
     public void removeFilter(FilterCriterion filter) {

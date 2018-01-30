@@ -13,7 +13,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class NamedSearchFilterTest extends AbstractEntityTest {
 
-    // TODO: rewrite tests!!
+    // TODO: write missing tests!!
 
     @Before
     public void setUp() {
@@ -58,8 +58,15 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         SubmissionListColumn submissionListColumn = submissionListColumnRepo.create("TEST_LABEL", Sort.ASC, Arrays.asList(new String[] { "test.path" }), inputType);
 
         NamedSearchFilter namedSearchFilter = namedSearchFilterRepo.create(submissionListColumn);
-        namedSearchFilter.addFilter(new FilterCriterion("FILTER_ONE"));
-        namedSearchFilter.addFilter(new FilterCriterion("FILTER_TWO"));
+
+        numberOfNamedSearchFilters = namedSearchFilterRepo.count();
+
+        assertEquals("There already exists a named search filter!", 1, numberOfNamedSearchFilters);
+
+        namedSearchFilter.addFilter(filterCriterionRepo.create("FILTER_ONE"));
+        namedSearchFilter.addFilter(filterCriterionRepo.create("FILTER_TWO"));
+
+        assertEquals("There are more filter criterion than expected!", 2, filterCriterionRepo.count());
 
         Set<NamedSearchFilter> namedSearchFilters = new HashSet<NamedSearchFilter>();
         namedSearchFilters.add(namedSearchFilter);
@@ -70,15 +77,11 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         rawNamedSearchFilterGroup.setNamedSearchFilters(namedSearchFilters);
 
-        // TODO: this method call creates too many named search filters!!!
+        // NOTE: this method call also creates new named search filters
         NamedSearchFilterGroup namedSearchFilterGroup = namedSearchFilterGroupRepo.createFromFilter(rawNamedSearchFilterGroup);
 
         assertEquals("There are more named search filter groups than expected!", ++numberOfNamedSearchFilterGroups, namedSearchFilterGroupRepo.count());
 
-        // TODO: fix!!!!!
-        ////////////////////////////////
-        // numberOfNamedSearchFilters++; // should not be incremented twice!!!!
-        ////////////////////////////////
         assertEquals("There are more named search filters than expected!", ++numberOfNamedSearchFilters, namedSearchFilterRepo.count());
 
         Set<NamedSearchFilter> persistedNamedSearchFilters = namedSearchFilterGroup.getNamedSearchFilters();
@@ -107,13 +110,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         creator = userRepo.save(creator);
 
-        int totalNumberOfFilterCriterion = 0;
-
-        for (NamedSearchFilter nsf : namedSearchFilterRepo.findAll()) {
-            totalNumberOfFilterCriterion += nsf.getFilters().size();
-        }
-
-        assertEquals("There are more filter criterion than expected!", 2, totalNumberOfFilterCriterion);
+        assertEquals("There are more filter criterion than expected!", 2, filterCriterionRepo.count());
 
     }
 
@@ -125,6 +122,9 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
         });
+        filterCriterionRepo.deleteAll();
+        submissionListColumnRepo.deleteAll();
+        inputTypeRepo.deleteAll();
         userRepo.deleteAll();
     }
 

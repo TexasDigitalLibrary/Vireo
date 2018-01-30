@@ -22,13 +22,13 @@ import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@JsonIgnoreProperties(value = { "user" }, allowGetters = true)
+// TODO: remove after verified UI completely functional around filters
+// @JsonIgnoreProperties(value = { "user" }, allowGetters = true)
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
