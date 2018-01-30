@@ -144,7 +144,7 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @Value("${app.document.path:private/}")
     private String documentPath;
 
@@ -243,13 +243,13 @@ public class SubmissionController {
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(((String) data.get("recipientEmail")).split(";"));
-            
+
             if (sendCCRecipientEmail) {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
             String preferredEmail = user.getSetting("preferedEmail");
-            
+
             if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
@@ -264,32 +264,32 @@ public class SubmissionController {
         actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
 
     }
-    
+
     @Transactional
     @RequestMapping(value = "/batch-comment")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
-    	submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-    		Map<String, Object> subMessage = new HashMap<String, Object>(data);
-    		if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
-    			subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
-    			subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
-			}
-    		addComment(user, sub.getId(), subMessage);
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
+            Map<String, Object> subMessage = new HashMap<String, Object>(data);
+            if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
+                subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
+                subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
+            }
+            addComment(user, sub.getId(), subMessage);
         });
         return new ApiResponse(SUCCESS);
     }
-    
+
     private String findEmailValue(Submission submission, String recipient) {
-    	if (recipient.equals("student")) {
-//    		data.put("recipientEmail", )
-    		return submission.getSubmitter().getSetting("preferedEmail");
-    		
-    	} else if (recipient.equals("advisor")) {
-    		return submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_CONTACT")).get(0).getContacts().get(0);
-    	} else {
-    		return "";
-    	}
+        if (recipient.equals("student")) {
+            // data.put("recipientEmail", )
+            return submission.getSubmitter().getSetting("preferedEmail");
+
+        } else if (recipient.equals("advisor")) {
+            return submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_CONTACT")).get(0).getContacts().get(0);
+        } else {
+            return "";
+        }
     }
 
     @Transactional
@@ -772,39 +772,40 @@ public class SubmissionController {
     }
 
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
     @Transactional
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
-        HashMap<String,Object> embargoData = (HashMap<String,Object>) data.get("embargo");
-        HashMap<String,Object> advisorData = (HashMap<String,Object>) data.get("advisor");
-        
+        HashMap<String, Object> embargoData = (HashMap<String, Object>) data.get("embargo");
+        HashMap<String, Object> advisorData = (HashMap<String, Object>) data.get("advisor");
+
         Boolean approveAdvisor = (Boolean) advisorData.get("approve");
         Boolean approveEmbargo = (Boolean) embargoData.get("approve");
 
         Boolean clearApproveEmbargo = (Boolean) embargoData.get("clearApproval");
         Boolean clearApproveAdvisor = (Boolean) advisorData.get("clearApproval");
-        
+
         String message = (String) data.get("message");
 
         if (approveAdvisor != null && !clearApproveAdvisor) {
             processAdvisorAction("Application", approveAdvisor, submission);
             submission.setApproveAdvisor(approveAdvisor);
-            submission.setApproveAdvisorDate(Calendar.getInstance());            
+            submission.setApproveAdvisorDate(Calendar.getInstance());
         }
-        
+
         if (clearApproveAdvisor != null && clearApproveAdvisor) {
             processAdvisorStatusClear("Application", submission.getApproveAdvisor(), submission);
             submission.clearApproveAdvisor();
         }
 
         if (approveEmbargo != null && !clearApproveEmbargo) {
-            processAdvisorAction("Embargo", approveEmbargo,submission);
+            processAdvisorAction("Embargo", approveEmbargo, submission);
             submission.setApproveEmbargo(approveEmbargo);
             submission.setApproveEmbargoDate(Calendar.getInstance());
         }
-        
+
         if (clearApproveEmbargo != null && clearApproveEmbargo) {
             processAdvisorStatusClear("Embargo", submission.getApproveEmbargo(), submission);
             submission.clearApproveEmbargo();
@@ -817,25 +818,25 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
 
     }
-    
+
     private void processAdvisorAction(String type, Boolean approveStatus, Submission submission) {
         String approveAdvisorMessage;
         if (approveStatus == true) {
-            approveAdvisorMessage = "The committee approved the "+type+".";
+            approveAdvisorMessage = "The committee approved the " + type + ".";
         } else {
-            approveAdvisorMessage = "The committee rejected the "+type+".";
+            approveAdvisorMessage = "The committee rejected the " + type + ".";
         }
         actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
     }
-    
+
     private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
-        String clearAdvisorMessage = "The committee has withdrawn its "+type;
+        String clearAdvisorMessage = "The committee has withdrawn its " + type;
         if (approvalState == true) {
             clearAdvisorMessage += " Approval.";
         } else {
-            clearAdvisorMessage += " Rejection.";                
+            clearAdvisorMessage += " Rejection.";
         }
-        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);        
+        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
     }
 
     private void processEmailWorkflowRules(User user, Submission submission) {

@@ -13,52 +13,48 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<NamedSearchFilterGroup, NamedSearchFilterGroupRepo> implements NamedSearchFilterGroupRepoCustom {
 
     @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
     @Autowired
-    private NamedSearchFilterRepo namedSerachFilterRepo;
+    private NamedSearchFilterRepo namedSearchFilterRepo;
 
     @Autowired
     private UserRepo userRepo;
 
     @Override
     public NamedSearchFilterGroup create(User user) {
-        NamedSearchFilterGroup newNamedSearchFilter = new NamedSearchFilterGroup();
-        newNamedSearchFilter.setUser(user);
-
-        return namedSearchFilterRepo.save(newNamedSearchFilter);
+        NamedSearchFilterGroup newNamedSearchFilterGroup = new NamedSearchFilterGroup();
+        newNamedSearchFilterGroup.setUser(user);
+        return namedSearchFilterGroupRepo.save(newNamedSearchFilterGroup);
     }
 
     @Override
     public NamedSearchFilterGroup create(User user, String name) {
-        NamedSearchFilterGroup newNamedSearchFilter = new NamedSearchFilterGroup();
-        newNamedSearchFilter.setUser(user);
-        newNamedSearchFilter.setName(name);
-        return namedSearchFilterRepo.save(newNamedSearchFilter);
+        NamedSearchFilterGroup newNamedSearchFilterGroup = new NamedSearchFilterGroup();
+        newNamedSearchFilterGroup.setUser(user);
+        newNamedSearchFilterGroup.setName(name);
+        return namedSearchFilterGroupRepo.save(newNamedSearchFilterGroup);
     }
 
     public NamedSearchFilterGroup clone(NamedSearchFilterGroup newNamedSearchFilterGroup, NamedSearchFilterGroup namedSearchFilterGroup) {
         newNamedSearchFilterGroup.setPublicFlag(namedSearchFilterGroup.getPublicFlag());
         newNamedSearchFilterGroup.setUmiRelease(namedSearchFilterGroup.getUmiRelease());
         newNamedSearchFilterGroup.setColumnsFlag(namedSearchFilterGroup.getColumnsFlag());
-        namedSearchFilterGroup.getNamedSearchFilters().forEach(filterCriterion -> {
-            newNamedSearchFilterGroup.addFilterCriterion(namedSerachFilterRepo.cloneFilterCriterion(filterCriterion));
+        namedSearchFilterGroup.getNamedSearchFilters().forEach(namedSearchFilter -> {
+            newNamedSearchFilterGroup.addFilterCriterion(namedSearchFilterRepo.clone(namedSearchFilter));
         });
-
         if (newNamedSearchFilterGroup.getColumnsFlag()) {
             namedSearchFilterGroup.getSavedColumns().forEach(column -> {
                 newNamedSearchFilterGroup.addSavedColumn(column);
             });
         }
-
         return newNamedSearchFilterGroup;
     }
 
     public NamedSearchFilterGroup createFromFilter(NamedSearchFilterGroup namedSearchFilterGroup) {
-        NamedSearchFilterGroup newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilterGroup.getUser());
-        newNamedSearchFilter.setName(namedSearchFilterGroup.getName());
-
-        return namedSearchFilterRepo.save(clone(newNamedSearchFilter, namedSearchFilterGroup));
+        NamedSearchFilterGroup newNamedSearchFilterGroup = namedSearchFilterGroupRepo.create(namedSearchFilterGroup.getUser());
+        newNamedSearchFilterGroup.setName(namedSearchFilterGroup.getName());
+        return namedSearchFilterGroupRepo.save(clone(newNamedSearchFilterGroup, namedSearchFilterGroup));
     }
 
     @Override
@@ -69,7 +65,7 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
         namedSearchFilterGroup.setUser(null);
         namedSearchFilterGroup.setNamedSearchFilters(null);
         namedSearchFilterGroup.setSavedColumns(null);
-        namedSearchFilterRepo.delete(namedSearchFilterGroup.getId());
+        namedSearchFilterGroupRepo.delete(namedSearchFilterGroup.getId());
     }
 
     @Override

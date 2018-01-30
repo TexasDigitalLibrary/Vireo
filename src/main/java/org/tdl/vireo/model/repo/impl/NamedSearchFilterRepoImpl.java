@@ -11,28 +11,28 @@ import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearchFilter, NamedSearchFilterRepo> implements NamedSearchFilterRepoCustom {
 
     @Autowired
-    private NamedSearchFilterRepo filterCriterionRepo;
+    private NamedSearchFilterRepo namedSearchFilterRepo;
 
     @Override
     public NamedSearchFilter create(SubmissionListColumn submissionListColumn) {
-        NamedSearchFilter fc = new NamedSearchFilter();
-        fc.setName(submissionListColumn.getTitle());
-        fc.setSubmissionListColumn(submissionListColumn);
-        return filterCriterionRepo.save(fc);
+        NamedSearchFilter namedSearchFilter = new NamedSearchFilter();
+        namedSearchFilter.setName(submissionListColumn.getTitle());
+        namedSearchFilter.setSubmissionListColumn(submissionListColumn);
+        return namedSearchFilterRepo.save(namedSearchFilter);
     }
 
-    public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter namedSearchFilter) {
-        NamedSearchFilter newNamedSearchFilter = filterCriterionRepo.create(namedSearchFilter.getSubmissionListColumn());
+    public NamedSearchFilter clone(NamedSearchFilter namedSearchFilter) {
+        NamedSearchFilter newNamedSearchFilter = namedSearchFilterRepo.create(namedSearchFilter.getSubmissionListColumn());
 
         newNamedSearchFilter.setName(namedSearchFilter.getName());
-        newNamedSearchFilter.setAllColumnSearch(namedSearchFilter.getAllColumnSearch());        
+        newNamedSearchFilter.setAllColumnSearch(namedSearchFilter.getAllColumnSearch());
         newNamedSearchFilter.setExactMatch(namedSearchFilter.getExactMatch());
-        
+
         namedSearchFilter.getFilters().forEach(filter -> {
             newNamedSearchFilter.addFilter(filter);
         });
 
-        return filterCriterionRepo.save(newNamedSearchFilter);
+        return namedSearchFilterRepo.save(newNamedSearchFilter);
     }
 
     @Override

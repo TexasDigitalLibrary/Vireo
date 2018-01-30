@@ -38,10 +38,12 @@ import org.tdl.vireo.model.repo.GraduationMonthRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
+import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
@@ -407,7 +409,13 @@ public abstract class AbstractEntityTest {
     protected OrganizationRepo organizationRepo;
 
     @Autowired
-    protected NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    protected SubmissionListColumnRepo submissionListColumnRepo;
+
+    @Autowired
+    protected NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+
+    @Autowired
+    protected NamedSearchFilterRepo namedSearchFilterRepo;
 
     @Autowired
     protected AbstractPackagerRepo abstractPackagerRepo;
