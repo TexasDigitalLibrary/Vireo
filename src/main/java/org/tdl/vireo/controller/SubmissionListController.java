@@ -145,7 +145,6 @@ public class SubmissionListController {
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
-
     }
 
     @RequestMapping("/active-filters")
