@@ -7,13 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-
-import edu.tamu.weaver.WeaverInitializer;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
-public class Application extends WeaverInitializer {
+public class Application extends SpringBootServletInitializer {
 
     private final static Logger LOG = LoggerFactory.getLogger(Application.class);
 

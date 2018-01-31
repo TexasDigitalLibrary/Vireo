@@ -1,0 +1,87 @@
+<div class="form-group" ng-class="{ 'has-error': form[property].$invalid && form[property].$dirty }">
+
+ 	<div ng-if="type === undefined || type == 'text' || type == 'password'">
+	 	<label ng-if="label" for="{{property}}-input">{{label}}</label>
+		<div ng-class="{ 'input-group': toolTip !== undefined }">
+			<input
+        ng-if="!repeatable"
+				id="{{property}}"
+				name="{{property}}"
+				type="{{type}}"
+				class="form-control"
+				placeholder="{{placeholder}}"
+				aria-describedby="{{label}}"
+				autocomplete="{{autocomplete}}"
+				uib-typeahead="data as data[typeaheadproperty] for data in typeahead | filter:$viewValue"
+				ng-model="model[property]"
+				ng-keydown="keydown($event)"
+				ng-blur="blur($event)"
+				ng-required="validations[property].required.value"
+				ng-minlength="validations[property].minlength.value"
+				ng-maxlength="validations[property].maxlength.value"
+				ng-pattern="validations[property].pattern.value"/>
+
+      <div class="validated-input-repeatable" ng-if="repeatable" class="row" ng-repeat="member in getValues(model[property]) track by $index">
+
+        <div class="col-xs-10">
+
+					<input
+            id="{{property}}"
+            name="{{property}}"
+            type="{{type}}"
+            class="form-control"
+            placeholder="{{placeholder}}"
+            aria-describedby="{{label}}"
+            autocomplete="{{autocomplete}}"
+            uib-typeahead="data as data[typeaheadproperty] for data in typeahead | filter:$viewValue"
+            ng-model="model[property][$index]"
+            ng-keydown="keydown($event)"
+            ng-blur="blur($event)"
+            ng-required="validations[property].required.value"
+            ng-minlength="validations[property].minlength.value"
+            ng-maxlength="validations[property].maxlength.value"
+            ng-pattern="validations[property].pattern.value"/>
+
+        </div>
+
+        <div class="col-xs-2">
+          <div>
+            <button ng-if="repeatable && !$first" ng-click="removeMember($index)" class="btn btn-danger"> - </button>
+            <button ng-if="repeatable && $first" ng-click="addMember()" class="btn btn-primary"> + </button>
+          </div>
+        </div>
+
+      </div>
+
+			<span ng-if="toolTip" class="input-group-addon">
+				<span ng-if="!inProgress" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ toolTip }}"></span>
+				<span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
+			</span>
+		</div>
+		<span ng-if="hint">{{ hint }}</span>
+	</div>
+
+	<div ng-if="type == 'checkbox'">
+		<label ng-if="label" for="{{property}}-input" class="checkbox">{{label}}</label>
+		<div class="checkbox-inline">
+			<input
+				id="{{property}}"
+				name="{{property}}"
+				type="{{type}}"
+				ng-change="change($event)"
+				ng-model="model[property]"
+				ng-false-value="{{falsevalue ? falsevalue : false}}"
+				ng-true-value="{{truevalue ? truevalue : true}}"
+				aria-describedby="{{label}}"/>
+			<span>{{placeholder}}</span>
+		</div>
+	</div>
+
+	<validationmessage
+		type="input"
+		property="{{property}}"
+		form="form"
+		validations="validations"
+		results="results">
+	</validationmessage>
+</div>

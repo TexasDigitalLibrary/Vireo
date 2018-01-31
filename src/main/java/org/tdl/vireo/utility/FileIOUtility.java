@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
-import org.tdl.vireo.Application;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +58,7 @@ public class FileIOUtility {
     }
 
     public void delete(String relativePath) throws IOException {
-        Files.delete(Paths.get(getPath(relativePath)));
+        Files.delete(Paths.get(FileHelperUtility.getPath(relativePath)));
     }
 
     public String write(InputStream is, String relativePath) throws IOException {
@@ -83,7 +82,7 @@ public class FileIOUtility {
     }
 
     public JsonNode getFileInfo(String relativePath) throws IOException {
-        Path path = Paths.get(getPath(relativePath));
+        Path path = Paths.get(FileHelperUtility.getPath(relativePath));
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
@@ -96,30 +95,26 @@ public class FileIOUtility {
     }
 
     public Path getAbsolutePath(String relativePath) {
-        return Paths.get(getPath(relativePath));
-    }
-
-    private String getPath(String relativePath) {
-        String path = Application.BASE_PATH + relativePath;
-        if (path.contains(":") && path.charAt(0) == '/') {
-            path = path.substring(1, path.length());
-        }
-        return path;
+        return Paths.get(FileHelperUtility.getPath(relativePath));
     }
 
     private Path processRelativePath(String relativePath) throws IOException {
-        Path path = Paths.get(getPath(relativePath));
+        Path path = Paths.get(FileHelperUtility.getPath(relativePath));
         Path parentDir = path.getParent();
         if (!Files.exists(parentDir)) {
             Files.createDirectories(parentDir);
         }
         return path;
     }
+    
+    public Resource getResource(String resourcePath) {
+    	return resourcePatternResolver.getResource(resourcePath);
+    }
 
     public File getFileFromResource(String resourcePath) throws IOException {
         Resource resource = resourcePatternResolver.getResource(resourcePath);
         if (!resource.getURL().toString().startsWith("jar:")) {
-            return resource.getFile();
+            return getResource(resourcePath).getFile();
         } // else (we're inside a war/jar)
         File resourceFile = File.createTempFile("temp", ".tmp");
         resourceFile.deleteOnExit();

@@ -18,7 +18,7 @@ public class SubmissionStatusController {
     private SubmissionStatusRepo submissionStatusRepo;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAllSubmissionStatuses() {
         return new ApiResponse(SUCCESS, submissionStatusRepo.findAll());
     }

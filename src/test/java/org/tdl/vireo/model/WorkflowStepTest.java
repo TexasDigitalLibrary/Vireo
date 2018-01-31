@@ -1377,8 +1377,8 @@ public class WorkflowStepTest extends AbstractEntityTest {
         fieldPredicateRepo.deleteAll();
         assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
 
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
+        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
+            namedSearchFilterGroupRepo.delete(nsf);
         });
 
         userRepo.deleteAll();

@@ -1,0 +1,65 @@
+<div id="email-templates" class="row" ng-controller="EmailTemplateRepoController">
+
+    <validationmessage results="emailTemplateRepo.getValidationResults()"></validationmessage>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <button
+                class="btn btn-default modal-add-btn"
+                ng-click="openModal('#emailTemplatesNewModal')">
+                Add Email Template
+            </button>
+
+            <div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog which allows the creation of a new email template."></div>
+
+            <p ng-if="emailTemplates.length == 0">Add new email template</p>
+
+            <draganddroplist
+                dragging="dragging"
+                scope-value="emailTemplates"
+                properties='["name"]'
+                item-view='views/directives/dragAndDropEmailTemplates.html'
+                listeners='dragControlListeners'
+                edit='launchEditModal(index)'
+                sort-label='Email Template'
+                sort-column='name'
+                sort-action='sortAction'
+                sort-method='sortEmailTemplates(column)'>
+            </draganddroplist>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="col-md-10 col-md-offset-1">
+            <trashcan
+                id="{{trashCanId}}"
+                dragging="dragging"
+                listeners='dragControlListeners'>
+            </trashcan>
+        </div>
+    </div>
+
+    <modal
+        modal-id="emailTemplatesNewModal"
+        modal-view="views/modals/settings/emailTemplatesNewModal.html"
+        modal-header-class="modal-header-primary"
+        wvr-modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="emailTemplatesEditModal"
+        modal-view="views/modals/settings/emailTemplatesEditModal.html"
+        modal-header-class="modal-header-primary"
+        wvr-modal-backdrop="static"
+        modal-fullscreen="true">
+    </modal>
+
+    <modal
+        modal-id="emailTemplatesConfirmRemoveModal"
+        modal-view="views/modals/settings/emailTemplatesConfirmRemoveModal.html"
+        modal-header-class="modal-header-danger"
+        wvr-modal-backdrop="static">
+    </modal>
+
+</div>

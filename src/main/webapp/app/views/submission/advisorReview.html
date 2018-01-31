@@ -1,0 +1,58 @@
+<div class="container review-page">
+  <div class="submission-view-container">
+    <div class="submission-view-top">
+
+      <h1 class="center">Review Application</h1>
+      <div class="student-submission-loader" ng-class="{'ready': advisorSubmissionRepoReady}">
+        <span><span class="glyphicon glyphicon-refresh spinning"></span>Loading Submission ...</span>
+      </div>
+
+      <reviewsubmissionsfields submission="submission" filter-optional="true" hide-links="true" ng-if="advisorSubmissionRepoReady"></reviewsubmissionsfields>
+
+      <div class="row advisor-review-row">
+        <h3>Application Activity</h3>
+        <hr/>
+        <div class="col-md-10 col-md-offset-1">
+          <actionlog  ng-if="submission" submission="submission" public="'true'"></actionlog>
+        </div>
+      </div>
+
+      <div class="row advisor-review-row">
+        <h3>Approval</h3>
+        <hr>
+
+        <form class="advisor-review-form">
+          <approvalblock type="'embargo'" approval-proxy="approval.embargo" status="submission.approveEmbargo" status-date="submission.approveEmbargoDate"></approvalblock>
+          <approvalblock type="'application'" approval-proxy="approval.advisor" status="submission.approveAdvisor" status-date="submission.approveAdvisorDate"></approvalblock>
+
+          <div class="row">
+            <div class="col-sm-2 col-sm-offset-1 col-xs-12">
+              <label>Comments:</label>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+              <div class="form-group">
+                <textarea class="form-control" ng-model="approval.message"></textarea>
+              </div>
+            </div>
+            <div class="col-xs-3"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 center">
+              <button class="btn btn-primary" ng-disabled="disableCheck(approval)" ng-click="addComment()">Submit
+                <span class="glyphicon glyphicon-refresh spinning" ng-if="approval.updating"></span>
+              </button>
+              <span ng-if="disableCheck(approval) && !approval.updating" class="glyphicon glyphicon-info-sign text-danger" tooltip="A comment is required."></div>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="submission-view-bottom">
+        <submissiondialog submission="submission" messages="messages" type="advisor"></submissiondialog>
+      </div>
+
+    </div>
+  </div>

@@ -1,0 +1,78 @@
+<form>
+    <div class="modal-header {{attr.modalHeaderClass}}">
+        <button type="button" class="close" ng-click="box.resetBatchCommentEmailModal(box.batchCommentEmail)" aria-title="Close">
+            <span class="modal-close" aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title">Batch Comment/Email</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <div class="form-group email-element email-to" ng-class="{'email-active':box.batchCommentEmail.sendEmailToRecipient&&box.batchCommentEmail.commentVisiblity==='public'}">
+                    <label>To:</label>
+                    <select class="form-control" ng-model="box.batchCommentEmail.recipientEmail">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="advisor">Advisor</option>
+                    </select>
+                </div>
+
+                <div class="form-group email-element email-cc" ng-class="{'email-active': box.batchCommentEmail.sendEmailToCCRecipient&&box.batchCommentEmail.commentVisiblity==='public'}">
+                    <label>CC:</label>
+                    <select class="form-control" ng-model="box.batchCommentEmail.ccRecipientEmail">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="advisor">Advisor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject:</label>
+                    <input type="text" class="form-control" ng-model="box.batchCommentEmail.subject" />
+                </div>
+
+                <div class="form-group comment-body">
+                    <textarea class="form-control" ng-model="box.batchCommentEmail.message"></textarea>
+                </div>
+
+                <div class="form-group email-template">
+                    <select class="form-control" ng-model="box.batchCommentEmail.selectedTemplate" ng-options="template as template.name for template in box.emailTemplates track by template.id" ng-change="box.updateTemplate(box.batchCommentEmail.selectedTemplate)">
+                    </select>
+                </div>
+
+                <div class="form-group public-private">
+
+                    <div class="radio">
+                    <label><input type="radio" name="optradio" value="public" ng-model="box.batchCommentEmail.commentVisiblity">Comment is public</label>
+                    </div>
+
+                    <div class="recipient-options email-element" ng-class="{'email-active': box.batchCommentEmail.commentVisiblity==='public'}">
+                        <div class="checkbox">
+                        <label><input type="checkbox" ng-model="box.batchCommentEmail.sendEmailToRecipient" ng-change="!box.batchCommentEmail.sendEmailToRecipient?box.batchCommentEmail.sendEmailToCCRecipient=sendEmailToRecipient:box.batchCommentEmail.sendEmailToCCRecipient=box.batchCommentEmail.sendEmailToCCRecipient">Add Email Recipient</label>
+                        </div>
+                        <div class="checkbox">
+                        <label><input type="checkbox" ng-model="box.batchCommentEmail.sendEmailToCCRecipient" ng-disabled="!box.batchCommentEmail.sendEmailToRecipient">Add CC Recipient</label>
+                        </div>
+                    </div>
+
+                    <div class="radio">
+                    <label><input type="radio" name="optradio" value="private" ng-model="box.batchCommentEmail.commentVisiblity" ng-click="box.batchCommentEmail.sendEmailToRecipient=false;box.batchCommentEmail.sendEmailToCCRecipient=false">Comment is private</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="box.resetBatchCommentEmailModal(box.batchCommentEmail)" ng-disabled="box.batchCommentEmail.adding">Cancel</button>
+            <button type="button" class="btn btn-primary" ng-click="box.addBatchCommentEmail(box.batchCommentEmail)" ng-disabled="box.batchCommentEmail.adding">
+                <span ng-if="!box.batchCommentEmail.adding">Comment</span>
+                <span ng-if="box.batchCommentEmail.adding">
+                    Adding Comment
+                    <span class="glyphicon glyphicon-refresh spinning"></span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>

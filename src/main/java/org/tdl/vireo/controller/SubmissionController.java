@@ -21,8 +21,12 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,11 +80,14 @@ import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.email.service.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.user.model.IRole;
 import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
 @RequestMapping("/submission")
 public class SubmissionController {
+
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
@@ -139,6 +146,9 @@ public class SubmissionController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Value("${app.document.path:private/}")
+    private String documentPath;
+
     @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
@@ -156,8 +166,17 @@ public class SubmissionController {
     @Transactional
     @RequestMapping("/get-one/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse getOne(@PathVariable Long submissionId) {
-        return new ApiResponse(SUCCESS, submissionRepo.read(submissionId));
+    public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
+        Submission submission = null;
+        if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+            submission = submissionRepo.read(submissionId);
+        } else {
+            submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
+        }
+        if (submission == null) {
+            return new ApiResponse(ERROR,"Submission not found");
+        }
+        return new ApiResponse(SUCCESS, submission);
     }
 
     @Transactional
@@ -183,7 +202,7 @@ public class SubmissionController {
         Submission submissionToDelete = submissionRepo.read(submissionId);
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() >= Role.ROLE_MANAGER.ordinal()) {
+        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
             submissionRepo.delete(submissionId);
         } else {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
@@ -226,11 +245,10 @@ public class SubmissionController {
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
-        boolean sendRecipientEmail = data.get("sendEmailToRecipient").equals("true");
+        boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
-
-            boolean sendCCRecipientEmail = data.get("sendEmailToCCRecipient").equals("true");
+            boolean sendCCRecipientEmail = (boolean) data.get("sendEmailToCCRecipient");
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
@@ -240,10 +258,10 @@ public class SubmissionController {
                 smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
             }
 
-            String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            String preferredEmail = user.getSetting("preferedEmail");
+
+            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
             smm.setSubject(subject);
@@ -255,6 +273,33 @@ public class SubmissionController {
 
         actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
 
+    }
+
+    @Transactional
+    @RequestMapping(value = "/batch-comment")
+    @PreAuthorize("hasRole('REVIEWER')")
+    public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
+            Map<String, Object> subMessage = new HashMap<String, Object>(data);
+            if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
+                subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
+                subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
+            }
+            addComment(user, sub.getId(), subMessage);
+        });
+        return new ApiResponse(SUCCESS);
+    }
+
+    private String findEmailValue(Submission submission, String recipient) {
+        if (recipient.equals("student")) {
+            // data.put("recipientEmail", )
+            return submission.getSubmitter().getSetting("preferedEmail");
+
+        } else if (recipient.equals("advisor")) {
+            return submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_CONTACT")).get(0).getContacts().get(0);
+        } else {
+            return "";
+        }
     }
 
     @Transactional
@@ -366,7 +411,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-update-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
@@ -424,7 +469,7 @@ public class SubmissionController {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
     public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
 
@@ -453,7 +498,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
@@ -465,7 +510,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping("/batch-publish/{depositLocationId}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchPublish(@WeaverUser User user, @PathVariable Long depositLocationId) {
         ApiResponse response = new ApiResponse(SUCCESS);
         SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
@@ -564,7 +609,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateReviewerNotes(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody Map<String, String> requestData) {
         Submission submission = submissionRepo.read(submissionId);
         String reviewerNotes = requestData.get("reviewerNotes");
@@ -610,7 +655,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
         return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
     }
@@ -634,7 +679,7 @@ public class SubmissionController {
     public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
-        String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName;
+        String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
 
         JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
@@ -645,7 +690,7 @@ public class SubmissionController {
 
     @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
@@ -698,7 +743,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/send-advisor-email")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     @Transactional
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
 
@@ -737,45 +782,71 @@ public class SubmissionController {
     }
 
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
     @Transactional
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
+        HashMap<String, Object> embargoData = (HashMap<String, Object>) data.get("embargo");
+        HashMap<String, Object> advisorData = (HashMap<String, Object>) data.get("advisor");
 
-        Boolean approveApplicationNode = (Boolean) data.get("approveApplication");
-        Boolean approveEmbargoNode = (Boolean) data.get("approveEmbargo");
-        String messageNode = (String) data.get("message");
-        Boolean clearApproveEmbargoNode = (Boolean) data.get("clearApproveEmbargo");
-        Boolean clearApproveApplicationNode = (Boolean) data.get("clearApproveApplication");
+        Boolean approveAdvisor = (Boolean) advisorData.get("approve");
+        Boolean approveEmbargo = (Boolean) embargoData.get("approve");
 
-        if (approveApplicationNode != null) {
-            submission.setApproveApplication(approveApplicationNode);
-            String approveApplicationMessage = approveApplicationNode ? "The committee approved the application" : "The committee rejected the Application";
-            actionLogRepo.createAdvisorPublicLog(submission, approveApplicationMessage);
+        Boolean clearApproveEmbargo = (Boolean) embargoData.get("clearApproval");
+        Boolean clearApproveAdvisor = (Boolean) advisorData.get("clearApproval");
+
+        String message = (String) data.get("message");
+
+        if (approveAdvisor != null && !clearApproveAdvisor) {
+            processAdvisorAction("Application", approveAdvisor, submission);
+            submission.setApproveAdvisor(approveAdvisor);
+            submission.setApproveAdvisorDate(Calendar.getInstance());
         }
 
-        if (approveEmbargoNode != null) {
-            submission.setApproveEmbargo(approveEmbargoNode);
-            String approveEmbargoMessage = approveEmbargoNode ? "The committee approved the Embargo Options" : "The committee rejected the Embargo Options";
-            actionLogRepo.createAdvisorPublicLog(submission, approveEmbargoMessage);
+        if (clearApproveAdvisor != null && clearApproveAdvisor) {
+            processAdvisorStatusClear("Application", submission.getApproveAdvisor(), submission);
+            submission.clearApproveAdvisor();
         }
 
-        if (clearApproveEmbargoNode != null && clearApproveEmbargoNode) {
+        if (approveEmbargo != null && !clearApproveEmbargo) {
+            processAdvisorAction("Embargo", approveEmbargo, submission);
+            submission.setApproveEmbargo(approveEmbargo);
+            submission.setApproveEmbargoDate(Calendar.getInstance());
+        }
+
+        if (clearApproveEmbargo != null && clearApproveEmbargo) {
+            processAdvisorStatusClear("Embargo", submission.getApproveEmbargo(), submission);
             submission.clearApproveEmbargo();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Embargo Approval.");
         }
 
-        if (clearApproveApplicationNode != null && clearApproveApplicationNode) {
-            submission.clearApproveApplication();
-            actionLogRepo.createAdvisorPublicLog(submission, "The committee has withdrawn its Application Approval.");
+        if (message != null) {
+            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + message);
         }
-
-        if (messageNode != null)
-            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + messageNode);
 
         return new ApiResponse(SUCCESS, submission);
 
+    }
+
+    private void processAdvisorAction(String type, Boolean approveStatus, Submission submission) {
+        String approveAdvisorMessage;
+        if (approveStatus == true) {
+            approveAdvisorMessage = "The committee approved the " + type + ".";
+        } else {
+            approveAdvisorMessage = "The committee rejected the " + type + ".";
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
+    }
+
+    private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
+        String clearAdvisorMessage = "The committee has withdrawn its " + type;
+        if (approvalState == true) {
+            clearAdvisorMessage += " Approval.";
+        } else {
+            clearAdvisorMessage += " Rejection.";
+        }
+        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
     }
 
     private void processEmailWorkflowRules(User user, Submission submission) {
@@ -784,7 +855,9 @@ public class SubmissionController {
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
 
-        rules.forEach(rule -> {
+        for (EmailWorkflowRule rule : rules) {
+
+            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
@@ -792,25 +865,31 @@ public class SubmissionController {
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
-                rule.getEmailRecipient().getEmails(submission).forEach(email -> {
+                for (String email : rule.getEmailRecipient().getEmails(submission)) {
 
-                    smm.setTo(email);
+                    try {
+                        LOG.debug("\tSending email to recipient at address " + email);
 
-                    String preferedEmail = user.getSetting("preferedEmail");
-                    user.getSetting("ccEmail");
-                    if (user.getSetting("ccEmail").equals("true")) {
-                        smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                        smm.setTo(email);
+
+                        String preferedEmail = user.getSetting("preferedEmail");
+
+                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                        }
+
+                        smm.setSubject(subject);
+                        smm.setText(content);
+
+                        emailSender.send(smm);
+                    } catch (MailException me) {
+                        LOG.error("Problem sending email: " + me.getMessage());
                     }
-
-                    smm.setSubject(subject);
-                    smm.setText(content);
-
-                    emailSender.send(smm);
-                });
-
+                }
+            } else {
+                LOG.debug("\tRule disabled or of irrelevant status condition.");
             }
-        });
-
+        }
     }
 
 }

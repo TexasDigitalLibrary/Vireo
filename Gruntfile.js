@@ -2,7 +2,8 @@ module.exports = function (grunt) {
 
     // Configurable paths
     var build = {
-        app: 'src/main/webapp/WEB-INF/app'
+        app: 'src/main/webapp/app',
+        templates: 'src/main/resources/templates'
     };
 
 
@@ -18,7 +19,7 @@ module.exports = function (grunt) {
             },
             explicit: {
                 src: 'node_modules',
-                dest: 'src/main/webapp/WEB-INF/app/node_modules'
+                dest: 'src/main/webapp/app/node_modules'
             }
         },
 
@@ -101,6 +102,7 @@ module.exports = function (grunt) {
                     'node_modules/weaver-ui-core/app/config/logging.js',
 
                     'node_modules/weaver-ui-core/app/constants/apiResponseActions.js',
+                    'node_modules/weaver-ui-core/app/constants/httpMethodVerbs.js',
 
                     'node_modules/weaver-ui-core/app/directives/headerDirective.js',
                     'node_modules/weaver-ui-core/app/directives/footerDirective.js',
@@ -174,24 +176,9 @@ module.exports = function (grunt) {
         },
 
         usemin: {
-            html: '<%= build.app %>/index.html',
+            html: '<%= build.templates %>/index.html',
             options: {
                 assetsDirs: ['<%= build.app %>/resources/scripts']
-            }
-        },
-
-        sass: {
-            options: {
-                sourceMap: false
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'src/main/webapp/WEB-INF/app/resources/styles/sass',
-                    src: ['*.scss'],
-                    dest: 'src/main/webapp/WEB-INF/app/resources/styles',
-                    ext: '.css'
-                }]
             }
         },
 
@@ -246,18 +233,10 @@ module.exports = function (grunt) {
                     expand: true
                 }],
             }
-        },
-
-        watch: {
-            css: {
-                files: '**/*.scss',
-                tasks: ['sass']
-            }
         }
 
     });
 
-    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -267,12 +246,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-symlink');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'copy:styles', 'clean', 'symlink']);
+    grunt.registerTask('default', ['jshint', 'copy:styles', 'clean', 'symlink']);
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'sass', 'copy:styles', 'clean', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
 
-    grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'sass', 'clean', 'copy']);
+    grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
 
 };

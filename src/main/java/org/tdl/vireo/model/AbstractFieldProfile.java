@@ -20,6 +20,8 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -60,6 +62,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
     private ManagedConfiguration mappedShibAttribute;
 

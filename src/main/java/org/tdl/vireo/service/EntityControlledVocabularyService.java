@@ -24,7 +24,7 @@ import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 
-import edu.tamu.weaver.utility.EntityUtility;
+import edu.tamu.weaver.data.utility.EntityUtility;
 
 @Service
 public class EntityControlledVocabularyService {
@@ -99,7 +99,7 @@ public class EntityControlledVocabularyService {
                 }
             }
         } else {
-            logger.warn("No entity controlled vocabulary " + name);
+            logger.debug("No entity controlled vocabulary " + name);
         }
         return dictionary;
     }

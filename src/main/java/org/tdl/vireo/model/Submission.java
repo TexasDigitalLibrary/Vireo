@@ -65,17 +65,24 @@ public class Submission extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
+    private Calendar approveApplicationDate;
+
+    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar approvalDate;
+    private Calendar approveAdvisorDate;
 
     @Column(nullable = true)
     private boolean approveEmbargo;
 
     @Column(nullable = true)
     private boolean approveApplication;
+    
+    @Column(nullable = true)
+    private boolean approveAdvisor;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
@@ -287,16 +294,32 @@ public class Submission extends ValidatingBaseEntity {
      * 
      * @return
      */
-    public Calendar getApprovalDate() {
-        return approvalDate;
+    public Calendar getApproveApplicationDate() {
+        return approveApplicationDate;
+    }
+
+    /**
+     * 
+     * @param approveApplicationDate
+     */
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+        this.approveApplicationDate = approveApplicationDate;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Calendar getApproveAdvisorDate() {
+        return approveAdvisorDate;
     }
 
     /**
      * 
      * @param approvalDate
      */
-    public void setApprovalDate(Calendar approvalDate) {
-        this.approvalDate = approvalDate;
+    public void setApproveAdvisorDate(Calendar approvalDate) {
+        this.approveAdvisorDate = approvalDate;
     }
 
     /**
@@ -312,11 +335,6 @@ public class Submission extends ValidatingBaseEntity {
      * @param approveEmbargo
      */
     public void setApproveEmbargo(boolean approveEmbargo) {
-        if (approveEmbargo) {
-            this.approveEmbargoDate = Calendar.getInstance();
-        } else {
-            this.approveEmbargoDate = null;
-        }
         this.approveEmbargo = approveEmbargo;
     }
 
@@ -348,10 +366,34 @@ public class Submission extends ValidatingBaseEntity {
      * 
      */
     public void clearApproveApplication() {
-        this.approvalDate = null;
+        this.approveApplicationDate = null;
         this.approveApplication = false;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean getApproveAdvisor() {
+        return approveAdvisor;
+    }
 
+    /**
+     * 
+     * @param approveApplication
+     */
+    public void setApproveAdvisor(boolean approveAdvisor) {
+        this.approveAdvisor = approveAdvisor;
+    }
+
+    /**
+     * 
+     */
+    public void clearApproveAdvisor() {
+        this.approveAdvisorDate = null;
+        this.approveAdvisor = false;
+    }
+    
     /**
      * @return the actionLog
      */

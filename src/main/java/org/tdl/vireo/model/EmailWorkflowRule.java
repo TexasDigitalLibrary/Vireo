@@ -9,11 +9,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -30,11 +30,12 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
     @JsonProperty("isDisabled")
     private Boolean isDisabled;
 
-    @OneToOne(targetEntity = AbstractEmailRecipient.class, orphanRemoval = true)
+    @ManyToOne(targetEntity = AbstractEmailRecipient.class)
     private EmailRecipient emailRecipient;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private SubmissionStatus submissionStatus;
 
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)

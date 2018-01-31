@@ -32,7 +32,7 @@ public class EmailTemplateController {
     private EmailTemplateRepo emailTemplateRepo;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse allEmailTemplates() {
         return new ApiResponse(SUCCESS, emailTemplateRepo.findAllByOrderByPositionAsc());
     }

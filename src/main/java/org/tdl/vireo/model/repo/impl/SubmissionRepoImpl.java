@@ -47,6 +47,7 @@ import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.utility.FileIOUtility;
@@ -64,6 +65,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private SubmissionRepo submissionRepo;
+    
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
@@ -96,6 +100,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private FileIOUtility fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
+    
+    @Value("${app.document.path:private/}")
+    private String documentPath;
 
     @Autowired
     public SubmissionRepoImpl(DataSource dataSource) {
@@ -164,6 +171,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, User user) {
+        
+        submissionStatus = submissionStatusRepo.findOne(submissionStatus.getId());
+        
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
@@ -198,6 +208,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 if (!attachDefaultLicenseFieldValues)
                     break;
             }
+            
+            clearLicenseFiles(submission);
 
             if (attachProquestLicense) {
                 writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
@@ -209,7 +221,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         case APPROVED:
             submission.setApproveApplication(true);
-            submission.setApprovalDate(Calendar.getInstance());
+            submission.setApproveApplicationDate(Calendar.getInstance());
             break;
         case CANCELED:
             break;
@@ -245,6 +257,20 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
+    
+    private void clearLicenseFiles(Submission submission) {
+    	FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+    	List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
+    	
+    	for (FieldValue fieldValue : fieldValues) {
+    		try {
+    			fileIOUtility.delete(fieldValue.getValue());
+    			submission.removeFieldValue(fieldValue);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
 
     private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {
 
@@ -275,7 +301,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         if (licenseBytes != null) {
             int hash = user.getEmail().hashCode();
-            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
+            String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
 
             try {
                 fileIOUtility.write(licenseBytes, uri);

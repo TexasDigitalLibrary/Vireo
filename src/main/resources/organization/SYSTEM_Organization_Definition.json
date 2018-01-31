@@ -1060,7 +1060,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_TEXT_WITH_DEFINITION"
+            "name":"INPUT_CONTACT"
           },
           "repeatable":true,
           "overrideable":true,
@@ -1253,7 +1253,13 @@
             }
           ],
           "controlledVocabularies":[
-
+            {
+              "name":"Manuscript Allowed File Extensions",
+              "isEntityProperty":false,
+              "language":{
+                "name":"English"
+              }
+            }
           ]
         },
         {

@@ -1,0 +1,95 @@
+/***********************
+** STUDENT SUBMISSION **
+************************/
+.start-your-submission {
+  box-shadow: 1px 1px 7px -1px #000;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.triptych-start-submission {
+  box-shadow: 1px 1px 7px -1px #000;
+  font-size:1.2em;
+  padding: 10px;
+  padding-bottom: 35px;
+  min-width: 400px;
+}
+
+.triptych-start-submission .disabled {
+  min-width: 400px;
+}
+
+
+.student-submission,
+.student-submission-loader.ready {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.student-submission-loader,
+.student-submission.ready {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+}
+
+.student-submission-loader {
+  top: 250px;
+  width: 100%;
+  text-align: center;
+  font-size: 2em;
+}
+
+.submission-workflow-steps-navigation {
+  margin-bottom: 25px;
+}
+
+.submission-workflow-step-navigation a {
+  width: 95%;
+  color: white;
+  background: $button_main_color_off;
+  background: -moz-linear-gradient linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: -webkit-linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: -ms-linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+  background: linear-gradient(to right, $button_main_color_off, $button_highlight_color_off);
+}
+
+.submission-workflow-step-navigation a:hover,
+.submission-workflow-step-navigation.active a {
+  cursor: pointer;
+  background: rgb(31, 58, 71);
+  background: -moz-linear-gradient linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: -webkit-linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: -ms-linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+  background: linear-gradient(to right, $button_main_color_on, $button_highlight_color_on);
+}
+
+.field-value-input:not(:last-of-type) {
+  margin-bottom: 5px;
+}
+
+.select-toggle:hover {
+  cursor: pointer;
+}
+
+.select-option {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  white-space: nowrap;
+}
+
+.select-option:hover {
+  cursor: pointer;
+  background: #efefef;
+}
+
+.select-value {
+  white-space: nowrap;
+}
+
+.organization-create-button {
+  white-space: normal !important;
+  word-wrap: break-word;
+}

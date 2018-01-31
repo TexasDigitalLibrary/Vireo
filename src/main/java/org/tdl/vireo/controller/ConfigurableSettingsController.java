@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.service.VireoThemeManagerService;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
@@ -23,6 +24,8 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RestController
 @RequestMapping("/settings/configurable")
 public class ConfigurableSettingsController {
+	@Autowired
+	VireoThemeManagerService themeManagerService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -44,6 +47,7 @@ public class ConfigurableSettingsController {
         logger.info("Updating configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         configuration = configurationRepo.save(configuration);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, configuration));
+        updateTheming(configuration.getType());
         return new ApiResponse(SUCCESS, configuration);
     }
 
@@ -53,7 +57,14 @@ public class ConfigurableSettingsController {
         logger.info("Resetting configuration with name " + configuration.getName() + " and value " + configuration.getValue());
         Configuration defaultConfiguration = configurationRepo.reset(configuration);
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, defaultConfiguration));
+        updateTheming(configuration.getType());
         return new ApiResponse(SUCCESS, defaultConfiguration);
+    }
+    
+    protected void updateTheming(String type) {
+    	if (type.equals("lookAndFeel")) {
+    		themeManagerService.refreshCurrentTheme();
+    	}
     }
 
 }

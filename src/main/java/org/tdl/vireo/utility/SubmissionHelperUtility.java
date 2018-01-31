@@ -198,8 +198,8 @@ public class SubmissionHelperUtility {
         return submission.getApproveEmbargoDate() != null ? dateFormat.format(submission.getApproveEmbargoDate().getTime()) : "";
     }
 
-    public String getApprovalDateString() {
-        return submission.getApprovalDate() != null ? dateFormat.format(submission.getApprovalDate().getTime()) : "";
+    public String getAdvisorApprovalDateString() {
+        return submission.getApproveAdvisorDate() != null ? dateFormat.format(submission.getApproveAdvisorDate().getTime()) : "";
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
