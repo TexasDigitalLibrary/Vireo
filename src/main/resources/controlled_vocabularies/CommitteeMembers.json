@@ -25,13 +25,17 @@
       "name":"Aggie Jack",
       "definition":"",
       "identifier":"",
-      "contacts":[]
+      "contacts":[
+        "aggiejack@mailinator.com"
+      ]
     },
     {
       "name":"Ted To Marrow",
       "definition":"",
       "identifier":"",
-      "contacts":[]
+      "contacts":[
+        "tmarrow@mailinator.com"
+      ]
     }
   ]
 }

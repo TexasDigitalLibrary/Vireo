@@ -6,7 +6,7 @@
 	 <ul class="dropdown-menu" uib-dropdown-menu>
 		<li class="select-option"
 			ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);" 
-			ng-repeat="word in profile.controlledVocabularies[0].dictionary">
+			ng-repeat="word in profile.controlledVocabularies[0].dictionary | orderBy:'name'">
 			{{word.name}}
 		</li>
 	</ul>

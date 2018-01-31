@@ -253,8 +253,8 @@ public class SubmissionTest extends AbstractEntityTest {
         fieldPredicateRepo.deleteAll();
         inputTypeRepo.deleteAll();
         embargoRepo.deleteAll();
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
+        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
+            namedSearchFilterGroupRepo.delete(nsf);
         });
         userRepo.deleteAll();
     }

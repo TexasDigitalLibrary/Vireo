@@ -18,7 +18,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         EmailTemplateRepo.getAll(),
         FieldPredicateRepo.getAll(),
         DepositLocationRepo.getAll(),
-        userSettingsUnfetched.ready()
+        userSettingsUnfetched
     ]);
 
     ready.then(function (resolved) {
@@ -39,6 +39,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.emailTemplates = emailTemplates;
 
         $scope.fieldPredicates = fieldPredicates;
+
+
+        var initializeEmailRecipients = function() {
+            $scope.recipientEmails = [];
+            $scope.ccRecipientEmails = [];
+        };
+
+        initializeEmailRecipients();
 
         var firstName = $scope.submission.submitter.firstName;
         var lastName = $scope.submission.submitter.lastName;
@@ -192,6 +200,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var resetFileData = function () {
+            initializeEmailRecipients();
             $scope.addFileData = {
                 selectedTemplate: emailTemplates[0],
                 sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
@@ -261,8 +270,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                             $scope.submission.sendEmail({
                                 subject: $scope.addFileData.subject,
                                 message: $scope.addFileData.message,
-                                recipientEmail: $scope.addFileData.recipientEmail,
-                                ccRecipientEmail: $scope.addFileData.ccRecipientEmail,
+                                recipientEmail: $scope.recipientEmails.join(';'),
+                                ccRecipientEmail: $scope.ccRecipientEmails.join(';'),
                                 sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                 sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                             }).then(function () {
@@ -307,6 +316,17 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.hasPrimaryDocument = function () {
             return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+        };
+
+        $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+            if (emailAddress) {
+                destinationModel.push(emailAddress);
+            }
+        };
+
+        $scope.removeEmailAddressee = function (email,destinationModel) {
+            var removeIndex = destinationModel.indexOf(email);
+            destinationModel.splice(removeIndex,1);
         };
 
         $scope.activeDocumentBox = {

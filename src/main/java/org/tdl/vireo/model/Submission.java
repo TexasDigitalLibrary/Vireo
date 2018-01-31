@@ -73,13 +73,16 @@ public class Submission extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar approvalDate;
+    private Calendar approveAdvisorDate;
 
     @Column(nullable = true)
     private boolean approveEmbargo;
 
     @Column(nullable = true)
     private boolean approveApplication;
+    
+    @Column(nullable = true)
+    private boolean approveAdvisor;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
@@ -307,16 +310,16 @@ public class Submission extends ValidatingBaseEntity {
      * 
      * @return
      */
-    public Calendar getApprovalDate() {
-        return approvalDate;
+    public Calendar getApproveAdvisorDate() {
+        return approveAdvisorDate;
     }
 
     /**
      * 
      * @param approvalDate
      */
-    public void setApprovalDate(Calendar approvalDate) {
-        this.approvalDate = approvalDate;
+    public void setApproveAdvisorDate(Calendar approvalDate) {
+        this.approveAdvisorDate = approvalDate;
     }
 
     /**
@@ -366,7 +369,31 @@ public class Submission extends ValidatingBaseEntity {
         this.approveApplicationDate = null;
         this.approveApplication = false;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean getApproveAdvisor() {
+        return approveAdvisor;
+    }
 
+    /**
+     * 
+     * @param approveApplication
+     */
+    public void setApproveAdvisor(boolean approveAdvisor) {
+        this.approveAdvisor = approveAdvisor;
+    }
+
+    /**
+     * 
+     */
+    public void clearApproveAdvisor() {
+        this.approveAdvisorDate = null;
+        this.approveAdvisor = false;
+    }
+    
     /**
      * @return the actionLog
      */

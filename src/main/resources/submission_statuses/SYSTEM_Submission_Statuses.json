@@ -14,7 +14,7 @@
       "isDeletable": false,
       "isEditableByReviewer": true,
       "isEditableByStudent": false,
-      "isActive": false,
+      "isActive": true,
       "submissionState": 2,
       "transitionSubmissionStatuses": [{
         "name": "Under Review",

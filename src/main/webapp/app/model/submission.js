@@ -259,7 +259,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                 for (var j in workflowStep.aggregateFieldProfiles) {
                     var fieldProfile = workflowStep.aggregateFieldProfiles[j];
                     if (fieldProfile.inputType.name == inputType) {
-                        angular.extend(fieldValues, submission.getFieldValuesByFieldPredicate(fieldProfile.fieldPredicate));
+                        var sfv = submission.getFieldValuesByFieldPredicate(fieldProfile.fieldPredicate);
+                        for (var k in sfv) {
+                            fieldValues.push(sfv[k]);
+                        }
                     }
                 }
             }
@@ -624,9 +627,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
             var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
             var emails = [];
-
             angular.forEach(fieldValues, function (fv) {
-                angular.extend(emails, fv.contacts);
+                angular.forEach(fv.contacts, function (contact) {
+                    emails.push(contact);                    
+                });
             });
 
             return emails;

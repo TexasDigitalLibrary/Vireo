@@ -19,7 +19,8 @@
 			<td title="'Actions'">
 				<button ng-if="row.submissionStatus.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
 				<a href="{{'submission/' + row.id}}" ng-if="row.submissionStatus.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">Continue</a>
-				<a href="{{'submission/' + row.id + '/view'}}" ng-if="row.submissionStatus.name !== SubmissionStatuses.IN_PROGRESS" class="btn btn-primary">View</a>
+				<a href="{{'submission/' + row.id + '/view'}}" ng-if="row.submissionStatus.name !== SubmissionStatuses.IN_PROGRESS && row.submissionStatus.name !== SubmissionStatuses.NEEDS_CORRECTIONS" class="btn btn-primary">View</a>
+				<a href="{{'submission/' + row.id + '/view'}}" ng-if="row.submissionStatus.name === SubmissionStatuses.NEEDS_CORRECTIONS" class="btn btn-primary">Edit</a>
 			</td>
 		  </tr>
 		</table>

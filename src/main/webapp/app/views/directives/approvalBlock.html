@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm-2 col-sm-offset-1 col-xs-12">
+    <label class="text-capitalize">
+      <span ng-if="approvalProxy.approveEmbargo===false||approvalProxy.approveEmbargo===true" class="glyphicon glyphicon-info-sign text-primary pull-left" tooltip="Double click the radio button to clear the value"></span>Approve {{type}}:</label>
+  </div>
+  <div class="col-sm-9 col-xs-12">
+    <!--This conditions on the data of the approval to allow the ui to mutate the status without incurring display changes-->
+    <div class="form-group" ng-if="statusDate">
+      <p>{{type}} was {{status == true ? 'approved':'rejected'}} on {{statusDate | date:'MMM dd, yyyy HH:mm'}}</p>
+      <div class="checkbox" ng-init="approvalProxy.clearApproval=false">
+        <label class="bg-warning"><input type="checkbox" ng-model="approvalProxy.clearApproval" ngTrueValue="true" ngFalseValue="false">I {{status == true ? (" unapprove this "+type+"."):(" remove this "+type+" rejection.")}}</label>
+      </div>
+    </div>
+    <div class="form-group" ng-if="!statusDate">
+      <div class="radio">
+        <label><input type="radio" ng-value="true" ng-dblclick="approvalProxy.approve=undefined" ng-model="approvalProxy.approve">I approve this {{type}}.</label>
+      </div>
+      <div class="radio">
+        <label><input type="radio" ng-value="false" ng-dblclick="approvalProxy.approve=undefined" ng-model="approvalProxy.approve">I reject this {{type}}. (Please leave a comment explaining why below)</label>
+      </div>
+    </div>
+  </div>
+</div>

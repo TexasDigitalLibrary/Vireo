@@ -100,6 +100,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private FileIOUtility fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
+    
+    @Value("${app.document.path:private/}")
+    private String documentPath;
 
     @Autowired
     public SubmissionRepoImpl(DataSource dataSource) {
@@ -218,7 +221,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         case APPROVED:
             submission.setApproveApplication(true);
-            submission.setApprovalDate(Calendar.getInstance());
+            submission.setApproveApplicationDate(Calendar.getInstance());
             break;
         case CANCELED:
             break;
@@ -298,7 +301,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         if (licenseBytes != null) {
             int hash = user.getEmail().hashCode();
-            String uri = "private/" + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
+            String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
 
             try {
                 fileIOUtility.write(licenseBytes, uri);

@@ -7,6 +7,6 @@ public interface NamedSearchFilterRepoCustom {
 
     public NamedSearchFilter create(SubmissionListColumn submissionListColumn);
 
-    public NamedSearchFilter cloneFilterCriterion(NamedSearchFilter namedSearchFilter);
+    public NamedSearchFilter clone(NamedSearchFilter namedSearchFilter);
 
 }

@@ -615,6 +615,11 @@ var apiMapping = {
             'controller': 'submission',
             'method': 'add-comment'
         },
+        batchComment: {
+            'endpont': '/private/queue',
+            'controller': 'submission',
+            'method': 'batch-comment'
+        },
         sendEmail: {
             'endpoint': '/private/queue',
             'controller': 'submission',

@@ -68,12 +68,20 @@
 
         <div class="form-group">
           <label for="recipientEmail">To:</label>
-          <input class="form-control" type="email" ng-model="addFileData.recipientEmail" name="recipientEmail">
+          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+          <div class="input-group">
+            <input class="form-control" type="email" ng-model="recipientEmail" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+            <span ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(recipientEmail,recipientEmails);recipientEmail=''"></span>
+          </div>
         </div>
 
         <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
           <label for="ccRecipientEmail">CC:</label>
-          <input class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" name="ccRecipientEmail">
+          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+          <div class="input-group">
+            <input class="form-control" type="email" ng-model="ccRecipientEmail" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+            <span ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(ccRecipientEmail,ccRecipientEmails);ccRecipientEmail=''"></span>
+          </div>
         </div>
 
         <div class="form-group">
@@ -86,7 +94,7 @@
         </div>
 
         <div class="form-group">
-          <select class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.emailBody = addFileData.selectedTemplate.message"></select>
+          <select class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.message = addFileData.selectedTemplate.message;addFileData.subject=addFileData.selectedTemplate.subject"></select>
         </div>
 
       </div>

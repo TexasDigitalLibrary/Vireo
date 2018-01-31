@@ -247,16 +247,12 @@ main footer {
   color: #4A5C81;
 }
 
-.label-add:hover {
+.label-add:hover, .label-remove:hover,.label-remove-hover:hover {
   cursor: pointer;
 }
 
-.label-remove {
+.label-remove, .label-remove-hover:hover {
   color: $brand-danger;
-}
-
-.label-remove:hover {
-  cursor: pointer;
 }
 
 .ng-table th.sortable.sort-asc,
@@ -1672,4 +1668,12 @@ input[type=color]:focus {
 
 .disable-strike-through {
   text-decoration: line-through;
+}
+
+.add-file-section .glyphicon {
+  top: 0;
+}
+
+.add-file-section .input-group-addon.glyphicon.disabled {
+  color: #ababab;
 }

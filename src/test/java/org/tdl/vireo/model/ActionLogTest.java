@@ -83,8 +83,8 @@ public class ActionLogTest extends AbstractEntityTest {
         submissionStatusRepo.deleteAll();
         organizationRepo.deleteAll();
         organizationCategoryRepo.deleteAll();
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
+        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
+            namedSearchFilterGroupRepo.delete(nsf);
         });
         userRepo.deleteAll();
     }

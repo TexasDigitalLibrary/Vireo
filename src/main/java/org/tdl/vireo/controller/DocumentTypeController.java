@@ -33,7 +33,7 @@ public class DocumentTypeController {
     private DocumentTypeRepo documentTypeRepo;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse allDocumentTypes() {
         return new ApiResponse(SUCCESS, documentTypeRepo.findAllByOrderByPositionAsc());
     }
