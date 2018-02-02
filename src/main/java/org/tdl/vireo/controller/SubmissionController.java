@@ -764,8 +764,7 @@ public class SubmissionController {
             smm.setTo(String.join(",", fv.getContacts()));
 
             String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
+            if ("true".equals(user.getSetting("ccEmail"))) {
                 smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
             }
 
@@ -874,7 +873,7 @@ public class SubmissionController {
 
                         String preferedEmail = user.getSetting("preferedEmail");
 
-                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                        if ("true".equals( user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
