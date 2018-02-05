@@ -447,11 +447,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                             if (filterString.contains("|")) {
                                 // Date Range
                                 String[] dates = filterString.split(Pattern.quote("|"));
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '").append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
+                                dates[0] = dates[0].replaceAll("[TZ:.\\-]", " ");
+                                dates[1] = dates[1].replaceAll("[TZ:.\\-]", " ");
 
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) BETWEEN to_timestamp('").append(dates[0]).append("', \'YYYY MM DD HH MI SS MS') AND to_timestamp('").append(dates[1]).append("', \'YYYY MM DD HH MI SS MS')) OR");
                             } else {
                                 // Date Match
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
+                                filterString.replaceAll("[TZ:.\\-]", " ");
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
                             }
                             break;
                         case "INPUT_CHECKBOX":
