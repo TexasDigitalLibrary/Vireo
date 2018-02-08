@@ -16,9 +16,9 @@
   </organization>
 
   <parent>
-    <groupId>edu.tamu.framework</groupId>
-    <artifactId>weaver-webservice-parent</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <groupId>edu.tamu.weaver</groupId>
+    <artifactId>webservice-parent</artifactId>
+    <version>2.0.0</version>
   </parent>
 
   <properties>
@@ -50,33 +50,33 @@
   <dependencies>
 
     <dependency>
-      <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-auth</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>auth</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
-      <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-token-provider</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>token-provider</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
-      <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-validation</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>validation</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
-      <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-wro</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>wro</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
-      <groupId>edu.tamu.framework</groupId>
-      <artifactId>weaver-reporting</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>reporting</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
@@ -285,7 +285,7 @@
           </webResource>
           <webResource>
             <filtering>false</filtering>
-            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+            <directory>node_modules/ui-core/app/resources/styles</directory>
             <targetPath>WEB-INF/classes</targetPath>
             <excludes>
               <exclude>**/*.css</exclude>
@@ -354,7 +354,7 @@
             </webResource>
             <webResource>
               <filtering>false</filtering>
-              <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+              <directory>node_modules/ui-core/app/resources/styles</directory>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
                 <exclude>**/*.css</exclude>
@@ -416,7 +416,7 @@
     <pluginManagement>
       <plugins>
 
-        <!--This plugin's configuration is used to store Eclipse m2e settings 
+        <!--This plugin's configuration is used to store Eclipse m2e settings
           only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -468,7 +468,7 @@
         </excludes>
       </resource>
       <resource>
-        <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
+        <directory>node_modules/ui-core/app/resources/styles</directory>
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.css</exclude>
