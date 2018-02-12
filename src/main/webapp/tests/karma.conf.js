@@ -55,14 +55,21 @@ module.exports = function(config){
 
         frameworks: ['jasmine'],
 
-        browsers : ['Firefox', 'Chrome'],
+        browsers : ['Firefox', 'Chrome', 'ChromeHeadless', 'ChromeHeadlessNoSandbox'],
+
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox']
+            }
+        },
 
         plugins : [
             'karma-jasmine',
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-junit-reporter'
-            ],
+        ],
 
         junitReporter : {
             outputFile: 'test_out/unit.xml',
