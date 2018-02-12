@@ -1,11 +1,11 @@
 var appConfig = {
 
-    'version': '4.0.x',
+    'version': '4.0.0',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
+    'authService': 'https://labs.library.tamu.edu/auth3',
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',
