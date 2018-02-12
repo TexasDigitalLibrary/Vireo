@@ -80,7 +80,6 @@ import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.email.service.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.user.model.IRole;
 import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
@@ -174,7 +173,7 @@ public class SubmissionController {
             submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
         }
         if (submission == null) {
-            return new ApiResponse(ERROR,"Submission not found");
+            return new ApiResponse(ERROR, "Submission not found");
         }
         return new ApiResponse(SUCCESS, submission);
     }
@@ -764,8 +763,8 @@ public class SubmissionController {
             smm.setTo(String.join(",", fv.getContacts()));
 
             String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
+
+            if ("true".equals(user.getSetting("ccEmail"))) {
                 smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
             }
 
@@ -874,7 +873,7 @@ public class SubmissionController {
 
                         String preferedEmail = user.getSetting("preferedEmail");
 
-                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                        if ("true".equals( user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
