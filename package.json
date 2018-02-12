@@ -11,11 +11,11 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "pretest": "npm install",
-    "test": "node node_modules/karma/bin/karma start src/main/webapp/WEB-INF/tests/karma.conf.js --single-run",
+    "test": "node node_modules/karma/bin/karma start src/main/webapp/tests/karma.conf.js --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor src/main/webapp/WEB-INF/tests/protractor.conf.js"
+    "protractor": "protractor src/main/webapp/tests/protractor.conf.js"
   },
   "dependencies": {
     "angular-ui-tinymce": "0.0.19",
@@ -37,6 +37,7 @@
     "grunt-contrib-uglify": "3.0.1",
     "grunt-contrib-watch": "1.0.0",
     "grunt-usemin": "3.1.1",
+    "jasmine-core": "2.99.1",
     "jshint-stylish": "2.2.1",
     "karma": "1.7.1",
     "karma-chrome-launcher": "2.2.0",

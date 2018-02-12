@@ -13,3 +13,4 @@ node_js:
 script:
   - mvn clean package -DskipTests=true
   - mvn clean package -Dproduction -DskipTests=true
+  - mvn clean test -DtestClient
