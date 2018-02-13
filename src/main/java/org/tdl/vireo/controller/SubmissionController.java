@@ -30,7 +30,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -148,21 +147,18 @@ public class SubmissionController {
     @Value("${app.document.path:private/}")
     private String documentPath;
 
-    @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
 
-    @Transactional
     @RequestMapping("/all-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getAllByUser(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(user));
     }
 
-    @Transactional
     @RequestMapping("/get-one/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -178,14 +174,12 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/advisor-review/{submissionHash}")
     public ApiResponse getOne(@PathVariable String submissionHash) {
         Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials, @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
@@ -194,7 +188,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/delete/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -210,7 +203,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
@@ -230,7 +222,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
@@ -274,7 +265,6 @@ public class SubmissionController {
 
     }
 
-    @Transactional
     @RequestMapping(value = "/batch-comment")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
@@ -301,7 +291,6 @@ public class SubmissionController {
         }
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse updateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
@@ -352,7 +341,6 @@ public class SubmissionController {
         return apiResponse;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse validateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
@@ -376,14 +364,12 @@ public class SubmissionController {
         return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByNameAndType("orcid_authentication", "orcid").getValue().toLowerCase().equals("true");
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
         return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
@@ -408,7 +394,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping("/batch-update-status/{submissionStatusName}")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
@@ -420,7 +405,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/publish/{depositLocationId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse publish(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long depositLocationId) throws Exception {
@@ -467,7 +451,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
     public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
@@ -495,7 +478,6 @@ public class SubmissionController {
         }
     }
 
-    @Transactional
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
@@ -507,7 +489,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping("/batch-publish/{depositLocationId}")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchPublish(@WeaverUser User user, @PathVariable Long depositLocationId) {
@@ -546,7 +527,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/submit-date", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse submitDate(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody String newDate) throws ParseException {
@@ -571,7 +551,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/assign-to", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse assign(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody User assignee) {
@@ -595,7 +574,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/remove-field-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse removeFieldValue(@PathVariable("submissionId") Long submissionId, @RequestBody FieldValue fieldValue) {
@@ -606,7 +584,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateReviewerNotes(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody Map<String, String> requestData) {
@@ -618,7 +595,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/needs-correction")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse setSubmissionNeedsCorrection(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -631,7 +607,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/submit-corrections")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse setSubmissionCorrectionsReceived(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -644,7 +619,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/add-message", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addMessage(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody String message) {
@@ -652,7 +626,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(submission, user, message));
     }
 
-    @Transactional
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
@@ -672,7 +645,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/upload", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
@@ -687,7 +659,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, uri);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
@@ -703,7 +674,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, newUri);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/remove-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
@@ -725,7 +695,6 @@ public class SubmissionController {
         return apiResponse;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/archive-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse archiveFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
@@ -743,7 +712,6 @@ public class SubmissionController {
 
     @RequestMapping("/{submissionId}/send-advisor-email")
     @PreAuthorize("hasRole('REVIEWER')")
-    @Transactional
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
 
         Submission submission = submissionRepo.read(submissionId);
@@ -783,7 +751,6 @@ public class SubmissionController {
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
-    @Transactional
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
@@ -873,7 +840,7 @@ public class SubmissionController {
 
                         String preferedEmail = user.getSetting("preferedEmail");
 
-                        if ("true".equals( user.getSetting("ccEmail"))) {
+                        if ("true".equals(user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 

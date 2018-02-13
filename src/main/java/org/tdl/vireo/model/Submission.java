@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -38,22 +37,23 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends ValidatingBaseEntity {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private User submitter;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    @ManyToOne(fetch = EAGER, optional = true)
     private User assignee;
 
-    @ManyToOne(cascade = { REFRESH })
+    @ManyToOne(fetch = EAGER, optional = false)
     private SubmissionStatus submissionStatus;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private Organization organization;
 
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
     private Set<FieldValue> fieldValues;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
@@ -80,7 +80,7 @@ public class Submission extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     private boolean approveApplication;
-    
+
     @Column(nullable = true)
     private boolean approveAdvisor;
 
@@ -88,9 +88,9 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
-    @JoinColumn
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
+    @JoinColumn
     private Set<ActionLog> actionLogs;
 
     @Column(columnDefinition = "TEXT")
@@ -369,7 +369,7 @@ public class Submission extends ValidatingBaseEntity {
         this.approveApplicationDate = null;
         this.approveApplication = false;
     }
-    
+
     /**
      * 
      * @return
@@ -393,7 +393,7 @@ public class Submission extends ValidatingBaseEntity {
         this.approveAdvisorDate = null;
         this.approveAdvisor = false;
     }
-    
+
     /**
      * @return the actionLog
      */
