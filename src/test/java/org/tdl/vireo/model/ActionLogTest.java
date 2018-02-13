@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 
 public class ActionLogTest extends AbstractEntityTest {
@@ -27,7 +26,6 @@ public class ActionLogTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testCreate() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         assertEquals("The actionLog repository is not empty!", 1, actionLogRepo.count());
@@ -48,7 +46,6 @@ public class ActionLogTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testDuplication() {
         actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
@@ -56,7 +53,6 @@ public class ActionLogTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testDelete() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         actionLogRepo.delete(testActionLog);
@@ -64,7 +60,6 @@ public class ActionLogTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testCascade() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         actionLogRepo.delete(testActionLog);

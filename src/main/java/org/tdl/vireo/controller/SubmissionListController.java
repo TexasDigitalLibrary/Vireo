@@ -10,7 +10,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,33 +59,28 @@ public class SubmissionListController {
 
     @RequestMapping("/all-columns")
     @PreAuthorize("hasRole('STUDENT')")
-    @Transactional
     public ApiResponse getSubmissionViewColumns() {
         return new ApiResponse(SUCCESS, submissionListColumnRepo.findAll());
     }
 
-    @Transactional
     @RequestMapping("/columns-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getSubmissionViewColumnsByUser(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
-    @Transactional
     @RequestMapping("/filter-columns-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getFilterColumnsByUser(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
 
-    @Transactional
     @RequestMapping("/pagesize-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getSubmissionViewPageSizeByUser(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getPageSize());
     }
 
-    @Transactional
     @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/update-user-columns/{pageSize}", method = POST)
     public ApiResponse updateUserSubmissionViewColumns(@WeaverUser User user, @PathVariable Integer pageSize, @RequestBody List<SubmissionListColumn> submissionViewColumns) {
@@ -97,7 +91,6 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
-    @Transactional
     @RequestMapping("/reset-user-columns")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse resetUserSubmissionViewColumns(@WeaverUser User user) {
@@ -106,7 +99,6 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
-    @Transactional
     @PreAuthorize("hasRole('STUDENT')")
     @RequestMapping(value = "/update-user-filter-columns", method = POST)
     public ApiResponse updateUserFilterColumns(@WeaverUser User user, @RequestBody List<SubmissionListColumn> filterColumns) {
@@ -262,7 +254,6 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, userSavedFilters);
     }
 
-    @Transactional
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping(value = "/save-filter-criteria", method = POST)
     public ApiResponse saveFilterCriteria(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
