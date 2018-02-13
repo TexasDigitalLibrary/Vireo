@@ -47,7 +47,6 @@ import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.utility.FileIOUtility;
@@ -65,9 +64,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private SubmissionRepo submissionRepo;
-
-    @Autowired
-    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
@@ -246,9 +242,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         default:
             break;
         }
-
-        // TODO: reduce multiple redundent saves
-        submission = submissionRepo.saveAndFlush(submission);
 
         super.update(submission);
 
