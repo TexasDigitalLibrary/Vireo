@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,7 +66,6 @@ public class ControlledVocabularyController {
      *
      * @return ApiResponse with all controlled vocabulary
      */
-    @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAllControlledVocabulary() {
@@ -81,7 +79,6 @@ public class ControlledVocabularyController {
      *            Name of controlled vocabulary
      * @return ApiResponse with requested controlled vocabulary
      */
-    @Transactional
     @RequestMapping("/{name}")
     public ApiResponse getControlledVocabularyByName(@PathVariable String name) {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findByName(name));
@@ -176,7 +173,6 @@ public class ControlledVocabularyController {
      *            name of controlled vocabulary to export
      * @return ApiResponse with map containing csv content
      */
-    @Transactional
     @RequestMapping("/export/{name}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse exportControlledVocabulary(@PathVariable String name) {
@@ -237,7 +233,6 @@ public class ControlledVocabularyController {
      * @throws IOException
      */
     // TODO: implement controller advice to catch exception and handle gracefully
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/compare/{name}", method = RequestMethod.POST)
     public ApiResponse compareControlledVocabulary(@PathVariable String name, @RequestParam MultipartFile file) throws IOException {
@@ -254,7 +249,6 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiReponse indicating success
      */
-    @Transactional
     @RequestMapping(value = "/import/{name}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse importControlledVocabulary(@PathVariable String name) {
@@ -285,7 +279,6 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiReponse indicating success
      */
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/add-vocabulary-word/{cvId}", method = POST)
     public ApiResponse addVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vocabularyWord) {
@@ -302,7 +295,6 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiReponse indicating success
      */
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     public ApiResponse removeVocabularyWord(@PathVariable Long cvId, @PathVariable Long vwId) {
@@ -320,7 +312,6 @@ public class ControlledVocabularyController {
      *            controlled vocabulary name
      * @return ApiReponse indicating success
      */
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update-vocabulary-word/{cvId}", method = RequestMethod.POST)
     public ApiResponse updateVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vw) {
