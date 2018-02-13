@@ -10,7 +10,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,7 +54,6 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS, workflowStepRepo.findAll());
     }
 
-    @Transactional
     @RequestMapping("/get/{workflowStepId}")
     public ApiResponse getStepById(@PathVariable Long workflowStepId) {
         WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
