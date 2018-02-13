@@ -1,6 +1,9 @@
-language: java
+sudo: required
+dist: trusty
+addons:
+  - chrome: stable
 
-sudo: false
+language: java
 
 jdk:
   - oraclejdk8
@@ -10,6 +13,14 @@ node_js:
   - "6"
   - "5"
 
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - npm start > /dev/null &
+  - npm run update-webdriver
+  - sleep 5
+
 script:
   - mvn clean package -DskipTests=true
   - mvn clean package -Dproduction -DskipTests=true
+  - mvn clean test -DtestClient
