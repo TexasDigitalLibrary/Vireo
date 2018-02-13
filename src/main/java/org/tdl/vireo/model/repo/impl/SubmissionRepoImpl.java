@@ -47,7 +47,6 @@ import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.utility.FileIOUtility;
@@ -65,9 +64,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private SubmissionRepo submissionRepo;
-    
-    @Autowired
-    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
@@ -100,7 +96,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private FileIOUtility fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
-    
+
     @Value("${app.document.path:private/}")
     private String documentPath;
 
@@ -171,9 +167,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, User user) {
-        
-        submissionStatus = submissionStatusRepo.findOne(submissionStatus.getId());
-        
+
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
@@ -208,7 +202,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 if (!attachDefaultLicenseFieldValues)
                     break;
             }
-            
+
             clearLicenseFiles(submission);
 
             if (attachProquestLicense) {
@@ -249,27 +243,24 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         }
 
-        // TODO: reduce multiple redundent saves
-        submission = submissionRepo.saveAndFlush(submission);
-
         super.update(submission);
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
-    
+
     private void clearLicenseFiles(Submission submission) {
-    	FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-    	List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
-    	
-    	for (FieldValue fieldValue : fieldValues) {
-    		try {
-    			fileIOUtility.delete(fieldValue.getValue());
-    			submission.removeFieldValue(fieldValue);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    	}
+        FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+        List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
+
+        for (FieldValue fieldValue : fieldValues) {
+            try {
+                fileIOUtility.delete(fieldValue.getValue());
+                submission.removeFieldValue(fieldValue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {

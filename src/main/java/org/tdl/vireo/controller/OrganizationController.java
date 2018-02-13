@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,14 +70,12 @@ public class OrganizationController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse allOrganizations() {
         return new ApiResponse(SUCCESS, organizationRepo.findAllByOrderByIdAsc());
     }
 
-    @Transactional
     @RequestMapping("/get/{id}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getOrganization(@PathVariable Long id) {
@@ -120,7 +117,6 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS, "Organization " + organization.getName() + " has been restored to defaults!");
     }
 
-    @Transactional
     @RequestMapping("/{requestingOrgId}/workflow")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getWorkflowStepsForOrganization(@PathVariable Long requestingOrgId) {
@@ -182,7 +178,6 @@ public class OrganizationController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/{requestingOrgId}/add-email-workflow-rule", method = POST)
     public ApiResponse addEmailWorkflowRule(@PathVariable Long requestingOrgId, @RequestBody Map<String, Object> data) {
@@ -207,7 +202,6 @@ public class OrganizationController {
         return response;
     }
 
-    @Transactional
     @RequestMapping("/{requestingOrgId}/edit-email-workflow-rule/{emailWorkflowRuleId}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse editEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId, @RequestBody Map<String, Object> data) {
@@ -238,7 +232,6 @@ public class OrganizationController {
         return response;
     }
 
-    @Transactional
     @RequestMapping("/{requestingOrgId}/remove-email-workflow-rule/{emailWorkflowRuleId}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
@@ -259,7 +252,6 @@ public class OrganizationController {
         }
     }
 
-    @Transactional
     @RequestMapping("/{requestingOrgId}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse changeEmailWorkflowRuleActivation(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) {
