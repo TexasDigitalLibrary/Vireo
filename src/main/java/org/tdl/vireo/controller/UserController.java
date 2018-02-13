@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +42,6 @@ public class UserController {
         return new ApiResponse(SUCCESS, credentials);
     }
 
-    @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('ROLE_REVIEWER')")
     public ApiResponse allUsers() {

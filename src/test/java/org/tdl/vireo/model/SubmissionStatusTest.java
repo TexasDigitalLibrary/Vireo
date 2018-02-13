@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 public class SubmissionStatusTest extends AbstractEntityTest {
 
@@ -55,7 +54,6 @@ public class SubmissionStatusTest extends AbstractEntityTest {
     }
 
     @Override
-    @Transactional
     public void testCascade() {
         // create states
         SubmissionStatus parentSubmissionState = submissionStatusRepo.create(TEST_PARENT_SUBMISSION_STATUS_NAME, TEST_PARENT_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATUS_DELETABLE, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATUS_ACTIVE, null);
@@ -64,11 +62,11 @@ public class SubmissionStatusTest extends AbstractEntityTest {
 
         // add transitional2 submission state to transitional1 submission state
         transition1SubmissionState.addTransitionSubmissionStatus(transition2SubmissionState);
-        transition1SubmissionState = submissionStatusRepo.findOne(transition1SubmissionState.getId());
+        transition1SubmissionState = submissionStatusRepo.save(transition1SubmissionState);
 
         // add transitional1 submission state to parent submission state
         parentSubmissionState.addTransitionSubmissionStatus(transition1SubmissionState);
-        parentSubmissionState = submissionStatusRepo.findOne(parentSubmissionState.getId());
+        parentSubmissionState = submissionStatusRepo.save(parentSubmissionState);
 
         // verify submission state transitions
         assertEquals("Parent submission state does not contain correct count of transition submission states!", 1, parentSubmissionState.getTransitionSubmissionStatuses().size());
@@ -81,12 +79,12 @@ public class SubmissionStatusTest extends AbstractEntityTest {
         parentSubmissionState.removeTransitionSubmissionStatus(transition1SubmissionState);
         transition1SubmissionState = submissionStatusRepo.findOne(transition1SubmissionState.getId());
         assertNotEquals("The severable transition1 submission state was deleted!", null, transition1SubmissionState);
-        parentSubmissionState = submissionStatusRepo.findOne(parentSubmissionState.getId());
+        parentSubmissionState = submissionStatusRepo.save(parentSubmissionState);
         assertEquals("The parent submission state had incorrect number of transition submission states (after detatch)!", 0, parentSubmissionState.getTransitionSubmissionStatuses().size());
 
         // test re-attach severable child transition submission state
         parentSubmissionState.addTransitionSubmissionStatus(transition1SubmissionState);
-        parentSubmissionState = submissionStatusRepo.findOne(parentSubmissionState.getId());
+        parentSubmissionState = submissionStatusRepo.save(parentSubmissionState);
         assertEquals("The parent submission state had incorrect number of transition submission states (after re-attach)!", 1, parentSubmissionState.getTransitionSubmissionStatuses().size());
 
         // test delete parent submission state transition
