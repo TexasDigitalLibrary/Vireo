@@ -54,11 +54,11 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<FieldGloss> fieldGlosses;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
 
