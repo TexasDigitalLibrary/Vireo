@@ -24,10 +24,11 @@ import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.weaver.auth.model.Credentials;
 
-
 /**
- * Activate the Vireo command line interface by passing the console argument to Maven thusly:
- * mvn clean spring-boot:run -Drun.arguments="console"
+ * Activate the Vireo command line interface by passing the console argument to Maven
+ * 
+ * mvn clean spring-boot:run -Drun.arguments=console
+ * 
  * @author James Creel
  * @author Jeremy Huff
  *
@@ -124,7 +125,7 @@ public class Cli implements CommandLineRunner {
                                 FieldPredicate pred = fp.getFieldPredicate();
                                 if (!pred.getDocumentTypePredicate()) {
                                     FieldValue val = fieldValueRepo.create(pred);
-                                    val.setValue("test value " + i);
+                                    val.setValue("test " + pred.getValue() + " " + i);
                                     sub.addFieldValue(val);
                                 }
                             }
