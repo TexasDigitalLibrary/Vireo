@@ -5,11 +5,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <name>Vireo</name>
+
   <description>Vireo Thesis and Dissertation Submission System</description>
+
   <version>4.0.0-SNAPSHOT</version>
+
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
+
   <url>https://github.com/TexasDigitalLibrary/Vireo</url>
+
   <organization>
     <name>TDL</name>
     <url>http://www.tdl.org</url>
@@ -22,8 +27,6 @@
   </parent>
 
   <properties>
-    <start-class>org.tdl.vireo.Application</start-class>
-    <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
     <tomcat.version>7.0.59</tomcat.version>
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -204,6 +207,7 @@
   </dependencies>
 
   <build>
+    <finalName>vireo</finalName>
 
     <plugins>
 
@@ -237,75 +241,6 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-filtering</artifactId>
-            <version>3.1.1</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <archive>
-            <manifest>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-            </manifest>
-          </archive>
-          <webResources>
-            <webResource>
-              <filtering>true</filtering>
-              <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
-              <includes>
-                <include>application.properties</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
-            </webResource>
-          </webResources>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>src/main/resources</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <includes>
-              <include>*/**</include>
-            </includes>
-            <exclude>application.properties</exclude>
-          </webResource>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>src/main/webapp/app/resources/styles</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>**/*.css</exclude>
-            </excludes>
-          </webResource>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/weaver-ui-core/app/resources/styles</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>**/*.css</exclude>
-            </excludes>
-          </webResource>
-          <webResource>
-            <filtering>false</filtering>
-            <directory>node_modules/bootstrap-sass/assets</directory>
-            <targetPath>WEB-INF/classes</targetPath>
-            <excludes>
-              <exclude>fonts/**</exclude>
-              <exclude>images/**</exclude>
-              <exclude>javascript/**</exclude>
-            </excludes>
-          </webResource>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.0</version>
         <dependencies>
@@ -316,13 +251,14 @@
           </dependency>
         </dependencies>
         <configuration>
+          <attachClasses>true</attachClasses>
           <archive>
             <manifest>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
-          <archiveClasses>true</archiveClasses>
           <webResources>
             <webResource>
               <filtering>true</filtering>
@@ -400,7 +336,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptor>assembly.xml</descriptor>
-          <finalName>${project.name}-${project.version}</finalName>
+          <finalName>vireo</finalName>
         </configuration>
         <executions>
           <execution>
@@ -416,7 +352,7 @@
     <pluginManagement>
       <plugins>
 
-        <!--This plugin's configuration is used to store Eclipse m2e settings
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
           only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>

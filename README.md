@@ -26,7 +26,7 @@ $ mvn clean spring-boot:run -Dproduction
 ```bash
 $ mvn clean package -DskipTests -Dproduction
 ```
-If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
+If all compile-time tests pass, you should have both a `vireo.war` and a `vireo-install.zip` in the `target/` directory.
 
 #### Apache Reverse Proxy Config
 
@@ -95,18 +95,18 @@ drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/vireo.war
+$ cp ~/vireo.war /var/lib/tomcat/webapps/vireo.war
 ```
 
 or as root:
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/ROOT.war
+$ cp ~/vireo.war /var/lib/tomcat/webapps/ROOT.war
 ```
 
 
 ## Running as a stand-alone Spring Boot application
 ```bash
-java -jar target/vireo-4.0.x-SNAPSHOT.war
+java -jar target/vireo.war
 ```
 
 ## Configuring
