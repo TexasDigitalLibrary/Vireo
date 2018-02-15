@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -35,11 +33,11 @@ public class FieldValue extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<String> contacts;
 
-    @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
+    @ManyToOne(optional = false)
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
-    	contacts = new ArrayList<String>();
+        contacts = new ArrayList<String>();
     }
 
     /**

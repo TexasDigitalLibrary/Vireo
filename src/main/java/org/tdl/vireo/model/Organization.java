@@ -51,6 +51,7 @@ public class Organization extends ValidatingBaseEntity {
     @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
+    @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
     @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
