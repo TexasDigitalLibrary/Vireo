@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.HashSet;
@@ -27,7 +25,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
 public class SubmissionListColumn extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(unique = true, nullable = false)

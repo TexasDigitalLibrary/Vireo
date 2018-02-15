@@ -1,9 +1,10 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,10 +73,10 @@ public class User extends AbstractWeaverUserDetails {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
 
     @Column(nullable = false)
