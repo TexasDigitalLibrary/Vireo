@@ -31,6 +31,7 @@ If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war
 #### Apache Reverse Proxy Config
 
 ```
+LoadModule rewrite_module modules/mod_rewrite.so
 LoadModule proxy_module modules/mod_proxy.so
 LoadModule proxy_http_module modules/mod_proxy_http.so
 LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so

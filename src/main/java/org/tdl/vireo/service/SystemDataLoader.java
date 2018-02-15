@@ -423,10 +423,6 @@ public class SystemDataLoader {
 
             processEmailWorflowRules();
 
-            category.addOrganization(organization);
-
-            organizationCategoryRepo.save(category);
-
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }

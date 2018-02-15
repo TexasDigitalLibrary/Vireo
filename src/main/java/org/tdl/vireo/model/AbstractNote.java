@@ -34,4 +34,5 @@ public abstract class AbstractNote<N> extends ValidatingBaseEntity {
     public void setText(String text) {
         this.text = text;
     }
+
 }

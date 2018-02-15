@@ -18,11 +18,13 @@ public class EmailRecipientOrganization extends AbstractEmailRecipient implement
     private Organization organization;
 
     public EmailRecipientOrganization() {
+
     }
 
     public EmailRecipientOrganization(Organization organization) {
+        this();
         setName(organization.getName());
-        this.organization = organization;
+        setOrganization(organization);
     }
 
     @Override

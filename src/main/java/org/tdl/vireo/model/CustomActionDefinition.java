@@ -61,4 +61,5 @@ public class CustomActionDefinition extends ValidatingOrderedBaseEntity {
     public void isStudentVisible(Boolean isStudentVisible) {
         this.isStudentVisible = isStudentVisible;
     }
+
 }

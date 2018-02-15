@@ -1,5 +1,6 @@
 package org.tdl.vireo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 
@@ -9,8 +10,9 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Inheritance
 public abstract class AbstractEmailRecipient extends ValidatingBaseEntity {
 
+    @Column(nullable = false)
     private String name;
-    
+
     public String getName() {
         return name;
     }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -37,6 +39,7 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
     private Boolean isSystemRequired;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EmbargoGuarantor guarantor;
 
     /**

@@ -40,18 +40,18 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 @JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
-
 public class Organization extends ValidatingBaseEntity {
-    
+
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
+    @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
     @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
@@ -60,12 +60,12 @@ public class Organization extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> originalWorkflowSteps;
 
-    @ManyToMany(cascade = REFRESH, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = true)
+    @ManyToOne(fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
@@ -420,50 +420,44 @@ public class Organization extends ValidatingBaseEntity {
 
     @JsonIgnore
     public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
-        
-        
 
         List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
         List<EmailWorkflowRule> newRules = new ArrayList<EmailWorkflowRule>();
-        
+
         aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
-        
-        
-        
-        if(getParentOrganization() != null) {
-            for(EmailWorkflowRule potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
+
+        if (getParentOrganization() != null) {
+            for (EmailWorkflowRule potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
                 System.out.println("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
-                
+
                 boolean rejectDuplicateRule = false;
-                for(EmailWorkflowRule currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
-                        String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
-                        String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
-    
-                        String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
-                        String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
-    
-                        LOG.debug("Current email recepient name: " + currentEmailRecipientName);
-                        LOG.debug("Potential email recepient name: " + potentialEmailRecipientName);
-    
-                        LOG.debug("Current email template name: " + currentEmailTemplateName);
-                        LOG.debug("Potential email template name: " + potentialEmailTemplateName);
-                        
-                        if((currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
-                            LOG.debug("Potential matches a current one for both recipient and template - must reject");
-                            rejectDuplicateRule = true;
-                        }
+                for (EmailWorkflowRule currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
+                    String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
+                    String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
+
+                    String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+                    String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+
+                    LOG.debug("Current email recepient name: " + currentEmailRecipientName);
+                    LOG.debug("Potential email recepient name: " + potentialEmailRecipientName);
+
+                    LOG.debug("Current email template name: " + currentEmailTemplateName);
+                    LOG.debug("Potential email template name: " + potentialEmailTemplateName);
+
+                    if ((currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
+                        LOG.debug("Potential matches a current one for both recipient and template - must reject");
+                        rejectDuplicateRule = true;
                     }
-                if( !rejectDuplicateRule ) {
+                }
+                if (!rejectDuplicateRule) {
                     LOG.debug("\tThe rule was not a duplicate - adding rule " + potentialEmailWorkflowRule);
                     newRules.add(potentialEmailWorkflowRule);
-                }
-                else
-                {
+                } else {
                     LOG.debug("\tThe rule was a duplicate - ignoring rule " + potentialEmailWorkflowRule);
                 }
-                    
-            }            
-            aggregateEmailWorkflowRules.addAll(newRules);            
+
+            }
+            aggregateEmailWorkflowRules.addAll(newRules);
         }
 
         return aggregateEmailWorkflowRules;
