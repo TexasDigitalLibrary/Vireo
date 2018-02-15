@@ -6,6 +6,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -73,6 +74,7 @@ import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -143,6 +145,9 @@ public class SubmissionController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Value("${app.document.path:private/}")
     private String documentPath;
@@ -457,10 +462,8 @@ public class SubmissionController {
 
         AbstractPackager packager = packagerUtility.getPackager(packagerName);
 
-        response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
-
-        try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
+        try {
+            ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 
             // TODO: need a more dynamic way to achieve this
             if (packagerName.equals("ProQuest")) {
@@ -475,6 +478,16 @@ public class SubmissionController {
                 zos.closeEntry();
             }
             zos.close();
+
+            response.setContentType("application/zip");
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
+        } catch (Exception e) {
+            response.setContentType("application/json");
+
+            ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+            PrintWriter out = response.getWriter();
+            out.print(objectMapper.writeValueAsString(apiResponse));
+            out.close();
         }
     }
 
