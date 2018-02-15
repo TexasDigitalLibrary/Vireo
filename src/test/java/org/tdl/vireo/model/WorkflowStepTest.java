@@ -1366,13 +1366,11 @@ public class WorkflowStepTest extends AbstractEntityTest {
         });
         assertEquals("Couldn't delete all workflow steps!", 0, workflowStepRepo.count());
 
+        organizationRepo.deleteAll();
+        assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
+
         organizationCategoryRepo.deleteAll();
         assertEquals("Couldn't delete all organization categories!", 0, organizationCategoryRepo.count());
-
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
-        assertEquals("Couldn't delete all organizations", 0, organizationRepo.count());
 
         fieldPredicateRepo.deleteAll();
         assertEquals("Couldn't delete all predicates!", 0, fieldPredicateRepo.count());
@@ -1382,7 +1380,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
         });
 
         userRepo.deleteAll();
-
     }
 
 }
