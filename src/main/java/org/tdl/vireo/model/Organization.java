@@ -48,9 +48,10 @@ public class Organization extends ValidatingBaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
+    @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
     @OneToMany(cascade = { REFRESH, REMOVE }, fetch = EAGER, orphanRemoval = true, mappedBy = "originatingOrganization")
@@ -59,12 +60,12 @@ public class Organization extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> originalWorkflowSteps;
 
-    @ManyToMany(cascade = REFRESH, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @ManyToOne(cascade = REFRESH, fetch = EAGER, optional = true)
+    @ManyToOne(fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;

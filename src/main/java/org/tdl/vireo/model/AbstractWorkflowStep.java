@@ -161,32 +161,62 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
         getAggregateFieldProfiles().add(dest, fieldProfile);
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<N> getAggregateNotes() {
         return aggregateNotes;
     }
 
+    /**
+     * 
+     * @param aggregateNotes
+     */
     public void setAggregateNotes(List<N> aggregateNotes) {
         this.aggregateNotes = aggregateNotes;
     }
 
+    /**
+     * 
+     * @param aggregateNote
+     */
     public void addAggregateNote(N aggregateNote) {
         if (!getAggregateNotes().contains(aggregateNote)) {
             getAggregateNotes().add(aggregateNote);
         }
     }
 
+    /**
+     * 
+     * @param aggregateNote
+     */
     public void removeAggregateNote(N aggregateNote) {
         getAggregateNotes().remove(aggregateNote);
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getInstructions() {
         return instructions;
     }
 
+    /**
+     * 
+     * @param instructions
+     */
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 
+    /**
+     * 
+     * @param n1
+     * @param n2
+     * @return
+     */
     public boolean replaceAggregateNote(N n1, N n2) {
         boolean res = false;
         int pos = 0;
@@ -202,6 +232,12 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
         return res;
     }
 
+    /**
+     * 
+     * @param n1
+     * @param n2
+     * @return
+     */
     public boolean swapAggregateNote(N n1, N n2) {
         boolean res = false;
 
@@ -215,6 +251,11 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
         return res;
     }
 
+    /**
+     * 
+     * @param src
+     * @param dest
+     */
     public void reorderAggregateNote(int src, int dest) {
 
         // adjust for index + 1

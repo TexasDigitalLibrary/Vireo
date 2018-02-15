@@ -33,7 +33,7 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
     @ManyToOne(targetEntity = AbstractEmailRecipient.class)
     private EmailRecipient emailRecipient;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private SubmissionStatus submissionStatus;

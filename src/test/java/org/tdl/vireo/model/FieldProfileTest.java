@@ -48,7 +48,8 @@ public class FieldProfileTest extends AbstractEntityTest {
         try {
             fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
+            /* SUCCESS */
+        }
         assertEquals("The repository duplicated entity!", 1, fieldProfileRepo.count());
     }
 
@@ -963,11 +964,9 @@ public class FieldProfileTest extends AbstractEntityTest {
             workflowStepRepo.delete(workflowStep);
         });
 
-        organizationCategoryRepo.deleteAll();
+        organizationRepo.deleteAll();
 
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
+        organizationCategoryRepo.deleteAll();
 
         fieldPredicateRepo.deleteAll();
         fieldGlossRepo.deleteAll();

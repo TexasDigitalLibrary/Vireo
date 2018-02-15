@@ -1,8 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.REFRESH;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -20,7 +17,7 @@ public class FieldGloss extends ValidatingBaseEntity {
     @Column(nullable = false)
     private String value;
 
-    @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
+    @ManyToOne(optional = false)
     private Language language;
 
     public FieldGloss() {

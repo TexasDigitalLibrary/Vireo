@@ -914,11 +914,9 @@ public class NoteTest extends AbstractEntityTest {
             workflowStepRepo.delete(workflowStep);
         });
 
-        organizationCategoryRepo.deleteAll();
+        organizationRepo.deleteAll();
 
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
+        organizationCategoryRepo.deleteAll();
     }
 
 }

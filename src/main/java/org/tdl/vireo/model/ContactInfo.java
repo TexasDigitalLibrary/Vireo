@@ -4,7 +4,7 @@ import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +17,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class ContactInfo extends ValidatingBaseEntity {
 
-    @OneToOne(cascade = { DETACH, MERGE, REFRESH, REMOVE }, optional = true, orphanRemoval = true, fetch = LAZY)
+    @OneToOne(cascade = { DETACH, MERGE, REFRESH, REMOVE }, fetch = EAGER, optional = true, orphanRemoval = true)
     private Address address;
 
     @Column(nullable = true)
