@@ -6,7 +6,7 @@ vireo.service("FileUploadService", function ($q, FileService) {
         return FileService.upload({
             'endpoint': '',
             'controller': 'submission',
-            'method': submission.id + '/' + fieldValue.id + '/upload-file',
+            'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload-file',
             'file': fieldValue.file
         });
     };

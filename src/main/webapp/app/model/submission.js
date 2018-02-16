@@ -48,9 +48,9 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
                     fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
                 });
-                if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
-                    submission.primaryDocumentFieldValue = fieldValue;
-                }
+            }
+            if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
+                submission.primaryDocumentFieldValue = fieldValue;
             }
         };
 

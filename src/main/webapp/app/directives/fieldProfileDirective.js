@@ -1,4 +1,4 @@
-vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValue, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -182,9 +182,18 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                         }
                         fieldValue.value = response.data.meta.message;
                         fieldValue.fileInfo.uploaded = true;
-                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function () {
-                            fieldValue.uploading = false;
-                            resolve();
+                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
+                            var apiRes = angular.fromJson(response.body);
+                            if(apiRes.meta.status === 'SUCCESS') {
+                                var newFieldValue = apiRes.payload.FieldValue;
+                                if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
+                                    $scope.submission.fetchDocumentTypeFileInfo();
+                                }
+                                fieldValue.uploading = false;
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
                         });
                     }, function (response) {
                         console.log('Error status: ' + response.status);
