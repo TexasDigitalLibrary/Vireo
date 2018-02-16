@@ -693,10 +693,10 @@ public class SubmissionController {
         if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
-            if (uri.contains(String.valueOf(hash))) {
+            if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
                 JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
                 fileIOUtility.delete(uri);
-                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }

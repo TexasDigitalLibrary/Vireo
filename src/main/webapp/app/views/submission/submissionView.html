@@ -79,6 +79,7 @@
                   ng-model="fieldPredicate"
                   ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined"
                   ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:uploadableFieldPredicates) track by documentFieldPredicate.value">
+                  <option value="">-- select document type --</option>
                 </select>
               </div>
             </div>

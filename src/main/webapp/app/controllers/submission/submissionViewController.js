@@ -10,6 +10,13 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
 
     FieldPredicateRepo.ready().then(function() {
 
+        var deleteFile = function (fieldValue) {
+            fieldValue.removing = true;
+            FileUploadService.removeFile($scope.submission, fieldValue).then(function (removed) {
+                delete fieldValue.removing;
+            });
+        };
+
         StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
             $scope.loaded = true;
             $scope.submission = submission;
@@ -86,27 +93,6 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
         $scope.uploadableFieldPredicates = function(fieldPredicate) {
             return fieldPredicate.documentTypePredicate && fieldPredicate.value !== '_doctype_primary' && fieldPredicate.value !== '_doctype_license';
         };
-
-        var defaultFieldPredicate = function () {
-            for (var i in $scope.fieldPredicates) {
-                if ($scope.uploadableFieldPredicates($scope.fieldPredicates[i])) {
-                    return $scope.fieldPredicates[i];
-                }
-            }
-        };
-
-        var deleteFile = function (fieldValue) {
-            fieldValue.removing = true;
-            FileUploadService.removeFile($scope.submission, fieldValue).then(function (removed) {
-                delete fieldValue.removing;
-            });
-        };
-
-        var resetDefaultFieldPredicate = function() {
-            $scope.fieldPredicate = defaultFieldPredicate();
-        };
-
-        resetDefaultFieldPredicate();
 
     });
 
