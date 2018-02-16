@@ -89,7 +89,7 @@ vireo.directive("validatedinput", function ($timeout) {
 
             $scope.addMember = function (member) {
                 $scope.model[$scope.property].push(member ? member : "");
-
+                $scope.model.dirty(true);
             };
 
             $scope.removeMember = function (i) {
