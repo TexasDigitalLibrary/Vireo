@@ -267,7 +267,6 @@ public class SubmissionController {
         }
 
         actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
-
     }
 
     @RequestMapping(value = "/batch-comment")
@@ -658,16 +657,14 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
 
-    @RequestMapping(value = "/{submissionId}/{documentType}/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/{submissionId}/{documentType}/upload-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
+    public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
         String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
@@ -680,30 +677,29 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
         fileIOUtility.copy(oldUri, newUri);
         fileIOUtility.delete(oldUri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
-    @RequestMapping(value = "/{submissionId}/{documentType}/remove-file", method = RequestMethod.POST)
+    @RequestMapping("/{submissionId}/{fieldValueId}/remove-file")
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
-        ApiResponse apiResponse = null;
+    public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long fieldValueId) throws IOException {
+        ApiResponse apiResponse = new ApiResponse(SUCCESS);
         int hash = user.getEmail().hashCode();
-        String uri = requestData.get("uri");
-        if (uri.contains(String.valueOf(hash))) {
-
-            JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-
-            fileIOUtility.delete(uri);
-
-            actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
-
-            apiResponse = new ApiResponse(SUCCESS);
+        FieldValue fileFieldValue = fieldValueRepo.findOne(fieldValueId);
+        String documentType = fileFieldValue.getFieldPredicate().getValue();
+        String uri = fileFieldValue.getValue();
+        if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
+            apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
-            apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+            if (uri.contains(String.valueOf(hash))) {
+                JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+                fileIOUtility.delete(uri);
+                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+            } else {
+                apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+            }
         }
         return apiResponse;
     }
@@ -716,9 +712,7 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
         fileIOUtility.copy(oldUri, newUri);
         fileIOUtility.delete(oldUri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return new ApiResponse(SUCCESS, newUri);
     }

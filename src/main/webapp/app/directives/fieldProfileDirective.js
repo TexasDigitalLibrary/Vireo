@@ -257,18 +257,18 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.removeFile = function (fieldValue) {
                 $scope.deleting = true;
-                $scope.submission.removeFile(fieldValue).then(function (res) {
-                    $scope.submission.removeFieldValue(fieldValue).then(function () {
-                        $scope.deleting = false;
-                        $scope.previewing = false;
+                FileUploadService.removeFile($scope.submission, fieldValue).then(function (removed) {
+                    $scope.deleting = false;
+                    $scope.previewing = false;
+                    if(removed) {
                         delete fieldValue.file;
                         delete fieldValue.value;
                         if (!$scope.profile.repeatable) {
                             $scope.addFieldValue();
                         }
-                        refreshFieldValues();
-                        $scope.closeModal();
-                    });
+                    }
+                    refreshFieldValues();
+                    $scope.closeModal();
                 });
             };
 

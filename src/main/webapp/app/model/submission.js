@@ -470,10 +470,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
 
         submission.removeFile = function (fieldValue) {
             angular.extend(this.getMapping().removeFile, {
-                method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + '/remove-file',
-                data: {
-                    'uri': fieldValue.value
-                }
+                method: submission.id + '/' + fieldValue.id + '/remove-file'
             });
             var promise = WsApi.fetch(this.getMapping().removeFile);
             return promise;
@@ -492,7 +489,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.renameFile = function (fieldValue) {
-
             angular.extend(this.getMapping().renameFile, {
                 method: submission.id + '/' + submission.getFileType(fieldValue.fieldPredicate) + "/rename-file",
                 data: {
@@ -500,9 +496,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     'newName': fieldValue.fileInfo.name
                 }
             });
-
             var promise = WsApi.fetch(this.getMapping().renameFile);
-
             return promise;
         };
 
@@ -629,7 +623,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             var emails = [];
             angular.forEach(fieldValues, function (fv) {
                 angular.forEach(fv.contacts, function (contact) {
-                    emails.push(contact);                    
+                    emails.push(contact);
                 });
             });
 
