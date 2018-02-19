@@ -406,7 +406,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }
 
             var userFilterColumns = filtersPreviouslyDisplayed.concat(filterColumns.userFilterColumns);
-            var inactiveFilterColumns = filtersPreviouslyDisabled.concat(filterColumns.inactiveFilterColumns)
+            var inactiveFilterColumns = filtersPreviouslyDisabled.concat(filterColumns.inactiveFilterColumns);
 
             angular.extend(filterColumns, {
                 userFilterColumns: userFilterColumns,
