@@ -29,7 +29,9 @@ import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -37,18 +39,23 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends ValidatingBaseEntity {
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private User submitter;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = true)
     private User assignee;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private SubmissionStatus submissionStatus;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private Organization organization;
 
+    @JsonView(ApiView.Partial.class)
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private Set<FieldValue> fieldValues;
@@ -59,28 +66,35 @@ public class Submission extends ValidatingBaseEntity {
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveEmbargoDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveApplicationDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveAdvisorDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveEmbargo;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveApplication;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveAdvisor;
 

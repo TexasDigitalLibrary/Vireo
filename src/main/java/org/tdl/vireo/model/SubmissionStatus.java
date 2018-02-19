@@ -17,13 +17,16 @@ import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 public class SubmissionStatus extends ValidatingBaseEntity {
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -51,6 +54,7 @@ public class SubmissionStatus extends ValidatingBaseEntity {
     @JsonProperty("isActive")
     private Boolean isActive;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private SubmissionState submissionState;
 

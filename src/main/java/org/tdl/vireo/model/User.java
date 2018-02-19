@@ -33,10 +33,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.validation.UserValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
@@ -44,9 +46,11 @@ public class User extends AbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private String netid;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -54,12 +58,15 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private String firstName;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private String lastName;
 
+    @JsonView(ApiView.Partial.class)
     @Column
     private String middleName;
 
@@ -68,6 +75,7 @@ public class User extends AbstractWeaverUserDetails {
     @Column(name = "value")
     private Map<String, String> settings;
 
+    @JsonView(ApiView.Partial.class)
     @Column
     private Integer birthYear;
 
