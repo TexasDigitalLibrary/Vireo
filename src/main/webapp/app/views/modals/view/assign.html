@@ -17,9 +17,10 @@
                 <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>
                 <select
                     class="form-control"
-                    name="newStatus"
+                    name="assign"
+                    ng-init="box.assignee = box.firstAssignable()"
                     ng-model="box.assignee"
-                    ng-options="au.settings.displayName for au in box.allUsers | filter:box.assignable">
+                    ng-options="au as au.settings.displayName for au in box.allUsers | filter:box.assignable">
                 </select>
                 <button type="button" class="btn btn-primary" ng-click="box.changeAssignee(box.assignee);box.assignSaveWorking=true;">Save <span ng-if="box.assignSaveWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
             </form>
