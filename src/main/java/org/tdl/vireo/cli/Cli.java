@@ -31,7 +31,7 @@ import edu.tamu.weaver.auth.model.Credentials;
  * 
  * mvn clean spring-boot:run -Drun.arguments=console
  * 
- * NOTE: this requires institutions
+ * NOTE: till enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
@@ -105,6 +105,12 @@ public class Cli implements CommandLineRunner {
                 case "generate":
 
                     Organization org = organizationRepo.findAll().get(0);
+
+                    if (!org.getAcceptsSubmissions()) {
+                        org.setAcceptsSubmissions(true);
+                        org = organizationRepo.save(org);
+                    }
+
                     SubmissionStatus state = submissionStatusRepo.findAll().get(0);
 
                     if (commandArgs.size() > 0) {
