@@ -247,6 +247,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
                         angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
                         console.log($scope.page);
+                        // NOTE: this causes way to many subscriptions!!!
                         // SubmissionRepo.addAll($scope.page.content);
                         params.total($scope.page.totalElements);
                         $scope.page.count = params.count();
