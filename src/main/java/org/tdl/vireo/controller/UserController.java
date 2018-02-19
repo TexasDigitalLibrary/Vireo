@@ -5,6 +5,8 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
@@ -46,6 +49,15 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_REVIEWER')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
+    }
+
+    @RequestMapping("/assignable")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ApiResponse allAssignableUsers() {
+        List<User> assignable = new ArrayList<User>();
+        assignable.addAll(userRepo.findAllByRole(Role.ROLE_ADMIN));
+        assignable.addAll(userRepo.findAllByRole(Role.ROLE_MANAGER));
+        return new ApiResponse(SUCCESS, assignable);
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")

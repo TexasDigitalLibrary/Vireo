@@ -1,6 +1,8 @@
 package org.tdl.vireo.cli;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,7 +31,7 @@ import edu.tamu.weaver.auth.model.Credentials;
  * 
  * mvn clean spring-boot:run -Drun.arguments=console
  * 
- * NOTE: this requires institutions 
+ * NOTE: this requires institutions
  * 
  * @author James Creel
  * @author Jeremy Huff
@@ -113,23 +115,33 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
                         User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.ROLE_STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
                         credentials.setLastName("Boring");
                         credentials.setEmail("bob@boring.bob");
-                        credentials.setRole("bore");
+                        credentials.setRole(Role.ROLE_STUDENT.name());
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
-                                if (!pred.getDocumentTypePredicate()) {
+                                if (fp.getInputType().getName().equals("INPUT_DATETIME")) {
+                                    FieldValue val = fieldValueRepo.create(pred);
+                                    val.setValue(format.format(calendar.getTime()));
+                                    sub.addFieldValue(val);
+                                } else if (fp.getInputType().getName().equals("INPUT_FILE")) {
+                                    // do nothing
+                                } else {
                                     FieldValue val = fieldValueRepo.create(pred);
                                     val.setValue("test " + pred.getValue() + " " + i);
                                     sub.addFieldValue(val);
                                 }
+
                             }
                         }
                         submissionRepo.saveAndFlush(sub);

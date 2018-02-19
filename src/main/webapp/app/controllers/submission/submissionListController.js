@@ -78,7 +78,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         update();
 
-        var allUsers = UserRepo.getAll();
+        var assignableUsers = UserRepo.getAssignableUsers();
+
         var savedFilters = SavedFilterRepo.getAll();
         var emailTemplates = EmailTemplateRepo.getAll();
         var organizations = OrganizationRepo.getAll();
@@ -92,17 +93,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var userSettings = new UserSettings();
         userSettings.fetch();
-
-        var findFirstAssignable = function () {
-            var firstAssignable;
-            for (var i in allUsers) {
-                if (allUsers[i].role === "ROLE_ADMIN" || allUsers[i].role === "ROLE_MANAGER") {
-                    firstAssignable = allUsers[i];
-                    break;
-                }
-            }
-            return firstAssignable;
-        };
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -209,7 +199,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var resetBatchAssignTo = function () {
-            $scope.advancedfeaturesBox.assignee = allUsers[0];
+            $scope.advancedfeaturesBox.assignee = assignableUsers[0];
             $scope.closeModal();
         };
 
@@ -319,8 +309,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "organizationCategories": organizationCategories,
             "documentTypes": documentTypes,
             "embargos": embargos,
-            "allUsers": allUsers,
-            "assignable": assignable,
+            "assignableUsers": assignableUsers,
             "defaultLimit": 3,
             "getTypeAheadByPredicateName": getTypeAheadByPredicateName
         };
@@ -334,10 +323,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "batchUpdateStatus": batchUpdateStatus,
             "submissionStatuses": submissionStatuses,
             "newStatus": submissionStatuses[0],
-            "assignee": findFirstAssignable(),
-            "allUsers": allUsers,
+            "assignableUsers": assignableUsers,
             "resetBatchAssignTo": resetBatchAssignTo,
-            "assignable": assignable,
             "batchAssignTo": batchAssignTo,
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
@@ -348,6 +335,38 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "resetBatchDownloadExport": resetBatchDownloadExport,
             "batchDownloadExport": batchDownloadExport,
             "packagers": packagers
+        };
+
+        $scope.getSubmissionProperty = function (row, col) {
+            var value;
+            for (var i in col.valuePath) {
+                if(typeof col.valuePath[i] !== 'function') {
+                    if (value === undefined) {
+                        value = row[col.valuePath[i]];
+                    } else {
+                        if (value instanceof Array) {
+                            return getValueFromArray(value, col);
+                        } else {
+                            if (value !== null) {
+                                value = value[col.valuePath[i]];
+                            }
+                        }
+                    }
+                }
+            }
+            return value;
+        };
+
+        $scope.displaySubmissionProperty = function (row, col) {
+            var value = $scope.getSubmissionProperty(row, col);
+            if ($scope.isDateColumn(col)) {
+                value = $filter('date')(value, 'MMM dd, yyyy');
+            }
+            return value;
+        };
+
+        $scope.isDateColumn = function (col) {
+            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME');
         };
 
         $scope.getUserById = function (userId) {
@@ -467,38 +486,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
                 update();
             });
-        };
-
-        $scope.getSubmissionProperty = function (row, col) {
-            var value;
-            for (var i in col.valuePath) {
-                if(typeof col.valuePath[i] !== 'function') {
-                    if (value === undefined) {
-                        value = row[col.valuePath[i]];
-                    } else {
-                        if (value instanceof Array) {
-                            return getValueFromArray(value, col);
-                        } else {
-                            if (value !== null) {
-                                value = value[col.valuePath[i]];
-                            }
-                        }
-                    }
-                }
-            }
-            return value;
-        };
-
-        $scope.displaySubmissionProperty = function (row, col) {
-            var value = $scope.getSubmissionProperty(row, col);
-            if ($scope.isDateColumn(col)) {
-                value = $filter('date')(value, 'MMM dd, yyyy');
-            }
-            return value;
-        };
-
-        $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME');
         };
 
         $scope.sortBy = function (sortColumn) {
