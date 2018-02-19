@@ -29,6 +29,8 @@ import edu.tamu.weaver.auth.model.Credentials;
  * 
  * mvn clean spring-boot:run -Drun.arguments=console
  * 
+ * NOTE: this requires institutions 
+ * 
  * @author James Creel
  * @author Jeremy Huff
  *
