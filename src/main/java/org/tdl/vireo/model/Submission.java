@@ -60,6 +60,7 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<FieldValue> fieldValues;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
