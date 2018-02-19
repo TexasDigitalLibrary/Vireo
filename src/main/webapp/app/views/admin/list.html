@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in $data" ng-click="viewSubmission(row)" class="select-toggle">
+      <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle">
         <td ng-repeat="col in $columns">
           <span>{{displaySubmissionProperty(row, col)}}</span>
         </td>
