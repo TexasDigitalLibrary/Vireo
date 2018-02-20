@@ -1,4 +1,4 @@
-<div class="further-filter-by" ng-repeat="column in box.getFilterColumns().userFilterColumns">
+<div class="further-filter-by" ng-repeat="column in box.filterColumns.userFilterColumns">
 	<sideboxsub>{{column.title}}</sideboxsub>
 
 	<div ng-switch on="column.title">

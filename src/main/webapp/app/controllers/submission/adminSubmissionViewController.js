@@ -8,62 +8,17 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
-    var userSettingsUnfetched = new UserSettings();
+    var userSettings = new UserSettings();
 
-    userSettingsUnfetched.fetch();
+    userSettings.fetch();
 
-    var ready = $q.all([
-        SubmissionRepo.findSubmissionById($routeParams.id),
-        UserRepo.getAll(),
-        SubmissionStatusRepo.getAll(),
-        EmailTemplateRepo.getAll(),
-        FieldPredicateRepo.getAll(),
-        DepositLocationRepo.getAll(),
-        userSettingsUnfetched
-    ]);
+    var submissionStatuses = SubmissionStatusRepo.getAll();
 
-    ready.then(function (resolved) {
+    var depositLocations = DepositLocationRepo.getAll();
 
-        var submission = resolved[0];
-        var users = resolved[1];
-        var submissionStatuses = resolved[2];
-        var emailTemplates = resolved[3];
-        var fieldPredicates = resolved[4];
-        var depositLocations = resolved[5];
-        var userSettings = resolved[6];
+    var emailTemplates = EmailTemplateRepo.getAll();
 
-        $scope.loaded = true;
-
-        $scope.submission = submission;
-        $scope.submission.fetchDocumentTypeFileInfo();
-
-        $scope.emailTemplates = emailTemplates;
-
-        $scope.fieldPredicates = fieldPredicates;
-
-
-        var initializeEmailRecipients = function() {
-            $scope.recipientEmails = [];
-            $scope.ccRecipientEmails = [];
-        };
-
-        initializeEmailRecipients();
-
-        var firstName = $scope.submission.submitter.firstName;
-        var lastName = $scope.submission.submitter.lastName;
-        var organization = $scope.submission.organization;
-
-        var assignable = function(user) {
-            return user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER";
-        };
-
-        var firstAssignable = function () {
-            for (var i in users) {
-                if (assignable(users[i])) {
-                    return users[i];
-                }
-            }
-        };
+    EmailTemplateRepo.ready().then(function() {
 
         var addDefaultTemplate = true;
         for (var i in emailTemplates) {
@@ -80,11 +35,38 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             });
         }
 
+    });
+
+    var initializeEmailRecipients = function() {
+        $scope.recipientEmails = [];
+        $scope.ccRecipientEmails = [];
+    };
+
+    initializeEmailRecipients();
+
+    $scope.loaded = true;
+
+    $scope.addCommentModal = {};
+
+    SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
+
+        $scope.submission = submission;
+
+        $scope.title = $scope.submission.submitter.lastName + ', ' + $scope.submission.submitter.firstName + ' (' + $scope.submission.organization.name + ')';
+
+        $scope.submission.fetchDocumentTypeFileInfo();
+
         var hasPrimaryDocumentFieldValue = function () {
             return $scope.submission.primaryDocumentFieldValue !== undefined && $scope.submission.primaryDocumentFieldValue !== null;
         };
 
-        $scope.addCommentModal = {};
+        var primaryDocumentFileName = function() {
+            return hasPrimaryDocumentFieldValue() ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
+        };
+
+        $scope.hasPrimaryDocument = function () {
+            return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
+        };
 
         $scope.resetCommentModal = function (addCommentModal) {
             $scope.closeModal();
@@ -112,8 +94,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.resetCommentModal($scope.addCommentModal);
-
-        $scope.title = lastName + ', ' + firstName + ' (' + organization.name + ')';
 
         $scope.showTab = function (workflowStep) {
             var show = false;
@@ -316,10 +296,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             $scope.closeModal();
         };
 
-        $scope.hasPrimaryDocument = function () {
-            return hasPrimaryDocumentFieldValue() && $scope.submission.primaryDocumentFieldValue.id !== undefined;
-        };
-
         $scope.addEmailAddressee = function (emailAddress,destinationModel) {
             if (emailAddress) {
                 destinationModel.push(emailAddress);
@@ -334,9 +310,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
-            "getPrimaryDocumentFileName": function () {
-                return hasPrimaryDocumentFieldValue() ? $scope.submission.primaryDocumentFieldValue.fileInfo !== undefined ? $scope.submission.primaryDocumentFieldValue.fileInfo.name : '' : '';
-            },
+            "getPrimaryDocumentFileName": primaryDocumentFileName,
             "downloadPrimaryDocument": function () {
                 $scope.getFile($scope.submission.primaryDocumentFieldValue);
             },
@@ -351,7 +325,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.submissionStatusBox = {
-            "newStatus": submissionStatuses[0],
             "depositLocations": depositLocations,
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
@@ -359,7 +332,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "SubmissionStatusRepo": SubmissionStatusRepo,
             "submissionStatuses": submissionStatuses,
             "advanced": true,
-            "allUsers": UserRepo.getAll(),
+            "assignableUsers": UserRepo.getAssignableUsers(),
             "user": UserService.getCurrentUser(),
             "sending": false,
             "sendAdvisorEmail": function () {
@@ -399,8 +372,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     $scope.submissionStatusBox.resetStatus();
                 });
             },
-            "assignable": assignable,
-            "firstAssignable": firstAssignable,
             "resetStatus": function () {
                 $scope.submissionStatusBox.advanced = true;
                 $scope.submissionStatusBox.newStatus = submissionStatuses[0];

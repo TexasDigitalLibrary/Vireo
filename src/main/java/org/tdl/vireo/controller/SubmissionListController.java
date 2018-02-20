@@ -87,7 +87,6 @@ public class SubmissionListController {
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
-
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 

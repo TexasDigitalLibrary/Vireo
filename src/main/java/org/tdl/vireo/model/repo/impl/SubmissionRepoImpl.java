@@ -4,6 +4,8 @@ import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
@@ -25,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -315,41 +319,47 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
-        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
         List<Long> ids = new ArrayList<Long>();
-        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
+        jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
         });
         return submissionRepo.findAll(ids);
     }
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
-        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
-        List<Long> ids = new ArrayList<Long>();
-        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
-            ids.add((Long) row.get("ID"));
-        });
-        List<Submission> actualResults = new ArrayList<Submission>();
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException {
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
 
-        List<Submission> submissions = submissionRepo.findAll(ids);
+        Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
+
+        List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<Long>() {
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getLong("ID");
+            }
+        });
+
+        List<Submission> submissions = new ArrayList<Submission>();
+
+        List<Submission> unordered = submissionRepo.findAll(ids);
 
         // order them
         for (Long id : ids) {
-            for (Submission ps : submissions) {
-                if (ps.getId().equals(id)) {
-                    actualResults.add(ps);
+            for (Submission sub : unordered) {
+                if (sub.getId().equals(id)) {
+                    submissions.add(sub);
+                    unordered.remove(sub);
+                    break;
                 }
             }
         }
 
-        Long total = this.jdbcTemplate.queryForObject(queryStrings[1], Long.class);
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
-        return new PageImpl<Submission>(actualResults, new PageRequest((int) Math.floor(offset / limit), limit), total);
+        return new PageImpl<Submission>(submissions, new PageRequest((int) Math.floor(offset / limit), limit), total);
     }
 
-    private String[] craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
@@ -370,8 +380,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        // add column filters to SubmissionListColumns, add all column filters
-        // to allColumnSearchFilters
+        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
             activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
                 if (namedSearchFilter.getAllColumnSearch()) {
@@ -388,8 +397,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             });
         }
 
-        // sort all submission list columns by sort order provided by users
-        // submission list columns
+        // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
@@ -666,7 +674,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);
 
-        return new String[] { sqlQuery, sqlCountQuery };
+        return new QueryStrings(sqlCountQuery, sqlQuery);
     }
 
     public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
@@ -686,6 +694,27 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     @Override
     protected String getChannel() {
         return "/channel/submission";
+    }
+
+    private class QueryStrings {
+
+        private final String countQuery;
+
+        private final String query;
+
+        private QueryStrings(String countQuery, String query) {
+            this.countQuery = countQuery;
+            this.query = query;
+        }
+
+        public String getCountQuery() {
+            return countQuery;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
     }
 
 }
