@@ -934,7 +934,7 @@ var apiMapping = {
         }
     },
     UserSettings: {
-        lazy: true,
+        lazy: false,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',
