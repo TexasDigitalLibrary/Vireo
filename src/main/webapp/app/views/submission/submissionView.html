@@ -54,7 +54,7 @@
                 </span>
                 <span ng-show="documentFieldValues.length > 0">
                   <ul class="list-unstyled">
-                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:{id: '!!',  fieldPredicate: {value: '!_doctype_primary'}} | documentFieldValuePerProfile)">
+                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:removibleDocuments)">
                       <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
                       <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
@@ -74,7 +74,11 @@
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
               <div class="col-sm-4">
-                <select class="form-control" ng-model="fieldPredicate" ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' } | filter: { value: '!LICENSE' }) track by documentFieldPredicate.value">
+                <select
+                  class="form-control"
+                  ng-model="fieldPredicate"
+                  ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined"
+                  ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:uploadableFieldPredicates) track by documentFieldPredicate.value">
                   <option value="">-- select document type --</option>
                 </select>
               </div>
