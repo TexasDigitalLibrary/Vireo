@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import edu.tamu.weaver.auth.model.Credentials;
  * 
  * mvn clean spring-boot:run -Drun.arguments=console
  * 
- * NOTE: till enable allow submissions on institution
+ * NOTE: will enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
@@ -121,6 +122,7 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
+                    Random random = new Random();
                     Calendar calendar = Calendar.getInstance();
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -138,6 +140,18 @@ public class Cli implements CommandLineRunner {
                                 FieldPredicate pred = fp.getFieldPredicate();
                                 if (fp.getInputType().getName().equals("INPUT_DATETIME")) {
                                     FieldValue val = fieldValueRepo.create(pred);
+
+                                    calendar.add(Calendar.YEAR, -random.nextInt(10));
+
+                                    int rm = random.nextInt(10);
+                                    if (random.nextInt(2) == 2) {
+                                        rm = -rm;
+                                    }
+
+                                    calendar.add(Calendar.MONTH, rm);
+
+                                    calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
+
                                     val.setValue(format.format(calendar.getTime()));
                                     sub.addFieldValue(val);
                                 } else if (fp.getInputType().getName().equals("INPUT_FILE")) {

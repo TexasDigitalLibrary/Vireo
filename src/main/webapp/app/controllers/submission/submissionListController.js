@@ -233,9 +233,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
-        var query = function () {
-            var start = window.performance.now();
+        var start;
 
+        var query = function () {
             $scope.tableParams = new NgTableParams({
                 page: $scope.page.number,
                 count: $scope.page.count
@@ -244,6 +244,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 total: $scope.page.totalElements,
                 filterDelay: 0,
                 getData: function (params) {
+                    start = window.performance.now();
                     return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
                         angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
                         console.log($scope.page);
@@ -253,14 +254,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = params.count();
                         return $scope.page.content;
                     });
-                }
+                }.bind(start)
             });
-
             $scope.finished = function() {
-                var end = window.performance.now();
-                console.log('Building submission list took ' + ((end - start) / 1000.0) + ' seconds');
-            };
-        };
+                console.log('Building submission list took ' + ((window.performance.now() - start) / 1000.0) + ' seconds');
+            }.bind(start);
+        }.bind(start);
 
         var getValueFromArray = function (array, col) {
             var value = "";

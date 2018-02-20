@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -650,7 +651,7 @@ public class SubmissionController {
     @JsonView(ApiView.Partial.class)
     @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
         long startTime = System.nanoTime();
         Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
