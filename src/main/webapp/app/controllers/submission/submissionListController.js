@@ -186,7 +186,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var resetBatchUpdateStatus = function () {
             $scope.advancedfeaturesBox.processing = false;
-            $scope.advancedfeaturesBox.assignee = findFirstAssignable();
+            $scope.advancedfeaturesBox.assignee = assignableUsers[0];
             $scope.closeModal();
         };
 
