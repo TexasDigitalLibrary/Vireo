@@ -33,8 +33,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -45,9 +47,11 @@ public class Organization extends ValidatingBaseEntity {
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private String name;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 

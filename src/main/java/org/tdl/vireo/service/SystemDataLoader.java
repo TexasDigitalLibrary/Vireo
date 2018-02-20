@@ -235,6 +235,8 @@ public class SystemDataLoader {
 
         logger.info("Loading default Depositors");
         loadDepositors();
+        
+        logger.info("Finished loading system defaults");
     }
 
     private void loadControlledVocabularies() {
