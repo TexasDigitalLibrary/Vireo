@@ -142,13 +142,9 @@ public class AuthController extends WeaverAuthController {
             return new ApiResponse(ERROR, "Token has expired! Please begin registration again.");
         }
 
-        User user = userRepo.create(email, firstName, lastName, Role.ROLE_STUDENT);
-
-        user.setUsername(email);
+        User user = new User(email, firstName, lastName, Role.ROLE_STUDENT, defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
         user.setPassword(cryptoService.encodePassword(password));
-
-        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
         user = userRepo.save(user);
 
