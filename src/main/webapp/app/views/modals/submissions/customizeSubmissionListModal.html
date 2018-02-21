@@ -36,8 +36,8 @@
         <form class="form-inline">
         <label class="control-title" for="resultsPerPageOptions"><strong>Results per page</strong>:</label>
         <select
-              class="form-control results-per-page-select"
-              name="resultsPerPageOptions"
+            class="form-control results-per-page-select"
+            name="resultsPerPageOptions"
             ng-model="page.count"
             ng-options="ps for ps in page.options"
             ng-change="updatePagination()">

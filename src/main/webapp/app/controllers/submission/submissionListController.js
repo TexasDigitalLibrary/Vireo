@@ -208,10 +208,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
-        var assignable = function (user) {
-            return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
-        };
-
         var resetBatchUpdateStatus = function () {
             $scope.advancedfeaturesBox.processing = false;
             $scope.advancedfeaturesBox.assignee = findFirstAssignable();
