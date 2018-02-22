@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User, UserService, UserSettings, SubmissionStatuses) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -9,8 +9,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     };
 
     var userSettings = new UserSettings();
-
-    userSettings.fetch();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
 

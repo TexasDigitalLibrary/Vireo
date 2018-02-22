@@ -172,8 +172,6 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
     
                 $scope.settings.user = new UserSettings();
     
-                $scope.settings.user.fetch();
-    
                 $scope.settings.user.ready().then(function () {
     
                     $scope.updateUserSetting = function (name) {
