@@ -2,10 +2,10 @@ vireo.repo("ManagerSubmissionListColumnRepo", function ManagerSubmissionListColu
 
 	var managerSubmissionListColumnRepo = this;
 	
-	this.updateSubmissionListColumns = function(pageSize) {
+	this.updateSubmissionListColumns = function(columns, pageSize) {
 		angular.extend(managerSubmissionListColumnRepo.mapping.update, {
 			'method': 'update-user-columns/' + pageSize,
-			'data': managerSubmissionListColumnRepo.getAll()
+			'data': columns
 		});
 		return WsApi.fetch(managerSubmissionListColumnRepo.mapping.update);
 	};

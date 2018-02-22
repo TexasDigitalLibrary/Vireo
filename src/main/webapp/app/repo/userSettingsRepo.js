@@ -1,7 +1,7 @@
 vireo.repo("UserSettingsRepo", function UserSettingsRepo() {
     
-        var userSettingsRepo = this;
+    var userSettingsRepo = this;
 
-        return userSettingsRepo;
-    
-    });
+    return userSettingsRepo;
+
+});

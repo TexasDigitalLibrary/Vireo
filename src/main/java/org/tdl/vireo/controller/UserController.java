@@ -22,6 +22,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
+import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
@@ -80,19 +81,15 @@ public class UserController {
 
     @RequestMapping("/settings")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ApiResponse getSettings(@WeaverCredentials Credentials shib) {
-        User user = userRepo.findByEmail(shib.getEmail());
+    public ApiResponse getSettings(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getSettings());
     }
 
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     @RequestMapping(value = "/settings/update", method = POST)
-    public ApiResponse updateSetting(@WeaverCredentials Credentials shib, @RequestBody Map<String, String> userSettings) {
-        User user = userRepo.findByEmail(shib.getEmail());
+    public ApiResponse updateSetting(@WeaverUser User user, @RequestBody Map<String, String> userSettings) {
         user.setSettings(userSettings);
-
         userRepo.update(user);
-
         simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
         return new ApiResponse(SUCCESS);
     }
