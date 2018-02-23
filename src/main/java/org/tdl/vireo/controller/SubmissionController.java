@@ -552,14 +552,16 @@ public class SubmissionController {
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
+            String nd = newDate.replaceAll("[\"]", "");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(df.parse(newDate));
+            cal.setTime(df.parse(nd));
 
             submission.setSubmissionDate(cal);
             submission = submissionRepo.update(submission);
 
-            actionLogRepo.createPublicLog(submission, user, "Submission submitted: " + submission.getSubmissionDate().getTime());
+            SimpleDateFormat logdf = new SimpleDateFormat("MM/dd/yyyy");
+            actionLogRepo.createPublicLog(submission, user, "Submission date set to: " + logdf.format(cal.getTime()));
 
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
