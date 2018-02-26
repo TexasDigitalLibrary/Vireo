@@ -18,7 +18,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     private UserRepo userRepo;
 
     @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
     @Autowired
     private DefaultFiltersService defaultFiltersService;
@@ -33,7 +33,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
         newUser = userRepo.save(newUser);
 
-        NamedSearchFilterGroup activeFilter = namedSearchFilterRepo.create(newUser);
+        NamedSearchFilterGroup activeFilter = namedSearchFilterGroupRepo.create(newUser);
 
         newUser.putSetting("id", newUser.getId().toString());
         newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());
@@ -47,7 +47,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public void delete(User user) {
-        namedSearchFilterRepo.delete(user.getActiveFilter());
+        namedSearchFilterGroupRepo.delete(user.getActiveFilter());
         userRepo.delete(user.getId());
     }
 

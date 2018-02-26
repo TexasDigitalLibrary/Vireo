@@ -26,10 +26,9 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Sub
         return defer.promise;
     };
 
-    submissionRepo.query = function (columns, page, size) {
+    submissionRepo.query = function (page, size) {
         angular.extend(submissionRepo.mapping.query, {
-            'method': 'query/' + page + '/' + size,
-            'data': columns
+            'method': 'query/' + page + '/' + size
         });
         var promise = WsApi.fetch(submissionRepo.mapping.query);
         promise.then(function (res) {
