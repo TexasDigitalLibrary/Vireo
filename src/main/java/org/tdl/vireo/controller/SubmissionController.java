@@ -6,6 +6,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,12 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,6 +48,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
@@ -73,14 +76,17 @@ import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.ApiPage;
 import edu.tamu.weaver.email.service.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.user.model.IRole;
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
@@ -146,24 +152,24 @@ public class SubmissionController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Value("${app.document.path:private/}")
     private String documentPath;
 
-    @Transactional
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
 
-    @Transactional
     @RequestMapping("/all-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getAllByUser(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(user));
     }
 
-    @Transactional
     @RequestMapping("/get-one/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -174,19 +180,17 @@ public class SubmissionController {
             submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
         }
         if (submission == null) {
-            return new ApiResponse(ERROR,"Submission not found");
+            return new ApiResponse(ERROR, "Submission not found");
         }
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/advisor-review/{submissionHash}")
     public ApiResponse getOne(@PathVariable String submissionHash) {
         Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials, @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
@@ -195,7 +199,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/delete/{submissionId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -211,7 +214,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
@@ -231,7 +233,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
@@ -272,10 +273,8 @@ public class SubmissionController {
         }
 
         actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
-
     }
 
-    @Transactional
     @RequestMapping(value = "/batch-comment")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
@@ -302,7 +301,6 @@ public class SubmissionController {
         }
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse updateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
@@ -353,7 +351,6 @@ public class SubmissionController {
         return apiResponse;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse validateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
@@ -377,14 +374,12 @@ public class SubmissionController {
         return submissionFieldProfile.getInputType().getName().equals("INPUT_ORCID") && configurationRepo.getByNameAndType("orcid_authentication", "orcid").getValue().toLowerCase().equals("true");
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
         return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
@@ -409,7 +404,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping("/batch-update-status/{submissionStatusName}")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
@@ -421,7 +415,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/publish/{depositLocationId}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse publish(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long depositLocationId) throws Exception {
@@ -468,17 +461,14 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
     public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
 
         AbstractPackager packager = packagerUtility.getPackager(packagerName);
 
-        response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
-
-        try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
+        try {
+            ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 
             // TODO: need a more dynamic way to achieve this
             if (packagerName.equals("ProQuest")) {
@@ -493,10 +483,19 @@ public class SubmissionController {
                 zos.closeEntry();
             }
             zos.close();
+
+            response.setContentType("application/zip");
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
+        } catch (Exception e) {
+            response.setContentType("application/json");
+
+            ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+            PrintWriter out = response.getWriter();
+            out.print(objectMapper.writeValueAsString(apiResponse));
+            out.close();
         }
     }
 
-    @Transactional
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
@@ -508,7 +507,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    @Transactional
     @RequestMapping("/batch-publish/{depositLocationId}")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchPublish(@WeaverUser User user, @PathVariable Long depositLocationId) {
@@ -547,7 +545,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/submit-date", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse submitDate(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody String newDate) throws ParseException {
@@ -572,7 +569,6 @@ public class SubmissionController {
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/assign-to", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse assign(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody User assignee) {
@@ -583,20 +579,23 @@ public class SubmissionController {
         }
 
         ApiResponse response = new ApiResponse(SUCCESS);
-        if (submission != null) {
-            submission.setAssignee(assignee);
-            submission = submissionRepo.update(submission);
 
-            actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+        if (assignee != null) {
+            if (submission != null) {
+                submission.setAssignee(assignee);
+                submission = submissionRepo.update(submission);
+                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
 
+            } else {
+                response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+            }
         } else {
-            response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+            response = new ApiResponse(ERROR, "Could not find a assignee!");
         }
 
         return response;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/remove-field-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse removeFieldValue(@PathVariable("submissionId") Long submissionId, @RequestBody FieldValue fieldValue) {
@@ -607,7 +606,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/update-reviewer-notes", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateReviewerNotes(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody Map<String, String> requestData) {
@@ -619,7 +617,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/needs-correction")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse setSubmissionNeedsCorrection(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -632,7 +629,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping("/{submissionId}/submit-corrections")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse setSubmissionCorrectionsReceived(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -645,7 +641,6 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, submission);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/add-message", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addMessage(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody String message) {
@@ -653,11 +648,18 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(submission, user, message));
     }
 
-    @Transactional
-    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
+    @JsonView(ApiView.Partial.class)
+    @RequestMapping("/query/{page}/{size}")
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) {
-        return new ApiResponse(SUCCESS, submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size)));
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
+        long startTime = System.nanoTime();
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");
+        return new ApiResponse(SUCCESS, new ApiPage<Submission>(submissions));
     }
 
     @RequestMapping("/file")
@@ -673,22 +675,18 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
     }
 
-    @Transactional
-    @RequestMapping(value = "/{submissionId}/{documentType}/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/{submissionId}/{documentType}/upload-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse uploadSubmission(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
+    public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
         String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
         fileIOUtility.write(file.getBytes(), uri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
@@ -697,36 +695,33 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
         fileIOUtility.copy(oldUri, newUri);
         fileIOUtility.delete(oldUri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
-    @Transactional
-    @RequestMapping(value = "/{submissionId}/{documentType}/remove-file", method = RequestMethod.POST)
+    @RequestMapping("/{submissionId}/{fieldValueId}/remove-file")
     @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
-        ApiResponse apiResponse = null;
+    public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long fieldValueId) throws IOException {
+        ApiResponse apiResponse = new ApiResponse(SUCCESS);
         int hash = user.getEmail().hashCode();
-        String uri = requestData.get("uri");
-        if (uri.contains(String.valueOf(hash))) {
-
-            JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-
-            fileIOUtility.delete(uri);
-
-            actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
-
-            apiResponse = new ApiResponse(SUCCESS);
+        FieldValue fileFieldValue = fieldValueRepo.findOne(fieldValueId);
+        String documentType = fileFieldValue.getFieldPredicate().getValue();
+        String uri = fileFieldValue.getValue();
+        if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
+            apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
-            apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+            if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
+                JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+                fileIOUtility.delete(uri);
+                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+            } else {
+                apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+            }
         }
         return apiResponse;
     }
 
-    @Transactional
     @RequestMapping(value = "/{submissionId}/{documentType}/archive-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse archiveFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
@@ -735,16 +730,13 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
         fileIOUtility.copy(oldUri, newUri);
         fileIOUtility.delete(oldUri);
-
         JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
-
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return new ApiResponse(SUCCESS, newUri);
     }
 
     @RequestMapping("/{submissionId}/send-advisor-email")
     @PreAuthorize("hasRole('REVIEWER')")
-    @Transactional
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
 
         Submission submission = submissionRepo.read(submissionId);
@@ -764,8 +756,8 @@ public class SubmissionController {
             smm.setTo(String.join(",", fv.getContacts()));
 
             String preferedEmail = user.getSetting("preferedEmail");
-            user.getSetting("ccEmail");
-            if (user.getSetting("ccEmail").equals("true")) {
+
+            if ("true".equals(user.getSetting("ccEmail"))) {
                 smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
             }
 
@@ -784,7 +776,6 @@ public class SubmissionController {
     // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
-    @Transactional
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
 
         Submission submission = submissionRepo.read(submissionId);
@@ -874,7 +865,7 @@ public class SubmissionController {
 
                         String preferedEmail = user.getSetting("preferedEmail");
 
-                        if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                        if ("true".equals(user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 

@@ -1,5 +1,7 @@
 package org.tdl.vireo.utility;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.Submission;
@@ -11,6 +13,8 @@ import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 @Service
 public class PackagerUtility {
 
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
 
@@ -19,9 +23,7 @@ public class PackagerUtility {
 
     public ExportPackage packageExport(Packager packager, Submission submission) throws Exception {
         String manifest = formatterUtility.renderManifest(packager.getFormatter(), submission);
-
-        System.out.println("\n\n" + manifest + "\n\n");
-
+        LOG.debug(manifest);
         return packager.packageExport(manifest, submission);
     }
 

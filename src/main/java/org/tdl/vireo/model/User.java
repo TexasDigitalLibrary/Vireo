@@ -1,9 +1,10 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,9 +18,12 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
@@ -30,10 +34,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.validation.UserValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
@@ -41,9 +47,11 @@ public class User extends AbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private String netid;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -51,12 +59,15 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private String firstName;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private String lastName;
 
+    @JsonView(ApiView.Partial.class)
     @Column
     private String middleName;
 
@@ -65,6 +76,7 @@ public class User extends AbstractWeaverUserDetails {
     @Column(name = "value")
     private Map<String, String> settings;
 
+    @JsonView(ApiView.Partial.class)
     @Column
     private Integer birthYear;
 
@@ -72,13 +84,14 @@ public class User extends AbstractWeaverUserDetails {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true, optional = true)
+    @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column
@@ -95,11 +108,11 @@ public class User extends AbstractWeaverUserDetails {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = true)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {

@@ -6,7 +6,7 @@ vireo.service("FileUploadService", function ($q, FileService) {
         return FileService.upload({
             'endpoint': '',
             'controller': 'submission',
-            'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload',
+            'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload-file',
             'file': fieldValue.file
         });
     };
@@ -14,9 +14,15 @@ vireo.service("FileUploadService", function ($q, FileService) {
     FileUploadService.removeFile = function (submission, fieldValue) {
         return $q(function (resolve) {
             submission.removeFile(fieldValue).then(function (response) {
-                submission.removeFieldValue(fieldValue).then(function () {
-                    resolve();
-                });
+                var status = angular.fromJson(response.body).meta.status;
+                if(status === 'SUCCESS') {
+                    submission.removeFieldValue(fieldValue).then(function () {
+                        resolve(true);
+                    });
+                } else {
+                    console.warn(response);
+                    resolve(false);
+                }
             });
         });
     };

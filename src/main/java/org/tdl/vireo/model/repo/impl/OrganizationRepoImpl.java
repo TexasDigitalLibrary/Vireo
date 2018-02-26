@@ -11,7 +11,6 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
@@ -20,9 +19,6 @@ import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
 public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
-
-    @Autowired
-    private OrganizationCategoryRepo organizationCategoryRepo;
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -36,10 +32,8 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     @Override
     public Organization create(String name, OrganizationCategory category) {
         Organization organization = organizationRepo.save(new Organization(name, category));
-        category.addOrganization(organization);
-        organizationCategoryRepo.save(category);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return super.read(organization.getId());
+        return organization;
     }
 
     @Override
@@ -68,10 +62,6 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
 
     @Override
     public void delete(Organization organization) {
-
-        OrganizationCategory category = organization.getCategory();
-        category.removeOrganization(organization);
-        organizationCategoryRepo.save(category);
 
         Long orgId = organization.getId();
 

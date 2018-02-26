@@ -55,7 +55,7 @@
   {
     "title": "Approval date",
     "sort": "NONE",
-    "valuePath": ["approvalDate"],
+    "valuePath": ["approveApplicationDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"

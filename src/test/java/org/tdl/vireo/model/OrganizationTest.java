@@ -447,11 +447,9 @@ public class OrganizationTest extends AbstractEntityTest {
             workflowStepRepo.delete(workflowStep);
         });
 
-        organizationCategoryRepo.deleteAll();
+        organizationRepo.deleteAll();
 
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
+        organizationCategoryRepo.deleteAll();
 
         emailWorkflowRuleRepo.deleteAll();
         submissionStatusRepo.deleteAll();

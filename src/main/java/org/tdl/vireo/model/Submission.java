@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -30,7 +29,9 @@ import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -38,49 +39,63 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends ValidatingBaseEntity {
 
-    @ManyToOne(optional = false)
+    @JsonView(ApiView.Partial.class)
+    @ManyToOne(fetch = EAGER, optional = false)
     private User submitter;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    @JsonView(ApiView.Partial.class)
+    @ManyToOne(fetch = EAGER, optional = true)
     private User assignee;
 
-    @ManyToOne(cascade = { REFRESH })
+    @JsonView(ApiView.Partial.class)
+    @ManyToOne(fetch = EAGER, optional = false)
     private SubmissionStatus submissionStatus;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @JsonView(ApiView.Partial.class)
+    @ManyToOne(fetch = EAGER, optional = false)
     private Organization organization;
 
+    @JsonView(ApiView.Partial.class)
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
     private Set<FieldValue> fieldValues;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @JsonView(ApiView.Partial.class)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveEmbargoDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveApplicationDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveAdvisorDate;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveEmbargo;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveApplication;
-    
+
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = true)
     private boolean approveAdvisor;
 
@@ -88,9 +103,9 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
-    @JoinColumn
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
+    @JoinColumn
     private Set<ActionLog> actionLogs;
 
     @Column(columnDefinition = "TEXT")
@@ -369,7 +384,7 @@ public class Submission extends ValidatingBaseEntity {
         this.approveApplicationDate = null;
         this.approveApplication = false;
     }
-    
+
     /**
      * 
      * @return
@@ -393,7 +408,7 @@ public class Submission extends ValidatingBaseEntity {
         this.approveAdvisorDate = null;
         this.approveAdvisor = false;
     }
-    
+
     /**
      * @return the actionLog
      */

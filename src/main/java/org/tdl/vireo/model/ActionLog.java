@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
-
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -22,10 +18,10 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class ActionLog extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(optional = false)
     private SubmissionStatus submissionStatus;
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = true)
+    @ManyToOne(optional = true)
     private User user;
 
     @Column(nullable = true)
@@ -42,21 +38,17 @@ public class ActionLog extends ValidatingBaseEntity {
         setModelValidator(new ActionLogValidator());
     }
 
-    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
-        this();
-        this.submissionStatus = submissionStatus;
-        this.user = user;
-        this.actionDate = actionDate;
-        this.entry = entry;
-        this.privateFlag = privateFlag;
-    }
-
     public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
         this();
-        this.submissionStatus = submissionStatus;
-        this.actionDate = actionDate;
-        this.entry = entry;
-        this.privateFlag = privateFlag;
+        setSubmissionStatus(submissionStatus);
+        setActionDate(actionDate);
+        setEntry(entry);
+        setPrivateFlag(privateFlag);
+    }
+
+    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
+        this(submissionStatus, actionDate, entry, privateFlag);
+        setUser(user);
     }
 
     /**

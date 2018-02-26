@@ -30,10 +30,10 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(nullable = false)
@@ -54,11 +54,11 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<FieldGloss> fieldGlosses;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ControlledVocabulary> controlledVocabularies;
 
@@ -136,18 +136,34 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
         this.optional = optional;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getHidden() {
         return hidden;
     }
 
+    /**
+     * 
+     * @param hidden
+     */
     public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Boolean getLogged() {
         return logged;
     }
 
+    /**
+     * 
+     * @param logged
+     */
     public void setLogged(Boolean logged) {
         this.logged = logged;
     }
@@ -307,10 +323,18 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
         this.flagged = flagged;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getDefaultValue() {
         return defaultValue;
     }
 
+    /**
+     * 
+     * @param defaultValue
+     */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }

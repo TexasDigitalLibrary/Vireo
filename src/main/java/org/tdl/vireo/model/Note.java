@@ -25,7 +25,7 @@ public class Note extends AbstractNote<Note> implements HeritableComponent<Note>
     @JsonIdentityReference(alwaysAsId = true)
     private Note originating;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
@@ -86,12 +86,12 @@ public class Note extends AbstractNote<Note> implements HeritableComponent<Note>
 
     @Override
     public void setOriginating(Note originating) {
-    	this.originating = originating;
+        this.originating = originating;
     }
 
     @Override
     public Note getOriginating() {
-    	return originating;
+        return originating;
     }
 
     @Override

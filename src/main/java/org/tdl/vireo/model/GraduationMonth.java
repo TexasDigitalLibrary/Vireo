@@ -20,9 +20,6 @@ public class GraduationMonth extends ValidatingOrderedBaseEntity implements Enti
     @Column(nullable = false, unique = true)
     private int month;
 
-    /**
-     *
-     */
     public GraduationMonth() {
         setModelValidator(new GraduationMonthValidator());
     }

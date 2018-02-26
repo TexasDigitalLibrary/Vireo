@@ -235,6 +235,8 @@ public class SystemDataLoader {
 
         logger.info("Loading default Depositors");
         loadDepositors();
+        
+        logger.info("Finished loading system defaults");
     }
 
     private void loadControlledVocabularies() {
@@ -422,10 +424,6 @@ public class SystemDataLoader {
             organization = organizationRepo.save(organization);
 
             processEmailWorflowRules();
-
-            category.addOrganization(organization);
-
-            organizationCategoryRepo.save(category);
 
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);

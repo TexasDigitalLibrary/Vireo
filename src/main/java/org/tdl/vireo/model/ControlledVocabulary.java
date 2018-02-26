@@ -35,7 +35,7 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     private Language language;
 
     @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
-    private List<VocabularyWord> dictionary = new ArrayList<VocabularyWord>();
+    private List<VocabularyWord> dictionary;
 
     @Column(nullable = false)
     private Boolean isEntityProperty;
@@ -43,6 +43,7 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     public ControlledVocabulary() {
         setModelValidator(new ControlledVocabularyValidator());
         setIsEntityProperty(false);
+        setDictionary(new ArrayList<VocabularyWord>());
     }
 
     public ControlledVocabulary(String name, Language language) {
