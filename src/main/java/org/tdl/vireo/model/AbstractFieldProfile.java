@@ -27,7 +27,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "FP_TYPE")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "flagged" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
     @ManyToOne(fetch = EAGER, optional = false)

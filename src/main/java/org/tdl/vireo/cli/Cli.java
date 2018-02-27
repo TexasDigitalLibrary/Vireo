@@ -57,6 +57,7 @@ public class Cli implements CommandLineRunner {
     @Autowired
     private SubmissionStatusRepo submissionStatusRepo;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void run(String... arg0) throws Exception {
         boolean runConsole = false;
@@ -124,7 +125,7 @@ public class Cli implements CommandLineRunner {
                     }
 
                     Random random = new Random();
-                    Calendar calendar = Calendar.getInstance();
+                    
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
@@ -140,41 +141,43 @@ public class Cli implements CommandLineRunner {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
                                 FieldValue val;
-                                switch(fp.getInputType().getName()) {
-                                    case "INPUT_FILE":
+                                switch (fp.getInputType().getName()) {
+                                case "INPUT_FILE":
                                     break;
-                                    case "INPUT_CONTACT":
-                                        val = fieldValueRepo.create(pred);
-                                        val.setValue("test " + pred.getValue() + " " + i);
-                                        val.setContacts(Arrays.asList(new String[]{"test" + pred.getValue() + i + "@mailinator.com"}));
-                                        sub.addFieldValue(val);
+                                case "INPUT_CONTACT":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test " + pred.getValue() + " " + i);
+                                    val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
+                                    sub.addFieldValue(val);
                                     break;
-                                    case "INPUT_EMAIL":
-                                        val = fieldValueRepo.create(pred);
-                                        val.setValue("test" + pred.getValue() + i + "@mailinator.com");
-                                        sub.addFieldValue(val);
+                                case "INPUT_EMAIL":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test" + pred.getValue() + i + "@mailinator.com");
+                                    sub.addFieldValue(val);
                                     break;
-                                    case "INPUT_DATETIME":
-                                        val = fieldValueRepo.create(pred);
+                                case "INPUT_DATETIME":
+                                    val = fieldValueRepo.create(pred);
+                                    
+                                    Calendar calendar = Calendar.getInstance();
 
-                                        calendar.add(Calendar.YEAR, -random.nextInt(10));
+                                    calendar.add(Calendar.YEAR, -random.nextInt(10));
 
-                                        int rm = random.nextInt(10);
-                                        if (random.nextInt(2) == 2) {
-                                            rm = -rm;
-                                        }
+                                    int rm = random.nextInt(10);
+                                    if (random.nextInt(2) == 2) {
+                                        rm = -rm;
+                                    }
 
-                                        calendar.add(Calendar.MONTH, rm);
+                                    calendar.add(Calendar.MONTH, rm);
 
-                                        calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
+                                    calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
 
-                                        val.setValue(format.format(calendar.getTime()));
-                                        sub.addFieldValue(val);
+                                    val.setValue(format.format(calendar.getTime()));
+                                    sub.addFieldValue(val);
                                     break;
-                                    default:
-                                        val = fieldValueRepo.create(pred);
-                                        val.setValue("test " + pred.getValue() + " " + i);
-                                        sub.addFieldValue(val);
+                                default:
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test " + pred.getValue() + " " + i);
+                                    sub.addFieldValue(val);
                                 }
                             }
                         }
