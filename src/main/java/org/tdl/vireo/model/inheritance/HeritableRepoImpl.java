@@ -148,7 +148,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
             // If the WS originates component C, we don't need a new one
             if (workflowStepOriginatesComponent) {
 
-                BeanUtils.copyProperties(componentCWithChanges, componentC);
+                BeanUtils.copyProperties(componentCWithChanges, componentC, "originating", "originatingWorkflowStep");
 
                 // update heritableModel directly
                 resultingHeritableModel = heritableRepo.save(componentC);
