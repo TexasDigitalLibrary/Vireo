@@ -55,6 +55,7 @@ public class Organization extends ValidatingBaseEntity {
     @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
@@ -69,11 +70,13 @@ public class Organization extends ValidatingBaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
+    @JsonView(ApiView.Partial.class)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
