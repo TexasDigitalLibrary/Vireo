@@ -125,7 +125,7 @@ public class Cli implements CommandLineRunner {
                     }
 
                     Random random = new Random();
-                    
+
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
@@ -157,7 +157,7 @@ public class Cli implements CommandLineRunner {
                                     break;
                                 case "INPUT_DATETIME":
                                     val = fieldValueRepo.create(pred);
-                                    
+
                                     Calendar calendar = Calendar.getInstance();
 
                                     calendar.add(Calendar.YEAR, -random.nextInt(10));
