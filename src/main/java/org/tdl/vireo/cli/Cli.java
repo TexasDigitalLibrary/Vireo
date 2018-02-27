@@ -25,6 +25,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
 /**
@@ -143,8 +144,15 @@ public class Cli implements CommandLineRunner {
                                     case "INPUT_FILE":
                                     break;
                                     case "INPUT_CONTACT":
+                                        val = fieldValueRepo.create(pred);
+                                        val.setValue("test " + pred.getValue() + " " + i);
+                                        val.setContacts(Arrays.asList(new String[]{"test" + pred.getValue() + i + "@mailinator.com"}));
+                                        sub.addFieldValue(val);
                                     break;
                                     case "INPUT_EMAIL":
+                                        val = fieldValueRepo.create(pred);
+                                        val.setValue("test" + pred.getValue() + i + "@mailinator.com");
+                                        sub.addFieldValue(val);
                                     break;
                                     case "INPUT_DATETIME":
                                         val = fieldValueRepo.create(pred);
