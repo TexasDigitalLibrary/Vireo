@@ -54,7 +54,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 filterDelay: 0,
                 getData: function (params) {
                     start = window.performance.now();
-                    return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
+                    return SubmissionRepo.query(params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
                         angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
                         // NOTE: this causes way to many subscriptions!!!
                         // SubmissionRepo.addAll($scope.page.content);
@@ -71,37 +71,43 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var update = function () {
 
+            SavedFilterRepo.reset();
+
             SubmissionListColumnRepo.reset();
 
-            ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(response) {
-                var apiRes = angular.fromJson(response.body);
-                if(apiRes.meta.status === 'SUCCESS') {
-                    $scope.page.count = apiRes.payload.Integer;
-                }
+            ManagerSubmissionListColumnRepo.reset();
 
-                var managerFilterColumns = ManagerFilterColumnRepo.getAll();
-                var submissionListColumns = SubmissionListColumnRepo.getAll();
+            $q.all([SavedFilterRepo.ready(), SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function() {
+                ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        $scope.page.count = apiRes.payload.Integer;
+                    }
 
-                $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
+                    var managerFilterColumns = ManagerFilterColumnRepo.getAll();
+                    var submissionListColumns = SubmissionListColumnRepo.getAll();
 
-                $scope.excludedColumns = [];
+                    $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
-                angular.copy($scope.userColumns, $scope.excludedColumns);
+                    $scope.excludedColumns = [];
 
-                $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
+                    angular.copy($scope.userColumns, $scope.excludedColumns);
 
-                $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
+                    $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
 
-                angular.extend(filterColumns, {
-                    userFilterColumns: managerFilterColumns,
-                    inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+                    $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
+
+                    angular.extend(filterColumns, {
+                        userFilterColumns: managerFilterColumns,
+                        inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+                    });
+
+                    query();
+
+                    $scope.change = false;
+
+                    $scope.closeModal();
                 });
-
-                query();
-
-                $scope.change = false;
-
-                $scope.closeModal();
             });
         };
 

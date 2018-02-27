@@ -48,6 +48,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
@@ -650,11 +651,13 @@ public class SubmissionController {
     }
 
     @JsonView(ApiView.Partial.class)
-    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
+    @RequestMapping("/query/{page}/{size}")
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
         long startTime = System.nanoTime();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size));
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");

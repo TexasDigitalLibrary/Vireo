@@ -23,6 +23,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
@@ -107,11 +108,11 @@ public class User extends AbstractWeaverUserDetails {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
     @Fetch(FetchMode.SELECT)
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = true)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {

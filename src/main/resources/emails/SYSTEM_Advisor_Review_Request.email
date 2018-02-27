@@ -4,10 +4,10 @@
 #   {FULL_NAME}: The student's full, official name
 #   {ADVISOR_URL}: A URL where the advisor may review the submission.
 #   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
-#   {DOCUMENT_TYPE}: The document type, typically 'Thesis' or 'Dissertation'
+#   {SUBMISSION_TYPE}: The document type, typically 'Thesis' or 'Dissertation'
 #   {SUBMISSION_STATUS}: The current status of the submissions, e.g. 'Approved' or 'Needs Corrections'
 #
-Subject: Review: {FULL_NAME}'s {DOCUMENT_TYPE} submission
+Subject: Review: {FULL_NAME}'s {SUBMISSION_TYPE} submission
 Dear Committee Chair:
 
 You are receiving this message because {FULL_NAME} has submitted a thesis or dissertation for final review, and has listed this email address as the contact email for their committee. We are giving you access to the submission in order to verify that the document is the correct, final version that you and the committee have approved.
@@ -19,7 +19,7 @@ The submission is available for your review at:
 The following information is included for your convenience:
 
 Title: {DOCUMENT_TITLE}
-Type: {DOCUMENT_TYPE}
+Type: {SUBMISSION_TYPE}
 Status: {SUBMISSION_STATUS}
 Assigned to: {SUBMISSION_ASSIGNED_TO}
 
