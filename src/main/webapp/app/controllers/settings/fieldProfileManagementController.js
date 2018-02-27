@@ -87,6 +87,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         FieldPredicateRepo.ready().then(function () {
             $scope.buildFilteredPredicateList();
         });
+
         FieldPredicateRepo.listen(function () {
             $scope.buildFilteredPredicateList();
         });

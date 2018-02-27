@@ -310,7 +310,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
 
         clone.setAggregateFieldProfiles(aggregateFieldProfiles);
 
-        clone.setInstructions(this.getInstructions());
+        clone.setInstructions(getInstructions());
 
         return clone;
     }

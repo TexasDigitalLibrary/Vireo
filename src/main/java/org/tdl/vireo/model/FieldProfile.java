@@ -187,6 +187,8 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         clone.setOptional(getOptional());
         clone.setRepeatable(getRepeatable());
 
+        clone.setDefaultValue(getDefaultValue());
+
         clone.setFlagged(getFlagged());
         clone.setOverrideable(getOverrideable());
 
