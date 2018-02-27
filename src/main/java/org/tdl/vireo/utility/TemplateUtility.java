@@ -102,15 +102,14 @@ public class TemplateUtility {
 			
 		};
 		
-		
 		return compiled;
     }
     
     private String findValue(String predicateKey, Submission submission) {
-        return submission.getFieldValuesByPredicateValue("submission_type")
-        .stream()
-        .map(v-> { return v.getValue(); })
-        .collect(Collectors.joining(", "));
+        return submission.getFieldValuesByPredicateValue(predicateKey)
+            .stream()
+            .map(v-> { return v.getValue(); })
+            .collect(Collectors.joining(", "));
     }
 
 }
