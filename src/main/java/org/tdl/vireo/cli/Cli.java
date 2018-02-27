@@ -138,30 +138,36 @@ public class Cli implements CommandLineRunner {
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
-                                if (fp.getInputType().getName().equals("INPUT_DATETIME")) {
-                                    FieldValue val = fieldValueRepo.create(pred);
+                                FieldValue val;
+                                switch(fp.getInputType().getName()) {
+                                    case "INPUT_FILE":
+                                    break;
+                                    case "INPUT_CONTACT":
+                                    break;
+                                    case "INPUT_EMAIL":
+                                    break;
+                                    case "INPUT_DATETIME":
+                                        val = fieldValueRepo.create(pred);
 
-                                    calendar.add(Calendar.YEAR, -random.nextInt(10));
+                                        calendar.add(Calendar.YEAR, -random.nextInt(10));
 
-                                    int rm = random.nextInt(10);
-                                    if (random.nextInt(2) == 2) {
-                                        rm = -rm;
-                                    }
+                                        int rm = random.nextInt(10);
+                                        if (random.nextInt(2) == 2) {
+                                            rm = -rm;
+                                        }
 
-                                    calendar.add(Calendar.MONTH, rm);
+                                        calendar.add(Calendar.MONTH, rm);
 
-                                    calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
+                                        calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
 
-                                    val.setValue(format.format(calendar.getTime()));
-                                    sub.addFieldValue(val);
-                                } else if (fp.getInputType().getName().equals("INPUT_FILE")) {
-                                    // do nothing
-                                } else {
-                                    FieldValue val = fieldValueRepo.create(pred);
-                                    val.setValue("test " + pred.getValue() + " " + i);
-                                    sub.addFieldValue(val);
+                                        val.setValue(format.format(calendar.getTime()));
+                                        sub.addFieldValue(val);
+                                    break;
+                                    default:
+                                        val = fieldValueRepo.create(pred);
+                                        val.setValue("test " + pred.getValue() + " " + i);
+                                        sub.addFieldValue(val);
                                 }
-
                             }
                         }
                         submissionRepo.saveAndFlush(sub);
