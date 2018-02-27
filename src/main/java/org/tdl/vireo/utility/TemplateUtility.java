@@ -24,7 +24,6 @@ public class TemplateUtility {
     private static final String DOCUMENT_TITLE = "DOCUMENT_TITLE";
     private static final String SUBMISSION_TYPE = "SUBMISSION_TYPE";
     private static final String DEPOSIT_URI = "DEPOSIT_URI";
-    private static final String GRAD_SEMESTER = "GRAD_SEMESTER";
     private static final String STUDENT_URL = "STUDENT_URL";
     private static final String SUBMISSION_URL = "SUBMISSION_URL";
     private static final String ADVISOR_URL = "ADVISOR_URL";
@@ -63,14 +62,17 @@ public class TemplateUtility {
                 .replaceAll("\\{" + STUDENT_URL + "\\}", url + "/submission/" + submission.getId() + "/view")
                 .replaceAll("\\{" + SUBMISSION_URL + "\\}", url + "/submission/" + submission.getId())
                 .replaceAll("\\{" + ADVISOR_URL + "\\}", submission.getAdvisorReviewURL())
-                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri());
+                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri())
+
+                .replaceAll("\\{" + DOCUMENT_TITLE + "\\}", findValue("dc.title", submission))
+                .replaceAll("\\{" + SUBMISSION_TYPE + "\\}", findValue("submission_type", submission));
                 
                 // This is being handled elswhere and may not be useful, since 
         		// sending this uri from an email workflow rule seems illogical.
         		// This is because these rule trigger from submission state changes
         		// and a user must be registered already to have a submission.
                 //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
-        
+ 
 
         if (submission.getSubmissionStatus() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionStatus().getName());
@@ -81,7 +83,6 @@ public class TemplateUtility {
         }
         
         compiled = replacePredicates(compiled, submission);
-        
 
         return compiled;
     }
@@ -93,12 +94,7 @@ public class TemplateUtility {
 			for(SubmissionFieldProfile afp : sws.getAggregateFieldProfiles()) {
 				
 				String predicateKey = afp.getFieldPredicate().getValue();				
-				String fieldValue = submission.getFieldValuesByPredicateValue(predicateKey)
-					.stream()
-					.map(v-> {
-						return v.getValue();
-					})
-					.collect(Collectors.joining(", "));
+				String fieldValue = findValue(predicateKey, submission);
 				
 				compiled = compiled.replaceAll("\\{" + predicateKey + "\\}", fieldValue);
 				
@@ -108,6 +104,13 @@ public class TemplateUtility {
 		
 		
 		return compiled;
-	}
+    }
+    
+    private String findValue(String predicateKey, Submission submission) {
+        return submission.getFieldValuesByPredicateValue("submission_type")
+        .stream()
+        .map(v-> { return v.getValue(); })
+        .collect(Collectors.joining(", "));
+    }
 
 }
