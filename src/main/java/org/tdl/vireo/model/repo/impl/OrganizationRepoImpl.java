@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
@@ -27,6 +29,8 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiView;
 
 public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
+
+    final static Logger logger = LoggerFactory.getLogger(OrganizationRepoImpl.class);
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -63,9 +67,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     @Override
     @Transactional // this transactional is required to persist parent child relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
-        Organization organization = create(name, category);
+        Organization organization = organizationRepo.save(new Organization(name, category));
         if (parent != null) {
-            System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
+            logger.info("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
             parent = organizationRepo.save(parent);
             parent.getAggregateWorkflowSteps().forEach(ws -> {

@@ -57,8 +57,8 @@ public class Cli implements CommandLineRunner {
     @Autowired
     private SubmissionStatusRepo submissionStatusRepo;
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void run(String... arg0) throws Exception {
         boolean runConsole = false;
         for (String s : arg0) {
@@ -169,7 +169,7 @@ public class Cli implements CommandLineRunner {
 
                                     calendar.add(Calendar.MONTH, rm);
 
-                                    calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
+                                    calendar.add(Calendar.DATE, random.nextInt(32 - calendar.get(Calendar.DAY_OF_MONTH)));
 
                                     val.setValue(format.format(calendar.getTime()));
                                     sub.addFieldValue(val);

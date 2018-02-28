@@ -68,21 +68,6 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return organization;
     };
 
-    this.getChildren = function (id) {
-        organizationRepo.clearValidationResults();
-        angular.extend(this.mapping.children, {
-            'method': 'get-children/' + id
-        });
-        var promise = WsApi.fetch(this.mapping.children);
-        promise.then(function (res) {
-            var resObj = angular.fromJson(res.body);
-            if (resObj.meta.status === "INVALID") {
-                angular.extend(organizationRepo, resObj.payload);
-            }
-        });
-        return promise;
-    };
-
     this.addWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.addWorkflowStep, {

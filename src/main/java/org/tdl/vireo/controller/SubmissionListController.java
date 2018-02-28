@@ -85,15 +85,7 @@ public class SubmissionListController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update-user-columns/{pageSize}", method = POST)
     public ApiResponse updateUserSubmissionViewColumns(@WeaverUser User user, @PathVariable Integer pageSize, @RequestBody List<SubmissionListColumn> submissionViewColumns) {
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        if (activeFilter.getColumnsFlag()) {
-            NamedSearchFilterGroup newActiveFilter = namedSearchFilterGroupRepo.create(user);
-            newActiveFilter.setUmiRelease(activeFilter.getUmiRelease());
-            activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
-                newActiveFilter.addFilterCriterion(namedSearchFilterRepo.clone(namedSearchFilter));
-            });
-            user.setActiveFilter(newActiveFilter);
-        }
+        clearColumnCreate(user);
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
@@ -103,6 +95,14 @@ public class SubmissionListController {
     @RequestMapping("/reset-user-columns")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse resetUserSubmissionViewColumns(@WeaverUser User user) {
+        clearColumnCreate(user);
+        user.setPageSize(10);
+        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
+        user = userRepo.save(user);
+        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+    }
+
+    private void clearColumnCreate(User user) {
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
         if (activeFilter.getColumnsFlag()) {
             NamedSearchFilterGroup newActiveFilter = namedSearchFilterGroupRepo.create(user);
@@ -112,10 +112,6 @@ public class SubmissionListController {
             });
             user.setActiveFilter(newActiveFilter);
         }
-        user.setPageSize(10);
-        user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
-        user = userRepo.save(user);
-        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
     @PreAuthorize("hasRole('MANAGER')")

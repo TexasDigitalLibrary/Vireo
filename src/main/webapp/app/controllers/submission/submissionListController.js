@@ -451,6 +451,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.resetColumns = function () {
             ManagerSubmissionListColumnRepo.reset();
             update();
+            $scope.closeModal();
         };
 
         $scope.resetColumnsToDefault = function () {

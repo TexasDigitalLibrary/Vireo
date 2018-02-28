@@ -540,10 +540,6 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization'
         },
-        children: {
-            'endpoint': '/private/queue',
-            'controller': 'organization'
-        },
         addWorkflowStep: {
             'endpoint': '/private/queue',
             'controller': 'organization'
