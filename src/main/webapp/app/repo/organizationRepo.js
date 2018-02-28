@@ -47,6 +47,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.getSelectedOrganization = function () {
+        // TODO: fetch complete organization if partial
         return organizationRepo.findById(selectedId);
     };
 
