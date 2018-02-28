@@ -45,6 +45,15 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     }
 
     @Override
+    public Organization update(Organization organization) {
+        organization = weaverRepo.save(organization);
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put(CONVERSION_HINT_HEADER, ApiView.Partial.class);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, BROADCAST, organizationRepo.findAllByOrderByIdAsc()), headers);
+        return organization;
+    }
+
+    @Override
     public Organization create(String name, OrganizationCategory category) {
         Organization organization = organizationRepo.save(new Organization(name, category));
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
