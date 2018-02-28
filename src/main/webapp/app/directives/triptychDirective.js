@@ -11,7 +11,7 @@ vireo.directive("triptych", function () {
                 $scope: $scope
             }));
 
-            OrganizationRepo.listen(function (data) {
+            OrganizationRepo.listen(function (response) {
                 $timeout(function () {
                     $scope.refreshPanels();
                 }, 250);

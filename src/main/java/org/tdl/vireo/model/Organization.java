@@ -117,6 +117,10 @@ public class Organization extends ValidatingBaseEntity {
         setCategory(category);
     }
 
+    public boolean isComplete() {
+        return true;
+    }
+
     /**
      * @return the name
      */

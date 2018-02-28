@@ -47,13 +47,25 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.getSelectedOrganization = function () {
-        // TODO: fetch complete organization if partial
         return organizationRepo.findById(selectedId);
     };
 
     this.setSelectedOrganization = function (organization) {
         selectedId = organization.id;
-        return organizationRepo.getSelectedOrganization();
+        organization = organizationRepo.getSelectedOrganization();
+        if(!organization.complete) {
+            organization.updateRequested = true;
+            angular.extend(this.mapping.get, {
+                'method': 'get/' + organization.id
+            });
+            WsApi.fetch(this.mapping.get).then(function (res) {
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status === "SUCCESS") {
+                    angular.extend(organization, apiRes.payload.Organization);
+                }
+            });
+        }
+        return organization;
     };
 
     this.getChildren = function (id) {
