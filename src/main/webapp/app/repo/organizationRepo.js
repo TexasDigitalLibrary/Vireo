@@ -25,9 +25,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.create);
         promise.then(function (res) {
-            var resObj = angular.fromJson(res.body);
-            if (resObj.meta.status === "INVALID") {
-                angular.extend(organizationRepo, resObj.payload);
+            var apiRes = angular.fromJson(res.body);
+            if (apiRes.meta.status === "INVALID") {
+                angular.extend(organizationRepo, apiRes.payload);
             }
         });
         return promise;

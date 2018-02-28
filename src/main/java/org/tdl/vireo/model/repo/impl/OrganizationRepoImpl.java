@@ -49,7 +49,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         organization = weaverRepo.save(organization);
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put(CONVERSION_HINT_HEADER, ApiView.Partial.class);
-        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, BROADCAST, organizationRepo.findAllByOrderByIdAsc()), headers);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return organization;
     }
 
