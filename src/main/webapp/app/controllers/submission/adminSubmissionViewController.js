@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, User, UserService, UserSettings, SubmissionStatuses) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -8,9 +8,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
-    var userSettings = new UserSettings();
+    $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
-    userSettings.fetch();
+    var userSettings = new UserSettings();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
 
@@ -144,7 +144,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return $scope.getFileType(fieldPredicate) == 'PRIMARY';
         };
 
-        $scope.deleteFieldValue = function (fieldValue) {
+        $scope.deleteDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
             FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
                 $scope.closeModal();
@@ -153,7 +153,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             });
         };
 
-        $scope.saveFieldValue = function (fieldValue) {
+        $scope.saveDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
             $scope.closeModal();
             $scope.submission.renameFile(fieldValue).then(function (response) {

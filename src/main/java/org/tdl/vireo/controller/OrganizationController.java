@@ -35,10 +35,12 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
@@ -70,6 +72,7 @@ public class OrganizationController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @JsonView(ApiView.Partial.class)
     @RequestMapping("/all")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse allOrganizations() {

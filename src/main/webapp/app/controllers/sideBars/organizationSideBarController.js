@@ -46,6 +46,7 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
         $scope.reset();
 
         $scope.createNewOrganization = function (hierarchical) {
+            $scope.creatingNewOrganization = true;
             var parentOrganization = hierarchical === 'true' ? OrganizationRepo.newOrganization.parent : $scope.organizations[0];
             OrganizationRepo.create({
                 "name": OrganizationRepo.newOrganization.name,
@@ -56,6 +57,7 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
                     "category": parentOrganization.category
                 }
             }, parentOrganization).then(function () {
+                $scope.creatingNewOrganization = false;
                 $scope.reset();
             });
         };

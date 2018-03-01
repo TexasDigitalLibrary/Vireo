@@ -66,7 +66,8 @@ public class SubmissionListController {
     @RequestMapping("/columns-by-user")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getSubmissionViewColumnsByUser(@WeaverUser User user) {
-        return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        return new ApiResponse(SUCCESS, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns());
     }
 
     @RequestMapping("/filter-columns-by-user")
@@ -81,9 +82,10 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getPageSize());
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update-user-columns/{pageSize}", method = POST)
     public ApiResponse updateUserSubmissionViewColumns(@WeaverUser User user, @PathVariable Integer pageSize, @RequestBody List<SubmissionListColumn> submissionViewColumns) {
+        clearColumnCreate(user);
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
         user = userRepo.save(user);
@@ -91,14 +93,28 @@ public class SubmissionListController {
     }
 
     @RequestMapping("/reset-user-columns")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse resetUserSubmissionViewColumns(@WeaverUser User user) {
+        clearColumnCreate(user);
+        user.setPageSize(10);
         user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
         user = userRepo.save(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    private void clearColumnCreate(User user) {
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        if (activeFilter.getColumnsFlag()) {
+            NamedSearchFilterGroup newActiveFilter = namedSearchFilterGroupRepo.create(user);
+            newActiveFilter.setUmiRelease(activeFilter.getUmiRelease());
+            activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
+                newActiveFilter.addFilterCriterion(namedSearchFilterRepo.clone(namedSearchFilter));
+            });
+            user.setActiveFilter(newActiveFilter);
+        }
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update-user-filter-columns", method = POST)
     public ApiResponse updateUserFilterColumns(@WeaverUser User user, @RequestBody List<SubmissionListColumn> filterColumns) {
         user.setFilterColumns(filterColumns);
@@ -106,51 +122,37 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
 
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/set-active-filter", method = POST)
     public ApiResponse setActiveFilter(@WeaverUser User user, @RequestBody NamedSearchFilterGroup namedSearchFilterGroup) {
-        List<Long> ids = new ArrayList<Long>();
-
-        user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
-            ids.add(namedSearchFilter.getId());
-        });
-
-        user.getActiveFilter().getNamedSearchFilters().clear();
-
-        user = userRepo.save(user);
-
-        ids.forEach(id -> {
-            namedSearchFilterRepo.delete(id);
-        });
 
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
 
-        if (activeFilter.getColumnsFlag()) {
-            user.getSubmissionViewColumns().clear();
-            user.getSubmissionViewColumns().addAll(user.getActiveFilter().getSavedColumns());
-        }
+        activeFilter.getNamedSearchFilters().clear();
+        activeFilter.getSavedColumns().clear();
+
+        activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
 
         user = userRepo.save(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + activeFilter.getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping("/active-filters")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getActiveFilters(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
     @RequestMapping("/saved-filters")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getSavedFilters(@WeaverUser User user) {
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove-saved-filter", method = POST)
     public ApiResponse removeSavedFilter(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup savedFilter) {
         user.getSavedFilters().remove(savedFilter);
@@ -158,7 +160,7 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/add-filter-criterion", method = POST)
     public ApiResponse addFilterCriterion(@WeaverUser User user, @RequestBody Map<String, Object> data) {
 
@@ -188,7 +190,7 @@ public class SubmissionListController {
 
         namedSearchFilter.setAllColumnSearch(criterionName.equals(SEARCH_BOX_TITLE) ? true : false);
 
-        user.getActiveFilter().addFilterCriterion(namedSearchFilter);
+        activeFilter.addFilterCriterion(namedSearchFilter);
 
         user = userRepo.save(user);
 
@@ -197,7 +199,7 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS);
     }
 
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove-filter-criterion/{namedSearchFilterName}", method = POST)
     public ApiResponse removeFilterCriterion(@WeaverUser User user, @PathVariable String namedSearchFilterName, @RequestBody FilterCriterion filterCriterion) {
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
@@ -225,23 +227,22 @@ public class SubmissionListController {
     }
 
     @RequestMapping("/clear-filter-criteria")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse clearFilterCriteria(@WeaverUser User user) {
-        user.getActiveFilter().getNamedSearchFilters().clear();
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        activeFilter.getNamedSearchFilters().clear();
+        activeFilter.getSavedColumns().clear();
+        activeFilter.setColumnsFlag(false);
 
         user = userRepo.save(user);
 
-        user.getActiveFilter().getNamedSearchFilters().forEach(namedSearchFilter -> {
-            namedSearchFilterRepo.delete(namedSearchFilter);
-        });
-
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + activeFilter.getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping("/all-saved-filter-criteria")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse getAllSaveFilterCriteria(@WeaverUser User user) {
         List<NamedSearchFilterGroup> userSavedFilters = user.getSavedFilters();
         List<NamedSearchFilterGroup> publicSavedFilters = namedSearchFilterGroupRepo.findByPublicFlagTrue();
@@ -253,7 +254,7 @@ public class SubmissionListController {
         return new ApiResponse(SUCCESS, userSavedFilters);
     }
 
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/save-filter-criteria", method = POST)
     public ApiResponse saveFilterCriteria(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 

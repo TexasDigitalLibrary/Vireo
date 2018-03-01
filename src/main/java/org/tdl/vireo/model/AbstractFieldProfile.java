@@ -27,7 +27,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "FP_TYPE")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "field_predicate_id", "originating_workflow_step_id", "fp_type", "overrideable" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
     @ManyToOne(fetch = EAGER, optional = false)
@@ -69,7 +69,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = true)
     private Boolean flagged;
 
-    @Column(nullable = true, name = "`default`", columnDefinition = "text")
+    @Column(columnDefinition = "text", nullable = true)
     private String defaultValue;
 
     @Column(nullable = true)
@@ -316,7 +316,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param overrideable
+     * @param flagged
      *            the flagged to set
      */
     public void setFlagged(Boolean flagged) {

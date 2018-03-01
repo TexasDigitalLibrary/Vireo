@@ -48,6 +48,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
@@ -552,14 +553,16 @@ public class SubmissionController {
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submission != null) {
+            String nd = newDate.replaceAll("[\"]", "");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(df.parse(newDate));
+            cal.setTime(df.parse(nd));
 
             submission.setSubmissionDate(cal);
             submission = submissionRepo.update(submission);
 
-            actionLogRepo.createPublicLog(submission, user, "Submission submitted: " + submission.getSubmissionDate().getTime());
+            SimpleDateFormat logdf = new SimpleDateFormat("MM/dd/yyyy");
+            actionLogRepo.createPublicLog(submission, user, "Submission date set to: " + logdf.format(cal.getTime()));
 
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -648,11 +651,13 @@ public class SubmissionController {
     }
 
     @JsonView(ApiView.Partial.class)
-    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
+    @RequestMapping("/query/{page}/{size}")
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
         long startTime = System.nanoTime();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(user.getActiveFilter(), submissionListColumns, new PageRequest(page, size));
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");

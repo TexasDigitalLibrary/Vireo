@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, $timeout, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -42,38 +42,71 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var batchCommentEmail = {};
 
+        var start;
+
+        var query = function () {
+            $scope.tableParams = new NgTableParams({
+                page: $scope.page.number,
+                count: $scope.page.count
+            }, {
+                counts: $scope.page.options,
+                total: $scope.page.totalElements,
+                filterDelay: 0,
+                getData: function (params) {
+                    start = window.performance.now();
+                    return SubmissionRepo.query(params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
+                        angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
+                        // NOTE: this causes way to many subscriptions!!!
+                        // SubmissionRepo.addAll($scope.page.content);
+                        params.total($scope.page.totalElements);
+                        $scope.page.count = params.count();
+                        return $scope.page.content;
+                    });
+                }.bind(start)
+            });
+            $scope.finished = function() {
+                console.log('Building submission list took ' + ((window.performance.now() - start) / 1000.0) + ' seconds');
+            }.bind(start);
+        }.bind(start);
+
         var update = function () {
 
+            SavedFilterRepo.reset();
+
             SubmissionListColumnRepo.reset();
+
             ManagerSubmissionListColumnRepo.reset();
 
-            ManagerSubmissionListColumnRepo.submissionListPageSize().then(function (data) {
+            $q.all([SavedFilterRepo.ready(), SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function() {
+                ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        $scope.page.count = apiRes.payload.Integer;
+                    }
 
-                var managerFilterColumns = ManagerFilterColumnRepo.getAll();
-                var submissionListColumns = SubmissionListColumnRepo.getAll();
+                    var managerFilterColumns = ManagerFilterColumnRepo.getAll();
+                    var submissionListColumns = SubmissionListColumnRepo.getAll();
 
-                $scope.userColumns = ManagerSubmissionListColumnRepo.getAll();
+                    $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
-                $scope.excludedColumns = [];
+                    $scope.excludedColumns = [];
 
-                angular.copy($scope.userColumns, $scope.excludedColumns);
+                    angular.copy($scope.userColumns, $scope.excludedColumns);
 
-                $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
+                    $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
 
-                $scope.columns = $filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title');
+                    $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
 
-                angular.extend(filterColumns, {
-                    userFilterColumns: managerFilterColumns,
-                    inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+                    angular.extend(filterColumns, {
+                        userFilterColumns: managerFilterColumns,
+                        inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+                    });
+
+                    query();
+
+                    $scope.change = false;
                 });
-
-                query();
-
-                $scope.change = false;
-
-                $scope.closeModal();
             });
-
         };
 
         update();
@@ -92,7 +125,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var packagers = PackagerRepo.getAll();
 
         var userSettings = new UserSettings();
-        userSettings.fetch();
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -180,10 +212,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
-        var assignable = function (user) {
-            return user.role === "ROLE_MANAGER" || user.role === "ROLE_ADMIN";
-        };
-
         var resetBatchUpdateStatus = function () {
             $scope.advancedfeaturesBox.processing = false;
             $scope.advancedfeaturesBox.assignee = assignableUsers[0];
@@ -199,6 +227,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var resetBatchAssignTo = function () {
+            $scope.advancedfeaturesBox.processing = false;
             $scope.advancedfeaturesBox.assignee = assignableUsers[0];
             $scope.closeModal();
         };
@@ -220,6 +249,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var resetBatchDownloadExport = function () {
+            $scope.advancedfeaturesBox.exporting = false;
             $scope.closeModal();
         };
 
@@ -232,34 +262,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 resetBatchUpdateStatus();
             });
         };
-
-        var start;
-
-        var query = function () {
-            $scope.tableParams = new NgTableParams({
-                page: $scope.page.number,
-                count: $scope.page.count
-            }, {
-                counts: $scope.page.options,
-                total: $scope.page.totalElements,
-                filterDelay: 0,
-                getData: function (params) {
-                    start = window.performance.now();
-                    return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
-                        angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
-                        console.log($scope.page);
-                        // NOTE: this causes way to many subscriptions!!!
-                        // SubmissionRepo.addAll($scope.page.content);
-                        params.total($scope.page.totalElements);
-                        $scope.page.count = params.count();
-                        return $scope.page.content;
-                    });
-                }.bind(start)
-            });
-            $scope.finished = function() {
-                console.log('Building submission list took ' + ((window.performance.now() - start) / 1000.0) + ' seconds');
-            }.bind(start);
-        }.bind(start);
 
         var getValueFromArray = function (array, col) {
             var value = "";
@@ -279,22 +281,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             }
             return value;
-        };
-
-        var listenForManagersSubmissionColumns = function () {
-            return $q(function (resolve) {
-                ManagerSubmissionListColumnRepo.listen(function () {
-                    resolve();
-                });
-            });
-        };
-
-        var listenForAllSubmissionColumns = function () {
-            return $q(function (resolve) {
-                SubmissionListColumnRepo.listen(function () {
-                    resolve();
-                });
-            });
         };
 
         $scope.furtherFilterBy = {
@@ -463,9 +449,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.resetColumns = function () {
-            $q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function () {
-                update();
-            });
+            ManagerSubmissionListColumnRepo.reset();
+            update();
+            $scope.closeModal();
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -475,7 +461,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.saveColumns = function () {
-            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.page.count).then(function () {
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function () {
                 $scope.resetColumns();
             });
         };
@@ -608,10 +594,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             $scope.furtherFilterBy,
             $scope.advancedfeaturesBox
         ]);
-
-        SubmissionRepo.listen(function () {
-            update();
-        });
 
     });
 

@@ -1,10 +1,18 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiAction.BROADCAST;
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+import static org.springframework.messaging.core.AbstractMessageSendingTemplate.CONVERSION_HINT_HEADER;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Organization;
@@ -17,8 +25,12 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.OrganizationRepoCustom;
 
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiView;
 
 public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, OrganizationRepo> implements OrganizationRepoCustom {
+
+    final static Logger logger = LoggerFactory.getLogger(OrganizationRepoImpl.class);
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -30,6 +42,22 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     private SubmissionRepo submissionRepo;
 
     @Override
+    public void broadcast(List<Organization> organizations) {
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put(CONVERSION_HINT_HEADER, ApiView.Partial.class);
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, BROADCAST, organizations), headers);
+    }
+
+    @Override
+    public Organization update(Organization organization) {
+        organization = weaverRepo.save(organization);
+        Map<String, Object> headers = new HashMap<String, Object>();
+        headers.put(CONVERSION_HINT_HEADER, ApiView.Partial.class);
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        return organization;
+    }
+
+    @Override
     public Organization create(String name, OrganizationCategory category) {
         Organization organization = organizationRepo.save(new Organization(name, category));
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
@@ -39,9 +67,9 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     @Override
     @Transactional // this transactional is required to persist parent child relationship within
     public Organization create(String name, Organization parent, OrganizationCategory category) {
-        Organization organization = create(name, category);
+        Organization organization = organizationRepo.save(new Organization(name, category));
         if (parent != null) {
-            System.out.println("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
+            logger.info("In Organization.create(): Creating organization " + name + " and adding it as a child of its parent " + (parent == null ? null : parent.getName()));
             parent.addChildOrganization(organization);
             parent = organizationRepo.save(parent);
             parent.getAggregateWorkflowSteps().forEach(ws -> {

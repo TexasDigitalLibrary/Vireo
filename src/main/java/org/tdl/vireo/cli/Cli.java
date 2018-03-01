@@ -25,6 +25,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
 /**
@@ -57,6 +58,7 @@ public class Cli implements CommandLineRunner {
     private SubmissionStatusRepo submissionStatusRepo;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void run(String... arg0) throws Exception {
         boolean runConsole = false;
         for (String s : arg0) {
@@ -123,7 +125,7 @@ public class Cli implements CommandLineRunner {
                     }
 
                     Random random = new Random();
-                    Calendar calendar = Calendar.getInstance();
+
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
@@ -138,8 +140,25 @@ public class Cli implements CommandLineRunner {
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
-                                if (fp.getInputType().getName().equals("INPUT_DATETIME")) {
-                                    FieldValue val = fieldValueRepo.create(pred);
+                                FieldValue val;
+                                switch (fp.getInputType().getName()) {
+                                case "INPUT_FILE":
+                                    break;
+                                case "INPUT_CONTACT":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test " + pred.getValue() + " " + i);
+                                    val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
+                                    sub.addFieldValue(val);
+                                    break;
+                                case "INPUT_EMAIL":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test" + pred.getValue() + i + "@mailinator.com");
+                                    sub.addFieldValue(val);
+                                    break;
+                                case "INPUT_DATETIME":
+                                    val = fieldValueRepo.create(pred);
+
+                                    Calendar calendar = Calendar.getInstance();
 
                                     calendar.add(Calendar.YEAR, -random.nextInt(10));
 
@@ -150,18 +169,16 @@ public class Cli implements CommandLineRunner {
 
                                     calendar.add(Calendar.MONTH, rm);
 
-                                    calendar.add(Calendar.DATE, random.nextInt(28 - calendar.get(Calendar.DAY_OF_MONTH)));
+                                    calendar.add(Calendar.DATE, random.nextInt(32 - calendar.get(Calendar.DAY_OF_MONTH)));
 
                                     val.setValue(format.format(calendar.getTime()));
                                     sub.addFieldValue(val);
-                                } else if (fp.getInputType().getName().equals("INPUT_FILE")) {
-                                    // do nothing
-                                } else {
-                                    FieldValue val = fieldValueRepo.create(pred);
+                                    break;
+                                default:
+                                    val = fieldValueRepo.create(pred);
                                     val.setValue("test " + pred.getValue() + " " + i);
                                     sub.addFieldValue(val);
                                 }
-
                             }
                         }
                         submissionRepo.saveAndFlush(sub);
