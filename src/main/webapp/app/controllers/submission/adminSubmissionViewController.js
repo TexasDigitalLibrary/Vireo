@@ -8,6 +8,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
     };
 
+    $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
     var userSettings = new UserSettings();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
