@@ -186,6 +186,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         switch (submissionStatus.getSubmissionState()) {
         case SUBMITTED:
 
+            submission.setApproveApplication(false);
+            submission.setApproveApplicationDate(null);
+
             submission.setSubmissionDate(Calendar.getInstance());
 
             List<FieldValue> proquestFieldValues = submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_PROQUEST"));
@@ -221,29 +224,23 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             submission.setApproveApplication(true);
             submission.setApproveApplicationDate(Calendar.getInstance());
             break;
-        case CANCELED:
-            break;
-        case CORRECTIONS_RECIEVED:
-            break;
-        case IN_PROGRESS:
-            break;
-        case NEEDS_CORRECTIONS:
-            break;
-        case NONE:
-            break;
-        case ON_HOLD:
-            break;
         case PENDING_PUBLICATION:
             break;
         case PUBLISHED:
             break;
-        case UNDER_REVIEW:
-            break;
-        case WAITING_ON_REQUIREMENTS:
-            break;
         case WITHDRAWN:
             break;
+        case ON_HOLD:
+        case CANCELED:
+        case CORRECTIONS_RECIEVED:
+        case IN_PROGRESS:
+        case NEEDS_CORRECTIONS:
+        case NONE:
+        case UNDER_REVIEW:
+        case WAITING_ON_REQUIREMENTS:
         default:
+            submission.setApproveApplication(false);
+            submission.setApproveApplicationDate(null);
             break;
         }
 
