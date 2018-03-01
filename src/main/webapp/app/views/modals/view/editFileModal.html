@@ -25,7 +25,7 @@
         </div>
         <div class="form-group">
           <label for="fileName">New Document Type:</label>
-          <select class="form-control" ng-model="documentFieldValue.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value"></select>
+          <select class="form-control" ng-model="documentFieldValue.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentFieldPredicate.value"></select>
         </div>
       </span>
     </span>
