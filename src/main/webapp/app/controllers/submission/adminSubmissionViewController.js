@@ -142,7 +142,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return $scope.getFileType(fieldPredicate) == 'PRIMARY';
         };
 
-        $scope.deleteFieldValue = function (fieldValue) {
+        $scope.deleteDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
             FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
                 $scope.closeModal();
@@ -151,7 +151,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             });
         };
 
-        $scope.saveFieldValue = function (fieldValue) {
+        $scope.saveDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
             $scope.closeModal();
             $scope.submission.renameFile(fieldValue).then(function (response) {

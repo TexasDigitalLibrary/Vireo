@@ -60,6 +60,15 @@ vireo.directive("info", function ($q,FieldValue) {
                 save(fieldValue);
             };
 
+            $scope.saveContacts = function (fieldValue) {
+                fieldValue.editing = false;
+                fieldValue.updating = true;
+                if (typeof fieldValue.contacts === 'string') {
+                    fieldValue.contacts = fieldValue.contacts.split(",");
+                }
+                save(fieldValue);
+            };
+
             $scope.saveWithCV = function (fieldValue, item) {
                 fieldValue.editing = false;
                 fieldValue.updating = true;
