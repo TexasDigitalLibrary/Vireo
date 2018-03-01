@@ -1,43 +1,47 @@
 <div ng-controller="OrganizationSideBarController">
-	<form name="forms.create" ng-submit="createNewOrganization(settings.configurable.application.hierarchical.value)" novalidate>
+  <form name="forms.create" ng-submit="createNewOrganization(settings.configurable.application.hierarchical.value)" novalidate>
 
-		<sideboxsub>NAME</sideboxsub>
-		<div class="sidebox-input">
-			<validatedinput
-				model="newOrganization"
-				property="name"
-				placeholder="Name of the new organization"
-				form="forms.create"
-				validations="organizationRepo.getValidations()"
-				results="organizationRepo.getValidationResults()">
-			</validatedinput>
-		</div>
+    <sideboxsub>NAME</sideboxsub>
+    <div class="sidebox-input">
+      <validatedinput
+        model="newOrganization"
+        property="name"
+        placeholder="Name of the new organization"
+        form="forms.create"
+        validations="organizationRepo.getValidations()"
+        results="organizationRepo.getValidationResults()">
+      </validatedinput>
+    </div>
 
-		<sideboxsub>Category</sideboxsub>
-		<div class="sidebox-input">
-			<validatedselect
-				options="organizationCategories"
-				optionproperty="name"
-				model="newOrganization"
-				property="category"
-				form="forms.create"
-				validations="organizationRepo.getValidations()"
-				results="organizationRepo.ValidationResults">
-			</validatedselect>
-		</div>
+    <sideboxsub>Category</sideboxsub>
+    <div class="sidebox-input">
+      <validatedselect
+        options="organizationCategories"
+        optionproperty="name"
+        model="newOrganization"
+        property="category"
+        form="forms.create"
+        validations="organizationRepo.getValidations()"
+        results="organizationRepo.ValidationResults">
+      </validatedselect>
+    </div>
 
-		<div class="form-group">
-			<button
-				ng-if="settings.configurable.application.hierarchical.value == 'true'"
-				class="btn btn-primary organization-create-button"
-				type="submit"
-				ng-disabled="forms.create.$invalid">Add to {{newOrganization.parent.name}}</button>
-			<button
-				ng-if="settings.configurable.application.hierarchical.value == 'false'"
-				class="btn btn-primary organization-create-button"
-				type="submit"
-				ng-disabled="forms.create.$invalid">Create</button>
-		</div>
+    <div class="form-group">
+      <button
+        ng-if="settings.configurable.application.hierarchical.value == 'true'"
+        class="btn btn-primary organization-create-button"
+        type="submit"
+        ng-disabled="forms.create.$invalid || creatingNewOrganization">Add to {{newOrganization.parent.name}} 
+        <span ng-if="creatingNewOrganization" class="glyphicon glyphicon-refresh spinning"></span>
+      </button>
+      <button
+        ng-if="settings.configurable.application.hierarchical.value == 'false'"
+        class="btn btn-primary organization-create-button"
+        type="submit"
+        ng-disabled="forms.create.$invalid || creatingNewOrganization">Create 
+        <span ng-if="creatingNewOrganization" class="glyphicon glyphicon-refresh spinning"></span>
+      </button>
+    </div>
 
-	</form>
+  </form>
 </div>

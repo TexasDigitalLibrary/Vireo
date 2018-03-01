@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, $timeout, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -105,8 +105,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     query();
 
                     $scope.change = false;
-
-                    $scope.closeModal();
                 });
             });
         };
@@ -216,7 +214,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var resetBatchUpdateStatus = function () {
             $scope.advancedfeaturesBox.processing = false;
-            $scope.advancedfeaturesBox.assignee = findFirstAssignable();
+            $scope.advancedfeaturesBox.assignee = assignableUsers[0];
             $scope.closeModal();
         };
 
@@ -229,6 +227,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var resetBatchAssignTo = function () {
+            $scope.advancedfeaturesBox.processing = false;
             $scope.advancedfeaturesBox.assignee = assignableUsers[0];
             $scope.closeModal();
         };
@@ -250,6 +249,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var resetBatchDownloadExport = function () {
+            $scope.advancedfeaturesBox.exporting = false;
             $scope.closeModal();
         };
 
@@ -281,22 +281,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             }
             return value;
-        };
-
-        var listenForManagersSubmissionColumns = function () {
-            return $q(function (resolve) {
-                ManagerSubmissionListColumnRepo.listen(function () {
-                    resolve();
-                });
-            });
-        };
-
-        var listenForAllSubmissionColumns = function () {
-            return $q(function (resolve) {
-                SubmissionListColumnRepo.listen(function () {
-                    resolve();
-                });
-            });
         };
 
         $scope.furtherFilterBy = {
@@ -466,9 +450,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         $scope.resetColumns = function () {
             ManagerSubmissionListColumnRepo.reset();
-            $q.all(listenForAllSubmissionColumns(), listenForManagersSubmissionColumns()).then(function () {
-                update();
-            });
+            update();
+            $scope.closeModal();
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -611,10 +594,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             $scope.furtherFilterBy,
             $scope.advancedfeaturesBox
         ]);
-
-        SubmissionRepo.listen(function () {
-            update();
-        });
 
     });
 

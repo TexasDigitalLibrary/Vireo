@@ -52,19 +52,21 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         };
 
         $scope.updateOrganization = function (organization) {
+            $scope.updatingOrganization = true;
             organization.save().then(function () {
                 // update the parent scoped selected organization
                 $scope.setSelectedOrganization(organization);
+                $scope.updatingOrganization = false;
             });
         };
 
         $scope.deleteOrganization = function (organization) {
             organization.delete().then(function (res) {
-                var resObj = angular.fromJson(res.body);
-                if (resObj.meta.status !== 'INVALID') {
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status !== 'INVALID') {
                     $scope.closeModal();
                     $timeout(function () {
-                        AlertService.add(resObj.meta, 'organization/delete');
+                        AlertService.add(apiRes.meta, 'organization/delete');
                     }, 300);
                 }
             });

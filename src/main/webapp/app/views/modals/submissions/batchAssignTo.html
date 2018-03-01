@@ -28,6 +28,8 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="box.resetBatchAssignTo()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="box.batchAssignTo(box.assignee)">Assign user</button>
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchAssignTo()" ng-disabled="box.processing">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="box.batchAssignTo(box.assignee)" ng-disabled="box.processing">Assign user 
+        <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
+    </button>
 </div>

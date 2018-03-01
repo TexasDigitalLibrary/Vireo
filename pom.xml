@@ -18,7 +18,7 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+    <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -52,31 +52,31 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+      <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+      <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+      <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+      <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.0.0-VIEW-PARTIAL-API-PAGE-SNAPSHOT</version>
+      <version>2.0.0-DISABLE-DEFAULT-VIEW-INCLUSION-SNAPSHOT</version>
     </dependency>
 
     <dependency>

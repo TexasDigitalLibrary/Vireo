@@ -19,6 +19,8 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="box.resetBatchDownloadExport()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="box.batchDownloadExport(packager)">Download Export</button>
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchDownloadExport()" ng-disabled="box.exporting">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="box.batchDownloadExport(packager)" ng-disabled="box.exporting">Download Export 
+      <span ng-if="box.exporting" class="glyphicon glyphicon-refresh spinning"></span>
+    </button>
 </div>
