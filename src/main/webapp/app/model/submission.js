@@ -340,8 +340,8 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
             promise.then(function (response) {
-                var responseObj = angular.fromJson(response.body);
-                if (responseObj.meta.status === "INVALID") {
+                var apiRes = angular.fromJson(response.body);
+                if (apiRes.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
                     angular.forEach(responseObj.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
@@ -353,9 +353,13 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     if (route === "/remove-field-value/") {
                         updatedFieldValue = submission.addFieldValue(fieldProfile.fieldPredicate);
                     } else {
-                        updatedFieldValue = responseObj.payload.FieldValue;
+                        updatedFieldValue = apiRes.payload.FieldValue;
                     }
                     fieldValue.setIsValid(true);
+                    if (fieldValue.fieldPredicate.documentTypePredicate) {
+                        delete fieldValue.fileInfo;
+                        enrichDocumentTypeFieldValue(fieldValue);
+                    }
                     var matchingFieldValues = {};
                     for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                         var currentFieldValue = submission.fieldValues[i];
