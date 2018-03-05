@@ -30,19 +30,19 @@
           <form class="form-horizontal">
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
-              <div class="col-sm-6">
-                <div ng-if="submission.primaryDocumentFieldValue">{{submission.primaryDocumentFieldValue.fileInfo.name}}
+              <div class="col-sm-6" ng-if="submission.primaryDocumentFieldValue">
+                <div>{{submission.primaryDocumentFieldValue.fileInfo.name}}
                   <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}} KB)</strong>
                 </div>
               </div>
-              <div class="col-sm-2">
-                <button ng-if="submission.primaryDocumentFieldValue" class="btn btn-default" type="button" ng-click="archiveManuscript()" ng-disabled="archivingManuscript">Replace Manuscript
+              <div class="col-sm-2" ng-if="submission.primaryDocumentFieldValue">
+                <button class="btn btn-default" type="button" ng-click="archiveManuscript()" ng-disabled="archivingManuscript">Replace Manuscript
                   <span ng-if="archivingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
                 </button>
               </div>
             </div>
             <div class="form-group">
-              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': submission.primaryDocumentFieldValue === undefined, 'dialog-closed': submission.primaryDocumentFieldValue !== undefined}">
+              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': !submission.primaryDocumentFieldValue, 'dialog-closed': submission.primaryDocumentFieldValue}">
                 <field ng-if="!submission.primaryDocumentFieldValue" profile="submission.getPrimaryDocumentFieldProfile()"></field>
               </div>
             </div>

@@ -3,9 +3,9 @@
     <div class="col-xs-12 col-sm-2">
       <label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
     </div>
-    <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name != 'INPUT_FILE'">
+    <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name !== 'INPUT_FILE'">
       <div class="field-value-input row" ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate">
-        <div ng-class="(profile.inputType.name=='INPUT_LICENSE' || profile.inputType.name=='INPUT_PROQUEST' || profile.inputType.name=='INPUT_RADIO' || profile.inputType.name=='CONDITIONAL_TEXT_AREA') ? 'col-xs-12' : 'col-xs-5'">
+        <div ng-class="(profile.inputType.name === 'INPUT_LICENSE' || profile.inputType.name === 'INPUT_PROQUEST' || profile.inputType.name === 'INPUT_RADIO' || profile.inputType.name === 'CONDITIONAL_TEXT_AREA') ? 'col-xs-12' : 'col-xs-5'">
           <div ng-class="{'invalid': !fieldValue.isValid()}" ng-include="includeTemplateUrl"></div>
           <div ng-if="!fieldValue.isValid()" class="alert alert-danger">
             <ul ng-class="{'list-unstyled': fieldValue.getValidationMessages().length === 1}">
@@ -20,7 +20,7 @@
         <div class="col-xs-6"></div>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name == 'INPUT_FILE'">
+    <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name === 'INPUT_FILE'">
       <div class="field-value-input row">
         <div class="col-xs-11">
           <div ng-include="includeTemplateUrl"></div>

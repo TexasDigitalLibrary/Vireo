@@ -49,7 +49,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
                 });
             }
-            if (submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
+            if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
                 submission.primaryDocumentFieldValue = fieldValue;
             }
         };
