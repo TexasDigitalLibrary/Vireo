@@ -207,9 +207,27 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.submission.primaryDocumentFieldValue : new FieldValue({
-                fieldPredicate: $scope.addFileData.fieldPredicate
-            });
+            var fieldValue;
+
+            if($scope.addFileData.addFileSelection === 'replace') {
+                if($scope.submission.primaryDocumentFieldValue !== undefined) {
+                    fieldValue = $scope.submission.primaryDocumentFieldValue;
+                } else {
+                    for(var i in $scope.fieldPredicates) {
+                        var fieldPredicate = $scope.fieldPredicates[i];
+                        if(fieldPredicate.value === '_doctype_primary') {
+                            fieldValue = new FieldValue({
+                                fieldPredicate: fieldPredicate
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                fieldValue = new FieldValue({
+                    fieldPredicate: $scope.addFileData.fieldPredicate
+                });
+            }
 
             fieldValue.file = $scope.addFileData.files[0];
 
@@ -217,35 +235,15 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                if ($scope.addFileData.addFileSelection === 'replace') {
-                    $scope.submission.archiveFile($scope.submission.primaryDocumentFieldValue).then(function (response) {
-                        var archivedDocumentFieldValue = new FieldValue();
-
-                        archivedDocumentFieldValue.value = angular.fromJson(response.body).meta.message;
-
-                        var archivedDocumentFieldProfile = $scope.submission.getFieldProfileByPredicateName("_doctype_archived");
-
-                        if (archivedDocumentFieldProfile !== undefined && archivedDocumentFieldProfile !== null) {
-                            archivedDocumentFieldValue.fieldPredicate = archivedDocumentFieldProfile.fieldPredicate;
-
-                            archivedDocumentFieldValue.updating = true;
-
-                            $scope.submission.saveFieldValue(archivedDocumentFieldValue, archivedDocumentFieldProfile).then(function (response) {
-                                if (angular.fromJson(response.body).meta.status === "INVALID") {
-                                    fieldValue.refresh();
-                                }
-                                archivedDocumentFieldValue.updating = false;
-                            });
-                        } else {
-                            console.warn("No archived field profile exists on submission!");
-                        }
-                    });
+                if ($scope.addFileData.addFileSelection === 'replace' && $scope.hasPrimaryDocument()) {
+                    FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue);
                 }
 
                 fieldValue.value = response.data.meta.message;
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
-                    if (angular.fromJson(response.body).meta.status === "INVALID") {
+                    var apiRes = angular.fromJson(response.body);
+                    if (apiRes.meta.status === "INVALID") {
                         fieldValue.refresh();
                     } else {
                         if ($scope.addFileData.sendEmailToRecipient) {
