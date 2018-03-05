@@ -346,7 +346,28 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "changeStatus": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.changeStatus(state.name).then(function () {
+                $scope.submission.changeStatus(state.name).then(function (response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        // remove field values that are document type field predicates
+                        for(var i = $scope.submission.fieldValues.length - 1; i >= 0; i--) {
+                            var fieldValue = $scope.submission.fieldValues[i];
+                            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                                $scope.submission.fieldValues.splice(i, 1);
+                            }
+                        }
+                        // add field values of response that are document type field predicates
+                        var submission = apiRes.payload.Submission;
+                        angular.forEach(submission.fieldValues, function (fieldValue) {
+                            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                                $scope.submission.fieldValues.push(new FieldValue(fieldValue));
+                            }
+                        });
+                        // update current submissions status
+                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+                        // fetch file info
+                        $scope.submission.fetchDocumentTypeFileInfo();
+                    }
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
@@ -355,7 +376,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "publish": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function () {
+                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function (response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        var submission = apiRes.payload.Submission;
+                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+                    }
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();

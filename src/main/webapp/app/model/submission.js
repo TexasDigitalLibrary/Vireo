@@ -501,24 +501,18 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.needsCorrection = function () {
-
             angular.extend(this.getMapping().needsCorrection, {
                 method: submission.id + "/needs-correction"
             });
-
             var promise = WsApi.fetch(this.getMapping().needsCorrection);
-
             return promise;
         };
 
         submission.submitCorrections = function () {
-
             angular.extend(this.getMapping().submitCorrections, {
                 method: submission.id + "/submit-corrections"
             });
-
             var promise = WsApi.fetch(this.getMapping().submitCorrections);
-
             return promise;
         };
 
@@ -531,13 +525,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.changeStatus = function (submissionStatusName) {
-
             angular.extend(this.getMapping().changeStatus, {
                 method: submission.id + "/change-status/" + submissionStatusName
             });
-
             var promise = WsApi.fetch(this.getMapping().changeStatus);
-
             return promise;
         };
 
@@ -545,9 +536,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             angular.extend(this.getMapping().publish, {
                 method: submission.id + "/publish/" + depositLocation.id
             });
-
             var promise = WsApi.fetch(this.getMapping().publish);
-
             return promise;
         };
 
@@ -556,69 +545,52 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.setSubmissionDate = function (newDate) {
-
             angular.extend(this.getMapping().submitDate, {
                 method: submission.id + "/submit-date",
                 data: newDate
             });
-
             var promise = WsApi.fetch(this.getMapping().submitDate);
-
             return promise;
         };
 
         submission.assign = function (assignee) {
-
             angular.extend(this.getMapping().assignTo, {
                 method: submission.id + "/assign-to",
                 data: assignee
             });
-
             var promise = WsApi.fetch(this.getMapping().assignTo);
-
             return promise;
         };
 
         submission.updateAdvisorApproval = function (approval) {
-
             angular.extend(this.getMapping().updateAdvisorApproval, {
                 method: submission.id + "/update-advisor-approval",
                 data: approval
             });
-
             var promise = WsApi.fetch(this.getMapping().updateAdvisorApproval);
-
             return promise;
         };
 
         submission.sendAdvisorEmail = function () {
-
             angular.extend(this.getMapping().sendAdvisorEmail, {
                 method: submission.id + "/send-advisor-email"
             });
-
             var promise = WsApi.fetch(this.getMapping().sendAdvisorEmail);
-
             return promise;
         };
 
         submission.getFlaggedFieldProfiles = function () {
-
             var fieldProfiles = [];
-
             angular.forEach(submission.submissionWorkflowSteps, function (submissionWorkflowStep) {
                 angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function (fp) {
                     if (fp.flagged)
                         fieldProfiles.push(fp);
                 });
             });
-
             return fieldProfiles;
-
         };
 
         submission.getContactEmails = function () {
-
             var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
             var emails = [];
             angular.forEach(fieldValues, function (fv) {
@@ -626,7 +598,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                     emails.push(contact);
                 });
             });
-
             return emails;
         };
 
