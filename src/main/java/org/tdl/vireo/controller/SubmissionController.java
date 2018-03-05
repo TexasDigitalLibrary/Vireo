@@ -384,23 +384,20 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
         Submission submission = submissionRepo.read(submissionId);
-
-        ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response;
         if (submission != null) {
-
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+                response = new ApiResponse(SUCCESS, submission);
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, response);
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-
         processEmailWorkflowRules(user, submission);
-
         return response;
     }
 
@@ -420,7 +417,7 @@ public class SubmissionController {
     public ApiResponse publish(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long depositLocationId) throws Exception {
         Submission submission = submissionRepo.read(submissionId);
 
-        ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response;
         if (submission != null) {
 
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
@@ -440,6 +437,7 @@ public class SubmissionController {
 
                         if (result != null) {
                             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                            response = new ApiResponse(SUCCESS, submission);
                         } else {
                             response = new ApiResponse(ERROR, "Could not deposit submission");
                         }
