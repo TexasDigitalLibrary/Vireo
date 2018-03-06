@@ -9,6 +9,7 @@ vireo.controller('SubmissionHistoryController', function($controller, $location,
 
   $scope.studentsSubmissions = StudentSubmissionRepo.getAll();
 
+
   var buildTable = function() {
     return new NgTableParams({}, {
       counts: [],
@@ -25,6 +26,30 @@ vireo.controller('SubmissionHistoryController', function($controller, $location,
   StudentSubmissionRepo.listen(function() {
     $scope.tableParams.reload();
   });
+
+  $scope.getDocumentTitle = function(row) {
+    var title = null;
+    for(var i in row.fieldValues) {
+      var fv = row.fieldValues[i];
+      if(fv.fieldPredicate.value === 'dc.title') {
+        title = fv.value;
+        break;
+      }
+    }
+    return title;
+  };
+
+  $scope.getManuscriptFileName = function(row) {
+    var fileName = null;
+    for(var i in row.fieldValues) {
+      var fv = row.fieldValues[i];
+      if(fv.fieldPredicate.value === '_doctype_primary') {
+        fileName = fv.fileInfo ? fv.fileInfo.name : null;
+        break;
+      }
+    }
+    return fileName;
+  };
 
   $scope.startNewSubmission = function(path) {
     $scope.closeModal();
