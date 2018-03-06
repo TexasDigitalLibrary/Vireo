@@ -9,9 +9,6 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
     StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
-        $timeout(function () {
-            $anchorScroll();
-        });
 
         $scope.studentSubmissionRepoReady = true;
 
@@ -64,6 +61,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         if ("/" + nextLocation !== $location.path()) {
             $location.path(nextLocation, false);
         }
+
+        $timeout(function () {
+            $anchorScroll();
+        });
 
     };
 
