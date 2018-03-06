@@ -3,13 +3,19 @@
 		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionStatus.name}}</button></li>
 
 		<li>Assignee:</li>
-		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
+		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn font-weight-bold"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
 
 		<li>Last Action:</li>
-		<li>none</li>
+		<li class="font-weight-bold">{{box.getLastActionDate() | date : 'short'}}</li>
+		<li>What:</li>
+		<li class="font-weight-bold">{{box.getLastActionEntry()}}</li>
+
+		<!-- TODO: determine how to set whether submission is UMI release -->
+		<!-- <li>UMI Relese:</li>
+		<li class="font-weight-bold">{{box.isUmiRelease()}}</li> -->
 
 		<li>Submission Date:</li>
-		<li class="sidebar-btn"
+		<li class="sidebar-btn font-weight-bold"
 			ng-click="date=true"
 			ng-change="box.setSubmitDate(newSubmitDate)"
 			uib-datepicker-popup="MM/dd/yyyy"
