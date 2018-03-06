@@ -335,7 +335,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         // TODO: determine how this is set
         var isUmiRelease = function() {
             return 'no';
-        }
+        };
 
         $scope.submissionStatusBox = {
             "isUmiRelease": isUmiRelease,
