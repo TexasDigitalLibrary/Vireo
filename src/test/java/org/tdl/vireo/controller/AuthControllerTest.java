@@ -19,8 +19,8 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.auth.controller.AuthController;
+import org.tdl.vireo.auth.service.VireoUserCredentialsService;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -40,6 +40,9 @@ public class AuthControllerTest extends AbstractControllerTest {
 
     @Mock
     private EmailTemplateRepo emailTemplateRepo;
+
+    @Mock
+    private VireoUserCredentialsService vireoUserCredentialsService;
 
     @InjectMocks
     private AuthController authController;
@@ -96,10 +99,10 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ReflectionTestUtils.setField(authController, "url", "localhost:9000");
 
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
+        Mockito.when(vireoUserCredentialsService.createUserFromRegistration(any(String.class), any(String.class), any(String.class), any(String.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (String) invocation.getArguments()[3], (Role) invocation.getArguments()[4]));
+                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (String) invocation.getArguments()[3], TEST_USER_ROLE));
             }
         });
 
