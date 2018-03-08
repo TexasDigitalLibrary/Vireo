@@ -829,26 +829,24 @@ public class SubmissionController {
         String content = templateUtility.compileTemplate(template, submission);
 
         // TODO: this needs to only send email to the advisor not any field value that is contact type
-        submission.getFieldValuesByInputType(contactInputType).forEach(
+        submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
 
-                        fv -> {
+            SimpleMailMessage smm = new SimpleMailMessage();
 
-                            SimpleMailMessage smm = new SimpleMailMessage();
+            smm.setTo(String.join(",", fv.getContacts()));
 
-                            smm.setTo(String.join(",", fv.getContacts()));
+            String preferedEmail = user.getSetting("preferedEmail");
 
-                            String preferedEmail = user.getSetting("preferedEmail");
+            if ("true".equals(user.getSetting("ccEmail"))) {
+                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            }
 
-                            if ("true".equals(user.getSetting("ccEmail"))) {
-                                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
-                            }
+            smm.setSubject(subject);
+            smm.setText(content);
 
-                            smm.setSubject(subject);
-                            smm.setText(content);
+            emailSender.send(smm);
 
-                            emailSender.send(smm);
-
-                        });
+        });
 
         actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
 
