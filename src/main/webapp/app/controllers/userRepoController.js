@@ -7,7 +7,6 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     $scope.users = UserRepo.getAll();
 
     UserRepo.listen(function(data) {
-    	$scope.modalData = {};
 		$scope.closeModal();
 	});
 
@@ -20,13 +19,17 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
         'ROLE_STUDENT' : 'Student'
     };
 
-    $scope.modalData = {};
-
     $scope.ready.then(function() {
 
 		$scope.updateRole = function(user, role) {
-			user.role = role !== undefined ? role : user.role;
+			if(role !== undefined) {
+				user.role = role;
+			}
 			user.save();
+		};
+
+		$scope.disableUpdateRole = function(role) {
+			return $scope.allowableRoles($scope.user.role).indexOf(role) < 0;
 		};
 
 		$scope.allowableRoles = function(role) {
@@ -49,10 +52,6 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
 				return [role];
 			}
 		};
-
-		$scope.selectUser = function (selectedUser) {
-            $scope.modalData = selectedUser;
-        };
 
 		UserRepo.listen(function() {
 	    	$scope.user = new User();

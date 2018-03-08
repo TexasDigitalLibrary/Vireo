@@ -3,7 +3,6 @@ package org.tdl.vireo.controller;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +18,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.auth.controller.AuthController;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
@@ -43,9 +40,6 @@ public class AuthControllerTest extends AbstractControllerTest {
 
     @Mock
     private EmailTemplateRepo emailTemplateRepo;
-
-    @Mock
-    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @InjectMocks
     private AuthController authController;
@@ -86,11 +80,11 @@ public class AuthControllerTest extends AbstractControllerTest {
         ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
 
         ReflectionTestUtils.setField(tokenService, AUTH_SECRET_KEY_PROPERTY_NAME, AUTH_SECRET_KEY_VALUE);
-        
+
         ReflectionTestUtils.setField(tokenService, AUTH_ISSUER_KEY_PROPERTY_NAME, AUTH_ISSUER_KEY_VALUE);
 
         ReflectionTestUtils.setField(tokenService, AUTH_DURATION_PROPERTY_NAME, AUTH_DURATION_VALUE);
-        
+
         ReflectionTestUtils.setField(tokenService, AUTH_KEY_PROPERTY_NAME, AUTH_KEY_VALUE);
 
         TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
@@ -102,10 +96,10 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ReflectionTestUtils.setField(authController, "url", "localhost:9000");
 
-        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
+        Mockito.when(userRepo.create(any(String.class), any(String.class), any(String.class), any(String.class), any(Role.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (Role) invocation.getArguments()[3]));
+                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (String) invocation.getArguments()[3], (Role) invocation.getArguments()[4]));
             }
         });
 
@@ -129,13 +123,6 @@ public class AuthControllerTest extends AbstractControllerTest {
                 EmailTemplate emailTemplate = new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
                 emailTemplate.setPosition(emailTemplatePosition++);
                 return emailTemplate;
-            }
-        });
-
-        Mockito.when(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns()).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return new ArrayList<SubmissionListColumn>();
             }
         });
 

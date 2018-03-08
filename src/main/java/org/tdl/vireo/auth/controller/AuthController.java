@@ -30,7 +30,6 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import edu.tamu.weaver.auth.controller.WeaverAuthController;
@@ -59,9 +58,6 @@ public class AuthController extends WeaverAuthController {
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-
-    @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @RequestMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@RequestBody(required = false) Map<String, String> data, @RequestParam Map<String, String> parameters) {
@@ -142,11 +138,7 @@ public class AuthController extends WeaverAuthController {
             return new ApiResponse(ERROR, "Token has expired! Please begin registration again.");
         }
 
-        User user = new User(email, firstName, lastName, Role.ROLE_STUDENT, defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
-
-        user.setPassword(cryptoService.encodePassword(password));
-
-        user = userRepo.save(user);
+        User user = userRepo.create(email, firstName, lastName, cryptoService.encodePassword(password), Role.ROLE_STUDENT);
 
         return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }

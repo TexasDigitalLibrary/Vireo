@@ -32,7 +32,7 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RequestMapping("/user")
 public class UserController {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -64,14 +64,14 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateRole(@WeaverValidatedModel User updatedUser) {
+    public ApiResponse update(@WeaverValidatedModel User updatedUser) {
 
         User persistedUser = userRepo.findOne(updatedUser.getId());
         // Awesome BeanUtils from Apache commons, included with Spring
         // copy properties from source, arg1, to destination, arg2, excluding ..., arg3
-        copyProperties(updatedUser, persistedUser, "password", "activeFilter");
+        copyProperties(updatedUser, persistedUser, "password", "activeFilter", "savedFilters");
 
-        LOG.info("Updating role for " + persistedUser.getEmail());
+        logger.info("Updating user with email " + persistedUser.getEmail());
         persistedUser = userRepo.save(persistedUser);
 
         userRepo.broadcast(userRepo.findAll());
