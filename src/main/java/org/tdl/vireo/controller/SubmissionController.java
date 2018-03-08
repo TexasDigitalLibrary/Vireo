@@ -413,15 +413,11 @@ public class SubmissionController {
     @RequestMapping("/batch-update-status/{submissionStatusName}")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchUpdateSubmissionStatuses(@WeaverUser User user, @PathVariable String submissionStatusName) {
-        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(
-
-                        submission -> {
-
-                            SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
-                            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-
-                            processEmailWorkflowRules(user, submission);
-                        });
+        submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
+            SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
+            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+            processEmailWorkflowRules(user, submission);
+        });
         return new ApiResponse(SUCCESS);
 
     }
