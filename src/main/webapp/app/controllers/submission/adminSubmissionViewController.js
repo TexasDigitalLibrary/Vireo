@@ -322,7 +322,25 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "hasPrimaryDocument": $scope.hasPrimaryDocument
         };
 
+        var getLastActionDate = function() {
+            var index = $scope.submission.actionLogs.length - 1;
+            return $scope.submission.actionLogs[index].actionDate;
+        };
+
+        var getLastActionEntry = function() {
+            var index = $scope.submission.actionLogs.length - 1;
+            return $scope.submission.actionLogs[index].entry;
+        };
+
+        // TODO: determine how this is set
+        var isUmiRelease = function() {
+            return 'no';
+        };
+
         $scope.submissionStatusBox = {
+            "isUmiRelease": isUmiRelease,
+            "getLastActionDate": getLastActionDate,
+            "getLastActionEntry": getLastActionEntry,
             "depositLocations": depositLocations,
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
