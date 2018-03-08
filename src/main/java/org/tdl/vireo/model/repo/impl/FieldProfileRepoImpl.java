@@ -1,7 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +23,6 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.FieldProfileRepoCustom;
 
 public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldProfileRepo> implements FieldProfileRepoCustom {
-
-    private static final List<String> PREDICATE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "fieldPredicate", "value" }));
-
-    private static final List<String> VALUE_PATH = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "value" }));
 
     @Autowired
     private FieldProfileRepo fieldProfileRepo;
@@ -84,7 +79,7 @@ public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldP
         fieldGlosses.forEach(fieldGloss -> {
             Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(fieldGloss.getValue(), fieldPredicate.getValue(), inputType);
             if (!slc.isPresent()) {
-                submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), PREDICATE_PATH, VALUE_PATH, inputType);
+                submissionListColumnRepo.create(fieldGloss.getValue(), Sort.NONE, fieldPredicate.getValue(), inputType);
             }
         });
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());

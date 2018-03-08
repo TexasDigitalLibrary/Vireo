@@ -10,6 +10,6 @@ public interface SubmissionListColumnRepoCustom {
 
     public SubmissionListColumn create(String label, Sort sort, List<String> path, InputType inputType);
 
-    public SubmissionListColumn create(String label, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType);
+    public SubmissionListColumn create(String label, Sort sort, String predicate, InputType inputType);
 
 }

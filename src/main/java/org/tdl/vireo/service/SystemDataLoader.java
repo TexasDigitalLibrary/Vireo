@@ -49,6 +49,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+import org.tdl.vireo.model.formatter.ExcelFormatter;
 import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
@@ -235,7 +236,7 @@ public class SystemDataLoader {
 
         logger.info("Loading default Depositors");
         loadDepositors();
-        
+
         logger.info("Finished loading system defaults");
     }
 
@@ -829,7 +830,7 @@ public class SystemDataLoader {
 
                 if (dbSubmissionListColumn == null) {
                     if (submissionListColumn.getPredicate() != null) {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), submissionListColumn.getPredicatePath(), submissionListColumn.getValuePath(), inputType);
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), inputType);
                     } else {
                         submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
                     }
@@ -837,7 +838,6 @@ public class SystemDataLoader {
                     dbSubmissionListColumn.setSort(submissionListColumn.getSort());
                     if (submissionListColumn.getPredicate() != null) {
                         dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
-                        dbSubmissionListColumn.setPredicatePath(submissionListColumn.getPredicatePath());
                     }
                     dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
                     submissionListColumnRepo.save(dbSubmissionListColumn);
@@ -863,9 +863,7 @@ public class SystemDataLoader {
                 }
             }
 
-        } catch (RuntimeException |
-
-                        IOException e) {
+        } catch (RuntimeException | IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default submission list column titles. ", e);
         }
@@ -1122,6 +1120,9 @@ public class SystemDataLoader {
         }
         if (abstractPackagerRepo.findByName("ProQuest") == null) {
             abstractPackagerRepo.createProQuestUmiPackager("ProQuest", new ProQuestUmiFormatter());
+        }
+        if (abstractPackagerRepo.findByName("Excel") == null) {
+            abstractPackagerRepo.createExcelPackager("Excel", new ExcelFormatter());
         }
     }
 

@@ -28,7 +28,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     @Override
     public DepositLocation create(Map<String, Object> depositLocationJson) {
 
-        Packager packager = (Packager) packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+        Packager<?> packager = (Packager<?>) packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
 
         String onBehalfOf = null;
         if (depositLocationJson.get("onBehalfOf") != null) {
@@ -39,7 +39,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     }
 
     @Override
-    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
+    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager<?> packager, String depositor, int timeout) {
         DepositLocation depositLocation = createDetached(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
         depositLocation.setPosition(depositLocationRepo.count() + 1);
         return super.create(depositLocation);
@@ -47,9 +47,9 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
 
     @Override
     public DepositLocation createDetached(Map<String, Object> depositLocationJson) {
-        Packager packager = null;
+        Packager<?> packager = null;
         if (depositLocationJson.get("packager") != null) {
-            packager = (Packager) packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+            packager = (Packager<?>) packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
         }
 
         String onBehalfOf = null;
@@ -66,7 +66,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     }
 
     @Override
-    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout) {
+    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager<?> packager, String depositor, int timeout) {
         return new DepositLocation(name, repository, collection, username, password, onBehalfOf, packager, depositor, timeout);
     }
 
