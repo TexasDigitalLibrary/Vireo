@@ -7,61 +7,59 @@ vireo.controller('UserRepoController', function ($controller, $location, $route,
     $scope.users = UserRepo.getAll();
 
     UserRepo.listen(function(data) {
-		$scope.closeModal();
-	});
+			$scope.closeModal();
+		});
 
     $scope.ready = $q.all([UserRepo.ready()]);
 
-    $scope.roles = {
-    	'ROLE_ADMIN' : 'Administrator',
-        'ROLE_MANAGER' : 'Manager' ,
-        'ROLE_REVIEWER': 'Reviewer',
-        'ROLE_STUDENT' : 'Student'
-    };
-
     $scope.ready.then(function() {
 
-		$scope.updateRole = function(user, role) {
-			if(role !== undefined) {
-				user.role = role;
-			}
-			user.save();
-		};
-
-		$scope.disableUpdateRole = function(role) {
-			return $scope.allowableRoles($scope.user.role).indexOf(role) < 0;
-		};
-
-		$scope.allowableRoles = function(role) {
-			if(sessionStorage.role === 'ROLE_ADMIN') {
-				return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
-			}
-			else if(sessionStorage.role === 'ROLE_MANAGER') {
-				if(role === 'ROLE_ADMIN') {
-					return ['ROLE_ADMIN'];
+			$scope.updateRole = function(user, role) {
+				if(role !== undefined) {
+					user.role = role;
 				}
-				return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
-			}
-			else if(sessionStorage.role === 'ROLE_REVIEWER') {
-				if(role === 'ROLE_ADMIN') {
-					return ['ROLE_ADMIN'];
-				}
-				return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
-			}
-			else {
-				return [role];
-			}
-		};
+				user.save();
+			};
 
-		UserRepo.listen(function() {
-	    	$scope.user = new User();
-	    	$timeout(function() {
-		    	if($scope.user.role === 'ROLE_STUDENT' || $scope.user.role === 'ROLE_REVIEWER') {
-					$location.path('/myprofile');
-				}
-	    	}, 250);
+			$scope.setRole = function(user) {
+				$scope.roles[user.email] = $scope.allowableRoles(user.role);
+			};
 
-		});
+			$scope.roles = {};
+
+			$scope.disableUpdateRole = function(user) {
+				return $scope.allowableRoles($scope.user.role).indexOf(user.role) < 0 || $scope.user.email === user.email;
+			};
+
+			$scope.allowableRoles = function(role) {
+				if(sessionStorage.role === 'ROLE_ADMIN') {
+					return ['ROLE_ADMIN','ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
+				}
+				else if(sessionStorage.role === 'ROLE_MANAGER') {
+					if(role === 'ROLE_ADMIN') {
+						return ['ROLE_ADMIN'];
+					}
+					return ['ROLE_MANAGER', 'ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
+				}
+				else if(sessionStorage.role === 'ROLE_REVIEWER') {
+					if(role === 'ROLE_ADMIN') {
+						return ['ROLE_ADMIN'];
+					}
+					return ['ROLE_REVIEWER', 'ROLE_STUDENT', 'ROLE_ANONYMOUS'];
+				}
+				else {
+					return [role];
+				}
+			};
+
+			UserRepo.listen(function() {
+					$scope.user = new User();
+					$timeout(function() {
+						if($scope.user.role === 'ROLE_STUDENT' || $scope.user.role === 'ROLE_REVIEWER') {
+						$location.path('/myprofile');
+					}
+					}, 250);
+			});
 
     });
 });
