@@ -477,6 +477,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     delete filterColumns.userFilterColumns[i].status;
                 }
                 update();
+                $scope.closeModal();
             });
         };
 
