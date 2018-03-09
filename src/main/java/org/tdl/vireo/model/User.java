@@ -112,7 +112,7 @@ public class User extends AbstractWeaverUserDetails {
     private NamedSearchFilterGroup activeFilter;
 
     @Fetch(FetchMode.SELECT)
-    @OneToMany(cascade = { REFRESH }, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<NamedSearchFilterGroup> savedFilters;
 
     public User() {
@@ -147,11 +147,11 @@ public class User extends AbstractWeaverUserDetails {
      * @param firstName
      * @param lastName
      * @param role
-     * @param displayedSubmissionColumns
+     * @param password
      */
-    public User(String email, String firstName, String lastName, Role role, List<SubmissionListColumn> displayedSubmissionColumns) {
+    public User(String email, String firstName, String lastName, String password, Role role) {
         this(email, firstName, lastName, role);
-        setSubmissionViewColumns(displayedSubmissionColumns);
+        setPassword(password);
     }
 
     public User(User user) {

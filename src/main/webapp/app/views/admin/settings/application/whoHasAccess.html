@@ -24,7 +24,8 @@
                                 ng-options="key as value for (key, value) in roles" 
                                 class="form-control" 
                                 ng-model="user.role" 
-                                ng-change="updateRole(user)"></select>
+                                ng-change="updateRole(user)"
+                                ng-disabled="disableUpdateRole(user.role)"></select>
                         </td>
                     </tr>
                 </tbody>
