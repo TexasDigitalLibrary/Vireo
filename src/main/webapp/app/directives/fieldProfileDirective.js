@@ -5,7 +5,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
         replace: 'false',
         scope: {
             profile: "=",
-            configuration: "="
+            configuration: "=",
+            fpi: "="
         },
         link: function ($scope) {
             angular.extend(this, $controller('AbstractController', {
