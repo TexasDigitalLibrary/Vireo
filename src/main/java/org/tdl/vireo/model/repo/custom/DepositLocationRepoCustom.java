@@ -9,10 +9,10 @@ public interface DepositLocationRepoCustom {
 
     public DepositLocation create(Map<String, Object> depositLocationJson);
 
-    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout);
+    public DepositLocation create(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager<?> packager, String depositor, int timeout);
 
     public DepositLocation createDetached(Map<String, Object> depositLocationJson);
 
-    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositor, int timeout);
+    public DepositLocation createDetached(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager<?> packager, String depositor, int timeout);
 
 }

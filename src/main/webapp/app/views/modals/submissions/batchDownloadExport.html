@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="box.resetBatchDownloadExport()" aria-title="Close">
+  <button type="button" class="close" ng-click="box.resetBatchProcess()" aria-title="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
   <h3 class="modal-title">Batch Export</h3>
@@ -9,18 +9,44 @@
   <div class="row">
     <div class="col-xs-12">
       <p>Download all the submissions selected by the currently active filter. The download will begin immediately, and may take some time to complete. Unfortunately, your browser will not be able to provide an estimate of when the download is complete.</p>
-      <form class="form-inline" ng-init="packager = box.packagers[0]">
-        <label class="export" for="packager"><strong>Results per page</strong>:</label>
-        <select class="form-control" name="exportType" ng-model="packager" ng-options="p.name for p in box.packagers">
-        </select>
+      <form>
+
+        <div class="row export-input">
+          <div class="col-xs-3"><label class="export-label" for="packager"><strong>Export Format</strong>:</label></div>
+          <div class="col-xs-8"><select class="form-control" name="packager" ng-model="box.packager" ng-options="p.name for p in box.packagers"></select></div>
+        </div>
+
+        <div class="row export-input" ng-show="box.packager.name === 'Excel'">
+          <div class="col-xs-3"><label class="export-label" for="type"><strong>Export Columns</strong>:</label></div>
+          <div class="col-xs-8"><select class="form-control" name="type" ng-model="box.type" ng-options="t for t in box.filterTypes"></select></div>
+        </div>
+
+        <div class="row export-input" ng-show="box.packager.name === 'Excel' && box.type === 'Saved Filter'">
+          <div class="col-xs-3"><label class="export-label" for="filter"><strong>Saved Filters</strong>:</label></div>
+          <div class="col-xs-8">
+            <select class="form-control" name="filter" ng-model="box.filterId">
+              <option value="" disabled selected>Select a filter</option>
+              
+              <option value="with columns" disabled><span class="ml-1">&nbsp&nbspWith Columns</span></option>
+              <option ng-repeat="filter in box.getFiltersWithColumns()" value="{{filter.id}}"><span class="ml-2">&nbsp&nbsp&nbsp&nbsp{{filter.name}}</span></option>
+              <option ng-if="box.getFiltersWithColumns().length === 0" value="none" disabled><span class="ml-2">&nbsp&nbsp&nbsp&nbspNone...</span></option>
+
+              <option value="without columns" disabled><span class="ml-1">&nbsp&nbspWithout Columns</span></option>
+              <option ng-repeat="filter in box.getFiltersWithoutColumns()" value="{{filter.id}}"><span class="ml-2">&nbsp&nbsp&nbsp&nbsp{{filter.name}}</span></option>
+              <option ng-if="box.getFiltersWithoutColumns().length === 0" value="none" disabled><span class="ml-2">&nbsp&nbsp&nbsp&nbspNone...</span></option>
+
+              </select>
+          </div>
+        </div>
+
       </form>
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="box.resetBatchDownloadExport()" ng-disabled="box.exporting">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="box.batchDownloadExport(packager)" ng-disabled="box.exporting">Download Export 
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchProcess()" ng-disabled="box.exporting">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="box.batchDownloadExport(box.packager, box.filterId)" ng-disabled="box.exporting">Download Export 
       <span ng-if="box.exporting" class="glyphicon glyphicon-refresh spinning"></span>
     </button>
 </div>

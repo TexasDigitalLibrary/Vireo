@@ -13,12 +13,11 @@ import javax.persistence.Entity;
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.export.ExportPackage;
-import org.tdl.vireo.model.export.TemplateExportPackage;
+import org.tdl.vireo.model.export.ZipExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
 @Entity
-public class ProQuestUmiPackager extends AbstractPackager {
+public class ProQuestUmiPackager extends AbstractPackager<ZipExportPackage> {
 
     public ProQuestUmiPackager() {
 
@@ -34,7 +33,7 @@ public class ProQuestUmiPackager extends AbstractPackager {
     }
 
     @Override
-    public ExportPackage packageExport(String manifest, Submission submission) {
+    public ZipExportPackage packageExport(Submission submission, String manifest) {
 
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "proquest.xml";
@@ -78,7 +77,7 @@ public class ProQuestUmiPackager extends AbstractPackager {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new TemplateExportPackage(submission, "application/zip", "ProQuest UMI", pkg, null);
+        return new ZipExportPackage(submission, "ProQuest UMI", pkg);
     }
 
 }

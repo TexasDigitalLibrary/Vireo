@@ -38,7 +38,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     private String onBehalfOf;
 
     @OneToOne(targetEntity = AbstractPackager.class, orphanRemoval = true, optional = true)
-    private Packager packager;
+    private Packager<?> packager;
 
     @Column(nullable = false)
     private String depositorName;
@@ -57,7 +57,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
      * @param name
      *            The name of the new deposit location.
      */
-    public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager packager, String depositorName, int timeout) {
+    public DepositLocation(String name, String repository, String collection, String username, String password, String onBehalfOf, Packager<?> packager, String depositorName, int timeout) {
         this();
         setName(name);
         setRepository(repository);
@@ -163,7 +163,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     /**
      * @return the packager
      */
-    public Packager getPackager() {
+    public Packager<?> getPackager() {
         return packager;
     }
 
@@ -171,7 +171,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
      * @param packager
      *            the packager to set
      */
-    public void setPackager(Packager packager) {
+    public void setPackager(Packager<?> packager) {
         this.packager = packager;
     }
 
