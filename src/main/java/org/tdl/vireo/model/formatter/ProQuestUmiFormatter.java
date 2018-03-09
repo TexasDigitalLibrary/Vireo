@@ -1,7 +1,5 @@
 package org.tdl.vireo.model.formatter;
 
-import java.text.ParseException;
-
 import javax.persistence.Entity;
 
 import org.tdl.vireo.model.FieldValue;
@@ -53,18 +51,10 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getSubmitterEmail());
                 break;
             case SUBMITTER_GRADUATION_DATE:
-                try {
-                    context.setVariable(key.name(), submissionHelperUtility.getGraduationDateString());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                context.setVariable(key.name(), submissionHelperUtility.getGraduationDateString());
                 break;
             case SUBMITTER_GRADUATION_YEAR:
-                try {
-                    context.setVariable(key.name(), submissionHelperUtility.getGraduationYearString());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                context.setVariable(key.name(), submissionHelperUtility.getGraduationYearString());
                 break;
             case SUBMITTER_PERMANENT_PHONE_NUMBER:
                 context.setVariable(key.name(), submissionHelperUtility.getSubmitterPermanentPhoneNumber());

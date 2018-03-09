@@ -1,9 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -19,7 +15,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class CustomActionValue extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, optional = false)
+    @ManyToOne(optional = false)
     private CustomActionDefinition definition;
 
     @Column(nullable = false)

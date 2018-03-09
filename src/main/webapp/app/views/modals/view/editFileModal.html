@@ -25,7 +25,7 @@
         </div>
         <div class="form-group">
           <label for="fileName">New Document Type:</label>
-          <select class="form-control" ng-model="documentFieldValue.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } track by documentFieldPredicate.value"></select>
+          <select class="form-control" ng-model="documentFieldValue.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentFieldPredicate.value"></select>
         </div>
       </span>
     </span>
@@ -35,8 +35,8 @@
     <button ng-if="!confirm" type="button" class="btn btn-danger pull-left" ng-click="toggleConfirm()">Delete</button>
     <button ng-if="!confirm" type="button" class="btn btn-default" ng-click="cancel(documentFieldValue);">Cancel</button>
     <button ng-if="confirm" type="button" class="btn btn-default" ng-click="toggleConfirm()">Cancel</button>
-    <button ng-if="confirm" type="button" class="btn btn-danger" ng-click="deleteFieldValue(documentFieldValue)">Confirm</button>
-    <button ng-if="!confirm && !isPrimaryDocument(documentFieldValue.fieldPredicate)" type="button" class="btn btn-primary pull-right" ng-click="saveFieldValue(documentFieldValue)">Submit</button>
+    <button ng-if="confirm" type="button" class="btn btn-danger" ng-click="deleteDocumentFieldValue(documentFieldValue)">Confirm</button>
+    <button ng-if="!confirm && !isPrimaryDocument(documentFieldValue.fieldPredicate)" type="button" class="btn btn-primary pull-right" ng-click="saveDocumentFieldValue(documentFieldValue)">Submit</button>
   </div>
 
 </form>

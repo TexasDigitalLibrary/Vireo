@@ -123,8 +123,9 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
             }
         }
 
-        if (stepSIsOverrideable != originalStepIsOverrideable)
-            System.err.println("Inheritance problem - a non-overrideable step appears to have been overridden!");
+        if (stepSIsOverrideable != originalStepIsOverrideable) {
+            logger.error("Inheritance problem - a non-overrideable step appears to have been overridden!");
+        }
 
         // A workflow step that has the heritableModel on it was found on the requesting organization
         if (stepS != null) {
@@ -148,7 +149,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
             // If the WS originates component C, we don't need a new one
             if (workflowStepOriginatesComponent) {
 
-                BeanUtils.copyProperties(componentCWithChanges, componentC);
+                BeanUtils.copyProperties(componentCWithChanges, componentC, "originating", "originatingWorkflowStep");
 
                 // update heritableModel directly
                 resultingHeritableModel = heritableRepo.save(componentC);

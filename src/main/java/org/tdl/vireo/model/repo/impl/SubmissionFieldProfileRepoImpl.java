@@ -19,7 +19,7 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
     @Override
-    @Transactional // this is needed to lazy fetch fieldGlosses and controlledVocabularies
+    @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
         SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
@@ -28,18 +28,20 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile = new SubmissionFieldProfile();
 
             submissionfieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
-
-            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
-            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
-            submissionfieldProfile.setHelp(fieldProfile.getHelp());
             submissionfieldProfile.setInputType(fieldProfile.getInputType());
+            submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
             submissionfieldProfile.setOptional(fieldProfile.getOptional());
             submissionfieldProfile.setHidden(fieldProfile.getHidden());
-            submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
             submissionfieldProfile.setLogged(fieldProfile.getLogged());
-            submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
             submissionfieldProfile.setUsage(fieldProfile.getUsage());
+            submissionfieldProfile.setHelp(fieldProfile.getHelp());
+
+            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
+            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
+
             submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
+
+            submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
             submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
             submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
 

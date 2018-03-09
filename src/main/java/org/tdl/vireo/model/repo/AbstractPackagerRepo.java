@@ -5,8 +5,8 @@ import org.tdl.vireo.model.repo.custom.AbstractPackagerRepoCustom;
 
 import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
-public interface AbstractPackagerRepo extends WeaverRepo<AbstractPackager>, AbstractPackagerRepoCustom {
+public interface AbstractPackagerRepo extends WeaverRepo<AbstractPackager<?>>, AbstractPackagerRepoCustom {
 
-    public AbstractPackager findByName(String name);
+    public AbstractPackager<?> findByName(String name);
 
 }

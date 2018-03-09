@@ -9,11 +9,13 @@
 
   <div class="modal-body">
 
-    <span ng-show="hasPrimaryDocument()">
+    <span>
       <input type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection">
-      Replace the primary document<br/>
+      <span ng-if="!hasPrimaryDocument()">Add the primary document</span>
+      <span ng-if="hasPrimaryDocument()">Replace the primary document</span>
+      <br/>
 
-      <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'replace', 'section-closed': addFileData.addFileSelection != 'replace'}">
+      <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'replace', 'section-closed': addFileData.addFileSelection !== 'replace'}">
 
         <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="pdf" drop-method="queueUpload(files)"></dropzone>
 
@@ -34,7 +36,7 @@
     <input type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection">
     Add additional document<br/>
 
-    <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection == 'add', 'section-closed': addFileData.addFileSelection != 'add'}">
+    <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'add', 'section-closed': addFileData.addFileSelection !== 'add'}">
 
       <div class="form-group">
         <label for="fileName">New Document Type:</label>

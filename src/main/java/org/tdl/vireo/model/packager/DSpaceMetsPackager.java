@@ -13,12 +13,11 @@ import javax.persistence.Entity;
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.export.ExportPackage;
-import org.tdl.vireo.model.export.TemplateExportPackage;
+import org.tdl.vireo.model.export.ZipExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
 @Entity
-public class DSpaceMetsPackager extends AbstractPackager {
+public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
     public DSpaceMetsPackager() {
 
@@ -34,7 +33,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
     }
 
     @Override
-    public ExportPackage packageExport(String manifest, Submission submission) {
+    public ZipExportPackage packageExport(Submission submission, String manifest) {
 
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
@@ -78,7 +77,7 @@ public class DSpaceMetsPackager extends AbstractPackager {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new TemplateExportPackage(submission, "application/zip", "http://purl.org/net/sword-types/METSDSpaceSIP", pkg, null);
+        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg);
     }
 
 }

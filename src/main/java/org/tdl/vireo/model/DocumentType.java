@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -19,7 +17,7 @@ public class DocumentType extends ValidatingOrderedBaseEntity {
     @Column(nullable = false, length = 255)
     private String name;
 
-    @OneToOne(cascade = DETACH, orphanRemoval = true, optional = false)
+    @OneToOne(orphanRemoval = true, optional = false)
     private FieldPredicate fieldPredicate;
 
     public DocumentType() {

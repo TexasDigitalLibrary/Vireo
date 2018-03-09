@@ -19,7 +19,7 @@
   {
     "title": "Organization",
     "sort": "NONE",
-    "valuePath": ["organization"],
+    "valuePath": ["organization", "name"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"
@@ -55,34 +55,16 @@
   {
     "title": "Approval date",
     "sort": "NONE",
-    "valuePath": ["approvalDate"],
+    "valuePath": ["approveApplicationDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
     }
   },
   {
-    "title": "Institutional ID",
-    "sort": "NONE",
-    "valuePath": [],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_TEXT"
-    }
-  },
-  {
-    "title": "Primary document",
-    "sort": "NONE",
-    "valuePath": [],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_TEXT"
-    }
-  },
-  {
     "title": "License agreement date",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["submissionDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
@@ -91,7 +73,7 @@
   {
     "title": "Committee approval date",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["approveAdvisorDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
@@ -100,19 +82,10 @@
   {
     "title": "Committee embargo approval date",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["approveEmbargo"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
-    }
-  },
-  {
-    "title": "Committee members",
-    "sort": "NONE",
-    "valuePath": [],
-    "status": null,
-    "inputType": {
-      "name": "INPUT_TEXT"
     }
   },
   {

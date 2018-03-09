@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.inheritance.HeritableComponent;
 import org.tdl.vireo.model.validation.NoteValidator;
@@ -18,6 +20,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @DiscriminatorValue("Org")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step", "originating_field_profile", "name" }))
 public class Note extends AbstractNote<Note> implements HeritableComponent<Note> {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
@@ -86,12 +89,12 @@ public class Note extends AbstractNote<Note> implements HeritableComponent<Note>
 
     @Override
     public void setOriginating(Note originating) {
-    	this.originating = originating;
+        this.originating = originating;
     }
 
     @Override
     public Note getOriginating() {
-    	return originating;
+        return originating;
     }
 
     @Override

@@ -25,9 +25,9 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         });
         var promise = WsApi.fetch(this.mapping.create);
         promise.then(function (res) {
-            var resObj = angular.fromJson(res.body);
-            if (resObj.meta.status === "INVALID") {
-                angular.extend(organizationRepo, resObj.payload);
+            var apiRes = angular.fromJson(res.body);
+            if (apiRes.meta.status === "INVALID") {
+                angular.extend(organizationRepo, apiRes.payload);
             }
         });
         return promise;
@@ -52,22 +52,20 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
 
     this.setSelectedOrganization = function (organization) {
         selectedId = organization.id;
-        return organizationRepo.getSelectedOrganization();
-    };
-
-    this.getChildren = function (id) {
-        organizationRepo.clearValidationResults();
-        angular.extend(this.mapping.children, {
-            'method': 'get-children/' + id
-        });
-        var promise = WsApi.fetch(this.mapping.children);
-        promise.then(function (res) {
-            var resObj = angular.fromJson(res.body);
-            if (resObj.meta.status === "INVALID") {
-                angular.extend(organizationRepo, resObj.payload);
-            }
-        });
-        return promise;
+        organization = organizationRepo.getSelectedOrganization();
+        if(!organization.complete) {
+            organization.updateRequested = true;
+            angular.extend(this.mapping.get, {
+                'method': 'get/' + organization.id
+            });
+            WsApi.fetch(this.mapping.get).then(function (res) {
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status === "SUCCESS") {
+                    angular.extend(organization, apiRes.payload.Organization);
+                }
+            });
+        }
+        return organization;
     };
 
     this.addWorkflowStep = function (workflowStep) {

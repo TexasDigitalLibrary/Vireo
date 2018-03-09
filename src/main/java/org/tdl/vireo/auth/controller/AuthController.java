@@ -25,12 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.auth.service.VireoUserCredentialsService;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import edu.tamu.weaver.auth.controller.WeaverAuthController;
@@ -61,7 +60,7 @@ public class AuthController extends WeaverAuthController {
     private EmailTemplateRepo emailTemplateRepo;
 
     @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
+    private VireoUserCredentialsService vireoUserCredentialsService;
 
     @RequestMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@RequestBody(required = false) Map<String, String> data, @RequestParam Map<String, String> parameters) {
@@ -142,15 +141,7 @@ public class AuthController extends WeaverAuthController {
             return new ApiResponse(ERROR, "Token has expired! Please begin registration again.");
         }
 
-        User user = userRepo.create(email, firstName, lastName, Role.ROLE_STUDENT);
-
-        user.setUsername(email);
-
-        user.setPassword(cryptoService.encodePassword(password));
-
-        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
-
-        user = userRepo.save(user);
+        User user = vireoUserCredentialsService.createUserFromRegistration(email, firstName, lastName, cryptoService.encodePassword(password));
 
         return new ApiResponse(SUCCESS, "Registration was successfull. Please login.", user);
     }

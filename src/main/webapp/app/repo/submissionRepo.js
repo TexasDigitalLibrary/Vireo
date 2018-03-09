@@ -26,10 +26,9 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Sub
         return defer.promise;
     };
 
-    submissionRepo.query = function (columns, page, size) {
+    submissionRepo.query = function (page, size) {
         angular.extend(submissionRepo.mapping.query, {
-            'method': 'query/' + page + '/' + size,
-            'data': columns
+            'method': 'query/' + page + '/' + size
         });
         var promise = WsApi.fetch(submissionRepo.mapping.query);
         promise.then(function (res) {
@@ -40,9 +39,9 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Sub
         return promise;
     };
 
-    submissionRepo.batchExport = function (packager) {
+    submissionRepo.batchExport = function (packager, filterId) {
         angular.extend(submissionRepo.mapping.batchExport, {
-            'method': 'batch-export/' + packager.name
+            'method': 'batch-export/' + packager.name + (filterId !== undefined ? '/' + filterId : '')
         });
         var promise = FileService.download(submissionRepo.mapping.batchExport);
         return promise;

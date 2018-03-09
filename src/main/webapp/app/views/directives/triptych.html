@@ -24,7 +24,7 @@
 		</div>
 		<div class="row triptych-panels">
 		
-			<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper" ng-repeat="panel in navigation.panels | filter:{visible:true}" ng-class="{'opening': panel.opening, 'closing': panel.closing, 'showing': panel.showing, 'back': navigation.backward}">
+			<div class="col-xs-12 col-sm-6 col-md-4 panel-wrapper" ng-repeat="panel in navigation.panels | filter:{visible:true}" ng-class="{'opening': panel.opening, 'closing': panel.closing, 'showing': panel.visible, 'back': navigation.backward}">
 
 				<div class="panel panel-default triptych-panel" ng-class="{'active': panel.active, 'previously-active': panel.previouslyActive}" ng-if="organizations.length > 1">
 					<div class="panel-heading" ng-click="navigation.expanded = true">
