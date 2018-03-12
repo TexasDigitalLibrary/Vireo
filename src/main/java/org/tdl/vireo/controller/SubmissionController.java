@@ -23,6 +23,9 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,7 @@ import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -114,6 +118,9 @@ public class SubmissionController {
     private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
     @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+
+    @Autowired
     private OrganizationRepo organizationRepo;
 
     @Autowired
@@ -159,7 +166,7 @@ public class SubmissionController {
     private String documentPath;
 
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAll() {
         return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
@@ -234,7 +241,7 @@ public class SubmissionController {
     }
 
     @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
         sendEmail(user, submissionRepo.read(submissionId), data);
         return new ApiResponse(SUCCESS);
@@ -284,9 +291,11 @@ public class SubmissionController {
                 subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
                 subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
             }
+
             addComment(user, sub.getId(), subMessage);
         });
         return new ApiResponse(SUCCESS);
+
     }
 
     private String findEmailValue(Submission submission, String recipient) {
@@ -375,32 +384,29 @@ public class SubmissionController {
     }
 
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
         return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
         Submission submission = submissionRepo.read(submissionId);
-
-        ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response;
         if (submission != null) {
-
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, new ApiResponse(SUCCESS, submission));
+                response = new ApiResponse(SUCCESS, submission);
+                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, response);
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-
         processEmailWorkflowRules(user, submission);
-
         return response;
     }
 
@@ -413,14 +419,15 @@ public class SubmissionController {
             processEmailWorkflowRules(user, submission);
         });
         return new ApiResponse(SUCCESS);
+
     }
 
     @RequestMapping("/{submissionId}/publish/{depositLocationId}")
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse publish(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long depositLocationId) throws Exception {
         Submission submission = submissionRepo.read(submissionId);
 
-        ApiResponse response = new ApiResponse(SUCCESS);
+        ApiResponse response;
         if (submission != null) {
 
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
@@ -440,6 +447,7 @@ public class SubmissionController {
 
                         if (result != null) {
                             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                            response = new ApiResponse(SUCCESS, submission);
                         } else {
                             response = new ApiResponse(ERROR, "Could not deposit submission");
                         }
@@ -462,38 +470,107 @@ public class SubmissionController {
     }
 
     @PreAuthorize("hasRole('REVIEWER')")
+    @RequestMapping("/batch-export/{packagerName}/{filterId}")
+    public void batchExportWithFilter(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName, @PathVariable Long filterId) throws IOException {
+        NamedSearchFilterGroup filter = namedSearchFilterGroupRepo.findOne(filterId);
+        processBatchExport(response, user, packagerName, filter);
+    }
+
+    @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}")
-    public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws Exception {
+    public void batchExport(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName) throws IOException {
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        processBatchExport(response, user, packagerName, activeFilter);
+    }
 
-        AbstractPackager packager = packagerUtility.getPackager(packagerName);
+    private void processBatchExport(HttpServletResponse response, User user, String packagerName, NamedSearchFilterGroup filter) throws IOException {
+        AbstractPackager<?> packager = packagerUtility.getPackager(packagerName);
 
-        try {
-            ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+        List<SubmissionListColumn> columns = filter.getColumnsFlag() ? filter.getSavedColumns() : user.getSubmissionViewColumns();
 
-            // TODO: need a more dynamic way to achieve this
-            if (packagerName.equals("ProQuest")) {
-                // TODO: add filter for UMI Publication true
+        switch (packagerName.trim()) {
+        case "Excel":
+            List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+
+            HSSFSheet worksheet = workbook.createSheet();
+
+            int rowCount = 0;
+
+            HSSFRow header = worksheet.createRow(rowCount++);
+
+            for (int i = 0; i < columns.size(); i++) {
+                SubmissionListColumn column = columns.get(i);
+                header.createCell(i).setCellValue(column.getTitle());
             }
 
-            for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
-                ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                File exportFile = exportPackage.getFile();
-                zos.putNextEntry(new ZipEntry(exportFile.getName()));
-                zos.write(Files.readAllBytes(exportFile.toPath()));
-                zos.closeEntry();
+            for (Submission submission : submissions) {
+                ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
+                if (exportPackage.isMap()) {
+                    @SuppressWarnings({ "unchecked" })
+                    Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
+                    HSSFRow row = worksheet.createRow(rowCount++);
+                    for (int i = 0; i < columns.size(); i++) {
+                        SubmissionListColumn column = columns.get(i);
+                        row.createCell(i).setCellValue(rowData.get(column.getTitle()));
+                    }
+                }
             }
-            zos.close();
 
-            response.setContentType("application/zip");
-            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".zip");
-        } catch (Exception e) {
+            for (int i = 0; i < columns.size(); i++) {
+                worksheet.autoSizeColumn(i);
+            }
+
+            response.setContentType(packager.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            workbook.write(response.getOutputStream());
+
+            break;
+        case "DSpaceMETS":
+        case "ProQuest":
+            try {
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+
+                // TODO: need a more dynamic way to achieve this
+                if (packagerName.equals("ProQuest")) {
+                    // TODO: add filter for UMI Publication true
+                }
+
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+
+                    if (exportPackage.isFile()) {
+                        File exportFile = (File) exportPackage.getPayload();
+                        zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        zos.write(Files.readAllBytes(exportFile.toPath()));
+                        zos.closeEntry();
+                    }
+
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                response.setContentType("application/json");
+
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+                PrintWriter out = response.getWriter();
+                out.print(objectMapper.writeValueAsString(apiResponse));
+                out.close();
+            }
+            break;
+        default:
             response.setContentType("application/json");
 
-            ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+            ApiResponse apiResponse = new ApiResponse(ERROR, "No packager " + packagerName + " found!");
             PrintWriter out = response.getWriter();
             out.print(objectMapper.writeValueAsString(apiResponse));
             out.close();
         }
+
+        response.getOutputStream().close();
     }
 
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
@@ -505,6 +582,7 @@ public class SubmissionController {
             submissionRepo.update(sub);
         });
         return new ApiResponse(SUCCESS);
+
     }
 
     @RequestMapping("/batch-publish/{depositLocationId}")
@@ -546,7 +624,7 @@ public class SubmissionController {
     }
 
     @RequestMapping(value = "/{submissionId}/submit-date", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse submitDate(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody String newDate) throws ParseException {
 
         Submission submission = submissionRepo.read(submissionId);
@@ -572,7 +650,7 @@ public class SubmissionController {
     }
 
     @RequestMapping(value = "/{submissionId}/assign-to", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse assign(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody User assignee) {
         Submission submission = submissionRepo.read(submissionId);
 
@@ -620,7 +698,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/needs-correction")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse setSubmissionNeedsCorrection(@WeaverUser User user, @PathVariable Long submissionId) {
         Submission submission = submissionRepo.read(submissionId);
         SubmissionStatus needsCorrectionStatus = submissionStatusRepo.findByName(NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);

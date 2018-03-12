@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.export.ExportPackage;
+import org.tdl.vireo.utility.FileHelperUtility;
 
 public class SWORDv1Depositor implements Depositor {
 
@@ -113,9 +114,11 @@ public class SWORDv1Depositor implements Depositor {
         try {
             URL repositoryURL = new URL(depLocation.getRepository());
 
-            File exportFile = exportPackage.getFile();
+            FileHelperUtility fileHelperUtility = new FileHelperUtility();
 
-            String exportMimeType = exportPackage.getMimeType();
+            File exportFile = (File) exportPackage.getPayload();
+
+            String exportMimeType = fileHelperUtility.getMimeType(exportFile);
 
             // Building the client
             Client client = new Client();
@@ -130,7 +133,7 @@ public class SWORDv1Depositor implements Depositor {
             }
 
             PostMessage message = new PostMessage();
-            
+
             System.out.println("\n\n" + exportFile.getAbsolutePath() + "\n\n");
 
             message.setFilepath(exportFile.getAbsolutePath());
@@ -156,10 +159,8 @@ public class SWORDv1Depositor implements Depositor {
             depositId = response.getEntry().getId();
 
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (SWORDClientException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

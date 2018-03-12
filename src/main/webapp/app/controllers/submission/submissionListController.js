@@ -212,30 +212,28 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
-        var resetBatchUpdateStatus = function () {
+        var resetBatchProcess = function () {
             $scope.advancedfeaturesBox.processing = false;
+            $scope.advancedfeaturesBox.exporting = false;
             $scope.advancedfeaturesBox.assignee = assignableUsers[0];
+            $scope.advancedfeaturesBox.packager = packagers[0];
+            $scope.advancedfeaturesBox.type = 'Active Filter';
+            $scope.advancedfeaturesBox.filterId = undefined;
             $scope.closeModal();
         };
 
         var batchUpdateStatus = function (newStatus) {
             $scope.advancedfeaturesBox.processing = true;
             SubmissionRepo.batchUpdateStatus(newStatus).then(function () {
-                resetBatchUpdateStatus();
+                resetBatchProcess();
                 query();
             });
-        };
-
-        var resetBatchAssignTo = function () {
-            $scope.advancedfeaturesBox.processing = false;
-            $scope.advancedfeaturesBox.assignee = assignableUsers[0];
-            $scope.closeModal();
         };
 
         var batchAssignTo = function (assignee) {
             $scope.advancedfeaturesBox.processing = true;
             SubmissionRepo.batchAssignTo(assignee).then(function () {
-                resetBatchUpdateStatus();
+                resetBatchProcess();
                 query();
             });
         };
@@ -243,23 +241,18 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var batchPublish = function (newStatus) {
             $scope.advancedfeaturesBox.processing = true;
             SubmissionRepo.batchPublish($scope.advancedfeaturesBox.depositLocation).then(function () {
-                resetBatchUpdateStatus();
+                resetBatchProcess();
                 query();
             });
         };
 
-        var resetBatchDownloadExport = function () {
-            $scope.advancedfeaturesBox.exporting = false;
-            $scope.closeModal();
-        };
-
-        var batchDownloadExport = function (packager) {
+        var batchDownloadExport = function (packager, filterId) {
             $scope.advancedfeaturesBox.exporting = true;
-            SubmissionRepo.batchExport(packager).then(function (data) {
+            SubmissionRepo.batchExport(packager, filterId).then(function (data) {
                 saveAs(new Blob([data], {
-                    type: 'application/zip'
-                }), packager.name + '.zip');
-                resetBatchUpdateStatus();
+                    type: packager.mimeType
+                }), packager.name + '.' + packager.fileExtension);
+                resetBatchProcess();
             });
         };
 
@@ -268,7 +261,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             for (var j in array) {
                 var member = array[j];
                 if (member.fieldPredicate !== undefined) {
-                    if (member.fieldPredicate.value == col.predicate) {
+                    if (member.fieldPredicate.value === col.predicate) {
                         value += value.length > 0 ? ", " + member.value : member.value;
                     }
                 } else {
@@ -281,6 +274,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             }
             return value;
+        };
+
+        var getFiltersWithColumns = function() {
+            return savedFilters.filter(function(filter) { return filter.columnsFlag; });
+        };
+
+        var getFiltersWithoutColumns = function() {
+            return savedFilters.filter(function(filter) { return !filter.columnsFlag; });
         };
 
         $scope.furtherFilterBy = {
@@ -302,16 +303,21 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.advancedfeaturesBox = {
+            "packager": packagers[0],
+            "type": 'Active Filter',
+            "filterTypes": ['Active Filter', 'Saved Filter'],
+            "filterId": undefined,
+            "getFiltersWithColumns": getFiltersWithColumns,
+            "getFiltersWithoutColumns": getFiltersWithoutColumns,
             "title": "Advanced Features:",
             "processing": false,
             "depositLocations": depositLocations,
             "viewUrl": "views/sideboxes/advancedFeatures.html",
-            "resetBatchUpdateStatus": resetBatchUpdateStatus,
+            "resetBatchProcess": resetBatchProcess,
             "batchUpdateStatus": batchUpdateStatus,
             "submissionStatuses": submissionStatuses,
             "newStatus": submissionStatuses[0],
             "assignableUsers": assignableUsers,
-            "resetBatchAssignTo": resetBatchAssignTo,
             "batchAssignTo": batchAssignTo,
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
@@ -319,7 +325,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "addBatchCommentEmail": addBatchCommentEmail,
             "emailTemplates": emailTemplates,
             "updateTemplate": updateTemplate,
-            "resetBatchDownloadExport": resetBatchDownloadExport,
             "batchDownloadExport": batchDownloadExport,
             "packagers": packagers
         };
@@ -472,6 +477,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     delete filterColumns.userFilterColumns[i].status;
                 }
                 update();
+                $scope.closeModal();
             });
         };
 

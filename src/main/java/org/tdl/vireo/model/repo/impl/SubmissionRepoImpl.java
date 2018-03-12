@@ -210,13 +210,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     break;
             }
 
-            clearLicenseFiles(submission);
-
             if (attachProquestLicense) {
+                removeLicenseFile(submission, "proquest_license");
                 writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
             }
 
             if (attachDefaultLicenseFieldValues) {
+                removeLicenseFile(submission, "license");
                 writeLicenseFile(user, submission, "submit_license", "license", "submission");
             }
             break;
@@ -250,16 +250,19 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         return submission;
     }
 
-    private void clearLicenseFiles(Submission submission) {
+    private void removeLicenseFile(Submission submission, String fileName) {
         FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
         List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
-
         for (FieldValue fieldValue : fieldValues) {
-            try {
-                fileIOUtility.delete(fieldValue.getValue());
-                submission.removeFieldValue(fieldValue);
-            } catch (IOException e) {
-                e.printStackTrace();
+            String licenceUri = fieldValue.getValue();
+            if (licenceUri.substring(licenceUri.lastIndexOf("-") + 1).equals(fileName + ".txt")) {
+                try {
+                    fileIOUtility.delete(fieldValue.getValue());
+                    submission.removeFieldValue(fieldValue);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
         }
     }
@@ -307,9 +310,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
             fieldValue.setValue(uri);
             submission.addFieldValue(fieldValue);
-
-            System.out.println(fieldValue.getValue());
-
         }
 
     }

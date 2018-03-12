@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
+    <button type="button" class="close" ng-click="box.resetBatchProcess()" aria-title="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Assign Submission</h3>
@@ -34,5 +34,5 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchProcess()">Cancel</button>
 </div>

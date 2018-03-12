@@ -30,6 +30,7 @@ public class SubmissionHelperUtility {
 
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
+    @SuppressWarnings("unused")
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -239,7 +240,7 @@ public class SubmissionHelperUtility {
         String date = "";
         if (graduationDate.isPresent()) {
             try {
-                date = dateFormat.format(dateTimeFormat.parse(graduationDate.get()));
+                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -252,7 +253,7 @@ public class SubmissionHelperUtility {
         String year = "";
         if (graduationYear.isPresent()) {
             try {
-                year = yearFormat.format(dateTimeFormat.parse(graduationYear.get()));
+                year = yearFormat.format(dateFormat.parse(graduationYear.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

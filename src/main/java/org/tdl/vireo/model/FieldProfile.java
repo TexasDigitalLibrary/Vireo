@@ -170,37 +170,38 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     public FieldProfile clone() {
         FieldProfile clone = new FieldProfile();
 
-        List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
-        for (ControlledVocabulary cv : getControlledVocabularies()) {
-            controlledVocabularies.add(cv);
-        }
+        clone.setFieldPredicate(getFieldPredicate());
+
+        clone.setInputType(getInputType());
+        clone.setRepeatable(getRepeatable());
+        clone.setOptional(getOptional());
+        clone.setHidden(getHidden());
+        clone.setLogged(getLogged());
+        clone.setUsage(getUsage());
+        clone.setHelp(getHelp());
 
         List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
         for (FieldGloss fg : getFieldGlosses()) {
             fieldGlosses.add(fg);
         }
+        clone.setFieldGlosses(fieldGlosses);
+
+        List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
+        for (ControlledVocabulary cv : getControlledVocabularies()) {
+            controlledVocabularies.add(cv);
+        }
+        clone.setControlledVocabularies(controlledVocabularies);
 
         clone.setMappedShibAttribute(getMappedShibAttribute());
-        clone.setHelp(getHelp());
-        clone.setUsage(getUsage());
-        clone.setEnabled(getEnabled());
-        clone.setOptional(getOptional());
-        clone.setRepeatable(getRepeatable());
-
-        clone.setDefaultValue(getDefaultValue());
 
         clone.setFlagged(getFlagged());
-        clone.setOverrideable(getOverrideable());
-
-        clone.setInputType(getInputType());
-        clone.setFieldPredicate(getFieldPredicate());
+        clone.setDefaultValue(getDefaultValue());
+        clone.setEnabled(getEnabled());
 
         clone.setOriginating(getOriginating());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
 
-        clone.setControlledVocabularies(controlledVocabularies);
-
-        clone.setFieldGlosses(fieldGlosses);
+        clone.setOverrideable(getOverrideable());
 
         return clone;
     }

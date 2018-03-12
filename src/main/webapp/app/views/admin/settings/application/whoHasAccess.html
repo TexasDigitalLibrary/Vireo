@@ -16,15 +16,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="user in users | filter:{role: '!ROLE_STUDENT'}">
-                        <td>{{user.firstName}} {{user.lastName}}</td>
-                        <td>{{user.email}}</td>
+                    <tr ng-repeat="u in users | filter:{role: '!ROLE_STUDENT'}" ng-init="setRole(u)">
+                        <td>{{u.firstName}} {{u.lastName}}</td>
+                        <td>{{u.email}}</td>
                         <td>
-                            <select 
-                                ng-options="key as value for (key, value) in roles" 
-                                class="form-control" 
-                                ng-model="user.role" 
-                                ng-change="updateRole(user)"></select>
+                            <select class="form-control" ng-model="u.role" ng-change="updateRole(u)" ng-disabled="disableUpdateRole(u)">
+                                <option ng-repeat="role in roles[u.email]" ng-selected="role === u.role">{{role}}</option>
+                            </select>
                         </td>
                     </tr>
                 </tbody>

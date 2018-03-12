@@ -207,9 +207,27 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             $scope.addFileData.uploading = true;
 
-            var fieldValue = $scope.addFileData.addFileSelection === 'replace' ? $scope.submission.primaryDocumentFieldValue : new FieldValue({
-                fieldPredicate: $scope.addFileData.fieldPredicate
-            });
+            var fieldValue;
+
+            if($scope.addFileData.addFileSelection === 'replace') {
+                if($scope.submission.primaryDocumentFieldValue !== undefined) {
+                    fieldValue = $scope.submission.primaryDocumentFieldValue;
+                } else {
+                    for(var i in $scope.fieldPredicates) {
+                        var fieldPredicate = $scope.fieldPredicates[i];
+                        if(fieldPredicate.value === '_doctype_primary') {
+                            fieldValue = new FieldValue({
+                                fieldPredicate: fieldPredicate
+                            });
+                            break;
+                        }
+                    }
+                }
+            } else {
+                fieldValue = new FieldValue({
+                    fieldPredicate: $scope.addFileData.fieldPredicate
+                });
+            }
 
             fieldValue.file = $scope.addFileData.files[0];
 
@@ -217,35 +235,15 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                if ($scope.addFileData.addFileSelection === 'replace') {
-                    $scope.submission.archiveFile($scope.submission.primaryDocumentFieldValue).then(function (response) {
-                        var archivedDocumentFieldValue = new FieldValue();
-
-                        archivedDocumentFieldValue.value = angular.fromJson(response.body).meta.message;
-
-                        var archivedDocumentFieldProfile = $scope.submission.getFieldProfileByPredicateName("_doctype_archived");
-
-                        if (archivedDocumentFieldProfile !== undefined && archivedDocumentFieldProfile !== null) {
-                            archivedDocumentFieldValue.fieldPredicate = archivedDocumentFieldProfile.fieldPredicate;
-
-                            archivedDocumentFieldValue.updating = true;
-
-                            $scope.submission.saveFieldValue(archivedDocumentFieldValue, archivedDocumentFieldProfile).then(function (response) {
-                                if (angular.fromJson(response.body).meta.status === "INVALID") {
-                                    fieldValue.refresh();
-                                }
-                                archivedDocumentFieldValue.updating = false;
-                            });
-                        } else {
-                            console.warn("No archived field profile exists on submission!");
-                        }
-                    });
+                if ($scope.addFileData.addFileSelection === 'replace' && $scope.hasPrimaryDocument()) {
+                    FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue);
                 }
 
                 fieldValue.value = response.data.meta.message;
 
                 $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
-                    if (angular.fromJson(response.body).meta.status === "INVALID") {
+                    var apiRes = angular.fromJson(response.body);
+                    if (apiRes.meta.status === "INVALID") {
                         fieldValue.refresh();
                     } else {
                         if ($scope.addFileData.sendEmailToRecipient) {
@@ -324,7 +322,25 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "hasPrimaryDocument": $scope.hasPrimaryDocument
         };
 
+        var getLastActionDate = function() {
+            var index = $scope.submission.actionLogs.length - 1;
+            return $scope.submission.actionLogs[index].actionDate;
+        };
+
+        var getLastActionEntry = function() {
+            var index = $scope.submission.actionLogs.length - 1;
+            return $scope.submission.actionLogs[index].entry;
+        };
+
+        // TODO: determine how this is set
+        var isUmiRelease = function() {
+            return 'no';
+        };
+
         $scope.submissionStatusBox = {
+            "isUmiRelease": isUmiRelease,
+            "getLastActionDate": getLastActionDate,
+            "getLastActionEntry": getLastActionEntry,
             "depositLocations": depositLocations,
             "title": "Submission Status",
             "viewUrl": "views/sideboxes/submissionStatus.html",
@@ -346,7 +362,28 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "changeStatus": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.changeStatus(state.name).then(function () {
+                $scope.submission.changeStatus(state.name).then(function (response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        // remove field values that are document type field predicates
+                        for(var i = $scope.submission.fieldValues.length - 1; i >= 0; i--) {
+                            var fieldValue = $scope.submission.fieldValues[i];
+                            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                                $scope.submission.fieldValues.splice(i, 1);
+                            }
+                        }
+                        // add field values of response that are document type field predicates
+                        var submission = apiRes.payload.Submission;
+                        angular.forEach(submission.fieldValues, function (fieldValue) {
+                            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                                $scope.submission.fieldValues.push(new FieldValue(fieldValue));
+                            }
+                        });
+                        // update current submissions status
+                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+                        // fetch file info
+                        $scope.submission.fetchDocumentTypeFileInfo();
+                    }
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
@@ -355,7 +392,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "publish": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function () {
+                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function (response) {
+                    var apiRes = angular.fromJson(response.body);
+                    if(apiRes.meta.status === 'SUCCESS') {
+                        var submission = apiRes.payload.Submission;
+                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+                    }
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
