@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $filter, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, NamedSearchFilterGroup, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -332,9 +332,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return $scope.submission.actionLogs[index].entry;
         };
 
-        // TODO: determine how this is set
         var isUmiRelease = function() {
-            return 'no';
+            var umiReleaseFilterFieldValue = $scope.submission.fieldValues.filter(function (fv) {
+                if(fv.fieldPredicate.value === "umi_publication") {
+                    umiRelease = fv.value === 'true' ? 'yes' : 'no';
+                }
+            });
+            return umiRelease;
         };
 
         $scope.submissionStatusBox = {
