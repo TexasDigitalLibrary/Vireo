@@ -334,11 +334,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         var isUmiRelease = function() {
             var umiRelease = 'no';
-            var umiReleaseFilterFieldValue = $scope.submission.fieldValues.filter(function (fv) {
+            for (var i in $scope.submission.fieldValues) {
+                var fv = $scope.submission.fieldValues[i];
                 if(fv.fieldPredicate.value === "umi_publication") {
                     umiRelease = fv.value === 'true' ? 'yes' : 'no';
+                    break;
                 }
-            });
+            }
             return umiRelease;
         };
 
