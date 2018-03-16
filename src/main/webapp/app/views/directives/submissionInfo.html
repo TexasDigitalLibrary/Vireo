@@ -12,7 +12,7 @@
 
       <div class="col-sm-8 info-data">
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
-        <span ng-if="inputLicense() || inputProquest()" ng-class="{'info-empty': !field.value}">{{field.value === 'true' ? 'yes' : 'no'}}</span>
+        <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
           <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
@@ -46,7 +46,7 @@
 
         <!-- conditionally show the proper form of the field value -->
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
-        <span ng-if="inputLicense() || inputProquest()" ng-class="{'info-empty': !field.value}">{{field.value === 'true' ? 'yes' : 'no'}}</span>
+        <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
           <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
