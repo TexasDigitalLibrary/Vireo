@@ -1,6 +1,7 @@
 package org.tdl.vireo.utility;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,15 @@ public class FormatterUtility {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-    public String renderManifest(Formatter formatter, Submission submission) throws Exception {
+    public Optional<String> renderManifest(Formatter formatter, Submission submission) throws Exception {
         Context context = new Context(Locale.getDefault());
         formatter.populateContext(context, submission);
-        return templateEngine.process(formatter.getTemplate(), context);
+        Optional<String> template = Optional.of(formatter.getTemplate());
+        Optional<String> manifest = Optional.empty();
+        if (template.isPresent()) {
+            manifest = Optional.of(templateEngine.process(template.get(), context));
+        }
+        return manifest;
     }
 
 }

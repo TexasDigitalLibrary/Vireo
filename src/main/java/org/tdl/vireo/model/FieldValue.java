@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -16,12 +14,15 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 public class FieldValue extends ValidatingBaseEntity {
 
+    @JsonView(ApiView.Partial.class)
     @Column(columnDefinition = "text", nullable = true)
     private String value;
 
@@ -35,11 +36,12 @@ public class FieldValue extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<String> contacts;
 
-    @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
+    @JsonView(ApiView.Partial.class)
+    @ManyToOne(optional = false)
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
-    	contacts = new ArrayList<String>();
+        contacts = new ArrayList<String>();
     }
 
     /**

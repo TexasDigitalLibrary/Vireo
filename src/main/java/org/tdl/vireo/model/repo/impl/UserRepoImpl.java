@@ -1,8 +1,8 @@
 package org.tdl.vireo.model.repo.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
+import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -18,7 +18,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     private UserRepo userRepo;
 
     @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
     @Autowired
     private DefaultFiltersService defaultFiltersService;
@@ -28,26 +28,30 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public User create(String email, String firstName, String lastName, Role role) {
+        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, role)));
+    }
 
-        User newUser = new User(email, firstName, lastName, role);
+    @Override
+    public User create(String email, String firstName, String lastName, String password, Role role) {
+        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, password, role)));
+    }
 
-        newUser = userRepo.save(newUser);
+    private User saveAndAddSettings(User user) {
+        NamedSearchFilterGroup activeFilter = namedSearchFilterGroupRepo.create(user);
 
-        NamedSearchFilterGroup activeFilter = namedSearchFilterRepo.create(newUser);
+        user.putSetting("id", user.getId().toString());
+        user.putSetting("displayName", user.getFirstName() + " " + user.getLastName());
+        user.putSetting("preferedEmail", user.getEmail());
+        user.setActiveFilter(activeFilter);
+        user.setFilterColumns(defaultFiltersService.getDefaultFilter());
+        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
-        newUser.putSetting("id", newUser.getId().toString());
-        newUser.putSetting("displayName", newUser.getFirstName() + " " + newUser.getLastName());
-        newUser.putSetting("preferedEmail", newUser.getEmail());
-        newUser.setActiveFilter(activeFilter);
-        newUser.setFilterColumns(defaultFiltersService.getDefaultFilter());
-        newUser.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
-
-        return userRepo.save(newUser);
+        return userRepo.save(user);
     }
 
     @Override
     public void delete(User user) {
-        namedSearchFilterRepo.delete(user.getActiveFilter());
+        namedSearchFilterGroupRepo.delete(user.getActiveFilter());
         userRepo.delete(user.getId());
     }
 

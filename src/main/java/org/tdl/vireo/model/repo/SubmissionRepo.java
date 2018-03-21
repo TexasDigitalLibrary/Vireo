@@ -18,7 +18,7 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
     public List<Submission> findByActionLogsId(Long id);
 
     public List<Submission> findAllBySubmitter(User submitter);
-    
+
     public Submission findOneBySubmitterAndId(User submitter, Long id);
 
     public Submission findOneByAdvisorAccessHash(String hash);

@@ -72,11 +72,14 @@
 							<button
 								type="button"
 								class="btn btn-default"
-								ng-click="resetManageOrganization()">Cancel</button>
+								ng-click="resetManageOrganization()"
+								ng-disabled="updatingOrganization">Cancel</button>
 							<button
 								type="submit"
 								class="btn btn-primary"
-								ng-disabled="forms.update.$invalid">Save</button>
+								ng-disabled="forms.update.$invalid || updatingOrganization">Save 
+								<span ng-if="updatingOrganization" class="glyphicon glyphicon-refresh spinning"></span>
+							</button>
 						</div>
 					</div>
 

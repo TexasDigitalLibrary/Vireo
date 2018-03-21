@@ -1,5 +1,6 @@
 package org.tdl.vireo.utility;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -10,12 +11,16 @@ public class FileHelperUtility {
 
     private final Tika tika = new Tika();
 
-    // TODO: fix problems on Windows!!!
     public String getMimeType(String relativePath) {
         Path path = Paths.get(getPath(relativePath));
         return tika.detect(path.toString());
     }
-    
+
+    public String getMimeType(File file) {
+        Path path = Paths.get(file.getAbsolutePath());
+        return tika.detect(path.toString());
+    }
+
     public static String getPath(String relativePath) {
         String path = Application.BASE_PATH + relativePath;
         if (path.contains(":") && path.charAt(0) == '/') {

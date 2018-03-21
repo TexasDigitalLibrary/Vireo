@@ -4,6 +4,8 @@ import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
@@ -25,6 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -47,7 +51,6 @@ import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.utility.FileIOUtility;
@@ -65,9 +68,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private SubmissionRepo submissionRepo;
-    
-    @Autowired
-    private SubmissionStatusRepo submissionStatusRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
@@ -100,7 +100,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private FileIOUtility fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
-    
+
     @Value("${app.document.path:private/}")
     private String documentPath;
 
@@ -171,9 +171,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Submission updateStatus(Submission submission, SubmissionStatus submissionStatus, User user) {
-        
-        submissionStatus = submissionStatusRepo.findOne(submissionStatus.getId());
-        
+
         SubmissionStatus oldSubmissionStatus = submission.getSubmissionStatus();
         String oldSubmissionStatusName = oldSubmissionStatus.getName();
 
@@ -187,6 +185,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         switch (submissionStatus.getSubmissionState()) {
         case SUBMITTED:
+
+            submission.setApproveApplication(false);
+            submission.setApproveApplicationDate(null);
 
             submission.setSubmissionDate(Calendar.getInstance());
 
@@ -208,14 +209,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 if (!attachDefaultLicenseFieldValues)
                     break;
             }
-            
-            clearLicenseFiles(submission);
 
             if (attachProquestLicense) {
+                removeLicenseFile(submission, "proquest_license");
                 writeLicenseFile(user, submission, "proquest_license", "proquest_license", "proquest_umi_degree_code");
             }
 
             if (attachDefaultLicenseFieldValues) {
+                removeLicenseFile(submission, "license");
                 writeLicenseFile(user, submission, "submit_license", "license", "submission");
             }
             break;
@@ -223,53 +224,47 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             submission.setApproveApplication(true);
             submission.setApproveApplicationDate(Calendar.getInstance());
             break;
-        case CANCELED:
-            break;
-        case CORRECTIONS_RECIEVED:
-            break;
-        case IN_PROGRESS:
-            break;
-        case NEEDS_CORRECTIONS:
-            break;
-        case NONE:
-            break;
-        case ON_HOLD:
-            break;
         case PENDING_PUBLICATION:
             break;
         case PUBLISHED:
             break;
-        case UNDER_REVIEW:
-            break;
-        case WAITING_ON_REQUIREMENTS:
-            break;
         case WITHDRAWN:
             break;
+        case ON_HOLD:
+        case CANCELED:
+        case CORRECTIONS_RECIEVED:
+        case IN_PROGRESS:
+        case NEEDS_CORRECTIONS:
+        case NONE:
+        case UNDER_REVIEW:
+        case WAITING_ON_REQUIREMENTS:
         default:
+            submission.setApproveApplication(false);
+            submission.setApproveApplicationDate(null);
             break;
         }
-
-        // TODO: reduce multiple redundent saves
-        submission = submissionRepo.saveAndFlush(submission);
 
         super.update(submission);
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
-    
-    private void clearLicenseFiles(Submission submission) {
-    	FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
-    	List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
-    	
-    	for (FieldValue fieldValue : fieldValues) {
-    		try {
-    			fileIOUtility.delete(fieldValue.getValue());
-    			submission.removeFieldValue(fieldValue);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    	}
+
+    private void removeLicenseFile(Submission submission, String fileName) {
+        FieldPredicate licensePredicate = fieldPredicateRepo.findByValue("_doctype_license");
+        List<FieldValue> fieldValues = submission.getFieldValuesByPredicate(licensePredicate);
+        for (FieldValue fieldValue : fieldValues) {
+            String licenceUri = fieldValue.getValue();
+            if (licenceUri.substring(licenceUri.lastIndexOf("-") + 1).equals(fileName + ".txt")) {
+                try {
+                    fileIOUtility.delete(fieldValue.getValue());
+                    submission.removeFieldValue(fieldValue);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
     }
 
     private void writeLicenseFile(User user, Submission submission, String licenseName, String fileName, String configurationType) {
@@ -315,50 +310,53 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             FieldValue fieldValue = fieldValueRepo.create(licensePredicate);
             fieldValue.setValue(uri);
             submission.addFieldValue(fieldValue);
-
-            System.out.println(fieldValue.getValue());
-
         }
 
     }
 
     @Override
     public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
-        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
         List<Long> ids = new ArrayList<Long>();
-        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
+        jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
         });
         return submissionRepo.findAll(ids);
     }
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
-        String[] queryStrings = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
-        List<Long> ids = new ArrayList<Long>();
-        this.jdbcTemplate.queryForList(queryStrings[0]).forEach(row -> {
-            ids.add((Long) row.get("ID"));
-        });
-        List<Submission> actualResults = new ArrayList<Submission>();
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException {
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
 
-        List<Submission> submissions = submissionRepo.findAll(ids);
+        Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
+
+        List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<Long>() {
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getLong("ID");
+            }
+        });
+
+        List<Submission> submissions = new ArrayList<Submission>();
+
+        List<Submission> unordered = submissionRepo.findAll(ids);
 
         // order them
         for (Long id : ids) {
-            for (Submission ps : submissions) {
-                if (ps.getId().equals(id)) {
-                    actualResults.add(ps);
+            for (Submission sub : unordered) {
+                if (sub.getId().equals(id)) {
+                    submissions.add(sub);
+                    unordered.remove(sub);
+                    break;
                 }
             }
         }
 
-        Long total = this.jdbcTemplate.queryForObject(queryStrings[1], Long.class);
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
-        return new PageImpl<Submission>(actualResults, new PageRequest((int) Math.floor(offset / limit), limit), total);
+        return new PageImpl<Submission>(submissions, new PageRequest((int) Math.floor(offset / limit), limit), total);
     }
 
-    private String[] craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
@@ -379,8 +377,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        // add column filters to SubmissionListColumns, add all column filters
-        // to allColumnSearchFilters
+        // add column filters to SubmissionListColumns, add all column filters to allColumnSearchFilters
         if (activeFilter != null) {
             activeFilter.getNamedSearchFilters().forEach(namedSearchFilter -> {
                 if (namedSearchFilter.getAllColumnSearch()) {
@@ -397,8 +394,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             });
         }
 
-        // sort all submission list columns by sort order provided by users
-        // submission list columns
+        // sort all submission list columns by sort order provided by users submission list columns
         Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
@@ -447,11 +443,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                             if (filterString.contains("|")) {
                                 // Date Range
                                 String[] dates = filterString.split(Pattern.quote("|"));
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) BETWEEN '").append(dates[0]).append("' AND '").append(dates[1]).append("') OR");
+                                dates[0] = dates[0].replaceAll("[TZ:.\\-]", " ");
+                                dates[1] = dates[1].replaceAll("[TZ:.\\-]", " ");
 
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) BETWEEN to_timestamp('").append(dates[0]).append("', \'YYYY MM DD HH MI SS MS') AND to_timestamp('").append(dates[1]).append("', \'YYYY MM DD HH MI SS MS')) OR");
                             } else {
                                 // Date Match
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS DATETIME) = '").append(filterString).append("') OR");
+                                filterString.replaceAll("[TZ:.\\-]", " ");
+                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
                             }
                             break;
                         case "INPUT_CHECKBOX":
@@ -672,7 +671,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);
 
-        return new String[] { sqlQuery, sqlCountQuery };
+        return new QueryStrings(sqlCountQuery, sqlQuery);
     }
 
     public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
@@ -692,6 +691,27 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     @Override
     protected String getChannel() {
         return "/channel/submission";
+    }
+
+    private class QueryStrings {
+
+        private final String countQuery;
+
+        private final String query;
+
+        private QueryStrings(String countQuery, String query) {
+            this.countQuery = countQuery;
+            this.query = query;
+        }
+
+        public String getCountQuery() {
+            return countQuery;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
     }
 
 }

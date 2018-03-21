@@ -91,9 +91,11 @@
                 <li ng-if="isAdmin() || isManager() || isReviewer()">
                   <a role="menuitem" href="admin/list">List</a>
                 </li>
+                <!--
                 <li ng-if="isAdmin() || isManager() || isReviewer()">
                   <a role="menuitem" href="admin/log">Log</a>
                 </li>
+                -->
                 <li ng-if="isAdmin() || isManager()">
                   <a role="menuitem" href="admin/settings">Settings</a>
                 </li>
@@ -122,9 +124,11 @@
             <li ng-class="{'active': activeTab('/admin/view')}">
               <a href ng-click="viewSelect()">View</a>
             </li>
+            <!--
             <li ng-class="{'active': activeTab('/admin/log')}">
               <a href="admin/log">Log</a>
             </li>
+            -->
             <li ng-if="!isReviewer()" ng-class="{'active': activeTab('/admin/settings')}" class="settings-tab">
               <a href="admin/settings">Settings</a>
             </li>
@@ -311,6 +315,7 @@
   <script src="directives/infoDirective.js"></script>
 
   <script src="directives/autofocusDirective.js"></script>
+  <script src="directives/fieldProfileFocusDirective.js"></script>
   <script src="directives/validatedInputDirective.js"></script>
 
   <!-- Services -->

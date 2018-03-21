@@ -30,19 +30,19 @@
           <form class="form-horizontal">
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
-              <div class="col-sm-6">
-                <div ng-if="submission.primaryDocumentFieldValue">{{submission.primaryDocumentFieldValue.fileInfo.name}}
+              <div class="col-sm-6" ng-if="submission.primaryDocumentFieldValue">
+                <div>{{submission.primaryDocumentFieldValue.fileInfo.name}}
                   <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}} KB)</strong>
                 </div>
               </div>
-              <div class="col-sm-2">
-                <button ng-if="submission.primaryDocumentFieldValue" class="btn btn-default" type="button" ng-click="archiveManuscript()" ng-disabled="archivingManuscript">Replace Manuscript
+              <div class="col-sm-2" ng-if="submission.primaryDocumentFieldValue">
+                <button class="btn btn-default" type="button" ng-click="archiveManuscript()" ng-disabled="archivingManuscript">Replace Manuscript
                   <span ng-if="archivingManuscript" class="glyphicon glyphicon-refresh spinning"></span>
                 </button>
               </div>
             </div>
             <div class="form-group">
-              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': submission.primaryDocumentFieldValue === undefined, 'dialog-closed': submission.primaryDocumentFieldValue !== undefined}">
+              <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': !submission.primaryDocumentFieldValue, 'dialog-closed': submission.primaryDocumentFieldValue}">
                 <field ng-if="!submission.primaryDocumentFieldValue" profile="submission.getPrimaryDocumentFieldProfile()"></field>
               </div>
             </div>
@@ -54,7 +54,7 @@
                 </span>
                 <span ng-show="documentFieldValues.length > 0">
                   <ul class="list-unstyled">
-                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:{id: '!!',  fieldPredicate: {value: '!_doctype_primary'}} | documentFieldValuePerProfile)">
+                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:removibleDocuments)">
                       <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
                       <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
@@ -74,7 +74,11 @@
             <div class="form-group">
               <label class="control-label col-sm-3" for="manuscript">Upload Additional Documents:</label>
               <div class="col-sm-4">
-                <select class="form-control" ng-model="fieldPredicate" ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:{ documentTypePredicate: true, value: '!_doctype_primary' } | filter: { value: '!LICENSE' }) track by documentFieldPredicate.value">
+                <select
+                  class="form-control"
+                  ng-model="fieldPredicate"
+                  ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined"
+                  ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:uploadableFieldPredicates) track by documentFieldPredicate.value">
                   <option value="">-- select document type --</option>
                 </select>
               </div>

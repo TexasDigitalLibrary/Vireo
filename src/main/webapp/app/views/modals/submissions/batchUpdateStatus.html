@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="box.resetBatchUpdateStatus()" aria-title="Close">
+  <button type="button" class="close" ng-click="box.resetBatchProcess()" aria-title="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
   <h3 class="modal-title">Batch Update Status</h3>
@@ -31,7 +31,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="box.resetBatchUpdateStatus()">Cancel</button>
+  <button type="button" class="btn btn-default" ng-click="box.resetBatchProcess()">Cancel</button>
   <button ng-if="box.newStatus.name!='Published'" type="button" class="btn btn-primary" ng-click="box.batchUpdateStatus(box.newStatus)" ng-disabled="box.processing">Update Statuses
     <span ng-if="box.processing" class="glyphicon glyphicon-refresh spinning"></span>
   </button>

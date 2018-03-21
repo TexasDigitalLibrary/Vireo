@@ -25,7 +25,7 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = true)
     private String template;
 
     @Transient

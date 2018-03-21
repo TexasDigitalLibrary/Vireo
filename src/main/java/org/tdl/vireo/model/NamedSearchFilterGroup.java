@@ -4,7 +4,9 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -32,7 +34,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { REFRESH }, optional = false)
+    @ManyToOne(optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private User user;
@@ -49,9 +51,9 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
     @Column(nullable = false)
     private Boolean umiRelease;
 
-    @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
-    private Set<SubmissionListColumn> savedColumns;
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    private List<SubmissionListColumn> savedColumns;
 
     @Fetch(FetchMode.SELECT)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER, orphanRemoval = true)
@@ -61,8 +63,8 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
         setPublicFlag(false);
         setColumnsFlag(false);
         setUmiRelease(false);
+        setSavedColumns(new ArrayList<SubmissionListColumn>());
         setNamedSearchFilters(new HashSet<NamedSearchFilter>());
-        setSavedColumns(new HashSet<SubmissionListColumn>());
         setModelValidator(new NamedSearchFilterValidator());
     }
 
@@ -126,11 +128,11 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
         return umiRelease;
     }
 
-    public Set<SubmissionListColumn> getSavedColumns() {
+    public List<SubmissionListColumn> getSavedColumns() {
         return savedColumns;
     }
 
-    public void setSavedColumns(Set<SubmissionListColumn> savedColumns) {
+    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
         this.savedColumns = savedColumns;
     }
 

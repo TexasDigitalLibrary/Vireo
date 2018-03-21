@@ -1,9 +1,9 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
 public class SubmissionListColumn extends ValidatingBaseEntity {
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = false)
+    @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
     @Column(unique = true, nullable = false)
@@ -35,10 +35,6 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     private String predicate;
-
-    @ElementCollection(fetch = EAGER)
-    @OrderColumn
-    private List<String> predicatePath;
 
     @ElementCollection(fetch = EAGER)
     @OrderColumn
@@ -71,10 +67,14 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
         this.filters = new HashSet<String>();
     }
 
-    public SubmissionListColumn(String title, Sort sort, List<String> valuePath) {
+    public SubmissionListColumn(String title, Sort sort) {
         this();
         this.title = title;
         this.sort = sort;
+    }
+
+    public SubmissionListColumn(String title, Sort sort, List<String> valuePath) {
+        this(title, sort);
         this.valuePath = valuePath;
     }
 
@@ -83,14 +83,14 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
         this.inputType = inputType;
     }
 
-    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath) {
-        this(title, sort, valuePath);
+    public SubmissionListColumn(String title, Sort sort, String predicate) {
+        this(title, sort);
         this.predicate = predicate;
-        this.predicatePath = predicatePath;
+        this.valuePath = new ArrayList<String>(Arrays.asList(new String[] { "fieldValues", "value" }));
     }
 
-    public SubmissionListColumn(String title, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
-        this(title, sort, predicate, predicatePath, valuePath);
+    public SubmissionListColumn(String title, Sort sort, String predicate, InputType inputType) {
+        this(title, sort, predicate);
         this.inputType = inputType;
     }
 
@@ -122,21 +122,6 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
      */
     public void setPredicate(String predicate) {
         this.predicate = predicate;
-    }
-
-    /**
-     * @return the predicatePath
-     */
-    public List<String> getPredicatePath() {
-        return predicatePath;
-    }
-
-    /**
-     * @param predicatePath
-     *            the predicatePath to set
-     */
-    public void setPredicatePath(List<String> predicatePath) {
-        this.predicatePath = predicatePath;
     }
 
     /**

@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="box.resetBatchAssignTo()" aria-title="Close">
+    <button type="button" class="close" ng-click="box.resetBatchProcess()" aria-title="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h3 class="modal-title">Assign Submission</h3>
@@ -17,9 +17,10 @@
                 <label class="control-title" for="newStatus"><strong>Assign To</strong>:</label>
                 <select
                     class="form-control"
-                    name="newStatus"
+                    name="assign"
+                    ng-init="box.assignee = box.assignableUsers[0]"
                     ng-model="box.assignee"
-                    ng-options="au.settings.displayName for au in box.allUsers | filter:box.assignable">
+                    ng-options="au as au.settings.displayName for au in box.assignableUsers">
                 </select>
                 <button type="button" class="btn btn-primary" ng-click="box.changeAssignee(box.assignee);box.assignSaveWorking=true;">Save <span ng-if="box.assignSaveWorking" class="glyphicon glyphicon-refresh spinning"></span></button>
             </form>
@@ -33,5 +34,5 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+    <button type="button" class="btn btn-default" ng-click="box.resetBatchProcess()">Cancel</button>
 </div>

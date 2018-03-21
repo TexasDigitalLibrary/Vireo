@@ -540,10 +540,6 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization'
         },
-        children: {
-            'endpoint': '/private/queue',
-            'controller': 'organization'
-        },
         addWorkflowStep: {
             'endpoint': '/private/queue',
             'controller': 'organization'
@@ -922,6 +918,11 @@ var apiMapping = {
             'controller': 'user',
             'method': 'all'
         },
+        assignable: {
+            'endpoint': '/private/queue',
+            'controller': 'user',
+            'method': 'assignable'
+        },
         update: {
             'endpoint': '/private/queue',
             'controller': 'user',
@@ -929,7 +930,7 @@ var apiMapping = {
         }
     },
     UserSettings: {
-        lazy: true,
+        lazy: false,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'user',

@@ -30,6 +30,7 @@ public class SubmissionHelperUtility {
 
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
+    @SuppressWarnings("unused")
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -234,14 +235,30 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
 
-    public String getGraduationDateString() throws ParseException {
+    public String getGraduationDateString() {
         Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
-        return graduationDate.isPresent() ? dateFormat.format(dateTimeFormat.parse(graduationDate.get())) : "";
+        String date = "";
+        if (graduationDate.isPresent()) {
+            try {
+                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return date;
     }
 
-    public String getGraduationYearString() throws ParseException {
+    public String getGraduationYearString() {
         Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
-        return graduationYear.isPresent() ? yearFormat.format(dateTimeFormat.parse(graduationYear.get())) : "";
+        String year = "";
+        if (graduationYear.isPresent()) {
+            try {
+                year = yearFormat.format(dateFormat.parse(graduationYear.get()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return year;
     }
 
     public String getSubmitterEmail() {
@@ -316,34 +333,57 @@ public class SubmissionHelperUtility {
         return currentPhone.isPresent() ? currentPhone.get() : permanentPhone.isPresent() ? permanentPhone.get() : "";
     }
 
-    public int getCountryCode(String number) throws NumberParseException {
-        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
-        return phoneNumber.getCountryCode();
+    public String getCountryCode(String number) {
+        String code = "";
+        PhoneNumber phoneNumber;
+        try {
+            phoneNumber = phoneUtil.parse(number, "US");
+            code = String.valueOf(phoneNumber.getCountryCode());
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+        }
+        return code;
     }
 
-    public String getAreaCode(String number) throws NumberParseException {
+    public String getAreaCode(String number) {
         Optional<String> areaCode = Optional.empty();
-        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
-        String nationalSignificantNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
-        int areaCodeLength = phoneUtil.getLengthOfGeographicalAreaCode(phoneNumber);
-        if (areaCodeLength > 0) {
-            areaCode = Optional.of(nationalSignificantNumber.substring(0, areaCodeLength));
+        try {
+            PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+            String nationalSignificantNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
+            int areaCodeLength = phoneUtil.getLengthOfGeographicalAreaCode(phoneNumber);
+            if (areaCodeLength > 0) {
+                areaCode = Optional.of(nationalSignificantNumber.substring(0, areaCodeLength));
+            }
+        } catch (NumberParseException e) {
+            e.printStackTrace();
         }
         return areaCode.isPresent() ? areaCode.get() : "";
     }
 
-    public String getNumber(String number) throws NumberParseException {
-        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
-        String fullNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
-        if (fullNumber.length() > 7) {
-            fullNumber = fullNumber.substring(3, fullNumber.length());
+    public String getNumber(String number) {
+        String fullNumber = "";
+        try {
+            PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+            fullNumber = phoneUtil.getNationalSignificantNumber(phoneNumber);
+            if (fullNumber.length() > 7) {
+                fullNumber = fullNumber.substring(3, fullNumber.length());
+            }
+        } catch (NumberParseException e) {
+            e.printStackTrace();
         }
+
         return fullNumber;
     }
 
-    public String getExt(String number) throws NumberParseException {
-        PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
-        return phoneNumber.getExtension();
+    public String getExt(String number) {
+        String ext = "";
+        try {
+            PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
+            ext = phoneNumber.getExtension();
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+        }
+        return ext;
     }
 
     public String getSubmitterCurrentAddress() {
@@ -503,7 +543,7 @@ public class SubmissionHelperUtility {
         String institutionCode = getProQuestInstitutionCode();
         return String.join("", institutionCode, externalIdPrefix, String.valueOf(id), lastName);
     }
-    
+
     public String getProQuestIndexing() {
         return getSettingByNameAndType("proquest_indexing", "proquest_umi_degree_code").getValue();
     }

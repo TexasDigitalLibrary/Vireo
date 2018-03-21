@@ -22,8 +22,8 @@ public class SubmissionListColumnRepoImpl extends AbstractWeaverRepoImpl<Submiss
     }
 
     @Override
-    public SubmissionListColumn create(String label, Sort sort, String predicate, List<String> predicatePath, List<String> valuePath, InputType inputType) {
-        return submissionListColumnRepo.save(new SubmissionListColumn(label, sort, predicate, predicatePath, valuePath, inputType));
+    public SubmissionListColumn create(String label, Sort sort, String predicate, InputType inputType) {
+        return submissionListColumnRepo.save(new SubmissionListColumn(label, sort, predicate, inputType));
     }
 
     @Override

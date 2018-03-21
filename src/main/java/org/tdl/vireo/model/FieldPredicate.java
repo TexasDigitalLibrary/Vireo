@@ -9,7 +9,9 @@ import javax.persistence.Transient;
 import org.tdl.vireo.model.validation.FieldPredicateValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -18,10 +20,12 @@ public class FieldPredicate extends ValidatingBaseEntity {
     @Transient
     private static String period = Pattern.quote(".");
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false, unique = true)
     private String value;
-    
-	@Column(nullable = false, unique = false)
+
+    @JsonView(ApiView.Partial.class)
+    @Column(nullable = false, unique = false)
     private Boolean documentTypePredicate;
 
     public FieldPredicate() {

@@ -389,6 +389,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.removeControlledVocabulary = function () {
+            $scope.modalData.updateRequested = true;
             $scope.modalData.delete().then(function (res) {
                 if (angular.fromJson(res.body).meta.status === 'SUCCESS') {
                     $scope.resetControlledVocabulary(true);

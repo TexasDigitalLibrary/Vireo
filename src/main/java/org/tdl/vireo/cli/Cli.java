@@ -1,7 +1,10 @@
 package org.tdl.vireo.cli;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,16 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
-
 /**
- * Activate the Vireo command line interface by passing the console argument to Maven thusly:
- * mvn clean spring-boot:run –Drun.arguments="console"
+ * Activate the Vireo command line interface by passing the console argument to Maven
+ * 
+ * mvn clean spring-boot:run -Drun.arguments=console
+ * 
+ * NOTE: will enable allow submissions on institution
+ * 
  * @author James Creel
  * @author Jeremy Huff
  *
@@ -51,6 +58,7 @@ public class Cli implements CommandLineRunner {
     private SubmissionStatusRepo submissionStatusRepo;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void run(String... arg0) throws Exception {
         boolean runConsole = false;
         for (String s : arg0) {
@@ -100,6 +108,12 @@ public class Cli implements CommandLineRunner {
                 case "generate":
 
                     Organization org = organizationRepo.findAll().get(0);
+
+                    if (!org.getAcceptsSubmissions()) {
+                        org.setAcceptsSubmissions(true);
+                        org = organizationRepo.save(org);
+                    }
+
                     SubmissionStatus state = submissionStatusRepo.findAll().get(0);
 
                     if (commandArgs.size() > 0) {
@@ -110,21 +124,59 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
+                    Random random = new Random();
+
+                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
                         User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.ROLE_STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
                         credentials.setLastName("Boring");
                         credentials.setEmail("bob@boring.bob");
-                        credentials.setRole("bore");
+                        credentials.setRole(Role.ROLE_STUDENT.name());
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
-                                if (!pred.getDocumentTypePredicate()) {
-                                    FieldValue val = fieldValueRepo.create(pred);
-                                    val.setValue("test value " + i);
+                                FieldValue val;
+                                switch (fp.getInputType().getName()) {
+                                case "INPUT_FILE":
+                                    break;
+                                case "INPUT_CONTACT":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test " + pred.getValue() + " " + i);
+                                    val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
+                                    sub.addFieldValue(val);
+                                    break;
+                                case "INPUT_EMAIL":
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test" + pred.getValue() + i + "@mailinator.com");
+                                    sub.addFieldValue(val);
+                                    break;
+                                case "INPUT_DATETIME":
+                                    val = fieldValueRepo.create(pred);
+
+                                    Calendar calendar = Calendar.getInstance();
+
+                                    calendar.add(Calendar.YEAR, -random.nextInt(10));
+
+                                    int rm = random.nextInt(10);
+                                    if (random.nextInt(2) == 2) {
+                                        rm = -rm;
+                                    }
+
+                                    calendar.add(Calendar.MONTH, rm);
+
+                                    calendar.add(Calendar.DATE, random.nextInt(32 - calendar.get(Calendar.DAY_OF_MONTH)));
+
+                                    val.setValue(format.format(calendar.getTime()));
+                                    sub.addFieldValue(val);
+                                    break;
+                                default:
+                                    val = fieldValueRepo.create(pred);
+                                    val.setValue("test " + pred.getValue() + " " + i);
                                     sub.addFieldValue(val);
                                 }
                             }

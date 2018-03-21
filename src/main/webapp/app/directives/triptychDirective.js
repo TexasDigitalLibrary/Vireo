@@ -11,7 +11,7 @@ vireo.directive("triptych", function () {
                 $scope: $scope
             }));
 
-            OrganizationRepo.listen(function (data) {
+            OrganizationRepo.listen(function (response) {
                 $timeout(function () {
                     $scope.refreshPanels();
                 }, 250);
@@ -30,10 +30,10 @@ vireo.directive("triptych", function () {
                     visible: false,
                     opening: false,
                     closing: false,
-                    showing: false,
                     active: false,
                     previouslyActive: false,
-                    filter: ''
+                    filter: '',
+                    categories: []
                 };
                 setCategories(panel);
                 return panel;
@@ -45,9 +45,9 @@ vireo.directive("triptych", function () {
             };
 
             var setCategories = function (panel) {
-                panel.categories = [];
+                panel.categories.length = 0;
                 for (var i in panel.organization.childrenOrganizations) {
-                    if (panel.categories.indexOf(panel.organization.childrenOrganizations[i].category.name) == -1) {
+                    if (panel.categories.indexOf(panel.organization.childrenOrganizations[i].category.name) < 0) {
                         panel.categories.push(panel.organization.childrenOrganizations[i].category.name);
                     }
                 }
@@ -55,7 +55,7 @@ vireo.directive("triptych", function () {
 
             var add = function (panel) {
                 for (var i in $scope.navigation.panels) {
-                    if ($scope.navigation.panels[i].organization.id == panel.organization.id) {
+                    if ($scope.navigation.panels[i].organization.id === panel.organization.id) {
                         angular.extend($scope.navigation.panels[i], panel);
                         return $scope.navigation.panels[i];
                     }
@@ -66,7 +66,7 @@ vireo.directive("triptych", function () {
 
             var remove = function (panel) {
                 for (var i in $scope.navigation.panels) {
-                    if ($scope.navigation.panels[i].organization.id == panel.organization.id) {
+                    if ($scope.navigation.panels[i].organization.id === panel.organization.id) {
                         $scope.navigation.panels.splice(i, 1);
                         break;
                     }
@@ -78,7 +78,7 @@ vireo.directive("triptych", function () {
                     panel.visible = true;
                     $timeout(function () {
                         panel.opening = true;
-                        panel.showing = true;
+                        panel.visible = true;
                         $timeout(function () {
                             panel.opening = false;
                             $scope.navigation.backward = false;
@@ -100,7 +100,6 @@ vireo.directive("triptych", function () {
                     panel.closing = true;
                     $timeout(function () {
                         panel.closing = false;
-                        panel.showing = false;
                         panel.visible = false;
                         defer.resolve();
                     }, 355);
@@ -114,7 +113,6 @@ vireo.directive("triptych", function () {
 
             var clear = function (panel) {
                 panel.visible = false;
-                panel.showing = false;
                 delete panel.selected;
             };
 
@@ -125,7 +123,7 @@ vireo.directive("triptych", function () {
                     for (var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
                         var panel1 = $scope.navigation.panels[i];
                         if (parent === undefined) {
-                            if (panel1.organization.id == organization.parentOrganization) {
+                            if (panel1.organization.id === organization.parentOrganization) {
                                 parent = panel1;
                             } else {
                                 clear(panel1);
@@ -209,7 +207,7 @@ vireo.directive("triptych", function () {
                         open(panel.parent, closingPromise);
                     }
                 }
-                if (!panel.visible && visible) {
+                if (panel.parent ? panel.parent.selected.organization.id === panel.organization.id && !panel.visible && visible : !panel.visible && visible) {
                     open(panel, closingPromise);
                 }
             };

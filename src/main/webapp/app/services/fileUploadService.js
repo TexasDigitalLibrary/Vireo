@@ -1,4 +1,4 @@
-vireo.service("FileUploadService", function ($q, FileService) {
+vireo.service("FileUploadService", function ($q, FieldValue, FileService) {
 
     var FileUploadService = this;
 
@@ -6,7 +6,7 @@ vireo.service("FileUploadService", function ($q, FileService) {
         return FileService.upload({
             'endpoint': '',
             'controller': 'submission',
-            'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload',
+            'method': submission.id + '/' + FileUploadService.getFileType(fieldValue.fieldPredicate) + '/upload-file',
             'file': fieldValue.file
         });
     };
@@ -14,19 +14,52 @@ vireo.service("FileUploadService", function ($q, FileService) {
     FileUploadService.removeFile = function (submission, fieldValue) {
         return $q(function (resolve) {
             submission.removeFile(fieldValue).then(function (response) {
-                submission.removeFieldValue(fieldValue).then(function () {
-                    resolve();
-                });
+                var apiRes = angular.fromJson(response.body);
+                if(apiRes.meta.status === 'SUCCESS') {
+                    submission.removeFieldValue(fieldValue).then(function () {
+                        resolve(true);
+                    });
+                } else {
+                    console.warn(response);
+                    resolve(false);
+                }
             });
         });
     };
 
-    FileUploadService.archiveFile = function (submission, fieldValue) {
+    FileUploadService.archiveFile = function (submission, fieldValue, removeFieldValue) {
         return $q(function (resolve) {
             submission.archiveFile(fieldValue).then(function (response) {
-                submission.removeFieldValue(fieldValue).then(function () {
-                    resolve();
-                });
+                var apiRes = angular.fromJson(response.body);
+                if(apiRes.meta.status === 'SUCCESS') {
+
+                    var archivedDocumentFieldValue = new FieldValue();
+
+                    archivedDocumentFieldValue.value = apiRes.meta.message;
+
+                    var archivedDocumentFieldProfile = submission.getFieldProfileByPredicateName("_doctype_archived");
+
+                    if (archivedDocumentFieldProfile !== undefined && archivedDocumentFieldProfile !== null) {
+                        archivedDocumentFieldValue.fieldPredicate = archivedDocumentFieldProfile.fieldPredicate;
+
+                        archivedDocumentFieldValue.updating = true;
+
+                        submission.saveFieldValue(archivedDocumentFieldValue, archivedDocumentFieldProfile).then(function (response) {
+                            archivedDocumentFieldValue.updating = false;
+                        });
+                    } else {
+                        console.warn("No archived field profile exists on submission!");
+                    }
+
+                    if(removeFieldValue) {
+                        submission.removeFieldValue(fieldValue).then(function () {
+                            resolve(true);
+                        });
+                    }
+                } else {
+                    console.warn(response);
+                    resolve(false);
+                }
             });
         });
     };

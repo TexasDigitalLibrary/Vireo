@@ -91,7 +91,17 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         credentials.setUin(user.getUsername());
 
         return user;
+    }
 
+    public User createUserFromRegistration(String email, String firstName, String lastName, String password) {
+        Role role = Role.ROLE_STUDENT;
+        for (String adminEmail : admins) {
+            if (adminEmail.equals(email)) {
+                role = Role.ROLE_ADMIN;
+                break;
+            }
+        }
+        return userRepo.create(email, firstName, lastName, password, role);
     }
 
     @Override
