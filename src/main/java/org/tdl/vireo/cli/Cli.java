@@ -144,11 +144,10 @@ public class Cli implements CommandLineRunner {
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
                         
                         Calendar date = Calendar.getInstance();
-						String entry = new String("Submission created.");
-						ActionLog log = actionLogRepo.create(sub, date, entry, false);
-						log.setActionDate(date);
-						log.setEntry(entry);
-						log.getActionDate();
+                        String entry = new String("Submission created.");
+                        ActionLog log = actionLogRepo.create(sub, date, entry, false);
+                        log.setActionDate(date);
+                        log.setEntry(entry);
                         
 						for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
