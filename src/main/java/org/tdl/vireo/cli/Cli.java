@@ -149,7 +149,7 @@ public class Cli implements CommandLineRunner {
                         log.setActionDate(date);
                         log.setEntry(entry);
                         
-						for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
+                        for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
                                 FieldValue val;
