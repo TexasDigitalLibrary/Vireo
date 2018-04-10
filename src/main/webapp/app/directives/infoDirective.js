@@ -16,6 +16,7 @@ vireo.directive("info", function ($q,FieldValue) {
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
         controller: function ($scope) {
+            
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
