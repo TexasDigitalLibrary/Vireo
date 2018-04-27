@@ -274,6 +274,17 @@ main footer {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
 }
 
+.list-row-remove .glyphicon {
+  color: $brand-danger;
+	margin: -8px 0 0 -35px;
+	padding: 8px;
+	visibility: hidden;
+}
+
+.list-row-remove tr:hover .glyphicon {
+	visibility: visible;
+}
+
 .pagination {
   display: block;
 }

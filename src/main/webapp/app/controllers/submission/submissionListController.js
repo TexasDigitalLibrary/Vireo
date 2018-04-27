@@ -212,6 +212,16 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
+         $scope.addRowFilter = function ($index, row) {
+            $scope.page.content.splice($index, 1);
+            var columnTitle = "Exclude";
+            var value = row.id.toString();
+            var gloss = "Submission #" + row.id;
+            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function () {
+                query();
+            });
+        };
+
         var resetBatchProcess = function () {
             $scope.advancedfeaturesBox.processing = false;
             $scope.advancedfeaturesBox.exporting = false;
