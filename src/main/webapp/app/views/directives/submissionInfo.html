@@ -21,6 +21,8 @@
           <a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
+        <span ng-if="inputDegreeDate() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
       </div>
@@ -55,6 +57,8 @@
           <a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
+        <span ng-if="inputDegreeDate() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
 
