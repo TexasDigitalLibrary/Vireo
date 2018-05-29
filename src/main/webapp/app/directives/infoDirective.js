@@ -77,6 +77,30 @@ vireo.directive("info", function ($q,FieldValue) {
                 save(fieldValue);
             };
 
+            $scope.datepickerOptions = {};
+            $scope.datepickerFormat = $scope.fieldProfile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            var checkDisabled = function (dateAndMode) {
+                var disabled = true;
+
+                for (var i in $scope.fieldProfile.controlledVocabularies[0].dictionary) {
+                    var cvw = $scope.fieldProfile.controlledVocabularies[0].dictionary[i];
+                    if (cvw.name == dateAndMode.date.getMonth()) {
+                        disabled = false;
+                        break;
+                    }
+                }
+                return disabled;
+            };
+
+            if ($scope.fieldProfile.controlledVocabularies.length && $scope.fieldProfile.controlledVocabularies[0].name === "Graduation Months") {
+                $scope.datepickerOptions.customClass = function (dateAndMode) {
+                    if (checkDisabled(dateAndMode)) return "disabled";
+                };
+                $scope.datepickerOptions.dateDisabled = checkDisabled;
+                $scope.datepickerOptions.minViewMode = "month";
+                $scope.datepickerOptions.minMode = "month";
+            }
+            
             $scope.cancel = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.editing = false;
@@ -99,12 +123,16 @@ vireo.directive("info", function ($q,FieldValue) {
                 return $scope.fieldProfile.inputType.name == 'INPUT_URL';
             };
 
+            $scope.inputDegreeDate = function () {
+                return $scope.fieldProfile.inputType.name == 'INPUT_DEGREEDATE';
+            };
+            
             $scope.inputDateTime = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
             };
 
             $scope.standardInput = function () {
-                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDateTime();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {

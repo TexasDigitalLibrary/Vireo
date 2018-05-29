@@ -10,9 +10,9 @@
 		ng-model="field.value"
 		placeholder="Choose Date"
 		ng-click="date=true"
-		is-open="date"
+        is-open="date"
+        show-button-bar="false"
 		ng-required="!fieldProfile.optional" 
-		close-text="Close"
 		readonly
 		stringtodate/>
 	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="save(field)"></span>
