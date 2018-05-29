@@ -1,0 +1,24 @@
+<div class="input-group">
+    <span class="input-group-addon" ng-click="date=true">
+        <span class="glyphicon glyphicon-calendar toggle-href"></span>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        uib-datepicker-popup="MMMM yyyy"
+        datepicker-options="datepickerOptions"
+        ng-model="fieldValue.value"
+        placeholder="Choose Date"
+        ng-click="date=true"
+        ng-blur="save(fieldValue)"
+        is-open="date"
+        show-button-bar="false"
+        ng-disabled="fieldValue.updating"
+        ng-required="!profile.optional"
+        readonly
+        stringtodate/>
+      <span class="input-group-addon">
+          <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+          <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+      </span>
+  </div>
