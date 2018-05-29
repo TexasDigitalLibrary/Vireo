@@ -31,6 +31,10 @@
 	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByUmiPublication.html'"></div>
 	    </div>
 
+		<div ng-switch-when="Degree Date">
+			<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDate.html'"></div>
+	    </div>
+
 		<div ng-switch-default>
 	    	
 			<div ng-if="column.inputType.name=='INPUT_DATETIME'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
