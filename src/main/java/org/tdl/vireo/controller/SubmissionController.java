@@ -660,17 +660,17 @@ public class SubmissionController {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
-        if (assignee != null) {
-            if (submission != null) {
-                submission.setAssignee(assignee);
-                submission = submissionRepo.update(submission);
-                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+        if (submission != null) {
+            submission.setAssignee(assignee);
+            submission = submissionRepo.update(submission);
 
+            if (assignee == null) {
+                actionLogRepo.createPublicLog(submission, user, "Submission was unassigned");
             } else {
-                response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             }
         } else {
-            response = new ApiResponse(ERROR, "Could not find a assignee!");
+            response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
         return response;
