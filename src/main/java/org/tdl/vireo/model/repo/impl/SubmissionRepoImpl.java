@@ -438,6 +438,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
 
                         switch (submissionListColumn.getInputType().getName()) {
+                        case "INPUT_DEGREEDATE":
+                            // Column's values are of type datetime
+                            filterString.replaceAll("[TZ:.\\-]", " ");
+                            sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                            break;
                         case "INPUT_DATETIME":
                             // Column's values are of type datetime
                             if (filterString.contains("|")) {
