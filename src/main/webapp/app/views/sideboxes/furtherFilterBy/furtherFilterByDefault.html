@@ -1,3 +1,8 @@
 <form ng-submit="box.addFilter(column)" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}" autocomplete="off">
-	<input type="text" name="{{column.title.split(' ').join('')+'Value'}}" ng-model="box[column.title.split(' ').join('')]" class="form-control" uib-typeahead="word for word in box.getTypeAheadByPredicateName(column.predicate) | filter: $viewValue" />
+    <input
+        type="text"
+        name="{{column.title.split(' ').join('')+'Value'}}"
+        ng-model="box[column.title.split(' ').join('')]"
+        class="form-control"
+        uib-typeahead="word for word in box.getTypeAheadByPredicateName(column.predicate) | filter: $viewValue" />
 </form>
