@@ -276,6 +276,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             return value;
         };
 
+        var getAssigneeDisplayName = function (row) {
+            return row.assignee.firstName + " " + row.assignee.lastName;
+        };
+
         var getFiltersWithColumns = function() {
             return savedFilters.filter(function(filter) { return filter.columnsFlag; });
         };
@@ -340,7 +344,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                             return getValueFromArray(value, col);
                         } else {
                             if (value !== null) {
-                                value = value[col.valuePath[i]];
+                                if (col.valuePath[0] === "assignee") {
+                                    value = getAssigneeDisplayName(row);
+                                } else {
+                                    value = value[col.valuePath[i]];
+                                }
                             }
                         }
                     }
