@@ -190,7 +190,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
 
         var addFilter = function (column, gloss) {
-            $scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss, column.exactMatch).then(function () {
+            $scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")].toString(), gloss, column.exactMatch).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
                 query();
             });
