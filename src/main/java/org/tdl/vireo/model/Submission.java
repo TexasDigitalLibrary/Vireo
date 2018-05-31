@@ -5,8 +5,10 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -438,6 +440,21 @@ public class Submission extends ValidatingBaseEntity {
      */
     public void removeActionLog(ActionLog actionLog) {
         getActionLogs().remove(actionLog);
+    }
+
+    /**
+     *
+     */
+    @JsonView(ApiView.Partial.class)
+    public String getLastEvent() {
+        Optional<ActionLog> actionLog = getActionLogs().stream().max(Comparator.comparing(al -> al.getActionDate()));
+        String lastEvent = null;
+
+        if (actionLog.isPresent()) {
+            lastEvent = actionLog.get().getEntry();
+        }
+
+        return lastEvent;
     }
 
     /**

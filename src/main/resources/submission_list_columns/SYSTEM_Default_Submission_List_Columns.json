@@ -127,7 +127,7 @@
   {
     "title": "Last event",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["lastEvent"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"
