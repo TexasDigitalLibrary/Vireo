@@ -1,6 +1,6 @@
 <form ng-init="box.assignToLimit=box.defaultLimit;" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
     <ul class="sidebox-list">
-        <li class="filter" ng-click="box[column.title.split(' ').join('')]=null;box.addExactMatchFilter(column, 'Unassigned');">Unassigned</li>
+        <li class="filter" ng-click="box[column.title.split(' ').join('')]='Unassigned';box.addExactMatchFilter(column, 'Unassigned');">Unassigned</li>
         <li
           class="filter"
           ng-repeat="assignee in assignables = box.assignableUsers | limitTo:box.assignToLimit"
