@@ -100,7 +100,7 @@ public class AuthController extends WeaverAuthController {
         String token = data.get("token");
         String firstName = data.get("firstName");
         String lastName = data.get("lastName");
-        String password = data.get("password");
+        String password = data.get("userPassword");
         String confirm = data.get("confirm");
 
         if ((firstName == null || firstName.trim().length() == 0) && (lastName == null || lastName.trim().length() == 0)) {
