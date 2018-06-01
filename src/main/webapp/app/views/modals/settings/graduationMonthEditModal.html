@@ -10,7 +10,8 @@
 
 		<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
-		<validatedselect
+    <validatedselect
+            id="edit-graduation-month"
             options="monthOptions"
             model="modalData"
             property="month"
@@ -28,7 +29,7 @@
 			class="btn btn-default"
 			ng-click="resetGraduationMonth()">Cancel</button>
 		<button
-			id="graduationMonth-save"
+			id="edit-graduationMonth-save"
 			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.update.$invalid">Update</button>

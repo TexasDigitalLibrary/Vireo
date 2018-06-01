@@ -12,6 +12,7 @@
     <div class="modal-body">
 
         <validatedinput
+            id="edit-template-name"
             model="modalData"
             property="name"
             label="Name"
@@ -22,6 +23,7 @@
         </validatedinput>
 
         <validatedinput
+            id="edit-template-subject"
             model="modalData"
             property="subject"
             label="Subject"
@@ -36,6 +38,7 @@
             <div class="col-md-9" ng-click="setCursorLocation($event)" ng-keyup="setCursorLocation($event)">
 
                 <validatedtextarea
+                    id="edit-template-body"
                     model="modalData"
                     property="message"
                     label="Message Body"
@@ -48,7 +51,7 @@
             </div>
 
             <div class="col-md-3">
-                <div id="email-template-modal-instructions-label">Properties:
+                <div id="edit-email-template-modal-instructions-label">Properties:
                     <div class="btn-group-vertical">
                         <button type="button" ng-click="insertText('FULL_NAME')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> FULL_NAME </button>
                         <button type="button" ng-click="insertText('FIRST_NAME')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> FIRST_NAME </button>
@@ -65,14 +68,14 @@
                     </div>
                 </div>
 
-                <div id="email-template-fields">Fields:
+                <div id="edit-email-template-fields">Fields:
                     <div class="input-group">
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-filter"></span>
                       </span>
                       <input class="form-control" placeholder="limit results" ng-model="fpFilter" />
                     </div>
-                    <div id="email-template-fields-list" class="btn-group-vertical">
+                    <div id="edit-email-template-fields-list" class="btn-group-vertical">
                         <button type="button" ng-repeat="fp in fieldPredicates | filter:fpFilter " ng-click="insertText(fp.value)" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> {{fp.value}}</button>
                     </div>
                 </div>
@@ -86,7 +89,7 @@
             class="btn btn-default"
             ng-click="resetEmailTemplates()">Cancel</button>
         <button
-            id="emailTemplate-save"
+            id="edit-emailTemplate-save"
             type="submit"
             class="btn btn-primary"
             ng-disabled="forms.update.$invalid">Update</button>

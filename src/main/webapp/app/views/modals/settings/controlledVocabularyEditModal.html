@@ -10,15 +10,15 @@
 	<validationmessage results="controlledVocabularyRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		<validatedinput model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
+		<validatedinput id="edit-cv-name" model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
 		</validatedinput>
 
-		<validatedselect options="languages" optionproperty="name" model="modalData" property="language" label="Language" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
+		<validatedselect id="edit-cv-language" options="languages" optionproperty="name" model="modalData" property="language" label="Language" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
 		</validatedselect>
 	</div>
 
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" ng-click="resetControlledVocabulary(true)">Cancel</button>
-		<button id="controlledVocabulary-save" type="submit" class="btn btn-primary" ng-disabled="forms.update.$invalid">Update</button>
+		<button id="edit-controlledVocabulary-save" type="submit" class="btn btn-primary" ng-disabled="forms.update.$invalid">Update</button>
 	</div>
 </form>

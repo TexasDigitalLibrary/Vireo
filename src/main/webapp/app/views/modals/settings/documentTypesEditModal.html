@@ -11,12 +11,12 @@
 
   <div class="modal-body">
 
-    <validatedinput model="modalData" property="name" label="Document Type Name" placeholder="Name of the new document type" form="forms.update" validations="documentTypeRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
+    <validatedinput id="edit-document-name" model="modalData" property="name" label="Document Type Name" placeholder="Name of the new document type" form="forms.update" validations="documentTypeRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetDocumentTypes()">Cancel</button>
-    <button id="graduationMonth-save" type="submit" class="btn btn-primary" ng-disabled="forms.update.$invalid">Update</button>
+    <button id="edit-document-save" type="submit" class="btn btn-primary" ng-disabled="forms.update.$invalid">Update</button>
   </div>
 </form>

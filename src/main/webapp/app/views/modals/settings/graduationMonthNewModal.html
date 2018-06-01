@@ -11,6 +11,7 @@
 		<validationmessage results="graduationMonthRepo.getValidationResults()"></validationmessage>
 
 		<validatedselect
+            id="new-graduation-month"
             options="monthOptions"
             model="modalData"
             property="month"
@@ -28,7 +29,7 @@
 			class="btn btn-default" 
 			ng-click="resetGraduationMonth()">Cancel</button>
 		<button 
-			id="graduationMonth-save" 
+			id="new-graduationMonth-save" 
 			type="submit" 
 			class="btn btn-primary"
 			ng-disabled="forms.create.$invalid">Create</button>

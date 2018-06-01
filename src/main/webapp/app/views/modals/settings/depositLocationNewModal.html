@@ -10,13 +10,13 @@
   <validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
   <div class="modal-body">
-    <validatedinput model="modalData" property="name" label="Location Name" placeholder="Location Name" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-deposit-name" model="modalData" property="name" label="Location Name" placeholder="Location Name" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    <validatedselect options="protocols" model="modalData" property="depositorName" label="Protocol" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
+    <validatedselect id="new-depositor-name" options="protocols" model="modalData" property="depositorName" label="Protocol" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 
-    <validatedselect options="packagers" optionproperty="name" model="modalData" property="packager" label="Format" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
+    <validatedselect id="new-packager-name" options="packagers" optionproperty="name" model="modalData" property="packager" label="Format" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedselect>
 
-    <validatedinput model="modalData" property="repository" label="Repository Location" placeholder="Repository Location" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-deposit-location" model="modalData" property="repository" label="Repository Location" placeholder="Repository Location" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
     <label for="collection">
       Collection
@@ -26,18 +26,18 @@
         (Please get collections)</span>
 
     </label>
-    <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
+    <select class="form-control" id="new-collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
-    <validatedinput model="modalData" property="timeout" label="Repository Timeout" placeholder="Repository Timeout (seconds)" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-timeout" model="modalData" property="timeout" label="Repository Timeout" placeholder="Repository Timeout (seconds)" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    <validatedinput model="modalData" property="username" label="Username" placeholder="Username" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-username" model="modalData" property="username" label="Username" placeholder="Username" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    <validatedinput type="password" model="modalData" property="password" label="Password" placeholder="Password" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-password" type="password" model="modalData" property="password" label="Password" placeholder="Password" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
-    <validatedinput model="modalData" property="onBehalfOf" label="On Behalf Of" placeholder="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
+    <validatedinput id="new-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" placeholder="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="depositLocationRepo.getValidationResults()"></validatedinput>
 
     <div class="form-group">
-      <button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
+      <button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="new-depositLocation-test" type="button" class="btn btn-default">
         <span ng-show="modalData.isTestDepositing()">Testing...</span>
         <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
       </button>
@@ -46,7 +46,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetDepositLocation()">Cancel</button>
-    <button id="depositLocation-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
+    <button id="new-depositLocation-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
   </div>
 
 </form>
