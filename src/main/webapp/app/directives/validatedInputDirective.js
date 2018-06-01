@@ -5,6 +5,7 @@ vireo.directive("validatedinput", function ($timeout) {
         scope: {
             "type": "@",
             "model": "=",
+            "id": "@",
             "property": "@",
             "label": "@",
             "placeholder": "@",
@@ -35,6 +36,10 @@ vireo.directive("validatedinput", function ($timeout) {
                 $scope.forms = {
                     dynamic: {}
                 };
+            }
+
+            if ($scope.id === undefined) {
+                $scope.id = $scope.property;
             }
 
             var getForm = function () {
