@@ -5,6 +5,7 @@ vireo.directive("validatedinput", function ($timeout) {
         scope: {
             "type": "@",
             "model": "=",
+            "noId": "@",
             "id": "@",
             "property": "@",
             "label": "@",
@@ -38,7 +39,7 @@ vireo.directive("validatedinput", function ($timeout) {
                 };
             }
 
-            if ($scope.id === undefined) {
+            if ($scope.id === undefined && ($scope.noId === 'false' || $scope.noId === undefined)) {
                 $scope.id = $scope.property;
             }
 
