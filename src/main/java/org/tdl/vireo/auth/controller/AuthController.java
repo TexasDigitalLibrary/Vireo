@@ -150,7 +150,7 @@ public class AuthController extends WeaverAuthController {
     public ApiResponse login(@RequestBody Map<String, String> data) {
 
         String email = data.get("email");
-        String password = data.get("password");
+        String password = data.get("userPassword");
 
         User user = userRepo.findByEmail(email);
 
