@@ -385,7 +385,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             $scope.modalData = {
                 language: $scope.languages[0]
             };
-        }
+        };
 
         $scope.resetControlledVocabulary = function (closeModal) {
             $scope.refreshControlledVocabulary();
