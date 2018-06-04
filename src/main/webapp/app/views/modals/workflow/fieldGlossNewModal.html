@@ -10,12 +10,12 @@
   <validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
 
   <div class="modal-body">
-    <validatedinput model="modalData" property="value" label="Label Name" placeholder="Name of the new label" form="forms.create" validations="fieldGlossRepo.getValidations()" results="fieldGlossRepo.getValidationResults()"></validatedinput>
+    <validatedinput no-id="true" model="modalData" property="value" label="Label Name" placeholder="Name of the new label" form="forms.create" validations="fieldGlossRepo.getValidations()" results="fieldGlossRepo.getValidationResults()"></validatedinput>
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetFieldGlosses()">Cancel</button>
-    <button id="fieldGloss-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
   </div>
 
 </form>
