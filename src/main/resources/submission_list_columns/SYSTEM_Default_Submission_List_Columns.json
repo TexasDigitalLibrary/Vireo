@@ -82,7 +82,7 @@
   {
     "title": "Committee embargo approval date",
     "sort": "NONE",
-    "valuePath": ["approveEmbargo"],
+    "valuePath": ["approveEmbargoDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
@@ -127,7 +127,7 @@
   {
     "title": "Last event",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["lastEvent"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

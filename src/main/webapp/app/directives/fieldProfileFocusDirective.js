@@ -5,7 +5,7 @@ vireo.directive('fieldProfileFocus', function ($timeout) {
 			if ($scope.fpi === 0) {
 				$timeout(function() {
 					var input = element[0].querySelector('input');
-					if(input){
+					if($scope.profile.inputType.name !== "INPUT_LICENSE" || $scope.profile.inputType.name === "INPUT_PROQUEST"){
 						input.focus();
 						angular.element(input).focus();
 					}

@@ -8,26 +8,41 @@
   <hr/>
 
   <form class="form-horizontal">
-    <div class="form-group" ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
-      <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.fieldGlosses[0].value}}:</label>
-      <div class="col-sm-9 field-values">
-        <ul class="list-unstyled">
-          <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
-            <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
-            <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_DATETIME">
-              {{fv.value}}
-              <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
-                {{fv.contacts}}</span>
-            </span>
-            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
-              <a href ng-click="getFile(fv)">{{fv.value}}</a>
-            </span>
-            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_LICENSE||aggregateFieldProfile.inputType.name==InputTypes.INPUT_PROQUEST">
-              {{fv.value=='true' ? 'yes' : 'no'}}
-            </span>
-            <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_DATETIME">{{fv.value | date:'MMMM yyyy'}}</span>
-          </li>
-        </ul>
+    <div ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
+      <div class="form-group">
+        <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.fieldGlosses[0].value}}{{aggregateFieldProfile.fieldPredicate.value==='default_embargos'||aggregateFieldProfile.fieldPredicate.value==='proquest_embargos' ? ' (Selected)' : ''}}:</label>
+        <div class="col-sm-9 field-values">
+          <ul class="list-unstyled">
+            <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
+              <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
+              <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_LICENSE&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_PROQUEST&&aggregateFieldProfile.inputType.name!==InputTypes.INPUT_DATETIME">
+                {{fv.value}}
+                <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
+                  {{fv.contacts}}</span>
+              </span>
+              <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
+                <a href ng-click="getFile(fv)">{{fv.value}}</a>
+              </span>
+              <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_LICENSE||aggregateFieldProfile.inputType.name==InputTypes.INPUT_PROQUEST">
+                {{fv.value=='true' ? 'yes' : 'no'}}
+              </span>
+              <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_DATETIME">{{fv.value | date:'MMMM yyyy'}}</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group" ng-if="aggregateFieldProfile.inputType.name===InputTypes.INPUT_RADIO&&(aggregateFieldProfile.fieldPredicate.value==='default_embargos'||aggregateFieldProfile.fieldPredicate.value==='proquest_embargos')">
+        <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">Alternative Options (Not Selected):</label>
+        <div class="col-sm-9 field-values">
+          <ul class="list-unstyled">
+            <li ng-repeat="word in aggregateFieldProfile.controlledVocabularies[0].dictionary">
+              <div ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
+                <span ng-if="fv.value!==word.name">{{word.name}}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </form>
