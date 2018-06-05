@@ -16,7 +16,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             100,
             200,
             400,
-            500
+            500,
+            1000
         ]
     };
 
@@ -209,6 +210,16 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
             $scope.activeFilters.addFilter(column.title, dateValue, dateGloss, false).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                query();
+            });
+        };
+
+         $scope.addRowFilter = function ($index, row) {
+            $scope.page.content.splice($index, 1);
+            var columnTitle = "Exclude";
+            var value = row.id.toString();
+            var gloss = "Submission #" + row.id;
+            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function () {
                 query();
             });
         };

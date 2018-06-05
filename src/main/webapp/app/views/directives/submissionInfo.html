@@ -25,6 +25,8 @@
         <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+        <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputContactChair() && field.value">{{field.value}} {{field.contacts[0]}}</span>
       </div>
 
       <div class="clearfix"></div>
@@ -61,6 +63,8 @@
         <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+        <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
+        <span ng-if="inputContactChair() && field.value">{{field.value}} {{field.contacts[0]}}</span>
 
         <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
         <span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
