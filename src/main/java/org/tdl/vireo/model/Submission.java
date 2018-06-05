@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -477,6 +478,23 @@ public class Submission extends ValidatingBaseEntity {
      */
     public String getAdvisorAccessHash() {
         return advisorAccessHash;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    @JsonView(ApiView.Partial.class)
+    public String getCommitteeContactEmail() {
+        Optional<FieldValue> optFv = this.getFieldValuesByPredicateValue("dc.contributor.advisor").stream().findFirst();
+        String email = null;
+        if (optFv.isPresent()) {
+            Optional<String> optEmail = optFv.get().getContacts().stream().findFirst();
+            if (optEmail.isPresent()) {
+                email = optEmail.get();
+            }
+        }
+        return email;
     }
 
     /**
