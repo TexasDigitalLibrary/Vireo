@@ -112,7 +112,7 @@
 							</div>
 						</td>
 						<td title="'Contacts'" ng-dblclick="startEditVWMode(vocabularyWord, 'contacts')">
-							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.contacts}}</span>
+							<span class="align-middle" ng-if="!editMode(vocabularyWord)">{{vocabularyWord.contacts[0]}}</span>
 							<div class="form-group">
 								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.contacts" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='contacts'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>

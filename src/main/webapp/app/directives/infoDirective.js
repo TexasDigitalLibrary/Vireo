@@ -16,7 +16,7 @@ vireo.directive("info", function ($q,FieldValue) {
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
         controller: function ($scope) {
-
+            
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
@@ -103,8 +103,12 @@ vireo.directive("info", function ($q,FieldValue) {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
             };
 
+            $scope.inputContactChair = function () {
+                return $scope.fieldProfile.fieldPredicate.value == 'dc.contributor.advisor';
+            };
+
             $scope.standardInput = function () {
-                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime() && !$scope.inputContactChair();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {
