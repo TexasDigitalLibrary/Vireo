@@ -16,7 +16,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             100,
             200,
             400,
-            500
+            500,
+            1000
         ]
     };
 
