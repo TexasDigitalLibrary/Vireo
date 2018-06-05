@@ -99,6 +99,7 @@ public class Submission extends ValidatingBaseEntity {
     @Column(nullable = true)
     private boolean approveAdvisor;
 
+    @JsonView(ApiView.Partial.class)
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
