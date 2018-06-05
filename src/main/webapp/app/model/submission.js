@@ -558,6 +558,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.assign = function (assignee) {
+            if (assignee === null) {
+                assignee = {};
+            }
+
             angular.extend(this.getMapping().assignTo, {
                 method: submission.id + "/assign-to",
                 data: assignee
