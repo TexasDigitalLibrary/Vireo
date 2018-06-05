@@ -16,8 +16,7 @@ import org.xml.sax.SAXException;
 
 public class OrcidUtility {
 
-    private static final String ORCID_API = "http://pub.orcid.org/#/orcid-bio";
-
+    private static final String ORCID_API = "https://pub.orcid.org/v2.0/#/";
     public static Map<String, String> verifyOrcid(User user, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
         if (fieldValue.getValue() == "") {
@@ -27,7 +26,7 @@ public class OrcidUtility {
             if (doc == null) {
                 errors.put("orcid-no-document", "No public profile was found for this ORCID");
             } else {
-                if (doc.getElementsByTagName("orcid-message") == null) {
+                if (doc.getElementsByTagName("record") == null) {
                     errors.put("orcid-no-document", "No public profile was found for this ORCID");
                 }
                 if (!tagMatchesCredentials(user.getFirstName(), doc.getElementsByTagName("given-names"))) {
