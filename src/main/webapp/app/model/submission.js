@@ -343,8 +343,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                 var apiRes = angular.fromJson(response.body);
                 if (apiRes.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
-                    angular.forEach(responseObj.payload.HashMap.value, function (value) {
-                        console.log(value);
+                    angular.forEach(apiRes.payload.HashMap.value, function (value) {
                         fieldValue.addValidationMessage(value);
                     });
 
