@@ -234,7 +234,6 @@ public class SubmissionController {
         } else {
             String subject = (String) data.get("subject");
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-            System.out.println("Add Comment: " + templatedMessage);
             actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
         }
 
