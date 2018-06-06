@@ -344,6 +344,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
                 if (apiRes.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
                     angular.forEach(responseObj.payload.HashMap.value, function (value) {
+                        console.log(value);
                         fieldValue.addValidationMessage(value);
                     });
 
