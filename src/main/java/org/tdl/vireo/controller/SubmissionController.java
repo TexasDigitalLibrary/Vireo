@@ -234,6 +234,7 @@ public class SubmissionController {
         } else {
             String subject = (String) data.get("subject");
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
+            System.out.println("Add Comment: " + templatedMessage);
             actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
         }
 
@@ -252,7 +253,9 @@ public class SubmissionController {
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-
+        
+        String recipientEmails = new String();
+        
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
@@ -260,10 +263,16 @@ public class SubmissionController {
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(((String) data.get("recipientEmail")).split(";"));
+            String recipientEmail = (String) data.get("recipientEmail");
+
+            recipientEmails = "Email sent to: [ " + recipientEmail + " ] ";
+
+            smm.setTo(recipientEmail.split(";"));
 
             if (sendCCRecipientEmail) {
-                smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
+                String ccRecipientEmail = (String) data.get("ccRecipientEmail");
+                smm.setCc(ccRecipientEmail.split(";"));
+                recipientEmails = recipientEmails + " and cc to: [ " + ccRecipientEmail + " ] ";
             }
 
             String preferredEmail = user.getSetting("preferedEmail");
@@ -279,7 +288,7 @@ public class SubmissionController {
 
         }
 
-        actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+        actionLogRepo.createPublicLog(submission, user, recipientEmails + subject + ": " + templatedMessage);
     }
 
     @RequestMapping(value = "/batch-comment")
