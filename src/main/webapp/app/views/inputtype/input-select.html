@@ -1,19 +1,20 @@
-<div class="input-group" uib-dropdown>
-	<span class="input-group-addon select-toggle" uib-dropdown-toggle>
-		<span ng-if="!fieldValue.updating" class="caret"></span>
-		<span ng-if="fieldValue.updating" class="glyphicon glyphicon-remove-circle"> </span>
-	</span>
-	 <ul class="dropdown-menu" uib-dropdown-menu>
-		<li class="select-option"
-			ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);" 
-			ng-repeat="word in profile.controlledVocabularies[0].dictionary | orderBy:'name'">
-			{{word.name}}
-		</li>
-	</ul>
-	<span class="form-control select-value" ng-bind="fieldValue.value || 'Choose {{profile.fieldGlosses[0].value}}'">			
-	</span>
-	<span class="input-group-addon">
-        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
-    </span>
+<div class="btn-group btn-block col-xs-12 input-select" uib-dropdown keyboard-nav role="group">
+  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
+    <span class="caret"></span>
+  </button>
+  <button ng-class="{{fieldValue.value ? 'selected' : ''}}" type="button" class="btn btn-default dropdown-text" disabled>
+    <span class="text-left dropdown-text-label">{{fieldValue.value || 'Choose ' + profile.fieldGlosses[0].value}}</span>
+  </button>
+  <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+    <li class="select-option"
+      role="menuitem"
+      ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);" 
+      ng-repeat="word in profile.controlledVocabularies[0].dictionary | orderBy:'name'">
+      <a href="#">{{word.name}}</a>
+    </li>
+  </ul>
+  <button type="button" class="btn dropdown-help" disabled>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+  </button>
 </div>
