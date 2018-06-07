@@ -63,6 +63,7 @@ import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -161,6 +162,9 @@ public class SubmissionController {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private CustomActionValueRepo customActionValueRepo;
 
     @Value("${app.document.path:private/}")
     private String documentPath;
@@ -386,7 +390,7 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
-        return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
+        return new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
