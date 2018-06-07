@@ -2,7 +2,7 @@
   <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
     <span class="caret"></span>
   </button>
-  <button ng-class="{{fieldValue.value ? 'selected' : ''}}" type="button" class="btn btn-default dropdown-text" disabled>
+  <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
     <span class="text-left dropdown-text-label">{{fieldValue.value || 'Choose ' + profile.fieldGlosses[0].value}}</span>
   </button>
   <ul class="dropdown-menu" uib-dropdown-menu role="menu">
