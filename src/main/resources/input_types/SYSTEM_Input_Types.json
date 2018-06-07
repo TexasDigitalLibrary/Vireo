@@ -11,7 +11,17 @@
   {
     "name": "INPUT_CONTACT",
     "validationPattern": null,
-    "validationMessage": null
+    "validationMessage": null,
+    "validation": {
+        "name": {
+            "pattern": null,
+            "message": null
+        },
+        "email": {
+            "pattern": "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            "message": "Field must be a valid email address"
+        }
+    }
   },
   {
     "name": "INPUT_TEXT_WITH_DEFINITION",

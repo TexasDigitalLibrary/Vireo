@@ -340,13 +340,18 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
             promise.then(function (response) {
+                function addFieldValidationMessage(value) {
+                    fieldValue.addValidationMessage(value);
+                }
+
                 var apiRes = angular.fromJson(response.body);
                 if (apiRes.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
-                    angular.forEach(responseObj.payload.HashMap.value, function (value) {
-                        fieldValue.addValidationMessage(value);
-                    });
-
+                    var messages = apiRes.payload.HashMap;
+                    for (var property in messages) {
+                        var messageValues = messages[property];
+                        angular.forEach(messageValues, addFieldValidationMessage);
+                    }
                 } else {
                     var updatedFieldValue = null;
 
