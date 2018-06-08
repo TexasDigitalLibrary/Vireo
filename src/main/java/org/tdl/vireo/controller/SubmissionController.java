@@ -390,7 +390,10 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
-        return new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
+        Submission submission = submissionRepo.getOne(submissionId);
+        ApiResponse response = new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/custom-action-values", response);
+        return response;
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
