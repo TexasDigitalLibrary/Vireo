@@ -12,8 +12,10 @@
       <ul class="nav nav-pills nav-justified">
         <li class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
           <a ng-click="setActiveStep(workflowStep)">
-            <button class="invisible-button">{{$index+1}}. {{workflowStep.name}}</button>
-            <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+            <button class="invisible-button wide-button">
+                <span>{{$index+1}}. {{workflowStep.name}}</span>
+                <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+            </button>
           </a>
         </li>
         <li class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
