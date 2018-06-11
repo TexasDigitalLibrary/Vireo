@@ -25,7 +25,13 @@
     <tbody>
       <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle">
         <td ng-repeat="col in $columns">
-          <span>{{displaySubmissionProperty(row, col)}}</span>
+          <span ng-if="col.title() !== 'Custom actions'">{{displaySubmissionProperty(row, col)}}</span>
+          <span ng-if="col.title() === 'Custom actions'">
+            <span ng-repeat="ca in row.customActionValues">
+              <input ng-checked="{{ca.value}}" type="checkbox" disabled> {{getCustomActionLabelById(ca.definition.id)}}</input>
+              <br/>
+            </span>
+          </span>
         </td>
       </tr>
     </tbody>
