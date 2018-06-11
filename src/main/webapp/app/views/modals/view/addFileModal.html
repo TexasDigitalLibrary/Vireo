@@ -30,7 +30,7 @@
           <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
         </div>
 
-        <span ng-if="hasPrimaryDocument()">
+        <span>
           <div class="checkbox">
             <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToRecipient">Add Email Recipients</label>
           </div>
