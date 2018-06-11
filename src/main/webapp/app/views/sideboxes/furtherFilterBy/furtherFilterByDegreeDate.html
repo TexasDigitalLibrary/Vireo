@@ -1,0 +1,21 @@
+<form ng-submit="box.addDateFilter(column)">
+    <div class="input-group">
+        <span class="input-group-addon" ng-click="date=true">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+        <input
+            type="text"
+            class="form-control" 
+            uib-datepicker-popup="MMMM yyyy" 
+            datepicker-options="box.datepickerOptions"
+            ng-model="box[column.title.split(' ').join('')].d1"
+            placeholder="Choose Date"
+            ng-click="date=true"
+            is-open="date"
+            ng-required="!fieldProfile.optional" 
+            show-button-bar="false"
+            readonly
+            stringtodate/>
+    </div>
+    <input type="submit" value="Add Filter" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
+</form>

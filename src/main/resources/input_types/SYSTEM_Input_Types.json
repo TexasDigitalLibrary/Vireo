@@ -29,6 +29,11 @@
     "validationMessage": "Checkboxes must be true or false"
   },
   {
+    "name": "INPUT_DEGREEDATE",
+    "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+    "validationMessage": "Dates must be in MMMM YYYY format"
+  },
+  {
     "name": "INPUT_DATETIME",
     "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
     "validationMessage": "Dates must be in MM/DD/YYYY format"
