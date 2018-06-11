@@ -282,8 +282,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.disableSubmitAddFile = function () {
             var disable = true;
-            console.log($scope.addFileData.subject);
-            console.log($scope.addFileData.message);
             if ($scope.addFileData.addFileSelection == 'replace') {
                 if ($scope.addFileData.sendEmailToRecipient) {
                     if ($scope.addFileData.sendEmailToCCRecipient) {
