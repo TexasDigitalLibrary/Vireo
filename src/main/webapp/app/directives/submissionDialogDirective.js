@@ -11,7 +11,7 @@ vireo.directive("submissiondialog", function($anchorScroll, $location) {
             $scope.show = ['-', '+'];
         },
         controller: function($scope) {
-            $scope.submitGloss = ["Submit Corrections", "Are you sure?"];
+            $scope.submitGloss = ["Corrections Completed", "Are you sure?"];
 
             $scope.submittingCorrections = false;
 
