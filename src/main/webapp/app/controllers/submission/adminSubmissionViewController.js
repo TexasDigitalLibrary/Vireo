@@ -419,12 +419,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "changeAssignee": function (assignee) {
                 $scope.submission.assign(assignee).then(function () {
                     $scope.submissionStatusBox.resetStatus();
+                    $scope.submissionStatusBox.resetAssigneeWorking();
                 });
             },
             "resetStatus": function () {
                 $scope.submissionStatusBox.advanced = true;
                 $scope.submissionStatusBox.newStatus = submissionStatuses[0];
                 $scope.closeModal();
+            },
+            "resetAssigneeWorking": function () {
+                $scope.submissionStatusBox.assignSaveWorking = false;
+                $scope.submissionStatusBox.unassignWorking = false;
+                $scope.submissionStatusBox.assignWorking = false;
             },
             "setSubmitDate": function (newDate) {
                 $scope.submissionStatusBox.savingDate = true;
