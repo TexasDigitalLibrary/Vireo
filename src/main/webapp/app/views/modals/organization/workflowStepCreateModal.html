@@ -11,6 +11,7 @@
 
 	<div class="modal-body">
 		<validatedinput
+			no-id="true"
 			model="modalData"
 			property="name"
 			label="Name"
@@ -27,7 +28,6 @@
 			class="btn btn-default" 
 			ng-click="resetWorkflowSteps()">Cancel</button>
 		<button 
-			id="workflow-step-save" 
 			type="submit" 
 			class="btn btn-primary" 
 			ng-disabled="forms.create.$invalid">Create</button>
