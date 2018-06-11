@@ -91,10 +91,10 @@
   {
     "title": "Committee contact email",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["committeeContactEmail"],
     "status": null,
     "inputType": {
-      "name": "INPUT_TEXT"
+      "name": "INPUT_CONTACT"
     }
   },
   {
