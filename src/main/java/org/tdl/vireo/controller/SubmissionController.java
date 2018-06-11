@@ -389,9 +389,10 @@ public class SubmissionController {
 
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
+    public ApiResponse updateCustomActionValue(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
         Submission submission = submissionRepo.getOne(submissionId);
         ApiResponse response = new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
+        actionLogRepo.createPublicLog(submission, user, "Custom action " + customActionValue.getDefinition().getLabel() + " " + (customActionValue.getValue() ? "set" : "unset"));
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/custom-action-values", response);
         return response;
     }
