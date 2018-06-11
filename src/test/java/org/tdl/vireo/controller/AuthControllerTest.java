@@ -153,7 +153,7 @@ public class AuthControllerTest extends AbstractControllerTest {
         data.put("email", TEST_USER_EMAIL);
         data.put("firstName", TEST_USER_FIRST_NAME);
         data.put("lastName", TEST_USER_LAST_NAME);
-        data.put("password", TEST_USER_PASSWORD);
+        data.put("userPassword", TEST_USER_PASSWORD);
         data.put("confirm", TEST_USER_CONFIRM);
 
         ApiResponse response = authController.registration(data, new HashMap<String, String>());
@@ -175,7 +175,7 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         Map<String, String> data = new HashMap<String, String>();
         data.put("email", TEST_USER_EMAIL);
-        data.put("password", TEST_USER_PASSWORD);
+        data.put("userPassword", TEST_USER_PASSWORD);
 
         ApiResponse response = authController.login(data);
 

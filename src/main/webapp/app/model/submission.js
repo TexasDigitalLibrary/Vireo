@@ -97,6 +97,27 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         });
 
         submission.before(function () {
+            angular.extend(apiMapping.Submission.customActionValuesListen, {
+                'method': submission.id + '/custom-action-values'
+            });
+            WsApi.listen(apiMapping.Submission.customActionValuesListen).then(null, null, function (data) {
+                var replacedCustomActionValue = false;
+                var newCustomActionValue = angular.fromJson(data.body).payload.CustomActionValue;
+                for (var i in submission.customActionValues) {
+                    if (submission.customActionValues[i].id === newCustomActionValue.id) {
+                        angular.extend(submission.customActionValues[i], newCustomActionValue);
+                        replacedCustomActionValue = true;
+                        break;
+                    }
+                }
+                if (!replacedCustomActionValue) {
+                    cav = new CustomActionValue(newCustomActionValue);
+                    submission.customActionValues.push(cav);
+                }
+            });
+        });
+
+        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValuesListen, {
                 'method': submission.id + '/field-values'
             });

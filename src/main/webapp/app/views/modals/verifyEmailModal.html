@@ -7,14 +7,14 @@
 		<h3 class="modal-title">Verify Email</h3>
 	</div>
 
-	<form ng-submit="verifyEmail(registration.email)" name="forms.verifyEmail" novalidate>
+	<form ng-submit="verifyEmail(registration.userEmail)" name="forms.verifyEmail" novalidate>
 		
 		<validationmessage results="user.getValidationResults()"></validationmessage>
 
 		<div class="modal-body verifyEmailModal">
 			<validatedinput
 				model="registration"
-				property="email"
+				property="userEmail"
 				label="Email"
 				placeholder="Enter email"
 				form="forms.verifyEmail"
