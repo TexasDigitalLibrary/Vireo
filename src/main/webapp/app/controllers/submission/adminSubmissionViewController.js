@@ -16,13 +16,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     var depositLocations = DepositLocationRepo.getAll();
 
-    var emailTemplates = EmailTemplateRepo.getAll();
+    $scope.emailTemplates = EmailTemplateRepo.getAll();
 
     EmailTemplateRepo.ready().then(function() {
 
         var addDefaultTemplate = true;
-        for (var i in emailTemplates) {
-            var template = emailTemplates[i];
+        for (var i in $scope.emailTemplates) {
+            var template = $scope.emailTemplates[i];
             if (template.name === "Choose a Message Template") {
                 addDefaultTemplate = false;
                 break;
@@ -30,7 +30,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         }
 
         if (addDefaultTemplate) {
-            emailTemplates.unshift({
+            $scope.emailTemplates.unshift({
                 name: "Choose a Message Template"
             });
         }
@@ -79,7 +79,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             addCommentModal.subject = "";
             addCommentModal.message = "";
             addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
-            addCommentModal.selectedTemplate = emailTemplates[0];
+            addCommentModal.selectedTemplate = $scope.emailTemplates[0];
             addCommentModal.needsCorrection = userSettings.notes_flag_submission_as_needs_corrections_by_default === "true";
         };
 
@@ -184,7 +184,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var resetFileData = function () {
             initializeEmailRecipients();
             $scope.addFileData = {
-                selectedTemplate: emailTemplates[0],
+                selectedTemplate: $scope.emailTemplates[0],
                 sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
                 recipientEmail: userSettings.attachment_email_student_by_default === "true" ? $scope.submission.submitter.email : "",
                 sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default === "true",
