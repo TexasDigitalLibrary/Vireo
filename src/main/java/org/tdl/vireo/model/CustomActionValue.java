@@ -6,6 +6,9 @@ import javax.persistence.ManyToOne;
 
 import org.tdl.vireo.model.validation.CustomActionValueValidator;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
@@ -15,9 +18,11 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 public class CustomActionValue extends ValidatingBaseEntity {
 
+    @JsonView(ApiView.Partial.class)
     @ManyToOne(optional = false)
     private CustomActionDefinition definition;
 
+    @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private Boolean value;
 

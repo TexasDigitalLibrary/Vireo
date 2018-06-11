@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, $timeout, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, $timeout, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -120,6 +120,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var submissionStatuses = SubmissionStatusRepo.getAll();
         var documentTypes = DocumentTypeRepo.getAll();
         var customActionDefinitions = CustomActionDefinitionRepo.getAll();
+        var customActionValues = CustomActionValueRepo.getAll();
         var depositLocations = DepositLocationRepo.getAll();
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
@@ -355,6 +356,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 value = $filter('date')(value, 'MMM dd, yyyy');
             }
             return value;
+        };
+
+        $scope.getCustomActionLabelById = function (id) {
+            for (var i in customActionDefinitions) {
+                if (customActionDefinitions[i].id === id) {
+                    return customActionDefinitions[i].label;
+                }
+            }
         };
 
         $scope.isDateColumn = function (col) {
