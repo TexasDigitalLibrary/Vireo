@@ -10,15 +10,15 @@
 	<validationmessage results="controlledVocabularyRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		<validatedinput model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.create" validations="controlledVocabularyRepo.getValidations()" results="controlledVocabularyRepo.getValidationResults()">
+		<validatedinput id="new-cv-name" model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.create" validations="controlledVocabularyRepo.getValidations()" results="controlledVocabularyRepo.getValidationResults()">
 		</validatedinput>
 
-		<validatedselect options="languages" optionproperty="name" model="modalData" property="language" label="Language" form="forms.create" validations="controlledVocabularyRepo.getValidations()" results="controlledVocabularyRepo.getValidationResults()">
+		<validatedselect id="new-cv-language" options="languages" optionproperty="name" model="modalData" property="language" label="Language" form="forms.create" validations="controlledVocabularyRepo.getValidations()" results="controlledVocabularyRepo.getValidationResults()">
 		</validatedselect>
 	</div>
 
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" ng-click="resetControlledVocabulary(true)">Cancel</button>
-		<button id="controlledVocabulary-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
+		<button id="new-controlledVocabulary-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
 	</div>
 </form>

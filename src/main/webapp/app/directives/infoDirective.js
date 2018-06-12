@@ -83,6 +83,14 @@ vireo.directive("info", function ($q,FieldValue) {
                 delete fieldValue.updating;
             };
 
+            $scope.inputLicense = function () {
+                return $scope.fieldProfile.inputType.name == 'INPUT_LICENSE';
+            };
+
+            $scope.inputProquest = function () {
+                return $scope.fieldProfile.inputType.name == 'INPUT_PROQUEST';
+            };
+            
             $scope.inputTel = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_TEL';
             };
@@ -96,7 +104,7 @@ vireo.directive("info", function ($q,FieldValue) {
             };
 
             $scope.standardInput = function () {
-                return !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDateTime();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {

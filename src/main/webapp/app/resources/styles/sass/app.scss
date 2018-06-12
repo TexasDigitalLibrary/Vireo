@@ -491,6 +491,8 @@ sidebox ul.sidebox-list {
 
 sidebox ul.sidebox-list li {
   padding: 3px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 sidebox ul.sidebox-list input {
