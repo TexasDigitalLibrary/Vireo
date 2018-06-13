@@ -10,6 +10,7 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
@@ -19,6 +20,7 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -56,6 +58,9 @@ public class Cli implements CommandLineRunner {
 
     @Autowired
     private SubmissionStatusRepo submissionStatusRepo;
+
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -137,6 +142,13 @@ public class Cli implements CommandLineRunner {
                         credentials.setRole(Role.ROLE_STUDENT.name());
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
+                        
+                        Calendar date = Calendar.getInstance();
+                        String entry = new String("Submission created.");
+                        ActionLog log = actionLogRepo.create(sub, date, entry, false);
+                        log.setActionDate(date);
+                        log.setEntry(entry);
+                        
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
