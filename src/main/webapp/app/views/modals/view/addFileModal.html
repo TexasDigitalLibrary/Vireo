@@ -45,7 +45,7 @@
               <label for="primaryDocumentRecipientEmail">To:</label>
               <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
               <div class="input-group">
-                <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+                <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
                 <span ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(recipientEmail,recipientEmails);recipientEmail=''"></span>
               </div>
             </div>
@@ -54,7 +54,7 @@
               <label for="primaryDocumentCcRecipientEmail">CC:</label>
               <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
               <div class="input-group">
-                <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+                <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
                 <span ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(ccRecipientEmail,ccRecipientEmails);ccRecipientEmail=''"></span>
               </div>
             </div>
@@ -120,7 +120,7 @@
           <label for="additionalDocumentRecipientEmail">To:</label>
           <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
           <div class="input-group">
-            <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+            <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
             <span ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(recipientEmail,recipientEmails);recipientEmail=''"></span>
           </div>
         </div>
@@ -129,7 +129,7 @@
           <label for="additionalDocumentCcRecipientEmail">CC:</label>
           <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
           <div class="input-group">
-            <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
+            <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
             <span ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(ccRecipientEmail,ccRecipientEmails);ccRecipientEmail=''"></span>
           </div>
         </div>

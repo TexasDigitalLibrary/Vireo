@@ -344,6 +344,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             destinationModel.splice(removeIndex,1);
         };
 
+        $scope.emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
         $scope.activeDocumentBox = {
             "title": "Active Document",
             "viewUrl": "views/sideboxes/activeDocument.html",
