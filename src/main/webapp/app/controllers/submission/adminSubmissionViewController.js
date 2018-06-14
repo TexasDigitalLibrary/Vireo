@@ -362,11 +362,17 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var getLastActionDate = function() {
+            if ($scope.submission.actionLogs === undefined || $scope.submission.actionLogs === null) {
+              return null;
+            }
             var index = $scope.submission.actionLogs.length - 1;
             return $scope.submission.actionLogs[index].actionDate;
         };
 
         var getLastActionEntry = function() {
+            if ($scope.submission.actionLogs === undefined || $scope.submission.actionLogs === null) {
+              return null;
+            }
             var index = $scope.submission.actionLogs.length - 1;
             return $scope.submission.actionLogs[index].entry;
         };
