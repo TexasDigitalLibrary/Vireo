@@ -662,6 +662,10 @@ var apiMapping = {
             'endpoint': '/channel',
             'controller': 'submission'
         },
+        customActionValuesListen: {
+            'endpoint': '/channel',
+            'controller': 'submission'
+        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'submission',

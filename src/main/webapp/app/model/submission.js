@@ -97,6 +97,27 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         });
 
         submission.before(function () {
+            angular.extend(apiMapping.Submission.customActionValuesListen, {
+                'method': submission.id + '/custom-action-values'
+            });
+            WsApi.listen(apiMapping.Submission.customActionValuesListen).then(null, null, function (data) {
+                var replacedCustomActionValue = false;
+                var newCustomActionValue = angular.fromJson(data.body).payload.CustomActionValue;
+                for (var i in submission.customActionValues) {
+                    if (submission.customActionValues[i].id === newCustomActionValue.id) {
+                        angular.extend(submission.customActionValues[i], newCustomActionValue);
+                        replacedCustomActionValue = true;
+                        break;
+                    }
+                }
+                if (!replacedCustomActionValue) {
+                    cav = new CustomActionValue(newCustomActionValue);
+                    submission.customActionValues.push(cav);
+                }
+            });
+        });
+
+        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValuesListen, {
                 'method': submission.id + '/field-values'
             });
@@ -340,13 +361,18 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             var promise = WsApi.fetch(this.getMapping().saveFieldValue);
 
             promise.then(function (response) {
+                function addFieldValidationMessage(value) {
+                    fieldValue.addValidationMessage(value);
+                }
+
                 var apiRes = angular.fromJson(response.body);
                 if (apiRes.meta.status === "INVALID") {
                     fieldValue.setIsValid(false);
-                    angular.forEach(responseObj.payload.HashMap.value, function (value) {
-                        fieldValue.addValidationMessage(value);
-                    });
-
+                    var messages = apiRes.payload.HashMap;
+                    for (var property in messages) {
+                        var messageValues = messages[property];
+                        angular.forEach(messageValues, addFieldValidationMessage);
+                    }
                 } else {
                     var updatedFieldValue = null;
 
@@ -558,6 +584,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.assign = function (assignee) {
+            if (assignee === null) {
+                assignee = {};
+            }
+
             angular.extend(this.getMapping().assignTo, {
                 method: submission.id + "/assign-to",
                 data: assignee

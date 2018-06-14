@@ -10,12 +10,12 @@
   <validationmessage results="modalData.ValidationResults"></validationmessage>
 
   <div class="modal-body">
-    <validatedinput model="modalData" property="value" label="Metadata Key Name" placeholder="Name of the new metadata key" form="forms.update" validations="fieldPredicateRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
+    <validatedinput no-id="true" model="modalData" property="value" label="Metadata Key Name" placeholder="Name of the new metadata key" form="forms.update" validations="fieldPredicateRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetFieldPredicates()">Cancel</button>
-    <button id="fieldPredicate-save" type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Update</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Update</button>
   </div>
 
 </form>

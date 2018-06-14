@@ -11,6 +11,7 @@
 
 	<div class="modal-body">
 		<validatedinput
+			id="new-language-name"
 			model="modalData"
 			property="name"
 			label="Name"
@@ -27,7 +28,7 @@
 			class="btn btn-default"
 			ng-click="resetLanguages()">Cancel</button>
 		<button
-			id="languages-save"
+			id="new-languages-save"
 			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.create.$invalid">Create</button>

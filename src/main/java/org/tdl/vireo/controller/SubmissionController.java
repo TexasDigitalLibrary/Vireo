@@ -63,6 +63,7 @@ import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -161,6 +162,9 @@ public class SubmissionController {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private CustomActionValueRepo customActionValueRepo;
 
     @Value("${app.document.path:private/}")
     private String documentPath;
@@ -252,7 +256,9 @@ public class SubmissionController {
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-
+        
+        String recipientEmails = new String();
+        
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
@@ -260,10 +266,16 @@ public class SubmissionController {
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            smm.setTo(((String) data.get("recipientEmail")).split(";"));
+            String recipientEmail = (String) data.get("recipientEmail");
+
+            recipientEmails = "Email sent to: [ " + recipientEmail + " ] ";
+
+            smm.setTo(recipientEmail.split(";"));
 
             if (sendCCRecipientEmail) {
-                smm.setCc(((String) data.get("ccRecipientEmail")).split(";"));
+                String ccRecipientEmail = (String) data.get("ccRecipientEmail");
+                smm.setCc(ccRecipientEmail.split(";"));
+                recipientEmails = recipientEmails + " and cc to: [ " + ccRecipientEmail + " ] ";
             }
 
             String preferredEmail = user.getSetting("preferedEmail");
@@ -279,7 +291,7 @@ public class SubmissionController {
 
         }
 
-        actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+        actionLogRepo.createPublicLog(submission, user, recipientEmails + "; " + subject + ": " + templatedMessage);
     }
 
     @RequestMapping(value = "/batch-comment")
@@ -385,8 +397,12 @@ public class SubmissionController {
 
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse updateCustomActionValue(@PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
-        return new ApiResponse(SUCCESS, submissionRepo.read(submissionId).editCustomActionValue(customActionValue));
+    public ApiResponse updateCustomActionValue(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
+        Submission submission = submissionRepo.getOne(submissionId);
+        ApiResponse response = new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
+        actionLogRepo.createPublicLog(submission, user, "Custom action " + customActionValue.getDefinition().getLabel() + " " + (customActionValue.getValue() ? "set" : "unset"));
+        simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/custom-action-values", response);
+        return response;
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
@@ -660,17 +676,17 @@ public class SubmissionController {
 
         ApiResponse response = new ApiResponse(SUCCESS);
 
-        if (assignee != null) {
-            if (submission != null) {
-                submission.setAssignee(assignee);
-                submission = submissionRepo.update(submission);
-                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+        if (submission != null) {
+            submission.setAssignee(assignee);
+            submission = submissionRepo.update(submission);
 
+            if (assignee == null) {
+                actionLogRepo.createPublicLog(submission, user, "Submission was unassigned");
             } else {
-                response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             }
         } else {
-            response = new ApiResponse(ERROR, "Could not find a assignee!");
+            response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
         return response;
@@ -825,6 +841,8 @@ public class SubmissionController {
 
         EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
 
+        String preferedEmail = user.getSetting("preferedEmail");
+
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
@@ -834,8 +852,6 @@ public class SubmissionController {
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(String.join(",", fv.getContacts()));
-
-            String preferedEmail = user.getSetting("preferedEmail");
 
             if ("true".equals(user.getSetting("ccEmail"))) {
                 smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
@@ -848,7 +864,7 @@ public class SubmissionController {
 
         });
 
-        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+        actionLogRepo.createPublicLog(submission, user, "Advisor review email sent to: " + "[ " + preferedEmail + " ]; " + subject + ": '" + content + "'");
 
         return new ApiResponse(SUCCESS);
     }
@@ -933,6 +949,7 @@ public class SubmissionController {
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
                 // TODO: Not all variables are currently being replaced.
+                String preferedEmail = user.getSetting("preferedEmail");
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
@@ -942,8 +959,6 @@ public class SubmissionController {
                         LOG.debug("\tSending email to recipient at address " + email);
 
                         smm.setTo(email);
-
-                        String preferedEmail = user.getSetting("preferedEmail");
 
                         if ("true".equals(user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
@@ -957,6 +972,9 @@ public class SubmissionController {
                         LOG.error("Problem sending email: " + me.getMessage());
                     }
                 }
+
+                actionLogRepo.createPublicLog(submission, user, "Email sent to: " + "[ " + preferedEmail + " ]; " + subject + ": '" + content + "'");
+
             } else {
                 LOG.debug("\tRule disabled or of irrelevant status condition.");
             }
