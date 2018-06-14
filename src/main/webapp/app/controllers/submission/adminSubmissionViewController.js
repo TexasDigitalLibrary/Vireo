@@ -289,14 +289,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                   $scope.addFileData.uploading || 
                                   $scope.recipientEmails.length === 0 || 
                                   $scope.ccRecipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === (undefined || "") || 
-                                  $scope.addFileData.message === (undefined || "");
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
                     } else {
                         disable = $scope.addFileData.files === undefined || 
                                   $scope.addFileData.uploading || 
                                   $scope.recipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === (undefined || "") || 
-                                  $scope.addFileData.message === (undefined || "");
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
                     }
                 } else {
                     disable = $scope.addFileData.files === undefined || 
@@ -310,15 +314,19 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                   $scope.addFileData.uploading || 
                                   $scope.recipientEmails.length === 0 || 
                                   $scope.ccRecipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === (undefined || "") || 
-                                  $scope.addFileData.message === (undefined || "");
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
                     } else {
                         disable = $scope.addFileData.files === undefined || 
                                   $scope.addFileData.fieldPredicate == undefined || 
                                   $scope.addFileData.uploading || 
                                   $scope.recipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === (undefined || "") || 
-                                  $scope.addFileData.message === (undefined || "");
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
                     }
                 } else {
                     disable = $scope.addFileData.files === undefined || 
