@@ -841,8 +841,6 @@ public class SubmissionController {
 
         EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
 
-        String preferedEmail = user.getSetting("preferedEmail");
-
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
@@ -852,6 +850,8 @@ public class SubmissionController {
             SimpleMailMessage smm = new SimpleMailMessage();
 
             smm.setTo(String.join(",", fv.getContacts()));
+
+            String preferedEmail = user.getSetting("preferedEmail");
 
             if ("true".equals(user.getSetting("ccEmail"))) {
                 smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
@@ -864,7 +864,7 @@ public class SubmissionController {
 
         });
 
-        actionLogRepo.createPublicLog(submission, user, "Advisor review email sent to: " + "[ " + preferedEmail + " ]; " + subject + ": '" + content + "'");
+        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
 
         return new ApiResponse(SUCCESS);
     }
@@ -949,7 +949,6 @@ public class SubmissionController {
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
 
                 // TODO: Not all variables are currently being replaced.
-                String preferedEmail = user.getSetting("preferedEmail");
                 String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
                 String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
 
@@ -959,6 +958,8 @@ public class SubmissionController {
                         LOG.debug("\tSending email to recipient at address " + email);
 
                         smm.setTo(email);
+
+                        String preferedEmail = user.getSetting("preferedEmail");
 
                         if ("true".equals(user.getSetting("ccEmail"))) {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
@@ -972,8 +973,6 @@ public class SubmissionController {
                         LOG.error("Problem sending email: " + me.getMessage());
                     }
                 }
-
-                actionLogRepo.createPublicLog(submission, user, "Email sent to: " + "[ " + preferedEmail + " ]; " + subject + ": '" + content + "'");
 
             } else {
                 LOG.debug("\tRule disabled or of irrelevant status condition.");
