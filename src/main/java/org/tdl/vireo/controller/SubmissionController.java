@@ -268,14 +268,14 @@ public class SubmissionController {
 
             String recipientEmail = (String) data.get("recipientEmail");
 
-            recipientEmails = "Email sent to: [ " + recipientEmail + " ] ";
+            recipientEmails = "Email sent to: [ " + recipientEmail + " ]; ";
 
             smm.setTo(recipientEmail.split(";"));
 
             if (sendCCRecipientEmail) {
                 String ccRecipientEmail = (String) data.get("ccRecipientEmail");
                 smm.setCc(ccRecipientEmail.split(";"));
-                recipientEmails = recipientEmails + " and cc to: [ " + ccRecipientEmail + " ] ";
+                recipientEmails = "Email sent to: [ " + recipientEmail + " ] " + " and cc to: [ " + ccRecipientEmail + " ]; ";
             }
 
             String preferredEmail = user.getSetting("preferedEmail");
@@ -291,7 +291,7 @@ public class SubmissionController {
 
         }
 
-        actionLogRepo.createPublicLog(submission, user, recipientEmails + "; " + subject + ": " + templatedMessage);
+        actionLogRepo.createPublicLog(submission, user, recipientEmails + subject + ": " + templatedMessage);
     }
 
     @RequestMapping(value = "/batch-comment")
