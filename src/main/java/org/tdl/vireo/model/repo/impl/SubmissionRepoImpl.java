@@ -360,7 +360,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
-
+    
         // get all the possible columns, some of which we will make visible
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
 
@@ -408,6 +408,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         StringBuilder sqlJoinsBuilder = new StringBuilder();
         StringBuilder sqlWheresBuilder = new StringBuilder();
+        StringBuilder sqlWheresExcludeBuilder = new StringBuilder();
         StringBuilder sqlOrderBysBuilder = new StringBuilder();
 
         int n = 0;
@@ -438,6 +439,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
 
                         switch (submissionListColumn.getInputType().getName()) {
+                        case "INPUT_DEGREEDATE":
+                            // Column's values are of type datetime
+                            filterString.replaceAll("[TZ:.\\-]", " ");
+                            sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                            break;
                         case "INPUT_DATETIME":
                             // Column's values are of type datetime
                             if (filterString.contains("|")) {
@@ -647,6 +653,23 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     break;
 
+                // exclude individual submissions from submission list
+                case "exclude":
+                	
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                    	if (sqlWheresExcludeBuilder.length() > 0) {
+                    		sqlWheresExcludeBuilder.append(" AND s").append(".id <> ").append(filterString);
+                    	} else {
+                    		sqlWheresExcludeBuilder.append(" s").append(".id <> ").append(filterString);
+                    	}
+                    }
+
+                    break;
+
                 default:
                     logger.info("No value path given for submissionListColumn " + submissionListColumn.getTitle());
                 }
@@ -666,8 +689,19 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // if where, complete where clause and strip the tailing OR
         if (sqlWheresBuilder.length() > 0) {
-            sqlWheresBuilder.insert(0, "\nWHERE");
+            sqlWheresBuilder.insert(0, "\nWHERE (");
             sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+            sqlWheresBuilder.append(" )");
+            // append excluded submissions
+            if (sqlWheresExcludeBuilder.length() > 0) {
+            	sqlWheresBuilder.append(" AND ").append(sqlWheresExcludeBuilder);
+            }
+        // if only exclude filter, complete where clause
+        } else {
+            if (sqlWheresExcludeBuilder.length() > 0) {
+            	sqlWheresBuilder.insert(0, "\nWHERE");
+            	sqlWheresBuilder.append(sqlWheresExcludeBuilder);
+            }
         }
 
         String sqlQuery;
@@ -689,7 +723,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         logger.debug("QUERY:\n" + sqlQuery);
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);
-
+        
         return new QueryStrings(sqlCountQuery, sqlQuery);
     }
 
@@ -728,7 +762,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         public String getQuery() {
-            return query;
+           return query;
         }
 
     }

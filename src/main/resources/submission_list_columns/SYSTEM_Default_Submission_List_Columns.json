@@ -150,5 +150,14 @@
     "inputType": {
       "name": "INPUT_TEXT"
     }
+  },
+  {
+    "title": "Exclude",
+    "sort": "NONE",
+    "valuePath": ["exclude"],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
   }
 ]

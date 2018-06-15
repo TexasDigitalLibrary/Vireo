@@ -64,25 +64,25 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
 
             $scope.datepickerOptions = {};
             $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
-            var checkDissabled = function (dateAndMode) {
-                var dissabled = true;
+            var checkDisabled = function (dateAndMode) {
+                var disabled = true;
 
                 for (var i in $scope.profile.controlledVocabularies[0].dictionary) {
                     var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
                     if (cvw.name == dateAndMode.date.getMonth()) {
-                        dissabled = false;
+                        disabled = false;
                         break;
                     }
                 }
-                return dissabled;
+                return disabled;
             };
 
             if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].name === "Graduation Months") {
 
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
-                    if (checkDissabled(dateAndMode)) return "dissabled";
+                    if (checkDisabled(dateAndMode)) return "disabled";
                 };
-                $scope.datepickerOptions.dateDisabled = checkDissabled;
+                $scope.datepickerOptions.dateDisabled = checkDisabled;
 
                 $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";

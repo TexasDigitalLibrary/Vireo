@@ -8,7 +8,7 @@
   <hr/>
   <a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
-  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
+  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover list-row-remove" id="etd-table">
     <thead class="header">
       <tr>
         <th ng-repeat="column in userColumns">
@@ -25,6 +25,7 @@
     <tbody>
       <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle">
         <td ng-repeat="col in $columns">
+            <span ng-class="{'glyphicon glyphicon-remove-circle' : $first}" ng-click="addRowFilter($parent.$index, row)"></span>
           <span>{{displaySubmissionProperty(row, col)}}</span>
         </td>
       </tr>
