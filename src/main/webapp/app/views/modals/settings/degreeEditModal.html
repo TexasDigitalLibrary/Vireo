@@ -11,7 +11,8 @@
 
 	<div class="modal-body">
 
-    <validatedinput
+		<validatedinput
+			id="edit-degree-name"
 			type="text"
 			model="modalData"
 			property="name"
@@ -22,7 +23,8 @@
 			results="modalData.ValidationResults">
 		</validatedinput>
 
-    <validatedselect
+		<validatedselect
+			id="edit-degree-level"
       options="degreeLevels"
       optionproperty="name"
       model="modalData"
@@ -41,7 +43,7 @@
 			class="btn btn-default"
 			ng-click="resetDegree()">Cancel</button>
 		<button
-			id="degree-save"
+			id="edit-degree-save"
 			type="submit"
 			class="btn btn-primary"
 			ng-disabled="forms.update.$invalid">Update</button>

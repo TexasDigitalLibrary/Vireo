@@ -16,13 +16,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     var depositLocations = DepositLocationRepo.getAll();
 
-    var emailTemplates = EmailTemplateRepo.getAll();
+    $scope.emailTemplates = EmailTemplateRepo.getAll();
 
     EmailTemplateRepo.ready().then(function() {
 
         var addDefaultTemplate = true;
-        for (var i in emailTemplates) {
-            var template = emailTemplates[i];
+        for (var i in $scope.emailTemplates) {
+            var template = $scope.emailTemplates[i];
             if (template.name === "Choose a Message Template") {
                 addDefaultTemplate = false;
                 break;
@@ -30,7 +30,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         }
 
         if (addDefaultTemplate) {
-            emailTemplates.unshift({
+            $scope.emailTemplates.unshift({
                 name: "Choose a Message Template"
             });
         }
@@ -79,7 +79,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             addCommentModal.subject = "";
             addCommentModal.message = "";
             addCommentModal.actionLogCurrentLimit = $scope.actionLogLimit;
-            addCommentModal.selectedTemplate = emailTemplates[0];
+            addCommentModal.selectedTemplate = $scope.emailTemplates[0];
             addCommentModal.needsCorrection = userSettings.notes_flag_submission_as_needs_corrections_by_default === "true";
         };
 
@@ -184,7 +184,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var resetFileData = function () {
             initializeEmailRecipients();
             $scope.addFileData = {
-                selectedTemplate: emailTemplates[0],
+                selectedTemplate: $scope.emailTemplates[0],
                 sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
                 recipientEmail: userSettings.attachment_email_student_by_default === "true" ? $scope.submission.submitter.email : "",
                 sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default === "true",
@@ -283,9 +283,56 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.disableSubmitAddFile = function () {
             var disable = true;
             if ($scope.addFileData.addFileSelection == 'replace') {
-                disable = $scope.addFileData.files === undefined || $scope.addFileData.uploading;
+                if ($scope.addFileData.sendEmailToRecipient) {
+                    if ($scope.addFileData.sendEmailToCCRecipient) {
+                        disable = $scope.addFileData.files === undefined || 
+                                  $scope.addFileData.uploading || 
+                                  $scope.recipientEmails.length === 0 || 
+                                  $scope.ccRecipientEmails.length === 0 || 
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
+                    } else {
+                        disable = $scope.addFileData.files === undefined || 
+                                  $scope.addFileData.uploading || 
+                                  $scope.recipientEmails.length === 0 || 
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
+                    }
+                } else {
+                    disable = $scope.addFileData.files === undefined || 
+                              $scope.addFileData.uploading;
+                }
             } else {
-                disable = $scope.addFileData.files === undefined || $scope.addFileData.fieldPredicate === undefined || $scope.addFileData.uploading;
+                if ($scope.addFileData.sendEmailToRecipient) {
+                    if ($scope.addFileData.sendEmailToCCRecipient) {
+                        disable = $scope.addFileData.files === undefined || 
+                                  $scope.addFileData.fieldPredicate == undefined || 
+                                  $scope.addFileData.uploading || 
+                                  $scope.recipientEmails.length === 0 || 
+                                  $scope.ccRecipientEmails.length === 0 || 
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
+                    } else {
+                        disable = $scope.addFileData.files === undefined || 
+                                  $scope.addFileData.fieldPredicate == undefined || 
+                                  $scope.addFileData.uploading || 
+                                  $scope.recipientEmails.length === 0 || 
+                                  $scope.addFileData.subject === undefined || 
+                                  $scope.addFileData.subject === "" || 
+                                  $scope.addFileData.message === undefined ||
+                                  $scope.addFileData.message === "";
+                    }
+                } else {
+                    disable = $scope.addFileData.files === undefined || 
+                              $scope.addFileData.fieldPredicate == undefined || 
+                              $scope.addFileData.uploading;
+                }
             }
             return disable;
         };
@@ -304,6 +351,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             var removeIndex = destinationModel.indexOf(email);
             destinationModel.splice(removeIndex,1);
         };
+
+        $scope.emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
         $scope.activeDocumentBox = {
             "title": "Active Document",
@@ -419,12 +468,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "changeAssignee": function (assignee) {
                 $scope.submission.assign(assignee).then(function () {
                     $scope.submissionStatusBox.resetStatus();
+                    $scope.submissionStatusBox.resetAssigneeWorking();
                 });
             },
             "resetStatus": function () {
                 $scope.submissionStatusBox.advanced = true;
                 $scope.submissionStatusBox.newStatus = submissionStatuses[0];
                 $scope.closeModal();
+            },
+            "resetAssigneeWorking": function () {
+                $scope.submissionStatusBox.assignSaveWorking = false;
+                $scope.submissionStatusBox.unassignWorking = false;
+                $scope.submissionStatusBox.assignWorking = false;
             },
             "setSubmitDate": function (newDate) {
                 $scope.submissionStatusBox.savingDate = true;

@@ -591,7 +591,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        if (submissionListColumn.getExactMatch()) {
+                        if (filterString == null) {
+                            sqlWheresBuilder.append(" a").append(".email IS NULL").append(" OR");
+                        }
+                        else if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" a").append(".email = '").append(filterString).append("' OR");
                         } else {
                             sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
@@ -634,6 +637,22 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     break;
 
+                case "lastEvent":
+                    // @formatter:off
+
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                   .append("\n   (SELECT al.id, al.action_date, al.entry, al.action_logs_id")
+                                   .append("\n   FROM action_log al")
+                                   .append("\n   WHERE (al.action_logs_id = id)")
+                                   .append("\n   ORDER BY al.action_date DESC")
+                                   .append("\n   LIMIT 1) als")
+                                   .append("\n   ON action_logs_id = s.submission_status_id");
+                    // @formatter:on
+
+                    // @todo finish sqlWheresBuilder.
+
+                    break;
+
                 // exclude individual submissions from submission list
                 case "exclude":
                 	
@@ -650,7 +669,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     break;
-                    
+
                 default:
                     logger.info("No value path given for submissionListColumn " + submissionListColumn.getTitle());
                 }

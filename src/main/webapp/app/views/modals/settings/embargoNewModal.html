@@ -12,6 +12,7 @@
     <div class="modal-body">
 
         <validatedinput
+            id="new-embargo-name"
             model="modalData"
             property="name"
             label="Name"
@@ -22,6 +23,7 @@
         </validatedinput>
     	
         <validatedinput
+            id="new-embargo-description"
             model="modalData"
             property="description"
             label="Description"
@@ -32,6 +34,7 @@
         </validatedinput>
         
         <validatedinput
+            id="new-embargo-duration"
             model="modalData"
             property="duration"
             label="Duration"
@@ -42,6 +45,7 @@
         </validatedinput>
 
         <validatedinput
+            id="new-embargo-duration-checkbox"
             type="checkbox"
             model="modalData"
             property="duration"
@@ -55,6 +59,7 @@
         </validatedinput>
         
         <validatedinput
+            id="new-embargo-is-active"
             type="checkbox"
             model="modalData"
             property="isActive"
@@ -75,7 +80,7 @@
             class="btn btn-default" 
             ng-click="resetEmbargo()">Cancel</button>
     	<button 
-            id="embargo-save" 
+            id="new-embargo-save" 
             type="submit" 
             class="btn btn-primary"
             ng-disabled="forms.create.$invalid">Create</button>
