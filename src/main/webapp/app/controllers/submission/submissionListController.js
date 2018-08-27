@@ -5,7 +5,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     }));
 
     $scope.page = {
-        number: 1,
+        number: sessionStorage.getItem("list-page-number") ? sessionStorage.getItem("list-page-number") : 1,
         count: 10,
         options: [
             5,
@@ -61,6 +61,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         // SubmissionRepo.addAll($scope.page.content);
                         params.total($scope.page.totalElements);
                         $scope.page.count = params.count();
+                        sessionStorage.setItem("list-page-size", $scope.page.count);
+                        sessionStorage.setItem("list-page-number", $scope.page.number + 1);
                         return $scope.page.content;
                     });
                 }.bind(start)
@@ -82,7 +84,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(response) {
                     var apiRes = angular.fromJson(response.body);
                     if(apiRes.meta.status === 'SUCCESS') {
-                        $scope.page.count = apiRes.payload.Integer;
+                        $scope.page.count = sessionStorage.getItem("list-page-size") ? sessionStorage.getItem("list-page-size") : apiRes.payload.Integer;
                     }
 
                     var managerFilterColumns = ManagerFilterColumnRepo.getAll();
@@ -530,6 +532,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         $scope.saveColumns = function () {
             ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function () {
+                $scope.page.number = 1;
+                sessionStorage.setItem("list-page-size", $scope.page.count);
                 $scope.resetColumns();
             });
         };
