@@ -11,7 +11,9 @@
   "license": "BSD-2-Clause",
   "scripts": {
     "pretest": "npm install",
-    "postinstall": "grunt",
+    "grunt": "grunt",
+    "grunt:develop": "grunt deploy",
+    "grunt:deploy": "grunt develop",
     "test": "node node_modules/karma/bin/karma start src/main/webapp/tests/karma.conf.js --single-run --browsers ChromeHeadlessNoSandbox,Firefox",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
@@ -20,7 +22,7 @@
   },
   "dependencies": {
     "angular-ui-tinymce": "0.0.19",
-    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#2x",
+    "weaver-ui-core": "git+https://github.com/TAMULib/Weaver-UI-Core.git#2.x",
     "file-saver": "1.3.3",
     "ng-csv": "0.3.6",
     "ng-sortable": "1.3.8",

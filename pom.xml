@@ -564,10 +564,14 @@
 
               <!-- Grunt Default -->
               <execution>
-                <id>exec-grunt-deploy</id>
+                <id>exec-npm-run-grunt</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt${grunt-extension}</executable>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>grunt</argument>
+                  </arguments>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -645,12 +649,13 @@
 
               <!-- Grunt Deploy -->
               <execution>
-                <id>exec-grunt-deploy</id>
+                <id>exec-npm-run-grunt-deploy</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt${grunt-extension}</executable>
+                  <executable>npm${npm-extension}</executable>
                   <arguments>
-                    <argument>deploy</argument>
+                    <argument>run</argument>
+                    <argument>grunt:deploy</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -713,10 +718,14 @@
 
               <!-- Grunt Default -->
               <execution>
-                <id>exec-grunt-deploy</id>
+                <id>exec-npm-run-grunt</id>
                 <phase>generate-sources</phase>
                 <configuration>
-                  <executable>grunt${grunt-extension}</executable>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>grunt</argument>
+                  </arguments>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
