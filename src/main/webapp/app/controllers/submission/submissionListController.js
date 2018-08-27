@@ -581,56 +581,30 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             query();
         };
 
-        $scope.columnOptions = {
-            accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
-                return true;
-            },
-            dragStart: function (event) {
-                event.source.itemScope.element.css('margin-top', '60px');
-            },
-            dragEnd: function (event) {
-                event.source.itemScope.element.css('margin-top', '');
-            },
-            itemMoved: function (event) {
-                if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
-                } else {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : null;
-                }
-                $scope.change = true;
-            },
-            orderChanged: function (event) {
-                $scope.change = true;
-            },
-            containment: '.customize-submission-list-columns',
-            containerPositioning: 'relative',
-            additionalPlaceholderClass: 'column-placeholder'
+        $scope.disableColumn = function(column) {
+            $scope.userColumns.splice($scope.userColumns.indexOf(column), 1);
+            $scope.columns.push(column);
+            $scope.change = true;
         };
 
-        $scope.filterColumnOptions = {
-            accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
-                return true;
-            },
-            dragStart: function (event) {
-                event.source.itemScope.element.css('margin-top', '60px');
-            },
-            dragEnd: function (event) {
-                event.source.itemScope.element.css('margin-top', '');
-            },
-            itemMoved: function (event) {
-                if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
-                } else {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisabled' : null;
-                }
-                $scope.filterChange = true;
-            },
-            orderChanged: function (event) {
-                $scope.filterChange = true;
-            },
-            containment: '.customize-filters',
-            containerPositioning: 'relative',
-            additionalPlaceholderClass: 'column-placeholder'
+        $scope.enableColumn = function(column) {
+            $scope.columns.splice($scope.columns.indexOf(column), 1);
+            $scope.userColumns.push(column);
+            $scope.change = true;
+        };
+
+        var disableFilter = function(column) {
+            filterColumns.userFilterColumns.splice(filterColumns.userFilterColumns.indexOf(column), 1);
+            filterColumns.inactiveFilterColumns.push(column);
+            $scope.filterChange = true;
+            column.status = !column.status ? 'previouslyDisplayed' : null;
+        };
+
+        var enableFilter = function(column) {
+            filterColumns.inactiveFilterColumns.splice(filterColumns.inactiveFilterColumns.indexOf(column), 1);
+            filterColumns.userFilterColumns.push(column);
+            $scope.filterChange = true;
+            column.status = !column.status ? 'previouslyDisabled' : null;
         };
 
         $scope.viewSubmission = function (submission) {
@@ -650,6 +624,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "saveFilter": $scope.saveFilter,
                 "savedFilters": savedFilters,
                 "filterColumns": filterColumns,
+                "disableFilter": disableFilter,
+                "enableFilter": enableFilter,
                 "getFilterColumnOptions": $scope.getFilterColumnOptions,
                 "saveUserFilters": $scope.saveUserFilters,
                 "getFilterChange": $scope.getFilterChange,
