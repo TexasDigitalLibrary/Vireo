@@ -1,4 +1,4 @@
-<form ng-submit="box.addFilter(column)" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}" autocomplete="off">
+<form ng-submit="box.addExactMatchFilter(column)" name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}" autocomplete="off">
     <input
         type="text"
         name="{{column.title.split(' ').join('')+'Value'}}"

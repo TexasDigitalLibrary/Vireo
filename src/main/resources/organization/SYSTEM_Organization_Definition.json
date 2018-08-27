@@ -786,7 +786,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_DATETIME"
+            "name":"INPUT_DEGREEDATE"
           },
           "repeatable":false,
           "overrideable":true,

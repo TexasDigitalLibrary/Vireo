@@ -82,7 +82,7 @@
   {
     "title": "Committee embargo approval date",
     "sort": "NONE",
-    "valuePath": ["approveEmbargo"],
+    "valuePath": ["approveEmbargoDate"],
     "status": null,
     "inputType": {
       "name": "INPUT_DATE"
@@ -91,10 +91,10 @@
   {
     "title": "Committee contact email",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["committeeContactEmail"],
     "status": null,
     "inputType": {
-      "name": "INPUT_TEXT"
+      "name": "INPUT_CONTACT"
     }
   },
   {
@@ -127,7 +127,7 @@
   {
     "title": "Last event",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["lastEvent"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"
@@ -146,6 +146,15 @@
     "title": "Search Box",
     "sort": "NONE",
     "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Exclude",
+    "sort": "NONE",
+    "valuePath": ["exclude"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

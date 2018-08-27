@@ -8,7 +8,7 @@
   <hr/>
   <a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
-  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
+  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover list-row-remove" id="etd-table">
     <thead class="header">
       <tr>
         <th ng-repeat="column in userColumns">
@@ -38,11 +38,7 @@
     <tfoot class="header">
       <tr>
         <th colspan="{{userColumns.length}}">
-          {{page.totalElements || 0}}
-          matching records displayed on
-          {{page.totalPages || 0}}
-          pages ({{page.count || 0}}
-          per page).
+          {{page.totalElements || 0}} matching records displayed on {{page.totalPages || 0}} pages ({{page.count || 0}} per page).
         </th>
       </tr>
     </tfoot>

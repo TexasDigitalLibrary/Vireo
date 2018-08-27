@@ -11,7 +11,17 @@
   {
     "name": "INPUT_CONTACT",
     "validationPattern": null,
-    "validationMessage": null
+    "validationMessage": null,
+    "validation": {
+        "name": {
+            "pattern": null,
+            "message": null
+        },
+        "email": {
+            "pattern": "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})|)$",
+            "message": "Field must be a valid email address"
+        }
+    }
   },
   {
     "name": "INPUT_TEXT_WITH_DEFINITION",
@@ -27,6 +37,11 @@
     "name": "INPUT_CHECKBOX",
     "validationPattern": "^(true|false)$",
     "validationMessage": "Checkboxes must be true or false"
+  },
+  {
+    "name": "INPUT_DEGREEDATE",
+    "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+    "validationMessage": "Dates must be in MMMM YYYY format"
   },
   {
     "name": "INPUT_DATETIME",

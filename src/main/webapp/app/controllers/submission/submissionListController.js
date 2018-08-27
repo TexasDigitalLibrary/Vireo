@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, $timeout, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, Submission, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -16,7 +16,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             100,
             200,
             400,
-            500
+            500,
+            1000
         ]
     };
 
@@ -124,6 +125,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var depositLocations = DepositLocationRepo.getAll();
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
+        var controlledVocabularies = ControlledVocabularyRepo.getAll();
 
         var userSettings = new UserSettings();
 
@@ -191,7 +193,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
 
         var addFilter = function (column, gloss) {
-            $scope.activeFilters.addFilter(column.title, $scope.furtherFilterBy[column.title.split(" ").join("")], gloss, column.exactMatch).then(function () {
+            var filterValue = $scope.furtherFilterBy[column.title.split(" ").join("")];
+            if (filterValue !== null) {
+                filterValue = filterValue.toString();
+            }
+            $scope.activeFilters.addFilter(column.title, filterValue, gloss, column.exactMatch).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
                 query();
             });
@@ -204,11 +210,21 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var addDateFilter = function (column) {
             var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, "MM/dd/yyyy");
+            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Degree Date" ? "MMMM yyyy" : "MM/dd/yyyy");
             dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
             dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
             $scope.activeFilters.addFilter(column.title, dateValue, dateGloss, false).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                query();
+            });
+        };
+
+         $scope.addRowFilter = function ($index, row) {
+            $scope.page.content.splice($index, 1);
+            var columnTitle = "Exclude";
+            var value = row.id.toString();
+            var gloss = "Submission #" + row.id;
+            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function () {
                 query();
             });
         };
@@ -277,12 +293,41 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             return value;
         };
 
+        var getAssigneeDisplayName = function (row) {
+            return row.assignee.firstName + " " + row.assignee.lastName;
+        };
+
         var getFiltersWithColumns = function() {
             return savedFilters.filter(function(filter) { return filter.columnsFlag; });
         };
 
         var getFiltersWithoutColumns = function() {
             return savedFilters.filter(function(filter) { return !filter.columnsFlag; });
+        };
+
+        var checkDisabled = function (dateAndMode) {
+            var disabled = true;
+
+            for (var h in controlledVocabularies) {
+                var cv = controlledVocabularies[h];
+                for (var i in cv.dictionary) {
+                    var dictionary = cv.dictionary[i];
+                    if (dictionary.name == dateAndMode.date.getMonth()) {
+                        disabled = false;
+                        break;
+                    }
+                }
+            }
+            return disabled;
+        };
+
+        var datepickerOptions = {
+            minMode: "month",
+            minViewMode: "month",
+            dateDisabled: checkDisabled,
+            customClass: function (dateAndMode) {
+                if (checkDisabled(dateAndMode)) return "disabled";
+            }
         };
 
         $scope.furtherFilterBy = {
@@ -300,7 +345,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "embargos": embargos,
             "assignableUsers": assignableUsers,
             "defaultLimit": 3,
-            "getTypeAheadByPredicateName": getTypeAheadByPredicateName
+            "getTypeAheadByPredicateName": getTypeAheadByPredicateName,
+            "datepickerOptions": datepickerOptions
         };
 
         $scope.advancedfeaturesBox = {
@@ -341,7 +387,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                             return getValueFromArray(value, col);
                         } else {
                             if (value !== null) {
-                                value = value[col.valuePath[i]];
+                                if (col.valuePath[0] === "assignee") {
+                                    value = getAssigneeDisplayName(row);
+                                } else {
+                                    value = value[col.valuePath[i]];
+                                }
                             }
                         }
                     }
@@ -353,7 +403,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.displaySubmissionProperty = function (row, col) {
             var value = $scope.getSubmissionProperty(row, col);
             if ($scope.isDateColumn(col)) {
-                value = $filter('date')(value, 'MMM dd, yyyy');
+                if(col.predicate === 'dc.date.created') {
+                    value = $filter('date')(value, 'MMMM yyyy');
+                } else {
+                    value = $filter('date')(value, 'MMM dd, yyyy');
+                }
             }
             return value;
         };
@@ -367,7 +421,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME');
+            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
         };
 
         $scope.getUserById = function (userId) {
@@ -584,7 +638,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         SidebarService.addBoxes([{
-                "title": "Now filtering By:",
+                "title": "Now Filtering By:",
                 "viewUrl": "views/sideboxes/nowfiltering.html",
                 "activeFilters": $scope.activeFilters,
                 "removeFilterValue": $scope.removeFilterValue

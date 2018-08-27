@@ -204,10 +204,20 @@ public class SubmissionListController {
     public ApiResponse removeFilterCriterion(@WeaverUser User user, @PathVariable String namedSearchFilterName, @RequestBody FilterCriterion filterCriterion) {
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
 
+        String filterValue = null;
         for (NamedSearchFilter namedSearchFilter : activeFilter.getNamedSearchFilters()) {
             if (namedSearchFilter.getName().equals(namedSearchFilterName)) {
                 for (FilterCriterion fc : namedSearchFilter.getFilters()) {
-                    if (fc.getValue().equals(filterCriterion.getValue()) && fc.getGloss().equals(filterCriterion.getGloss())) {
+                    filterValue = fc.getValue();
+                    if (filterValue == null) {
+                        if (filterCriterion.getValue() == null && fc.getGloss().equals(filterCriterion.getGloss())) {
+                            namedSearchFilter.removeFilter(fc);
+                            if (namedSearchFilter.getFilters().size() == 0) {
+                                activeFilter.removeNamedSearchFilter(namedSearchFilter);
+                            }
+                            break;
+                        }
+                    } else if (filterValue.equals(filterCriterion.getValue()) && fc.getGloss().equals(filterCriterion.getGloss())) {
                         namedSearchFilter.removeFilter(fc);
                         if (namedSearchFilter.getFilters().size() == 0) {
                             activeFilter.removeNamedSearchFilter(namedSearchFilter);

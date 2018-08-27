@@ -12,6 +12,7 @@
 	<div class="modal-body">
 		
 		<validatedinput
+			id="new-custom-action-label"
 			type="text"
 			model="modalData"
 			property="label"
@@ -23,6 +24,7 @@
 		</validatedinput>
 		
 		<validatedinput
+			id="new-is-student-visible"
 			type="checkbox"
 			model="modalData"
 			property="isStudentVisible"
@@ -41,7 +43,7 @@
 			class="btn btn-default" 
 			ng-click="resetCustomAction()">Cancel</button>
 		<button 
-			id="customAction-save" 
+			id="new-customAction-save" 
 			type="submit" 
 			class="btn btn-primary"
 			ng-disabled="forms.create.$invalid">Create</button>
