@@ -12,8 +12,8 @@
   "scripts": {
     "pretest": "npm install",
     "grunt": "grunt",
-    "grunt:develop": "grunt deploy",
-    "grunt:deploy": "grunt develop",
+    "grunt:develop": "grunt develop",
+    "grunt:deploy": "grunt deploy",
     "test": "node node_modules/karma/bin/karma start src/main/webapp/tests/karma.conf.js --single-run --browsers ChromeHeadlessNoSandbox,Firefox",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
