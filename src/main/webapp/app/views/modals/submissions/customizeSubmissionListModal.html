@@ -12,9 +12,9 @@
             <div class="col-sm-6">
                 <h4>Displayed Columns</h4>
                 <div class="column-background">
-                    <ul class="displayed-column-container list-unstyled" ng-model="userColumns">
-                        <li class="displayed-column" ng-repeat="column in userColumns" ng-click="disableColumn(column)">
-                            <span>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right"></span></span>
+                    <ul class="displayed-column-container" as-sortable="displayedColumnOptions" ng-model="userColumns">
+                        <li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in userColumns" ng-click="disableColumn(column)" as-sortable-item>
+                            <div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right"></span></div>
                         </li>
                     </ul>
                 </div>
@@ -22,9 +22,9 @@
             <div class="col-sm-6">
                 <h4>Disabled Columns</h4>
                 <div class="column-background">
-                    <ul class="disabled-column-container list-unstyled" ng-model="columns">
-                        <li class="disabled-column" ng-repeat="column in columns" ng-click="enableColumn(column)">
-                            <span><span class="glyphicon glyphicon-arrow-left pull-left"></span>&nbsp;{{column.title}}</span>
+                    <ul class="disabled-column-container" as-sortable="disabledColumnOptions" ng-model="columns">
+                        <li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in columns" ng-click="enableColumn(column)" as-sortable-item>
+                            <div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left"></span>&nbsp;{{column.title}}</div>
                         </li>
                     </ul>
                 </div>
