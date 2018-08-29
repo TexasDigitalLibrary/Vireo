@@ -50,8 +50,12 @@
     width: 20ch;
 }
 
-.field-profile .file-info .file-name{
+.field-profile .file-info .file-name {
   font-weight: bold;
+}
+
+.file-size {
+  white-space: nowrap;
 }
 
 .file-preview-container {
