@@ -55,7 +55,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 filterDelay: 0,
                 getData: function (params) {
                     start = window.performance.now();
-                    return SubmissionRepo.query(params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
+                    return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
                         angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
                         // NOTE: this causes way to many subscriptions!!!
                         // SubmissionRepo.addAll($scope.page.content);
@@ -121,7 +121,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var submissionStatuses = SubmissionStatusRepo.getAll();
         var documentTypes = DocumentTypeRepo.getAll();
         var customActionDefinitions = CustomActionDefinitionRepo.getAll();
-        var customActionValues = CustomActionValueRepo.getAll();
         var depositLocations = DepositLocationRepo.getAll();
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
@@ -576,9 +575,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             });
 
-            previousSortColumnToggled = sortColumn;
-
             query();
+
         };
 
         $scope.columnOptions = {

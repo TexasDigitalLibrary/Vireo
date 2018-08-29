@@ -274,15 +274,15 @@ main footer {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
 }
 
-.list-row-remove .glyphicon {
+tr.submission-list-row td span.glyphicon.glyphicon-remove-circle {
   color: $brand-danger;
-	margin: -8px 0 0 -35px;
-	padding: 8px;
-	visibility: hidden;
+  margin: -8px 0 0 -35px;
+  padding: 8px;
+  visibility: hidden;
 }
 
-.list-row-remove tr:hover .glyphicon {
-	visibility: visible;
+tr.submission-list-row:hover td span.glyphicon.glyphicon-remove-circle {
+  visibility: visible;
 }
 
 .pagination {
