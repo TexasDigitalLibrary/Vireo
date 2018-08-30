@@ -164,7 +164,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Submission update(Submission submission) {
-        submission = super.update(submission);
+        submission = submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
         return submission;
     }
@@ -244,7 +244,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         }
 
-        super.update(submission);
+        submission = update(submission);
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
