@@ -12,12 +12,20 @@
 
                 <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.sendEmailToRecipient&&addCommentModal.commentVisiblity==='public'}">
                     <label>To:</label>
-                    <input type="text" class="form-control" ng-model="addCommentModal.recipientEmail" />
+                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+                    <div class="input-group">
+                        <input type="email" class="form-control" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" />
+                        <span title="Add Email" ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(recipientEmail,recipientEmails);recipientEmail=''"></span>
+                    </div>
                 </div>
 
                 <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.sendEmailToCCRecipient&&addCommentModal.commentVisiblity==='public'}">
                     <label>CC:</label>
-                    <input type="text" class="form-control" ng-model="addCommentModal.ccRecipientEmail" />
+                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+                    <div class="input-group">
+                        <input type="email" class="form-control" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" />
+                        <span title="Add Email" ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus toggle-href" ng-click="addEmailAddressee(ccRecipientEmail,ccRecipientEmails);ccRecipientEmail=''"></span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -26,7 +34,7 @@
                 </div>
 
                 <div class="form-group comment-body">
-                    <textarea class="form-control" ng-model="addCommentModal.message"></textarea>
+                    <textarea class="form-control" placeholder="Compose comment here..." ng-model="addCommentModal.message"></textarea>
                 </div>
 
                 <div class="form-group email-template">
@@ -42,10 +50,10 @@
 
                     <div class="recipient-options email-element" ng-class="{'email-active': addCommentModal.commentVisiblity==='public'}">
                         <div class="checkbox">
-                          <label><input type="checkbox" ng-model="addCommentModal.sendEmailToRecipient" ng-change="!addCommentModal.sendEmailToRecipient?addCommentModal.sendEmailToCCRecipient=sendEmailToRecipient:addCommentModal.sendEmailToCCRecipient=addCommentModal.sendEmailToCCRecipient">Add Email Recipient</label>
+                          <label><input type="checkbox" ng-model="addCommentModal.sendEmailToRecipient" ng-change="!addCommentModal.sendEmailToRecipient?addCommentModal.sendEmailToCCRecipient=sendEmailToRecipient:addCommentModal.sendEmailToCCRecipient=addCommentModal.sendEmailToCCRecipient">Add Email Recipients</label>
                         </div>
                         <div class="checkbox">
-                          <label><input type="checkbox" ng-model="addCommentModal.sendEmailToCCRecipient" ng-disabled="!addCommentModal.sendEmailToRecipient">Add CC Recipient</label>
+                          <label><input type="checkbox" ng-model="addCommentModal.sendEmailToCCRecipient" ng-disabled="!addCommentModal.sendEmailToRecipient">Add CC Recipients</label>
                         </div>
                     </div>
 
@@ -66,7 +74,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="resetCommentModal(addCommentModal)" ng-disabled="addCommentModal.adding">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="addComment(addCommentModal)" ng-disabled="addCommentModal.adding">
+        <button type="button" class="btn btn-primary" ng-click="addComment(addCommentModal)" ng-disabled="disableAddComment()">
             <span ng-if="!addCommentModal.adding">Comment</span>
             <span ng-if="addCommentModal.adding">
                 Adding Comment
