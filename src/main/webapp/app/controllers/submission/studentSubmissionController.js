@@ -27,6 +27,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
     });
 
     $scope.setActiveStep = function (step, hash) {
+        if ($scope.submitting) {
+            // do not allow changing the active step while submitting to prevent changing field values.
+            return;
+        }
 
         var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
         var reviewStepNum = $scope.submission.submissionWorkflowSteps.length + 1;
