@@ -86,12 +86,18 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
             });
         };
 
+        var protectedDocTypes = [
+            '_doctype_primary',
+            '_doctype_license',
+            '_doctype_archived'
+        ];
+
         $scope.removibleDocuments = function(fieldValue) {
-            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.fieldPredicate.value !== '_doctype_primary' && fieldValue.fieldPredicate.value !== '_doctype_license';
+            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldValue.fieldPredicate.value) < 0;
         };
 
         $scope.uploadableFieldPredicates = function(fieldPredicate) {
-            return fieldPredicate.documentTypePredicate && fieldPredicate.value !== '_doctype_primary' && fieldPredicate.value !== '_doctype_license';
+            return fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldPredicate.value) < 0;
         };
 
     });
