@@ -38,7 +38,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.save = function (fieldValue) {
                 // give typeahead select time to save the value
                 $timeout(function () {
-                    console.log($scope.profile);
                     // if the fieldProfileForm is undefined we have changed view, save the field value if not already updating
                     if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty || !$scope.profile.optional) && !fieldValue.updating) {
                         fieldValue.updating = true;
