@@ -1,4 +1,4 @@
-vireo.directive("info", function ($q,FieldValue) {
+vireo.directive("info", function () {
     return {
         templateUrl: 'views/directives/submissionInfo.html',
         restrict: 'E',
@@ -47,10 +47,8 @@ vireo.directive("info", function ($q,FieldValue) {
             };
 
             var save = function (fieldValue) {
-                return $q(function (resolve) {
-                    $scope.submission.saveFieldValue(fieldValue, $scope.fieldProfile).then(function (response) {
-                        delete fieldValue.updating;
-                    });
+                $scope.submission.saveFieldValue(fieldValue, $scope.fieldProfile).then(function (response) {
+                    delete fieldValue.updating;
                 });
             };
 

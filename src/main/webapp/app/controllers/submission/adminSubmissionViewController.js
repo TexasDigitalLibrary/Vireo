@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $q, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -53,6 +53,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
+
+        WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
+            var apiRes = angular.fromJson(res.body);
+            angular.merge($scope.submission, apiRes.payload.Submission);
+            $route.reload();
+        });
 
         $scope.title = $scope.submission.submitter.lastName + ', ' + $scope.submission.submitter.firstName + ' (' + $scope.submission.organization.name + ')';
 

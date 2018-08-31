@@ -425,7 +425,6 @@ public class SubmissionController {
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, user);
                 response = new ApiResponse(SUCCESS, submission);
-                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, response);
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
