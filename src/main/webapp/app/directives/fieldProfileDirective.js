@@ -227,11 +227,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
             $scope.getPreview = function (fieldValue) {
                 var preview;
                 if (fieldValue !== undefined && fieldValue.fileInfo !== undefined && fieldValue.fileInfo.type !== null) {
-                    if (fieldValue.fileInfo.type.includes("image/png")) {
+                    if (fieldValue.fileInfo.type.indexOf("image/png") >= 0) {
                         preview = "resources/images/png-logo.jpg";
-                    } else if (fieldValue.fileInfo.type.includes("image/jpeg")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("image/jpeg") >= 0) {
                         preview = "resources/images/jpg-logo.png";
-                    } else if (fieldValue.fileInfo.type.includes("pdf")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("pdf") >= 0) {
                         preview = "resources/images/pdf-logo.gif";
                     }
                 }

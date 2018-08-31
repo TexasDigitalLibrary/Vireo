@@ -9,10 +9,10 @@ vireo.directive("vireoTabs", function() {
 			this.activeTab = function(path) {
 				var active = false;
 				if($routeParams.id !== undefined) {
-					active = path.includes('/' + $routeParams.id + '/' + $routeParams.tab);
+					active = path.indexOf('/' + $routeParams.id + '/' + $routeParams.tab) >= 0;
 				}
 				else {
-					active = path.includes('/' + $routeParams.tab);
+					active = path.indexOf('/' + $routeParams.tab) >= 0;
 				}
 				return active;
 			};
