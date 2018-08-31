@@ -1,5 +1,10 @@
 <div class="input-group input-contact-value">
-	<input class="form-control" type="text" ng-model="field.value" placeholder="Input Name">
+  <input type="text"
+    class="form-control"
+    ng-model="field.value"
+    placeholder="Input Name"
+    uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
+    typeahead-on-select="saveWithCV(field, $item)"/>
 	<span class="input-group-addon glyphicon glyphicon-ok toggle-href" ng-click="saveContacts(field)"></span>
 	<span class="input-group-addon glyphicon glyphicon-remove toggle-href" ng-click="cancel(field)"></span>
 </div>

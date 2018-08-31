@@ -74,6 +74,7 @@ vireo.directive("info", function ($q,FieldValue) {
                 fieldValue.updating = true;
                 fieldValue.identifier = item.identifier;
                 fieldValue.definition = item.definition;
+                fieldValue.contacts = item.contacts;
                 save(fieldValue);
             };
 
