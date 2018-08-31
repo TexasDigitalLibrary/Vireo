@@ -22,6 +22,11 @@ vireo.config(function ($locationProvider, $routeProvider) {
         controller: 'CompleteSubmissionController',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
+    when('/submission/corrected', {
+        templateUrl: 'views/submission/submissionCorrected.html',
+        controller: 'CompleteSubmissionController',
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
+    }).
     when('/submission/:submissionId', {
         templateUrl: 'views/submission/submission.html',
         controller: 'StudentSubmissionController',
