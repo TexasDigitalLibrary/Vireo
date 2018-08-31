@@ -18,6 +18,7 @@
         <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
       </div>
     </div>
+
     <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
     <div class="file-info" ng-if="hasFile(fieldValue) || previewing">
       <p class="file-name">{{fieldValue.fileInfo.name}}</p>
@@ -45,6 +46,7 @@
       <dropzone file-model="files" text="Choose file here or drag and drop to upload" allow-multiple="true" patterns="{{getPattern()}}" drop-method="queueUpload(files)"></dropzone>
     </div>
   </div>
+  <div ng-if="!fieldValue.uploading && errorMessage" class="file-info text-danger">{{errorMessage}}</div>
   <div class="col-md-7 col-sm-12 file-preview-container" ng-if="previewing || hasFiles">
     <table class="table table-condensed table-hover multiple-file-upload-table">
       <thead>

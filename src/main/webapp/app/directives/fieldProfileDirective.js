@@ -175,31 +175,64 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 });
             };
 
+            var uploadFailed = function(fieldValue, reason) {
+                fieldValue.uploading = false;
+                fieldValue.setIsValid(false);
+                if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                    delete fieldValue.fileInfo.uploaded;
+                }
+                $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
+                $scope.cancelUpload();
+            };
+
             var upload = function (fieldValue) {
                 return $q(function (resolve) {
                     FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
-                        if ($scope.hasFile(fieldValue)) {
-                            $scope.submission.removeFile(fieldValue);
-                        }
-                        fieldValue.value = response.data.meta.message;
-                        fieldValue.fileInfo.uploaded = true;
-                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
-                            var apiRes = angular.fromJson(response.body);
-                            if(apiRes.meta.status === 'SUCCESS') {
-                                var newFieldValue = apiRes.payload.FieldValue;
-                                if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
-                                    $scope.submission.fetchDocumentTypeFileInfo();
-                                }
-                                fieldValue.uploading = false;
-                                resolve(true);
-                            } else {
-                                resolve(false);
+                        if (response.data.meta.status === 'SUCCESS') {
+                            if ($scope.hasFile(fieldValue)) {
+                                $scope.submission.removeFile(fieldValue);
                             }
-                        });
+                            fieldValue.value = response.data.meta.message;
+                            fieldValue.fileInfo.uploaded = true;
+                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
+                                var apiRes = angular.fromJson(response.body);
+                                if (apiRes.meta.status === 'SUCCESS') {
+                                    var newFieldValue = apiRes.payload.FieldValue;
+                                    if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
+                                        $scope.submission.fetchDocumentTypeFileInfo();
+                                    }
+                                    fieldValue.uploading = false;
+                                    resolve(true);
+                                } else {
+                                    if (apiRes.meta.message !== undefined) {
+                                        uploadFailed(fieldValue, apiRes.meta.message);
+                                    }
+                                    resolve(false);
+                                }
+                            });
+                        }
+                        else {
+                            if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                                uploadFailed(fieldValue, response.payload.meta.message);
+                            }
+                            else {
+                                uploadFailed(fieldValue, false);
+                            }
+                            resolve(false);
+                        }
                     }, function (response) {
-                        console.log('Error status: ' + response.status);
-                        $scope.errorMessage = response.data.meta.message;
-                        $scope.cancelUpload();
+                        var reason = false;
+                        var status = response.meta.status;
+                        if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                            reason = response.payload.meta.message;
+                            status = response.payload.meta.status;
+                        }
+                        else if (response.status !== undefined) {
+                            status = response.status;
+                        }
+
+                        console.log('Error status: ' + status);
+                        uploadFailed(fieldValue, reason);
                     }, function (progress) {
                         $scope.progress = progress;
                         fieldValue.progress = progress;

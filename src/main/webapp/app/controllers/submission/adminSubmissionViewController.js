@@ -48,6 +48,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.addCommentModal = {};
 
+    $scope.errorMessage = "";
+
     SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
@@ -196,11 +198,24 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         resetFileData();
 
         $scope.queueUpload = function (files) {
+            $scope.errorMessage = "";
             $scope.addFileData.files = files;
         };
 
         $scope.removeFiles = function () {
+            $scope.errorMessage = "";
             delete $scope.addFileData.files;
+        };
+
+        var uploadFailed = function(fieldValue, reason) {
+            $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
+            $scope.addFileData.uploading = false;
+            fieldValue.uploading = false;
+            fieldValue.setIsValid(false);
+            if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                delete fieldValue.fileInfo.uploaded;
+            }
+            fieldValue.refresh();
         };
 
         $scope.submitAddFile = function () {
@@ -232,39 +247,64 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             fieldValue.file = $scope.addFileData.files[0];
 
             FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
+                if (response.data.meta.status === 'SUCCESS') {
+                    var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
 
-                var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
+                    if ($scope.addFileData.addFileSelection === 'replace' && $scope.hasPrimaryDocument()) {
+                        FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue);
+                    }
 
-                if ($scope.addFileData.addFileSelection === 'replace' && $scope.hasPrimaryDocument()) {
-                    FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue);
+                    fieldValue.value = response.data.meta.message;
+
+                    $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
+                        var apiRes = angular.fromJson(response.body);
+                        if (apiRes.meta.status === "INVALID") {
+                            if (apiRes.meta.message !== undefined) {
+                                uploadFailed(fieldValue, apiRes.meta.message);
+                            }
+                            else {
+                                uploadFailed(fieldValue, false);
+                            }
+                        } else {
+                            if ($scope.addFileData.sendEmailToRecipient) {
+                                $scope.submission.sendEmail({
+                                    subject: $scope.addFileData.subject,
+                                    message: $scope.addFileData.message,
+                                    recipientEmail: $scope.recipientEmails.join(';'),
+                                    ccRecipientEmail: $scope.ccRecipientEmails.join(';'),
+                                    sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
+                                    sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
+                                }).then(function () {
+                                    $scope.resetAddFile();
+                                });
+                            } else {
+                                $scope.resetAddFile();
+                            }
+                        }
+                    });
+                }
+                else {
+                    if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                        uploadFailed(fieldValue, response.payload.meta.message);
+                    }
+                    else {
+                        uploadFailed(fieldValue, false);
+                    }
                 }
 
-                fieldValue.value = response.data.meta.message;
-
-                $scope.submission.saveFieldValue(fieldValue, fieldProfile).then(function (response) {
-                    var apiRes = angular.fromJson(response.body);
-                    if (apiRes.meta.status === "INVALID") {
-                        fieldValue.refresh();
-                    } else {
-                        if ($scope.addFileData.sendEmailToRecipient) {
-                            $scope.submission.sendEmail({
-                                subject: $scope.addFileData.subject,
-                                message: $scope.addFileData.message,
-                                recipientEmail: $scope.recipientEmails.join(';'),
-                                ccRecipientEmail: $scope.ccRecipientEmails.join(';'),
-                                sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
-                                sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
-                            }).then(function () {
-                                $scope.resetAddFile();
-                            });
-                        } else {
-                            $scope.resetAddFile();
-                        }
-                    }
-                });
-
             }, function (response) {
-                console.log('Error status: ' + response.status);
+                var reason = false;
+                var status = response.meta.status;
+                if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                    reason = response.payload.meta.message;
+                    status = response.payload.meta.status;
+                }
+                else if (response.status !== undefined) {
+                    status = response.status;
+                }
+
+                console.log('Error status: ' + status);
+                uploadFailed(fieldValue, reason);
             }, function (progress) {
                 $scope.addFileData.progress = progress;
             });
@@ -276,6 +316,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.resetAddFile = function () {
+            $scope.errorMessage = "";
             resetFileData();
             $scope.closeModal();
         };
@@ -285,52 +326,52 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             if ($scope.addFileData.addFileSelection == 'replace') {
                 if ($scope.addFileData.sendEmailToRecipient) {
                     if ($scope.addFileData.sendEmailToCCRecipient) {
-                        disable = $scope.addFileData.files === undefined || 
-                                  $scope.addFileData.uploading || 
-                                  $scope.recipientEmails.length === 0 || 
-                                  $scope.ccRecipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === undefined || 
-                                  $scope.addFileData.subject === "" || 
+                        disable = $scope.addFileData.files === undefined ||
+                                  $scope.addFileData.uploading ||
+                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.ccRecipientEmails.length === 0 ||
+                                  $scope.addFileData.subject === undefined ||
+                                  $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
                                   $scope.addFileData.message === "";
                     } else {
-                        disable = $scope.addFileData.files === undefined || 
-                                  $scope.addFileData.uploading || 
-                                  $scope.recipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === undefined || 
-                                  $scope.addFileData.subject === "" || 
+                        disable = $scope.addFileData.files === undefined ||
+                                  $scope.addFileData.uploading ||
+                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.addFileData.subject === undefined ||
+                                  $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
                                   $scope.addFileData.message === "";
                     }
                 } else {
-                    disable = $scope.addFileData.files === undefined || 
+                    disable = $scope.addFileData.files === undefined ||
                               $scope.addFileData.uploading;
                 }
             } else {
                 if ($scope.addFileData.sendEmailToRecipient) {
                     if ($scope.addFileData.sendEmailToCCRecipient) {
-                        disable = $scope.addFileData.files === undefined || 
-                                  $scope.addFileData.fieldPredicate == undefined || 
-                                  $scope.addFileData.uploading || 
-                                  $scope.recipientEmails.length === 0 || 
-                                  $scope.ccRecipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === undefined || 
-                                  $scope.addFileData.subject === "" || 
+                        disable = $scope.addFileData.files === undefined ||
+                                  $scope.addFileData.fieldPredicate == undefined ||
+                                  $scope.addFileData.uploading ||
+                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.ccRecipientEmails.length === 0 ||
+                                  $scope.addFileData.subject === undefined ||
+                                  $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
                                   $scope.addFileData.message === "";
                     } else {
-                        disable = $scope.addFileData.files === undefined || 
-                                  $scope.addFileData.fieldPredicate == undefined || 
-                                  $scope.addFileData.uploading || 
-                                  $scope.recipientEmails.length === 0 || 
-                                  $scope.addFileData.subject === undefined || 
-                                  $scope.addFileData.subject === "" || 
+                        disable = $scope.addFileData.files === undefined ||
+                                  $scope.addFileData.fieldPredicate == undefined ||
+                                  $scope.addFileData.uploading ||
+                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.addFileData.subject === undefined ||
+                                  $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
                                   $scope.addFileData.message === "";
                     }
                 } else {
-                    disable = $scope.addFileData.files === undefined || 
-                              $scope.addFileData.fieldPredicate == undefined || 
+                    disable = $scope.addFileData.files === undefined ||
+                              $scope.addFileData.fieldPredicate == undefined ||
                               $scope.addFileData.uploading;
                 }
             }
@@ -362,6 +403,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 $scope.getFile($scope.submission.primaryDocumentFieldValue);
             },
             "uploadNewFile": function () {
+                $scope.errorMessage = "";
                 $scope.openModal('#addFileModal');
             },
             "gotoAllFiles": function () {

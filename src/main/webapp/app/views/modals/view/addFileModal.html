@@ -19,6 +19,7 @@
 
         <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="pdf" drop-method="queueUpload(files)"></dropzone>
 
+        <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
         <div ng-if="addFileData.files">
           <button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
           <label>Name:</label>
@@ -99,6 +100,7 @@
 
       <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="*" drop-method="queueUpload(files)"></dropzone>
 
+      <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
       <div ng-if="addFileData.files">
         <button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
         <label>Name:</label>
