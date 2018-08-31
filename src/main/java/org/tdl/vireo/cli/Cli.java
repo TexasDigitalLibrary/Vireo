@@ -31,7 +31,11 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
 /**
- * Activate the Vireo command line interface by passing the console argument to Maven mvn clean spring-boot:run -Drun.arguments=console NOTE: will enable allow submissions on institution
+ * Activate the Vireo command line interface by passing the console argument to Maven 
+ *
+ * mvn clean spring-boot:run -Drun.arguments=console
+ * 
+ * NOTE: will enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
