@@ -162,7 +162,7 @@ public class SubmissionController {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
 
@@ -256,9 +256,9 @@ public class SubmissionController {
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-        
+
         String recipientEmails = new String();
-        
+
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
@@ -352,7 +352,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
@@ -370,6 +370,17 @@ public class SubmissionController {
         }
 
         return apiResponse;
+    }
+
+    private String convertBoolean(final String value) {
+        String result = value;
+        if (result.equals("true")) {
+            result = "Yes";
+        }
+        if (result.equals("false")) {
+            result = "No";
+        }
+        return result;
     }
 
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
