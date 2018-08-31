@@ -167,7 +167,15 @@
   max-height: 0;
   overflow: hidden;
   margin: 0;
-  transition: max-height 0.35s linear, margin 0.35s linear;
+  transition: max-height 0.35s linear;
+}
+
+.email-element .input-group-addon.glyphicon {
+  top: 0;
+}
+
+.email-element .input-group-addon.glyphicon.disabled {
+  color: #ababab;
 }
 
 .recipient-options .checkbox {
@@ -180,7 +188,7 @@
   max-height: 100px;
   overflow: hidden;
   margin: 18px 0;
-  transition: max-height 0.35s linear, margin 0.35s linear;
+  transition: max-height 0.35s linear;
 }
 
 div .item-view div.row h1 span.spinning {
