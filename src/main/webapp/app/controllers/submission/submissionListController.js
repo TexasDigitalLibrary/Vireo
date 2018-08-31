@@ -55,7 +55,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 filterDelay: 0,
                 getData: function (params) {
                     start = window.performance.now();
-                    return SubmissionRepo.query(params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
+                    return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
                         angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
                         // NOTE: this causes way to many subscriptions!!!
                         // SubmissionRepo.addAll($scope.page.content);
@@ -180,8 +180,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                                 var cv = currentFieldProfile.controlledVocabularies[k];
                                 for (var l in cv.dictionary) {
                                     var dictionary = cv.dictionary[l];
-                                    if (words.indexOf(cv.dictionary[l].name) == -1) {
-                                        words.push(cv.dictionary[l].name);
+                                    if (words.indexOf(dictionary.name) == -1) {
+                                        words.push(dictionary.name);
                                     }
                                 }
                             }
@@ -575,9 +575,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             });
 
-            previousSortColumnToggled = sortColumn;
-
             query();
+
         };
 
         var createDisplayedColumnOptions = function() {

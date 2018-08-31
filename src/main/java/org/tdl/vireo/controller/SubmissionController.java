@@ -162,7 +162,7 @@ public class SubmissionController {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
 
@@ -256,9 +256,9 @@ public class SubmissionController {
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-        
+
         String recipientEmails = new String();
-        
+
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
@@ -745,13 +745,12 @@ public class SubmissionController {
     }
 
     @JsonView(ApiView.Partial.class)
-    @RequestMapping("/query/{page}/{size}")
+    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
         long startTime = System.nanoTime();
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");
