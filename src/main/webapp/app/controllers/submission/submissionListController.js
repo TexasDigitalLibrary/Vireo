@@ -123,7 +123,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var submissionStatuses = SubmissionStatusRepo.getAll();
         var documentTypes = DocumentTypeRepo.getAll();
         var customActionDefinitions = CustomActionDefinitionRepo.getAll();
-        var customActionValues = CustomActionValueRepo.getAll();
         var depositLocations = DepositLocationRepo.getAll();
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
@@ -500,10 +499,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             $scope.closeModal();
         };
 
-        $scope.getFilterColumnOptions = function () {
-            return $scope.filterColumnOptions;
-        };
-
         $scope.getFilterChange = function () {
             return $scope.filterChange;
         };
@@ -585,57 +580,77 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             query();
         };
 
-        $scope.columnOptions = {
-            accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
-                return true;
-            },
-            dragStart: function (event) {
-                event.source.itemScope.element.css('margin-top', '60px');
-            },
-            dragEnd: function (event) {
-                event.source.itemScope.element.css('margin-top', '');
-            },
-            itemMoved: function (event) {
-                if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
-                } else {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'pervisoulyDisabled' : null;
-                }
-                $scope.change = true;
-            },
-            orderChanged: function (event) {
-                $scope.change = true;
-            },
-            containment: '.customize-submission-list-columns',
-            containerPositioning: 'relative',
-            additionalPlaceholderClass: 'column-placeholder'
+        var createDisplayedColumnOptions = function() {
+            return {
+                accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
+                    return true;
+                },
+                itemMoved: function (event) {
+                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : undefined;
+                    $scope.change = true;
+                },
+                orderChanged: function (event) {
+                    $scope.change = true;
+                },
+                containment: 'displayed-column-container',
+                containerPositioning: 'relative',
+                additionalPlaceholderClass: 'column-placeholder'
+            };
         };
 
-        $scope.filterColumnOptions = {
-            accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
-                return true;
-            },
-            dragStart: function (event) {
-                event.source.itemScope.element.css('margin-top', '60px');
-            },
-            dragEnd: function (event) {
-                event.source.itemScope.element.css('margin-top', '');
-            },
-            itemMoved: function (event) {
-                if (event.source.sortableScope.$id < event.dest.sortableScope.$id) {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : null;
-                } else {
-                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisabled' : null;
-                }
-                $scope.filterChange = true;
-            },
-            orderChanged: function (event) {
-                $scope.filterChange = true;
-            },
-            containment: '.customize-filters',
-            containerPositioning: 'relative',
-            additionalPlaceholderClass: 'column-placeholder'
+        var createDisabledColumnOptions = function() {
+            return {
+                accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
+                    return true;
+                },
+                itemMoved: function (event) {
+                    event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisabled' : undefined;
+                    $scope.change = true;
+                },
+                orderChanged: function (event) {
+                    $scope.change = true;
+                },
+                containment: 'disabled-column-container',
+                containerPositioning: 'relative',
+                additionalPlaceholderClass: 'column-placeholder'
+            };
         };
+
+        $scope.disableColumn = function(column) {
+            $scope.userColumns.splice($scope.userColumns.indexOf(column), 1);
+            $scope.columns.push(column);
+            $scope.change = true;
+            column.status = !column.status ? 'previouslyDisplayed' : undefined;
+        };
+
+        $scope.enableColumn = function(column) {
+            $scope.columns.splice($scope.columns.indexOf(column), 1);
+            $scope.userColumns.push(column);
+            $scope.change = true;
+            column.status = !column.status ? 'previouslyDisabled' : undefined;
+        };
+
+        $scope.displayedColumnOptions = createDisplayedColumnOptions();
+
+        $scope.disabledColumnOptions = createDisabledColumnOptions();
+
+        var disableFilter = function(column) {
+            filterColumns.userFilterColumns.splice(filterColumns.userFilterColumns.indexOf(column), 1);
+            filterColumns.inactiveFilterColumns.push(column);
+            $scope.filterChange = true;
+            column.status = !column.status ? 'previouslyDisplayed' : undefined;
+        };
+
+        var enableFilter = function(column) {
+            filterColumns.inactiveFilterColumns.splice(filterColumns.inactiveFilterColumns.indexOf(column), 1);
+            filterColumns.userFilterColumns.push(column);
+            $scope.filterChange = true;
+            column.status = !column.status ? 'previouslyDisabled' : undefined;
+        };
+
+        var displayedFilterColumnOptions = createDisplayedColumnOptions();
+
+        var disabledFilterColumnOptions = createDisabledColumnOptions();
 
         $scope.viewSubmission = function (submission) {
             $location.path("/admin/view/" + submission.id + "/" + submission.submissionWorkflowSteps[0].id);
@@ -654,7 +669,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "saveFilter": $scope.saveFilter,
                 "savedFilters": savedFilters,
                 "filterColumns": filterColumns,
-                "getFilterColumnOptions": $scope.getFilterColumnOptions,
+                "disableFilter": disableFilter,
+                "enableFilter": enableFilter,
+                "displayedFilterColumnOptions": displayedFilterColumnOptions,
+                "disabledFilterColumnOptions": disabledFilterColumnOptions,
                 "saveUserFilters": $scope.saveUserFilters,
                 "getFilterChange": $scope.getFilterChange,
                 "resetSaveFilter": $scope.resetSaveFilter,
