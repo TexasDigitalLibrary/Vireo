@@ -31,15 +31,10 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
 /**
- * Activate the Vireo command line interface by passing the console argument to Maven
- * 
- * mvn clean spring-boot:run -Drun.arguments=console
- * 
- * NOTE: will enable allow submissions on institution
+ * Activate the Vireo command line interface by passing the console argument to Maven mvn clean spring-boot:run -Drun.arguments=console NOTE: will enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
- *
  */
 @Component
 public class Cli implements CommandLineRunner {
@@ -129,8 +124,6 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
-                    Random random = new Random();
-
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
@@ -142,13 +135,18 @@ public class Cli implements CommandLineRunner {
                         credentials.setRole(Role.ROLE_STUDENT.name());
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
-                        
+
+                        sub.setSubmissionDate(getRandomDate());
+                        sub.setApproveAdvisorDate(getRandomDate());
+                        sub.setApproveApplicationDate(getRandomDate());
+                        sub.setApproveEmbargoDate(getRandomDate());
+
                         Calendar date = Calendar.getInstance();
                         String entry = new String("Submission created.");
                         ActionLog log = actionLogRepo.create(sub, date, entry, false);
                         log.setActionDate(date);
                         log.setEntry(entry);
-                        
+
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
@@ -167,22 +165,10 @@ public class Cli implements CommandLineRunner {
                                     val.setValue("test" + pred.getValue() + i + "@mailinator.com");
                                     sub.addFieldValue(val);
                                     break;
+                                case "INPUT_DEGREEDATE":
                                 case "INPUT_DATETIME":
                                     val = fieldValueRepo.create(pred);
-
-                                    Calendar calendar = Calendar.getInstance();
-
-                                    calendar.add(Calendar.YEAR, -random.nextInt(10));
-
-                                    int rm = random.nextInt(10);
-                                    if (random.nextInt(2) == 2) {
-                                        rm = -rm;
-                                    }
-
-                                    calendar.add(Calendar.MONTH, rm);
-
-                                    calendar.add(Calendar.DATE, random.nextInt(32 - calendar.get(Calendar.DAY_OF_MONTH)));
-
+                                    Calendar calendar = getRandomDate();
                                     val.setValue(format.format(calendar.getTime()));
                                     sub.addFieldValue(val);
                                     break;
@@ -217,5 +203,18 @@ public class Cli implements CommandLineRunner {
             reader.close();
 
         }
+    }
+
+    private Calendar getRandomDate() {
+        Random random = new Random();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.YEAR, -random.nextInt(10));
+        int rm = random.nextInt(10);
+        if (random.nextInt(2) == 2) {
+            rm = -rm;
+        }
+        date.add(Calendar.MONTH, rm);
+        date.add(Calendar.DATE, random.nextInt(32 - date.get(Calendar.DAY_OF_MONTH)));
+        return date;
     }
 }
