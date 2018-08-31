@@ -211,8 +211,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
             $scope.addFileData.uploading = false;
             fieldValue.uploading = false;
-            fieldValue.fileInfo.uploaded = false;
             fieldValue.setIsValid(false);
+            if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                delete fieldValue.fileInfo.uploaded;
+            }
             fieldValue.refresh();
         };
 

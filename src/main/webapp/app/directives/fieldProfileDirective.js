@@ -177,8 +177,10 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
 
             var uploadFailed = function(fieldValue, reason) {
                 fieldValue.uploading = false;
-                fieldValue.fileInfo.uploaded = false;
                 fieldValue.setIsValid(false);
+                if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                    delete fieldValue.fileInfo.uploaded;
+                }
                 $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
                 $scope.cancelUpload();
             };
