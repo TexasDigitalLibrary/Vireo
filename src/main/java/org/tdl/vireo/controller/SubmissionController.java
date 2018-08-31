@@ -376,8 +376,7 @@ public class SubmissionController {
         String result = value;
         if (result.equals("true")) {
             result = "Yes";
-        }
-        if (result.equals("false")) {
+        } else if (result.equals("false")) {
             result = "No";
         }
         return result;
