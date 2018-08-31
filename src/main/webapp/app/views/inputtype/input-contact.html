@@ -5,6 +5,7 @@
     ng-required="!profile.optional" 
     ng-model="fieldValue.value"
     ng-disabled="fieldValue.updating"
+    ng-blur="saveContacts(fieldValue)"
     placeholder="Input Name"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
