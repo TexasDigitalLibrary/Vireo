@@ -48,9 +48,9 @@ vireo.directive("validatedinput", function ($timeout) {
             };
 
             var update = function () {
-                if ($scope.confirm !== undefined) {
+                if ($scope.confirm) {
                     $scope.inProgress = true;
-                    $scope.confirm().then(function () {
+                    $q.when($scope.confirm()).then(function () {
                         $timeout(function () {
                             $scope.inProgress = false;
                         }, 500);
@@ -68,9 +68,7 @@ vireo.directive("validatedinput", function ($timeout) {
             $scope.keydown = function ($event) {
                 // enter(13): submit value to be persisted
                 if ($event.which == 13 && $scope.formView && getForm().$valid) {
-                    if ($scope.confirm !== undefined) {
-                        update();
-                    }
+                    update();
                 }
                 // escape(27): reset value using shadow
                 else if ($event.which == 27) {
@@ -82,17 +80,13 @@ vireo.directive("validatedinput", function ($timeout) {
 
             $scope.blur = function ($event) {
                 if ($scope.formView && getForm().$valid) {
-                    if ($scope.confirm !== undefined) {
-                        update();
-                    }
+                    update();
                 }
             };
 
             $scope.change = function ($event) {
                 if (getForm().$valid) {
-                    if ($scope.confirm !== undefined) {
-                        update();
-                    }
+                    update();
                 }
             };
 

@@ -352,7 +352,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
@@ -370,6 +370,16 @@ public class SubmissionController {
         }
 
         return apiResponse;
+    }
+
+    private String convertBoolean(final String value) {
+        String result = value;
+        if (result.equals("true")) {
+            result = "Yes";
+        } else if (result.equals("false")) {
+            result = "No";
+        }
+        return result;
     }
 
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
