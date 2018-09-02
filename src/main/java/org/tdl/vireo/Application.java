@@ -34,7 +34,7 @@ public class Application extends SpringBootServletInitializer {
         application.run(args);
     }
 
-    @Value("${app.assets.path:classpath:/}")
+    @Value("${app.assets.uri:classpath:/}")
     public void setup(Resource assets) throws IOException, URISyntaxException {
 
         System.out.println("\n\n\n\n\nASSETS URI: " + assets.getURI() + "\n\n\n\n\n");
@@ -55,7 +55,7 @@ public class Application extends SpringBootServletInitializer {
 
         assetsPath = resourceUriPath.isPresent() ? resourceUriPath.get() : rootPath;
 
-        System.setProperty("spring.config.location", "file:/" + rootPath + "conf/");
+        System.setProperty("spring.config.location", "file:/" + assetsPath + "conf/");
 
         System.out.println("\n\n\n\n\nASSETS PATH: " + assetsPath + "\n\n\n\n\n");
 

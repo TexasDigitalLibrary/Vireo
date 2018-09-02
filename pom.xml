@@ -30,7 +30,9 @@
     <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
     <maven-filtering-version>3.1.1</maven-filtering-version>
     <production>false</production>
-    <assets.path>classpath:/</assets.path>
+    <!-- must be valid uri with schema file or classpath -->
+    <!-- i.e. file://var/vireo/assets/ -->
+    <assets.uri>classpath:/</assets.uri>
   </properties>
 
   <packaging>war</packaging>
