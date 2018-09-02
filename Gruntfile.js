@@ -250,7 +250,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'copy:styles', 'clean', 'symlink', 'watch']);
 
     grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
 

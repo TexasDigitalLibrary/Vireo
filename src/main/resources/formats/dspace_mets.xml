@@ -157,7 +157,7 @@
               th:each="fv,iter : ${ SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES }"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id }, 
                        ID=${ 'piper-mets-file-' + fv.id },
-                       MIMETYPE=${ FILE_HELPER.getMimeType(fv.value) },
+                       MIMETYPE=${ FILE_HELPER.getMimeTypeOfAsset(fv.value) },
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
@@ -172,7 +172,7 @@
               th:each="fv,iter : ${ LICENSE_DOCUMENT_FIELD_VALUES }"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id }, 
                        ID=${ 'piper-mets-file-' + fv.id },
-                       MIMETYPE=${ FILE_HELPER.getMimeType(fv.value) },
+                       MIMETYPE=${ FILE_HELPER.getMimeTypeOfAsset(fv.value) },
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"

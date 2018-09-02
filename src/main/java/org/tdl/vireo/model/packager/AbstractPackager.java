@@ -55,7 +55,7 @@ public abstract class AbstractPackager<EP extends ExportPackage> extends BaseEnt
     }
 
     protected Path getAbsolutePath(String relativePath) {
-        return Paths.get(FileHelperUtility.getPath(relativePath));
+        return Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath));
     }
 
     public EP packageExport(Submission submission, List<SubmissionListColumn> columns) throws UnsupportedFormatterException {

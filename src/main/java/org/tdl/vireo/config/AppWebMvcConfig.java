@@ -1,5 +1,6 @@
 package org.tdl.vireo.config;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.catalina.connector.Connector;
@@ -33,17 +34,20 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo", "edu.tamu.weaver.wro.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private List<HttpMessageConverter<?>> converters;
+
     @Value("${app.ui.path}")
     private String path;
 
     @Value("${info.build.production:false}")
     private boolean production;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private List<HttpMessageConverter<?>> converters;
+    @Value("${app.public.folder:public}")
+    private String publicFolder;
 
     @Bean
     public ServletRegistrationBean h2servletRegistration() {
@@ -68,10 +72,14 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (!production) {
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
+            System.out.println("\n\n/node_modules/** -> " + "file:" + Application.getRootPath() + "node_modules" + File.separator + "\n\n");
+            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.getRootPath() + "node_modules" + File.separator);
         }
-        registry.addResourceHandler("/**").addResourceLocations(path + "/");
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
+
+        System.out.println("\n\n/public/** -> " + "file:" + Application.getAssetsPath() + publicFolder + File.separator + "\n\n");
+
+        registry.addResourceHandler("/**").addResourceLocations(path + File.separator);
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + File.separator);
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

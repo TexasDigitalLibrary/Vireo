@@ -484,7 +484,7 @@ public abstract class AbstractEntityTest {
 
     protected FieldProfile fieldProfile;
 
-    protected Packager packager;
+    protected Packager<?> packager;
 
     private Credentials credentials;
 

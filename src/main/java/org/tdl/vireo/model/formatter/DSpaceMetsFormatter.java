@@ -42,7 +42,7 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
                 String primaryDocumentType = "application/pdf";
                 FieldValue primaryDocumentFieldValue = submission.getPrimaryDocumentFieldValue();
                 if (primaryDocumentFieldValue != null) {
-                    primaryDocumentType = fileHelperUtility.getMimeType(primaryDocumentFieldValue.getValue());
+                    primaryDocumentType = fileHelperUtility.getMimeTypeOfAsset(primaryDocumentFieldValue.getValue());
                 }
                 context.setVariable(key.name(), primaryDocumentType);
                 break;

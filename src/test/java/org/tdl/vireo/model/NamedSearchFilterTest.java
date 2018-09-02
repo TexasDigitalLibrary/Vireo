@@ -2,14 +2,13 @@ package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class NamedSearchFilterTest extends AbstractEntityTest {
 
@@ -41,7 +40,6 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testSetActiveFilter() {
 
         long numberOfNamedSearchFilterGroups = namedSearchFilterGroupRepo.count();

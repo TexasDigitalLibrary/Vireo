@@ -11,8 +11,16 @@ public class FileHelperUtility {
 
     private final Tika tika = new Tika();
 
-    public String getMimeType(String relativePath) {
-        Path path = Paths.get(getPath(relativePath));
+    public String getMimeTypeOfResource(String relativePath) {
+        return getMimeType(getResourceAbsolutePath(relativePath));
+    }
+
+    public String getMimeTypeOfAsset(String relativePath) {
+        return getMimeType(getAssetAbsolutePath(relativePath));
+    }
+
+    public String getMimeType(String absolutePath) {
+        Path path = Paths.get(absolutePath);
         return tika.detect(path.toString());
     }
 
@@ -21,8 +29,19 @@ public class FileHelperUtility {
         return tika.detect(path.toString());
     }
 
-    public static String getPath(String relativePath) {
-        String path = Application.BASE_PATH + relativePath;
+    public static String getResourceAbsolutePath(String relativePath) {
+        System.out.println("\n\nGET PATH: " + relativePath + "\n\n");
+        System.out.println("\n\nABSOLUTE PATH FROM ROOT: " + Application.getRootPath() + relativePath + "\n\n");
+        return cleanPath(Application.getRootPath() + relativePath);
+    }
+
+    public static String getAssetAbsolutePath(String relativePath) {
+        System.out.println("\n\nGET PATH: " + relativePath + "\n\n");
+        System.out.println("\n\nABSOLUTE PATH FROM ASSETS: " + Application.getAssetsPath() + relativePath + "\n\n");
+        return cleanPath(Application.getAssetsPath() + relativePath);
+    }
+
+    private static String cleanPath(String path) {
         if (path.contains(":") && path.charAt(0) == '/') {
             path = path.substring(1, path.length());
         }

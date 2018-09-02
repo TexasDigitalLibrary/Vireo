@@ -53,7 +53,7 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
-import org.tdl.vireo.utility.FileIOUtility;
+import org.tdl.vireo.utility.AssetService;
 
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
@@ -97,7 +97,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService fileIOUtility;
 
     private JdbcTemplate jdbcTemplate;
 

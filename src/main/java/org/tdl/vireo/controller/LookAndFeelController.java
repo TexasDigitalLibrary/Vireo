@@ -2,11 +2,13 @@ package org.tdl.vireo.controller;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,7 @@ import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.utility.FileIOUtility;
+import org.tdl.vireo.utility.AssetService;
 
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -36,7 +38,10 @@ public class LookAndFeelController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService fileIOUtility;
+
+    @Value("${app.public.folder:public}")
+    private String publicFolder;
 
     private String lookAndFeelType = "lookAndFeel";
 
@@ -47,7 +52,7 @@ public class LookAndFeelController {
         String logoFileName = setting + "." + fileType;
 
         // TODO: folder should be a configuration
-        String path = "public/" + configurationRepo.getByNameAndType(ConfigurationName.THEME_PATH, lookAndFeelType).getValue() + logoFileName;
+        String path = publicFolder + File.separator + configurationRepo.getByNameAndType(ConfigurationName.THEME_PATH, lookAndFeelType).getValue() + logoFileName;
 
         logger.info("Changing logo " + setting);
 

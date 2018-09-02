@@ -2,6 +2,7 @@ package org.tdl.vireo.cli;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +28,6 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import edu.tamu.weaver.auth.model.Credentials;
 
 /**
@@ -63,7 +63,6 @@ public class Cli implements CommandLineRunner {
     private ActionLogRepo actionLogRepo;
 
     @Override
-    @SuppressWarnings("unchecked")
     public void run(String... arg0) throws Exception {
         boolean runConsole = false;
         for (String s : arg0) {
@@ -142,13 +141,13 @@ public class Cli implements CommandLineRunner {
                         credentials.setRole(Role.ROLE_STUDENT.name());
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
-                        
+
                         Calendar date = Calendar.getInstance();
                         String entry = new String("Submission created.");
                         ActionLog log = actionLogRepo.create(sub, date, entry, false);
                         log.setActionDate(date);
                         log.setEntry(entry);
-                        
+
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
                                 FieldPredicate pred = fp.getFieldPredicate();
