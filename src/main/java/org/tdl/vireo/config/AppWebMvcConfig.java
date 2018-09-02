@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.h2.server.web.WebServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -33,6 +35,8 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @EntityScan(basePackages = { "org.tdl.vireo.model", "edu.tamu.weaver.wro.model" })
 @EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo", "edu.tamu.weaver.wro.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppWebMvcConfig.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -71,18 +75,14 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        System.out.println("\n\n\n\nPROPERTIES LOCATION: " + System.getProperty("spring.config.location") + "\n\n");
-
+        logger.info("PROPERTIES LOCATION: " + System.getProperty("spring.config.location"));
         if (!production) {
-            System.out.println("\n\n/node_modules/** -> " + "file:" + File.separator + File.separator + Application.getRootPath() + "node_modules" + File.separator + "\n\n");
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + File.separator + File.separator + Application.getRootPath() + "node_modules" + File.separator);
+            logger.info("/node_modules/** -> file:" + File.separator + Application.getRootPath() + "node_modules" + File.separator);
+            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + File.separator + Application.getRootPath() + "node_modules" + File.separator);
         }
-
-        System.out.println("\n\n/public/** -> " + "file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator + "\n\n");
-
+        logger.info("/public/** -> file:" + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
         registry.addResourceHandler("/**").addResourceLocations(path + File.separator);
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

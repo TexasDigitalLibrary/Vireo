@@ -24,7 +24,7 @@ $ mvn clean spring-boot:run -Dproduction
 
 ### Production
 ```bash
-$ mvn clean package -DskipTests -Dproduction
+$ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/
 ```
 If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
 
@@ -65,7 +65,7 @@ $ npm run test
 
 ### Server and Client
 ```bash
-$ mvn clean test -DtestClient
+$ mvn clean test -Dclient
 ```
 
 ### e2e
@@ -84,8 +84,8 @@ $ unzip ~/Vireo-4.0.x-SNAPSHOT-install.zip
 ### Directory Structure of installed package
 ```bash
 /opt/vireo$ ls
-drwxr-xr-x 2 root root 4096 Nov 11 11:54 attachments
 drwxr-xr-x 2 root root 4096 Oct  2 15:36 conf
+drwxr-xr-x 2 root root 4096 Nov 11 11:54 logs
 drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 ```
 * attachments -- where the server stores uploaded files
@@ -96,16 +96,18 @@ drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/vireo.war
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
 ```
 
 or as root:
+
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /var/lib/tomcat/webapps/ROOT.war
+$ cp ~/vireo-4.0.x-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 ```
 
 
 ## Running as a stand-alone Spring Boot application
+
 ```bash
 java -jar target/vireo-4.0.x-SNAPSHOT.war
 ```

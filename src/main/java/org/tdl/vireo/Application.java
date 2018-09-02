@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationHome;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +18,8 @@ import org.springframework.core.io.Resource;
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
 public class Application extends SpringBootServletInitializer {
+
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     // where to store public and private directories
     private static String assetsPath;
@@ -35,28 +39,19 @@ public class Application extends SpringBootServletInitializer {
 
     @Value("${app.assets.uri:classpath:/}")
     public void setup(Resource assets) throws IOException, URISyntaxException {
-
-        System.out.println("\n\n\n\n\nASSETS URI: " + assets.getURI() + "\n\n\n\n\n");
-
-        System.out.println("\n\n\n\n\nASSETS URI SCHEME PART: " + assets.getURI().getSchemeSpecificPart() + "\n\n\n\n\n");
-
-        System.out.println("\n\n\n\n\nASSETS URI SCHEME: " + assets.getURI().getScheme() + "\n\n\n\n\n");
-
         ApplicationHome HOME = new ApplicationHome(Application.class);
-
         if (assets.getURI().getScheme().equals("jar")) {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator;
         } else {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator + ".." + File.separator;
         }
-
-        assetsPath = assets.getURI().toString().replace(assets.getURI().getSchemeSpecificPart(), "");
+        assetsPath = assets.getURI().getSchemeSpecificPart();
+        assetsPath = assetsPath.substring(0, assetsPath.length() - 1);
 
         System.setProperty("spring.config.location", "file:" + File.separator + assetsPath + "conf/");
 
-        System.out.println("\n\n\n\n\nASSETS PATH: " + assetsPath + "\n\n\n\n\n");
-
-        System.out.println("\n\n\n\n\nROOT PATH: " + rootPath + "\n\n\n\n\n");
+        logger.info("ASSETS PATH: " + assetsPath);
+        logger.info("ROOT PATH: " + rootPath);
     }
 
     public static String getAssetsPath() {
