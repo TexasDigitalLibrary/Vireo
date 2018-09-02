@@ -55,6 +55,8 @@ public class Application extends SpringBootServletInitializer {
 
         assetsPath = resourceUriPath.isPresent() ? resourceUriPath.get() : rootPath;
 
+        System.setProperty("spring.config.location", "file:/" + rootPath + "conf/");
+
         System.out.println("\n\n\n\n\nASSETS PATH: " + assetsPath + "\n\n\n\n\n");
 
         System.out.println("\n\n\n\n\nROOT PATH: " + rootPath + "\n\n\n\n\n");

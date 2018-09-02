@@ -11,6 +11,13 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
+      <directory>./</directory>
+      <outputDirectory>logs</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
       <directory>./src/main/resources</directory>
       <outputDirectory>conf</outputDirectory>
       <includes>

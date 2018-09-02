@@ -71,6 +71,9 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        System.out.println("\n\n\n\nPROPERTIES LOCATION: " + System.getProperty("spring.config.location") + "\n\n");
+
         if (!production) {
             System.out.println("\n\n/node_modules/** -> " + "file:" + Application.getRootPath() + "node_modules" + File.separator + "\n\n");
             registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.getRootPath() + "node_modules" + File.separator);
