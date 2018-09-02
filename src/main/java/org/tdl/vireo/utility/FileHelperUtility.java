@@ -30,14 +30,10 @@ public class FileHelperUtility {
     }
 
     public static String getResourceAbsolutePath(String relativePath) {
-        System.out.println("\n\nGET PATH: " + relativePath + "\n\n");
-        System.out.println("\n\nABSOLUTE PATH FROM ROOT: " + Application.getRootPath() + relativePath + "\n\n");
         return cleanPath(Application.getRootPath() + relativePath);
     }
 
     public static String getAssetAbsolutePath(String relativePath) {
-        System.out.println("\n\nGET PATH: " + relativePath + "\n\n");
-        System.out.println("\n\nABSOLUTE PATH FROM ASSETS: " + Application.getAssetsPath() + relativePath + "\n\n");
         return cleanPath(Application.getAssetsPath() + relativePath);
     }
 

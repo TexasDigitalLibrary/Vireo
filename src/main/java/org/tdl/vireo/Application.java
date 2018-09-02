@@ -3,7 +3,6 @@ package org.tdl.vireo;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationHome;
@@ -39,11 +38,9 @@ public class Application extends SpringBootServletInitializer {
 
         System.out.println("\n\n\n\n\nASSETS URI: " + assets.getURI() + "\n\n\n\n\n");
 
-        System.out.println("\n\n\n\n\nASSETS URI PATH: " + assets.getURI().getPath() + "\n\n\n\n\n");
+        System.out.println("\n\n\n\n\nASSETS URI SCHEME PART: " + assets.getURI().getSchemeSpecificPart() + "\n\n\n\n\n");
 
         System.out.println("\n\n\n\n\nASSETS URI SCHEME: " + assets.getURI().getScheme() + "\n\n\n\n\n");
-
-        Optional<String> resourceUriPath = Optional.ofNullable(assets.getURI().getPath());
 
         ApplicationHome HOME = new ApplicationHome(Application.class);
 
@@ -53,9 +50,9 @@ public class Application extends SpringBootServletInitializer {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator + ".." + File.separator;
         }
 
-        assetsPath = resourceUriPath.isPresent() ? resourceUriPath.get() : rootPath;
+        assetsPath = assets.getURI().toString().replace(assets.getURI().getSchemeSpecificPart(), "");
 
-        System.setProperty("spring.config.location", "file:/" + assetsPath + "conf/");
+        System.setProperty("spring.config.location", "file:" + File.separator + assetsPath + "conf/");
 
         System.out.println("\n\n\n\n\nASSETS PATH: " + assetsPath + "\n\n\n\n\n");
 

@@ -31,7 +31,7 @@
     <maven-filtering-version>3.1.1</maven-filtering-version>
     <production>false</production>
     <!-- must be valid uri with schema file or classpath -->
-    <!-- i.e. file://var/vireo/assets/ -->
+    <!-- i.e. file://opt/vireo/ -->
     <assets.uri>classpath:/</assets.uri>
   </properties>
 

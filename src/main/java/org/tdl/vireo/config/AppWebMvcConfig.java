@@ -75,14 +75,14 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
         System.out.println("\n\n\n\nPROPERTIES LOCATION: " + System.getProperty("spring.config.location") + "\n\n");
 
         if (!production) {
-            System.out.println("\n\n/node_modules/** -> " + "file:" + Application.getRootPath() + "node_modules" + File.separator + "\n\n");
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.getRootPath() + "node_modules" + File.separator);
+            System.out.println("\n\n/node_modules/** -> " + "file:" + File.separator + File.separator + Application.getRootPath() + "node_modules" + File.separator + "\n\n");
+            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + File.separator + File.separator + Application.getRootPath() + "node_modules" + File.separator);
         }
 
-        System.out.println("\n\n/public/** -> " + "file:" + Application.getAssetsPath() + publicFolder + File.separator + "\n\n");
+        System.out.println("\n\n/public/** -> " + "file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator + "\n\n");
 
         registry.addResourceHandler("/**").addResourceLocations(path + File.separator);
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + File.separator);
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 
