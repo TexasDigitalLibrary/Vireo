@@ -45,8 +45,7 @@ public class Application extends SpringBootServletInitializer {
         } else {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator + ".." + File.separator;
         }
-        assetsPath = assets.getURI().getSchemeSpecificPart();
-        assetsPath = assetsPath.substring(0, assetsPath.length() - 1);
+        assetsPath = assets.getURI().getSchemeSpecificPart().substring(1);
 
         System.setProperty("spring.config.location", "file:" + File.separator + assetsPath + "conf/");
 
