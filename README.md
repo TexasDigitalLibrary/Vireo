@@ -8,21 +8,25 @@ The software is presently in a Beta release.  If you want to help with testing o
 ## Building Vireo 4
 
 ### Development
+
 ```bash
 $ mvn clean package
 ```
 
 or run for development:
+
 ```bash
 $ mvn clean spring-boot:run
 ```
 
 or run for production
+
 ```bash
 $ mvn clean spring-boot:run -Dproduction
 ```
 
 ### Production
+
 ```bash
 $ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/
 ```
@@ -54,27 +58,32 @@ LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
 ## Testing Vireo 4
 
 ### Server
+
 ```bash
 $ mvn clean test
 ```
 
 ### Client
+
 ```bash
 $ npm run test
 ```
 
 ### Server and Client
+
 ```bash
 $ mvn clean test -Dclient
 ```
 
 ### e2e
+
 ```bash
 $ mvn clean spring-boot:run
 $ npm run protractor
 ```
 
 ## Installing Zip Package to filesystem
+
 Unzip package into preferred directory (or any directory you choose):
 
 ```bash
@@ -96,26 +105,28 @@ drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 * webapp -- the extracted WAR file
 
 ## Installing WAR Package in Tomcat
+
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
+$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
 ```
 
 or as root:
 
 ```bash
-$ cp ~/vireo-4.0.x-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 ```
 
 
 ## Running as a stand-alone Spring Boot application
 
 ```bash
-java -jar target/vireo-4.0.x-SNAPSHOT.war
+java -jar target/vireo-4.0.0-SNAPSHOT.war
 ```
 
 ## Configuring
+
 There is an external `application.properties` file under the `conf` directory that you can modify to override the values in the built-in `application.properties`.
 
 **NOTE: The `conf` directory is only available if deployed from the ZIP package.**

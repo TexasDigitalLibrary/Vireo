@@ -19,9 +19,6 @@
       "email_reply_to":"dev@tdl.org"
     },
     {
-      "documents.path":"documents/"
-    },
-    {
       "hierarchical":"false"
     },
     {

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,9 @@ public class Application extends SpringBootServletInitializer {
     // where is root of the app, i.e. where node_modules is
     private static String rootPath;
 
+    @Value("${app.assets.uri:classpath:/}")
+    private Resource assets;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
@@ -37,8 +42,8 @@ public class Application extends SpringBootServletInitializer {
         application.run(args);
     }
 
-    @Value("${app.assets.uri:classpath:/}")
-    public void setup(Resource assets) throws IOException, URISyntaxException {
+    @PostConstruct
+    public void setup() throws IOException, URISyntaxException {
         ApplicationHome HOME = new ApplicationHome(Application.class);
         if (assets.getURI().getScheme().equals("jar")) {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator;
