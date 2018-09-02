@@ -511,7 +511,9 @@
     <profile>
       <id>development</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!production</name>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -593,9 +595,6 @@
 
     <profile>
       <id>production</id>
-      <properties>
-        <production>true</production>
-      </properties>
       <activation>
         <property>
           <name>production</name>
@@ -665,6 +664,11 @@
 
     <profile>
       <id>test-client</id>
+      <activation>
+        <property>
+          <name>client</name>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
@@ -672,54 +676,6 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>${exec-maven-plugin-version}</version>
             <executions>
-
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-              <!-- NPM Install -->
-              <execution>
-                <id>exec-npm-install</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>install</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
-              <!-- Grunt Default -->
-              <execution>
-                <id>exec-npm-run-grunt</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>run</argument>
-                    <argument>grunt</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
 
               <!-- Karma Testing for AngularJS -->
               <execution>
