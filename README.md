@@ -26,7 +26,7 @@ $ mvn clean spring-boot:run -Dproduction
 ```bash
 $ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/
 ```
-If all compile-time tests pass, you should have both a `vireo-4.0.x-SNAPSHOT.war` and a `Vireo-4.0.x-SNAPSHOT-install.zip` in the `target/` directory.
+If all compile-time tests pass, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory.
 
 #### Apache Reverse Proxy Config
 
@@ -76,18 +76,21 @@ $ npm run protractor
 
 ## Installing Zip Package to filesystem
 Unzip package into preferred directory (or any directory you choose):
+
 ```bash
 $ cd /opt/vireo
-$ unzip ~/Vireo-4.0.x-SNAPSHOT-install.zip
+$ unzip ~/vireo-4.0.0-SNAPSHOT-install.zip
 ```
 
 ### Directory Structure of installed package
+
 ```bash
 /opt/vireo$ ls
 drwxr-xr-x 2 root root 4096 Oct  2 15:36 conf
 drwxr-xr-x 2 root root 4096 Nov 11 11:54 logs
 drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 ```
+
 * attachments -- where the server stores uploaded files
 * conf -- where the external config files reside
 * webapp -- the extracted WAR file
@@ -119,4 +122,30 @@ There is an external `application.properties` file under the `conf` directory th
 
 **NOTE: If you need an external configuration file to the WAR file, you'll need to put a `conf` directory in the same directory as the WAR file (whether running inside tomcat or as stand-alone Spring Boot application).**
 
-**You should override the database config and the spring secret key.**
+**You should configure the following properties for production**
+
+* spring.datasource.platform
+* spring.datasource.url
+* spring.datasource.driverClassName
+* spring.jpa.database-platform
+* spring.datasource.username
+* spring.datasource.password
+* spring.jpa.hibernate.ddl-auto
+
+* app.url
+* app.assets.uri
+
+* app.authority.admins
+
+* auth.security.jwt.secret
+* auth.security.jwt.issuer
+* auth.security.jwt.duration
+
+* app.security.secret
+* app.security.allow-access
+
+* app.email.host
+* app.email.from
+* app.email.replyTo
+
+* app.reporting.address
