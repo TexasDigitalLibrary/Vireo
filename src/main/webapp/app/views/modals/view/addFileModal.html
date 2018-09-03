@@ -17,7 +17,7 @@
 
       <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'replace', 'section-closed': addFileData.addFileSelection !== 'replace'}">
 
-        <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="pdf" drop-method="queueUpload(files)"></dropzone>
+        <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="getPattern('_doctype_primary')" drop-method="queueUpload(files)"></dropzone>
 
         <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
         <div ng-if="addFileData.files">
@@ -93,12 +93,12 @@
 
       <div class="form-group">
         <label for="additionalDocumentFileName">New Document Type:</label>
-        <select id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentFieldPredicate.value">
+        <select id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in fieldPredicates | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentFieldPredicate.value" ng-selected="getPattern(addFileData.fieldPredicate.value)">
           <option value="">Select File Type...</option>
         </select>
       </div>
 
-      <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="*" drop-method="queueUpload(files)"></dropzone>
+      <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
 
       <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
       <div ng-if="addFileData.files">
