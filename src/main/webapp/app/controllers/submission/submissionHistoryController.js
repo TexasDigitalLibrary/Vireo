@@ -5,10 +5,10 @@ vireo.controller('SubmissionHistoryController', function($controller, $location,
   }));
 
   $scope.SubmissionStatuses = SubmissionStatuses;
+
   $scope.submissionToDelete = {};
 
   $scope.studentsSubmissions = StudentSubmissionRepo.getAll();
-
 
   var buildTable = function() {
     return new NgTableParams({}, {
@@ -21,10 +21,12 @@ vireo.controller('SubmissionHistoryController', function($controller, $location,
   StudentSubmissionRepo.ready().then(function() {
     $scope.tableParams = buildTable();
     $scope.tableParams.reload();
-  });
-
-  StudentSubmissionRepo.listen(function() {
-    $scope.tableParams.reload();
+    angular.forEach($scope.studentsSubmissions, function(submission) {
+      submission.listen(function(res) {
+        var apiRes = angular.fromJson(res.body);
+        angular.extend(submission, apiRes.payload.Submission);
+      });
+    });
   });
 
   $scope.getDocumentTitle = function(row) {

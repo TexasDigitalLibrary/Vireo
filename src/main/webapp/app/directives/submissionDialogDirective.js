@@ -20,7 +20,7 @@ vireo.directive("submissiondialog", function($anchorScroll, $location) {
                     $scope.submittingCorrections = true;
                     $scope.submission.submitCorrections().then(function(response) {
                         angular.extend($scope.submission, angular.fromJson(response.body).payload.Submission);
-                        $location.path("/submission/complete");
+                        $location.path("/submission/corrected");
                         $scope.submittingCorrections = false;
                         $scope.submitGloss.reverse();
                     });

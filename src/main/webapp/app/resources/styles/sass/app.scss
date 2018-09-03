@@ -274,15 +274,15 @@ main footer {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
 }
 
-.list-row-remove .glyphicon {
+tr.submission-list-row td span.glyphicon.glyphicon-remove-circle {
   color: $brand-danger;
-	margin: -8px 0 0 -35px;
-	padding: 8px;
-	visibility: hidden;
+  margin: -8px 0 0 -35px;
+  padding: 8px;
+  visibility: hidden;
 }
 
-.list-row-remove tr:hover .glyphicon {
-	visibility: visible;
+tr.submission-list-row:hover td span.glyphicon.glyphicon-remove-circle {
+  visibility: visible;
 }
 
 .pagination {
@@ -1519,8 +1519,21 @@ input[type=color]:focus {
  * Submission View Column Selection *
  ************************************/
 .column-modal {
-  height: 750px;
+  height: 675px;
   overflow-y: scroll;
+}
+
+.displayed-column:hover,
+.disabled-column:hover {
+  cursor: pointer;
+}
+
+.disabled-column:hover .glyphicon {
+  display: inline-block;
+}
+
+.displayed-column:hover .glyphicon {
+  display: inline-block;
 }
 
 .column-background {
@@ -1536,12 +1549,17 @@ input[type=color]:focus {
   border-color: #d6e9c6;
   margin: 5px;
   padding: 5px;
+  .glyphicon {
+    display: none;
+  }
 }
 
 .displayed-column-container {
   margin: 0;
   padding: 0;
   min-height: 20px;
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .disabled-column {
@@ -1550,11 +1568,16 @@ input[type=color]:focus {
   border-color: #CCCCCC;
   margin: 5px;
   padding: 5px;
+  .glyphicon {
+    display: none;
+  }
 }
 
 .disabled-column-container {
   margin: 0;
   padding: 0;
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .column-placeholder {

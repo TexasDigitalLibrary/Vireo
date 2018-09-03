@@ -1,4 +1,4 @@
-vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValue, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -39,7 +39,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 // give typeahead select time to save the value
                 $timeout(function () {
                     // if the fieldProfileForm is undefined we have changed view, save the field value if not already updating
-                    if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty) && !fieldValue.updating) {
+                    if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty || !$scope.profile.optional) && !fieldValue.updating) {
                         fieldValue.updating = true;
                         return save(fieldValue);
                     }
@@ -175,31 +175,64 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 });
             };
 
+            var uploadFailed = function(fieldValue, reason) {
+                fieldValue.uploading = false;
+                fieldValue.setIsValid(false);
+                if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                    delete fieldValue.fileInfo.uploaded;
+                }
+                $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
+                $scope.cancelUpload();
+            };
+
             var upload = function (fieldValue) {
                 return $q(function (resolve) {
                     FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
-                        if ($scope.hasFile(fieldValue)) {
-                            $scope.submission.removeFile(fieldValue);
-                        }
-                        fieldValue.value = response.data.meta.message;
-                        fieldValue.fileInfo.uploaded = true;
-                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
-                            var apiRes = angular.fromJson(response.body);
-                            if(apiRes.meta.status === 'SUCCESS') {
-                                var newFieldValue = apiRes.payload.FieldValue;
-                                if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
-                                    $scope.submission.fetchDocumentTypeFileInfo();
-                                }
-                                fieldValue.uploading = false;
-                                resolve(true);
-                            } else {
-                                resolve(false);
+                        if (response.data.meta.status === 'SUCCESS') {
+                            if ($scope.hasFile(fieldValue)) {
+                                $scope.submission.removeFile(fieldValue);
                             }
-                        });
+                            fieldValue.value = response.data.meta.message;
+                            fieldValue.fileInfo.uploaded = true;
+                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
+                                var apiRes = angular.fromJson(response.body);
+                                if (apiRes.meta.status === 'SUCCESS') {
+                                    var newFieldValue = apiRes.payload.FieldValue;
+                                    if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
+                                        $scope.submission.fetchDocumentTypeFileInfo();
+                                    }
+                                    fieldValue.uploading = false;
+                                    resolve(true);
+                                } else {
+                                    if (apiRes.meta.message !== undefined) {
+                                        uploadFailed(fieldValue, apiRes.meta.message);
+                                    }
+                                    resolve(false);
+                                }
+                            });
+                        }
+                        else {
+                            if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                                uploadFailed(fieldValue, response.payload.meta.message);
+                            }
+                            else {
+                                uploadFailed(fieldValue, false);
+                            }
+                            resolve(false);
+                        }
                     }, function (response) {
-                        console.log('Error status: ' + response.status);
-                        $scope.errorMessage = response.data.meta.message;
-                        $scope.cancelUpload();
+                        var reason = false;
+                        var status = response.meta.status;
+                        if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                            reason = response.payload.meta.message;
+                            status = response.payload.meta.status;
+                        }
+                        else if (response.status !== undefined) {
+                            status = response.status;
+                        }
+
+                        console.log('Error status: ' + status);
+                        uploadFailed(fieldValue, reason);
                     }, function (progress) {
                         $scope.progress = progress;
                         fieldValue.progress = progress;
@@ -227,11 +260,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
             $scope.getPreview = function (fieldValue) {
                 var preview;
                 if (fieldValue !== undefined && fieldValue.fileInfo !== undefined && fieldValue.fileInfo.type !== null) {
-                    if (fieldValue.fileInfo.type.includes("image/png")) {
+                    if (fieldValue.fileInfo.type.indexOf("image/png") >= 0) {
                         preview = "resources/images/png-logo.jpg";
-                    } else if (fieldValue.fileInfo.type.includes("image/jpeg")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("image/jpeg") >= 0) {
                         preview = "resources/images/jpg-logo.png";
-                    } else if (fieldValue.fileInfo.type.includes("pdf")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("pdf") >= 0) {
                         preview = "resources/images/pdf-logo.gif";
                     }
                 }

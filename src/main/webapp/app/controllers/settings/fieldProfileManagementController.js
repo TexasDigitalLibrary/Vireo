@@ -72,7 +72,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             };
             if(data !== undefined) {
                 angular.extend($scope.modalData, data);
-                console.log($scope.modalData);
             }
         };
 

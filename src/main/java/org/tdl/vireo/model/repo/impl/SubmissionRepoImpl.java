@@ -164,7 +164,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Submission update(Submission submission) {
-        submission = super.update(submission);
+        submission = submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
         return submission;
     }
@@ -244,7 +244,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         }
 
-        super.update(submission);
+        submission = update(submission);
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
@@ -360,7 +360,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<String>();
-    
+
         // get all the possible columns, some of which we will make visible
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
 
@@ -593,8 +593,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         if (filterString == null) {
                             sqlWheresBuilder.append(" a").append(".email IS NULL").append(" OR");
-                        }
-                        else if (submissionListColumn.getExactMatch()) {
+                        } else if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" a").append(".email = '").append(filterString).append("' OR");
                         } else {
                             sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
@@ -655,23 +654,70 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                 // exclude individual submissions from submission list
                 case "exclude":
-                	
+
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                    	if (sqlWheresExcludeBuilder.length() > 0) {
-                    		sqlWheresExcludeBuilder.append(" AND s").append(".id <> ").append(filterString);
-                    	} else {
-                    		sqlWheresExcludeBuilder.append(" s").append(".id <> ").append(filterString);
-                    	}
+                        if (sqlWheresExcludeBuilder.length() > 0) {
+                            sqlWheresExcludeBuilder.append(" AND s").append(".id <> ").append(filterString);
+                        } else {
+                            sqlWheresExcludeBuilder.append(" s").append(".id <> ").append(filterString);
+                        }
                     }
 
                     break;
+                case "submissionDate":
 
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.submission_date");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        filterString.replaceAll("[TZ:.\\-]", " ");
+                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                    }
+
+                    break;
+                case "approveApplicationDate":
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_application_date");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        filterString.replaceAll("[TZ:.\\-]", " ");
+                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                    }
+
+                    break;
+                case "approveAdvisorDate":
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_advisor_date");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        filterString.replaceAll("[TZ:.\\-]", " ");
+                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                    }
+
+                    break;
+                case "approveEmbargoDate":
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_embargo_date");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        filterString.replaceAll("[TZ:.\\-]", " ");
+                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                    }
+
+                    break;
                 default:
-                    logger.info("No value path given for submissionListColumn " + submissionListColumn.getTitle());
+                    logger.info("No value path given for submission list column " + String.join(".", submissionListColumn.getValuePath()) + ": " + submissionListColumn.getTitle());
                 }
 
             }
@@ -694,13 +740,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             sqlWheresBuilder.append(" )");
             // append excluded submissions
             if (sqlWheresExcludeBuilder.length() > 0) {
-            	sqlWheresBuilder.append(" AND ").append(sqlWheresExcludeBuilder);
+                sqlWheresBuilder.append(" AND ").append(sqlWheresExcludeBuilder);
             }
-        // if only exclude filter, complete where clause
+            // if only exclude filter, complete where clause
         } else {
             if (sqlWheresExcludeBuilder.length() > 0) {
-            	sqlWheresBuilder.insert(0, "\nWHERE");
-            	sqlWheresBuilder.append(sqlWheresExcludeBuilder);
+                sqlWheresBuilder.insert(0, "\nWHERE");
+                sqlWheresBuilder.append(sqlWheresExcludeBuilder);
             }
         }
 
@@ -723,7 +769,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         logger.debug("QUERY:\n" + sqlQuery);
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);
-        
+
         return new QueryStrings(sqlCountQuery, sqlQuery);
     }
 
@@ -762,7 +808,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         public String getQuery() {
-           return query;
+            return query;
         }
 
     }

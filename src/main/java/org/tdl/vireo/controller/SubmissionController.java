@@ -352,7 +352,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
@@ -370,6 +370,16 @@ public class SubmissionController {
         }
 
         return apiResponse;
+    }
+
+    private String convertBoolean(final String value) {
+        String result = value;
+        if (result.equals("true")) {
+            result = "Yes";
+        } else if (result.equals("false")) {
+            result = "No";
+        }
+        return result;
     }
 
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
@@ -415,7 +425,6 @@ public class SubmissionController {
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, user);
                 response = new ApiResponse(SUCCESS, submission);
-                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, response);
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
@@ -745,13 +754,12 @@ public class SubmissionController {
     }
 
     @JsonView(ApiView.Partial.class)
-    @RequestMapping("/query/{page}/{size}")
+    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
         long startTime = System.nanoTime();
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");

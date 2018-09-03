@@ -1,6 +1,6 @@
 <div ng-controller="SubmissionListController">
 
-  <modal modal-id="customizeSubmissionListModal" modal-view="views/modals/submissions/customizeSubmissionListModal.html" modal-header-class="modal-header-primary"></modal>
+  <modal modal-id="customizeSubmissionListModal" modal-view="views/modals/submissions/customizeSubmissionListModal.html" modal-header-class="modal-header-primary" 	wvr-modal-backdrop="static"></modal>
 
   <alerts seconds="90" channels="submission/select" types="WARNING" view="views/alerts/submissionItemViewAlert.html" exclusive></alerts>
 
@@ -8,7 +8,7 @@
   <hr/>
   <a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
 
-  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover list-row-remove" id="etd-table">
+  <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
     <thead class="header">
       <tr>
         <th ng-repeat="column in userColumns">
@@ -23,8 +23,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle">
+      <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle submission-list-row">
         <td ng-repeat="col in $columns">
+          <span ng-class="{'glyphicon glyphicon-remove-circle' : $first}" ng-click="addRowFilter($parent.$index, row)"></span>
           <span ng-if="col.title() !== 'Custom actions'">{{displaySubmissionProperty(row, col)}}</span>
           <span ng-if="col.title() === 'Custom actions'">
             <span ng-repeat="ca in row.customActionValues">
