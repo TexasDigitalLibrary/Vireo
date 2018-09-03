@@ -12,9 +12,9 @@ vireo.repo("StudentSubmissionRepo", function StudentSubmissionRepo($q, WsApi) {
             });
             var fetchPromise = WsApi.fetch(studentSubmissionRepo.mapping.one);
             fetchPromise.then(function(res) {
-                var resObj = angular.fromJson(res.body);
-                if (resObj.meta.status !== "ERROR") {
-                    studentSubmissionRepo.add(resObj.payload.Submission);
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status === 'SUCCESS') {
+                    studentSubmissionRepo.add(apiRes.payload.Submission);
                     defer.resolve(studentSubmissionRepo.findById(id));
                 }
             });
