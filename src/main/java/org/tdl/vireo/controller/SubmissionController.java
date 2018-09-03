@@ -75,8 +75,8 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
+import org.tdl.vireo.service.AssetService;
 import org.tdl.vireo.service.DepositorService;
-import org.tdl.vireo.utility.FileIOUtility;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
@@ -140,7 +140,7 @@ public class SubmissionController {
     private TemplateUtility templateUtility;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService assetService;
 
     @Autowired
     private ConfigurationRepo configurationRepo;
@@ -166,8 +166,8 @@ public class SubmissionController {
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
 
-    @Value("${app.document.path:private/}")
-    private String documentPath;
+    @Value("${app.document.folder:private}")
+    private String documentFolder;
 
     @RequestMapping("/all")
     @PreAuthorize("hasRole('REVIEWER')")
@@ -769,14 +769,14 @@ public class SubmissionController {
     @RequestMapping("/file")
     public void submissionFile(HttpServletResponse response, @RequestHeader String uri) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
-        Path path = fileIOUtility.getAbsolutePath(uri);
+        Path path = assetService.getAssetsAbsolutePath(uri);
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
     }
 
     @RequestMapping(value = "/file-info", method = RequestMethod.POST)
     public ApiResponse submissionFileInfo(@RequestBody Map<String, String> requestData) throws IOException {
-        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
+        return new ApiResponse(SUCCESS, assetService.getAssetFileInfo(requestData.get("uri")));
     }
 
     @RequestMapping(value = "/{submissionId}/{documentType}/upload-file", method = RequestMethod.POST)
@@ -784,9 +784,9 @@ public class SubmissionController {
     public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
-        String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
-        fileIOUtility.write(file.getBytes(), uri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+        String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
+        assetService.write(file.getBytes(), uri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(uri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
@@ -797,9 +797,9 @@ public class SubmissionController {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
-        fileIOUtility.copy(oldUri, newUri);
-        fileIOUtility.delete(oldUri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+        assetService.copy(oldUri, newUri);
+        assetService.delete(oldUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
@@ -816,8 +816,8 @@ public class SubmissionController {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-                fileIOUtility.delete(uri);
+                JsonNode fileInfo = assetService.getAssetFileInfo(uri);
+                assetService.delete(uri);
                 actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
@@ -832,9 +832,9 @@ public class SubmissionController {
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
-        fileIOUtility.copy(oldUri, newUri);
-        fileIOUtility.delete(oldUri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+        assetService.copy(oldUri, newUri);
+        assetService.delete(oldUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return new ApiResponse(SUCCESS, newUri);
     }

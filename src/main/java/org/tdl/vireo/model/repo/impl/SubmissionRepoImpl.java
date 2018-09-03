@@ -53,7 +53,7 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
-import org.tdl.vireo.utility.FileIOUtility;
+import org.tdl.vireo.service.AssetService;
 
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
@@ -97,7 +97,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService assetService;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -257,7 +257,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             String licenceUri = fieldValue.getValue();
             if (licenceUri.substring(licenceUri.lastIndexOf("-") + 1).equals(fileName + ".txt")) {
                 try {
-                    fileIOUtility.delete(fieldValue.getValue());
+                    assetService.delete(fieldValue.getValue());
                     submission.removeFieldValue(fieldValue);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -299,7 +299,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName + ".txt";
 
             try {
-                fileIOUtility.write(licenseBytes, uri);
+                assetService.write(licenseBytes, uri);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

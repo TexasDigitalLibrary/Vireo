@@ -12,14 +12,14 @@ import edu.tamu.weaver.wro.service.ThemeManager;
 import ro.isdc.wro.model.resource.processor.ResourcePostProcessor;
 
 public class VireoConfigurableWroManagerFactory extends WeaverConfigurableWroManagerFactory {
-	public VireoConfigurableWroManagerFactory(Properties props, ThemeManager themeManagerService, ResourcePatternResolver resourcePatternResolver) {
-		super(props, themeManagerService,resourcePatternResolver);
-	}
 
-	@Override
-	protected void contributePostProcessors(Map<String, ResourcePostProcessor> map) {
-		map.put("vireoPostProcessor", new VireoPostProcessor((VireoThemeManager) getThemeManagerService()));
-	}
+    public VireoConfigurableWroManagerFactory(Properties props, ThemeManager themeManagerService, ResourcePatternResolver resourcePatternResolver) {
+        super(props, themeManagerService, resourcePatternResolver);
+    }
 
-	
+    @Override
+    protected void contributePostProcessors(Map<String, ResourcePostProcessor> map) {
+        map.put("vireoPostProcessor", new VireoPostProcessor((VireoThemeManager) getThemeManagerService()));
+    }
+
 }

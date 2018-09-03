@@ -73,7 +73,6 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-import org.tdl.vireo.utility.FileIOUtility;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -95,7 +94,7 @@ public class SystemDataLoader {
     private ResourcePatternResolver resourcePatternResolver;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService fileIOUtility;
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -242,15 +241,14 @@ public class SystemDataLoader {
 
     private void loadControlledVocabularies() {
 
-        File controlledVocabularyDirectory = null;
+        List<File> controlledVocabularyFiles = new ArrayList<File>();
         try {
-            controlledVocabularyDirectory = getFileFromResource("classpath:/controlled_vocabularies/");
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            controlledVocabularyFiles = fileIOUtility.getResouceDirectoryListing("classpath:/controlled_vocabularies/");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        for (File vocabularyJson : controlledVocabularyDirectory.listFiles()) {
+        for (File vocabularyJson : controlledVocabularyFiles) {
             try {
                 ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
 
@@ -581,7 +579,8 @@ public class SystemDataLoader {
 
                 // create new SubmissionStatus if not already exists
                 if (newSubmissionStatus == null) {
-                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(), emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
+                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
                     newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
                 }
 
@@ -874,7 +873,7 @@ public class SystemDataLoader {
 
         List<SubmissionListColumn> defaultFilterColumns = null;
         try {
-            defaultFilterColumns = objectMapper.readValue(fileIOUtility.getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
+            defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
             });
         } catch (IOException e) {
             e.printStackTrace();
