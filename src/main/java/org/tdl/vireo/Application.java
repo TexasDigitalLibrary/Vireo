@@ -49,7 +49,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @PostConstruct
-    public void setup() throws IOException, URISyntaxException {
+    public void init() throws IOException, URISyntaxException {
         assetsPath = assets.getURI().getSchemeSpecificPart();
         // ensure assetsPath ends with URI seperator
         if (!assetsPath.endsWith("/")) {

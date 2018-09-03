@@ -21,7 +21,7 @@ import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.utility.AssetService;
+import org.tdl.vireo.service.AssetService;
 
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -38,7 +38,7 @@ public class LookAndFeelController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    private AssetService fileIOUtility;
+    private AssetService assetService;
 
     @Value("${app.public.folder:public}")
     private String publicFolder;
@@ -56,7 +56,7 @@ public class LookAndFeelController {
 
         logger.info("Changing logo " + setting);
 
-        fileIOUtility.write(file.getBytes(), path);
+        assetService.write(file.getBytes(), path);
 
         ManagedConfiguration newLogoConfig = configurationRepo.create(setting, path, "lookAndFeel");
 
