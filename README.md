@@ -95,13 +95,13 @@ $ unzip ~/vireo-4.0.0-SNAPSHOT-install.zip
 
 ```bash
 /opt/vireo$ ls
-drwxr-xr-x 2 root root 4096 Oct  2 15:36 conf
+drwxr-xr-x 2 root root 4096 Oct  2 15:36 config
 drwxr-xr-x 2 root root 4096 Nov 11 11:54 logs
 drwxr-xr-x 5 root root 4096 Nov 11 11:54 webapp
 ```
 
 * attachments -- where the server stores uploaded files
-* conf -- where the external config files reside
+* config -- where the external config files reside
 * webapp -- the extracted WAR file
 
 ## Installing WAR Package in Tomcat
@@ -127,11 +127,11 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 
 ## Configuring
 
-There is an external `application.properties` file under the `conf` directory that you can modify to override the values in the built-in `application.properties`.
+There is an external `application.properties` file under the `config` directory that you can modify to override the values in the built-in `application.properties`.
 
-**NOTE: The `conf` directory is only available if deployed from the ZIP package.**
+**NOTE: The `config` directory is only available if deployed from the ZIP package.**
 
-**NOTE: If you need an external configuration file to the WAR file, you'll need to put a `conf` directory in the same directory as the WAR file (whether running inside tomcat or as stand-alone Spring Boot application).**
+**NOTE: If you need an external configuration file to the WAR file, you'll need to put a `config` directory in the same directory as the WAR file (whether running inside tomcat or as stand-alone Spring Boot application).**
 
 **You should configure the following properties for production**
 

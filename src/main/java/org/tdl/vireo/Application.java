@@ -45,7 +45,7 @@ public class Application extends SpringBootServletInitializer {
     @PostConstruct
     public void setup() throws IOException, URISyntaxException {
         assetsPath = assets.getURI().getSchemeSpecificPart().substring(1) + File.separator;
-        System.setProperty("spring.config.location", "file:" + assetsPath + "conf/");
+        // System.setProperty("spring.config.location", "file:" + assetsPath + "config/");
         ApplicationHome HOME = new ApplicationHome(Application.class);
         if (assets.getURI().getScheme().equals("jar")) {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator;
