@@ -1,4 +1,4 @@
-vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, $routeParams, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, StudentSubmission, SubmissionStates) {
+vireo.controller("SubmissionViewController", function ($controller, $q, $scope, $routeParams, CustomActionDefinitionRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -99,6 +99,15 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
         $scope.uploadableFieldPredicates = function(fieldPredicate) {
             return fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldPredicate.value) < 0;
         };
+
+        CustomActionDefinitionRepo.listen(function(apiRes) {
+            if(apiRes.meta.status === 'SUCCESS') {
+                StudentSubmissionRepo.remove($scope.submission);
+                StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
+                    angular.extend($scope.submission, submission);
+                });
+            }
+        });
 
     });
 
