@@ -50,6 +50,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.errorMessage = "";
 
+    $scope.dropZoneText = "Drop a file or click arrow";
+
     SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;

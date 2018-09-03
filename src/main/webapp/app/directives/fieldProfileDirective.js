@@ -23,6 +23,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.errorMessage = "";
 
+            $scope.dropzoneText = "Choose file here or drag and drop to upload";
+
             var save = function (fieldValue) {
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {

@@ -17,7 +17,7 @@
 
       <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'replace', 'section-closed': addFileData.addFileSelection !== 'replace'}">
 
-        <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" , patterns="getPattern('_doctype_primary')" drop-method="queueUpload(files)"></dropzone>
+        <dropzone ng-if="!addFileData.files" file-model="files" text="dropZoneText" , patterns="getPattern('_doctype_primary')" drop-method="queueUpload(files)"></dropzone>
 
         <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
         <div ng-if="addFileData.files">
@@ -98,7 +98,7 @@
         </select>
       </div>
 
-      <dropzone ng-if="!addFileData.files" file-model="files" text="Drop a file or click arrow" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
+      <dropzone ng-if="!addFileData.files" file-model="files" text="dropZoneText" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
 
       <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
       <div ng-if="addFileData.files">
