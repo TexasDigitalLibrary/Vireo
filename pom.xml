@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -30,9 +29,12 @@
     <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
     <maven-filtering-version>3.1.1</maven-filtering-version>
     <production>false</production>
-    <!-- must be valid uri with schema file or classpath -->
-    <!-- i.e. file://opt/vireo/ -->
+    <!-- must be valid uri with scheme file or classpath -->
+    <!-- i.e. file:///opt/vireo/, file:/opt/vireo, classpath:/assets -->
     <assets.uri>classpath:/</assets.uri>
+    <!-- must be valid uri with scheme file or classpath -->
+    <!-- i.e. file:///opt/vireo/config/, file:/opt/vireo/config, classpath:/config -->
+    <config.uri>${assets.uri}config/</config.uri>
   </properties>
 
   <packaging>war</packaging>
@@ -249,13 +251,10 @@
             <webResource>
               <filtering>true</filtering>
               <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
+              <targetPath>WEB-INF/classes</targetPath>
               <includes>
                 <include>application.properties</include>
               </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
             </webResource>
             <webResource>
               <filtering>false</filtering>
@@ -315,17 +314,20 @@
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
+          <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
           <webResources>
             <webResource>
               <filtering>true</filtering>
+              <directory>src/main/webapp/META-INF</directory>
+              <targetPath>META-INF</targetPath>
+            </webResource>
+            <webResource>
+              <filtering>true</filtering>
               <directory>src/main/resources</directory>
-              <targetPath>WEB-INF</targetPath>
+              <targetPath>WEB-INF/classes</targetPath>
               <includes>
                 <include>application.properties</include>
               </includes>
-              <excludes>
-                <exclude>**/*.xls</exclude>
-              </excludes>
             </webResource>
             <webResource>
               <filtering>false</filtering>
@@ -448,9 +450,6 @@
         <includes>
           <include>application.properties</include>
         </includes>
-        <excludes>
-          <exclude>**/*.jks</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>

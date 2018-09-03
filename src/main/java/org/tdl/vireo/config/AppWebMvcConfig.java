@@ -80,7 +80,6 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
             registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + File.separator + File.separator + Application.getRootPath() + "node_modules" + File.separator);
         }
         logger.info("/public/** -> file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
-        logger.info("spring.config.location: " + System.getProperty("spring.config.location"));
         registry.addResourceHandler("/**").addResourceLocations(path + File.separator);
         registry.addResourceHandler("/public/**").addResourceLocations("file:" + File.separator + File.separator + Application.getAssetsPath() + publicFolder + File.separator);
         registry.setOrder(Integer.MAX_VALUE - 2);

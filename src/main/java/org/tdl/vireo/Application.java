@@ -26,11 +26,17 @@ public class Application extends SpringBootServletInitializer {
     // where to store public and private directories
     private static String assetsPath;
 
+    // where to store application.properties
+    private static String configPath;
+
     // where is root of the app, i.e. where node_modules is
     private static String rootPath;
 
     @Value("${app.assets.uri:classpath:/}")
     private Resource assets;
+
+    @Value("${app.config.uri:classpath:/config/}")
+    private Resource config;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -44,15 +50,25 @@ public class Application extends SpringBootServletInitializer {
 
     @PostConstruct
     public void setup() throws IOException, URISyntaxException {
-        assetsPath = assets.getURI().getSchemeSpecificPart().substring(1) + File.separator;
-        // System.setProperty("spring.config.location", "file:" + assetsPath + "config/");
+        assetsPath = assets.getURI().getSchemeSpecificPart();
+        // ensure assetsPath ends with URI seperator
+        if (!assetsPath.endsWith("/")) {
+            assetsPath += "/";
+        }
+        // ensure configPath ends with URI seperator
+        configPath = config.getURI().getSchemeSpecificPart();
+        if (!configPath.endsWith("/")) {
+            configPath += "/";
+        }
+        // NOTE: external config for running as jar or spring-boot
+        System.setProperty("spring.config.location", "file:" + configPath);
         ApplicationHome HOME = new ApplicationHome(Application.class);
         if (assets.getURI().getScheme().equals("jar")) {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator;
         } else {
             rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator + ".." + File.separator;
         }
-        logger.info("PROPERTIES LOCATION: " + System.getProperty("spring.config.location"));
+        logger.info("CONFIG PATH: " + configPath);
         logger.info("ASSETS PATH: " + assetsPath);
         logger.info("ROOT PATH: " + rootPath);
     }
