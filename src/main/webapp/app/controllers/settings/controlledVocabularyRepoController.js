@@ -27,6 +27,10 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.uploadAction = "confirm";
 
+    $scope.uploadModalDataText = "Begin import by dropping csv into drop zone";
+
+    $scope.uploadModalDataPattern = ".csv";
+
     $scope.forms = {};
 
     $scope.newVW = {};

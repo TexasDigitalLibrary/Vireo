@@ -50,6 +50,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.errorMessage = "";
 
+    $scope.dropZoneText = "Drop a file or click arrow";
+
     SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
@@ -202,6 +204,33 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         resetFileData();
+
+        $scope.getPattern = function (doctype) {
+            var pattern = "*";
+            var fieldPredicate;
+            var i;
+
+            for(i in $scope.fieldPredicates) {
+                if($scope.fieldPredicates[i].value === doctype) {
+                    fieldPredicate = $scope.fieldPredicates[i];
+                    break;
+                }
+            }
+
+            if (fieldPredicate !== undefined) {
+                var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldPredicate);
+                if (fieldProfile.controlledVocabularies[0] !== undefined) {
+                    var cv = fieldProfile.controlledVocabularies[0];
+                    pattern = "";
+                    for (i in cv.dictionary) {
+                        var word = cv.dictionary[i];
+                        pattern += pattern.length > 0 ? (",." + word.name) : ("." + word.name);
+                    }
+                }
+            }
+
+            return pattern;
+        };
 
         $scope.queueUpload = function (files) {
             $scope.errorMessage = "";
