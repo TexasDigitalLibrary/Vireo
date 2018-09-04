@@ -66,8 +66,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = params.count();
                         sessionStorage.setItem("list-page-size", $scope.page.count);
                         sessionStorage.setItem("list-page-number", $scope.page.number + 1);
-
-                        console.log($scope.page);
                         return $scope.page.content;
                     });
                 }.bind(start)
@@ -210,7 +208,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var addExactMatchFilter = function (column, gloss) {
-            console.log(column, gloss);
             column.exactMatch = true;
             addFilter(column, gloss);
         };
@@ -553,10 +550,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.sortBy = function (sortColumn) {
-
-            if(sortColumn.title === 'Custom Actions') {
-                return;
-            }
 
             switch (sortColumn.sort) {
             case "ASC":
