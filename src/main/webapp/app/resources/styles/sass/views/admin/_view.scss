@@ -164,11 +164,11 @@
 }
 
 .email-element {
+  opacity: 0;
   max-height: 0;
-  overflow: hidden;
   margin: 0;
-  transition: max-height 0.35s linear, margin 0.35s linear;
-}
+  transition: all 0.35s linear, margin 0.35s linear;
+ }
 
 .email-element .input-group-addon.glyphicon {
   top: 0;
@@ -185,10 +185,10 @@
 .email-cc.email-active,
 .email-element.email-active,
 .email-to.email-active {
-  max-height: 100px;
-  overflow: hidden;
-  margin: 18px 0;
-  transition: max-height 0.35s linear, margin 0.35s linear;
+ opacity: 1;
+ max-height: 100px;
+ margin: 18px 0;
+ transition: all 0.35s linear, margin 0.35s linear;
 }
 
 div .item-view div.row h1 span.spinning {
