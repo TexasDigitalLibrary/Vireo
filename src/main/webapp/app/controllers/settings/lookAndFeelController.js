@@ -8,6 +8,10 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, Fil
         newLogo: {}
     };
 
+    $scope.uploadDataText = "Drop image on the drop zone to set a logo";
+
+    $scope.uploadDataPattern = ".jpg,.jpeg,.gif,.GIF,.JPEG,.png";
+
     $scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value;
 
     $scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
