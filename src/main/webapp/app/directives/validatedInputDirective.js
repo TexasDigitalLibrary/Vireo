@@ -1,4 +1,4 @@
-vireo.directive("validatedinput", function ($timeout) {
+vireo.directive("validatedinput", function ($q, $timeout) {
     return {
         template: '<span ng-include src="view"></span>',
         restrict: 'E',

@@ -25,13 +25,16 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.userColumns = [];
 
-    $scope.change = false;
-
-    $scope.filterChange = false;
-
     $scope.activeFilters = new NamedSearchFilterGroup();
 
     var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]);
+
+    var updateChange = function(change) {
+        $scope.change = change;
+        $scope.filterChange = change;
+    };
+
+    updateChange(false);
     
     ready.then(function () {
 
@@ -63,6 +66,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = params.count();
                         sessionStorage.setItem("list-page-size", $scope.page.count);
                         sessionStorage.setItem("list-page-number", $scope.page.number + 1);
+
+                        console.log($scope.page);
                         return $scope.page.content;
                     });
                 }.bind(start)
@@ -107,7 +112,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
                     query();
 
-                    $scope.change = false;
+                    updateChange(false);
                 });
             });
         };
@@ -205,6 +210,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var addExactMatchFilter = function (column, gloss) {
+            console.log(column, gloss);
             column.exactMatch = true;
             addFilter(column, gloss);
         };
@@ -487,6 +493,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 userFilterColumns: userFilterColumns,
                 inactiveFilterColumns: inactiveFilterColumns
             });
+
+            updateChange(false);
         };
 
         $scope.removeFilter = function (filter) {
@@ -517,6 +525,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             ManagerSubmissionListColumnRepo.reset();
             update();
             $scope.closeModal();
+            updateChange(false);
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -544,6 +553,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.sortBy = function (sortColumn) {
+
+            if(sortColumn.title === 'Custom Actions') {
+                return;
+            }
 
             switch (sortColumn.sort) {
             case "ASC":
@@ -586,10 +599,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 },
                 itemMoved: function (event) {
                     event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisplayed' : undefined;
-                    $scope.change = true;
+                    updateChange(true);
                 },
                 orderChanged: function (event) {
-                    $scope.change = true;
+                    updateChange(true);
                 },
                 containment: 'displayed-column-container',
                 containerPositioning: 'relative',
@@ -604,10 +617,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 },
                 itemMoved: function (event) {
                     event.source.itemScope.column.status = !event.source.itemScope.column.status ? 'previouslyDisabled' : undefined;
-                    $scope.change = true;
+                    updateChange(true);
                 },
                 orderChanged: function (event) {
-                    $scope.change = true;
+                    updateChange(true);
                 },
                 containment: 'disabled-column-container',
                 containerPositioning: 'relative',

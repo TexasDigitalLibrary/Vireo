@@ -429,7 +429,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                   .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
                                   .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
                                   .append("\n ON pfv").append(n).append(".submission_id=s.id");
-
                     // @formatter:on
 
                     if (submissionListColumn.getSortOrder() > 0) {
@@ -514,8 +513,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         if (submissionListColumn.getExactMatch()) {
                             sqlWheresBuilder.append(" ss").append(".name = '").append(filterString).append("' OR");
                         } else {
-                            // TODO: determine if status will ever be search
-                            // using a like
+                            // TODO: determine if status will ever be search using a like
                             sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                         }
 
@@ -530,8 +528,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                 case "organization.name":
 
-                    if (sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1)
+                    if (sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1) {
                         sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+                    }
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
@@ -716,6 +715,22 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     break;
+                 case "customActionValues":
+
+                    // @formatter:off
+                    sqlJoinsBuilder.append("\nLEFT JOIN")
+                                 .append("\n   (SELECT submission_id, value, label")
+                                 .append("\n   FROM submission_custom_action_values scav")
+                                 .append("\n   LEFT JOIN custom_action_value cav ON scav.custom_action_values_id = cav .id")
+                                 .append("\n   LEFT JOIN custom_action_definition cad ON cav.definition_id = cad.id) scavcavcad")
+                                 .append("\n   ON scavcavcad.submission_id = s.id");
+                    // @formatter:on
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWheresBuilder.append(" (scavcavcad.value = true AND scavcavcad.label = '" + filterString + "') OR ");
+                    }
+
+                    break;
                 default:
                     logger.info("No value path given for submission list column " + String.join(".", submissionListColumn.getValuePath()) + ": " + submissionListColumn.getTitle());
                 }
@@ -753,19 +768,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         String sqlQuery;
 
         if (pageable != null) {
-
             // determine the offset and limit of the query
             int offset = pageable.getPageSize() * pageable.getPageNumber();
             int limit = pageable.getPageSize();
-
             sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString() + sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
-
         } else {
             sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
         }
 
         String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
-
+        
         logger.debug("QUERY:\n" + sqlQuery);
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);

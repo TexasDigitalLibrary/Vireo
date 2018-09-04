@@ -26,8 +26,8 @@
       <tr ng-repeat="row in $data" ng-init="$last && finished()" ng-click="viewSubmission(row)" class="select-toggle submission-list-row">
         <td ng-repeat="col in $columns">
           <span ng-class="{'glyphicon glyphicon-remove-circle' : $first}" ng-click="addRowFilter($parent.$index, row)"></span>
-          <span ng-if="col.title() !== 'Custom actions'">{{displaySubmissionProperty(row, col)}}</span>
-          <span ng-if="col.title() === 'Custom actions'">
+          <span ng-if="col.title() !== 'Custom Actions'">{{displaySubmissionProperty(row, col)}}</span>
+          <span ng-if="col.title() === 'Custom Actions'">
             <span ng-repeat="ca in row.customActionValues">
               <input ng-checked="{{ca.value}}" type="checkbox" disabled> {{getCustomActionLabelById(ca.definition.id)}}</input>
               <br/>
