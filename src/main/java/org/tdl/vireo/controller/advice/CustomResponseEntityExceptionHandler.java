@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.tdl.vireo.exception.SwordDepositException;
 
 import edu.tamu.weaver.response.ApiResponse;
 
@@ -25,8 +26,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
     @ResponseBody
     public ApiResponse handleMultipartException(MultipartException exception) {
-        logger.error("File size limit exceeded", exception);
+        logger.debug("File size limit exceeded", exception);
         return new ApiResponse(ERROR, "File size limit exceeded");
+    }
+
+    @ExceptionHandler(SwordDepositException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ResponseBody
+    public ApiResponse handleSwordDepositException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
     }
 
 }

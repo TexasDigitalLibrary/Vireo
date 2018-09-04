@@ -14,6 +14,7 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 * ```-DskipTests``` will skip tests.
 * ```-Dassets.uri=file://opt/vireo``` will configure the package to store assets at /opt/vireo. Subsequently will configure the external configuration at /opt/vireo/config.
 * ```-Dconfig.uri=file://var/vireo/config``` will configure the external configuration directory.
+* ```-Dspring.config.location=file://var/vireo/config``` will configure the external configuration directory for development using spring-boot:run.
 
 The external configuration directory is where an application.properties file can be added to override default properties. **External configuration is recommended for production deployment**
 

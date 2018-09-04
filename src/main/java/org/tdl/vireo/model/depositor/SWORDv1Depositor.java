@@ -18,6 +18,7 @@ import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tdl.vireo.exception.SwordDepositException;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.utility.FileHelperUtility;
@@ -40,8 +41,9 @@ public class SWORDv1Depositor implements Depositor {
         try {
             Map<String, String> foundCollections = new HashMap<String, String>();
 
-            if (depLocation == null || depLocation.getRepository() == null)
-                throw new IllegalArgumentException("Bad deposit location or repository URL when trying to getCollections()");
+            if (depLocation == null || depLocation.getRepository() == null) {
+                throw new SwordDepositException("Bad deposit location or repository URL when trying to getCollections()");
+            }
 
             logger.debug("Getting Collections via SWORD from: " + depLocation.getRepository());
 
@@ -71,7 +73,8 @@ public class SWORDv1Depositor implements Depositor {
                     serviceDocument = client.getServiceDocument(depLocation.getRepository());
                 }
             } catch (SWORDClientException e) {
-                throw new RuntimeException(e);
+                logger.debug("Could not get service document!", e);
+                throw new SwordDepositException("Could not get service document!", e);
             }
 
             // Getting the service from the service document
@@ -86,7 +89,8 @@ public class SWORDv1Depositor implements Depositor {
             return foundCollections;
 
         } catch (MalformedURLException murle) {
-            logger.error("The repository is an invalid URL", murle);
+            logger.debug("The repository is an invalid URL", murle);
+            throw new SwordDepositException("The repository is an invalid URL", murle);
         } catch (RuntimeException re) {
 
             String message = re.getMessage();
@@ -101,10 +105,9 @@ public class SWORDv1Depositor implements Depositor {
                 message = "The repository does not appear to be a valid SWORD server.";
             }
 
-            logger.error(message, re);
+            logger.debug(message, re);
+            throw new SwordDepositException(message, re);
         }
-
-        return null;
     }
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
@@ -153,18 +156,20 @@ public class SWORDv1Depositor implements Depositor {
             DepositResponse response = client.postFile(message);
 
             if (response.getHttpResponse() < 200 || response.getHttpResponse() > 204) {
-                throw new RuntimeException("Sword server responed with a non success HTTP status code: " + response.getHttpResponse());
+                throw new SwordDepositException("Sword server responed with a non success HTTP status code: " + response.getHttpResponse());
             }
 
             depositId = response.getEntry().getId();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (SWORDClientException e) {
-            e.printStackTrace();
-        }
+            return depositId;
 
-        return depositId;
+        } catch (MalformedURLException e) {
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
+        } catch (SWORDClientException e) {
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
+        }
     }
 
     private void setAuthentication(Client client, DepositLocation depLocation) {
@@ -175,13 +180,17 @@ public class SWORDv1Depositor implements Depositor {
             HttpClient httpClient = (HttpClient) httpClientField.get(client);
             httpClient.getParams().setAuthenticationPreemptive(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
         } catch (SecurityException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage(), e);
+            throw new SwordDepositException(e.getMessage(), e);
         }
     }
 

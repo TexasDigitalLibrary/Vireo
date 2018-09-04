@@ -31,6 +31,7 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                     $scope.forms[key].$setPristine();
+                    $scope.forms[key].$setUntouched();
                 }
             }
 

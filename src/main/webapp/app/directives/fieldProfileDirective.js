@@ -31,6 +31,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                         delete fieldValue.updating;
                         if ($scope.fieldProfileForm !== undefined) {
                             $scope.fieldProfileForm.$setPristine();
+                            $scope.fieldProfileForm.$setUntouched();
                         }
                         resolve();
                     });
