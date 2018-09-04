@@ -715,15 +715,15 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     break;
-                 case "customActionValues":
+                case "customActionValues":
 
                     // @formatter:off
                     sqlJoinsBuilder.append("\nLEFT JOIN")
-                                 .append("\n   (SELECT submission_id, value, label")
-                                 .append("\n   FROM submission_custom_action_values scav")
-                                 .append("\n   LEFT JOIN custom_action_value cav ON scav.custom_action_values_id = cav .id")
-                                 .append("\n   LEFT JOIN custom_action_definition cad ON cav.definition_id = cad.id) scavcavcad")
-                                 .append("\n   ON scavcavcad.submission_id = s.id");
+                                   .append("\n   (SELECT submission_id, value, label")
+                                   .append("\n   FROM submission_custom_action_values scav")
+                                   .append("\n   LEFT JOIN custom_action_value cav ON scav.custom_action_values_id = cav .id")
+                                   .append("\n   LEFT JOIN custom_action_definition cad ON cav.definition_id = cad.id) scavcavcad")
+                                   .append("\n   ON scavcavcad.submission_id = s.id");
                     // @formatter:on
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -777,7 +777,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
-        
+
         logger.debug("QUERY:\n" + sqlQuery);
 
         logger.debug("COUNT QUERY:\n" + sqlCountQuery);
