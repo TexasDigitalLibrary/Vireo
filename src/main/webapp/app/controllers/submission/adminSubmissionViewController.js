@@ -80,6 +80,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.resetCommentModal = function (addCommentModal) {
             $scope.closeModal();
+            initializeEmailRecipients();
             addCommentModal.adding = false;
             addCommentModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
             addCommentModal.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
@@ -95,12 +96,48 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.addComment = function (addCommentModal) {
             addCommentModal.adding = true;
+            if ($scope.addCommentModal.sendEmailToRecipient) {
+                $scope.addCommentModal.recipientEmail = $scope.recipientEmails.join(';');
+                if ($scope.addCommentModal.sendEmailToRecipient) {
+                    $scope.addCommentModal.ccRecipientEmail = $scope.ccRecipientEmails.join(';');
+                }
+            }
             $scope.submission.addComment(addCommentModal).then(function () {
                 if (addCommentModal.needsCorrection) {
                     $scope.submission.changeStatus(SubmissionStatuses.NEEDS_CORRECTIONS);
                 }
                 $scope.resetCommentModal(addCommentModal);
             });
+        };
+
+        $scope.disableAddComment = function () {
+            var disable = true;
+            if ($scope.addCommentModal.commentVisiblity == 'public') {
+                if ($scope.addCommentModal.sendEmailToRecipient) {
+                    if ($scope.addCommentModal.sendEmailToCCRecipient) {
+                        disable = $scope.recipientEmails.length === 0 || 
+                                  $scope.ccRecipientEmails.length === 0 || 
+                                  $scope.addCommentModal.subject === undefined || 
+                                  $scope.addCommentModal.subject === "" || 
+                                  $scope.addCommentModal.message === undefined ||
+                                  $scope.addCommentModal.message === "";
+                    } else {
+                        disable = $scope.recipientEmails.length === 0 || 
+                                  $scope.addCommentModal.subject === undefined || 
+                                  $scope.addCommentModal.subject === "" || 
+                                  $scope.addCommentModal.message === undefined ||
+                                  $scope.addCommentModal.message === "";
+                    }
+                }
+            } else {
+                if ($scope.addCommentModal.commentVisiblity == 'private') {
+                    disable = $scope.addCommentModal.subject === undefined || 
+                            $scope.addCommentModal.subject === "" || 
+                            $scope.addCommentModal.message === undefined ||
+                            $scope.addCommentModal.message === "";
+                }
+            }
+            return disable;
         };
 
         $scope.resetCommentModal($scope.addCommentModal);
