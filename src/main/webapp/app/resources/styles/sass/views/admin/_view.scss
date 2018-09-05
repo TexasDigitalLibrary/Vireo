@@ -91,10 +91,18 @@
   border: 1px solid #ddd;
 }
 
-.item-view .advisor-review-url {
+.item-view .advisor-review-url,
+.item-view .published-location-url {
   margin-left: -12px;
-  padding-top: 18px;
   line-height: 25px;
+}
+
+.item-view .advisor-review-url {
+  padding-top: 18px;
+}
+
+.item-view .published-location-url {
+  padding-top: 10px;
 }
 
 .item-view .reviewer-notes textarea {

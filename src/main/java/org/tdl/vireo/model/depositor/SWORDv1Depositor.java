@@ -3,6 +3,8 @@ package org.tdl.vireo.model.depositor;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,8 +114,6 @@ public class SWORDv1Depositor implements Depositor {
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
 
-        String depositId = null;
-
         try {
             URL repositoryURL = new URL(depLocation.getRepository());
 
@@ -137,8 +137,6 @@ public class SWORDv1Depositor implements Depositor {
 
             PostMessage message = new PostMessage();
 
-            System.out.println("\n\n" + exportFile.getAbsolutePath() + "\n\n");
-
             message.setFilepath(exportFile.getAbsolutePath());
             message.setDestination(depLocation.getCollection());
             message.setFiletype(exportMimeType);
@@ -159,9 +157,20 @@ public class SWORDv1Depositor implements Depositor {
                 throw new SwordDepositException("Sword server responed with a non success HTTP status code: " + response.getHttpResponse());
             }
 
-            depositId = response.getEntry().getId();
+            try {
+                URI sword = new URI(depLocation.getRepository());
+                URI handle = new URI(response.getEntry().getId());
 
-            return depositId;
+                String depositURL = sword.getScheme() + "://" + sword.getHost();
+                if (sword.getPort() != -1) {
+                    depositURL += ":" + sword.getPort();
+                }
+                depositURL += "/handle" + handle.getPath();
+
+                return new URI(depositURL).toString();
+            } catch (URISyntaxException e) {
+                throw new SwordDepositException("Unable to publish to " + depLocation.getRepository(), e);
+            }
 
         } catch (MalformedURLException | SWORDClientException e) {
             logger.debug(e.getMessage(), e);

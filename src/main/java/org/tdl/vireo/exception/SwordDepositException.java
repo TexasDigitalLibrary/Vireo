@@ -1,11 +1,11 @@
 package org.tdl.vireo.exception;
 
-public class SwordDepositException extends RuntimeException {
+public class SwordDepositException extends DepositException {
 
-    private static final long serialVersionUID = -3564243098286926246L;
+    private static final long serialVersionUID = 446759184838773536L;
 
     public SwordDepositException() {
-
+        super();
     }
 
     public SwordDepositException(String message) {

@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
@@ -465,17 +466,11 @@ public class SubmissionController {
                     Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
 
                     if (depositor != null) {
-
                         ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-
-                        String result = depositor.deposit(depositLocation, exportPackage);
-
-                        if (result != null) {
-                            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                            response = new ApiResponse(SUCCESS, submission);
-                        } else {
-                            response = new ApiResponse(ERROR, "Could not deposit submission");
-                        }
+                        String depositURL = depositor.deposit(depositLocation, exportPackage);
+                        submission.setDepositURL(depositURL);
+                        submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                        response = new ApiResponse(SUCCESS, submission);
                     } else {
                         response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                     }
@@ -618,26 +613,20 @@ public class SubmissionController {
         if (submissionStatus != null) {
             DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
             if (depositLocation != null) {
-                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
-                    Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
-                    if (depositor != null) {
+                Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+                if (depositor != null) {
+                    for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
                         try {
                             ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-
-                            String result = depositor.deposit(depositLocation, exportPackage);
-
-                            if (result != null) {
-                                submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                            } else {
-                                throw new RuntimeException("Failed batch publish on submission " + submission.getId());
-                            }
-
+                            String depositURL = depositor.deposit(depositLocation, exportPackage);
+                            submission.setDepositURL(depositURL);
+                            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
                         } catch (Exception e) {
-                            throw new RuntimeException("Failed package export on submission " + submission.getId());
+                            throw new DepositException("Failed package export on submission " + submission.getId());
                         }
-                    } else {
-                        response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                     }
+                } else {
+                    response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                 }
             } else {
                 response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
