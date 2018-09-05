@@ -35,7 +35,7 @@
 
         <div class="row">
 
-            <div class="col-md-9" ng-click="setCursorLocation($event)" ng-keyup="setCursorLocation($event)">
+            <div class="col-md-8" ng-click="setCursorLocation($event)" ng-keyup="setCursorLocation($event)">
 
                 <validatedtextarea
                     id="edit-template-body"
@@ -50,9 +50,10 @@
 
             </div>
 
-            <div class="col-md-3">
-                <div id="edit-email-template-modal-instructions-label">Properties:
-                    <div class="btn-group-vertical">
+            <div class="col-md-4">
+                <div id="edit-email-template-modal-instructions-label">
+                    <label for="properties" class="email-template-label">Properties:</label>
+                    <div class="btn-group-vertical email-template-properties-list">
                         <button type="button" ng-click="insertText('FULL_NAME')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> FULL_NAME </button>
                         <button type="button" ng-click="insertText('FIRST_NAME')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> FIRST_NAME </button>
                         <button type="button" ng-click="insertText('LAST_NAME')" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> LAST_NAME </button>
@@ -68,14 +69,15 @@
                     </div>
                 </div>
 
-                <div id="edit-email-template-fields">Fields:
+                <div id="edit-email-template-fields">
+                    <label for="fields" class="email-template-label">Fields:</label>
                     <div class="input-group">
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-filter"></span>
                       </span>
                       <input class="form-control" placeholder="limit results" ng-model="fpFilter" />
                     </div>
-                    <div id="edit-email-template-fields-list" class="btn-group-vertical">
+                    <div id="edit-email-template-fields-list" class="btn-group-vertical email-template-fields-list">
                         <button type="button" ng-repeat="fp in fieldPredicates | filter:fpFilter " ng-click="insertText(fp.value)" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> {{fp.value}}</button>
                     </div>
                 </div>
