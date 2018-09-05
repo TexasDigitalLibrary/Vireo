@@ -138,7 +138,7 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 
 ### Configure application
 
-Currently, in order to have Tomcat know where the external configuration directory is, `webapp/META-INF/context.xml` will have to be updated. Skip step 1 if build package setting `assets.uri`.
+Currently, in order to have Tomcat know where the external configuration directory is, `webapp/META-INF/context.xml` will have to be updated. Skip step 1 if package built defining `config.uri`.
 
 1) Update [context.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/WEB-INF/context.xml) to set external configuration directory
 
