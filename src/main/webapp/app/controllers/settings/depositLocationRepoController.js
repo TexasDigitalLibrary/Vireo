@@ -55,14 +55,16 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                     delete testData.packager;
                     var testableDepositLocation = new DepositLocation(testData);
                     testableDepositLocation.testConnection().then(function (response) {
-                        var data = angular.fromJson(response.body);
-                        var collections = data.payload.HashMap;
-                        angular.forEach(collections, function (uri, name) {
-                            $scope.collections.push({
-                                "name": name,
-                                "uri": uri
+                        var apiRes = angular.fromJson(response.body);
+                        if(apiRes.meta.status === 'SUCCESS') {
+                        	var collections = apiRes.payload.HashMap;
+                            angular.forEach(collections, function (uri, name) {
+                                $scope.collections.push({
+                                    "name": name,
+                                    "uri": uri
+                                });
                             });
-                        });
+                        }                        
                         isTestDepositing = false;
                     });
                 },

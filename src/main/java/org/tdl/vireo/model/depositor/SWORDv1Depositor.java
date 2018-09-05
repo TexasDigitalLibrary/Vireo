@@ -163,10 +163,7 @@ public class SWORDv1Depositor implements Depositor {
 
             return depositId;
 
-        } catch (MalformedURLException e) {
-            logger.debug(e.getMessage(), e);
-            throw new SwordDepositException(e.getMessage(), e);
-        } catch (SWORDClientException e) {
+        } catch (MalformedURLException | SWORDClientException e) {
             logger.debug(e.getMessage(), e);
             throw new SwordDepositException(e.getMessage(), e);
         }
@@ -179,16 +176,7 @@ public class SWORDv1Depositor implements Depositor {
             httpClientField.setAccessible(true);
             HttpClient httpClient = (HttpClient) httpClientField.get(client);
             httpClient.getParams().setAuthenticationPreemptive(true);
-        } catch (NoSuchFieldException e) {
-            logger.debug(e.getMessage(), e);
-            throw new SwordDepositException(e.getMessage(), e);
-        } catch (SecurityException e) {
-            logger.debug(e.getMessage(), e);
-            throw new SwordDepositException(e.getMessage(), e);
-        } catch (IllegalArgumentException e) {
-            logger.debug(e.getMessage(), e);
-            throw new SwordDepositException(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             logger.debug(e.getMessage(), e);
             throw new SwordDepositException(e.getMessage(), e);
         }

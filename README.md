@@ -11,12 +11,14 @@ The software is presently in a Beta release.  If you would like to help with tes
 Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4. 
 
 * ```-Dproduction``` will package production ready. **Required for Tomcat deployment or running as a jar**
-* ```-DskipTests``` will skip tests.
-* ```-Dassets.uri=file://opt/vireo``` will configure the package to store assets at /opt/vireo. Subsequently will configure the external configuration at /opt/vireo/config.
-* ```-Dconfig.uri=file://var/vireo/config``` will configure the external configuration directory.
-* ```-Dspring.config.location=file://var/vireo/config``` will configure the external configuration directory for development using spring-boot:run.
+* ```-DskipTests``` will skip tests
+* ```-Dassets.uri=file://opt/vireo/``` will configure to store assets at /opt/vireo
+* ```-Dconfig.uri=file://var/vireo/config/``` will configure the external configuration directory for the WAR packaged application
+* ```-Dspring.config.location=file://var/vireo/config/``` will configure the external configuration directory for development using spring-boot:run or running as a jar **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.properties file can be added to override default properties. **External configuration is recommended for production deployment**
+The external configuration directory is where an application.properties file can be added to override default properties. When packaging the application define config.uri, which will template context.xml file with the spring.config.location system variable for container deployment. When running for development define spring.config.location to externalize the configuration. If running for development and using an external configuration, do not define assets.uri. It will have to be configured manually.
+
+**External configuration is recommended for production deployment**
 
 ### Development
 
@@ -24,10 +26,16 @@ The external configuration directory is where an application.properties file can
 $ mvn clean package
 ```
 
-or run for development:
+or run for development
 
 ```bash
 $ mvn clean spring-boot:run
+```
+
+or run for development with external config and assets
+
+```bash
+$ mvn clean spring-boot:run -Dassets.uri=file://opt/vireo -Dspring.config.location=file://var/vireo/config
 ```
 
 or run for production
@@ -36,10 +44,12 @@ or run for production
 $ mvn clean spring-boot:run -Dproduction
 ```
 
+**Building or running with -Dproduction will change the index.html template at src/main/resources/templates/index.html**
+
 ### Production
 
 ```bash
-$ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/
+$ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/ -Dconfig.uri=file://opt/vireo/config/
 ```
 
 If all compile-time tests pass, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
@@ -167,7 +177,7 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 **if deplyoed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
 
 
-## Running as a stand-alone Spring Boot application
+## Running WAR as a stand-alone Spring Boot application
 
 ```bash
 java -jar target/vireo-4.0.0-SNAPSHOT.war
