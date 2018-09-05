@@ -16,6 +16,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
+import org.tdl.vireo.model.converter.CryptoConverter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
@@ -32,6 +33,9 @@ public class Application extends SpringBootServletInitializer {
     @Value("${app.assets.uri:classpath:/}")
     private Resource assets;
 
+    @Value("${app.security.secret}")
+    private String secret;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
@@ -44,6 +48,8 @@ public class Application extends SpringBootServletInitializer {
 
     @PostConstruct
     public void init() throws IOException, URISyntaxException {
+        CryptoConverter.setKey(secret);
+
         assetsPath = assets.getURI().getSchemeSpecificPart();
         // ensure assetsPath ends with URI seperator
         if (!assetsPath.endsWith("/")) {

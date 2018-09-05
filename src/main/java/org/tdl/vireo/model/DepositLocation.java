@@ -1,10 +1,12 @@
 package org.tdl.vireo.model;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.tdl.vireo.model.converter.CryptoConverter;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.validation.DepositLocationValidator;
@@ -20,7 +22,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    // TODO: this is really a URL
+    // NOTE: this is really a URL
     @Column(nullable = false)
     private String repository;
 
@@ -30,8 +32,8 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     @Column(nullable = false)
     private String username;
 
-    // TODO: encrypt!!!
     @Column(nullable = false)
+    @Convert(converter = CryptoConverter.class)
     private String password;
 
     @Column(nullable = true)
