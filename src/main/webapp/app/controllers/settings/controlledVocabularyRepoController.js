@@ -354,6 +354,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                     $scope.forms[key].$setPristine();
+                    $scope.forms[key].$setUntouched();
                 }
             }
 

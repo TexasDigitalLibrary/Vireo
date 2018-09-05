@@ -46,7 +46,8 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			$scope.graduationMonthRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-    				$scope.forms[key].$setPristine();
+						$scope.forms[key].$setPristine();
+						$scope.forms[key].$setUntouched();
     			}
     		}
 

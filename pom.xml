@@ -34,7 +34,7 @@
     <assets.uri>classpath:/</assets.uri>
     <!-- must be valid uri with scheme file or classpath -->
     <!-- i.e. file:///opt/vireo/config/, file:/opt/vireo/config, classpath:/config -->
-    <config.uri>${assets.uri}config/</config.uri>
+    <config.uri>classpath:/config/</config.uri>
   </properties>
 
   <packaging>war</packaging>
