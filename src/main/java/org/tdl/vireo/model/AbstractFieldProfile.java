@@ -1,6 +1,5 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
@@ -13,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -63,7 +61,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     private List<ControlledVocabulary> controlledVocabularies;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ManagedConfiguration mappedShibAttribute;
 
     @Column(nullable = true)
@@ -121,7 +119,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public Boolean getOptional() {
@@ -129,7 +126,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param optional
      */
     public void setOptional(Boolean optional) {
@@ -137,7 +133,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Boolean getHidden() {
@@ -145,7 +140,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param hidden
      */
     public void setHidden(Boolean hidden) {
@@ -153,7 +147,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Boolean getLogged() {
@@ -161,7 +154,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param logged
      */
     public void setLogged(Boolean logged) {
@@ -169,7 +161,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public String getUsage() {
@@ -177,7 +168,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param usage
      */
     public void setUsage(String usage) {
@@ -185,7 +175,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public String getHelp() {
@@ -193,7 +182,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param help
      */
     public void setHelp(String help) {
@@ -208,7 +196,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param Language
      *            language
      * @return The field gloss that matches the language, or null if not found
@@ -222,7 +209,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param String
      *            value
      * @param Language
@@ -248,7 +234,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     // TODO : Restrict multiple field gloss with the same language
 
     /**
-     *
      * @param fieldGloss
      */
     public void addFieldGloss(FieldGloss fieldGloss) {
@@ -256,7 +241,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param fieldGloss
      */
     public void removeFieldGloss(FieldGloss fieldGloss) {
@@ -271,7 +255,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param id
      * @return The controlled vocabulary that matches the id, or null if not found
      */
@@ -284,7 +267,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param id
      * @return The controlled vocabulary that matches the name, or null if not found
      */
@@ -324,7 +306,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public String getDefaultValue() {
@@ -332,7 +313,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param defaultValue
      */
     public void setDefaultValue(String defaultValue) {
@@ -357,7 +337,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     // TODO : Restrict multiple controlled vocabulary with the same language
 
     /**
-     *
      * @param controlledVocabularies
      */
     public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
@@ -365,7 +344,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param controlledVocabularies
      */
     public void addControlledVocabulary(int index, ControlledVocabulary controlledVocabulary) {
@@ -373,7 +351,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param controlledVocabulary
      */
     public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
