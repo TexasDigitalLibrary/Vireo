@@ -62,7 +62,7 @@ public class TemplateUtility {
                 .replaceAll("\\{" + STUDENT_URL + "\\}", url + "/submission/" + submission.getId() + "/view")
                 .replaceAll("\\{" + SUBMISSION_URL + "\\}", url + "/submission/" + submission.getId())
                 .replaceAll("\\{" + ADVISOR_URL + "\\}", submission.getAdvisorReviewURL())
-                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositUri())
+                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositURL())
 
                 .replaceAll("\\{" + DOCUMENT_TITLE + "\\}", findValue("dc.title", submission))
                 .replaceAll("\\{" + SUBMISSION_TYPE + "\\}", findValue("submission_type", submission));

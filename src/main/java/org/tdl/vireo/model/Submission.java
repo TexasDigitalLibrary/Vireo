@@ -121,7 +121,7 @@ public class Submission extends ValidatingBaseEntity {
     private String advisorReviewURL;
 
     @Column(nullable = true)
-    private String depositUri;
+    private String depositURL;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -154,7 +154,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return the submitter
      */
     public User getSubmitter() {
@@ -162,7 +161,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param submitter
      */
     public void setSubmitter(User submitter) {
@@ -170,7 +168,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public User getAssignee() {
@@ -231,7 +228,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param fieldValue
      */
     public void addFieldValue(FieldValue fieldValue) {
@@ -239,7 +235,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param fieldValue
      */
     public void removeFieldValue(FieldValue fieldValue) {
@@ -262,7 +257,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param submissionWorkflowStep
      */
     public void addSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
@@ -270,7 +264,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param submissionWorkflowStep
      */
     public void removeSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
@@ -293,7 +286,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approveEmbargoDate
      */
     public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
@@ -301,7 +293,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Calendar getApproveEmbargoDate() {
@@ -309,7 +300,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Calendar getApproveApplicationDate() {
@@ -317,7 +307,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approveApplicationDate
      */
     public void setApproveApplicationDate(Calendar approveApplicationDate) {
@@ -325,7 +314,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Calendar getApproveAdvisorDate() {
@@ -333,7 +321,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approvalDate
      */
     public void setApproveAdvisorDate(Calendar approvalDate) {
@@ -341,7 +328,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public boolean getApproveEmbargo() {
@@ -349,7 +335,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approveEmbargo
      */
     public void setApproveEmbargo(boolean approveEmbargo) {
@@ -365,7 +350,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public boolean getApproveApplication() {
@@ -373,7 +357,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approveApplication
      */
     public void setApproveApplication(boolean approveApplication) {
@@ -389,7 +372,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public boolean getApproveAdvisor() {
@@ -397,7 +379,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param approveApplication
      */
     public void setApproveAdvisor(boolean approveAdvisor) {
@@ -428,7 +409,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param actionLog
      */
     public void addActionLog(ActionLog actionLog) {
@@ -436,7 +416,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param actionLog
      */
     public void removeActionLog(ActionLog actionLog) {
@@ -459,7 +438,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public String getReviewerNotes() {
@@ -467,7 +445,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param reviewerNotes
      */
     public void setReviewerNotes(String reviewerNotes) {
@@ -482,7 +459,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param string
      */
     public void setAdvisorAccessHash(String string) {
@@ -490,15 +466,13 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public String getAdvisorAccessHash() {
         return advisorAccessHash;
     }
-    
+
     /**
-     * 
      * @return
      */
     @JsonView(ApiView.Partial.class)
@@ -515,19 +489,17 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
-    public String getDepositUri() {
-        return depositUri;
+    public String getDepositURL() {
+        return depositURL;
     }
 
     /**
-     * 
-     * @param depositUri
+     * @param depositURL
      */
-    public void setDepositUri(String depositUri) {
-        this.depositUri = depositUri;
+    public void setDepositURL(String depositURL) {
+        this.depositURL = depositURL;
     }
 
     /**
@@ -546,7 +518,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param customActionValue
      */
     public void addCustomActionValue(CustomActionValue customActionValue) {
@@ -554,7 +525,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param customActionValue
      */
     public void removeCustomActionValue(CustomActionValue customActionValue) {
@@ -562,7 +532,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param customActionValue
      * @return
      */
@@ -579,7 +548,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param customActionValue
      * @return
      */
