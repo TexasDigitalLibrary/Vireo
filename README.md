@@ -48,7 +48,7 @@ or run for development with external assets
 $ mvn clean spring-boot:run -Dassets.uri=file://var/vireo/
 ```
 
-or run for as production
+or run as production
 
 ```bash
 $ mvn clean spring-boot:run -Dproduction
