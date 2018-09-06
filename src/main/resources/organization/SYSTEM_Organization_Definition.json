@@ -184,6 +184,7 @@
           "optional":true,
           "usage":"",
           "help":"Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+          "htmlTooltip":true,
           "fieldGlosses":[
             {
               "value":"ORCID",
