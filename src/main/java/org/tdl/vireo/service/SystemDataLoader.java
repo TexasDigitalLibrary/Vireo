@@ -39,6 +39,7 @@ import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Language;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -53,6 +54,7 @@ import org.tdl.vireo.model.formatter.ExcelFormatter;
 import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.DegreeRepo;
@@ -124,6 +126,9 @@ public class SystemDataLoader {
     private FieldProfileRepo fieldProfileRepo;
 
     @Autowired
+    private ConfigurationRepo configurationRepo;
+
+    @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
 
     @Autowired
@@ -163,7 +168,7 @@ public class SystemDataLoader {
     private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
 
     @Autowired
-    DefaultFiltersService defaultFiltersService;
+    private DefaultFiltersService defaultFiltersService;
 
     @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
@@ -515,6 +520,19 @@ public class SystemDataLoader {
 
                 });
 
+                // check to see if the ManagedConfiguration exists
+                ManagedConfiguration managedConfiguration = fieldProfile.getMappedShibAttribute();
+
+                // create new ManagedConfiguration if not already exists
+                if (managedConfiguration != null) {
+                    ManagedConfiguration newManagedConfiguration = configurationRepo.findByNameAndType(managedConfiguration.getName(), managedConfiguration.getType());
+
+                    if (newManagedConfiguration == null) {
+                        newManagedConfiguration = configurationRepo.save(managedConfiguration);
+                        fieldProfile.setMappedShibAttribute(newManagedConfiguration);
+                    }
+                }
+
                 // check to see if the FieldProfile exists
                 FieldProfile newFieldProfile = fieldProfileRepo.findByFieldPredicateAndOriginatingWorkflowStep(fieldPredicate, newWorkflowStep);
 
@@ -579,8 +597,7 @@ public class SystemDataLoader {
 
                 // create new SubmissionStatus if not already exists
                 if (newSubmissionStatus == null) {
-                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
-                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(), emailWorkflowRule.getSubmissionStatus().getSubmissionState());
                     newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
                 }
 
