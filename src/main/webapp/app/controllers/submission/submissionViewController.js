@@ -17,7 +17,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             });
         };
 
-        StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
+        StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
             $scope.loaded = true;
             $scope.submission = submission;
             $scope.submission.fetchDocumentTypeFileInfo();
@@ -103,7 +103,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         CustomActionDefinitionRepo.listen(function(apiRes) {
             if(apiRes.meta.status === 'SUCCESS') {
                 StudentSubmissionRepo.remove($scope.submission);
-                StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
+                StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
                     angular.extend($scope.submission, submission);
                 });
             }

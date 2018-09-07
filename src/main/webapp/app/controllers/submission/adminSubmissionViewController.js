@@ -52,7 +52,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.dropZoneText = "Drop a file or click arrow";
 
-    SubmissionRepo.findSubmissionById($routeParams.id).then(function(submission) {
+    SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
 

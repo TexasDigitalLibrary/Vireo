@@ -1,29 +1,24 @@
-vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Submission) {
+vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, Submission, WsApi) {
 
     var submissionRepo = this;
 
     // additional repo methods and variables
 
-    submissionRepo.findSubmissionById = function (id) {
-        var submission = submissionRepo.findById(id);
-        var defer = $q.defer();
-        if (!submission) {
-            submissionRepo.clearValidationResults();
+    submissionRepo.fetchSubmissionById = function (id) {
+        return $q(function(resolve, reject) {
             angular.extend(submissionRepo.mapping.one, {
                 'method': 'get-one/' + id
             });
             var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
             fetchPromise.then(function (res) {
-                var resObj = angular.fromJson(res.body);
-                if (resObj.meta.status !== "ERROR") {
-                    submissionRepo.add(resObj.payload.Submission);
-                    defer.resolve(submissionRepo.findById(id));
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status === "SUCCESS") {
+                    resolve(new Submission(apiRes.payload.Submission));
+                } else {
+                    reject();
                 }
             });
-        } else {
-            defer.resolve(submission);
-        }
-        return defer.promise;
+        });
     };
 
     submissionRepo.query = function (columns, page, size) {
@@ -33,7 +28,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, WsApi, Sub
         });
         var promise = WsApi.fetch(submissionRepo.mapping.query);
         promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.status !== "ERROR") {
+            if (angular.fromJson(res.body).meta.status === "SUCCESS") {
                 angular.extend(submissionRepo, angular.fromJson(res.body).payload);
             }
         });
