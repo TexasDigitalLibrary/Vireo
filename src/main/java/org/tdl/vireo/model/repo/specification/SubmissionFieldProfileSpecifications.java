@@ -22,7 +22,7 @@ import edu.tamu.weaver.validation.validators.BaseModelValidator;
 
 public class SubmissionFieldProfileSpecifications {
 
-    public static Specification<SubmissionFieldProfile> exists(FieldProfile fieldProfile) {
+    public static Specification<SubmissionFieldProfile> existing(FieldProfile fieldProfile) {
         return new Specification<SubmissionFieldProfile>() {
 
             private final static String ID_NAME = "id";

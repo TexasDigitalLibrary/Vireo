@@ -1,6 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
-import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.exists;
+import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.existing;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findOne(exists(fieldProfile));
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findOne(existing(fieldProfile));
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
