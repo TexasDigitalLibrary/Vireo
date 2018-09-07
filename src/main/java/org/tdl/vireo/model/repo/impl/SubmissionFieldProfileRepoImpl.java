@@ -22,32 +22,27 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
+        SubmissionFieldProfile submissionfieldProfile = new SubmissionFieldProfile();
 
-        if (submissionfieldProfile == null) {
-            submissionfieldProfile = new SubmissionFieldProfile();
+        submissionfieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
+        submissionfieldProfile.setInputType(fieldProfile.getInputType());
+        submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
+        submissionfieldProfile.setOptional(fieldProfile.getOptional());
+        submissionfieldProfile.setHidden(fieldProfile.getHidden());
+        submissionfieldProfile.setLogged(fieldProfile.getLogged());
+        submissionfieldProfile.setUsage(fieldProfile.getUsage());
+        submissionfieldProfile.setHelp(fieldProfile.getHelp());
 
-            submissionfieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
-            submissionfieldProfile.setInputType(fieldProfile.getInputType());
-            submissionfieldProfile.setRepeatable(fieldProfile.getRepeatable());
-            submissionfieldProfile.setOptional(fieldProfile.getOptional());
-            submissionfieldProfile.setHidden(fieldProfile.getHidden());
-            submissionfieldProfile.setLogged(fieldProfile.getLogged());
-            submissionfieldProfile.setUsage(fieldProfile.getUsage());
-            submissionfieldProfile.setHelp(fieldProfile.getHelp());
+        submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
+        submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
 
-            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
-            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
+        submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
 
-            submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
+        submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
+        submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
+        submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
 
-            submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
-            submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
-            submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
-
-            submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
-        }
-
+        submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
         return submissionfieldProfile;
     }
 

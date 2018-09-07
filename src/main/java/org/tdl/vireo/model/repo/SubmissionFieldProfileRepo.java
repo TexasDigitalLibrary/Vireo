@@ -10,6 +10,4 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface SubmissionFieldProfileRepo extends WeaverRepo<SubmissionFieldProfile>, SubmissionFieldProfileRepoCustom {
 
-    public SubmissionFieldProfile findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean optional, Boolean hidden, Boolean logged, String usage, String help, ManagedConfiguration mappedShibAttribute, Boolean flagged, String defaultValue, Boolean enabled);
-
 }
