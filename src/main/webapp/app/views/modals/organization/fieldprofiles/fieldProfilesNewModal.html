@@ -9,22 +9,23 @@
 
   <validationmessage results="workflowStepRepo.ValidationResults"></validationmessage>
 
-  <validationmessage results="fieldGlossRepo.getValidationResults()"></validationmessage>
+  <validationmessage results="fieldProfileRepo.ValidationResults"></validationmessage>
 
-  <!-- TODO: figure out how to validate glosses and controlled vocabularies -->
+  <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
+
+  <!-- TODO: figure out how to validate controlled vocabularies -->
 
   <div class="modal-body field-profiles-new-modal">
 
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="General">
-        
-        <div class="form-group row">
+        <div class="form-group">
           <div class="col-sm-10 col-sm-offset-1">
             <label for="field-profiles-gloss">Label</label>
-            <input no-id="true" ng-model="modalData.fieldGlosses[0]" autocomplete="off" uib-typeahead="gloss as gloss.value for gloss in fieldGlosses | filter:$viewValue" type="text" class="form-control" placeholder="Display label for the new field" required/>
-            <button type="button" class="btn btn-default fp-button pull-right" ng-click="createFieldGloss(modalData.fieldGlosses[0])" ng-if="!modalData.fieldGlosses[0].id">Create New Label</button>
+            <input name="gloss" ng-model="modalData.gloss" ng-change="changeLabel()" autocomplete="off" type="text" class="form-control" placeholder="Display label for the new field" required/>
+            <small class="text-muted" ng-if="mustCreateFieldPredicate()">Metadata key <strong>{{modalData.fieldPredicate}}</strong> will be created.</small>
           </div>
-        </div>
+        </div>        
         <div class="row">
           <div class="col-sm-5 col-sm-offset-1 col-xs-6">
             <toggleButton label="Repeatable:" scope-value="modalData.repeatable" toggle-options='[{"true": "Yes"},{"false": "No"}]'></toggleButton>
@@ -41,34 +42,34 @@
       </uib-tab>
       <uib-tab index="1" heading="Advanced">
         <div class="field-profile-section field-profile-open">
-          <div ng-if="!inputFile" class="form-group row">
+          <div ng-if="!inputFile" class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
-              <validationmessage results="fieldPredicateRepo.getValidationResults()"></validationmessage>
-              <validatedinput no-id="true" model="modalData" property="fieldPredicate" label="Metadata Key" placeholder="Metadata Key of the field" autocomplete="off" wvr-typeahead="filteredPredicates" typeaheadproperty="value" form="forms.create" validations="fieldPredicateRepo.getValidations()" results="fieldPredicateRepo.getValidationResults()"></validatedinput>
-              <button type="button" class="btn btn-default pull-right" ng-if="!modalData.fieldPredicate.id" ng-click="createFieldPredicate()">Create New Metadata Key</button>
+              <label for="field-predicates-gloss">Metadata Key</label>
+              <input ng-model="modalData.fieldPredicate" autocomplete="off" uib-typeahead="predicate as predicate.value for predicate in fieldPredicates | filter:$viewValue" type="text" class="form-control" placeholder="Metadata Key of the field" required/>
+              <small class="text-muted" ng-if="mustCreateFieldPredicate()">Metadata key <strong>{{modalData.fieldPredicate}}</strong> will be created.</small>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
-              <validatedselect no-id="true" options="inputTypes" optionproperty="name" model="modalData" property="inputType" label="Input Type" form="forms.create" change="inputTypeChanged()" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedselect>
+              <validatedselect no-id="true" options="inputTypes" optionproperty="name" model="modalData" property="inputType" label="Input Type" form="forms.create" change="inputTypeChanged()" validations="fieldProfileRepo.getValidations()" results="fieldProfileRepo.ValidationResults"></validatedselect>
             </div>
           </div>
-          <div ng-if="inputFile" class="form-group row">
+          <div ng-if="inputFile" class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect no-id="true" options="documentTypes" optionproperty="name" model="documentData" property="documentType" label="Document Type" form="forms.create" change="documentTypeChanged()" validations="fieldProfileRepo.getValidations()" results="fieldProfileRepo.ValidationResults"></validatedselect>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
-              <validatedinput no-id="true" model="modalData" property="help" label="Help" placeholder="Help of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
+              <validatedinput no-id="true" model="modalData" property="help" label="Help" placeholder="Help of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="fieldProfileRepo.ValidationResults"></validatedinput>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
-              <validatedinput no-id="true" model="modalData" property="defaultValue" label="Default Value" placeholder="A default value for the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="workflowStepRepo.ValidationResults"></validatedinput>
+              <validatedinput no-id="true" model="modalData" property="defaultValue" label="Default Value" placeholder="A default value for the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results="fieldProfileRepo.ValidationResults"></validatedinput>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
               <validatedselect no-id="true" options="shibbolethAttributes" optionproperty="value" model="modalData" property="mappedShibAttribute" label="Shibboleth Attribute Mapping" placeholder="Shibboleth attribute mapping of the new field" form="forms.create" validations="fieldProfileRepo.getValidations()" results=""></validatedselect>
             </div>
@@ -77,7 +78,7 @@
       </uib-tab>
       <uib-tab index="2" heading="Controlled Vocabulary">
         <div class="field-profile-section field-profile-open">
-          <div class="form-group row">
+          <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
               <label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
               <select no-id="true" ng-model="modalData.controlledVocabularies[0]" ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" type="text" class="form-control">
@@ -88,12 +89,9 @@
         </div>
       </uib-tab>
     </uib-tabset>
-
   </div>
-
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="advanced = false; controlledVocabulary = false; resetFieldProfiles();">Cancel</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!modalData.fieldGlosses[0].id || !modalData.fieldPredicate.id || forms.create.$invalid">Create</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="forms.create.$invalid">Create</button>
   </div>
-
 </form>

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -22,7 +21,8 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
+        // NOTE: if field profile's properties change, this method must change as well
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndGlossAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
@@ -35,8 +35,8 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile.setLogged(fieldProfile.getLogged());
             submissionfieldProfile.setUsage(fieldProfile.getUsage());
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
+            submissionfieldProfile.setGloss(fieldProfile.getGloss());
 
-            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
             submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
 
             submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());

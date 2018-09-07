@@ -74,7 +74,7 @@ public class WorkflowStepController {
         if (!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
-        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabularies(), fieldProfile.getFieldGlosses(), fieldProfile.getDefaultValue());
+        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabularies(), fieldProfile.getDefaultValue());
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);
     }

@@ -18,7 +18,6 @@ public class SubmissionFieldProfile extends AbstractFieldProfile<SubmissionField
         setFlagged(false);
         setLogged(false);
         setEnabled(true);
-        setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 

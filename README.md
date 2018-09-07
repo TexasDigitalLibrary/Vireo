@@ -12,9 +12,9 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 * ```-Dproduction``` will package production ready. **Required for Tomcat deployment or running as a jar**
 * ```-DskipTests``` will skip tests.
-* ```-Dassets.uri=file://opt/vireo/``` will configure where to store assets.
-* ```-Dconfig.uri=file://var/vireo/config/``` will configure the external configuration directory for the WAR packaged application.
-* ```-Dspring.config.location=file://var/vireo/config/``` will configure the external configuration directory for development using `spring-boot:run`.
+* ```-Dassets.uri=file:///opt/vireo/``` will configure where to store assets.
+* ```-Dconfig.uri=file:///var/vireo/config/``` will configure the external configuration directory for the WAR packaged application.
+* ```-Dspring.config.location=file:///var/vireo/config/``` will configure the external configuration directory for development using `spring-boot:run`.
 
 **Ending trailing slash is required for spring.config.location**
 
@@ -39,13 +39,13 @@ $ mvn clean spring-boot:run
 or run for development with external configuration
 
 ```bash
-$ mvn clean spring-boot:run -Dspring.config.location=file://var/vireo/config/
+$ mvn clean spring-boot:run -Dspring.config.location=file:///var/vireo/config/
 ```
 
 or run for development with external assets
 
 ```bash
-$ mvn clean spring-boot:run -Dassets.uri=file://var/vireo/
+$ mvn clean spring-boot:run -Dassets.uri=file:///var/vireo/
 ```
 
 or run as production
@@ -59,7 +59,7 @@ $ mvn clean spring-boot:run -Dproduction
 ### Production
 
 ```bash
-$ mvn clean package -DskipTests -Dproduction -Dassets.uri=file://opt/vireo/ -Dconfig.uri=file://opt/vireo/config/
+$ mvn clean package -DskipTests -Dproduction -Dassets.uri=file:///opt/vireo/ -Dconfig.uri=file:///opt/vireo/config/
 ```
 
 If build succeeds, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
@@ -145,7 +145,7 @@ Currently, in order to have Tomcat know where the external configuration directo
 ```bash
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-  <Parameter name="spring.config.location" value="file://opt/vireo/config" />
+  <Parameter name="spring.config.location" value="file:///opt/vireo/config" />
 </Context>
 ```
 

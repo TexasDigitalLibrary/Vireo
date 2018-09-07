@@ -371,13 +371,13 @@ public class OrganizationTest extends AbstractEntityTest {
 
         WorkflowStep parentWSOne = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        FieldProfile fieldProfileOne = fieldProfileRepo.create(parentWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
+        FieldProfile fieldProfileOne = fieldProfileRepo.create(parentWSOne, fieldPredicate, inputType, TEST_GLOSS, false, false, false, false, false, false, null);
         parentWSOne.addAggregateFieldProfile(fieldProfileOne);
         parentWSOne = workflowStepRepo.save(parentWSOne);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
 
         WorkflowStep parentWSTwo = workflowStepRepo.create("Parent Step 2", parentOrganization);
-        FieldProfile fieldProfileTwo = fieldProfileRepo.create(parentWSTwo, fieldPredicate, inputType, false, false, false, false, false, false, null);
+        FieldProfile fieldProfileTwo = fieldProfileRepo.create(parentWSTwo, fieldPredicate, inputType, TEST_GLOSS, false, false, false, false, false, false, null);
         parentWSOne.addAggregateFieldProfile(fieldProfileTwo);
         parentWSOne = workflowStepRepo.save(parentWSOne);
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
@@ -389,13 +389,13 @@ public class OrganizationTest extends AbstractEntityTest {
         childOrganization = organizationRepo.findOne(childOrganization.getId());
 
         WorkflowStep childWSOne = workflowStepRepo.create("Child Step 1", childOrganization);
-        FieldProfile fieldProfileThree = fieldProfileRepo.create(childWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
+        FieldProfile fieldProfileThree = fieldProfileRepo.create(childWSOne, fieldPredicate, inputType, TEST_GLOSS, false, false, false, false, false, false, null);
         childWSOne.addAggregateFieldProfile(fieldProfileThree);
         childWSOne = workflowStepRepo.save(childWSOne);
         childOrganization = organizationRepo.findOne(childOrganization.getId());
 
         WorkflowStep childWSTwo = workflowStepRepo.create("Child Step 2", childOrganization);
-        FieldProfile fieldProfileFour = fieldProfileRepo.create(childWSTwo, fieldPredicate, inputType, false, false, false, false, false, false, null);
+        FieldProfile fieldProfileFour = fieldProfileRepo.create(childWSTwo, fieldPredicate, inputType, TEST_GLOSS, false, false, false, false, false, false, null);
         childWSTwo.addAggregateFieldProfile(fieldProfileFour);
         childWSTwo = workflowStepRepo.save(childWSTwo);
 
@@ -403,7 +403,7 @@ public class OrganizationTest extends AbstractEntityTest {
         grandChildOrganization = organizationRepo.findOne(grandChildOrganization.getId());
 
         WorkflowStep grandChildWSOne = workflowStepRepo.create("Grand Child Step 1", grandChildOrganization);
-        FieldProfile fieldProfileFive = fieldProfileRepo.create(grandChildWSOne, fieldPredicate, inputType, false, false, false, false, false, false, null);
+        FieldProfile fieldProfileFive = fieldProfileRepo.create(grandChildWSOne, fieldPredicate, inputType, TEST_GLOSS, false, false, false, false, false, false, null);
         grandChildWSOne.addAggregateFieldProfile(fieldProfileFive);
         grandChildWSOne.removeAggregateFieldProfile(fieldProfileOne);
         grandChildWSOne = workflowStepRepo.save(grandChildWSOne);

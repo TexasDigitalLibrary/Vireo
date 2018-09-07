@@ -30,7 +30,8 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
-    @Column(unique = true, nullable = false)
+    // NOTE: should this be unique? Are there any front end requirements for it to be unique.
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = true)

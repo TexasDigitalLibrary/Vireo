@@ -1405,14 +1405,6 @@ input[type=color]:focus {
   font-size: 0.85em;
 }
 
-.tip .tip-message a,
-.tip .tip-message a:active,
-.tip .tip-message a:focus,
-.tip .tip-message a:hover,
-.tip .tip-message a:visited {
-  color: #f8ff11;
-}
-
 .tip.tip-visible .tip-message {
   z-index: 102 !important;
 }

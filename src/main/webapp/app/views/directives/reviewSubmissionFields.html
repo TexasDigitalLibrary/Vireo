@@ -10,7 +10,7 @@
   <form class="form-horizontal">
     <div ng-repeat="aggregateFieldProfile in submissionWorkflowStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
       <div class="form-group">
-        <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.fieldGlosses[0].value}}{{aggregateFieldProfile.fieldPredicate.value==='default_embargos'||aggregateFieldProfile.fieldPredicate.value==='proquest_embargos' ? ' (Selected)' : ''}}:</label>
+        <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">{{aggregateFieldProfile.gloss}}{{aggregateFieldProfile.fieldPredicate.value==='default_embargos'||aggregateFieldProfile.fieldPredicate.value==='proquest_embargos' ? ' (Selected)' : ''}}:</label>
         <div class="col-sm-9 field-values">
           <ul class="list-unstyled">
             <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">

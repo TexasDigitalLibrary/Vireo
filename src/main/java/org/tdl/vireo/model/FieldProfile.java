@@ -47,7 +47,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setHidden(false);
         setFlagged(false);
         setLogged(false);
-        setFieldGlosses(new ArrayList<FieldGloss>());
         setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
@@ -57,17 +56,17 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     *
      * @param fieldPredicate
      * @param inputType
      * @param repeatable
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
         this(originatingWorkflowStep);
         setFieldPredicate(fieldPredicate);
         setInputType(inputType);
+        setGloss(gloss);
         setRepeatable(repeatable);
         setOverrideable(overrideable);
         setEnabled(enabled);
@@ -78,7 +77,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     }
 
     /**
-     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -86,13 +84,12 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
         setUsage(usage);
     }
 
     /**
-     *
      * @param fieldPredicate
      * @param inputType
      * @param usage
@@ -100,29 +97,28 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
      * @param enabled
      * @param optional
      */
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
         setHelp(help);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
         addControlledVocabulary(0, controlledVocabulary);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
         setControlledVocabularies(controlledVocabularies);
-        setFieldGlosses(fieldGlosses);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, ManagedConfiguration mappedShibAttribute, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, ManagedConfiguration mappedShibAttribute, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, defaultValue);
         setMappedShibAttribute(mappedShibAttribute);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, List<FieldGloss> fieldGlosses, ManagedConfiguration mappedShibAttribute, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, fieldGlosses, mappedShibAttribute, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, ManagedConfiguration mappedShibAttribute, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, mappedShibAttribute, defaultValue);
         setHidden(hidden);
     }
 
@@ -179,12 +175,7 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         clone.setLogged(getLogged());
         clone.setUsage(getUsage());
         clone.setHelp(getHelp());
-
-        List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
-        for (FieldGloss fg : getFieldGlosses()) {
-            fieldGlosses.add(fg);
-        }
-        clone.setFieldGlosses(fieldGlosses);
+        clone.setGloss(getGloss());
 
         List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
         for (ControlledVocabulary cv : getControlledVocabularies()) {

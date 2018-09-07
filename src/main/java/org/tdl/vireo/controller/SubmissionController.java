@@ -343,7 +343,7 @@ public class SubmissionController {
                     submission = submissionRepo.save(submission);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was set to " + fieldValue.getValue());
                     }
 
                 } else {
@@ -353,7 +353,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
