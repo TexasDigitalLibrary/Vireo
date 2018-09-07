@@ -33,7 +33,6 @@ import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Embargo;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.GraduationMonth;
@@ -62,7 +61,6 @@ import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
@@ -130,9 +128,6 @@ public class SystemDataLoader {
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
-    private FieldGlossRepo fieldGlossRepo;
 
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
@@ -495,31 +490,6 @@ public class SystemDataLoader {
 
                 });
 
-                // temporary list of FieldGloss
-                List<FieldGloss> fieldGlosses = new ArrayList<FieldGloss>();
-
-                fieldProfile.getFieldGlosses().forEach(fieldGloss -> {
-
-                    // check to see if the Language exists
-                    Language language = languageRepo.findByName(fieldGloss.getLanguage().getName());
-
-                    // create new Language if not already exists
-                    if (language == null) {
-                        language = languageRepo.create(fieldGloss.getLanguage().getName());
-                    }
-
-                    // check to see if the FieldGloss exists
-                    FieldGloss newFieldGloss = fieldGlossRepo.findByValueAndLanguage(fieldGloss.getValue(), language);
-
-                    // create new FieldGloss if not already exists
-                    if (newFieldGloss == null) {
-                        newFieldGloss = fieldGlossRepo.create(fieldGloss.getValue(), language);
-                    }
-
-                    fieldGlosses.add(newFieldGloss);
-
-                });
-
                 // check to see if the ManagedConfiguration exists
                 ManagedConfiguration managedConfiguration = fieldProfile.getMappedShibAttribute();
 
@@ -541,7 +511,7 @@ public class SystemDataLoader {
 
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
 
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldGlosses, fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
 
                 }
 
@@ -615,7 +585,7 @@ public class SystemDataLoader {
                         organization.getAggregateWorkflowSteps().forEach(awfs -> {
                             awfs.getAggregateFieldProfiles().forEach(afp -> {
                                 if (afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
-                                    EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getFieldGlosses().get(0).getValue(), afp.getFieldPredicate());
+                                    EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getGloss(), afp.getFieldPredicate());
                                     emailWorkflowRule.setEmailRecipient(recipient);
                                 }
                             });

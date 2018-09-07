@@ -30,7 +30,6 @@ import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.FieldGlossRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -150,7 +149,8 @@ public abstract class AbstractEntityTest {
 
     // WorkFlow test
     protected static final String TEST_WORKFLOW_NAME = "Test Workflow";
-    protected static final String TEST_FIELD_GLOSS_VALUE = "Test Field Gloss";
+    protected static final String TEST_GLOSS = "Test Gloss";
+    protected static final String TEST_SEVERABLE_GLOSS = "Test Severable Gloss";
 
     // Organization Category test
     protected static final String TEST_CATEGORY_NAME = "Test Category";
@@ -158,7 +158,6 @@ public abstract class AbstractEntityTest {
 
     // Field Predicate Test
     protected static final String TEST_FIELD_PREDICATE_VALUE = "test.predicate";
-    protected static final String TEST_SEVERABLE_FIELD_GLOSS_VALUE = "Test Severable Gloss";
     protected static final String TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME = "Test Severable Controlled Vocaublary";
 
     // Submission Status Test
@@ -376,9 +375,6 @@ public abstract class AbstractEntityTest {
 
     @Autowired
     protected NoteRepo noteRepo;
-
-    @Autowired
-    protected FieldGlossRepo fieldGlossRepo;
 
     @Autowired
     protected FieldPredicateRepo fieldPredicateRepo;

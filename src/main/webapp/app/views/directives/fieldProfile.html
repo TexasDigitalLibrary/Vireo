@@ -1,7 +1,7 @@
 <form id="{{profile.fieldPredicate.value}}" class="field-profile input-text row" name="fieldProfileForm" novalidate autocomplete="off">
   <div class="form-group">
     <div class="col-xs-12 col-sm-2">
-      <label ng-class="{'required': !profile.optional}">{{profile.fieldGlosses[0].value}}:</label>
+      <label ng-class="{'required': !profile.optional}">{{profile.gloss}}:</label>
     </div>
     <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name !== 'INPUT_FILE'">
       <div class="field-value-input row" ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate" field-profile-focus>

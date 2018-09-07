@@ -52,9 +52,8 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
-    @ManyToMany(fetch = EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<FieldGloss> fieldGlosses;
+    @Column(nullable = false)
+    private String gloss;
 
     @ManyToMany(fetch = EAGER)
     @Fetch(FetchMode.SELECT)
@@ -189,62 +188,17 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the fieldGlosses
+     * @return
      */
-    public List<FieldGloss> getFieldGlosses() {
-        return fieldGlosses;
+    public String getGloss() {
+        return gloss;
     }
 
     /**
-     * @param Language
-     *            language
-     * @return The field gloss that matches the language, or null if not found
+     * @param gloss
      */
-    public FieldGloss getFieldGlossByLanguage(Language language) {
-        for (FieldGloss fieldGloss : getFieldGlosses()) {
-            if (fieldGloss.getLanguage().equals(language))
-                return fieldGloss;
-        }
-        return null;
-    }
-
-    /**
-     * @param String
-     *            value
-     * @param Language
-     *            language
-     * @return The field gloss that matches the language, or null if not found
-     */
-    public FieldGloss getFieldGlossByValueAndLanguage(String value, Language language) {
-        for (FieldGloss fieldGloss : getFieldGlosses()) {
-            if (fieldGloss.getLanguage().equals(language) && fieldGloss.getValue().equals(value))
-                return fieldGloss;
-        }
-        return null;
-    }
-
-    /**
-     * @param fieldGlosses
-     *            the fieldGlosses to set
-     */
-    public void setFieldGlosses(List<FieldGloss> fieldGlosses) {
-        this.fieldGlosses = fieldGlosses;
-    }
-
-    // TODO : Restrict multiple field gloss with the same language
-
-    /**
-     * @param fieldGloss
-     */
-    public void addFieldGloss(FieldGloss fieldGloss) {
-        getFieldGlosses().add(fieldGloss);
-    }
-
-    /**
-     * @param fieldGloss
-     */
-    public void removeFieldGloss(FieldGloss fieldGloss) {
-        getFieldGlosses().remove(fieldGloss);
+    public void setGloss(String gloss) {
+        this.gloss = gloss;
     }
 
     /**

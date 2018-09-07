@@ -5,7 +5,7 @@
     ng-required="!profile.optional" 
     ng-model="fieldValue.value"
     ng-blur="save(fieldValue)"
-    placeholder="Input {{profile.fieldGlosses[0].value}}"
+    placeholder="Input {{profile.gloss}}"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
