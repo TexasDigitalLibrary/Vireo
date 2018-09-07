@@ -135,58 +135,58 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
         $scope.changeLabel = function() {
             if(angular.isDefined($scope.modalData.gloss) && (angular.isUndefined($scope.modalData.fieldPredicate) || $scope.mustCreateFieldPredicate())) {
-                $scope.modalData.fieldPredicate = $scope.modalData.gloss.toLowerCase().replace(' ', '_');
+                $scope.modalData.fieldPredicate = $scope.modalData.gloss.toLowerCase().replace(/ /g, '_');
                 for(var i in $scope.fieldPredicates) {
-                	if($scope.fieldPredicates[i].value === $scope.modalData.fieldPredicate) {
-                		$scope.modalData.fieldPredicate = $scope.fieldPredicates[i];
-                		break;
-                	}
+                    if($scope.fieldPredicates[i].value === $scope.modalData.fieldPredicate) {
+                        $scope.modalData.fieldPredicate = $scope.fieldPredicates[i];
+                        break;
+                    }
                 }
             } else if(angular.isUndefined($scope.modalData.gloss) && typeof $scope.modalData.fieldPredicate === 'string') {
-            	delete $scope.modalData.fieldPredicate;
+                delete $scope.modalData.fieldPredicate;
             }
         };
         
         $scope.mustCreateFieldPredicate = function () {
-        	return typeof $scope.modalData.fieldPredicate === 'string';
+            return typeof $scope.modalData.fieldPredicate === 'string';
         };
         
         $scope.canCreateFieldPredicate = function () {
-        	return $scope.mustCreateFieldPredicate() && $scope.modalData.fieldPredicate.length > 0;
+            return $scope.mustCreateFieldPredicate() && $scope.modalData.fieldPredicate.length > 0;
         };
 
         $scope.createFieldPredicate = function () {
-        	return $q(function(resolve) {
-        		if($scope.mustCreateFieldPredicate()) {
-		            FieldPredicateRepo.create({
-		                value: $scope.modalData.fieldPredicate,
-		                documentTypePredicate: false
-		            }).then(function (response) {
-		                var apiRes = angular.fromJson(response.body);
-		                if (apiRes.meta.status === "SUCCESS") {
-		                    $scope.modalData.fieldPredicate = apiRes.payload.FieldPredicate;
-		                    resolve();
-		                }
-		            });
-        		} else {
-        			resolve();
-        		}
-        	});
+            return $q(function(resolve) {
+                if($scope.mustCreateFieldPredicate()) {
+                    FieldPredicateRepo.create({
+                        value: $scope.modalData.fieldPredicate,
+                        documentTypePredicate: false
+                    }).then(function (response) {
+                        var apiRes = angular.fromJson(response.body);
+                        if (apiRes.meta.status === "SUCCESS") {
+                            $scope.modalData.fieldPredicate = apiRes.payload.FieldPredicate;
+                            resolve();
+                        }
+                    });
+                } else {
+                    resolve();
+                }
+            });
         };
         
         var unsetDefaultShipAttribute = function() {
-        	if(angular.isDefined($scope.modalData.mappedShibAttribute) && $scope.modalData.mappedShibAttribute.id === 0) {
+            if(angular.isDefined($scope.modalData.mappedShibAttribute) && $scope.modalData.mappedShibAttribute.id === 0) {
                 delete $scope.modalData.mappedShibAttribute;
             }
         };
 
         $scope.createFieldProfile = function () {
-        	unsetDefaultShipAttribute();
-        	$scope.createFieldPredicate().then(function() {
-        	    WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
+            unsetDefaultShipAttribute();
+            $scope.createFieldPredicate().then(function() {
+                WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
                 });
-        	});
+            });
         };
 
         $scope.selectFieldProfile = function (index) {
@@ -208,7 +208,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
-        	unsetDefaultShipAttribute();
+            unsetDefaultShipAttribute();
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();

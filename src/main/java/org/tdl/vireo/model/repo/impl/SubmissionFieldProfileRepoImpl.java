@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.exists;
+
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,7 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        // NOTE: if field profile's properties change, this method must change as well
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndGlossAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findOne(exists(fieldProfile));
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
@@ -36,14 +37,12 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile.setUsage(fieldProfile.getUsage());
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
             submissionfieldProfile.setGloss(fieldProfile.getGloss());
-
-            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
-
             submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
-
             submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
             submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
             submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
+
+            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
 
             submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
         }
