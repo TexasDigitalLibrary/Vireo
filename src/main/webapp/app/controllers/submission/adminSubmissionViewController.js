@@ -242,6 +242,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         resetFileData();
 
+        $scope.getDocumentTypePredicates = function () {
+            var documentTypePredicates = [];
+            for (var i in $scope.submission.fieldValues) {
+                var fieldValue = $scope.submission.fieldValues[i];
+                if (fieldValue.fieldPredicate.documentTypePredicate) {
+                    documentTypePredicates.push(fieldValue.fieldPredicate);
+                }
+            }
+            console.log(documentTypePredicates);
+            return documentTypePredicates;
+        };
+
         $scope.getPattern = function (doctype) {
             var pattern = "*";
             var fieldPredicate;
