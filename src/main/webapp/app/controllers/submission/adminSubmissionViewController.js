@@ -250,7 +250,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     documentTypePredicates.push(fieldValue.fieldPredicate);
                 }
             }
-            console.log(documentTypePredicates);
             return documentTypePredicates;
         };
 
