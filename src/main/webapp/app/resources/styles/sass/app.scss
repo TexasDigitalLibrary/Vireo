@@ -619,8 +619,6 @@ a.tooltip-icon {
   text-decoration: none;
 }
 
-a.tooltip-icon:hover {}
-
 a[title]:hover:after {
   position: absolute;
 }
@@ -649,8 +647,6 @@ h4 {
   text-decoration: none;
 }
 
-.deposit-location {}
-
 .custom-actions {
   margin-left: 18px;
 
@@ -658,8 +654,6 @@ h4 {
     margin-right: 8px;
   }
 }
-
-.graduation-month {}
 
 .edit-setting-icon:hover {
   cursor: pointer;
@@ -1133,8 +1127,6 @@ input[type=color]:focus {
   cursor: pointer;
 }
 
-.triptych-navigation {}
-
 .triptych-navigation .breadcrumb {
   min-height: 60px;
   display: inline-block;
@@ -1149,10 +1141,6 @@ input[type=color]:focus {
 .triptych-navigation .breadcrumb .glyphicon-arrow-down {
   vertical-align: middle;
 }
-
-.triptych-navigation breadcrumb {}
-
-.triptych-panels {}
 
 .triptych-panels .glyphicon-arrow-right {
   display: none;
@@ -1248,8 +1236,6 @@ input[type=color]:focus {
   margin: auto;
 }
 
-.triptych-panel-entry {}
-
 #organizationManagement .panel-wrap {
   display: none;
 }
@@ -1271,10 +1257,12 @@ input[type=color]:focus {
   cursor: pointer;
   color: #337ab7;
 }
-/*************
-* DIRECTIVES *
-**************/
-/*Accordion*/
+
+/**************
+ * DIRECTIVES *
+ **************/
+
+/* Accordion */
 .accordion .panel {
   margin-bottom: 3px;
 }
@@ -1339,6 +1327,7 @@ input[type=color]:focus {
 .panel-content-wrapper {
   padding: 25px;
 }
+
 /* Tooltip */
 .tooltip-wrapper {
   position: relative;
@@ -1450,12 +1439,6 @@ input[type=color]:focus {
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
-  // background-color: #afafaf;
-  // color: transparent;
-  // text-shadow: 0px 2px 3px rgba(255,255,255,0.75);
-  // -webkit-background-clip: text;
-  // -moz-background-clip: text;
-  // background-clip: text;
 }
 
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-down,
@@ -1506,9 +1489,10 @@ input[type=color]:focus {
   font-weight: normal;
   line-height: 22px;
 }
-/********
-* NOTES *
-*********/
+
+/*********
+ * NOTES *
+ *********/
 .note {
   position: relative;
   max-width: 225px;
@@ -1523,6 +1507,7 @@ input[type=color]:focus {
   top: 7px;
   left: 8px;
 }
+
 /************************************
  * Submission View Column Selection *
  ************************************/
@@ -1712,7 +1697,6 @@ input[type=color]:focus {
 .email-workflow-rule-row:hover span.glyphicon-pencil {
   visibility: visible;
 }
-//<span class="glyphicon glyphicon-pencil"></span>
 
 .submission-review-item {
   padding-bottom: 5px;
@@ -1732,4 +1716,10 @@ input[type=color]:focus {
 
 .font-weight-bold {
   font-weight: bold;
+}
+
+.open > .dropdown-menu,
+[uib-typeahead-popup].dropdown-menu {
+  max-height: 400px;
+  overflow-y: scroll;
 }

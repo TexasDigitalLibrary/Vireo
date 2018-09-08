@@ -45,7 +45,7 @@
 
       <div class="col-sm-8 info-data">
         <!-- conditionally show the edit clicker or the progress spinner -->
-        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="editFieldValue(field)"></span>
+        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue(field)"></span>
         <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
 
         <!-- conditionally show the proper form of the field value -->
@@ -66,11 +66,11 @@
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value">{{field.value}} ({{field.contacts[0]}})</span>
 
-        <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
-        <span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
+        <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
+        <span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>
 
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
-        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary toggle-href" ng-click="refreshFieldValue(field)"></span>
+        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
       </div>
 
       <div class="clearfix"></div>
