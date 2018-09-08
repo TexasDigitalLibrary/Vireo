@@ -19,6 +19,9 @@
   min-width: 400px;
 }
 
+.student-submission.ready {
+  margin-top: -50px;
+}
 
 .student-submission,
 .student-submission-loader.ready {
@@ -50,6 +53,7 @@
   margin: 0px 0px 5px 0px;
   color: inherit;
   background-color: inherit;
+  white-space: nowrap;
 }
 
 .nav-pills > .submission-workflow-step-navigation.active > a,
