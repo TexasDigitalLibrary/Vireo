@@ -1,13 +1,15 @@
-<div class="input-group">
-  <input  
-    ng-init="checked = field.value && field.value !== ''"
-    type="checkbox" 
-    ng-model="checked"
-    ng-true-value="true" 
-    ng-false-value="false"
-    ng-click="setConditionalTextArea(field, checked)"/>
-  <span ng-if="checked !== true" class="glyphicon glyphicon-ok pull-right clickable" ng-click="save(field)"></span>
-  <span ng-if="checked !== true" class="glyphicon glyphicon-remove pull-right clickable" ng-click="cancel(field)"></span>
+<div class="input-group checkbox">
+  <label>
+    <input  
+      ng-init="checked = field.value && field.value !== ''"
+      type="checkbox" 
+      ng-model="checked"
+      ng-true-value="true" 
+      ng-false-value="false"
+      ng-click="setConditionalTextArea(field, checked)"/>
+    <span ng-if="checked !== true" class="glyphicon glyphicon-ok pull-right clickable" ng-click="save(field)"></span>
+    <span ng-if="checked !== true" class="glyphicon glyphicon-remove pull-right clickable" ng-click="cancel(field)"></span>
+  </label>
   <div ng-if="checked === true">
     <textarea
       class="form-control"
