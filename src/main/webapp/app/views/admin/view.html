@@ -32,13 +32,13 @@
       <h1>REVIEWER NOTES</h1>
     </div>
     <div class="form-inline reviewer-notes">
-      <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil toggle-href" ng-click="editReviewerNotes()"></span>
+      <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil clickable" ng-click="editReviewerNotes()"></span>
       <span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"></span>
       <span ng-if="!editingReviewerNotes" ng-class="{'info-empty': !submission.reviewerNotes}">{{submission.reviewerNotes || 'none'}}</span>
       <div class="input-group" ng-if="editingReviewerNotes">
         <textarea class="form-control" ng-model="submission.reviewerNotes" cols="200"></textarea>
-        <span class="glyphicon glyphicon-ok toggle-href" ng-click="saveReviewerNotes()"></span>
-        <span class="glyphicon glyphicon-remove toggle-href" ng-click="cancelReviewerNotes()"></span>
+        <span class="glyphicon glyphicon-ok clickable" ng-click="saveReviewerNotes()"></span>
+        <span class="glyphicon glyphicon-remove clickable" ng-click="cancelReviewerNotes()"></span>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@
           <td>{{documentFieldValue.fileInfo.time | date : 'MM/dd/yyyy h:mm:ss a' }}</td>
           <td class="all-files-action">
             <modal modal-id="{{'editFileModal-' + documentFieldValue.id}}" modal-view="views/modals/view/editFileModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
-            <span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
+            <span ng-if="!documentFieldValue.updating" class="glyphicon glyphicon-pencil clickable" ng-click="openModal('#editFileModal-' + documentFieldValue.id)"></span>
             <span ng-if="documentFieldValue.updating" class="glyphicon glyphicon-refresh spinning"></span>
           </td>
         </tr>
