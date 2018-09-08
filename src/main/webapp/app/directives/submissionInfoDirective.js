@@ -1,6 +1,6 @@
-vireo.directive("info", function () {
+vireo.directive("submissioninfo", function () {
     return {
-        templateUrl: 'views/directives/submissionInfo.html',
+        templateUrl: 'views/admin/info/submissionInfo.html',
         restrict: 'E',
         replace: true,
         transclude: true,
