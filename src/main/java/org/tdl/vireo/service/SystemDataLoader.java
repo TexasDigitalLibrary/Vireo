@@ -706,7 +706,7 @@ public class SystemDataLoader {
                 Language newLanguage = languageRepo.findByName(language.getName());
 
                 if (newLanguage == null) {
-                    newLanguage = languageRepo.create(language);
+                    newLanguage = languageRepo.create(language.getName());
                 } else {
                     newLanguage.setName(language.getName());
                     newLanguage = languageRepo.save(newLanguage);
