@@ -1,7 +1,6 @@
 package org.tdl.vireo.model.repo.impl;
 
 import static edu.tamu.weaver.response.ApiAction.CHANGE;
-import static edu.tamu.weaver.response.ApiAction.CREATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
             controlledVocabulary = new ControlledVocabulary(name);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
             controlledVocabulary = super.create(controlledVocabulary);
-            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CREATE));
+            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
         }
         return controlledVocabulary;
     }
@@ -37,7 +36,7 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
             controlledVocabulary = new ControlledVocabulary(name, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
             controlledVocabulary = super.create(controlledVocabulary);
-            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CREATE));
+            simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
         }
 
         return controlledVocabulary;
