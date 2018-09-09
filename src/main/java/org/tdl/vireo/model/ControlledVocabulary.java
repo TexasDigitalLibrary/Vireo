@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -29,6 +31,7 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     private String name;
 
     @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
+    @Fetch(FetchMode.SELECT)
     private List<VocabularyWord> dictionary;
 
     @Column(nullable = false)
