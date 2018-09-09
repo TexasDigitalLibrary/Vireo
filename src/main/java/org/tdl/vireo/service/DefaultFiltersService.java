@@ -3,15 +3,11 @@ package org.tdl.vireo.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.SubmissionListColumn;
 
 @Service
 public class DefaultFiltersService {
-
-    private final static Logger logger = LoggerFactory.getLogger(DefaultFiltersService.class);
 
     private List<SubmissionListColumn> defaultFilters = new ArrayList<SubmissionListColumn>();
 
@@ -28,11 +24,7 @@ public class DefaultFiltersService {
     }
 
     public void addDefaultFilter(SubmissionListColumn defaultFilter) {
-        if (defaultFilter != null) {
-            this.defaultFilters.add(defaultFilter);
-        } else {
-            logger.info("Default filter is null!!");
-        }
+        this.defaultFilters.add(defaultFilter);
     }
 
     public void removeDefaultFilter(SubmissionListColumn defaultFilter) {
