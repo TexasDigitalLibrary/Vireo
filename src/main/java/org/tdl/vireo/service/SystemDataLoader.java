@@ -866,7 +866,7 @@ public class SystemDataLoader {
             if (dbDefaultFilterColumn != null) {
                 defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
             } else {
-                logger.warn("Unable to find fefault filter for column " + defaultFilterColumn.getTitle() + "!");
+                logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
             }
         }
 
