@@ -1,9 +1,6 @@
 {
   "name":"Colleges",
   "isEntityProperty":false,
-  "language":{
-    "name":"English"
-  },
   "dictionary":[
     {
       "name":"College of Science",

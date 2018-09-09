@@ -31,7 +31,7 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
 
     @Override
     public ControlledVocabulary create(String name, Boolean isEntityProperty) {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndIsEntityProperty(name, isEntityProperty);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         if (controlledVocabulary == null) {
             controlledVocabulary = new ControlledVocabulary(name, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);

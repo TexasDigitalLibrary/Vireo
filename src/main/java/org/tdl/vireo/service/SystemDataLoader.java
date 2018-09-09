@@ -181,9 +181,6 @@ public class SystemDataLoader {
 
         logger.info("Loading default languages");
         loadLanguages();
-        
-        logger.info("Loading default controlled vocabularies");
-        loadControlledVocabularies();
 
         logger.info("Loading default input types");
         loadInputTypes();
@@ -214,6 +211,9 @@ public class SystemDataLoader {
 
         logger.info("Loading default organization");
         loadOrganization();
+
+        logger.info("Loading default controlled vocabularies");
+        loadControlledVocabularies();
 
         logger.info("Loading default settings");
         loadSystemDefaults();
@@ -456,11 +456,10 @@ public class SystemDataLoader {
                 // create new ControlledVocabulary if not already exists
                 if (controlledVocabulary != null) {
                     ControlledVocabulary persistedControlledVocabulary = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
-
                     if (persistedControlledVocabulary == null) {
                         persistedControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getIsEntityProperty());
-                        fieldProfile.setControlledVocabulary(persistedControlledVocabulary);
                     }
+                    fieldProfile.setControlledVocabulary(persistedControlledVocabulary);
                 }
 
                 // check to see if the ManagedConfiguration exists
@@ -469,11 +468,10 @@ public class SystemDataLoader {
                 // create new ManagedConfiguration if not already exists
                 if (managedConfiguration != null) {
                     ManagedConfiguration persistedManagedConfiguration = configurationRepo.findByNameAndType(managedConfiguration.getName(), managedConfiguration.getType());
-
                     if (persistedManagedConfiguration == null) {
-                        persistedManagedConfiguration = configurationRepo.save(managedConfiguration);
-                        fieldProfile.setMappedShibAttribute(persistedManagedConfiguration);
+                        persistedManagedConfiguration = configurationRepo.create(managedConfiguration);
                     }
+                    fieldProfile.setMappedShibAttribute(persistedManagedConfiguration);
                 }
 
                 // check to see if the FieldProfile exists
@@ -481,17 +479,13 @@ public class SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
-
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
-
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
-
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
 
                 newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
-
             }
 
             // temporary list of Note

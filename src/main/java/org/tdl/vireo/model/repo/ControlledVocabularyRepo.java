@@ -11,8 +11,6 @@ public interface ControlledVocabularyRepo extends WeaverOrderedRepo<ControlledVo
 
     public ControlledVocabulary findByName(String name);
 
-    public ControlledVocabulary findByNameAndIsEntityProperty(String name, Boolean isEntityProperty);
-
     public List<ControlledVocabulary> findAllByIsEntityProperty(boolean isEntityProperty);
 
 }
