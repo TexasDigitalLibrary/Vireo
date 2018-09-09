@@ -53,7 +53,9 @@ vireo.directive("vireoTab", function($compile, $location, VireoTabService, WsApi
 			angular.element('#tabs-directive').after($compile(span)($scope));
 
 			VireoTabService.register($scope.path, function() {
-				WsApi.skipUnsubscribe();
+				if($scope.reload === false) {
+					WsApi.registerPersistentRouteBasedChannel($scope.path);
+				}
 				$location.path($scope.path, $scope.reload);
 			});
 
