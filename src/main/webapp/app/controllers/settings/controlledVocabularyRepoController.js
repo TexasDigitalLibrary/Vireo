@@ -382,12 +382,11 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
             $scope.uploadWordMap = {};
 
-            if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+            if (angular.isDefined($scope.modalData) && angular.isDefined($scope.modalData.refresh)) {
                 $scope.modalData.refresh();
             }
-            $scope.modalData = {
-                
-            };
+
+            $scope.modalData = {};
         };
 
         $scope.resetControlledVocabulary = function (closeModal) {
