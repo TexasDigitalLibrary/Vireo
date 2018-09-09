@@ -77,5 +77,5 @@ vireo.service("VireoTabService", function() {
 		isActive: function(path) {
 			return active === path;
 		}
-	}
+	};
 });
