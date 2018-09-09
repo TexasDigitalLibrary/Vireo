@@ -1,8 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
@@ -10,7 +8,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.slf4j.Logger;
@@ -31,9 +28,6 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToOne(cascade = { DETACH, REFRESH }, optional = false)
-    private Language language;
-
     @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
     private List<VocabularyWord> dictionary;
 
@@ -46,14 +40,13 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
         setDictionary(new ArrayList<VocabularyWord>());
     }
 
-    public ControlledVocabulary(String name, Language language) {
+    public ControlledVocabulary(String name) {
         this();
         setName(name);
-        setLanguage(language);
     }
 
-    public ControlledVocabulary(String name, Language language, Boolean isEntityProperty) {
-        this(name, language);
+    public ControlledVocabulary(String name, Boolean isEntityProperty) {
+        this(name);
         setIsEntityProperty(isEntityProperty);
     }
 
@@ -73,7 +66,8 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
+     * Returns either a set of vocabulary words of the controlled vocabulary or a set composed of a unique list of an entities property. This is done lazily by requesting the EntityControlledVocabularyService bean through a static method of
+     * SpringContext. From the bean, calling the getControlledVocabulary method providing the entityName and name of the controlled vocabulary. This name is also the property name of the entity.
      *
      * @return the values
      */
@@ -90,22 +84,6 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
             }
         }
         return values;
-    }
-
-    /**
-     *
-     * @return Language language
-     */
-    public Language getLanguage() {
-        return language;
-    }
-
-    /**
-     *
-     * @param language
-     */
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 
     /**

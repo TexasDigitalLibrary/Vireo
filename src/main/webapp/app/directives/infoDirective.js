@@ -77,21 +77,22 @@ vireo.directive("info", function () {
             };
 
             $scope.datepickerOptions = {};
-            $scope.datepickerFormat = $scope.fieldProfile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            $scope.datepickerFormat = angular.isDefined($scope.fieldProfile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
-
-                for (var i in $scope.fieldProfile.controlledVocabularies[0].dictionary) {
-                    var cvw = $scope.fieldProfile.controlledVocabularies[0].dictionary[i];
-                    if (cvw.name == dateAndMode.date.getMonth()) {
-                        disabled = false;
-                        break;
+                if(angular.isDefined($scope.fieldProfile.controlledVocabulary)) {
+                    for (var i in $scope.fieldProfile.controlledVocabulary.dictionary) {
+                        var cvw = $scope.fieldProfile.controlledVocabulary.dictionary[i];
+                        if (cvw.name == dateAndMode.date.getMonth()) {
+                            disabled = false;
+                            break;
+                        }
                     }
                 }
                 return disabled;
             };
 
-            if ($scope.fieldProfile.controlledVocabularies.length && $scope.fieldProfile.controlledVocabularies[0].name === "Graduation Months") {
+            if (angular.isDefined($scope.fieldProfile.controlledVocabulary) && $scope.fieldProfile.controlledVocabulary.name === "Graduation Months") {
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };

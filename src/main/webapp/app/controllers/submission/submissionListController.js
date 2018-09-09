@@ -179,8 +179,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     for (var j in aggWorkflowStep.aggregateFieldProfiles) {
                         var currentFieldProfile = aggWorkflowStep.aggregateFieldProfiles[j];
                         if (currentFieldProfile.fieldPredicate.value === predicateValue) {
-                            for (var k in currentFieldProfile.controlledVocabularies) {
-                                var cv = currentFieldProfile.controlledVocabularies[k];
+                            if(angular.isDefined(currentFieldProfile.controlledVocabulary)) {
+                                var cv = currentFieldProfile.controlledVocabulary;
                                 for (var l in cv.dictionary) {
                                     var dictionary = cv.dictionary[l];
                                     if (words.indexOf(dictionary.name) == -1) {

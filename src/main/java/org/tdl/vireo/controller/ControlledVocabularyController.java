@@ -96,7 +96,7 @@ public class ControlledVocabularyController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Creating controlled vocabulary with name " + controlledVocabulary.getName());
-        controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getLanguage());
+        controlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName());
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
 

@@ -1,4 +1,4 @@
-vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, $timeout, ApiResponseActions, ControlledVocabularyRepo, DragAndDropListenerFactory, LanguageRepo, NgTableParams) {
+vireo.controller("ControlledVocabularyRepoController", function ($controller, $q, $scope, $timeout, ApiResponseActions, ControlledVocabularyRepo, DragAndDropListenerFactory, NgTableParams) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -15,9 +15,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         }
     });
 
-    $scope.languages = LanguageRepo.getAll();
-
-    $scope.ready = $q.all([ControlledVocabularyRepo.ready(), LanguageRepo.ready()]);
+    $scope.ready = $q.all([ControlledVocabularyRepo.ready()]);
 
     $scope.dragging = false;
 
@@ -388,7 +386,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
                 $scope.modalData.refresh();
             }
             $scope.modalData = {
-                language: $scope.languages[0]
+                
             };
         };
 

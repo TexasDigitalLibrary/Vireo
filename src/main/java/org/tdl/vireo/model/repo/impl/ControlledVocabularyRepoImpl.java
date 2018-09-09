@@ -6,7 +6,6 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.custom.ControlledVocabularyRepoCustom;
 
@@ -19,10 +18,10 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
     @Override
-    public ControlledVocabulary create(String name, Language language) {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(name, language);
+    public ControlledVocabulary create(String name) {
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         if (controlledVocabulary == null) {
-            controlledVocabulary = new ControlledVocabulary(name, language);
+            controlledVocabulary = new ControlledVocabulary(name);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
             controlledVocabulary = super.create(controlledVocabulary);
             simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));
@@ -31,10 +30,10 @@ public class ControlledVocabularyRepoImpl extends AbstractWeaverOrderedRepoImpl<
     }
 
     @Override
-    public ControlledVocabulary create(String name, Language language, Boolean isEntityProperty) {
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndLanguageAndIsEntityProperty(name, language, isEntityProperty);
+    public ControlledVocabulary create(String name, Boolean isEntityProperty) {
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByNameAndIsEntityProperty(name, isEntityProperty);
         if (controlledVocabulary == null) {
-            controlledVocabulary = new ControlledVocabulary(name, language, isEntityProperty);
+            controlledVocabulary = new ControlledVocabulary(name, isEntityProperty);
             controlledVocabulary.setPosition(controlledVocabularyRepo.count() + 1);
             controlledVocabulary = super.create(controlledVocabulary);
             simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, CHANGE));

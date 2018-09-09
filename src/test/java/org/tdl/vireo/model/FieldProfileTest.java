@@ -20,7 +20,6 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The repository was not empty!", 0, languageRepo.count());
         assertEquals("The repository was not empty!", 0, fieldProfileRepo.count());
         assertEquals("The repository was not empty!", 0, fieldPredicateRepo.count());
-        language = languageRepo.create(TEST_LANGUAGE);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
@@ -67,29 +66,20 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         // add glosses and controlled vocabularies
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
-        ControlledVocabulary severablecontrolledVocabulary = controlledVocabularyRepo.create(TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME, language);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         fieldProfile.setGloss(TEST_GLOSS);
-        fieldProfile.addControlledVocabulary(controlledVocabulary);
-        fieldProfile.addControlledVocabulary(severablecontrolledVocabulary);
+        fieldProfile.setControlledVocabulary(controlledVocabulary);
         fieldProfile = fieldProfileRepo.save(fieldProfile);
 
         // verify field glosses and controlled vocabularies
         assertEquals("The field profile did not contain the correct field gloss!", TEST_GLOSS, fieldProfile.getGloss());
-        assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME));
-        assertEquals("The field profile did not contain the correct severable controlled vocabulary!", severablecontrolledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME));
-
-        // test remove severable controlled vocabularies
-        fieldProfile.removeControlledVocabulary(severablecontrolledVocabulary);
-        fieldProfile = fieldProfileRepo.save(fieldProfile);
-        assertEquals("The field profile had the incorrect number of glosses!", 1, fieldProfile.getControlledVocabularies().size());
+        assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary.getName(), fieldProfile.getControlledVocabulary().getName());
 
         // test delete profile
         fieldProfileRepo.delete(fieldProfile);
         assertEquals("An field profile was not deleted!", 0, fieldProfileRepo.count());
-        assertEquals("The language was deleted!", 1, languageRepo.count());
         assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
-        assertEquals("The controlled vocabularies were deleted!", 2, controlledVocabularyRepo.count());
+        assertEquals("The controlled vocabulary was deleted!", 1, controlledVocabularyRepo.count());
     }
 
     @Test
@@ -962,7 +952,6 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         fieldPredicateRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
-        languageRepo.deleteAll();
     }
 
 }

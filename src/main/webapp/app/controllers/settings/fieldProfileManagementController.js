@@ -63,8 +63,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 logged: false,
                 hidden: false,
                 gloss: '',
-                mappedShibAttribute: $scope.shibbolethAttributes.UI_SHIBBOLETH_SELECT,
-                controlledVocabularies: []
+                mappedShibAttribute: $scope.shibbolethAttributes.UI_SHIBBOLETH_SELECT
             };
             if(data !== undefined) {
                 angular.extend($scope.modalData, data);

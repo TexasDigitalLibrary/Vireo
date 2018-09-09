@@ -2,11 +2,8 @@ package org.tdl.vireo.model.repo.impl;
 
 import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.existing;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -37,12 +34,11 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile.setUsage(fieldProfile.getUsage());
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
             submissionfieldProfile.setGloss(fieldProfile.getGloss());
+            submissionfieldProfile.setControlledVocabulary(fieldProfile.getControlledVocabulary());
             submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
             submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
             submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
             submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
-
-            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
 
             submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
         }

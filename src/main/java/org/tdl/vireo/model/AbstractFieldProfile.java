@@ -3,20 +3,13 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -55,9 +48,9 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = false)
     private String gloss;
 
-    @ManyToMany(fetch = EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<ControlledVocabulary> controlledVocabularies;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
+    private ControlledVocabulary controlledVocabulary;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
@@ -201,47 +194,12 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
         this.gloss = gloss;
     }
 
-    /**
-     * @return the controlledVocabularies
-     */
-    public List<ControlledVocabulary> getControlledVocabularies() {
-        return controlledVocabularies;
+    public ControlledVocabulary getControlledVocabulary() {
+        return controlledVocabulary;
     }
 
-    /**
-     * @param id
-     * @return The controlled vocabulary that matches the id, or null if not found
-     */
-    public ControlledVocabulary getControlledVocabularyById(long id) {
-        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-            if (controlledVocabulary.getId() == id)
-                return controlledVocabulary;
-        }
-        return null;
-    }
-
-    /**
-     * @param id
-     * @return The controlled vocabulary that matches the name, or null if not found
-     */
-    public ControlledVocabulary getControlledVocabularyByName(String name) {
-        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-            if (controlledVocabulary.getName().equals(name))
-                return controlledVocabulary;
-        }
-        return null;
-    }
-
-    /**
-     * @param controlledVocabularies
-     *            the controlledVocab to set
-     */
-    public void setControlledVocabularies(List<ControlledVocabulary> controlledVocabularies) {
-        this.controlledVocabularies = controlledVocabularies;
-    }
-
-    public void clearControlledVocabulary() {
-        this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
+    public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+        this.controlledVocabulary = controlledVocabulary;
     }
 
     /**
@@ -286,29 +244,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    // TODO : Restrict multiple controlled vocabulary with the same language
-
-    /**
-     * @param controlledVocabularies
-     */
-    public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().add(controlledVocabulary);
-    }
-
-    /**
-     * @param controlledVocabularies
-     */
-    public void addControlledVocabulary(int index, ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().set(index, controlledVocabulary);
-    }
-
-    /**
-     * @param controlledVocabulary
-     */
-    public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().remove(controlledVocabulary);
     }
 
     /**
