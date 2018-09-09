@@ -9,8 +9,8 @@
 					Add Controlled Vocabulary
 				</button>
 				<div class="glyphicon glyphicon-info-sign opaque tooltip-span-adjust" tooltip="Dialog in which allows to create new controlled vocabulary."></div>
-				<p ng-if="controlledVocabulary.length === 0">Add new controlled vocabulary</p>
-				<draganddroplist dragging="dragging" scope-value="controlledVocabulary" properties='["name"]' item-view='views/directives/dragAndDropControlledVocabulary.html' listeners='dragControlListeners' edit='editControlledVocabulary(index)' sort-label='Controlled Vocabulary' sort-column='name' sort-action='sortAction' sort-method='sortControlledVocabulary(column)'>
+				<p ng-if="controlledVocabularies.length === 0">Add new controlled vocabulary</p>
+				<draganddroplist dragging="dragging" scope-value="controlledVocabularies" properties='["name"]' item-view='views/directives/dragAndDropControlledVocabulary.html' listeners='dragControlListeners' edit='editControlledVocabulary(index)' sort-label='Controlled Vocabulary' sort-column='name' sort-action='sortAction' sort-method='sortControlledVocabulary(column)'>
 				</draganddroplist>
 			</div>
 		</div>
@@ -45,7 +45,7 @@
 
 	<div class="row cv-editing-selection">
 		<div class="col-md-4">
-			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabulary | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv(selectedCv)"></select>
+			<select class="form-control" ng-options="cv as cv.name for cv in controlledVocabularies | filter:{isEntityProperty:false}" ng-model="selectedCv" ng-change="setSelectedCv(selectedCv)"></select>
 		</div>
 
 	</div>

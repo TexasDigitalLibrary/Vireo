@@ -110,8 +110,12 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
+    public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {        
+        String name = controlledVocabulary.getName();
+        Long id = controlledVocabulary.getId();
+        controlledVocabulary = controlledVocabularyRepo.findOne(id);
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
+        controlledVocabulary.setName(name);
         controlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
         return new ApiResponse(SUCCESS, controlledVocabulary);
     }
