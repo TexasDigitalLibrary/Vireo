@@ -21,6 +21,8 @@ public interface SubmissionRepoCustom {
 
     public Submission update(Submission submission);
 
+    public void delete(Submission submission);
+
     public Submission updateStatus(Submission submission, SubmissionStatus status, User user);
 
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException;

@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiAction.CREATE;
+import static edu.tamu.weaver.response.ApiAction.DELETE;
 import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
@@ -39,8 +41,10 @@ import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
+import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
@@ -123,8 +127,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.cloneWorkflow(organization));
 
-        submission.getSubmissionWorkflowSteps().forEach(ws -> {
-            ws.getAggregateFieldProfiles().forEach(afp -> {
+        for (SubmissionWorkflowStep ws : submission.getSubmissionWorkflowSteps()) {
+            for (SubmissionFieldProfile afp : ws.getAggregateFieldProfiles()) {
                 ManagedConfiguration mappedShibAttribute = afp.getMappedShibAttribute();
                 if (mappedShibAttribute != null) {
                     if (credentials.getAllCredentials().containsKey(mappedShibAttribute.getValue())) {
@@ -141,8 +145,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     fieldValue.setValue(afp.getDefaultValue());
                     submission.addFieldValue(fieldValue);
                 }
-            });
-        });
+            }
+        }
 
         submission.generateAdvisorReviewUrl(url);
 
@@ -150,7 +154,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         setCheckboxDefaultValue(submission, "INPUT_LICENSE");
         setCheckboxDefaultValue(submission, "INPUT_PROQUEST");
 
-        return super.create(submission);
+        submission = super.create(submission);
+        simpMessagingTemplate.convertAndSendToUser(submitter.getUsername(), "/queue/submissions", new ApiResponse(SUCCESS, CREATE, submission));
+        return submission;
     }
 
     private void setCheckboxDefaultValue(Submission submission, String inputTypeName) {
@@ -167,6 +173,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         submission = submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
         return submission;
+    }
+
+    @Override
+    public void delete(Submission submission) {
+        super.delete(submission);
+        simpMessagingTemplate.convertAndSendToUser(submission.getSubmitter().getUsername(), "/queue/submissions", new ApiResponse(SUCCESS, DELETE, submission));
     }
 
     @Override

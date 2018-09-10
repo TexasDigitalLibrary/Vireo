@@ -1,6 +1,6 @@
-vireo.directive("info", function () {
+vireo.directive("submissioninfo", function () {
     return {
-        templateUrl: 'views/directives/submissionInfo.html',
+        templateUrl: 'views/admin/info/submissionInfo.html',
         restrict: 'E',
         replace: true,
         transclude: true,
@@ -12,10 +12,9 @@ vireo.directive("info", function () {
             stacked: '=?'
         },
         link: function ($scope, element, attr) {
-            var edit = attr.edit !== undefined ? attr.edit : 'text';
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
-        controller: function ($scope) {
+        controller: function ($scope, $element, $timeout) {
             
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
@@ -42,8 +41,21 @@ vireo.directive("info", function () {
                 }
             };
 
-            $scope.editFieldValue = function (fieldValue) {
+            $scope.editFieldValue = function ($event, fieldValue) {
                 fieldValue.editing = true;
+                $timeout(function() {
+                    var infoForm = $element.find("input");
+                    if(!infoForm.hasClass("form-control")) {
+                        infoForm = $element.find("textarea");
+                    }
+                    if(infoForm.hasClass("form-control")) {
+                        if(infoForm.length > 1) {
+                            infoForm[Number($event.currentTarget.id) * 2].focus();
+                        } else {
+                            infoForm.focus();
+                        }
+                    }
+                });
             };
 
             var save = function (fieldValue) {
