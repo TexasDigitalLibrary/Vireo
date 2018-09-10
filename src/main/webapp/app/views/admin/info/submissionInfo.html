@@ -5,7 +5,7 @@
     <div class="info-container form-group">
 
       <label class="info-label" ng-if="$index < 1">
-        <span>{{label}}:</span>
+        <span>{{label}}</span>
       </label>
 
       <span class="info-data form-control">
@@ -36,17 +36,11 @@
     <div ng-if="!field.editing" class="info-container form-group" ng-class="{'text-danger': !field.isValid()}">
       
       <label class="info-label" ng-if="$index < 1">
-        <span>{{label}}:</span>
+        <span>{{label}}</span>
       </label>
-      <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable pull-right" ng-click="addFieldValue()"></span>
+      <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
 
       <span class="info-data form-control">
-        <!-- conditionally show the edit clicker or the progress spinner -->
-        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable pull-right" ng-click="editFieldValue(field)"></span>
-        <span ng-if="!field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable pull-right" ng-click="removeFieldValue(field)"></span>        
-        
-        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning pull-right"></span>
-
         <!-- conditionally show the proper form of the field value -->
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
@@ -65,8 +59,15 @@
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value">{{field.value}} ({{field.contacts[0]}})</span>
 
+        <!-- conditionally show the invalidation and refresh -->
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
+
+        <!-- conditionally show the edit clicker or the progress spinner -->
+        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue(field)"></span>
+        <span ng-if="!field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>        
+        
+        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning pull-right"></span>
       </span>
 
     </div>
@@ -76,7 +77,7 @@
       <div ng-show="field.editing" class="info-container form-group">
 
         <label class="info-label" ng-if="$index < 1">
-          <span>{{label}}:</span>
+          <span>{{label}}</span>
         </label>
 
         <ng-include class="info-form" src="edit"></ng-include>

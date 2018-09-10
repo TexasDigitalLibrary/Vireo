@@ -14,7 +14,7 @@ vireo.directive("submissioninfo", function () {
         link: function ($scope, element, attr) {
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
-        controller: function ($scope) {
+        controller: function ($scope, $element, $timeout) {
             
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
@@ -43,6 +43,19 @@ vireo.directive("submissioninfo", function () {
 
             $scope.editFieldValue = function (fieldValue) {
                 fieldValue.editing = true;
+                $timeout(function() {
+                    var infoForm = $element.find("input");
+                    if(!infoForm.hasClass("form-control")) {
+                        infoForm = $element.find("textarea");
+                    }
+                    if(infoForm.hasClass("form-control")) {
+                        if(infoForm.length === 2) {
+                            infoForm[0].focus();
+                        } else {
+                            infoForm.focus();
+                        }
+                    }
+                });
             };
 
             var save = function (fieldValue) {
