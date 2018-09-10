@@ -23,7 +23,9 @@
     ng-model="fieldValue.contacts"
     ng-blur="saveContacts(fieldValue)"
     ng-disabled="fieldValue.updating"
-    placeholder="Input Email"/>
+    placeholder="Input Email"
+    uib-typeahead="word.contacts[0] as word.contacts[0] for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
+    typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
