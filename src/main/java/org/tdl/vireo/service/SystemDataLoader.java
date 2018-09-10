@@ -179,6 +179,9 @@ public class SystemDataLoader {
 
     public void loadSystemData() {
 
+        logger.info("Loading default languages");
+        loadLanguages();
+
         logger.info("Loading default input types");
         loadInputTypes();
 
@@ -252,21 +255,11 @@ public class SystemDataLoader {
             try {
                 ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
 
-                // check to see if the Language exists
-                Language language = languageRepo.findByName(cv.getLanguage().getName());
-
-                // create new Language if not already exists
-                if (language == null) {
-                    language = languageRepo.create(cv.getLanguage().getName());
-                }
-
-                cv.setLanguage(language);
-
                 // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
 
                 if (persistedCV == null) {
-                    persistedCV = controlledVocabularyRepo.create(cv.getName(), cv.getLanguage());
+                    persistedCV = controlledVocabularyRepo.create(cv.getName());
                 }
 
                 for (VocabularyWord vw : cv.getDictionary()) {
@@ -275,7 +268,7 @@ public class SystemDataLoader {
 
                     if (persistedVW == null) {
                         persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
-                        persistedCV = controlledVocabularyRepo.findByNameAndLanguage(cv.getName(), cv.getLanguage());
+                        persistedCV = controlledVocabularyRepo.findByName(cv.getName());
                     } else {
                         persistedVW.setDefinition(vw.getDefinition());
                         persistedVW.setIdentifier(vw.getIdentifier());
@@ -298,8 +291,7 @@ public class SystemDataLoader {
     private void loadOrganizationCategories() {
         try {
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {
-            });
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
 
             for (OrganizationCategory organizationCategory : organizationCategories) {
                 OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
@@ -318,8 +310,7 @@ public class SystemDataLoader {
     private void loadDegreeLevels() {
         try {
 
-            List<DegreeLevel> degreeLevels = objectMapper.readValue(getFileFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {
-            });
+            List<DegreeLevel> degreeLevels = objectMapper.readValue(getFileFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {});
 
             for (DegreeLevel degreeLevel : degreeLevels) {
                 DegreeLevel dbDegreeLevel = degreeLevelRepo.findByName(degreeLevel.getName());
@@ -338,8 +329,7 @@ public class SystemDataLoader {
     private void loadDegrees() {
         try {
 
-            List<Degree> degrees = objectMapper.readValue(getFileFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {
-            });
+            List<Degree> degrees = objectMapper.readValue(getFileFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {});
 
             for (Degree degree : degrees) {
 
@@ -372,8 +362,7 @@ public class SystemDataLoader {
     private void loadGraduationMonths() {
         try {
 
-            List<GraduationMonth> graduationMonths = objectMapper.readValue(getFileFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {
-            });
+            List<GraduationMonth> graduationMonths = objectMapper.readValue(getFileFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {});
 
             for (GraduationMonth graduationMonth : graduationMonths) {
                 GraduationMonth persistedGraduationMonth = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
@@ -461,46 +450,28 @@ public class SystemDataLoader {
                     inputType = inputTypeRepo.create(fieldProfile.getInputType().getName());
                 }
 
-                // temporary list of ControlledVocabulary
-                List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
+                // check to see if the ControlledVocabulary exists
+                ControlledVocabulary controlledVocabulary = fieldProfile.getControlledVocabulary();
 
-                fieldProfile.getControlledVocabularies().forEach(controlledVocabulary -> {
-
-                    // check to see if the Language exists
-                    Language language = languageRepo.findByName(controlledVocabulary.getLanguage().getName());
-
-                    // create new Language if not already exists
-                    if (language == null) {
-                        language = languageRepo.create(controlledVocabulary.getLanguage().getName());
+                // create new ControlledVocabulary if not already exists
+                if (controlledVocabulary != null) {
+                    ControlledVocabulary persistedControlledVocabulary = controlledVocabularyRepo.findByName(controlledVocabulary.getName());
+                    if (persistedControlledVocabulary == null) {
+                        persistedControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), controlledVocabulary.getIsEntityProperty());
                     }
-
-                    // check to see if the ControlledVocabulary exists
-                    ControlledVocabulary newControlledVocabulary = controlledVocabularyRepo.findByNameAndLanguage(controlledVocabulary.getName(), language);
-
-                    // create new ControlledVocabulary if not already exists
-                    if (newControlledVocabulary == null) {
-                        if (controlledVocabulary.getIsEntityProperty()) {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language, controlledVocabulary.getIsEntityProperty());
-                        } else {
-                            newControlledVocabulary = controlledVocabularyRepo.create(controlledVocabulary.getName(), language);
-                        }
-                    }
-
-                    controlledVocabularies.add(newControlledVocabulary);
-
-                });
+                    fieldProfile.setControlledVocabulary(persistedControlledVocabulary);
+                }
 
                 // check to see if the ManagedConfiguration exists
                 ManagedConfiguration managedConfiguration = fieldProfile.getMappedShibAttribute();
 
                 // create new ManagedConfiguration if not already exists
                 if (managedConfiguration != null) {
-                    ManagedConfiguration newManagedConfiguration = configurationRepo.findByNameAndType(managedConfiguration.getName(), managedConfiguration.getType());
-
-                    if (newManagedConfiguration == null) {
-                        newManagedConfiguration = configurationRepo.save(managedConfiguration);
-                        fieldProfile.setMappedShibAttribute(newManagedConfiguration);
+                    ManagedConfiguration persistedManagedConfiguration = configurationRepo.findByNameAndType(managedConfiguration.getName(), managedConfiguration.getType());
+                    if (persistedManagedConfiguration == null) {
+                        persistedManagedConfiguration = configurationRepo.create(managedConfiguration);
                     }
+                    fieldProfile.setMappedShibAttribute(persistedManagedConfiguration);
                 }
 
                 // check to see if the FieldProfile exists
@@ -508,17 +479,13 @@ public class SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
-
                     newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
-
-                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), controlledVocabularies, fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
-
+                    newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
                 }
 
                 newWorkflowStep.addOriginalFieldProfile(newFieldProfile);
 
                 newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
-
             }
 
             // temporary list of Note
@@ -567,7 +534,8 @@ public class SystemDataLoader {
 
                 // create new SubmissionStatus if not already exists
                 if (newSubmissionStatus == null) {
-                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(), emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
+                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
                     newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
                 }
 
@@ -724,19 +692,38 @@ public class SystemDataLoader {
         }
     }
 
+    private void loadLanguages() {
+        try {
+            List<Language> languages = objectMapper.readValue(getFileFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
+
+            for (Language language : languages) {
+                Language persistedLanguage = languageRepo.findByName(language.getName());
+
+                if (persistedLanguage == null) {
+                    persistedLanguage = languageRepo.create(language.getName());
+                } else {
+                    persistedLanguage.setName(language.getName());
+                    persistedLanguage = languageRepo.save(persistedLanguage);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default languages. ", e);
+        }
+    }
+
     private void loadInputTypes() {
         try {
-            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {
-            });
+            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
 
             for (InputType inputType : inputTypes) {
-                InputType newInputType = inputTypeRepo.findByName(inputType.getName());
+                InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
 
-                if (newInputType == null) {
-                    newInputType = inputTypeRepo.create(inputType);
+                if (persistedInputType == null) {
+                    persistedInputType = inputTypeRepo.create(inputType);
                 } else {
-                    newInputType.setName(inputType.getName());
-                    newInputType = inputTypeRepo.save(newInputType);
+                    persistedInputType.setName(inputType.getName());
+                    persistedInputType = inputTypeRepo.save(persistedInputType);
                 }
             }
         } catch (RuntimeException | IOException e) {
@@ -798,8 +785,7 @@ public class SystemDataLoader {
 
         try {
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {
-            });
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
@@ -841,7 +827,7 @@ public class SystemDataLoader {
             int count = 0;
             for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
-                if(dbSubmissionListColumn != null) {
+                if (dbSubmissionListColumn != null) {
                     if (dbSubmissionListColumn.getSort() != Sort.NONE) {
                         dbSubmissionListColumn.setSortOrder(++count);
                         defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
@@ -864,15 +850,18 @@ public class SystemDataLoader {
 
         List<SubmissionListColumn> defaultFilterColumns = null;
         try {
-            defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {
-            });
+            defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
             SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
-            defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+            if (dbDefaultFilterColumn != null) {
+                defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+            } else {
+                logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
+            }
         }
 
     }
@@ -898,8 +887,7 @@ public class SystemDataLoader {
 
         try {
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {
-            });
+            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
             for (Embargo embargoDefinition : embargoDefinitions) {
                 Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
@@ -946,14 +934,7 @@ public class SystemDataLoader {
                     logger.debug(c.getName() + ": " + c.getValue());
                 });
             });
-        } catch (JsonParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -962,8 +943,7 @@ public class SystemDataLoader {
 
         try {
 
-            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {
-            });
+            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
 
             for (DocumentType documentType : documentTypes) {
 
@@ -1012,19 +992,11 @@ public class SystemDataLoader {
 
     private void createSubjectControlledVocabulary(Map<String, String> subjectCodes) {
 
-        // check to see if the Language exists
-        Language language = languageRepo.findByName("English");
-
-        // create new Language if not already exists
-        if (language == null) {
-            language = languageRepo.create("English");
-        }
-
         // check to see if Controlled Vocabulary exists, and if so, merge up with it
-        ControlledVocabulary persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+        ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName("Subjects");
 
         if (persistedCV == null) {
-            persistedCV = controlledVocabularyRepo.create("Subjects", language);
+            persistedCV = controlledVocabularyRepo.create("Subjects");
         }
 
         for (Map.Entry<String, String> entry : subjectCodes.entrySet()) {
@@ -1035,7 +1007,7 @@ public class SystemDataLoader {
 
             if (persistedVW == null) {
                 persistedVW = vocabularyRepo.create(persistedCV, description, "", code, new ArrayList<String>());
-                persistedCV = controlledVocabularyRepo.findByNameAndLanguage("Subjects", language);
+                persistedCV = controlledVocabularyRepo.findByName("Subjects");
             } else {
                 persistedVW.setDefinition("");
                 persistedVW.setIdentifier(code);

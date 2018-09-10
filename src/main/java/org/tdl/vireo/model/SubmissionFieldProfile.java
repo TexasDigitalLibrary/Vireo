@@ -1,7 +1,5 @@
 package org.tdl.vireo.model;
 
-import java.util.ArrayList;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -18,7 +16,6 @@ public class SubmissionFieldProfile extends AbstractFieldProfile<SubmissionField
         setFlagged(false);
         setLogged(false);
         setEnabled(true);
-        setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
 }

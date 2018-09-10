@@ -53,8 +53,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 flagged: false,
                 logged: false,
                 hidden: false,
-                gloss: '',
-                controlledVocabularies: []
+                gloss: ''
             };
             if(data !== undefined) {
                 angular.extend($scope.modalData, data);

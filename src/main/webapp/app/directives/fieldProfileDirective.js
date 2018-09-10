@@ -67,21 +67,22 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             $scope.datepickerOptions = {};
-            $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            $scope.datepickerFormat = angular.isDefined($scope.profile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
-
-                for (var i in $scope.profile.controlledVocabularies[0].dictionary) {
-                    var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
-                    if (cvw.name == dateAndMode.date.getMonth()) {
-                        disabled = false;
-                        break;
+                if(angular.isDefined($scope.profile.controlledVocabulary)) {
+                    for (var i in $scope.profile.controlledVocabulary.dictionary) {
+                        var cvw = $scope.profile.controlledVocabulary.dictionary[i];
+                        if (cvw.name == dateAndMode.date.getMonth()) {
+                            disabled = false;
+                            break;
+                        }
                     }
                 }
                 return disabled;
             };
 
-            if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].name === "Graduation Months") {
+            if (angular.isDefined($scope.profile.controlledVocabulary) && $scope.profile.controlledVocabulary.name === "Graduation Months") {
 
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
@@ -122,8 +123,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.getPattern = function () {
                 var pattern = "*";
-                var cv = $scope.profile.controlledVocabularies[0];
-                if (typeof cv !== "undefined") {
+                if(angular.isDefined($scope.profile.controlledVocabulary)) {
+                    var cv = $scope.profile.controlledVocabulary;
                     pattern = "";
                     for (var i in cv.dictionary) {
                         var word = cv.dictionary[i];

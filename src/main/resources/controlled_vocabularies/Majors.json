@@ -1,10 +1,6 @@
 {
   "name":"Majors",
   "isEntityProperty":false,
-  "isEnum":false,
-  "language":{
-    "name":"English"
-  },
   "dictionary":[
     {
       "name":"Ocean and Coastal Resources",

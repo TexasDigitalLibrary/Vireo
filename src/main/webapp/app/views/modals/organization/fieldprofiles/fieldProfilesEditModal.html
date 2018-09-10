@@ -85,10 +85,10 @@
           <div class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
               <label for="field-profiles-controlled-vocabulary">Controlled Vocabulary</label>
-              <select no-id="true" ng-model="modalData.controlledVocabularies[0]" ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" type="text" class="form-control">
+              <select no-id="true" ng-model="modalData.controlledVocabulary" ng-options="cv as cv.name for cv in controlledVocabularies track by cv.id" type="text" class="form-control">
                 <option value="" disabled selected>(None)</option>
               </select>
-              <small class="text-muted toggle-href pull-right" ng-if="modalData.controlledVocabularies[0]" ng-click="modalData.controlledVocabularies = [];"><strong>Clear</strong></small>
+              <small class="text-muted toggle-href pull-right" ng-if="modalData.controlledVocabulary" ng-click="modalData.controlledVocabulary = undefined;"><strong>Clear</strong></small>
             </div>
           </div>
         </div>
