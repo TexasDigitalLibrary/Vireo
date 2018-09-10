@@ -19,10 +19,10 @@ public class AppEmailConfig extends WeaverEmailConfig {
     @Autowired
     private ConfigurationRepo configurationRepo;
     
-    @Value("${app.email.username}")
+    @Value("${app.email.username:}")
     private String username;
     
-    @Value("${app.email.password}")
+    @Value("${app.email.password:}")
     private String password;
     
     @Value("${app.email.port:25}")
