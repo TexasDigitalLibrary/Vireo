@@ -14,7 +14,7 @@
     <hr />
 
     <vireo-tabs ng-show="loaded">
-      <vireo-tab class="item-view" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{submission.id}}/{{workflowStep.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
+      <vireo-tab class="item-view" reload="false" ng-repeat="workflowStep in submission.submissionWorkflowSteps" ng-if="showTab(workflowStep)" label="{{workflowStep.name}}" path="admin/view/{{submission.id}}/{{workflowStep.id}}" view="views/admin/info/workflowStep.html"></vireo-tab>
     </vireo-tabs>
 
   </div>
