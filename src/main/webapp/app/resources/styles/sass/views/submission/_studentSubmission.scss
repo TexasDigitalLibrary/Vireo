@@ -132,3 +132,13 @@
 .wide-button {
   width: 100%;
 }
+
+.submission-input-select,
+.submission-input-select .btn {
+  display: flex;
+  width: unset;
+}
+
+.submission-input-select .dropdown-text {
+  width: 100%;
+}
