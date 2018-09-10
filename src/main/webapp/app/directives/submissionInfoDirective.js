@@ -41,7 +41,7 @@ vireo.directive("submissioninfo", function () {
                 }
             };
 
-            $scope.editFieldValue = function (fieldValue) {
+            $scope.editFieldValue = function ($event, fieldValue) {
                 fieldValue.editing = true;
                 $timeout(function() {
                     var infoForm = $element.find("input");
@@ -49,8 +49,8 @@ vireo.directive("submissioninfo", function () {
                         infoForm = $element.find("textarea");
                     }
                     if(infoForm.hasClass("form-control")) {
-                        if(infoForm.length === 2) {
-                            infoForm[0].focus();
+                        if(infoForm.length > 1) {
+                            infoForm[Number($event.currentTarget.id) * 2].focus();
                         } else {
                             infoForm.focus();
                         }

@@ -2,15 +2,22 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
 .item-view ul.info-list {
   padding-left: 10px;
   padding-right: 5px;
 }
 
+.item-view ul.info-list label {
+  font-weight: bolder;
+  font-size: 15px;
+  margin: 0px;
+}
+
 .item-view ul.info-list .info-data {
-  padding-top: 7px;
   border: none;
-  margin: 1px;
+  margin: 0px 1px;
+  padding-top: 8px;
   -webkit-box-shadow: none;
   box-shadow: none;
   display: inline-block;
@@ -34,7 +41,7 @@
 }
 
 .item-view ul.info-list .form-group {
-  margin: 6px 0;
+  margin: 0px 0px 0px 10px;
 }
 
 .item-view ul.info-list .form-group .glyphicon-plus {

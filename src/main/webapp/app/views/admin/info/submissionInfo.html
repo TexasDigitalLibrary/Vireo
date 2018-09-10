@@ -64,7 +64,7 @@
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
 
         <!-- conditionally show the edit clicker or the progress spinner -->
-        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue(field)"></span>
+        <span id="{{$index}}" ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
         <span ng-if="!field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>        
         
         <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
