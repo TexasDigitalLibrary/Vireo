@@ -22,9 +22,9 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
         systemDataLoader.loadSystemDefaults();
 
-        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1, languageRepo.create(TEST_LANGUAGE_NAME1));
-        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2, languageRepo.create(TEST_LANGUAGE_NAME2));
-        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME3, languageRepo.create(TEST_LANGUAGE_NAME3));
+        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1);
+        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2);
+        controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME3);
 
     }
 

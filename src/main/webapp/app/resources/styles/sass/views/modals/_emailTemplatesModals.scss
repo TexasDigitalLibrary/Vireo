@@ -1,12 +1,21 @@
-#email-template-fields .input-group {
-  margin-bottom: 10px;
+#new-template-body {
+  resize: vertical;
 }
-#email-template-fields-list {
+#edit-template-body {
+  resize: vertical;
+}
+.email-template-label {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+.email-template-properties-list {
   max-height:  200px;
+  width: 100%;
   overflow: scroll;
 }
-#email-template-modal-instructions-label {
+.email-template-fields-list {
   max-height:  200px;
+  width: 100%;
   overflow: scroll;
-  margin-bottom: 10px;
 }

@@ -42,8 +42,7 @@
       <div class="container-fluid" ng-controller="ApplicationAuthenticationController">
 
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-            aria-expanded="false">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -68,7 +67,7 @@
         <div ng-if="!isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a class="dropdown-toggle toggle-href" data-toggle="dropdown" aria-expanded="false">
+              <a class="dropdown-toggle clickable" data-toggle="dropdown" aria-expanded="false">
                 <displayname></displayname>
                 <span class="caret"></span>
               </a>
@@ -115,7 +114,7 @@
       <div class="container">
         <div class="row">
           <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
-              <img style="max-height: 57px;" ng-src="{{logoImage()}}"></img>
+              <img style="max-height: 57px;" ng-src="{{logoImage()}}" />
             </a>
           <ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
             <li ng-class="{'active': activeTab('/admin/list')}">
@@ -312,7 +311,7 @@
   <script src="directives/submissionNoteDirective.js"></script>
   <script src="directives/stringToDateDirective.js"></script>
   <script src="directives/triptychDirective.js"></script>
-  <script src="directives/infoDirective.js"></script>
+  <script src="directives/submissionInfoDirective.js"></script>
 
   <script src="directives/autofocusDirective.js"></script>
   <script src="directives/fieldProfileFocusDirective.js"></script>
@@ -343,7 +342,6 @@
   <script src="repo/organizationCategoryRepo.js"></script>
   <script src="repo/inputTypeRepo.js"></script>
   <script src="repo/fieldPredicateRepo.js"></script>
-  <script src="repo/fieldGlossRepo.js"></script>
   <script src="repo/studentSubmissionRepo.js"></script>
   <script src="repo/savedFilterRepo.js"></script>
   <script src="repo/submissionRepo.js"></script>
@@ -377,7 +375,6 @@
   <script src="model/organizationCategory.js"></script>
   <script src="model/inputType.js"></script>
   <script src="model/fieldPredicate.js"></script>
-  <script src="model/fieldGloss.js"></script>
   <script src="model/savedFilter.js"></script>
   <script src="model/submission.js"></script>
   <script src="model/submissionStatus.js"></script>
@@ -407,19 +404,18 @@
   <!-- Controllers -->
   <script src="controllers/abstractController.js"></script>
   <script src="controllers/adminController.js"></script>
-  <script src="controllers/applicationSettingsController.js"></script>
-  <script src="controllers/settings/emailWorkflowRulesController.js"></script>
   <script src="controllers/headerController.js"></script>
-  <script src="controllers/settings/lookAndFeelController.js"></script>
+  <script src="controllers/applicationSettingsController.js"></script>
   <script src="controllers/organizationSettingsController.js"></script>
-  <script src="controllers/settings/organizationManagementController.js"></script>
-  <script src="controllers/settings/workflowManagementController.js"></script>
-  <script src="controllers/settings/fieldGlossController.js"></script>
-  <script src="controllers/settings/fieldPredicatesController.js"></script>
+  <script src="controllers/workflowManagementController.js"></script>
   <script src="controllers/settingsController.js"></script>
   <script src="controllers/sidebarController.js"></script>
   <script src="controllers/userRepoController.js"></script>
   <script src="controllers/applicationAuthenticationController.js"></script>
+  <script src="controllers/settings/organizationManagementController.js"></script>
+  <script src="controllers/settings/lookAndFeelController.js"></script>
+  <script src="controllers/settings/emailWorkflowRulesController.js"></script>
+  <script src="controllers/settings/fieldPredicatesController.js"></script>
   <script src="controllers/settings/customActionSettingsController.js"></script>
   <script src="controllers/settings/depositLocationRepoController.js"></script>
   <script src="controllers/settings/embargoRepoController.js"></script>
@@ -429,10 +425,10 @@
   <script src="controllers/settings/controlledVocabularyRepoController.js"></script>
   <script src="controllers/settings/languagesController.js"></script>
   <script src="controllers/settings/documentTypesController.js"></script>
-  <script src="controllers/sideBars/organizationSideBarController.js"></script>
   <script src="controllers/settings/organizationCategoriesController.js"></script>
   <script src="controllers/settings/fieldProfileManagementController.js"></script>
   <script src="controllers/settings/noteManagementController.js"></script>
+  <script src="controllers/sidebar/organizationSideBarController.js"></script>
   <script src="controllers/submission/advisorSubmissionReviewController.js"></script>
   <script src="controllers/submission/newSubmissionController.js"></script>
   <script src="controllers/submission/studentSubmissionController.js"></script>

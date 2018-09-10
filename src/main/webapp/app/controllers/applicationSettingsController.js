@@ -5,11 +5,11 @@ vireo.controller('ApplicationSettingsController', function ($controller, $scope,
 	SidebarService.addBoxes([
 	    {
 	        "title": "My Profile",
-	        "viewUrl": "views/sideboxes/myprofile.html"
+	        "viewUrl": "views/sideboxes/myProfile.html"
 	    },
 	    {
 	        "title": "My Preferences",
-	        "viewUrl": "views/sideboxes/mypreferences.html"
+	        "viewUrl": "views/sideboxes/myPreferences.html"
 	    }
 	]);
 

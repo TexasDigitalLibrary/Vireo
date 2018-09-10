@@ -161,7 +161,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
             }
             // If the WS didn't originate the M, we need a new M to replace it
             else {
-                logger.info("\n\nRequesting org " + requestingOrganization.getName() + " originated workflow step where " + componentC.getId() + " appears on it, but that workflow step " + stepS.getName() + "(" + stepS.getId() + ") didn't originate the component.  Making a new component.");
+                logger.info("Requesting org " + requestingOrganization.getName() + " originated workflow step where " + componentC.getId() + " appears on it, but that workflow step " + stepS.getName() + "(" + stepS.getId() + ") didn't originate the component.  Making a new component.");
 
                 M cloneHeritableComponent = (M) componentCWithChanges.clone();
 
@@ -212,7 +212,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
         // If the requesting org didn't originate the WS, we need a new WS to replace it and to originate a new M
         // workflowStepWithHeritableModelOnRequestingOrganization does not originate on the requesting org
         else {
-            logger.info("\n\nRequesting org " + requestingOrganization.getName() + " didn't originate component " + componentC.getId() + "'s originating WS of " + stepS.getName() + "(" + stepS.getId() + ")");
+            logger.info("Requesting org " + requestingOrganization.getName() + " didn't originate component " + componentC.getId() + "'s originating WS of " + stepS.getName() + "(" + stepS.getId() + ")");
 
             WorkflowStep stepT = workflowStepRepo.update(stepS, requestingOrganization);
 
@@ -355,7 +355,6 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
     /**
      * Have all the heritableModels (in workflow steps descended from a given step) that are derived from a particular ancestor heritableModel be replaced with a replacement heritableModel (which could also be just that ancestor heritableModel)
-     *
      */
 
     @SuppressWarnings("unchecked")

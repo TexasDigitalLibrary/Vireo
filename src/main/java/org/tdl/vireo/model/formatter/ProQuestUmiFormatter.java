@@ -102,7 +102,7 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
                 String primaryDocumentType = "Other";
                 FieldValue primaryDocumentFieldValue = submission.getPrimaryDocumentFieldValue();
                 if (primaryDocumentFieldValue != null) {
-                    primaryDocumentType = fileHelperUtility.getMimeType(primaryDocumentFieldValue.getValue());
+                    primaryDocumentType = fileHelperUtility.getMimeTypeOfAsset(primaryDocumentFieldValue.getValue());
                     if (primaryDocumentType.equals("application/pdf")) {
                         primaryDocumentType = "PDF";
                     }

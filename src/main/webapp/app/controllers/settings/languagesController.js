@@ -8,7 +8,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
     $scope.languages = LanguageRepo.getAll();
 
-    LanguageRepo.listen(function (data) {
+    LanguageRepo.listen(function () {
         $scope.resetLanguages();
     });
 
@@ -32,9 +32,10 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
         $scope.resetLanguages = function () {
             $scope.languageRepo.clearValidationResults();
-            for (var i in $scope.forms) {
-                if ($scope.forms[i] !== undefined && !$scope.forms[i].$pristine) {
-                    $scope.forms[i].$setPristine();
+            for (var key in $scope.forms) {
+                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+                    $scope.forms[key].$setPristine();
+                    $scope.forms[key].$setUntouched();
                 }
             }
             if ($scope.uploadAction == 'process') {

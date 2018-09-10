@@ -21,7 +21,7 @@ public class ApplicationInitialization implements CommandLineRunner {
     private EntityControlledVocabularyService entityControlledVocabularyService;
 
     @Override
-    public void run(String... arg0) throws Exception {
+    public void run(String... args) throws Exception {
         // load defaults first
         systemDataLoader.loadSystemData();
         // assumes one language defined in defaults

@@ -20,7 +20,6 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals("The repository was not empty!", 0, languageRepo.count());
         assertEquals("The repository was not empty!", 0, fieldProfileRepo.count());
         assertEquals("The repository was not empty!", 0, fieldPredicateRepo.count());
-        language = languageRepo.create(TEST_LANGUAGE);
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
@@ -32,11 +31,12 @@ public class FieldProfileTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         assertEquals("The repository did not save the entity!", 1, fieldProfileRepo.count());
         assertEquals("The field profile did not contain the correct perdicate value!", fieldPredicate, fieldProfile.getFieldPredicate());
         assertEquals("The field predicate did not contain the correct value!", inputType, fieldProfile.getInputType());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_USAGE, fieldProfile.getUsage());
+        assertEquals("The field predicate did not contain the correct value!", TEST_GLOSS, fieldProfile.getGloss());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_REPEATABLE, fieldProfile.getRepeatable());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_ENABLED, fieldProfile.getEnabled());
         assertEquals("The field predicate did not contain the correct value!", TEST_FIELD_PROFILE_OPTIONAL, fieldProfile.getOptional());
@@ -44,9 +44,9 @@ public class FieldProfileTest extends AbstractEntityTest {
 
     @Override
     public void testDuplication() {
-        fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         try {
-            fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+            fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */
         }
@@ -55,7 +55,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
     @Override
     public void testDelete() {
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         fieldProfileRepo.delete(fieldProfile);
         assertEquals("Entity did not delete!", 0, fieldProfileRepo.count());
     }
@@ -63,43 +63,23 @@ public class FieldProfileTest extends AbstractEntityTest {
     @Override
     public void testCascade() {
         // create field profile
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         // add glosses and controlled vocabularies
-        FieldGloss fieldGloss = fieldGlossRepo.create(TEST_FIELD_GLOSS_VALUE, language);
-        FieldGloss severableFieldGloss = fieldGlossRepo.create(TEST_SEVERABLE_FIELD_GLOSS_VALUE, language);
-        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
-        ControlledVocabulary severablecontrolledVocabulary = controlledVocabularyRepo.create(TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME, language);
-        fieldProfile.addFieldGloss(fieldGloss);
-        fieldProfile.addControlledVocabulary(controlledVocabulary);
-        fieldProfile.addFieldGloss(severableFieldGloss);
-        fieldProfile.addControlledVocabulary(severablecontrolledVocabulary);
+        ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
+        fieldProfile.setGloss(TEST_GLOSS);
+        fieldProfile.setControlledVocabulary(controlledVocabulary);
         fieldProfile = fieldProfileRepo.save(fieldProfile);
 
         // verify field glosses and controlled vocabularies
-        assertEquals("The field profile did not contain the correct field gloss!", fieldGloss, fieldProfile.getFieldGlossByValueAndLanguage(TEST_FIELD_GLOSS_VALUE, language));
-        assertEquals("The field profile did not contain the correct severable field gloss!", severableFieldGloss, fieldProfile.getFieldGlossByValueAndLanguage(TEST_SEVERABLE_FIELD_GLOSS_VALUE, language));
-        assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_CONTROLLED_VOCABULARY_NAME));
-        assertEquals("The field profile did not contain the correct severable controlled vocabulary!", severablecontrolledVocabulary, fieldProfile.getControlledVocabularyByName(TEST_SEVERABLE_CONTROLLED_VOCABULARY_NAME));
-
-        // test remove severable gloss
-        fieldProfile.removeFieldGloss(severableFieldGloss);
-        fieldProfile = fieldProfileRepo.save(fieldProfile);
-        assertEquals("The field profile had the incorrect number of glosses!", 1, fieldProfile.getFieldGlosses().size());
-
-        // test remove severable controlled vocabularies
-        fieldProfile.removeControlledVocabulary(severablecontrolledVocabulary);
-        fieldProfile = fieldProfileRepo.save(fieldProfile);
-        assertEquals("The field profile had the incorrect number of glosses!", 1, fieldProfile.getControlledVocabularies().size());
+        assertEquals("The field profile did not contain the correct field gloss!", TEST_GLOSS, fieldProfile.getGloss());
+        assertEquals("The field profile did not contain the correct controlled vocabulary!", controlledVocabulary.getName(), fieldProfile.getControlledVocabulary().getName());
 
         // test delete profile
         fieldProfileRepo.delete(fieldProfile);
         assertEquals("An field profile was not deleted!", 0, fieldProfileRepo.count());
-        assertEquals("The language was deleted!", 1, languageRepo.count());
         assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
-        assertEquals("The field glosses were deleted!", 2, fieldGlossRepo.count());
-        assertEquals("The controlled vocabularies were deleted!", 2, controlledVocabularyRepo.count());
-
+        assertEquals("The controlled vocabulary was deleted!", 1, controlledVocabularyRepo.count());
     }
 
     @Test
@@ -132,7 +112,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         parentOrganization = organizationRepo.findOne(parentOrganization.getId());
         childOrganization = organizationRepo.findOne(childOrganization.getId());
@@ -181,7 +161,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         fieldProfile.setOverrideable(false);
 
@@ -207,7 +187,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         organization = organizationRepo.findOne(organization.getId());
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
@@ -241,7 +221,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         organization = organizationRepo.findOne(organization.getId());
 
@@ -308,15 +288,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
 
-        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
@@ -459,15 +439,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
 
-        FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
@@ -659,7 +639,7 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
         Long originalFieldProfileId = fieldProfile.getId();
 
@@ -762,15 +742,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
 
-        fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
@@ -823,15 +803,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
 
-        /* FieldProfile fp1 = */ fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        /* FieldProfile fp1 = */ fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(wsId);
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(wsId);
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(wsId);
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
@@ -929,15 +909,15 @@ public class FieldProfileTest extends AbstractEntityTest {
         FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
         FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
 
-        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        /* FieldProfile fp2 = */ fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        /* FieldProfile fp2 = */ fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
-        /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
+        /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
         workflowStep = workflowStepRepo.findOne(workflowStep.getId());
         fieldPredicate = fieldPredicateRepo.findOne(fieldPredicate.getId());
 
@@ -958,6 +938,8 @@ public class FieldProfileTest extends AbstractEntityTest {
             fieldProfileRepo.delete(fieldProfile);
         });
 
+        submissionListColumnRepo.deleteAll();
+
         inputTypeRepo.deleteAll();
 
         workflowStepRepo.findAll().forEach(workflowStep -> {
@@ -969,9 +951,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         organizationCategoryRepo.deleteAll();
 
         fieldPredicateRepo.deleteAll();
-        fieldGlossRepo.deleteAll();
         controlledVocabularyRepo.deleteAll();
-        languageRepo.deleteAll();
     }
 
 }

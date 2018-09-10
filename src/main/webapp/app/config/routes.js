@@ -22,6 +22,11 @@ vireo.config(function ($locationProvider, $routeProvider) {
         controller: 'CompleteSubmissionController',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
     }).
+    when('/submission/corrected', {
+        templateUrl: 'views/submission/submissionCorrected.html',
+        controller: 'CompleteSubmissionController',
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
+    }).
     when('/submission/:submissionId', {
         templateUrl: 'views/submission/submission.html',
         controller: 'StudentSubmissionController',
@@ -59,8 +64,7 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/admin/view/:id/:tab', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
-        controller: 'AdminSubmissionViewController',
-        reloadOnSearch: false
+        controller: 'AdminSubmissionViewController'
     }).
     when('/admin/log', {
         templateUrl: 'views/admin/admin.html',
@@ -73,8 +77,7 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/admin/settings/:tab', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER"],
-        controller: 'SettingsController',
-        reloadOnSearch: false
+        controller: 'SettingsController'
     }).
     when('/', {
         templateUrl: 'views/home.html'

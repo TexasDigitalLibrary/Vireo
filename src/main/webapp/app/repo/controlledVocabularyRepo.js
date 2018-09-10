@@ -13,7 +13,6 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(FileSer
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
-                console.log(controlledVocabularyRepo);
             }
         });
         return promise;
@@ -28,7 +27,6 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(FileSer
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(controlledVocabularyRepo, angular.fromJson(res.body).payload);
-                console.log(controlledVocabularyRepo);
             }
         });
         return promise;

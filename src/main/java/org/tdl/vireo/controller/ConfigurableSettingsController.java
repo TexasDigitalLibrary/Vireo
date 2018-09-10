@@ -24,8 +24,9 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RestController
 @RequestMapping("/settings/configurable")
 public class ConfigurableSettingsController {
-	@Autowired
-	VireoThemeManagerService themeManagerService;
+
+    @Autowired
+    private VireoThemeManagerService themeManagerService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -60,11 +61,11 @@ public class ConfigurableSettingsController {
         updateTheming(configuration.getType());
         return new ApiResponse(SUCCESS, defaultConfiguration);
     }
-    
+
     protected void updateTheming(String type) {
-    	if (type.equals("lookAndFeel")) {
-    		themeManagerService.refreshCurrentTheme();
-    	}
+        if (type.equals("lookAndFeel")) {
+            themeManagerService.refreshCurrentTheme();
+        }
     }
 
 }

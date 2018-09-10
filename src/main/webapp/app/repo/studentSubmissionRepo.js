@@ -1,28 +1,41 @@
-vireo.repo("StudentSubmissionRepo", function StudentSubmissionRepo($q, WsApi) {
+vireo.repo("StudentSubmissionRepo", function StudentSubmissionRepo($q, ApiResponseActions, StudentSubmission, WsApi) {
 
     var studentSubmissionRepo = this;
 
-    studentSubmissionRepo.findSubmissionById = function (id) {
-        var submission = studentSubmissionRepo.findById(id);
-        var defer = $q.defer();
-        if (!submission) {
-            studentSubmissionRepo.clearValidationResults();
+    var defer = $q.defer();
+
+    studentSubmissionRepo.fetchSubmissionById = function (id) {
+        return $q(function(resolve, reject) {
             angular.extend(studentSubmissionRepo.mapping.one, {
                 'method': 'get-one/' + id
             });
             var fetchPromise = WsApi.fetch(studentSubmissionRepo.mapping.one);
-            fetchPromise.then(function(res) {
-                var resObj = angular.fromJson(res.body);
-                if (resObj.meta.status !== "ERROR") {
-                    studentSubmissionRepo.add(resObj.payload.Submission);
-                    defer.resolve(studentSubmissionRepo.findById(id));
+            fetchPromise.then(function (res) {
+                var apiRes = angular.fromJson(res.body);
+                if (apiRes.meta.status === "SUCCESS") {
+                    resolve(new StudentSubmission(apiRes.payload.Submission));
+                } else {
+                    reject();
                 }
             });
-        } else {
-            defer.resolve(submission);
-        }
+        });
+    };
+
+    studentSubmissionRepo.listenForChanges = function() {
         return defer.promise;
     };
+
+    WsApi.listen('/private/queue/submissions').then(null, null, function(msg) {
+        var apiRes = angular.fromJson(msg.body);
+        if(apiRes.meta.status === 'SUCCESS') {
+            if(apiRes.meta.action === ApiResponseActions.CREATE) {
+                studentSubmissionRepo.add(apiRes.payload.Submission);
+            } else if(apiRes.meta.action === ApiResponseActions.DELETE) {
+                studentSubmissionRepo.remove(apiRes.payload.Submission);
+            }
+            defer.notify();
+        }
+    });
 
     return studentSubmissionRepo;
 

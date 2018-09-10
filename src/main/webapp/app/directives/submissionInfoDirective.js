@@ -1,6 +1,6 @@
-vireo.directive("info", function ($q,FieldValue) {
+vireo.directive("submissioninfo", function () {
     return {
-        templateUrl: 'views/directives/submissionInfo.html',
+        templateUrl: 'views/admin/info/submissionInfo.html',
         restrict: 'E',
         replace: true,
         transclude: true,
@@ -12,10 +12,9 @@ vireo.directive("info", function ($q,FieldValue) {
             stacked: '=?'
         },
         link: function ($scope, element, attr) {
-            var edit = attr.edit !== undefined ? attr.edit : 'text';
             $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
         },
-        controller: function ($scope) {
+        controller: function ($scope, $element, $timeout) {
             
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
@@ -42,15 +41,26 @@ vireo.directive("info", function ($q,FieldValue) {
                 }
             };
 
-            $scope.editFieldValue = function (fieldValue) {
+            $scope.editFieldValue = function ($event, fieldValue) {
                 fieldValue.editing = true;
+                $timeout(function() {
+                    var infoForm = $element.find("input");
+                    if(!infoForm.hasClass("form-control")) {
+                        infoForm = $element.find("textarea");
+                    }
+                    if(infoForm.hasClass("form-control")) {
+                        if(infoForm.length > 1) {
+                            infoForm[Number($event.currentTarget.id) * 2].focus();
+                        } else {
+                            infoForm.focus();
+                        }
+                    }
+                });
             };
 
             var save = function (fieldValue) {
-                return $q(function (resolve) {
-                    $scope.submission.saveFieldValue(fieldValue, $scope.fieldProfile).then(function (response) {
-                        delete fieldValue.updating;
-                    });
+                $scope.submission.saveFieldValue(fieldValue, $scope.fieldProfile).then(function (response) {
+                    delete fieldValue.updating;
                 });
             };
 
@@ -74,25 +84,27 @@ vireo.directive("info", function ($q,FieldValue) {
                 fieldValue.updating = true;
                 fieldValue.identifier = item.identifier;
                 fieldValue.definition = item.definition;
+                fieldValue.contacts = item.contacts;
                 save(fieldValue);
             };
 
             $scope.datepickerOptions = {};
-            $scope.datepickerFormat = $scope.fieldProfile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            $scope.datepickerFormat = angular.isDefined($scope.fieldProfile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
-
-                for (var i in $scope.fieldProfile.controlledVocabularies[0].dictionary) {
-                    var cvw = $scope.fieldProfile.controlledVocabularies[0].dictionary[i];
-                    if (cvw.name == dateAndMode.date.getMonth()) {
-                        disabled = false;
-                        break;
+                if(angular.isDefined($scope.fieldProfile.controlledVocabulary)) {
+                    for (var i in $scope.fieldProfile.controlledVocabulary.dictionary) {
+                        var cvw = $scope.fieldProfile.controlledVocabulary.dictionary[i];
+                        if (cvw.name == dateAndMode.date.getMonth()) {
+                            disabled = false;
+                            break;
+                        }
                     }
                 }
                 return disabled;
             };
 
-            if ($scope.fieldProfile.controlledVocabularies.length && $scope.fieldProfile.controlledVocabularies[0].name === "Graduation Months") {
+            if (angular.isDefined($scope.fieldProfile.controlledVocabulary) && $scope.fieldProfile.controlledVocabulary.name === "Graduation Months") {
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };

@@ -95,6 +95,11 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
 
         assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
 
+        submissionListColumnRepo.deleteAll();
+
+        inputTypeRepo.deleteAll();
+        assertEquals("Couldn't delete all input types!", 0, inputTypeRepo.count());
+
         submissionFieldProfileRepo.deleteAll();
 
         workflowStepRepo.findAll().forEach(workflowStep -> {

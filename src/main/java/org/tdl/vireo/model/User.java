@@ -102,7 +102,7 @@ public class User extends AbstractWeaverUserDetails {
 
     @OrderColumn
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
-    private List<SubmissionListColumn> displayedSubmissionColumns;
+    private List<SubmissionListColumn> submissionViewColumns;
 
     @OrderColumn
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
@@ -126,7 +126,6 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     *
      * @param email
      * @param firstName
      * @param lastName
@@ -142,7 +141,6 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     *
      * @param email
      * @param firstName
      * @param lastName
@@ -304,7 +302,6 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     *
      * @param shibbolethAffiliation
      */
     public void addShibbolethAffiliation(String shibbolethAffiliation) {
@@ -312,7 +309,6 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     *
      * @param shibbolethAffiliation
      */
     public void removeShibbolethAffiliation(String shibbolethAffiliation) {
@@ -395,25 +391,25 @@ public class User extends AbstractWeaverUserDetails {
      * @return the submissionViewColumn
      */
     public List<SubmissionListColumn> getSubmissionViewColumns() {
-        return displayedSubmissionColumns;
+        return submissionViewColumns;
     }
 
     /**
      * @param submissionViewColumn
      *            the submissionViewColumn to set
      */
-    public void setSubmissionViewColumns(List<SubmissionListColumn> displayedSubmissionColumn) {
-        this.displayedSubmissionColumns = displayedSubmissionColumn;
+    public void setSubmissionViewColumns(List<SubmissionListColumn> submissionViewColumns) {
+        this.submissionViewColumns = submissionViewColumns;
     }
 
-    public void addSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
-        if (!this.displayedSubmissionColumns.contains(displayedSubmissionColumn)) {
-            this.displayedSubmissionColumns.add(displayedSubmissionColumn);
+    public void addSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
+        if (!this.submissionViewColumns.contains(submissionViewColumn)) {
+            this.submissionViewColumns.add(submissionViewColumn);
         }
     }
 
-    public void removeSubmissionViewColumn(SubmissionListColumn displayedSubmissionColumn) {
-        this.displayedSubmissionColumns.remove(displayedSubmissionColumn);
+    public void removeSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
+        this.submissionViewColumns.remove(submissionViewColumn);
     }
 
     /**

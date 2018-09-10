@@ -1,9 +1,6 @@
 {
   "name":"Committee Members",
   "isEntityProperty":false,
-  "language":{
-    "name":"English"
-  },
   "dictionary":[
     {
       "name":"Dr. Bob Boring",

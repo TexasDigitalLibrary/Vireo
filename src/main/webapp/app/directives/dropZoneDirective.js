@@ -3,11 +3,11 @@ vireo.directive("dropzone", function ($timeout) {
         templateUrl: 'views/directives/dropZone.html',
         restrict: 'E',
         scope: {
-            'id': '@',
-            'text': '@',
-            'patterns': '@',
-            'maxFiles': '@',
-            'allowMultiple': '@',
+            'id': '=',
+            'text': '=',
+            'patterns': '=',
+            'maxFiles': '=',
+            'allowMultiple': '=',
             'dropMethod': '&',
             'fileModel': '='
         },

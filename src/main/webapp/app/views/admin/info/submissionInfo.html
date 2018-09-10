@@ -2,15 +2,13 @@
 
   <div ng-if="immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
-    <div class="info-container">
+    <div class="info-container form-group">
 
-      <div class="col-sm-4 info-label">
-        <label>
-          <span ng-if="$index < 1">{{label}}:</span>
-        </label>
-      </div>
+      <label class="info-label" ng-if="$index < 1">
+        <span>{{label}}</span>
+      </label>
 
-      <div class="col-sm-8 info-data">
+      <span class="info-data form-control">
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
@@ -26,28 +24,23 @@
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputContactChair() && field.value">{{field.value}} {{field.contacts[0]}}</span>
-      </div>
+        <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
+      </span>
 
-      <div class="clearfix"></div>
     </div>
 
   </div>
 
   <div ng-if="!immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
-    <div ng-if="!field.editing" class="info-container" ng-class="{'text-danger': !field.isValid()}">
-      <div class="col-sm-4 info-label">
-        <label>
-          <span ng-if="$index < 1">{{label}}:</span>
-        </label>
-      </div>
+    <div ng-if="!field.editing" class="info-container form-group" ng-class="{'text-danger': !field.isValid()}">
+      
+      <label class="info-label" ng-if="$index < 1">
+        <span>{{label}}</span>
+      </label>
+      <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
 
-      <div class="col-sm-8 info-data">
-        <!-- conditionally show the edit clicker or the progress spinner -->
-        <span ng-if="!field.updating" class="glyphicon glyphicon-pencil toggle-href" ng-click="editFieldValue(field)"></span>
-        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
-
+      <span class="info-data form-control">
         <!-- conditionally show the proper form of the field value -->
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
@@ -64,30 +57,31 @@
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputContactChair() && field.value">{{field.value}} {{field.contacts[0]}}</span>
+        <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
 
-        <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus toggle-href" ng-click="addFieldValue()"></span>
-        <span ng-if="fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus toggle-href" ng-click="removeFieldValue(field)"></span>
-
+        <!-- conditionally show the invalidation and refresh -->
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
-        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary toggle-href" ng-click="refreshFieldValue(field)"></span>
-      </div>
+        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
 
-      <div class="clearfix"></div>
+        <!-- conditionally show the edit clicker or the progress spinner -->
+        <span id="{{$index}}" ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
+        <span ng-if="!field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>        
+        
+        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
+      </span>
+
     </div>
 
     <form ng-submit="save(field)">
 
-      <div ng-if="field.editing" class="info-container">
+      <div ng-show="field.editing" class="info-container form-group">
 
-        <div class="col-sm-4 info-label">
-          <label>
-            <span ng-if="$index < 1">{{label}}:</span>
-          </label>
-        </div>
-        <ng-include class="col-sm-8 info-form" src="edit"></ng-include>
+        <label class="info-label" ng-if="$index < 1">
+          <span>{{label}}</span>
+        </label>
 
-        <div class="clearfix"></div>
+        <ng-include class="info-form" src="edit"></ng-include>
+
       </div>
 
     </form>
