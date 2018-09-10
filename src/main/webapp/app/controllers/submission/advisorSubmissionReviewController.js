@@ -12,7 +12,7 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
 
     $scope.advisorSubmissionRepoReady = false;
 
-    AdvisorSubmissionRepo.fetchSubmissionByhash($routeParams.advisorAccessHash).then(function (submissions) {
+    AdvisorSubmissionRepo.fetchSubmissionByHash($routeParams.advisorAccessHash).then(function (submissions) {
         $scope.advisorSubmissionRepoReady = true;
         $scope.submission = submissions;
         resetApproveProxy();
