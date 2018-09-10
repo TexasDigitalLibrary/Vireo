@@ -841,11 +841,15 @@ public class SystemDataLoader {
             int count = 0;
             for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
-                if (dbSubmissionListColumn.getSort() != Sort.NONE) {
-                    dbSubmissionListColumn.setSortOrder(++count);
-                    defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
+                if(dbSubmissionListColumn != null) {
+                    if (dbSubmissionListColumn.getSort() != Sort.NONE) {
+                        dbSubmissionListColumn.setSortOrder(++count);
+                        defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
+                    } else {
+                        defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
+                    }
                 } else {
-                    defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
+                    logger.warn("Unable to find submission list column with title " + defaultTitle);
                 }
             }
 
@@ -937,9 +941,9 @@ public class SystemDataLoader {
                 defaultSettingsService.addSettings(entry.getKey(), defaultConfigurations);
             }
             defaultSettingsService.getTypes().forEach(t -> {
-                logger.info("Stored preferences for type: " + t);
+                logger.debug("Stored preferences for type: " + t);
                 defaultSettingsService.getSettingsByType(t).forEach(c -> {
-                    logger.info(c.getName() + ": " + c.getValue());
+                    logger.debug(c.getName() + ": " + c.getValue());
                 });
             });
         } catch (JsonParseException e) {
