@@ -1,6 +1,7 @@
 package org.tdl.vireo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +18,21 @@ public class AppEmailConfig extends WeaverEmailConfig {
 
     @Autowired
     private ConfigurationRepo configurationRepo;
+    
+    @Value("${app.email.username}")
+    private String username;
+    
+    @Value("${app.email.password}")
+    private String password;
+    
+    @Value("${app.email.port:25}")
+    private int port;
+    
+    @Value("${app.email.protocol:smtp}")
+    private String protocol;
+    
+    @Value("${app.email.channel:clear}")
+    private String channel;
 
     @Bean
     @Override
@@ -30,11 +46,11 @@ public class AppEmailConfig extends WeaverEmailConfig {
         emailService.setReplyTo(getConfigValue(ConfigurationName.APPLICATION_MAIL_REPLYTO, defaultReplyTo));
 
         // some hardcoded defaults
-        emailService.setPort(getConfigValue(ConfigurationName.APPLICATION_MAIL_PORT, 25));
-        emailService.setProtocol(getConfigValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, "smtp"));
-        emailService.setUsername(getConfigValue(ConfigurationName.APPLICATION_MAIL_USER, (String) null));
-        emailService.setPassword(getConfigValue(ConfigurationName.APPLICATION_MAIL_PASSWORD, (String) null));
-        emailService.setChannel(getConfigValue(ConfigurationName.APPLICATION_MAIL_CHANNEL, "clear"));
+        emailService.setPort(getConfigValue(ConfigurationName.APPLICATION_MAIL_PORT, port));
+        emailService.setProtocol(getConfigValue(ConfigurationName.APPLICATION_MAIL_PROTOCOL, protocol));
+        emailService.setUsername(getConfigValue(ConfigurationName.APPLICATION_MAIL_USER, (String) username));
+        emailService.setPassword(getConfigValue(ConfigurationName.APPLICATION_MAIL_PASSWORD, (String) password));
+        emailService.setChannel(getConfigValue(ConfigurationName.APPLICATION_MAIL_CHANNEL, channel));
 
         return emailService;
     }
