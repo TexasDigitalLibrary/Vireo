@@ -170,6 +170,9 @@ public class SubmissionController {
     @Value("${app.document.folder:private}")
     private String documentFolder;
 
+    @Value("${app.documentType.rename:}")
+    private String documentTypesToRename;
+
     @RequestMapping("/all")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAll() {
@@ -773,6 +776,16 @@ public class SubmissionController {
     public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
+
+        String[] fileNameParts = fileName.split("\\.");
+        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+
+        if(documentTypesToRename.contains(documentType)) {
+            String lastName = user.getLastName().toUpperCase();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
+        }
+
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
         assetService.write(file.getBytes(), uri);
         JsonNode fileInfo = assetService.getAssetFileInfo(uri);

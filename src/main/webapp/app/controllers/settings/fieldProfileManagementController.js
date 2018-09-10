@@ -4,16 +4,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope: $scope
     }));
 
-    $scope.shibbolethAttributes = {
-        UI_SHIBBOLETH_SELECT: {
-            id: 0,
-            name: "UI_SHIBBOLETH_SELECT",
-            value: "Select a Shibboleth Attribute",
-            type: "select"
-        }
-    };
-
-    angular.extend($scope.shibbolethAttributes, ManagedConfigurationRepo.getAll().shibboleth);
+    $scope.shibbolethAttributes = ManagedConfigurationRepo.getAllShibbolethConfigurations();
 
     $scope.organizationRepo = OrganizationRepo;
 
@@ -45,7 +36,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.forms = {};
 
-    $scope.ready = $q.all([ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
+    $scope.ready = $q.all([ManagedConfigurationRepo.ready(), ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
 
     $scope.ready.then(function () {
 
@@ -62,8 +53,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 flagged: false,
                 logged: false,
                 hidden: false,
-                gloss: '',
-                mappedShibAttribute: $scope.shibbolethAttributes.UI_SHIBBOLETH_SELECT
+                gloss: ''
             };
             if(data !== undefined) {
                 angular.extend($scope.modalData, data);
@@ -173,14 +163,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             });
         };
         
-        var unsetDefaultShipAttribute = function() {
-            if(angular.isDefined($scope.modalData.mappedShibAttribute) && $scope.modalData.mappedShibAttribute.id === 0) {
-                delete $scope.modalData.mappedShibAttribute;
-            }
-        };
-
         $scope.createFieldProfile = function () {
-            unsetDefaultShipAttribute();
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
@@ -207,7 +190,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
-            unsetDefaultShipAttribute();
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
