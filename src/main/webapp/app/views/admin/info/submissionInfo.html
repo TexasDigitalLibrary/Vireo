@@ -24,7 +24,7 @@
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputContactChair() && field.value">{{field.value}} {{field.contacts[0]}}</span>
+        <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
       </span>
 
     </div>
@@ -57,7 +57,7 @@
         <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputContactChair() && field.value">{{field.value}} ({{field.contacts[0]}})</span>
+        <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
 
         <!-- conditionally show the invalidation and refresh -->
         <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
