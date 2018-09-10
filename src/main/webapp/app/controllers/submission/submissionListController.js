@@ -663,7 +663,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         SidebarService.addBoxes([{
                 "title": "Now Filtering By:",
-                "viewUrl": "views/sideboxes/nowfiltering.html",
+                "viewUrl": "views/sideboxes/nowFiltering.html",
                 "activeFilters": $scope.activeFilters,
                 "removeFilterValue": $scope.removeFilterValue
             }, {

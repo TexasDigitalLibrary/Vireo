@@ -4,8 +4,6 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
 
     var configurations = {};
 
-    var listening = false;
-
     var defer = $q.defer();
 
     // additional repo methods and variables
@@ -50,6 +48,10 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
         return configurationRepo.getContents();
     };
 
+    configurationRepo.getAllShibbolethConfigurations = function () {
+        return configurationRepo.getAll().shibboleth;
+    };
+
     configurationRepo.getContents = function () {
         return configurations;
     };
@@ -71,15 +73,15 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
         });
     });
 
-    this.reset = function(model) {
+    configurationRepo.reset = function(model) {
         return model.reset();
     };
 
-    this.findByTypeAndName = function(type, name) {
+    configurationRepo.findByTypeAndName = function(type, name) {
 
         var configuration;
 
-        var list = this.getAll();
+        var list = configurationRepo.getAll();
 
         for (var i in list) {
             var config = list[i];
@@ -92,6 +94,6 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
         return configuration;
     };
 
-    return this;
+    return configurationRepo;
 
 });

@@ -1,8 +1,13 @@
 <div class="row" ng-controller="WorkflowManagementController">
   <div class="col-xs-12">
     <h1>WORKFLOW MANAGEMENT</h1>
-    <p>Manage Workflow Components</p>
+    <p>Manage workflow settings</p>
     <vireo-accordion single-expand="false">
+      <vireo-pane query="organizationSettings" html="views/admin/settings/workflow/organizationSettings.html">ORGANIZATION SETTINGS</vireo-pane>
+      <vireo-pane query="orcidSettings" html="views/admin/settings/workflow/orcidSettings.html">ORCID SETTINGS</vireo-pane>
+      <vireo-pane query="proquestUmiSettings" html="views/admin/settings/workflow/proquestUmiDegreeCodeSettings.html">PROQUEST SETTINGS</vireo-pane>
+      <vireo-pane query="controlledVocabularyManagement" html="views/admin/settings/workflow/controlledVocabularyManagement.html">CONTROLLED VOCABULARY MANAGEMENT</vireo-pane>
+      <vireo-pane query="shibbolethAttributes" html="views/admin/settings/workflow/shibbolethAttributes.html">SHIBBOLETH ATTRIBUTES</vireo-pane>
       <vireo-pane query="metadataKeys" html="views/admin/settings/workflow/fieldPredicates.html">METADATA KEYS</vireo-pane>
     </vireo-accordion>
   </div>

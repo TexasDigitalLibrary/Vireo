@@ -2,7 +2,7 @@ vireo.repo("AdvisorSubmissionRepo", function AdvisorSubmissionRepo($q, AdvisorSu
 
     var advisorSubmissionRepo = this;
 
-    advisorSubmissionRepo.fetchSubmissionByhash = function (hash) {
+    advisorSubmissionRepo.fetchSubmissionByHash = function (hash) {
         return $q(function(resolve, reject) {
             angular.extend(advisorSubmissionRepo.mapping.getByHash, {
                 'method': 'advisor-review/' + hash

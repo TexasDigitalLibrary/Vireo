@@ -28,4 +28,7 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
     @Override
     public Submission update(Submission submission);
 
+    @Override
+    public void delete(Submission submission);
+
 }

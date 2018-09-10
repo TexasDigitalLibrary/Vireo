@@ -54,6 +54,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 fieldValue.identifier = item.identifier;
                 fieldValue.definition = item.definition;
                 fieldValue.contacts = item.contacts;
+                fieldValue.value = item.name;
                 save(fieldValue);
             };
 
