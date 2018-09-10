@@ -256,8 +256,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             if (fieldPredicate !== undefined) {
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldPredicate);
-                if (fieldProfile.controlledVocabularies[0] !== undefined) {
-                    var cv = fieldProfile.controlledVocabularies[0];
+                if (angular.isDefined(fieldProfile.controlledVocabulary)) {
+                    var cv = fieldProfile.controlledVocabulary;
                     pattern = "";
                     for (i in cv.dictionary) {
                         var word = cv.dictionary[i];

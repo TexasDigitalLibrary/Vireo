@@ -4,9 +4,6 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -47,7 +44,6 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setHidden(false);
         setFlagged(false);
         setLogged(false);
-        setControlledVocabularies(new ArrayList<ControlledVocabulary>());
     }
 
     public FieldProfile(WorkflowStep originatingWorkflowStep) {
@@ -102,23 +98,18 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         setHelp(help);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, ControlledVocabulary controlledVocabulary, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, String defaultValue) {
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, ControlledVocabulary controlledVocabulary, String defaultValue) {
         this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
-        addControlledVocabulary(0, controlledVocabulary);
+        setControlledVocabulary(controlledVocabulary);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, defaultValue);
-        setControlledVocabularies(controlledVocabularies);
-    }
-
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, ManagedConfiguration mappedShibAttribute, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean flagged, Boolean logged, ControlledVocabulary controlledVocabulary, ManagedConfiguration mappedShibAttribute, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabulary, defaultValue);
         setMappedShibAttribute(mappedShibAttribute);
     }
 
-    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, List<ControlledVocabulary> controlledVocabularies, ManagedConfiguration mappedShibAttribute, String defaultValue) {
-        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabularies, mappedShibAttribute, defaultValue);
+    public FieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, ControlledVocabulary controlledVocabulary, ManagedConfiguration mappedShibAttribute, String defaultValue) {
+        this(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, flagged, logged, controlledVocabulary, mappedShibAttribute, defaultValue);
         setHidden(hidden);
     }
 
@@ -165,9 +156,8 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
     @Override
     public FieldProfile clone() {
         FieldProfile clone = new FieldProfile();
-
+        // TODO: can be simplified with BeanUtils
         clone.setFieldPredicate(getFieldPredicate());
-
         clone.setInputType(getInputType());
         clone.setRepeatable(getRepeatable());
         clone.setOptional(getOptional());
@@ -176,24 +166,14 @@ public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements 
         clone.setUsage(getUsage());
         clone.setHelp(getHelp());
         clone.setGloss(getGloss());
-
-        List<ControlledVocabulary> controlledVocabularies = new ArrayList<ControlledVocabulary>();
-        for (ControlledVocabulary cv : getControlledVocabularies()) {
-            controlledVocabularies.add(cv);
-        }
-        clone.setControlledVocabularies(controlledVocabularies);
-
+        clone.setControlledVocabulary(getControlledVocabulary());
         clone.setMappedShibAttribute(getMappedShibAttribute());
-
         clone.setFlagged(getFlagged());
         clone.setDefaultValue(getDefaultValue());
         clone.setEnabled(getEnabled());
-
         clone.setOriginating(getOriginating());
         clone.setOriginatingWorkflowStep(getOriginatingWorkflowStep());
-
         clone.setOverrideable(getOverrideable());
-
         return clone;
     }
 

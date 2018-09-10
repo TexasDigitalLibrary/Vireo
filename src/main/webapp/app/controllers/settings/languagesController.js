@@ -8,7 +8,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
     $scope.languages = LanguageRepo.getAll();
 
-    LanguageRepo.listen(function (data) {
+    LanguageRepo.listen(function () {
         $scope.resetLanguages();
     });
 

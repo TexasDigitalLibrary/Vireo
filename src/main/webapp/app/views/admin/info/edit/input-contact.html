@@ -3,7 +3,7 @@
     class="form-control"
     ng-model="field.value"
     placeholder="Input Name"
-    uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
+    uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(field, $item)"/>
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
   <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
