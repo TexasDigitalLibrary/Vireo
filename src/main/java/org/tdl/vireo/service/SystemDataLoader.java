@@ -230,7 +230,7 @@ public class SystemDataLoader {
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumns();
 
-        logger.info("Loading default Submission List Columns");
+        logger.info("Loading default Submission List Columns Filters");
         loadSubmissionListColumnsFilters();
 
         logger.info("Loading default Packagers");
