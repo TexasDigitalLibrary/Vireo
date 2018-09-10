@@ -11,12 +11,7 @@
     <span ng-if="checked !== true" class="glyphicon glyphicon-remove pull-right clickable" ng-click="cancel(field)"></span>
   </label>
   <div ng-if="checked === true">
-    <textarea
-      class="form-control"
-      name="profile.fieldPredicate.value"
-      ng-required="!profile.optional"
-      ng-model="field.value">
-    </textarea>
+    <textarea class="form-control" name="profile.fieldPredicate.value" ng-required="!profile.optional" ng-model="field.value" rows="2" cols="500"></textarea>
     <span class="glyphicon glyphicon-ok pull-right clickable" ng-click="save(field)"></span>
     <span class="glyphicon glyphicon-remove pull-right clickable" ng-click="cancel(field)"></span>
   </div>
