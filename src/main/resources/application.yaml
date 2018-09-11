@@ -21,24 +21,22 @@ spring:
     maxFileSize: 20MB
     maxRequestSize: 20MB
 
-  # H2
   datasource:
+    # H2
     platform: h2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     # url=jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
 
-  # PostgreSQL
-  #datasource:
-  #  platform: postgresql
-  #  url: jdbc:postgresql://localhost:5432/vireo
-  #  driverClassName: org.postgresql.Driver
+    # PostgreSQL
+    #platform: postgresql
+    #url: jdbc:postgresql://localhost:5432/vireo
+    #driverClassName: org.postgresql.Driver
 
-  # MySQL
-  #datasource:
-  #  platform: mysql
-  #  url: jdbc:mysql://localhost/vireo
-  #  driverClassName: com.mysql.jdbc.Driver
+    # MySQL
+    #platform: mysql
+    #url: jdbc:mysql://localhost/vireo
+    #driverClassName: com.mysql.jdbc.Driver
 
     # database username and password
     username: vireo
