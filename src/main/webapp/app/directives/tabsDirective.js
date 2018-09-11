@@ -5,21 +5,15 @@ vireo.directive("vireoTabs", function() {
 		replace: false,
 		transclude: true,
 		scope: false,
-		controller: function($scope, $routeParams, VireoTabService) {
+		controller: function($scope, $location, VireoTabService) {
 			var initialized = false;
+			var isCurrent = function(path) {
+				return ('/' + path).indexOf($location.path()) === 0;
+			};
 			$scope.activeTab = function(path) {
-				if(!initialized) {
-					var active = false;
-					if($routeParams.id !== undefined) {
-						active = path.indexOf('/' + $routeParams.id + '/' + $routeParams.tab) >= 0;
-					}
-					else {
-						active = path.indexOf('/' + $routeParams.tab) >= 0;
-					}
-					if(active) {
-						initialized = true;
-						$scope.setActive(path);
-					}
+				if(!initialized && isCurrent(path)) {
+					initialized = true;
+					$scope.setActive(path);
 				}
 				return VireoTabService.isActive(path);
 			};
@@ -52,10 +46,11 @@ vireo.directive("vireoTab", function($compile, $location, VireoTabService, WsApi
 			}
 			angular.element('#tabs-directive').after($compile(span)($scope));
 
+			if($scope.reload === false) {
+				WsApi.registerPersistentRouteBasedChannel($scope.path);
+			}
+
 			VireoTabService.register($scope.path, function() {
-				if($scope.reload === false) {
-					WsApi.registerPersistentRouteBasedChannel($scope.path);
-				}
 				$location.path($scope.path, $scope.reload);
 			});
 

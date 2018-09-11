@@ -64,7 +64,8 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/admin/view/:id/:tab', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
-        controller: 'AdminSubmissionViewController'
+        controller: 'AdminSubmissionViewController',
+        reloadOnSearch: false
     }).
     when('/admin/log', {
         templateUrl: 'views/admin/admin.html',
@@ -77,7 +78,8 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/admin/settings/:tab', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER"],
-        controller: 'SettingsController'
+        controller: 'SettingsController',
+        reloadOnSearch: false
     }).
     when('/', {
         templateUrl: 'views/home.html'

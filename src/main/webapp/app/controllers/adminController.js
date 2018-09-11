@@ -4,22 +4,20 @@ vireo.controller('AdminController', function ($controller, $location, $scope) {
         $scope: $scope
     }));
 
-    var view = $location.path();
-
     $scope.isList = function () {
-        return view.indexOf("/admin/list") >= 0;
+        return $location.path().indexOf("/admin/list") >= 0;
     };
 
     $scope.isView = function () {
-        return view.indexOf("/admin/view") >= 0;
+        return $location.path().indexOf("/admin/view") >= 0;
     };
 
     $scope.isLog = function () {
-        return view.indexOf("/admin/log") >= 0;
+        return $location.path().indexOf("/admin/log") >= 0;
     };
 
     $scope.isSettings = function () {
-        return view.indexOf("/admin/settings") >= 0;
+        return $location.path().indexOf("/admin/settings") >= 0;
     };
 
 });
