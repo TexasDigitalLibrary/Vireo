@@ -169,14 +169,21 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
     public Organization restoreDefaults(Organization organization) {
         Organization persistedOrg = organizationRepo.findOne(organization.getId());
         Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
+        
+        List<WorkflowStep> workflowStepsToDelete = new ArrayList<WorkflowStep>(persistedOrg.getOriginalWorkflowSteps());
 
         persistedOrg.clearAggregatedWorkflowStepsFromHiarchy();
 
-        parentOrg.getAggregateWorkflowSteps().forEach(ws -> {
+        for (WorkflowStep ws : parentOrg.getAggregateWorkflowSteps()) {
             persistedOrg.addAggregateWorkflowStep(ws);
-        });
-
+        }
+ 
         organization = organizationRepo.save(persistedOrg);
+
+        for (WorkflowStep ws : workflowStepsToDelete) {
+            workflowStepRepo.delete(ws);
+        }
+        
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return organization;
     }

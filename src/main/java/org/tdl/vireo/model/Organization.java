@@ -493,11 +493,11 @@ public class Organization extends ValidatingBaseEntity {
 
         List<WorkflowStep> originals = new ArrayList<WorkflowStep>(getOriginalWorkflowSteps());
         List<WorkflowStep> aggregets = new ArrayList<WorkflowStep>(getAggregateWorkflowSteps());
-
+        
         originals.forEach(owfs -> {
             removeOriginalWorkflowStep(owfs);
         });
-
+        
         aggregets.forEach(awfs -> {
             removeAggregateWorkflowStep(awfs);
         });
