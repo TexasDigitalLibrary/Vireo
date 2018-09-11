@@ -30,7 +30,8 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
 			$scope.embargoRepo.clearValidationResults();
 			for(var key in $scope.forms) {
     			if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-    				$scope.forms[key].$setPristine();
+						$scope.forms[key].$setPristine();
+						$scope.forms[key].$setUntouched();
     			}
     		}
 			if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {

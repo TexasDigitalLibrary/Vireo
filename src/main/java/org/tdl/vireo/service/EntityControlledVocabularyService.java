@@ -18,11 +18,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.aspect.annotation.EntityCV;
 import org.tdl.vireo.model.EntityControlledVocabulary;
-import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.EntityControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.LanguageRepo;
 
 import edu.tamu.weaver.data.utility.EntityUtility;
 
@@ -35,9 +33,6 @@ public class EntityControlledVocabularyService {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private LanguageRepo langaugeRepo;
-
-    @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
     private Map<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>> entityControlledVocabularyRepos;
@@ -48,7 +43,6 @@ public class EntityControlledVocabularyService {
 
     @SuppressWarnings("unchecked")
     public void scanForEntityControlledVocabularies() throws ClassNotFoundException {
-        Language language = langaugeRepo.findAll().get(0);
         for (String name : applicationContext.getBeanDefinitionNames()) {
             Object bean = applicationContext.getBean(name);
             if (bean instanceof EntityControlledVocabularyRepo) {
@@ -58,14 +52,14 @@ public class EntityControlledVocabularyService {
                 if (subsetAnnotations.size() > 0) {
                     subsetAnnotations.forEach(entityCVSubset -> {
                         String controlledVocabularyName = entityCVSubset.name();
-                        controlledVocabularyRepo.create(controlledVocabularyName, language, true);
+                        controlledVocabularyRepo.create(controlledVocabularyName, true);
                         entityControlledVocabularyRepos.put(controlledVocabularyName, entityControlledVoabularyRepo);
                         logger.info("Created entity controlled vocabulary: " + controlledVocabularyName);
                     });
                 } else {
                     Optional<String> controlledVocabularyName = getEntityControlledVocabularyName(entityControlledVoabularyRepo);
                     String entityCVName = controlledVocabularyName.isPresent() ? controlledVocabularyName.get() : entityName;
-                    controlledVocabularyRepo.create(entityCVName, language, true);
+                    controlledVocabularyRepo.create(entityCVName, true);
                     entityControlledVocabularyRepos.put(entityCVName, entityControlledVoabularyRepo);
                     logger.info("Created entity controlled vocabulary: " + entityCVName);
                 }

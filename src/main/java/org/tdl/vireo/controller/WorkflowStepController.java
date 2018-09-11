@@ -18,9 +18,11 @@ import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -46,6 +48,9 @@ public class WorkflowStepController {
     private FieldProfileRepo fieldProfileRepo;
 
     @Autowired
+    private ConfigurationRepo configurationRepo;
+
+    @Autowired
     private NoteRepo noteRepo;
 
     @RequestMapping("/all")
@@ -69,7 +74,7 @@ public class WorkflowStepController {
         if (!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
-        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabularies(), fieldProfile.getFieldGlosses(), fieldProfile.getDefaultValue());
+        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getDefaultValue());
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);
     }
@@ -78,6 +83,14 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        ManagedConfiguration mappedShibAttribute = fieldProfile.getMappedShibAttribute();
+        if (mappedShibAttribute != null && mappedShibAttribute.getId() == null) {
+            ManagedConfiguration persistedMappedShibAttribute = configurationRepo.findByNameAndType(mappedShibAttribute.getName(), mappedShibAttribute.getType());
+            if (persistedMappedShibAttribute == null) {
+                persistedMappedShibAttribute = configurationRepo.create(mappedShibAttribute);
+            }
+            fieldProfile.setMappedShibAttribute(persistedMappedShibAttribute);
+        }
         fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);

@@ -1,6 +1,5 @@
 package org.tdl.vireo.integration;
 
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,7 +10,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
@@ -53,8 +51,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void testRegisterEmail() throws Exception {
-        // TODO: fix
-        // mockMvc.perform(get("/auth/register").param("email", TEST_USER_EMAIL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS")).andExpect(jsonPath("$.payload.UnmodifiableMap.email").value(TEST_USER_EMAIL)).andDo(MockMvcResultHandlers.print());
+        // TODO
     }
 
     @Test
@@ -67,7 +64,8 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         data.put("lastName", TEST_USER_LAST_NAME);
         data.put("userPassword", TEST_USER_PASSWORD);
         data.put("confirm", TEST_USER_CONFIRM);
-        mockMvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS")).andExpect(jsonPath("$.payload.User.email").value(TEST_USER_EMAIL)).andExpect(jsonPath("$.payload.User.firstName").value(TEST_USER_FIRST_NAME)).andExpect(jsonPath("$.payload.User.lastName").value(TEST_USER_LAST_NAME)).andExpect(jsonPath("$.payload.User.password").doesNotExist()).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS")).andExpect(jsonPath("$.payload.User.email").value(TEST_USER_EMAIL)).andExpect(jsonPath("$.payload.User.firstName").value(TEST_USER_FIRST_NAME)).andExpect(jsonPath("$.payload.User.lastName").value(TEST_USER_LAST_NAME))
+                .andExpect(jsonPath("$.payload.User.password").doesNotExist());
     }
 
     @Test
@@ -78,7 +76,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         Map<String, String> data = new HashMap<String, String>();
         data.put("email", TEST_USER_EMAIL);
         data.put("userPassword", TEST_USER_PASSWORD);
-        mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS")).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))).andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS"));
     }
 
     @Override

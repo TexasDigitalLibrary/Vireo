@@ -33,7 +33,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
                 if (aggregateFieldProfile.inputType.name === InputTypes.INPUT_CONTACT) {
                     $scope.recipients.push({
-                        name: aggregateFieldProfile.fieldGlosses[0].value,
+                        name: aggregateFieldProfile.gloss,
                         type: EmailRecipientType.CONTACT,
                         data: aggregateFieldProfile.fieldPredicate.id
                     });

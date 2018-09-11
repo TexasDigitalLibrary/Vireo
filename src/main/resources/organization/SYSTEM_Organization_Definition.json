@@ -58,17 +58,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter your first name.",
-          "fieldGlosses":[
-            {
-              "value":"First Name",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss":"First Name"
         },
         {
           "fieldPredicate":{
@@ -87,17 +77,7 @@
           "optional":true,
           "usage":"",
           "help":"Enter your middle name or initial.",
-          "fieldGlosses":[
-            {
-              "value":"Middle Name",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Middle Name"
         },
         {
           "fieldPredicate":{
@@ -118,17 +98,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter your last name.",
-          "fieldGlosses":[
-            {
-              "value":"Last Name",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Last Name"
         },
         {
           "fieldPredicate":{
@@ -155,17 +125,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter your email.",
-          "fieldGlosses":[
-            {
-              "value":"Email",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Email"
         },
         {
           "fieldPredicate":{
@@ -184,17 +144,8 @@
           "optional":true,
           "usage":"",
           "help":"Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
-          "fieldGlosses":[
-            {
-              "value":"ORCID",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "htmlTooltip":true,
+          "gloss": "ORCID"
         },
         {
           "fieldPredicate":{
@@ -220,17 +171,7 @@
           "hidden":true,
           "usage":"",
           "help":"",
-          "fieldGlosses":[
-            {
-              "value":"Institutional ID",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Institutional ID"
         },
         {
           "fieldPredicate":{
@@ -249,17 +190,7 @@
           "optional":true,
           "usage":"",
           "help":"Enter the full year in which you were born. For example 1985.",
-          "fieldGlosses":[
-            {
-              "value":"Year of Birth",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Year of Birth"
         },
         {
           "fieldPredicate":{
@@ -278,17 +209,7 @@
           "optional":true,
           "usage":"",
           "help":"Your degree granting institution.",
-          "fieldGlosses":[
-            {
-              "value":"School",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "School"
         },
         {
           "fieldPredicate":{
@@ -309,23 +230,11 @@
           "logged":false,
           "usage":"",
           "help":"Enter the college you belong to.",
-          "fieldGlosses":[
-            {
-              "value":"College",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Colleges",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "College",
+          "controlledVocabulary": {
+            "name":"Colleges",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -344,23 +253,11 @@
           "optional":true,
           "usage":"",
           "help":"Enter the program you belong to.",
-          "fieldGlosses":[
-            {
-              "value":"Program",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Programs",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Program",
+          "controlledVocabulary":{
+            "name":"Programs",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -381,23 +278,11 @@
           "logged":false,
           "usage":"",
           "help":"Enter the department you belong to.",
-          "fieldGlosses":[
-            {
-              "value":"Department",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Departments",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Department",
+          "controlledVocabulary":{
+            "name":"Departments",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -418,24 +303,12 @@
           "logged":false,
           "usage":"",
           "help":"Choose the type of degree you are seeking.",
-          "fieldGlosses":[
-            {
-              "value":"Degree",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Degrees",
-              "entityName":"Degree",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Degree",
+          "controlledVocabulary":{
+            "name":"Degrees",
+            "entityName":"Degree",
+            "isEntityProperty":true
+          }
         },
         {
           "fieldPredicate":{
@@ -456,23 +329,11 @@
           "logged":false,
           "usage":"",
           "help":"Enter the discipline you specialized in.",
-          "fieldGlosses":[
-            {
-              "value":"Major",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Majors",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Major",
+          "controlledVocabulary":{
+            "name":"Majors",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -493,17 +354,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter a phone number where you can be reached even after you have left school",
-          "fieldGlosses":[
-            {
-              "value":"Permanent Phone",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Permanent Phone"
         },
         {
           "fieldPredicate":{
@@ -524,17 +375,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter an address where you can be reached even after you complete and leave school.",
-          "fieldGlosses":[
-            {
-              "value":"Permanent Address",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Permanent Address"
         },
         {
           "fieldPredicate":{
@@ -555,17 +396,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter an email address you will always have.",
-          "fieldGlosses":[
-            {
-              "value":"Permanent Email",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Permanent Email"
         },
         {
           "fieldPredicate":{
@@ -584,17 +415,7 @@
           "optional":true,
           "usage":"",
           "help":"Enter a phone number where you can be reached.",
-          "fieldGlosses":[
-            {
-              "value":"Current Phone",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Current Phone"
         },
         {
           "fieldPredicate":{
@@ -613,17 +434,7 @@
           "optional":true,
           "usage":"",
           "help":"Enter an address where you can be reached.",
-          "fieldGlosses":[
-            {
-              "value":"Current Address",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Current Address"
         }
       ]
     },
@@ -660,17 +471,7 @@
           "logged":false,
           "usage":"",
           "help":"By checking here you agree to the above license in its entirety.",
-          "fieldGlosses":[
-            {
-              "value":"License Agreement",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "License Agreement"
         },
         {
           "fieldPredicate":{
@@ -691,17 +492,7 @@
           "logged":false,
           "usage":"",
           "help":"I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
-          "fieldGlosses":[
-            {
-              "value":"Proquest Publication",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Proquest Publication"
         }
       ]
     },
@@ -765,17 +556,7 @@
           "logged":false,
           "usage":"",
           "help":"Enter the title of your document.",
-          "fieldGlosses":[
-            {
-              "value":"Title",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Title"
         },
         {
           "fieldPredicate":{
@@ -796,23 +577,11 @@
           "logged":false,
           "usage":"",
           "help":"Example: May 2008",
-          "fieldGlosses":[
-            {
-              "value":"Degree Date",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Graduation Months",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Degree Date",
+          "controlledVocabulary":{
+            "name":"Graduation Months",
+            "isEntityProperty":true
+          }
         },
         {
           "fieldPredicate":{
@@ -831,17 +600,7 @@
           "optional":true,
           "usage":"",
           "help":"Format: mm/dd/yyyy",
-          "fieldGlosses":[
-            {
-              "value":"Defense Date",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Defense Date"
         },
         {
           "fieldPredicate":{
@@ -862,23 +621,11 @@
           "logged":false,
           "usage":"",
           "help":"Choose the type of your submission.",
-          "fieldGlosses":[
-            {
-              "value":"Submission Type",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Submission Types",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Submission Type",
+          "controlledVocabulary":{
+            "name":"Submission Types",
+            "isEntityProperty":false
+    	  }
         },
         {
           "fieldPredicate":{
@@ -899,17 +646,7 @@
           "logged":false,
           "usage":"",
           "help":"Provide the abstract of your document.",
-          "fieldGlosses":[
-            {
-              "value":"Abstract",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Abstract"
         },
         {
           "fieldPredicate":{
@@ -930,17 +667,7 @@
           "logged":false,
           "usage":"",
           "help":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
-          "fieldGlosses":[
-            {
-              "value":"Keywords",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Keywords"
         },
         {
           "fieldPredicate":{
@@ -961,23 +688,11 @@
           "logged":false,
           "usage":"",
           "help":"Provide a primary subject, and up to two additional subjects.",
-          "fieldGlosses":[
-            {
-              "value":"Subjects",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Subjects",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Subjects",
+          "controlledVocabulary":{
+            "name":"Subjects",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -996,23 +711,11 @@
           "optional":true,
           "usage":"",
           "help":"Provide the primary language of your document.",
-          "fieldGlosses":[
-            {
-              "value":"Language",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Languages",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Language",
+          "controlledVocabulary":{
+            "name":"Languages",
+            "isEntityProperty":true
+          }
         },
         {
           "fieldPredicate":{
@@ -1033,23 +736,11 @@
           "logged":false,
           "usage":"",
           "help":"Enter the name and email address for your committee chair.",
-          "fieldGlosses":[
-            {
-              "value":"Committee Chair",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Committee Members",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Committee Chair",
+          "controlledVocabulary":{
+            "name":"Committee Members",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -1070,23 +761,11 @@
           "logged":false,
           "usage":"",
           "help":"Enter the names and select role of your non-chairing committee members",
-          "fieldGlosses":[
-            {
-              "value":"Non-Chairing Committee Members",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Committee Members",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Non-Chairing Committee Members",
+          "controlledVocabulary":{
+            "name":"Committee Members",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -1105,17 +784,7 @@
           "optional":true,
           "usage":"",
           "help":"Has any part of the material being submitted been previously published (i.e. book chapters or journal articles)? If so you will be asked identify the section where these materials are used in whole or in part.",
-          "fieldGlosses":[
-            {
-              "value":"Previously Published Material",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Previously Published Material"
         },
         {
           "fieldPredicate":{
@@ -1136,23 +805,11 @@
           "logged":false,
           "usage":"",
           "help":"With your advisor's approval you may request a delay in the publication (embargo) of your work.",
-          "fieldGlosses":[
-            {
-              "value":"Default Embargos",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Default Embargos",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Default Embargos",
+          "controlledVocabulary":{
+            "name":"Default Embargos",
+            "isEntityProperty":true
+          }
         },
         {
           "fieldPredicate":{
@@ -1171,23 +828,11 @@
           "optional":true,
           "usage":"",
           "help":" With your advisor's approval you may request a delay in the publication (embargo) of your work.",
-          "fieldGlosses":[
-            {
-              "value":"ProQuest Embargos",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Proquest Embargos",
-              "isEntityProperty":true,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "ProQuest Embargos",
+          "controlledVocabulary":{
+            "name":"Proquest Embargos",
+            "isEntityProperty":true
+          }
         }
       ]
     },
@@ -1244,23 +889,11 @@
           "logged":false,
           "usage":"",
           "help":"Upload the primary manuscript. You may only upload one file. Additional files may be uploaded below.",
-          "fieldGlosses":[
-            {
-              "value":"Manuscript in PDF",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-            {
-              "name":"Manuscript Allowed File Extensions",
-              "isEntityProperty":false,
-              "language":{
-                "name":"English"
-              }
-            }
-          ]
+          "gloss": "Manuscript in PDF",
+          "controlledVocabulary":{
+            "name":"Manuscript Allowed File Extensions",
+            "isEntityProperty":false
+          }
         },
         {
           "fieldPredicate":{
@@ -1279,17 +912,7 @@
           "optional":true,
           "usage":"",
           "help":"Upload only supplemental files such as audio, video or data sets. These files must be listed in the appendix of your thesis or dissertation.",
-          "fieldGlosses":[
-            {
-              "value":"Supplemental Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Supplemental Files"
         },
         {
           "fieldPredicate":{
@@ -1308,17 +931,7 @@
           "optional":true,
           "usage":"",
           "help":"Upload the source files used to create your manuscript such as a Word Document, LaTeX Source file, etc. These files will be used to improve the digital preservation potential of your document.",
-          "fieldGlosses":[
-            {
-              "value":"Source Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Source Files"
         },
         {
           "fieldPredicate":{
@@ -1337,17 +950,7 @@
           "optional":true,
           "usage":"",
           "help":"Upload additional administrative files such as a signed graduation release form or other local administrative requirement.",
-          "fieldGlosses":[
-            {
-              "value":"Administrative Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Administrative Files"
         },
         {
           "fieldPredicate":{
@@ -1367,17 +970,7 @@
           "hidden":true,
           "usage":"",
           "help":"",
-          "fieldGlosses":[
-            {
-              "value":"License Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "License Files"
         },
         {
           "fieldPredicate":{
@@ -1397,17 +990,7 @@
           "hidden":true,
           "usage":"",
           "help":"",
-          "fieldGlosses":[
-            {
-              "value":"Archived Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Archived Files"
         },
         {
           "fieldPredicate":{
@@ -1427,17 +1010,7 @@
           "hidden":true,
           "usage":"",
           "help":"",
-          "fieldGlosses":[
-            {
-              "value":"Feedback Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Feedback Files"
         },
         {
           "fieldPredicate":{
@@ -1457,17 +1030,7 @@
           "hidden":true,
           "usage":"",
           "help":"",
-          "fieldGlosses":[
-            {
-              "value":"Unknown Files",
-              "language":{
-                "name":"English"
-              }
-            }
-          ],
-          "controlledVocabularies":[
-
-          ]
+          "gloss": "Unknown Files"
         }
       ]
     }

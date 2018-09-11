@@ -1,11 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
-import java.util.ArrayList;
+import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.existing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -22,7 +20,7 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findByFieldPredicateAndInputTypeAndRepeatableAndOptionalAndHiddenAndLoggedAndUsageAndHelpAndMappedShibAttributeAndFlaggedAndDefaultValueAndEnabled(fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getRepeatable(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getLogged(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getMappedShibAttribute(), fieldProfile.getFlagged(), fieldProfile.getDefaultValue(), fieldProfile.getEnabled());
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findOne(existing(fieldProfile));
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();
@@ -35,12 +33,9 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile.setLogged(fieldProfile.getLogged());
             submissionfieldProfile.setUsage(fieldProfile.getUsage());
             submissionfieldProfile.setHelp(fieldProfile.getHelp());
-
-            submissionfieldProfile.setFieldGlosses(new ArrayList<FieldGloss>(fieldProfile.getFieldGlosses()));
-            submissionfieldProfile.setControlledVocabularies(new ArrayList<ControlledVocabulary>(fieldProfile.getControlledVocabularies()));
-
+            submissionfieldProfile.setGloss(fieldProfile.getGloss());
+            submissionfieldProfile.setControlledVocabulary(fieldProfile.getControlledVocabulary());
             submissionfieldProfile.setMappedShibAttribute(fieldProfile.getMappedShibAttribute());
-
             submissionfieldProfile.setFlagged(fieldProfile.getFlagged());
             submissionfieldProfile.setDefaultValue(fieldProfile.getDefaultValue());
             submissionfieldProfile.setEnabled(fieldProfile.getEnabled());

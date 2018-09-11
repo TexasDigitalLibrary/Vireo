@@ -1,3 +1,4 @@
+
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DepositLocation, PackagerRepo, DragAndDropListenerFactory) {
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -33,46 +34,54 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
     $scope.ready.then(function () {
 
         $scope.resetDepositLocation = function () {
+
             $scope.depositLocationRepo.clearValidationResults();
-            for (var key in $scope.forms) {
-                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
-                    $scope.forms[key].$setPristine();
-                }
-            }
+
             if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
                 $scope.modalData.refresh();
             }
+
             $scope.modalData = {
+                name: '',
                 depositorName: 'SWORDv1Depositor',
                 timeout: 240,
-                packager: $scope.packagers.length > 0 ? $scope.packagers[0] : undefined
-            };
-
-            $scope.modalData.testDepositLocation = function () {
-                isTestDepositing = true;
-                var testData = angular.copy($scope.modalData);
-                delete testData.packager;
-                var testableDepositLocation = new DepositLocation(testData);
-                testableDepositLocation.testConnection().then(function (response) {
-                    var data = angular.fromJson(response.body);
-                    var collections = data.payload.HashMap;
-                    angular.forEach(collections, function (uri, name) {
-                        $scope.collections.push({
-                            "name": name,
-                            "uri": uri
-                        });
+                packager: $scope.packagers.length > 0 ? $scope.packagers[0] : undefined,
+                repository: '',
+                username: '',
+                password: '',
+                testDepositLocation: function () {
+                    isTestDepositing = true;
+                    var testData = angular.copy($scope.modalData);
+                    delete testData.packager;
+                    var testableDepositLocation = new DepositLocation(testData);
+                    testableDepositLocation.testConnection().then(function (response) {
+                        var apiRes = angular.fromJson(response.body);
+                        if(apiRes.meta.status === 'SUCCESS') {
+                        	var collections = apiRes.payload.HashMap;
+                            angular.forEach(collections, function (uri, name) {
+                                $scope.collections.push({
+                                    "name": name,
+                                    "uri": uri
+                                });
+                            });
+                        }                        
+                        isTestDepositing = false;
                     });
-                    isTestDepositing = false;
-                });
+                },
+                isTestDepositing: function () {
+                    return isTestDepositing;
+                },
+                isTestable: function () {
+                    return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositorName && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
+                }
             };
 
-            $scope.modalData.isTestDepositing = function () {
-                return isTestDepositing;
-            };
-
-            $scope.modalData.isTestable = function () {
-                return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositorName && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
-            };
+            for (var key in $scope.forms) {
+                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+                    $scope.forms[key].$setPristine();
+                    $scope.forms[key].$setUntouched();
+                }
+            }
 
             $scope.closeModal();
         };

@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
@@ -75,8 +76,8 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
+import org.tdl.vireo.service.AssetService;
 import org.tdl.vireo.service.DepositorService;
-import org.tdl.vireo.utility.FileIOUtility;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
@@ -140,7 +141,7 @@ public class SubmissionController {
     private TemplateUtility templateUtility;
 
     @Autowired
-    private FileIOUtility fileIOUtility;
+    private AssetService assetService;
 
     @Autowired
     private ConfigurationRepo configurationRepo;
@@ -162,12 +163,15 @@ public class SubmissionController {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
 
-    @Value("${app.document.path:private/}")
-    private String documentPath;
+    @Value("${app.document.folder:private}")
+    private String documentFolder;
+
+    @Value("${app.documentType.rename:}")
+    private String documentTypesToRename;
 
     @RequestMapping("/all")
     @PreAuthorize("hasRole('REVIEWER')")
@@ -217,7 +221,7 @@ public class SubmissionController {
 
         ApiResponse response = new ApiResponse(SUCCESS);
         if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
-            submissionRepo.delete(submissionId);
+            submissionRepo.delete(submissionToDelete);
         } else {
             response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
         }
@@ -256,9 +260,9 @@ public class SubmissionController {
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-        
+
         String recipientEmails = new String();
-        
+
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
         if (sendRecipientEmail) {
@@ -342,7 +346,7 @@ public class SubmissionController {
                     submission = submissionRepo.save(submission);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was set to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was set to " + fieldValue.getValue());
                     }
 
                 } else {
@@ -352,7 +356,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getFieldGlosses().get(0).getValue() + " was changed from " + oldValue + " to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
@@ -370,6 +374,16 @@ public class SubmissionController {
         }
 
         return apiResponse;
+    }
+
+    private String convertBoolean(final String value) {
+        String result = value;
+        if (result.equals("true")) {
+            result = "Yes";
+        } else if (result.equals("false")) {
+            result = "No";
+        }
+        return result;
     }
 
     @RequestMapping(value = "/{submissionId}/validate-field-value/{fieldProfileId}", method = RequestMethod.POST)
@@ -415,7 +429,6 @@ public class SubmissionController {
             if (submissionStatus != null) {
                 submission = submissionRepo.updateStatus(submission, submissionStatus, user);
                 response = new ApiResponse(SUCCESS, submission);
-                simpMessagingTemplate.convertAndSend("/channel/submission/" + submissionId, response);
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
@@ -456,17 +469,11 @@ public class SubmissionController {
                     Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
 
                     if (depositor != null) {
-
                         ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-
-                        String result = depositor.deposit(depositLocation, exportPackage);
-
-                        if (result != null) {
-                            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                            response = new ApiResponse(SUCCESS, submission);
-                        } else {
-                            response = new ApiResponse(ERROR, "Could not deposit submission");
-                        }
+                        String depositURL = depositor.deposit(depositLocation, exportPackage);
+                        submission.setDepositURL(depositURL);
+                        submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                        response = new ApiResponse(SUCCESS, submission);
                     } else {
                         response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                     }
@@ -609,26 +616,20 @@ public class SubmissionController {
         if (submissionStatus != null) {
             DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
             if (depositLocation != null) {
-                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
-                    Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
-                    if (depositor != null) {
+                Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
+                if (depositor != null) {
+                    for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns())) {
                         try {
                             ExportPackage exportPackage = packagerUtility.packageExport(depositLocation.getPackager(), submission);
-
-                            String result = depositor.deposit(depositLocation, exportPackage);
-
-                            if (result != null) {
-                                submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-                            } else {
-                                throw new RuntimeException("Failed batch publish on submission " + submission.getId());
-                            }
-
+                            String depositURL = depositor.deposit(depositLocation, exportPackage);
+                            submission.setDepositURL(depositURL);
+                            submission = submissionRepo.updateStatus(submission, submissionStatus, user);
                         } catch (Exception e) {
-                            throw new RuntimeException("Failed package export on submission " + submission.getId());
+                            throw new DepositException("Failed package export on submission " + submission.getId());
                         }
-                    } else {
-                        response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                     }
+                } else {
+                    response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
                 }
             } else {
                 response = new ApiResponse(ERROR, "Could not find a deposite location id " + depositLocationId);
@@ -745,13 +746,12 @@ public class SubmissionController {
     }
 
     @JsonView(ApiView.Partial.class)
-    @RequestMapping("/query/{page}/{size}")
+    @RequestMapping(value = "/query/{page}/{size}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size) throws ExecutionException {
+    public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
         long startTime = System.nanoTime();
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        List<SubmissionListColumn> submissionListColumns = activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : user.getSubmissionViewColumns();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, submissionListColumns, new PageRequest(page, size));
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");
@@ -761,14 +761,14 @@ public class SubmissionController {
     @RequestMapping("/file")
     public void submissionFile(HttpServletResponse response, @RequestHeader String uri) throws IOException {
         response.addHeader("Content-Disposition", "attachment");
-        Path path = fileIOUtility.getAbsolutePath(uri);
+        Path path = assetService.getAssetsAbsolutePath(uri);
         Files.copy(path, response.getOutputStream());
         response.getOutputStream().flush();
     }
 
     @RequestMapping(value = "/file-info", method = RequestMethod.POST)
     public ApiResponse submissionFileInfo(@RequestBody Map<String, String> requestData) throws IOException {
-        return new ApiResponse(SUCCESS, fileIOUtility.getFileInfo(requestData.get("uri")));
+        return new ApiResponse(SUCCESS, assetService.getAssetFileInfo(requestData.get("uri")));
     }
 
     @RequestMapping(value = "/{submissionId}/{documentType}/upload-file", method = RequestMethod.POST)
@@ -776,9 +776,19 @@ public class SubmissionController {
     public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
-        String uri = documentPath + hash + "/" + System.currentTimeMillis() + "-" + fileName;
-        fileIOUtility.write(file.getBytes(), uri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
+
+        String[] fileNameParts = fileName.split("\\.");
+        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+
+        if(documentTypesToRename.contains(documentType)) {
+            String lastName = user.getLastName().toUpperCase();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
+        }
+
+        String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
+        assetService.write(file.getBytes(), uri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(uri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
@@ -789,9 +799,9 @@ public class SubmissionController {
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
-        fileIOUtility.copy(oldUri, newUri);
-        fileIOUtility.delete(oldUri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+        assetService.copy(oldUri, newUri);
+        assetService.delete(oldUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
@@ -808,8 +818,8 @@ public class SubmissionController {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                JsonNode fileInfo = fileIOUtility.getFileInfo(uri);
-                fileIOUtility.delete(uri);
+                JsonNode fileInfo = assetService.getAssetFileInfo(uri);
+                assetService.delete(uri);
                 actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
@@ -824,9 +834,9 @@ public class SubmissionController {
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
-        fileIOUtility.copy(oldUri, newUri);
-        fileIOUtility.delete(oldUri);
-        JsonNode fileInfo = fileIOUtility.getFileInfo(newUri);
+        assetService.copy(oldUri, newUri);
+        assetService.delete(oldUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
         return new ApiResponse(SUCCESS, newUri);
     }

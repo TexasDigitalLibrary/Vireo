@@ -1,4 +1,4 @@
-vireo.controller("SubmissionViewController", function ($controller, $filter, $q, $scope, $routeParams, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, StudentSubmission, SubmissionStates) {
+vireo.controller("SubmissionViewController", function ($controller, $q, $scope, $routeParams, CustomActionDefinitionRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -17,7 +17,7 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
             });
         };
 
-        StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
+        StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
             $scope.loaded = true;
             $scope.submission = submission;
             $scope.submission.fetchDocumentTypeFileInfo();
@@ -86,13 +86,28 @@ vireo.controller("SubmissionViewController", function ($controller, $filter, $q,
             });
         };
 
+        var protectedDocTypes = [
+            '_doctype_primary',
+            '_doctype_license',
+            '_doctype_archived'
+        ];
+
         $scope.removibleDocuments = function(fieldValue) {
-            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.fieldPredicate.value !== '_doctype_primary' && fieldValue.fieldPredicate.value !== '_doctype_license';
+            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldValue.fieldPredicate.value) < 0;
         };
 
         $scope.uploadableFieldPredicates = function(fieldPredicate) {
-            return fieldPredicate.documentTypePredicate && fieldPredicate.value !== '_doctype_primary' && fieldPredicate.value !== '_doctype_license';
+            return fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldPredicate.value) < 0;
         };
+
+        CustomActionDefinitionRepo.listen(function(apiRes) {
+            if(apiRes.meta.status === 'SUCCESS') {
+                StudentSubmissionRepo.remove($scope.submission);
+                StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
+                    angular.extend($scope.submission, submission);
+                });
+            }
+        });
 
     });
 

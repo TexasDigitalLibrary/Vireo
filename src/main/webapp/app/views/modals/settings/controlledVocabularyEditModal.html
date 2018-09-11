@@ -10,11 +10,7 @@
 	<validationmessage results="controlledVocabularyRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		<validatedinput id="edit-cv-name" model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
-		</validatedinput>
-
-		<validatedselect id="edit-cv-language" options="languages" optionproperty="name" model="modalData" property="language" label="Language" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults">
-		</validatedselect>
+		<validatedinput id="edit-cv-name" model="modalData" property="name" label="Name" placeholder="Name of the new controlled vocabulary" form="forms.update" validations="controlledVocabularyRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 	</div>
 
 	<div class="modal-footer">

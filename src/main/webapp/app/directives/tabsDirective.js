@@ -5,25 +5,26 @@ vireo.directive("vireoTabs", function() {
 		replace: false,
 		transclude: true,
 		scope: false,
-		controller: function($scope, $location, $routeParams) {
-			this.activeTab = function(path) {
-				var active = false;
-				if($routeParams.id !== undefined) {
-					active = path.includes('/' + $routeParams.id + '/' + $routeParams.tab);
-				}
-				else {
-					active = path.includes('/' + $routeParams.tab);
-				}
-				return active;
+		controller: function($scope, $location, VireoTabService) {
+			var initialized = false;
+			var isCurrent = function(path) {
+				return ('/' + path).indexOf($location.path()) === 0;
 			};
-			this.setActive = function(path) {
-				$location.path(path);
+			$scope.activeTab = function(path) {
+				if(!initialized && isCurrent(path)) {
+					initialized = true;
+					$scope.setActive(path);
+				}
+				return VireoTabService.isActive(path);
+			};
+			$scope.setActive = function(path) {
+				VireoTabService.activate(path);
 			};
 		}
 	};
 });
 
-vireo.directive("vireoTab", function($compile) {
+vireo.directive("vireoTab", function($compile, $location, VireoTabService, WsApi) {
 	 return {
 		template: '<span ng-class="{\'active\': activeTab(path)}" ng-click="setActive(path)" class="tab">{{label}}</span>',
 		restrict: 'E',
@@ -31,9 +32,11 @@ vireo.directive("vireoTab", function($compile) {
 		transclude: false,
 		require: '^vireoTabs',
 		scope: true,
-		link: function ($scope, element, attr, parent) {
+		link: function ($scope, attr, parent) {
 			angular.extend($scope, parent);
 			angular.extend($scope, attr);
+
+			$scope.reload = angular.isDefined($scope.reload) ? ($scope.reload === 'false') ? false : true : true;
 
 			var span = angular.element('<span id="'+($scope.path.replace(/\//g, "-"))+'" ng-if="activeTab(path)">');
 			span.html("<ng-include src='view'></ng-include>");
@@ -43,6 +46,33 @@ vireo.directive("vireoTab", function($compile) {
 			}
 			angular.element('#tabs-directive').after($compile(span)($scope));
 
+			if($scope.reload === false) {
+				WsApi.registerPersistentRouteBasedChannel($scope.path);
+			}
+
+			VireoTabService.register($scope.path, function() {
+				$location.path($scope.path, $scope.reload);
+			});
+
 	    }
+	};
+});
+
+vireo.service("VireoTabService", function() {
+	var tabs = {};
+	var active;
+	return {
+		register: function(path, loader) {
+			tabs[path] = {
+				load: loader
+			};
+		},
+		activate: function(path) {
+			tabs[path].load();
+			active = path;
+		},
+		isActive: function(path) {
+			return active === path;
+		}
 	};
 });

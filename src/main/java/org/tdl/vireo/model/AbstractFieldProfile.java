@@ -1,24 +1,15 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -54,16 +45,15 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
-    @ManyToMany(fetch = EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<FieldGloss> fieldGlosses;
-
-    @ManyToMany(fetch = EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<ControlledVocabulary> controlledVocabularies;
+    @Column(nullable = false)
+    private String gloss;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @OneToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
+    private ControlledVocabulary controlledVocabulary;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ManagedConfiguration mappedShibAttribute;
 
     @Column(nullable = true)
@@ -121,7 +111,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public Boolean getOptional() {
@@ -129,7 +118,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param optional
      */
     public void setOptional(Boolean optional) {
@@ -137,7 +125,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Boolean getHidden() {
@@ -145,7 +132,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param hidden
      */
     public void setHidden(Boolean hidden) {
@@ -153,7 +139,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public Boolean getLogged() {
@@ -161,7 +146,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param logged
      */
     public void setLogged(Boolean logged) {
@@ -169,7 +153,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public String getUsage() {
@@ -177,7 +160,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param usage
      */
     public void setUsage(String usage) {
@@ -185,7 +167,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @return
      */
     public String getHelp() {
@@ -193,7 +174,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param help
      */
     public void setHelp(String help) {
@@ -201,111 +181,25 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the fieldGlosses
+     * @return
      */
-    public List<FieldGloss> getFieldGlosses() {
-        return fieldGlosses;
+    public String getGloss() {
+        return gloss;
     }
 
     /**
-     *
-     * @param Language
-     *            language
-     * @return The field gloss that matches the language, or null if not found
+     * @param gloss
      */
-    public FieldGloss getFieldGlossByLanguage(Language language) {
-        for (FieldGloss fieldGloss : getFieldGlosses()) {
-            if (fieldGloss.getLanguage().equals(language))
-                return fieldGloss;
-        }
-        return null;
+    public void setGloss(String gloss) {
+        this.gloss = gloss;
     }
 
-    /**
-     *
-     * @param String
-     *            value
-     * @param Language
-     *            language
-     * @return The field gloss that matches the language, or null if not found
-     */
-    public FieldGloss getFieldGlossByValueAndLanguage(String value, Language language) {
-        for (FieldGloss fieldGloss : getFieldGlosses()) {
-            if (fieldGloss.getLanguage().equals(language) && fieldGloss.getValue().equals(value))
-                return fieldGloss;
-        }
-        return null;
+    public ControlledVocabulary getControlledVocabulary() {
+        return controlledVocabulary;
     }
 
-    /**
-     * @param fieldGlosses
-     *            the fieldGlosses to set
-     */
-    public void setFieldGlosses(List<FieldGloss> fieldGlosses) {
-        this.fieldGlosses = fieldGlosses;
-    }
-
-    // TODO : Restrict multiple field gloss with the same language
-
-    /**
-     *
-     * @param fieldGloss
-     */
-    public void addFieldGloss(FieldGloss fieldGloss) {
-        getFieldGlosses().add(fieldGloss);
-    }
-
-    /**
-     *
-     * @param fieldGloss
-     */
-    public void removeFieldGloss(FieldGloss fieldGloss) {
-        getFieldGlosses().remove(fieldGloss);
-    }
-
-    /**
-     * @return the controlledVocabularies
-     */
-    public List<ControlledVocabulary> getControlledVocabularies() {
-        return controlledVocabularies;
-    }
-
-    /**
-     *
-     * @param id
-     * @return The controlled vocabulary that matches the id, or null if not found
-     */
-    public ControlledVocabulary getControlledVocabularyById(long id) {
-        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-            if (controlledVocabulary.getId() == id)
-                return controlledVocabulary;
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param id
-     * @return The controlled vocabulary that matches the name, or null if not found
-     */
-    public ControlledVocabulary getControlledVocabularyByName(String name) {
-        for (ControlledVocabulary controlledVocabulary : controlledVocabularies) {
-            if (controlledVocabulary.getName().equals(name))
-                return controlledVocabulary;
-        }
-        return null;
-    }
-
-    /**
-     * @param controlledVocabularies
-     *            the controlledVocab to set
-     */
-    public void setControlledVocabularies(List<ControlledVocabulary> controlledVocabularies) {
-        this.controlledVocabularies = controlledVocabularies;
-    }
-
-    public void clearControlledVocabulary() {
-        this.controlledVocabularies = new ArrayList<ControlledVocabulary>();
+    public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
+        this.controlledVocabulary = controlledVocabulary;
     }
 
     /**
@@ -324,7 +218,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @return
      */
     public String getDefaultValue() {
@@ -332,7 +225,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * 
      * @param defaultValue
      */
     public void setDefaultValue(String defaultValue) {
@@ -352,32 +244,6 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    // TODO : Restrict multiple controlled vocabulary with the same language
-
-    /**
-     *
-     * @param controlledVocabularies
-     */
-    public void addControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().add(controlledVocabulary);
-    }
-
-    /**
-     *
-     * @param controlledVocabularies
-     */
-    public void addControlledVocabulary(int index, ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().set(index, controlledVocabulary);
-    }
-
-    /**
-     *
-     * @param controlledVocabulary
-     */
-    public void removeControlledVocabulary(ControlledVocabulary controlledVocabulary) {
-        getControlledVocabularies().remove(controlledVocabulary);
     }
 
     /**

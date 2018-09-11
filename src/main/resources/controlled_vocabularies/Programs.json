@@ -1,8 +1,5 @@
 {
-	"name": "Programs",
-	"isEntityProperty": false,
-	"language": {
-		"name": "English"
-	},
-	"dictionary": []
+  "name": "Programs",
+  "isEntityProperty": false,
+  "dictionary": []
 }
