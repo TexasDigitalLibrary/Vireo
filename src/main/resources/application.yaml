@@ -121,11 +121,11 @@ app:
     from: noreply@library.tamu.edu
     replyTo: helpdesk@library.tamu.edu
     # additional email configurations
-    username:
-    password:
-    port: 587
-    protocol: smtp
-    channel: starttls
+    #username:
+    #password:
+    #port: 587
+    #protocol: smtp
+    #channel: starttls
 
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting.address: reporting@tdl.org
@@ -142,7 +142,7 @@ auth:
   security.jwt:
     secret: verysecretsecret
     issuer: localhost
-    duration: 1
+    duration: 5
 
   # edu.tamu.weaver.token.provider.controller.TokenController
   path: /auth
