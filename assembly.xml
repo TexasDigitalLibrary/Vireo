@@ -22,7 +22,7 @@
       <directory>./src/main/resources</directory>
       <outputDirectory>config</outputDirectory>
       <includes>
-        <include>application.properties</include>
+        <include>application.yaml</include>
       </includes>
       <filtered>true</filtered>
     </fileSet>

@@ -1,0 +1,179 @@
+server:
+  port: 9000
+  contextPath:
+
+
+# TODO: determine if this is required
+security.basic.enabled: false
+
+
+# TODO: determine if these are required
+multipart:
+  # File size limit
+  maxFileSize: 100Mb
+  # Total request size for a multipart/form-data
+  maxRequestSize: 1000Mb
+
+
+spring:
+  template.cache: false
+  http.multipart:
+    maxFileSize: 20MB
+    maxRequestSize: 20MB
+
+  datasource:
+    # H2
+    platform: h2
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # url=jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+
+    # PostgreSQL
+    #platform: postgresql
+    #url: jdbc:postgresql://localhost:5432/vireo
+    #driverClassName: org.postgresql.Driver
+
+    # MySQL
+    #platform: mysql
+    #url: jdbc:mysql://localhost/vireo
+    #driverClassName: com.mysql.jdbc.Driver
+
+    # database username and password
+    username: vireo
+    password: vireo
+
+    # common database config -- might be needed for postgres
+    defaultAutoCommit: false
+    test-on-borrow: true
+    validation-query: select version();
+
+  jpa:
+    # H2
+    database-platform: org.hibernate.dialect.H2Dialect
+    # PostgreSQL
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # MySQL
+    #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  
+    generate-ddl: true
+    show-sql: false
+    hibernate.ddl-auto: create-drop
+    properties.hibernate.event.merge.entity_copy_observer: allow
+
+  thymeleaf:
+    cache: false
+    model: LEGACYHTML5
+
+
+# logging
+logging:
+  level:
+    org:
+      tdl: INFO
+      springframework: INFO
+    edu.tamu: INFO
+    ro.isdc.wro: INFO
+  file: logs/vireo.log
+
+
+# generated values
+info:
+  build:
+    production: @production@
+    artifact: @project.artifactId@
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+
+
+app:
+  url: http://localhost:9000
+
+  # value generated from property assets.uri
+  # either defined in pom.xml or via package argument
+  # i.e. `mvn clean package -Dassets.uri=file:/opt/vireo/`
+  assets.uri: @assets.uri@
+
+  public.folder: public
+
+  document.folder: private
+
+  cvcache.duration: 3600000
+
+  # VUG ETD-Centric config
+  # Comma delimited names of the document types that are to be renamed on upload as LASTNAME-DOCUMENTTYPE-YEAR.pdf as per VUG recommendations.
+  # Leave blank to not rename any.
+  documentType.rename: PRIMARY
+
+  # edu.tamu.weaver.auth.service.UserCredentialsService
+  authority.admins: admin@tdl.org,aggieJack@tamu.edu
+  
+  
+  security:
+    # edu.tamu.weaver.auth.service.CryptoService
+    secret: verysecretsecret
+    # edu.tamu.weaver.filter.CorsFilter
+    allow-access: http://localhost:9000
+    
+  # edu.tamu.weaver.email.config.WeaverEmailConfig
+  email:
+    host: relay.tamu.edu
+    from: noreply@library.tamu.edu
+    replyTo: helpdesk@library.tamu.edu
+    # additional email configurations
+    #username:
+    #password:
+    #port: 587
+    #protocol: smtp
+    #channel: starttls
+
+  # edu.tamu.weaver.reporting.controller.ReportingController
+  reporting.address: reporting@tdl.org
+  
+  # edu.tamu.weaver.validation.controller.ValidationsController
+  model.packages: org.tdl.vireo.model
+  
+  # edu.tamu.weaver.utility.HttpUtility
+  http.timeout: 10000
+
+
+# edu.tamu.weaver.token.service.TokenService
+auth:
+  security.jwt:
+    secret: verysecretsecret
+    issuer: localhost
+    duration: 5
+
+  # edu.tamu.weaver.token.provider.controller.TokenController
+  path: /auth
+
+
+# edu.tamu.weaver.token.provider.controller.TokenController
+shib:
+  keys: netid,uin,lastName,firstName,email
+  subject: email
+  netid: edupersonprincipalnameunscoped
+  uin: tamuuin
+  lastName: tdl-sn
+  firstName: tdl-givenname
+  email: tdl-mail
+
+
+# WRO Configuration
+wro:
+  managerFactoryClassName: org.tdl.vireo.wro.manager.factory.VireoConfigurableWroManagerFactory
+  # define which preProcessors should be used to process SASS
+  preProcessors: lessCssImport
+  # define which postProcessors should be used to process SASS
+  postProcessors: vireoPostProcessor,rubySassCss
+
+
+# ThemeManagerService implementation
+# NOTE: weaver-wro dependency will not be able to access class when deployed as jar
+theme:
+  managerService: org.tdl.vireo.service.VireoThemeManagerService
+  # define the location of sass/css files 
+  default.css: sass/app.scss
+  cacheReloadUrl: ${app.url}/wro/wroAPI/reloadCache
+
+
