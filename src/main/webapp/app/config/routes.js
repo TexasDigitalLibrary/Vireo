@@ -35,7 +35,8 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/submission/:submissionId/step/:stepNum', {
         templateUrl: 'views/submission/submission.html',
         controller: 'StudentSubmissionController',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"]
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER", "ROLE_STUDENT"],
+        reloadOnUrl: false
     }).
     when('/submission/:submissionId/view', {
         templateUrl: 'views/submission/submissionView.html',
@@ -65,7 +66,7 @@ vireo.config(function ($locationProvider, $routeProvider) {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
         controller: 'AdminSubmissionViewController',
-        reloadOnSearch: false
+        reloadOnUrl: false
     }).
     when('/admin/log', {
         templateUrl: 'views/admin/admin.html',

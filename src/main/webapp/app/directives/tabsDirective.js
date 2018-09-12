@@ -6,16 +6,15 @@ vireo.directive("vireoTabs", function() {
 		transclude: true,
 		scope: false,
 		controller: function($scope, $location, VireoTabService) {
-			var initialized = false;
 			var isCurrent = function(path) {
 				return ('/' + path).indexOf($location.path()) === 0;
 			};
 			$scope.activeTab = function(path) {
-				if(!initialized && isCurrent(path)) {
-					initialized = true;
+				var active = VireoTabService.isActive(path);
+				if(!active && isCurrent(path)) {
 					$scope.setActive(path);
 				}
-				return VireoTabService.isActive(path);
+				return active;
 			};
 			$scope.setActive = function(path) {
 				VireoTabService.activate(path);
@@ -51,10 +50,10 @@ vireo.directive("vireoTab", function($compile, $location, VireoTabService, WsApi
 			}
 
 			VireoTabService.register($scope.path, function() {
-				$location.path($scope.path, $scope.reload);
+				$location.path($scope.path);
 			});
 
-	    }
+		}
 	};
 });
 
