@@ -63,7 +63,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
         // Only change path if it differs from the current path.
         if ("/" + nextLocation !== $location.path()) {
-            $location.path(nextLocation, false);
+            $location.path(nextLocation);
         }
 
         $timeout(function () {
