@@ -1,62 +1,43 @@
-vireo.directive('tooltip', function ($timeout, $compile) {
-
+vireo.directive('tooltip', function ($timeout) {
     return {
-        template: '<span class="tooltip-handle" ng-mousemove="positionTip($event)" ng-mouseover="showTip()" ng-mouseout="hideTip()" ng-click="toggleVisible()" ng-transclude></span>',
+        templateUrl: "views/directives/tooltip.html",
         replace: true,
-        transclude: true,
         restrict: 'A',
-        scope:true,
+        scope: true,
         link: function($scope, elem, attr) {
-            var htmlTooltip = attr.htmltooltip !== undefined;
+            $scope.message = attr.tooltip;
 
-            var tipTemplate = '<div class="tooltip-wrapper">' +
-                                  '<div ng-style="tipStyles" class="tip" ng-class="{\'tip-visible\': tipVisible, \'hidden\': hidden}">' +
-                                      '<div class="tip-point"></div>' +
-                                      (htmlTooltip ? '<div class="tip-message">' + attr.tooltip + '</div>' : '<div class="tip-message">{{::tip}}</div>') +
-                                  '</div>' +
-                              '</div>';
+            $scope.isOpen = false;
 
-            angular.element("body").append($compile(tipTemplate)($scope));
+            var timer;
 
-            $scope.tip = attr.tooltip;
-
-            $scope.tipVisible = false;
-            $scope.hidden = true;
-            $scope.showTimer = {};
-            $scope.tipStyles = {};
-
-            $scope.showTip = function() {
-                $scope.hidden = false;
-                $scope.showTimer = $timeout(function() {
-                    $scope.tipVisible = true;
-                }, 500);
+            var open = function() {
+                $timeout.cancel(timer);
+                $scope.isOpen = true;
             };
 
-            $scope.hideTip = function() {
-                $timeout.cancel($scope.showTimer);
-                $scope.tipVisible = false;
+            var close = function() {
+                $timeout.cancel(timer);
+                timer = $timeout(function() {
+                    $scope.isOpen = false;
+                }, 250);
+            };
 
+            $scope.mouseEnter = function() {
+                open();
                 $timeout(function() {
-                    $scope.hidden = true;
-                }, 500);
+                    angular.element('.popover').hover(function() {
+                        open();
+                    }, function() {
+                        close();
+                    });
+                });
             };
 
-            $scope.toggleVisible = function() {
-                $timeout.cancel($scope.showTimer);
-                $scope.tipVisible = $scope.tipVisible ? false : true;
-
-                if(!$scope.tipVisible) {
-                    $timeout(function() {
-                        $scope.hidden = $scope.hidden ? false : true;
-                    }, 500);
-                }
-
+            $scope.mouseLeave = function() {
+                close();
             };
 
-            $scope.positionTip = function($event) {
-                $scope.tipStyles.top = $event.clientY + 20;
-                $scope.tipStyles.left = $event.clientX - 25;
-            };
         }
     };
 });
