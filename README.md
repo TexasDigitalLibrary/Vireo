@@ -205,6 +205,7 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
   * browser favicon
 
 **You should configure the following properties for production.**
+**spring.jpa.hibernate.ddl-auto: create-drop will clear database on restart**
 
 | **Property** | **Type** | **Description** | **Example** |
 | :----------- | :------- | :-------------- | :---------- |
