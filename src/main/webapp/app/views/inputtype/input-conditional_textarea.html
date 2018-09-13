@@ -4,7 +4,7 @@
 	ng-model="checked"
 	ng-true-value="true" 
 	ng-false-value="false"
-	ng-click="setConditionalTextArea(fieldValue, checked)" 
+	ng-click="setConditionalTextArea($event, fieldValue)" 
 >	
 <span>{{profile.help}}</span>
 
@@ -16,7 +16,7 @@
 		ng-model="fieldValue.value"
 		ng-blur="save(fieldValue)"
 		ng-disabled="fieldValue.updating" 
-		placeholder="Input {{profile.gloss}}">			
+		placeholder="Input {{profile.gloss}}">
 	</textarea>
 
 	<span class="input-group-addon">
@@ -24,4 +24,13 @@
         <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 
+</div>
+
+{{checked}}
+{{confirm}}
+{{fieldValue.value}}
+
+<div ng-if="fieldValue.value && confirm">
+	<button class="btn btn-primary" ng-click="confirmRemove(fieldValue)">Confirm Remove Text</button>
+	<button class="btn btn-danger" ng-click="cancelRemove()">Cancel</button>
 </div>
