@@ -28,6 +28,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
     <maven-filtering-version>3.1.1</maven-filtering-version>
+    <profile>default</profile>
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
     <!-- e.g. file:/opt/vireo, classpath:/assets -->
@@ -601,6 +602,9 @@
           <name>production</name>
         </property>
       </activation>
+      <properties>
+        <profile>production</profile>
+      </properties>
       <build>
         <plugins>
           <plugin>
