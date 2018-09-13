@@ -16,6 +16,7 @@ multipart:
 
 
 spring:
+  profiles.active: @profile@
   template.cache: false
   http.multipart:
     maxFileSize: 20MB

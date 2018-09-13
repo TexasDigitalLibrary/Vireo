@@ -13,6 +13,7 @@ multipart:
   maxRequestSize: 1000Mb
 
 spring:
+  profiles.active: test
   template.cache: false
   http.multipart:
     maxFileSize: 20MB
