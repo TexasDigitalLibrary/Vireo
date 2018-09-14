@@ -326,7 +326,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
                 if ($event && fieldValue.value) {
                     $event.preventDefault();
-                    $event.stopPropagation();
                     $scope.confirm = true;
                 }
 
@@ -343,10 +342,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 console.log(checked);
                 console.log(fieldValue);
 
-                // fieldValue.value = "";
-                // $scope.save(fieldValue);
-                // checked = false;
-                // $scope.confirm = false;
+                fieldValue.value = "";
+                $scope.save(fieldValue);
+                checked = false;
+                console.log(checked);
+                $scope.confirm = false;
             };
 
             $scope.cancelRemove = function () {

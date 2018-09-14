@@ -31,6 +31,6 @@
 {{fieldValue.value}}
 
 <div ng-if="fieldValue.value && confirm">
-	<button class="btn btn-primary" ng-click="confirmRemove(fieldValue)">Confirm Remove Text</button>
+	<button class="btn btn-primary" ng-click="confirmRemove(checked, fieldValue)">Confirm Remove Text</button>
 	<button class="btn btn-danger" ng-click="cancelRemove()">Cancel</button>
 </div>
