@@ -16,7 +16,7 @@ multipart:
 
 
 spring:
-  profiles.active: @profile@
+  profiles.active: $profile$
   template.cache: false
   http.multipart:
     maxFileSize: 20MB
@@ -80,11 +80,11 @@ logging:
 # generated values
 info:
   build:
-    production: @production@
-    artifact: @project.artifactId@
-    name: @project.name@
-    description: @project.description@
-    version: @project.version@
+    production: $production$
+    artifact: $project.artifactId$
+    name: $project.name$
+    description: $project.description$
+    version: $project.version$
 
 
 app:
@@ -93,7 +93,7 @@ app:
   # value generated from property assets.uri
   # either defined in pom.xml or via package argument
   # i.e. `mvn clean package -Dassets.uri=file:/opt/vireo/`
-  assets.uri: @assets.uri@
+  assets.uri: $assets.uri$
 
   public.folder: public
 

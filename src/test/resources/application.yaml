@@ -58,11 +58,10 @@ logging:
 info:
   build:
     production: false
-    artifact: vireo
-    name: Vireo
-    description: Vireo Thesis and Dissertation Submission System
-    version: 4.0.0-SNAPSHOT
-
+    artifact: $project.artifactId$
+    name: $project.name$
+    description: $project.description$
+    version: $project.version$
 
 
 app:
