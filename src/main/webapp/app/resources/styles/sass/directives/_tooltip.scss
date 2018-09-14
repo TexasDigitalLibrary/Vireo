@@ -12,6 +12,10 @@
   border-bottom-color: rgba(31, 58, 71, 0.95);
 }
 
+.checkbox .popover.bottom > .arrow:after {
+  border-bottom-color: #f7f7f7;
+}
+
 .tooltip {
   max-width: 250px;
   border: solid 2px #CCC;
