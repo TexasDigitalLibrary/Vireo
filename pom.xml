@@ -374,7 +374,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <delimiters>
-            <delimiter>@</delimiter>
+            <delimiter>$</delimiter>
           </delimiters>
         </configuration>
       </plugin>
