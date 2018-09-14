@@ -1,4 +1,4 @@
-vireo.directive("field", function ($compile, $controller, $filter, $q, $timeout, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -320,9 +320,8 @@ vireo.directive("field", function ($compile, $controller, $filter, $q, $timeout,
                 });
             };
 
-            $scope.confirm = false;
-
             $scope.initConditionalTextarea = function (fieldValue) {
+                $scope.confirm = false;
                 $scope.checked = angular.isDefined(fieldValue) && fieldValue.value.length > 0;
             };
 
