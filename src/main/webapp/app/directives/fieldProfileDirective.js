@@ -333,24 +333,27 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 //Only save if checked == true and value is a non-empty string OR if checked == false and value is not a string (which it won't have been anyway given the line above)
 
                 if (!$event && !fieldValue.value) {
-                    $scope.save(fieldValue);
-                    $scope.confirm = false;
+                    save(fieldValue).then(function() {
+                        $scope.confirm = false;
+                    });
                 }
             };
 
-            $scope.confirmRemove = function (checked, fieldValue) {
-                console.log(checked);
-                console.log(fieldValue);
-
-                fieldValue.value = "";
-                $scope.save(fieldValue);
-                checked = false;
-                console.log(checked);
+            $scope.initConditionalTextarea = function (fieldValue) {
+                $scope.checked = angular.isDefined(fieldValue) && fieldValue.value.length > 0;
                 $scope.confirm = false;
             };
 
+            $scope.confirmRemove = function (fieldValue) {
+
+                fieldValue.value = "";
+                save(fieldValue).then(function() {
+                    $scope.checked = false;
+                    $scope.confirm = false;
+                });
+            };
+
             $scope.cancelRemove = function () {
-                $scope.checked = true;
                 $scope.confirm = false;
             };
 
