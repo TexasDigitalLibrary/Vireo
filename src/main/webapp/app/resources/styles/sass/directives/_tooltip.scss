@@ -26,3 +26,11 @@
   background: -ms-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
   background: linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
 }
+
+.tooltip .popover-content a,
+.tooltip .popover-content a:active,
+.tooltip .popover-content a:focus,
+.tooltip .popover-content a:hover,
+.tooltip .popover-content a:visited {
+  color: #f8ff11;
+}
