@@ -2,10 +2,10 @@
   <div class="form-group">
     <div class="col-xs-12 col-sm-2">
       <label>
-        <strong>
-          <span ng-if="!profile.optional">*<span>{{profile.gloss}}:</span></span>
-          <span ng-if="profile.optional"><span>{{profile.gloss}}:</span></span>
+        <strong ng-if="!profile.optional">
+          <span>*<span>{{profile.gloss}}:</span></span>
         </strong>
+        <span ng-if="profile.optional"><span>{{profile.gloss}}:</span></span>
       </label>
     </div>
     <div class="col-xs-12 col-sm-10" ng-if="profile.inputType.name !== 'INPUT_FILE'">
