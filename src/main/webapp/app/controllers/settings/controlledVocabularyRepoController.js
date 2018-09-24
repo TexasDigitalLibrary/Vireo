@@ -426,7 +426,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.updateControlledVocabulary = function () {
-            console.log($scope.modalData);
             $scope.modalData.save().then(function (res) {
                 if (angular.fromJson(res.body).meta.status === 'SUCCESS') {
                     $scope.resetControlledVocabulary(true);
