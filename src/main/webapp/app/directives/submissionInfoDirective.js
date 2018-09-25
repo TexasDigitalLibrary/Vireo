@@ -85,6 +85,7 @@ vireo.directive("submissioninfo", function () {
                 fieldValue.identifier = item.identifier;
                 fieldValue.definition = item.definition;
                 fieldValue.contacts = item.contacts;
+                fieldValue.value = item.name;
                 save(fieldValue);
             };
 
