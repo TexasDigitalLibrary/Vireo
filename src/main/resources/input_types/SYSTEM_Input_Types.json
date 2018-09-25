@@ -24,11 +24,6 @@
     }
   },
   {
-    "name": "INPUT_TEXT_WITH_DEFINITION",
-    "validationPattern": null,
-    "validationMessage": null
-  },
-  {
     "name": "INPUT_PASSWORD",
     "validationPattern": null,
     "validationMessage": null
