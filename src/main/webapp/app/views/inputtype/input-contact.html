@@ -1,12 +1,13 @@
 <div class="input-group input-contact-value">
-  <input type="text" 
-    class="form-control" 
-    name="profile.fieldPredicate.value" 
-    ng-required="!profile.optional" 
+  <input type="text"
+    class="form-control"
+    name="profile.fieldPredicate.value"
+    ng-required="!profile.optional"
     ng-model="fieldValue.value"
     ng-disabled="fieldValue.updating"
+    ng-blur="saveContacts(fieldValue)"
     placeholder="Input Name"
-    uib-typeahead="word.name as word.name for word in profile.controlledVocabularies[0].dictionary | filter: { name: $viewValue }"
+    uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
@@ -15,14 +16,16 @@
 </div>
 
 <div class="input-group input-contact-contacts">
-  <input type="text" 
-    class="form-control" 
-    name="profile.fieldPredicate.value" 
-    ng-required="!profile.optional" 
+  <input type="text"
+    class="form-control"
+    name="profile.fieldPredicate.value"
+    ng-required="!profile.optional"
     ng-model="fieldValue.contacts"
     ng-blur="saveContacts(fieldValue)"
     ng-disabled="fieldValue.updating"
-    placeholder="Input Email"/>
+    placeholder="Input Email"
+    uib-typeahead="word.contacts[0] as word.contacts[0] for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    typeahead-on-select="saveWithCV(fieldValue, $item)"/>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>

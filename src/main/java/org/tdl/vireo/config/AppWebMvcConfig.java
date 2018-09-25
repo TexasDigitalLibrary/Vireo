@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
-import org.h2.server.web.WebServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -33,11 +33,7 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo", "edu.tamu.weaver.wro.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
-    @Value("${app.ui.path}")
-    private String path;
-
-    @Value("${info.build.production:false}")
-    private boolean production;
+    private static final Logger logger = LoggerFactory.getLogger(AppWebMvcConfig.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -45,13 +41,11 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private List<HttpMessageConverter<?>> converters;
 
-    @Bean
-    public ServletRegistrationBean h2servletRegistration() {
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
-        registrationBean.addUrlMappings("/admin/h2console/*");
-        registrationBean.addInitParameter("-webAllowOthers", "true");
-        return registrationBean;
-    }
+    @Value("${info.build.production:false}")
+    private boolean production;
+
+    @Value("${app.public.folder:public}")
+    private String publicFolder;
 
     @Bean
     public TomcatEmbeddedServletContainerFactory containerFactory() {
@@ -68,10 +62,12 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (!production) {
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.BASE_PATH + "node_modules/");
+            logger.info("/node_modules/** -> file:" + Application.getRootPath() + "node_modules/");
+            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.getRootPath() + "node_modules/");
         }
-        registry.addResourceHandler("/**").addResourceLocations(path + "/");
-        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.BASE_PATH + "public/");
+        logger.info("/public/** -> file:" + Application.getAssetsPath() + publicFolder + "/");
+        registry.addResourceHandler("/**").addResourceLocations("/app/");
+        registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + "/");
         registry.setOrder(Integer.MAX_VALUE - 2);
     }
 

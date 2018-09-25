@@ -327,30 +327,6 @@ var apiMapping = {
             'controller': 'settings/email-template'
         }
     },
-    FieldGloss: {
-        validations: true,
-        channel: '/channel/field-gloss',
-        all: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/field-gloss',
-            'method': 'all'
-        },
-        create: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/field-gloss',
-            'method': 'create'
-        },
-        update: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/field-gloss',
-            'method': 'update'
-        },
-        remove: {
-            'endpoint': '/private/queue',
-            'controller': 'settings/field-gloss',
-            'method': 'remove'
-        }
-    },
     FieldPredicate: {
         validations: true,
         channel: '/channel/field-predicate',

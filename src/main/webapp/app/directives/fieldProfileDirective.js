@@ -1,4 +1,4 @@
-vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValue, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -23,12 +23,15 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
 
             $scope.errorMessage = "";
 
+            $scope.dropzoneText = "Choose file here or drag and drop to upload";
+
             var save = function (fieldValue) {
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
                         delete fieldValue.updating;
                         if ($scope.fieldProfileForm !== undefined) {
                             $scope.fieldProfileForm.$setPristine();
+                            $scope.fieldProfileForm.$setUntouched();
                         }
                         resolve();
                     });
@@ -39,7 +42,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 // give typeahead select time to save the value
                 $timeout(function () {
                     // if the fieldProfileForm is undefined we have changed view, save the field value if not already updating
-                    if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty) && !fieldValue.updating) {
+                    if (($scope.fieldProfileForm === undefined || $scope.fieldProfileForm.$dirty || !$scope.profile.optional) && !fieldValue.updating) {
                         fieldValue.updating = true;
                         return save(fieldValue);
                     }
@@ -51,6 +54,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 fieldValue.identifier = item.identifier;
                 fieldValue.definition = item.definition;
                 fieldValue.contacts = item.contacts;
+                fieldValue.value = item.name;
                 save(fieldValue);
             };
 
@@ -63,21 +67,22 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
             };
 
             $scope.datepickerOptions = {};
-            $scope.datepickerFormat = $scope.profile.controlledVocabularies.length ? "MMMM yyyy" : "MM/dd/yyyy";
+            $scope.datepickerFormat = angular.isDefined($scope.profile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
-
-                for (var i in $scope.profile.controlledVocabularies[0].dictionary) {
-                    var cvw = $scope.profile.controlledVocabularies[0].dictionary[i];
-                    if (cvw.name == dateAndMode.date.getMonth()) {
-                        disabled = false;
-                        break;
+                if(angular.isDefined($scope.profile.controlledVocabulary)) {
+                    for (var i in $scope.profile.controlledVocabulary.dictionary) {
+                        var cvw = $scope.profile.controlledVocabulary.dictionary[i];
+                        if (cvw.name == dateAndMode.date.getMonth()) {
+                            disabled = false;
+                            break;
+                        }
                     }
                 }
                 return disabled;
             };
 
-            if ($scope.profile.controlledVocabularies.length && $scope.profile.controlledVocabularies[0].name === "Graduation Months") {
+            if (angular.isDefined($scope.profile.controlledVocabulary) && $scope.profile.controlledVocabulary.name === "Graduation Months") {
 
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
@@ -118,8 +123,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
 
             $scope.getPattern = function () {
                 var pattern = "*";
-                var cv = $scope.profile.controlledVocabularies[0];
-                if (typeof cv !== "undefined") {
+                if(angular.isDefined($scope.profile.controlledVocabulary)) {
+                    var cv = $scope.profile.controlledVocabulary;
                     pattern = "";
                     for (var i in cv.dictionary) {
                         var word = cv.dictionary[i];
@@ -175,31 +180,64 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 });
             };
 
+            var uploadFailed = function(fieldValue, reason) {
+                fieldValue.uploading = false;
+                fieldValue.setIsValid(false);
+                if (fieldValue.fileInfo !== undefined && fieldValue.fileInfo.uploaded === true) {
+                    delete fieldValue.fileInfo.uploaded;
+                }
+                $scope.errorMessage = "Upload Failed" + (reason ? ": " + reason : "") + ".";
+                $scope.cancelUpload();
+            };
+
             var upload = function (fieldValue) {
                 return $q(function (resolve) {
                     FileUploadService.uploadFile($scope.submission, fieldValue).then(function (response) {
-                        if ($scope.hasFile(fieldValue)) {
-                            $scope.submission.removeFile(fieldValue);
-                        }
-                        fieldValue.value = response.data.meta.message;
-                        fieldValue.fileInfo.uploaded = true;
-                        $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
-                            var apiRes = angular.fromJson(response.body);
-                            if(apiRes.meta.status === 'SUCCESS') {
-                                var newFieldValue = apiRes.payload.FieldValue;
-                                if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
-                                    $scope.submission.fetchDocumentTypeFileInfo();
-                                }
-                                fieldValue.uploading = false;
-                                resolve(true);
-                            } else {
-                                resolve(false);
+                        if (response.data.meta.status === 'SUCCESS') {
+                            if ($scope.hasFile(fieldValue)) {
+                                $scope.submission.removeFile(fieldValue);
                             }
-                        });
+                            fieldValue.value = response.data.meta.message;
+                            fieldValue.fileInfo.uploaded = true;
+                            $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (response) {
+                                var apiRes = angular.fromJson(response.body);
+                                if (apiRes.meta.status === 'SUCCESS') {
+                                    var newFieldValue = apiRes.payload.FieldValue;
+                                    if(newFieldValue.fieldPredicate.value === "_doctype_primary") {
+                                        $scope.submission.fetchDocumentTypeFileInfo();
+                                    }
+                                    fieldValue.uploading = false;
+                                    resolve(true);
+                                } else {
+                                    if (apiRes.meta.message !== undefined) {
+                                        uploadFailed(fieldValue, apiRes.meta.message);
+                                    }
+                                    resolve(false);
+                                }
+                            });
+                        }
+                        else {
+                            if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                                uploadFailed(fieldValue, response.payload.meta.message);
+                            }
+                            else {
+                                uploadFailed(fieldValue, false);
+                            }
+                            resolve(false);
+                        }
                     }, function (response) {
-                        console.log('Error status: ' + response.status);
-                        $scope.errorMessage = response.data.meta.message;
-                        $scope.cancelUpload();
+                        var reason = false;
+                        var status = response.meta.status;
+                        if (response.payload !== undefined && typeof response.payload  == "object" && response.payload.meta.message !== undefined) {
+                            reason = response.payload.meta.message;
+                            status = response.payload.meta.status;
+                        }
+                        else if (response.status !== undefined) {
+                            status = response.status;
+                        }
+
+                        console.log('Error status: ' + status);
+                        uploadFailed(fieldValue, reason);
                     }, function (progress) {
                         $scope.progress = progress;
                         fieldValue.progress = progress;
@@ -227,11 +265,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
             $scope.getPreview = function (fieldValue) {
                 var preview;
                 if (fieldValue !== undefined && fieldValue.fileInfo !== undefined && fieldValue.fileInfo.type !== null) {
-                    if (fieldValue.fileInfo.type.includes("image/png")) {
+                    if (fieldValue.fileInfo.type.indexOf("image/png") >= 0) {
                         preview = "resources/images/png-logo.jpg";
-                    } else if (fieldValue.fileInfo.type.includes("image/jpeg")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("image/jpeg") >= 0) {
                         preview = "resources/images/jpg-logo.png";
-                    } else if (fieldValue.fileInfo.type.includes("pdf")) {
+                    } else if (fieldValue.fileInfo.type.indexOf("pdf") >= 0) {
                         preview = "resources/images/pdf-logo.gif";
                     }
                 }
@@ -282,10 +320,42 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FieldValu
                 });
             };
 
-            $scope.setConditionalTextArea = function (fieldValue, checked) {
-                fieldValue.value = checked ? fieldValue.value : null;
-                //Only save if checked == true and value is a non-empty string OR if checked == false and value is not a string (which it won't have been anyway given the line above)
-                if (!checked && !fieldValue.value) $scope.save(fieldValue);
+            $scope.initConditionalTextarea = function (fieldValue) {
+                $scope.confirm = false;
+                $scope.checked = angular.isDefined(fieldValue) && fieldValue.value.length > 0;
+            };
+
+            $scope.setConditionalTextArea = function ($event, fieldValue) {
+                $scope.confirm = false;
+                if ($event && fieldValue.value) {
+                    $event.preventDefault();
+                    $scope.confirm = true;
+                }
+                fieldValue.value = $event ? fieldValue.value : "";
+            };
+
+            $scope.saveConditionalTextArea = function(fieldValue) {
+                save(fieldValue).then(function() {
+                    if(fieldValue.length === 0) {
+                        $scope.checked = false;
+                    }
+                });
+            };
+
+            $scope.confirmRemove = function (fieldValue) {
+                fieldValue.value = "";
+                save(fieldValue).then(function() {
+                    $scope.checked = false;
+                    $scope.confirm = false;
+                });
+            };
+
+            $scope.cancelRemove = function() {
+                $scope.confirm = false;
+            };
+
+            $scope.showConfirm = function() {
+                return $scope.confirm;
             };
 
             var refreshFieldValues = function () {

@@ -1,19 +1,10 @@
-vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, DocumentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldGlossRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ManagedConfigurationRepo) {
+vireo.controller("FieldProfileManagementController", function ($q, $controller, $scope, $filter, DragAndDropListenerFactory, DocumentTypeRepo, FieldProfileRepo, OrganizationRepo, ControlledVocabularyRepo, FieldPredicateRepo, InputTypeRepo, WorkflowStepRepo, ManagedConfigurationRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
     }));
 
-    $scope.shibbolethAttributes = {
-        UI_SHIBBOLETH_SELECT: {
-            id: 0,
-            name: "UI_SHIBBOLETH_SELECT",
-            value: "Select a Shibboleth Attribute",
-            type: "select"
-        }
-    };
-
-    angular.extend($scope.shibbolethAttributes, ManagedConfigurationRepo.getAll().shibboleth);
+    $scope.shibbolethAttributes = ManagedConfigurationRepo.getAllShibbolethConfigurations();
 
     $scope.organizationRepo = OrganizationRepo;
 
@@ -23,13 +14,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.fieldPredicateRepo = FieldPredicateRepo;
 
-    $scope.fieldGlossRepo = FieldGlossRepo;
-
     $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
-
-    $scope.fieldGlosses = FieldGlossRepo.getAll();
 
     $scope.inputTypes = InputTypeRepo.getAll();
 
@@ -49,7 +36,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.forms = {};
 
-    $scope.ready = $q.all([ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), FieldGlossRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
+    $scope.ready = $q.all([ManagedConfigurationRepo.ready(), ControlledVocabularyRepo.ready(), FieldPredicateRepo.ready(), InputTypeRepo.ready(), DocumentTypeRepo.ready()]);
 
     $scope.ready.then(function () {
 
@@ -66,13 +53,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 flagged: false,
                 logged: false,
                 hidden: false,
-                fieldGlosses: [],
-                mappedShibAttribute: $scope.shibbolethAttributes.UI_SHIBBOLETH_SELECT,
-                controlledVocabularies: []
+                gloss: ''
             };
             if(data !== undefined) {
                 angular.extend($scope.modalData, data);
-                console.log($scope.modalData);
             }
         };
 
@@ -109,10 +93,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             $scope.workflowStepRepo.clearValidationResults();
             $scope.fieldProfileRepo.clearValidationResults();
             $scope.fieldPredicateRepo.clearValidationResults();
-            $scope.fieldGlossRepo.clearValidationResults();
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                     $scope.forms[key].$setPristine();
+                    $scope.forms[key].$setUntouched();
                 }
             }
 
@@ -138,44 +122,53 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
         $scope.resetFieldProfiles();
 
-        $scope.updateFieldGloss = function (glossValue) {
-            $scope.createFieldGloss(glossValue, true);
-        };
-
-        $scope.createFieldGloss = function (glossValue, preservePredicate) {
-            preservePredicate = preservePredicate !== undefined && preservePredicate != null ? preservePredicate : false;
-            // TODO set the language dynamically.
-            // For now, the language must be 'English' so that's in name will match that existing on the server.
-            $scope.modalData.fieldGlosses[0] = {
-                'value': glossValue,
-                'language': 'English'
-            };
-            FieldGlossRepo.create($scope.modalData.fieldGlosses[0]).then(function (response) {
-                var body = angular.fromJson(response.body);
-                if (body.meta.status == 'SUCCESS') {
-                    angular.extend($scope.modalData.fieldGlosses[0], body.payload.FieldGloss);
-                    if (!$scope.advanced && !preservePredicate) {
-                        $scope.modalData.fieldPredicate = body.payload.FieldGloss.value.toLowerCase();
-                        $scope.createFieldPredicate();
+        $scope.changeLabel = function() {
+            if(angular.isDefined($scope.modalData.gloss) && (angular.isUndefined($scope.modalData.fieldPredicate) || $scope.mustCreateFieldPredicate())) {
+                $scope.modalData.fieldPredicate = $scope.modalData.gloss.toLowerCase().replace(/ /g, '_');
+                for(var i in $scope.fieldPredicates) {
+                    if($scope.fieldPredicates[i].value === $scope.modalData.fieldPredicate) {
+                        $scope.modalData.fieldPredicate = $scope.fieldPredicates[i];
+                        break;
                     }
                 }
-            });
+            } else if(angular.isUndefined($scope.modalData.gloss) && typeof $scope.modalData.fieldPredicate === 'string') {
+                delete $scope.modalData.fieldPredicate;
+            }
+        };
+        
+        $scope.mustCreateFieldPredicate = function () {
+            return typeof $scope.modalData.fieldPredicate === 'string';
+        };
+        
+        $scope.canCreateFieldPredicate = function () {
+            return $scope.mustCreateFieldPredicate() && $scope.modalData.fieldPredicate.length > 0;
         };
 
         $scope.createFieldPredicate = function () {
-            FieldPredicateRepo.create({
-                value: $scope.modalData.fieldPredicate,
-                documentTypePredicate: false
-            }).then(function (response) {
-                var body = angular.fromJson(response.body);
-                if (body.meta.status == "SUCCESS") {
-                    $scope.modalData.fieldPredicate = body.payload.FieldPredicate;
+            return $q(function(resolve) {
+                if($scope.mustCreateFieldPredicate()) {
+                    FieldPredicateRepo.create({
+                        value: $scope.modalData.fieldPredicate,
+                        documentTypePredicate: false
+                    }).then(function (response) {
+                        var apiRes = angular.fromJson(response.body);
+                        if (apiRes.meta.status === "SUCCESS") {
+                            $scope.modalData.fieldPredicate = apiRes.payload.FieldPredicate;
+                            resolve();
+                        }
+                    });
+                } else {
+                    resolve();
                 }
             });
         };
-
+        
         $scope.createFieldProfile = function () {
-            WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData);
+            $scope.createFieldPredicate().then(function() {
+                WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
+                    resetModalData();
+                });
+            });
         };
 
         $scope.selectFieldProfile = function (index) {
@@ -197,11 +190,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
-            if($scope.modalData.mappedShibAttribute.id === 0) {
-                $scope.modalData.mappedShibAttribute = undefined;
-            }
-            WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
-                resetModalData();
+            $scope.createFieldPredicate().then(function() {
+                WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
+                    resetModalData();
+                });
             });
         };
 

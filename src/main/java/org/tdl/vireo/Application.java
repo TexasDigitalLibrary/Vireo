@@ -1,71 +1,76 @@
 package org.tdl.vireo;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationHome;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.io.Resource;
+import org.tdl.vireo.model.converter.CryptoConverter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
 public class Application extends SpringBootServletInitializer {
 
-    private final static Logger LOG = LoggerFactory.getLogger(Application.class);
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    public static String BASE_PATH = "/var/lib/vireo/";
+    // where to store public and private directories
+    private static String assetsPath;
 
-    /**
-     * {@inheritDoc}
-     *
-     * This configuration is for when running inside of Tomcat/Jetty
-     */
+    // where is root of the app, i.e. where node_modules is
+    private static String rootPath;
+
+    @Value("${app.assets.uri:classpath:/}")
+    private Resource assets;
+
+    @Value("${app.security.secret}")
+    private String secret;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        init(false);
         return application.sources(Application.class);
     }
 
-    /**
-     * Main method for when running as a stand-alone Spring Boot Application
-     *
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) {
-        init(true);
         SpringApplication application = new SpringApplication(Application.class);
         application.run(args);
     }
 
-    /**
-     * Shared init() method for when starting as either stand-alone Spring Boot app or as a Tomcat/Jetty webapp
-     */
-    public static void init(boolean isSpringBoot) {
-        String applicationClassPathRoot = Application.class.getResource("/").getPath();
-        File applicationClassPath = new File(applicationClassPathRoot);
-        // if we're running in an expanded war
-        if (applicationClassPath.exists() && applicationClassPath.isDirectory()) {
-            BASE_PATH = applicationClassPathRoot + (isSpringBoot ? "../../" : "../../../");
-            File customProps = new File(BASE_PATH + "conf/application.properties");
-            if (customProps.exists() && customProps.isFile()) {
-                LOG.info("Loading application.properties from " + BASE_PATH + "conf directory relative to our classpath");
-                System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
-            }
+    @PostConstruct
+    public void init() throws IOException, URISyntaxException {
+        CryptoConverter.setKey(secret);
+
+        assetsPath = assets.getURI().getSchemeSpecificPart();
+        // ensure assetsPath ends with URI seperator
+        if (!assetsPath.endsWith("/")) {
+            assetsPath += "/";
         }
-        // if we're a jar or a war
-        else if (applicationClassPath.exists() && applicationClassPath.isFile() && (applicationClassPathRoot.endsWith(".jar") || applicationClassPathRoot.endsWith(".war"))) {
-            BASE_PATH = applicationClassPath.getParent();
-            File customProps = new File(BASE_PATH + "/conf/application.properties");
-            if (customProps.exists() && customProps.isFile()) {
-                LOG.info("Loading application.properties from  " + BASE_PATH + "conf directory in same parent directory as our .jar/.war");
-                System.setProperty("spring.config.location", "file://" + customProps.getAbsolutePath());
-            }
+        ApplicationHome HOME = new ApplicationHome(Application.class);
+        if (assets.getURI().getScheme().equals("jar")) {
+            rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator;
         } else {
-            LOG.info("Couldn't discern how we're running to be able to load an external application.properties file!");
+            rootPath = HOME.getDir().getAbsolutePath() + File.separator + ".." + File.separator + ".." + File.separator;
         }
+        logger.info("ASSETS PATH: " + assetsPath);
+        logger.info("ROOT PATH: " + rootPath);
     }
+
+    public static String getAssetsPath() {
+        return assetsPath;
+    }
+
+    public static String getRootPath() {
+        return rootPath;
+    }
+
 }

@@ -1,0 +1,137 @@
+server:
+  port: 9000
+  contextPath:
+
+# TODO: determine if this is required
+security.basic.enabled: false
+
+# TODO: determine if these are required
+multipart:
+  # File size limit
+  maxFileSize: 100Mb
+  # Total request size for a multipart/form-data
+  maxRequestSize: 1000Mb
+
+spring:
+  profiles.active: test
+  template.cache: false
+  http.multipart:
+    maxFileSize: 20MB
+    maxRequestSize: 20MB
+
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+
+    # database username and password
+    username: vireo
+    password: vireo
+
+    # common database config -- might be needed for postgres
+    defaultAutoCommit: false
+    test-on-borrow: true
+    validation-query: select version();
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  
+    generate-ddl: true
+    show-sql: false
+    hibernate.ddl-auto: create-drop
+    properties.hibernate.event.merge.entity_copy_observer: allow
+
+  thymeleaf:
+    cache: false
+    model: LEGACYHTML5
+
+# logging
+logging:
+  level:
+    org:
+      tdl: INFO
+      springframework: INFO
+    edu.tamu: INFO
+    ro.isdc.wro: INFO
+  file: logs/vireo.log
+
+# generated values
+info:
+  build:
+    production: false
+    artifact: $project.artifactId$
+    name: $project.name$
+    description: $project.description$
+    version: $project.version$
+
+
+app:
+  url: http://localhost:9000
+  assets.uri: classpath:/
+  public.folder: public
+  document.folder: private
+  cvcache.duration: 3600000
+  documentType.rename: PRIMARY
+
+  # edu.tamu.weaver.auth.service.UserCredentialsService
+  authority.admins: admin@tdl.org,aggieJack@tamu.edu
+  
+  
+  security:
+    # edu.tamu.weaver.auth.service.CryptoService
+    secret: verysecretsecret
+    # edu.tamu.weaver.filter.CorsFilter
+    allow-access: http://localhost:9000
+    
+  # edu.tamu.weaver.email.config.WeaverEmailConfig
+  email:
+    host: relay.tamu.edu
+    from: noreply@library.tamu.edu
+    replyTo: helpdesk@library.tamu.edu
+    # additional email configurations
+    #username:
+    #password:
+    #port: 587
+    #protocol: smtp
+    #channel: starttls
+
+  # edu.tamu.weaver.reporting.controller.ReportingController
+  reporting.address: reporting@tdl.org
+  
+  # edu.tamu.weaver.validation.controller.ValidationsController
+  model.packages: org.tdl.vireo.model
+  
+  # edu.tamu.weaver.utility.HttpUtility
+  http.timeout: 10000
+
+# edu.tamu.weaver.token.provider.controller.TokenController
+shib:
+  keys: netid,uin,lastName,firstName,email
+  subject: email
+  netid: edupersonprincipalnameunscoped
+  uin: tamuuin
+  lastName: tdl-sn
+  firstName: tdl-givenname
+  email: tdl-mail
+
+# edu.tamu.weaver.token.service.TokenService
+auth:
+  security.jwt:
+    secret: verysecretsecret
+    issuer: localhost
+    duration: 1
+
+  # edu.tamu.weaver.token.provider.controller.TokenController
+  path: /auth
+
+# WRO Configuration
+wro:
+  # define which preProcessors should be used to process SASS
+  preProcessors: cssUrlRewriting
+  # define which postProcessors should be used to process SASS
+  postProcessors: repoPostProcessor,rubySassCss,cssMin
+
+# edu.tamu.weaver.wro.service.ThemeManagerService
+theme:
+  manager: false
+  default.css:
+  defaults.location:

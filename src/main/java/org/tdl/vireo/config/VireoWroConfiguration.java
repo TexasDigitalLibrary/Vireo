@@ -12,13 +12,13 @@ import ro.isdc.wro.manager.factory.WroManagerFactory;
 
 @Configuration
 public class VireoWroConfiguration extends WeaverWroConfiguration {
-    @Autowired
-    VireoThemeManager vireoThemeManagerService;
 
-    
+    @Autowired
+    private VireoThemeManager vireoThemeManagerService;
+
     @Override
     protected WroManagerFactory getWroManagerFactory(Properties properties) {
-    	return new VireoConfigurableWroManagerFactory(properties, vireoThemeManagerService, getResourcePatternResolver());
+        return new VireoConfigurableWroManagerFactory(properties, vireoThemeManagerService, getResourcePatternResolver());
     }
 
 }

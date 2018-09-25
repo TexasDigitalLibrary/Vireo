@@ -1,8 +1,5 @@
 {
-	"name": "Administrative Groups",
-	"isEntityProperty": false,
-	"language": {
-		"name": "English"
-	},
-	"dictionary": []
+  "name": "Administrative Groups",
+  "isEntityProperty": false,
+  "dictionary": []
 }

@@ -23,11 +23,11 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 		};
 
 		$scope.activeTab = function(path) {
-			return $location.url().includes(path);
+			return $location.url().indexOf(path) >= 0;
 		};
 
 		$scope.activeAdminSection = function() {
-			return $location.url().includes("/admin");
+			return $location.url().indexOf("/admin") >= 0;
 		};
 
 		$scope.viewSelect = function() {

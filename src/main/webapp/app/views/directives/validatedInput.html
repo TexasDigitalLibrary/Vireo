@@ -60,19 +60,20 @@
     <span ng-if="hint">{{ hint }}</span>
   </div>
 
-  <div ng-if="type == 'checkbox'">
-    <label ng-if="label" for="{{property}}-input" class="checkbox">{{label}}</label>
-    <div class="checkbox-inline">
-      <input
-      ng-attr-id="{{id}}"
-        name="{{property}}"
-        type="{{type}}"
-        ng-change="change($event)"
-        ng-model="model[property]"
-        ng-false-value="{{falsevalue ? falsevalue : false}}"
-        ng-true-value="{{truevalue ? truevalue : true}}"
-        aria-describedby="{{label}}"/>
-      <span>{{placeholder}}</span>
+  <div ng-if="type === 'checkbox'">
+    <label ng-if="label" for="{{property}}-input">{{label}}</label>
+    <div class="checkbox">
+      <label>
+        <input
+          ng-attr-id="{{id}}"
+          name="{{property}}"
+          type="{{type}}"
+          ng-disabled="disabled"
+          ng-change="change($event)"
+          ng-model="model[property]"
+          ng-false-value="{{falsevalue ? falsevalue : false}}"
+          ng-true-value="{{truevalue ? truevalue : true}}"
+          aria-describedby="{{label}}"/>{{placeholder}}</label>
     </div>
   </div>
 

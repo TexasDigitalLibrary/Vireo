@@ -132,7 +132,7 @@ main footer {
   margin-bottom: 25px;
 }
 
-.toggle-href {
+.clickable {
   cursor: pointer;
 }
 
@@ -274,15 +274,15 @@ main footer {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
 }
 
-.list-row-remove .glyphicon {
+tr.submission-list-row td span.glyphicon.glyphicon-remove-circle {
   color: $brand-danger;
-	margin: -8px 0 0 -35px;
-	padding: 8px;
-	visibility: hidden;
+  margin: -8px 0 0 -35px;
+  padding: 8px;
+  visibility: hidden;
 }
 
-.list-row-remove tr:hover .glyphicon {
-	visibility: visible;
+tr.submission-list-row:hover td span.glyphicon.glyphicon-remove-circle {
+  visibility: visible;
 }
 
 .pagination {
@@ -605,7 +605,7 @@ togglebutton {
   width: 100%;
 }
 
-.tooltip-span-adjust {
+.glyiphicon-span-adjust {
   margin-left: 10px;
   margin-bottom: 14px;
   line-height: 2;
@@ -618,8 +618,6 @@ a.tooltip-icon {
   color: #666666;
   text-decoration: none;
 }
-
-a.tooltip-icon:hover {}
 
 a[title]:hover:after {
   position: absolute;
@@ -649,8 +647,6 @@ h4 {
   text-decoration: none;
 }
 
-.deposit-location {}
-
 .custom-actions {
   margin-left: 18px;
 
@@ -658,8 +654,6 @@ h4 {
     margin-right: 8px;
   }
 }
-
-.graduation-month {}
 
 .edit-setting-icon:hover {
   cursor: pointer;
@@ -935,11 +929,6 @@ footer p {
   color: #70706f;
 }
 
-.control-group.required .control-label:before {
-  content: "*";
-  color: #70706f;
-}
-
 .pager {
   display: inline-block;
   padding: 5px 14px;
@@ -1133,8 +1122,6 @@ input[type=color]:focus {
   cursor: pointer;
 }
 
-.triptych-navigation {}
-
 .triptych-navigation .breadcrumb {
   min-height: 60px;
   display: inline-block;
@@ -1149,10 +1136,6 @@ input[type=color]:focus {
 .triptych-navigation .breadcrumb .glyphicon-arrow-down {
   vertical-align: middle;
 }
-
-.triptych-navigation breadcrumb {}
-
-.triptych-panels {}
 
 .triptych-panels .glyphicon-arrow-right {
   display: none;
@@ -1248,8 +1231,6 @@ input[type=color]:focus {
   margin: auto;
 }
 
-.triptych-panel-entry {}
-
 #organizationManagement .panel-wrap {
   display: none;
 }
@@ -1271,10 +1252,12 @@ input[type=color]:focus {
   cursor: pointer;
   color: #337ab7;
 }
-/*************
-* DIRECTIVES *
-**************/
-/*Accordion*/
+
+/**************
+ * DIRECTIVES *
+ **************/
+
+/* Accordion */
 .accordion .panel {
   margin-bottom: 3px;
 }
@@ -1339,75 +1322,6 @@ input[type=color]:focus {
 .panel-content-wrapper {
   padding: 25px;
 }
-/* Tooltip */
-.tooltip-wrapper {
-  position: relative;
-}
-
-.tooltip-handle:hover {
-  cursor: help;
-}
-
-.tip.hidden {
-  z-index: -100;
-}
-
-.tip {
-  position: fixed;
-  top: 999999px;
-  width: auto;
-  max-width: 250px;
-  padding: 15px;
-  border-radius: 10px;
-  border: solid 2px #CCC;
-  background: rgba(31, 58, 71, 0.95);
-  background: -moz-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -webkit-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: -ms-linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  background: linear-gradient(to bottom, rgba(31, 58, 71, 0.95), rgba(80, 114, 129, 0.95));
-  opacity: 0;
-  -webkit-transition: opacity 0.5s linear;
-  transition: opacity 0.5s linear;
-}
-
-.tip.tip-visible {
-  opacity: 1;
-  z-index: 100;
-}
-
-.tip-point {
-  position: absolute;
-  top: -10px;
-  left: 12px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #CCC;
-}
-
-.tip-point:after {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: -8px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid rgba(41, 68, 81, 1);
-}
-
-.tip-message {
-  width: 100%;
-  margin: auto;
-  color: #EFEFEF;
-  font-size: 0.85em;
-}
-
-.tip.tip-visible .tip-message {
-  z-index: 102 !important;
-}
 
 .mouse-hover-pointer:hover {
   cursor: pointer;
@@ -1442,12 +1356,6 @@ input[type=color]:focus {
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text;
-  // background-color: #afafaf;
-  // color: transparent;
-  // text-shadow: 0px 2px 3px rgba(255,255,255,0.75);
-  // -webkit-background-clip: text;
-  // -moz-background-clip: text;
-  // background-clip: text;
 }
 
 .panel-heading:hover .accordion-order-box .glyphicon-chevron-down,
@@ -1498,9 +1406,10 @@ input[type=color]:focus {
   font-weight: normal;
   line-height: 22px;
 }
-/********
-* NOTES *
-*********/
+
+/*********
+ * NOTES *
+ *********/
 .note {
   position: relative;
   max-width: 225px;
@@ -1515,12 +1424,26 @@ input[type=color]:focus {
   top: 7px;
   left: 8px;
 }
+
 /************************************
  * Submission View Column Selection *
  ************************************/
 .column-modal {
-  height: 750px;
+  height: 675px;
   overflow-y: scroll;
+}
+
+.displayed-column:hover,
+.disabled-column:hover {
+  cursor: pointer;
+}
+
+.disabled-column:hover .glyphicon {
+  display: inline-block;
+}
+
+.displayed-column:hover .glyphicon {
+  display: inline-block;
 }
 
 .column-background {
@@ -1536,12 +1459,17 @@ input[type=color]:focus {
   border-color: #d6e9c6;
   margin: 5px;
   padding: 5px;
+  .glyphicon {
+    display: none;
+  }
 }
 
 .displayed-column-container {
   margin: 0;
   padding: 0;
   min-height: 20px;
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .disabled-column {
@@ -1550,11 +1478,16 @@ input[type=color]:focus {
   border-color: #CCCCCC;
   margin: 5px;
   padding: 5px;
+  .glyphicon {
+    display: none;
+  }
 }
 
 .disabled-column-container {
   margin: 0;
   padding: 0;
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .column-placeholder {
@@ -1681,7 +1614,6 @@ input[type=color]:focus {
 .email-workflow-rule-row:hover span.glyphicon-pencil {
   visibility: visible;
 }
-//<span class="glyphicon glyphicon-pencil"></span>
 
 .submission-review-item {
   padding-bottom: 5px;
@@ -1701,4 +1633,10 @@ input[type=color]:focus {
 
 .font-weight-bold {
   font-weight: bold;
+}
+
+.open > .dropdown-menu,
+[uib-typeahead-popup].dropdown-menu {
+  max-height: 400px;
+  overflow-y: scroll;
 }

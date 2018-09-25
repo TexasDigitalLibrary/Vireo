@@ -40,7 +40,7 @@ vireo.directive("draganddroplist", function($filter) {
 		},
 		link: function($scope, elem, attr) {
 			$scope.properties = angular.fromJson(attr.properties);
-            $scope.selectedFilter = $scope.properties.length==1?$scope.properties[0]:"";
+            $scope.selectedFilter = $scope.properties.length === 1 ? $scope.properties[0] : "";
 		}
 	};
 });

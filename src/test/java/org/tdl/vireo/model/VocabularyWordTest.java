@@ -11,8 +11,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     @Before
     public void setUp() {
         assertEquals("VocabularyWord repo was not empty!", 0, vocabularyWordRepo.count());
-        language = languageRepo.create(TEST_LANGUAGE);
-        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME, language);
+        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
     }
 
     @Override
@@ -46,7 +45,6 @@ public class VocabularyWordTest extends AbstractEntityTest {
         vocabularyWordRepo.delete(vocabularyWord);
         assertEquals("Vocabulary word did not delete!", 0, vocabularyWordRepo.count());
         assertEquals("The controlled vocabulary was deleted!", 1, controlledVocabularyRepo.count());
-        assertEquals("The language was deleted!", 1, languageRepo.count());
     }
 
     @After
@@ -57,7 +55,6 @@ public class VocabularyWordTest extends AbstractEntityTest {
         vocabularyWordRepo.findAll().forEach(vw -> {
             vocabularyWordRepo.delete(vw);
         });
-        languageRepo.deleteAll();
     }
 
 }

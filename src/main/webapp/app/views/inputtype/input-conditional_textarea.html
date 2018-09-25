@@ -1,27 +1,28 @@
-<input  
-	ng-init="checked = fieldValue.value && fieldValue.value !== ''"
-	type="checkbox" 
-	ng-model="checked"
-	ng-true-value="true" 
-	ng-false-value="false"
-	ng-click="setConditionalTextArea(fieldValue, checked)" 
->	
-<span>{{profile.help}}</span>
-
-<div ng-if="checked === true" class="input-group">
-	<textarea
-		class="form-control" 
-		name="profile.fieldPredicate.value" 
-		ng-required="!profile.optional" 
-		ng-model="fieldValue.value"
-		ng-blur="save(fieldValue)"
-		ng-disabled="fieldValue.updating" 
-		placeholder="Input {{profile.fieldGlosses[0].value}}">			
-	</textarea>
-
-	<span class="input-group-addon">
-        <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
-        <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
-    </span>
-
+<div ng-init="initConditionalTextarea(fieldValue)" class="checkbox">
+  <label><input
+          type="checkbox"
+          ng-model="checked"
+          ng-click="setConditionalTextArea($event, fieldValue)"
+          uib-popover-template="'views/inputtype/confirm.html'"
+          popover-trigger="'none'"
+          popover-title="Confirm Remove Text"
+          popover-animation="true"
+          popover-placement="auto top-left"
+          popover-is-open="showConfirm()"> {{profile.help}}</label>
 </div>
+<div ng-show="checked" class="input-group">
+  <textarea
+    class="form-control"
+    name="profile.fieldPredicate.value"
+    ng-required="!profile.optional"
+    ng-model="fieldValue.value"
+    ng-blur="saveConditionalTextArea(fieldValue)"
+    ng-disabled="fieldValue.updating"
+    placeholder="Input {{profile.gloss}}">
+  </textarea>
+  <span class="input-group-addon">
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+  </span>
+</div>
+

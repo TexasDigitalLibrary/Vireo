@@ -1,62 +1,43 @@
-vireo.directive('tooltip', function ($timeout, $compile) {
+vireo.directive('tooltip', function ($timeout) {
+    return {
+        templateUrl: "views/directives/tooltip.html",
+        replace: true,
+        restrict: 'A',
+        scope: true,
+        link: function($scope, elem, attr) {
+            $scope.message = attr.tooltip;
 
-	return {
-		template: '<span class="tooltip-handle" ng-mousemove="positionTip($event)" ng-mouseover="showTip()" ng-mouseout="hideTip()" ng-click="toggleVisible()" ng-transclude></span>',
-		replace: true,
-		transclude: true,
-		restrict: 'A',
-		scope:true,
-		link: function($scope, elem, attr) {
-			
-			var tipTemplate = 	'<div class="tooltip-wrapper">'+
-									'<div ng-style="tipStyles" class="tip" ng-class="{\'tip-visible\': tipVisible, \'hidden\': hidden}">'+
-										'<div class="tip-point"></div>' +
-										'<div class="tip-message">{{::tip}}</div>' +
-									'</div>' +
-								'</div>';
-			
-			angular.element("body").append($compile(tipTemplate)($scope));
+            $scope.isOpen = false;
 
-			$scope.tip = attr.tooltip;
+            var timer;
 
-			$scope.tipVisible = false;
-			$scope.hidden = true;
-			$scope.showTimer = {};
-			$scope.tipStyles = {};
+            var open = function() {
+                $timeout.cancel(timer);
+                $scope.isOpen = true;
+            };
 
-			$scope.showTip = function() {
-				$scope.hidden = false;
-				$scope.showTimer = $timeout(function() {
-					$scope.tipVisible = true;
-				}, 500);
-			};
+            var close = function() {
+                $timeout.cancel(timer);
+                timer = $timeout(function() {
+                    $scope.isOpen = false;
+                }, 250);
+            };
 
-			$scope.hideTip = function() {
-				$timeout.cancel($scope.showTimer);
-				$scope.tipVisible = false;
+            $scope.mouseEnter = function() {
+                open();
+                $timeout(function() {
+                    angular.element('.popover').hover(function() {
+                        open();
+                    }, function() {
+                        close();
+                    });
+                });
+            };
 
-				$timeout(function() {
-					$scope.hidden = true;
-				}, 500);
+            $scope.mouseLeave = function() {
+                close();
+            };
 
-			};
-
-			$scope.toggleVisible = function() {
-				$timeout.cancel($scope.showTimer);
-				$scope.tipVisible = $scope.tipVisible ? false : true;
-
-				if(!$scope.tipVisible) {
-					$timeout(function() {
-						$scope.hidden = $scope.hidden ? false : true;
-					}, 500);
-				} 
-
-			};
-
-			$scope.positionTip = function($event) {
-				$scope.tipStyles.top = $event.clientY + 20;
-				$scope.tipStyles.left = $event.clientX -	25;
-			};
-		}
-	};
+        }
+    };
 });

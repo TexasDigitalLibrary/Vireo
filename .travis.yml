@@ -22,4 +22,4 @@ before_script:
 
 script:
   - mvn clean package -Dproduction -DskipTests=true
-  - mvn clean test -DtestClient
+  - mvn clean test -Dclient

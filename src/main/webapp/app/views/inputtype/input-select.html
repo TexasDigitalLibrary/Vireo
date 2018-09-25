@@ -1,15 +1,15 @@
-<div class="btn-group btn-block col-xs-12 input-select" uib-dropdown keyboard-nav role="group">
+<div class="btn-group btn-group-justified submission-input-select" uib-dropdown keyboard-nav role="group">
   <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
     <span class="caret"></span>
   </button>
   <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
-    <span class="text-left dropdown-text-label">{{fieldValue.value || 'Choose ' + profile.fieldGlosses[0].value}}</span>
+    <span class="text-left dropdown-text-label">{{fieldValue.value || 'Choose ' + profile.gloss}}</span>
   </button>
   <ul class="dropdown-menu" uib-dropdown-menu role="menu">
     <li class="select-option"
       role="menuitem"
       ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);" 
-      ng-repeat="word in profile.controlledVocabularies[0].dictionary | orderBy:'name'">
+      ng-repeat="word in profile.controlledVocabulary.dictionary | orderBy:'name'">
       <a href="#">{{word.name}}</a>
     </li>
   </ul>

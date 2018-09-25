@@ -1,10 +1,6 @@
 {
   "name":"Departments",
   "isEntityProperty":false,
-  "isEnum":false,
-  "language":{
-    "name":"English"
-  },
   "dictionary":[
     {
       "name":"Obstetrics and Gynecology",

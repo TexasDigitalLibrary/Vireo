@@ -8,7 +8,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
-    StudentSubmissionRepo.findSubmissionById($routeParams.submissionId).then(function (submission) {
+    StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
 
         $scope.studentSubmissionRepoReady = true;
 
@@ -27,6 +27,10 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
     });
 
     $scope.setActiveStep = function (step, hash) {
+        if ($scope.submitting) {
+            // do not allow changing the active step while submitting to prevent changing field values.
+            return;
+        }
 
         var stepIndex = $scope.submission.submissionWorkflowSteps.indexOf(step);
         var reviewStepNum = $scope.submission.submissionWorkflowSteps.length + 1;
@@ -59,7 +63,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
 
         // Only change path if it differs from the current path.
         if ("/" + nextLocation !== $location.path()) {
-            $location.path(nextLocation, false);
+            $location.path(nextLocation);
         }
 
         $timeout(function () {

@@ -62,9 +62,8 @@ module.exports = function (grunt) {
                     'node_modules/angular-messages/angular-messages.min.js',
                     'node_modules/angular-mocks/angular-mocks.js',
 
-                    'node_modules/ng-csv/build/ng-csv.min.js',
-
                     'node_modules/ng-sortable/dist/ng-sortable.min.js',
+                    'node_modules/ng-csv/build/ng-csv.min.js',
 
                     'node_modules/ng-table/bundles/ng-table.min.js',
 
@@ -250,7 +249,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watch', ['watch']);
 
-    grunt.registerTask('develop', ['jshint', 'concat', 'usemin', 'copy:styles', 'clean', 'symlink', 'watch']);
+    grunt.registerTask('develop', ['jshint', 'copy:styles', 'clean', 'symlink', 'watch']);
 
     grunt.registerTask('deploy', ['jshint', 'concat', 'uglify', 'usemin', 'clean', 'copy']);
 

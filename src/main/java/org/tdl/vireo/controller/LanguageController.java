@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.FieldGloss;
 import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestCodesService;
@@ -27,7 +26,6 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 /**
  * Controller in which to manage languages.
- *
  */
 @RestController
 @RequestMapping("/settings/language")
@@ -42,7 +40,6 @@ public class LanguageController {
     private ProquestCodesService proquestCodesService;
 
     /**
-     *
      * @return
      */
     @RequestMapping("/all")
@@ -52,7 +49,6 @@ public class LanguageController {
     }
 
     /**
-     *
      * @return
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -64,7 +60,6 @@ public class LanguageController {
     }
 
     /**
-     *
      * @return
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -76,12 +71,11 @@ public class LanguageController {
     }
 
     /**
-     *
      * @return
      */
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldGloss.class, ControlledVocabulary.class }) })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { ControlledVocabulary.class }) })
     public ApiResponse removeLanguage(@WeaverValidatedModel Language language) {
         logger.info("Removing language with name " + language.getName());
         languageRepo.remove(language);
@@ -123,7 +117,6 @@ public class LanguageController {
     }
 
     /**
-     *
      * @return
      */
     @RequestMapping("/proquest")

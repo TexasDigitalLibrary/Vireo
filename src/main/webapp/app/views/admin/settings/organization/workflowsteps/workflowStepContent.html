@@ -60,13 +60,13 @@
 						Add Field
 					</button>
 
-					<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new field."></div>
+					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Dialog in which allows to create new field."></div>
 
 					<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field</p>
 
 					<draganddroplist dragging="dragging"
 									 scope-value="step.aggregateFieldProfiles"
-									 properties='["fieldGlosses"]'
+									 properties='["gloss"]'
 									 item-view='views/directives/dragAndDropFieldProfile.html'
 									 listeners='dragControlListeners'
 									 edit='editFieldProfile(index)'
@@ -115,7 +115,7 @@
 		<h3>Read only. Workflow step is non overrideable.</h3>
 		<ul class="list-unstyled">
 		   <li ng-repeat="fieldProfile in step.aggregateFieldProfiles">
-		      	{{fieldProfile.position}}. <span ng-if="!fieldProfile.optional">*</span>{{fieldProfile.fieldGlosses[0].value}}
+		      	{{fieldProfile.position}}. <span ng-if="!fieldProfile.optional">*</span>{{fieldProfile.gloss}}
 		   </li>
 		</ul>
 	</div>
@@ -140,7 +140,7 @@
 						Add Note
 					</button>
 
-					<div class="glyphicon glyphicon-info-sign tooltip-span-adjust" tooltip="Dialog in which allows to create new note."></div>
+					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Dialog in which allows to create new note."></div>
 
 					<p ng-if="step.aggregateNotes.length == 0">Add New Note</p>
 

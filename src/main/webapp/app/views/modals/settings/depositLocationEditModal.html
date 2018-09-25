@@ -7,6 +7,8 @@
 
 <form ng-submit="updateDepositLocation()" name="forms.update" novalidate>
 
+  <alerts seconds="30" channels="settings/deposit-location/test-connection" types="ERROR,SUCCESS" exclusive></alerts>
+
   <validationmessage results="depositLocationRepo.getValidationResults()"></validationmessage>
 
   <div class="modal-body">

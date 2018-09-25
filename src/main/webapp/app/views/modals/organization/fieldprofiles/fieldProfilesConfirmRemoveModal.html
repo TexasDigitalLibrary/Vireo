@@ -10,20 +10,15 @@
   <validationmessage results="modalData.ValidationResults"></validationmessage>
 
   <div class="modal-body">
-    <h4>
-      <b>Click confirm to remove the Field Profile:
-        {{modalData.fieldGlosses[0].value}}</b>
-    </h4>
-    <h4>Organization:
-      {{organizationRepo.getSelectedOrganization().name}}</h4>
-    <h4>Workflow Step:
-      {{step.name}}</h4>
-    <h4>Predicate:
-      {{modalData.fieldPredicate.value}}</h4>
+    <h4><b>Click confirm to remove the Field Profile: {{modalData.gloss}}</b></h4>
+    <h4>Organization: {{organizationRepo.getSelectedOrganization().name}}</h4>
+    <h4>Workflow Step: {{step.name}}</h4>
+    <h4>Predicate: {{modalData.fieldPredicate.value}}</h4>
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="resetFieldProfiles()">Cancel</button>
     <button type="submit" class="btn btn-primary">Confirm</button>
   </div>
+
 </form>
