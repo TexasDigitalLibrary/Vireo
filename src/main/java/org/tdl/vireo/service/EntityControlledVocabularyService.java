@@ -43,26 +43,24 @@ public class EntityControlledVocabularyService {
 
     @SuppressWarnings("unchecked")
     public void scanForEntityControlledVocabularies() throws ClassNotFoundException {
-        for (String name : applicationContext.getBeanDefinitionNames()) {
+        for (String name : applicationContext.getBeanNamesForType(EntityControlledVocabularyRepo.class)) {
             Object bean = applicationContext.getBean(name);
-            if (bean instanceof EntityControlledVocabularyRepo) {
-                EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = (EntityControlledVocabularyRepo<EntityControlledVocabulary>) bean;
-                String entityName = getEntity(entityControlledVoabularyRepo).getSimpleName();
-                List<EntityCV.Subset> subsetAnnotations = getEntityControlledVocabularySubsets(entityControlledVoabularyRepo);
-                if (subsetAnnotations.size() > 0) {
-                    subsetAnnotations.forEach(entityCVSubset -> {
-                        String controlledVocabularyName = entityCVSubset.name();
-                        controlledVocabularyRepo.create(controlledVocabularyName, true);
-                        entityControlledVocabularyRepos.put(controlledVocabularyName, entityControlledVoabularyRepo);
-                        logger.info("Created entity controlled vocabulary: " + controlledVocabularyName);
-                    });
-                } else {
-                    Optional<String> controlledVocabularyName = getEntityControlledVocabularyName(entityControlledVoabularyRepo);
-                    String entityCVName = controlledVocabularyName.isPresent() ? controlledVocabularyName.get() : entityName;
-                    controlledVocabularyRepo.create(entityCVName, true);
-                    entityControlledVocabularyRepos.put(entityCVName, entityControlledVoabularyRepo);
-                    logger.info("Created entity controlled vocabulary: " + entityCVName);
-                }
+            EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = (EntityControlledVocabularyRepo<EntityControlledVocabulary>) bean;
+            String entityName = getEntity(entityControlledVoabularyRepo).getSimpleName();
+            List<EntityCV.Subset> subsetAnnotations = getEntityControlledVocabularySubsets(entityControlledVoabularyRepo);
+            if (subsetAnnotations.size() > 0) {
+                subsetAnnotations.forEach(entityCVSubset -> {
+                    String controlledVocabularyName = entityCVSubset.name();
+                    controlledVocabularyRepo.create(controlledVocabularyName, true);
+                    entityControlledVocabularyRepos.put(controlledVocabularyName, entityControlledVoabularyRepo);
+                    logger.info("Created entity controlled vocabulary: " + controlledVocabularyName);
+                });
+            } else {
+                Optional<String> controlledVocabularyName = getEntityControlledVocabularyName(entityControlledVoabularyRepo);
+                String entityCVName = controlledVocabularyName.isPresent() ? controlledVocabularyName.get() : entityName;
+                controlledVocabularyRepo.create(entityCVName, true);
+                entityControlledVocabularyRepos.put(entityCVName, entityControlledVoabularyRepo);
+                logger.info("Created entity controlled vocabulary: " + entityCVName);
             }
         }
     }
