@@ -587,6 +587,35 @@ public class SubmissionController {
                 out.close();
             }
             break;
+        case "DSpaceSimple":
+            try {
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+
+                    if (exportPackage.isFile()) {
+                        File exportFile = (File) exportPackage.getPayload();
+                        zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        zos.write(Files.readAllBytes(exportFile.toPath()));
+                        zos.closeEntry();
+                    }
+
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                response.setContentType("application/json");
+
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+                PrintWriter out = response.getWriter();
+                out.print(objectMapper.writeValueAsString(apiResponse));
+                out.close();
+            }
+            break;
+
         default:
             response.setContentType("application/json");
 
