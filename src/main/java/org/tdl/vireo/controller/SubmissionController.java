@@ -23,6 +23,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -589,14 +590,31 @@ public class SubmissionController {
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
-                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-
+                    Map<String, String> metadata = new HashMap<String, String>();
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, metadata);
+                    
                     if (exportPackage.isFile()) {
                         File exportFile = (File) exportPackage.getPayload();
                         zos.putNextEntry(new ZipEntry(exportFile.getName()));
                         zos.write(Files.readAllBytes(exportFile.toPath()));
                         zos.closeEntry();
                     }
+
+                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        zos.putNextEntry(new ZipEntry(ldfv.getFileName()));
+                        zos.write(fileBytes);
+                        zos.closeEntry();
+                    }
+
+                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                    byte[] fileBytes = Files.readAllBytes(path);
+                    zos.putNextEntry(new ZipEntry(primaryDoc.getFileName()));
+                    zos.write(fileBytes);
+                    zos.closeEntry();
+
 
                 }
                 zos.close();
@@ -607,9 +625,10 @@ public class SubmissionController {
                 response.setContentType("application/json");
 
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                e.printStackTrace();
+//                PrintWriter out = response.getWriter();
+//                out.print(objectMapper.writeValueAsString(apiResponse));
+//                out.close();
             }
             break;
 
