@@ -65,11 +65,16 @@ Created src/main/resources/formats/dspace_simple.xml
 	needs to be edited to simple format
 
 
+
+START ######
 Created src/main/java/org/tdl/vireo/model/packager/DSpaceSimplePackager.java
 	which extends AbstractPackager<ZipExportPackage> and has method
 	ZipExportPackage packageExport(Submssion submission, String manifest)
 
 	oriented to creating a ZipExportPackage for a single submission using a formatter - needs to only create a file for each submission
+
+src/main/java/org/tdl/vireo/model/packager/AbstractPackager.java
+	AbstractPackager only has one formatter to set - one formatter per packager but packager needs multiple formatter
 
 
 Created src/main/java/org/tdl/vireo/model/formatter/DSpaceSimpleFormatter.java
@@ -80,5 +85,9 @@ Created src/main/java/org/tdl/vireo/model/formatter/DSpaceSimpleFormatter.java
 
 	Formats a specific submission
 
+
+
+src/main/java/org/tdl/vireo/utility/PackagerUtility.java
+	needs an additional packageExport signature to accomodate SimpleFormat entries?
 
 

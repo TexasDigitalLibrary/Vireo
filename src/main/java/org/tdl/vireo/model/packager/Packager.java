@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.packager;
 
 import java.util.List;
+import java.util.Map;
 
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -24,5 +25,7 @@ public interface Packager<EP extends ExportPackage> {
     public EP packageExport(Submission submission, String manifest);
 
     public EP packageExport(Submission submission, List<SubmissionListColumn> columns);
+
+    public EP packageExport(Submission submission, Map<String,String> ds_docs);
 
 }
