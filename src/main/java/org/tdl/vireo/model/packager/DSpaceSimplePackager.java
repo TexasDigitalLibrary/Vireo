@@ -1,9 +1,9 @@
 package org.tdl.vireo.model.packager;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 //import java.util.zip.ZipEntry;
@@ -12,13 +12,18 @@ import java.util.Map;
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.DSpaceSimplePackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
+import org.tdl.vireo.service.AssetService;
 
 @Entity
 public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> {
+
+    @Autowired
+    private AssetService assetService;
 
     public DSpaceSimplePackager() {
 
@@ -33,62 +38,68 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
         setFormatter(formatter);
     }
 
-    //@Override
-    //public DSpaceSimplePackage packageExport(Submission submission, String manifest){
-	//}
+    // @Override
+    // public DSpaceSimplePackage packageExport(Submission submission, String
+    // manifest){
+    // }
 
     @Override
-    public DSpaceSimplePackage packageExport(Submission submission, Map<String,String> ds_docs) {
+    public DSpaceSimplePackage packageExport(Submission submission, Map<String, String> ds_docs) {
 
         String packageName = "submission-" + submission.getId() + "-";
 
-        List<File> pkg_list = null;
+        // Add templated files
+        List<File> pkg_list = new ArrayList<File>();
         try {
-			//Add non submitted content
-			for(Map.Entry<String,String> ds_entry : ds_docs.entrySet()){
-				String docName = ds_entry.getKey();
-				String docContents = ds_entry.getValue();
-				File ff = File.createTempFile(docName,"");
-           		FileUtils.writeStringToFile(ff, docContents, "UTF-8");
-				pkg_list.add(ff);
-			}
-
-/***
-			//Add submitted content
-			String contentsFileName = "contents";
-            File contentsFile = File.createTempFile(contentsFileName, null);
-System.out.println("AAAA");
-            List<FieldValue> documentFieldValuesForContent = submission.getAllDocumentFieldValues();
-            for (FieldValue documentFieldValue : documentFieldValuesForContent) {
-System.out.println("FKEY FFF "+documentFieldValue.getFileName()+" FFF "+submission.getPrimaryDocumentFieldValue().getFieldPredicate().getValue());
-            	FileUtils.writeStringToFile(contentsFile,documentFieldValue.getFileName()+"\tbundle:CONTENT", "UTF-8");
-				System.out.println("BBBB "+documentFieldValue.getFieldPredicate().getValue().equals("_doctype_primary"));
+            // Add non submitted content
+            for (Map.Entry<String, String> ds_entry : ds_docs.entrySet()) {
+                String docName = ds_entry.getKey();
+                String docContents = ds_entry.getValue();
+                File ff = File.createTempFile(docName, "");
+                FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+                pkg_list.add(ff);
+            }
+            
+            for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+//                File licenseFile = File.createTempFile(ldfv.getValue(), "");
+//                ldfv.getValue();
             }
 
-            // Add manifest to zip
-            //fos.putNextEntry(new FileOutputStream(contentsFileName));
-            fos.write(Files.readAllBytes(contentsFile.toPath()));
-            //fos.closeEntry();
+            /***
+             * //Add submitted content String contentsFileName = "contents"; File
+             * contentsFile = File.createTempFile(contentsFileName, null);
+             * System.out.println("AAAA"); List<FieldValue> documentFieldValuesForContent =
+             * submission.getAllDocumentFieldValues(); for (FieldValue documentFieldValue :
+             * documentFieldValuesForContent) { System.out.println("FKEY FFF
+             * "+documentFieldValue.getFileName()+" FFF
+             * "+submission.getPrimaryDocumentFieldValue().getFieldPredicate().getValue());
+             * FileUtils.writeStringToFile(contentsFile,documentFieldValue.getFileName()+"\tbundle:CONTENT",
+             * "UTF-8"); System.out.println("BBBB
+             * "+documentFieldValue.getFieldPredicate().getValue().equals("_doctype_primary"));
+             * }
+             * 
+             * // Add manifest to zip //fos.putNextEntry(new
+             * FileOutputStream(contentsFileName));
+             * fos.write(Files.readAllBytes(contentsFile.toPath())); //fos.closeEntry();
+             * 
+             * contentsFile.delete();
+             ***/
 
-            contentsFile.delete();
-***/
-
-/***
-            List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
-            for (FieldValue documentFieldValue : documentFieldValues) {
-
-                // TODO: add file whitelist for publish
-
-                File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
-
-                //fos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
-                fos.write(Files.readAllBytes(exportFile.toPath()));
-                //fos.closeEntry();
-
-            }
-            fos.close();
-***/
-
+            /***
+             * List<FieldValue> documentFieldValues =
+             * submission.getAllDocumentFieldValues(); for (FieldValue documentFieldValue :
+             * documentFieldValues) {
+             * 
+             * // TODO: add file whitelist for publish
+             * 
+             * File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
+             * 
+             * //fos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
+             * fos.write(Files.readAllBytes(exportFile.toPath())); //fos.closeEntry();
+             * 
+             * } fos.close();
+             ***/
 
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
